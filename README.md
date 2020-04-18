@@ -1,4 +1,4 @@
-Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.com/foxtrotarg/foxtrot-framework).
+Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos.
 
 ### Qué estamos desarrollando
 
@@ -6,10 +6,12 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.
 
 2. Gestor de acceso al DOM, ideado para abastraer el acceso al mismo para abreviar el código y por cuestiones de intercompatibilidad entre navegadores (como jQuery, pero ultra-fino--y no está basado en jQuery). Debe ser compatible con navegadores modernos (descartamos IE y cualquier navegador desactualizado), pero aún escrita en ES5.
 
+3. El API de todas las librerías se desarrolla íntegramente en español.
+
 ### Más información
 
-Autor: Gabriel Quagliano
+contacto@foxtrot.ar
 
-Contacto: gabriel@foxtrot.ar
+www.foxtrot.ar
 
 Licencia: Apache 2.0

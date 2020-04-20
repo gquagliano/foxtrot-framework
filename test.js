@@ -9,4 +9,5 @@
 
 $(window).evento("load",function() {
     ui.ejecutar();
+    editor.activar();
 });

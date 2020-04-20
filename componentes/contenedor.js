@@ -11,6 +11,20 @@
  * Componente concreto Contenedor.
  */
 function componenteContenedor() {
+    /**
+     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     */
+    this.crear=function() {
+        this.$elemento=$("<div class='container vacio'>");
+        this.$contenedor=this.$elemento;
+
+        this.datosElemento.$elemento=this.$elemento;
+        this.datosElemento.$contenedorHijos=this.$contenedor;
+        this.datosElemento.instancia=this;
+
+        return this;
+    };
+
     //Constructor
     (function() {
 
@@ -18,7 +32,7 @@ function componenteContenedor() {
 }
 componenteContenedor.prototype=new componente();
 
-var config=Object.assign({},configComponente);
+var config=dom.clonar(configComponente);
 config.descripcion="Contenedor";
 config.icono="componentes/iconos/contenedor.png";
 

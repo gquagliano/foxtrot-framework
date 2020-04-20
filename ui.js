@@ -13,17 +13,18 @@
 var ui=new function() {
     "use strict";
 
-    //Configuración
-    var claseBotonesBarrasHerramientas="btn btn-sm";
-
     var componentes={},
-        //Cache de instancias objetoDom
-        //Por convención utilizaremos el signo $ al comienzo de cada variable que almacene una instancia de objetoDom. La idea es facilitar la visualización
-        //de qué variables contienen elementos del DOM (Element) y cuáles instancias de objetoDom a fin de mantener la creación de instancias al mínimo.
-        $doc=$(document),
-        $body=$("body"),
-        $ventana=$(window),
-        $cuerpo=$("#foxtrot-cuerpo");
+        instanciasComponentes=[];
+
+    //Cache de instancias objetoDom
+    //Por convención utilizaremos el signo $ al comienzo de cada variable que almacene una instancia de objetoDom. La idea es facilitar la visualización
+    //de qué variables contienen elementos del DOM (Element) y cuáles instancias de objetoDom a fin de mantener la creación de instancias al mínimo.
+    this.$doc=$(document),
+    this.$body=$("body"),
+    this.$ventana=$(window),
+    this.$cuerpo=$("#foxtrot-cuerpo");
+
+    this.modoEdicion=false;
 
     this.registrarComponente=function(nombre,funcion,configuracion) {
         configuracion.nombre=nombre;
@@ -33,52 +34,26 @@ var ui=new function() {
         };
     };
 
-    var configurarBarrasHerramientas=function() {
-        $("#foxtrot-barra-componentes").arrastrable({
-            asa:$("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
-            mover:true
-        });
+    this.obtenerComponentes=function() {
+        return componentes;
     };
 
-    var contruirBarrasHerramientas=function() {
-        var $barra=$("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas");
-        for(var nombre in componentes) {
-            if(!componentes.hasOwnProperty(nombre)) continue;
-            $barra.anexar(
-                $("<button class='"+claseBotonesBarrasHerramientas+"'>")
-                    .anexar(
-                        $("<img>")
-                            .atributo("src",componentes[nombre].config.icono)
-                            .atributo("title",componentes[nombre].config.descripcion)
-                    )
-                    .metadatos("componente",nombre)
-                );
-        }
-
-        configurarBarrasHerramientas();
+    /**
+     * Crea una instancia de un componente dado su nombre.
+     */
+    this.crearComponente=function(nombre) {
+        var obj=new componentes[nombre].fn;
+        instanciasComponentes.push(obj);
+        return obj;
     };
 
-    var prapararArrastrarYSoltar=function() {
-        var componentes=$("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas button").obtener();
-        for(var i=0;i<componentes.length;i++) {
-            var $comp=$(componentes[i]);
-            $comp.arrastrable({
-                icono:$comp.buscar("img").obtener(0),
-                datos:$comp.metadatos("componente")
-            });
-        }
-
-        $cuerpo.aceptarColocacion({
-            drop:function(e) {
-                
-            }
-        });
+    this.establecerModoEdicion=function(valor) {
+        this.modoEdicion=valor;
+        this.$body.alternarClase("foxtrot-modo-edicion");
     };
 
     this.ejecutar=function() {
-        contruirBarrasHerramientas();
-
-        prapararArrastrarYSoltar();
+        
     };
 }();
 
@@ -96,6 +71,15 @@ var configComponente={
      * - [ nombre, ... ]    Nombre de componentes de los cualqes puede ser hijo, o que acepta como hijos
      */
     aceptaHijos: true
+};
+
+/**
+ * Plantilla para los objetos que contienen la relación entre elementos del DOM e instancias de componentes.
+ */
+var elementoComponente={
+    $elemento:null,
+    $contenedorHijos:null,
+    instancia:null
 };
 
 //Exportar para Closure

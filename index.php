@@ -20,6 +20,11 @@
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
+    <div id="foxtrot-barra-propiedades" class="foxtrot-barra-herramientas">
+        <div class="foxtrot-asa-arrastre"></div>
+        <div class="foxtrot-contenidos-barra-herramientas"></div>
+    </div>
+
     <div id="foxtrot-cuerpo"></div>
     
 
@@ -33,8 +38,9 @@
     <link rel="stylesheet" href="dom.css">
     <script src="ui.js"></script>
     <script src="componente.js"></script>
-    <script src="componentes/texto.js"></script>
     <script src="componentes/contenedor.js"></script>
+    <script src="componentes/texto.js"></script>
+    <script src="editor.js"></script>
     <script src="test.js"></script>
     
   </body>

@@ -84,8 +84,6 @@
         
         $t.removerClase("foxtrot-arrastrando-sobre");  
 
-        console.log(1,e.dataTransfer.getData("text/plain"));   
-
         e.preventDefault();
         e.stopPropagation();           
     }

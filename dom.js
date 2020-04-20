@@ -252,7 +252,7 @@
         /**
          * Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
          */
-        this.alternarClase=function() {
+        this.alternarClase=function(clase) {
             if(clase instanceof RegExp) {
                 for(var i=0;i<elementos.length;i++) 
                     for(var j=0;j<elementos[i].classList.length;j++)
@@ -469,6 +469,13 @@
          */
         esArray:function(obj) {
             return Array.isArray(obj);
+        },
+
+        /**
+         * Clona un objeto.
+         */
+        clonar:function(obj) {
+            return Object.assign({},obj);
         }
     };
 })();

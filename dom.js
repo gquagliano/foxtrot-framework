@@ -12,11 +12,38 @@
 (function() {
     "use strict";
 
-    var metadatos={};
+    var id=0,
+        almacenMetadatos={};
 
-    function inicializarMetadatos(clave) {
-        if(metadatos.hasOwnProperty(clave)) return;
-        metadatos[clave]={
+    /**
+     * Establece o devuelve los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     */
+    function metadatos(elemento,clave,valor) {
+        //if(dom.esInstancia(elemento)) elemento=elemento.obtener(0);
+
+        //if(!elemento.hasOwnProperty("_dom_id")) elemento._dom_id=id++;
+        var id=elemento._dom_id;
+
+        if(!almacenMetadatos.hasOwnProperty(id)) almacenMetadatos[id]={};
+        var obj=almacenMetadatos[id];
+
+        if(!dom.esIndefinido(clave)&&!obj.hasOwnProperty(clave)) obj[clave]=null;
+
+        if(dom.esIndefinido(clave)) return obj;
+
+        if(dom.esIndefinido(valor)) return obj[clave];
+
+        obj[clave]=valor;
+
+        return obj[clave];
+    }
+
+    /**
+     * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     */
+    function inicializarMetadatos(elemento) {
+        var obj=metadatos(elemento);
+        obj={
             eventos:{},
             variables:{}
         };
@@ -28,7 +55,7 @@
         //en la documentación de cada método.
 
         var elementos=[],    
-            d=document;
+            d=document;        
 
         /**
          * Devuelve la cantidad de elementos contenidos en esta instancia.
@@ -38,7 +65,7 @@
         };
 
         /**
-         * Devuelve el elemento # i, o un array de elementos si i no está definido.
+         * Devuelve el elemento # i, o un array de elementos si i no está definido. Devuelve instancias de Element (no de objetoDom).
          */
         this.obtener=function(i) {
             if(typeof i!=="number") return elementos;
@@ -49,7 +76,7 @@
          * Agrega los elementos especificados a los elementos de esta instancia.
          */
         this.anexar=function(elemento) {
-            elemento=dom(elemento);
+            elemento=$(elemento);
             var elemAnexar=elemento.obtener();
             for(var i=0;i<elementos.length;i++) {
                 var e=elementos[i];
@@ -78,7 +105,9 @@
                 var elem=elementos[i];
 
                 inicializarMetadatos(elem);
-                if(metadatos[elem].eventos.hasOwnProperty(nombre)) metadatos[elem].eventos[nombre]=[];
+                var eventos=metadatos(elem,"eventos");
+                if(eventos===null) eventos=[];
+                if(!eventos.hasOwnProperty(nombre)) eventos[nombre]=[];
 
                 //Eventos especiales
                 if(elem===document&&nombre=="ready") {
@@ -91,11 +120,11 @@
                 if(Array.isArray(funcion)) {
                     for(var j=0;j<funcion.length;j++) {
                         elem.addEventListener(nombre,funcion[j],captura);
-                        metadatos[elem].eventos[nombre]=funcion[j];
+                        eventos[nombre].push(funcion[j]);
                     }
                 } else  if(typeof funcion==="function") {
                     elem.addEventListener(nombre,funcion,captura);
-                    metadatos[elem].eventos[nombre]=funcion;
+                    eventos[nombre].push(funcion);
                 }
             }
 
@@ -139,10 +168,10 @@
             };
         };
 
-        var normalizarValorCss=function(valor) {
+        function normalizarValorCss(valor) {
             if(typeof valor==="number") valor=valor+"px";
             return valor;
-        };
+        }
 
         /**
          * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
@@ -313,13 +342,11 @@
          */
         this.metadatos=function(nombre,valor) {
             if(typeof valor==="undefined") {
-                inicializarMetadatos(elementos[0]);
-                return metadatos[elementos[0]].variables[nombre];
+                return metadatos(elementos[0],nombre);
             }
 
-            for(var i=0;i<elementos.length;i++) {                
-                inicializarMetadatos(elementos[i]);
-                metadatos[elementos[i]].variables[nombre]=valor;
+            for(var i=0;i<elementos.length;i++) {
+                metadatos(elementos[i],nombre,valor);
             }
             return this;
         };
@@ -337,17 +364,19 @@
         };
 
         /**
-         * Devuelve el prototipo de objetoDom.
+         * Asigna un ID a cada elemento para identificarlo en los diferentes objetos como los metadatos o el (futuro) caché.
          */
-        this.prototipo=function() {
-            return objetoDom.prototype;
-        };
+        function actualizarIds() {
+            for(var i=0;i<elementos.length;i++)
+                if(!elementos[i].hasOwnProperty("_dom_id"))
+                    elementos[i]._dom_id=id++;
+        }
 
         /**
-         * Determina si un objeto es instancia de objetoDom.
+         * Devuelve el ID interno del elemento.
          */
-        this.esInstancia=function(obj) {
-            return obj instanceof objetoDom;
+        this.id=function() {
+            return elementos[0]._dom_id;
         };
 
         /**
@@ -374,6 +403,8 @@
                     for(var i=0;i<div.children.length;i++) elementos.push(div.children[i]);
                 }
             }
+
+            actualizarIds();
         })(consulta,buscarEn,busquedaProfunda);
     }
 
@@ -381,7 +412,7 @@
      * Atajo para crear y devolver una instancia de objetoDom.
      * @param {String} consulta 
      */
-    window.dom=function(consulta) {
+    window["$"]=function(consulta) {
         if(typeof consulta==="undefined") return new objetoDom();
 
         //Recibimos otra instancia, devolver para seguir trabajando con ella directamente
@@ -390,5 +421,54 @@
         if(typeof consulta!=="string"&&!(consulta instanceof Element)&&consulta!==window&&consulta!==document) return null;
 
         return new objetoDom(consulta);
+    };
+
+    /**
+     * Objeto público con funciones útiles.
+     */
+    window["dom"]={
+        /**
+         * Devuelve el prototipo de objetoDom.
+         */
+        prototipo:function() {
+            return objetoDom.prototype;
+        },
+
+        /**
+         * Agrega un nuevo método a las instancias de objetoDom.
+         */
+        agregarMetodo:function(nombre,funcion) {
+            dom.prototipo()[nombre]=funcion;
+        },
+
+        /**
+         * Determina si un objeto es instancia de objetoDom.
+         */
+        esInstancia:function(obj) {
+            return obj instanceof objetoDom;
+        },
+
+        /**
+         * Determina si un objeto es un elemento del DOM (Element).
+         */
+        esElemento:function(obj) {
+            return obj instanceof Element;
+        },
+
+        //Utilidades varias
+
+        /**
+         * Determina si una expresión es indefinida o no.
+         */
+        esIndefinido:function(expr) {
+            return typeof expr==="undefined";
+        },
+
+        /**
+         * Determina si un objeto es un array.
+         */
+        esArray:function(obj) {
+            return Array.isArray(obj);
+        }
     };
 })();

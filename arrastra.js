@@ -12,60 +12,89 @@
 (function() {
     "use strict";
 
-    var proto=dom().prototipo(),
-        ventana=dom(window),
-        doc=dom(document);
+    var $ventana=$(window),
+        $doc=$(document),
+        opcionesArrastre={},
+        opcionesColocacion={};
 
-    var moverX,moverY,
-    moverDragover=function(e) {
-        e=(e||event);
-        e.preventDefault();
-        e.dataTransfer.dropEffect="move";
-    },
-    moverDragstart=function(e) {
-        e=e||event;
-        moverX=e.clientX;
-        moverY=e.clientY;
+    function removerArrastre(elem) {
 
-        //Remover el elemento "fantasma"
-        e.dataTransfer.setDragImage(new Image,0,0);
-        //Implementar dragover en el documento para controlar el cursor
-        doc.evento("dragover",moverDragover);
-    },
-    moverDrag=function(e) {
-        e=e||event;
-        if(e.clientX==0&&e.clientY==0) return;
+    }
+
+    function removerColocacion(elem) {
+
+    }
+
+    function dragStart(e) {
+        var $t=$(this),
+            opciones=opcionesArrastre[$t.id()],
+            $elem=$t.metadatos("arrastra");
+
+        $elem.agregarClase("foxtrot-arrastrando");
         
-        var elem=dom(this).metadatos("arrastra"),
-            dx=e.clientX-moverX,
-            dy=e.clientY-moverY;
-        moverX=e.clientX;
-        moverY=e.clientY;
-
-        var pos=elem.posicionAbsoluta(),
-            ancho=elem.ancho(),
-            alto=elem.alto(),
-            anchoVentana=ventana.ancho(),
-            altoVentana=ventana.alto();
-
-        if(pos.x+dx<=0||pos.y+dy<=0||pos.x+dx+ancho>=anchoVentana||pos.y+dy+alto>=altoVentana) {
-            //Fuera de los límites
-            return;
+        if(opciones.icono) {
+            var ic=opciones.icono;
+            if(dom.esInstancia(ic)) {
+                ic=ic.obtener(0);
+            } else if(!(ic instanceof Element)) {
+                ic=$("<img>").atributo("src",ic).obtener(0);
+            }               
+            e.dataTransfer.setDragImage(ic,-5,-5);
         }
+        
+        if(opciones.datos) {
+            e.dataTransfer.setData("text/plain",opciones.datos);
+        }
+    }
+    
+    function dragEnd(e) {
+        var $t=$(this),
+            opciones=opcionesArrastre[$t.id()];
 
-        elem.estilo({
-            left:pos.x+dx,
-            top:pos.y+dy
-        });
-    },
-    moverDragend=function(e) {
-        doc.removerEvento("dragover",moverDragover);
-    };
+        $t.removerClase("foxtrot-arrastrando");
+    }
+
+    function dragEnter(e) {
+        var $t=$(this),
+            opciones=opcionesColocacion[$t.id()];
+        
+        $t.agregarClase("foxtrot-arrastrando-sobre");
+    }
+
+    function dragOver(e) {
+        var $t=$(this),
+            opciones=opcionesColocacion[$t.id()];
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        e.dataTransfer.dropEffect="move";     
+    }
+
+    function dragLeave(e) {
+        var $t=$(this),
+            opciones=opcionesColocacion[$t.id()];
+        
+        $t.removerClase("foxtrot-arrastrando-sobre");        
+    }
+
+    function drop(e) {
+        var $t=$(this),
+            opciones=opcionesColocacion[$t.id()];
+        
+        $t.removerClase("foxtrot-arrastrando-sobre");  
+
+        console.log(1,e.dataTransfer.getData("text/plain"));   
+
+        e.preventDefault();
+        e.stopPropagation();           
+    }
 
     /**
      * Hace a los elementos arrastrables. Establecer opciones=false para deshabilitar.
      */
-    proto.arrastrable=function(opciones) {
+    dom.agregarMetodo("arrastrable",function(opciones) {
+        if(dom.esIndefinido(opciones)) opciones={};
         var predeterminados={
             //Mantenemos los nombres de eventos en inglés
             dragstart:null,
@@ -74,7 +103,8 @@
             asa:null,
             icono:null,
             mover:false,
-            limite:null
+            limite:null,
+            datos:null
         };
         opciones=Object.assign(predeterminados,opciones);
 
@@ -100,38 +130,135 @@
 
         var elems=this.obtener();
         for(var i=0;i<elems.length;i++) {
-            var elem=dom(elems[i]);
+            var $elem=$(elems[i]);
 
-            var arrastrable=elem;
+            removerArrastre($elem);
+            
+            opcionesArrastre[$elem.id()]=opciones;
+
+            var $arrastrable=$elem;
             if(typeof opciones.asa==="string") {
-                arrastrable=elem.buscar(opciones.asa);
-            } else if(dom().esInstancia(opciones.asa)) {
-                arrastrable=opciones.asa;
+                $arrastrable=$elem.buscar(opciones.asa);
+            } else if(dom.esInstancia(opciones.asa)) {
+                $arrastrable=opciones.asa;
+            } else if(dom.esElemento(opciones.asa)) {
+                $arrastrable=$(opciones.asa);
             }
 
-            arrastrable.propiedad("draggable",true)
+            $arrastrable.propiedad("draggable",true)
                 .agregarClase("foxtrot-arrastrable");
 
-            arrastrable.metadatos("arrastra",elem);
+            $arrastrable.metadatos("arrastra",$elem);
 
-            if(opciones.dragstart) arrastrable.evento("dragstart",opciones.dragstart);
-            if(opciones.drag) arrastrable.evento("drag",opciones.drag);
-            if(opciones.dragend) arrastrable.evento("dragend",opciones.dragend);
+            if(opciones.dragstart) $arrastrable.evento("dragstart",opciones.dragstart);
+            if(opciones.drag) $arrastrable.evento("drag",opciones.drag);
+            if(opciones.dragend) $arrastrable.evento("dragend",opciones.dragend);
+
+            $arrastrable.evento("dragstart",dragStart)
+                .evento("dragend",dragEnd);
         }
-    };
+
+        return this;
+    });
 
     /**
      * Hace que los elementos admitan que se suelte otro elemento dentro de sí. Establecer opciones=false para deshabilitar. 
      */
-    proto.aceptarColocacion=function(opciones) {
+    dom.agregarMetodo("aceptarColocacion",function(opciones) {
+        if(dom.esIndefinido(opciones)) opciones={};
+        var predeterminados={
+            //Mantenemos los nombres de eventos en inglés
+            dragenter:null,
+            dragover:null,
+            dragleave:null,
+            drop:null
+        };
+        opciones=Object.assign(predeterminados,opciones);
 
-    };
+        var elems=this.obtener();
+        for(var i=0;i<elems.length;i++) {
+            var $elem=$(elems[i]);
+
+            removerColocacion($elem);
+            
+            opcionesColocacion[$elem.id()]=opciones;
+            
+            $elem.agregarClase("foxtrot-receptor-arrastrable");
+
+            if(opciones.dragenter) $elem.evento("dragenter",opciones.dragenter);
+            if(opciones.dragover) $elem.evento("dragover",opciones.dragover);
+            if(opciones.dragleave) $elem.evento("dragleave",opciones.dragleave);
+            if(opciones.drop) $elem.evento("drop",opciones.drop);
+
+            $elem.evento("dragenter",dragEnter)
+                .evento("dragover",dragOver)
+                .evento("dragleave",dragLeave)
+                .evento("drop",drop);
+        }
+
+        return this;
+    });
 
     /**
      * Hace que los elementos acepten arrastrar y soltar archivos desde el escritorio del cliente sobre ellos. Establecer opciones=false para deshabilitar.
      */
-    proto.aceptarArchivoColocado=function(opciones) {
+    dom.agregarMetodo("aceptarArchivoColocado",function(opciones) {
 
-    };
+
+        return this;
+    });
+
+    //Implementación automática de arrastre
+    
+    var moverX,moverY;
+
+    function moverDragover(e) {
+        e=(e||event);
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect="move";
+    }
+
+    function moverDragstart(e) {
+        e=e||event;
+        moverX=e.clientX;
+        moverY=e.clientY;
+
+        //Remover el elemento "fantasma"
+        e.dataTransfer.setDragImage(new Image,0,0);
+        //Implementar dragover en el documento para controlar el cursor
+        $doc.evento("dragover",moverDragover);
+    }
+
+    function moverDrag(e) {
+        e=e||event;
+        if(e.clientX==0&&e.clientY==0) return;
+        
+        var $elem=$(this).metadatos("arrastra"),
+            dx=e.clientX-moverX,
+            dy=e.clientY-moverY;
+        moverX=e.clientX;
+        moverY=e.clientY;
+
+        var pos=$elem.posicionAbsoluta(),
+            ancho=$elem.ancho(),
+            alto=$elem.alto(),
+            anchoVentana=$ventana.ancho(),
+            altoVentana=$ventana.alto();
+
+        if(pos.x+dx<=0||pos.y+dy<=0||pos.x+dx+ancho>=anchoVentana||pos.y+dy+alto>=altoVentana) {
+            //Fuera de los límites
+            return;
+        }
+
+        $elem.estilo({
+            left:pos.x+dx,
+            top:pos.y+dy
+        });
+    }
+
+    function moverDragend(e) {
+        $doc.removerEvento("dragover",moverDragover);
+    }
 })();
 

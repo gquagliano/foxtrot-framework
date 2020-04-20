@@ -4,9 +4,25 @@
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
  */
- 
- .foxtrot-barra-herramientas {
+
+html,body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+body {
+    background: url(img/fondo.png);
+}
+#foxtrot-cuerpo {
+    background: #fff;
+    padding: 40px 0;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1);
+}
+.foxtrot-barra-herramientas {
     position: fixed;
+    z-index: 999;
     left: 20px;
     top: 20px;
     background-color: #fff;

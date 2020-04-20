@@ -28,3 +28,6 @@ function componente() {
 
     })();
 }
+
+//Exportar para Closure
+window["componente"]=componente;

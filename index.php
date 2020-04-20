@@ -20,12 +20,14 @@
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
+    <div id="foxtrot-cuerpo"></div>
     
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
+    <script src="util.js"></script>
     <script src="dom.js"></script>
     <script src="arrastra.js"></script>
     <link rel="stylesheet" href="dom.css">

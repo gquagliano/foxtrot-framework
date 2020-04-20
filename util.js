@@ -7,6 +7,9 @@
 
  "use strict";
 
-$(window).evento("load",function() {
-    ui.ejecutar();
-});
+/**
+ * Utilidades varias.
+ */
+var util={
+    
+};

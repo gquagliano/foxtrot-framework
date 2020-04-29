@@ -6,476 +6,205 @@
  */
 
  /**
- * Gestor de acceso al DOM, ideado para abastraer el acceso al mismo para abreviar el código y por cuestiones de intercompatibilidad
- * entre navegadores (como jQuery, pero ultra-fino--y no está basado en jQuery). Debe ser compatible con navegadores modernos, pero escrita en ES5.
+ * Extiende los prototipos del DOM.
  */
 (function() {
     "use strict";
 
-    var id=0,
+    var id=1,
         almacenMetadatos={};
 
+    ////// Métodos para los elementos del DOM
+
     /**
-     * Establece o devuelve los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     * Devuelve el ID del elemento, inicializandolo si es necesario.
      */
-    function metadatos(elemento,clave,valor) {
-        //if(dom.esInstancia(elemento)) elemento=elemento.obtener(0);
-
-        //if(!elemento.hasOwnProperty("_dom_id")) elemento._dom_id=id++;
-        var id=elemento._dom_id;
-
-        if(!almacenMetadatos.hasOwnProperty(id)) almacenMetadatos[id]={};
-        var obj=almacenMetadatos[id];
-
-        if(!dom.esIndefinido(clave)&&!obj.hasOwnProperty(clave)) obj[clave]=null;
-
-        if(dom.esIndefinido(clave)) return obj;
-
-        if(dom.esIndefinido(valor)) return obj[clave];
-
-        obj[clave]=valor;
-
-        return obj[clave];
-    }
+    Node.prototype.obtenerId=function() {
+        if(util.esIndefinido(this._id)) this._id=id++;
+        return this._id;    
+    };
 
     /**
      * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
      */
-    function inicializarMetadatos(elemento) {
-        var obj=metadatos(elemento);
-        obj={
-            eventos:{},
-            variables:{}
-        };
-    }
-
-    function objetoDom(consulta,buscarEn,busquedaProfunda) {
-        //Nota sobre la documentación:
-        //Algunos métodos trabajan sobre elementos únicos, otros pueden trabajar sobre todos los elementos seleccionados. Esto debe diferenciarse
-        //en la documentación de cada método.
-
-        var elementos=[],    
-            d=document;        
-
-        /**
-         * Devuelve la cantidad de elementos contenidos en esta instancia.
-         */
-        this.cantidad=function() {
-            return elementos.length;
-        };
-
-        /**
-         * Devuelve el elemento # i, o un array de elementos si i no está definido. Devuelve instancias de Element (no de objetoDom).
-         */
-        this.obtener=function(i) {
-            if(typeof i!=="number") return elementos;
-            return elementos[i];
-        };
-
-        /**
-         * Agrega los elementos especificados a los elementos de esta instancia.
-         */
-        this.anexar=function(elemento) {
-            elemento=$(elemento);
-            var elemAnexar=elemento.obtener();
-            for(var i=0;i<elementos.length;i++) {
-                var e=elementos[i];
-                for(var j=0;j<elemAnexar.length;j++) {
-                    var f=elemAnexar[j];
-                    e.appendChild(f);
-                }
-            }
-            return this;
-        };
-
-        /**
-         * Determina si todos los elementos coinciden con la consulta.
-         */
-        this.es=function(consulta) {
-            //TODO
-        };
-
-        /**
-         * Escucha un evento para todos los elementos de esta instancia. Acepta un array de funciones en funcion.
-         */    
-        this.evento=function(nombre,funcion,captura) {
-            if(typeof captura==="undefined") captura=false;
-
-            for(var i=0;i<elementos.length;i++) {
-                var elem=elementos[i];
-
-                inicializarMetadatos(elem);
-                var eventos=metadatos(elem,"eventos");
-                if(eventos===null) eventos=[];
-                if(!eventos.hasOwnProperty(nombre)) eventos[nombre]=[];
-
-                //Eventos especiales
-                if(elem===document&&nombre=="ready") {
-                    nombre="DOMContentLoaded";
-                    captura=false;
-                } else if(elem===window&&nombre=="load") {
-                    captura=false;
-                }
-
-                if(Array.isArray(funcion)) {
-                    for(var j=0;j<funcion.length;j++) {
-                        elem.addEventListener(nombre,funcion[j],captura);
-                        eventos[nombre].push(funcion[j]);
-                    }
-                } else  if(typeof funcion==="function") {
-                    elem.addEventListener(nombre,funcion,captura);
-                    eventos[nombre].push(funcion);
-                }
-            }
-
-            return this;
-        };
-
-        /**
-         * Remueve un evento, o todos los eventos si funcion no está definido. Acepta un array de funciones en funcion.
-         */
-        this.removerEvento=function(nombre,funcion) {
-            for(var i=0;i<elementos.length;i++) {
-                var elem=elementos[i];
-
-                if(Array.isArray(funcion)) {
-                    for(var j=0;j<funcion.length;j++)
-                        if(typeof funcion[j]==="function") elem.removeEventListener(nombre,funcion[j]);
-                } else if(typeof funcion==="function") {
-                    elem.removeEventListener(nombre,funcion);
-                }
-
-                //TODO remover todo
-                //TODO remover funcion de metadatos
-            }
-            return this;
-        };
-
-        /**
-         * Devuelve un objeto {x,y} con la posición relativa del elemento.
-         */
-        this.posicion=function() {
-            //TODO
-        };
-        
-        /**
-         * Devuelve un objeto {x,y} con la posición absoluta del elemento.
-         */
-        this.posicionAbsoluta=function() {
-            return {
-                x: elementos[0].offsetLeft,
-                y: elementos[0].offsetTop
-            };
-        };
-
-        function normalizarValorCss(valor) {
-            if(typeof valor==="number") valor=valor+"px";
-            return valor;
-        }
-
-        /**
-         * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
-         */
-        this.estilo=function(estilo,valor) {
-            if(typeof estilo==="string"&&typeof valor==="undefined") {
-                return elementos[i].style[estilo];
-            } else if(typeof estilo==="object") {
-                for(var clave in estilo) {
-                    if(!estilo.hasOwnProperty(clave)) continue;
-                    this.estilo(clave,estilo[clave]);
-                }
-            } else {
-                for(var i=0;i<elementos.length;i++) elementos[i].style[estilo]=normalizarValorCss(valor);
-            }
-            return this;
-        };
-
-        /**
-         * Devuelve el ancho del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el ancho de la página. Si el elemento
-         * es window, devolverá el ancho de la ventana (viewport).
-         */
-        this.ancho=function() {
-            if(elementos[0]===document) return document.body.offsetWidth;
-            if(elementos[0]===window) return window.innerWidth;
-            return elementos[0].offsetWidth;
-        };
-
-        /**
-         * Devuelve el alto del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el alto de la página. Si el elemento
-         * es window, devolverá el alto de la ventana (viewport).
-         */
-        this.alto=function() {
-            if(elementos[0]===document) return document.body.offsetHeight;
-            if(elementos[0]===window) return window.innerHeight;
-            return elementos[0].offsetHeight;
-        };
-
-        /**
-         * Devuelve o establece el id del elemento.
-         */
-        this.id=function(valor) {
-            if(typeof valor==="undefined") return this.atributo("id");
-            this.atributo("id",valor);
-            return this;
-        };
-
-        /**
-         * Agrega una clase css a los elementos. Soporta múltiples clases separadas por espacios.
-         */
-        this.agregarClase=function(clase) {
-            clase=clase.split(" ");
-            for(var i=0;i<elementos.length;i++)
-                for(var j=0;j<clase.length;j++)
-                    elementos[i].classList.add(clase[j]);
-            return this;
-        };
-
-        /**
-         * Remueve una clase css de los elementos. Soporta RegExp o múltiples clases separadas por espacios.
-         */
-        this.removerClase=function(clase) {
-            if(clase instanceof RegExp) {
-                for(var i=0;i<elementos.length;i++) 
-                    for(var j=0;j<elementos[i].classList.length;j++)
-                        if(clase.test(elementos[i].classList[j]))
-                            elementos[i].classList.remove(elementos[i].classList[j]);
-                return this;
-            }
-
-            clase=clase.split(" ");
-            for(var i=0;i<elementos.length;i++)
-                for(var j=0;j<clase.length;j++)
-                    elementos[i].classList.remove(clase[j]);
-            return this;
-        };
-
-        /**
-         * Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
-         */
-        this.alternarClase=function(clase) {
-            if(clase instanceof RegExp) {
-                for(var i=0;i<elementos.length;i++) 
-                    for(var j=0;j<elementos[i].classList.length;j++)
-                        if(clase.test(elementos[i].classList[j]))
-                            elementos[i].classList.toggle(elementos[i].classList[j]);
-                return this;
-            }
-
-            clase=clase.split(" ");
-            for(var i=0;i<elementos.length;i++)
-                for(var j=0;j<clase.length;j++)
-                    elementos[i].classList.toggle(clase[j]);
-            return this;
-        };
-
-        /**
-         * Busca en todo el árbol de descendencia del elemento.
-         */
-        this.buscar=function(consulta) {
-            return new objetoDom(consulta,elementos[0]);
-        };
-
-        /**
-         * Busca en los hijos del elemento.
-         */
-        this.hijos=function(consulta) {
-            return new objetoDom(consulta,elementos[0],false);
-        };
-
-        /**
-         * Devuelve el padre del elemento o, si consulta está definido, busca en la ascendencia hasta dar con el elemento que coincida o con body.
-         */
-        this.padre=function(consulta) {
-            if(typeof consulta==="undefined") {
-                //Devolver el padre
-                return new objectDom(elementos[0].parent);
-            }
-
-            //Buscar el padre que coincida con consulta
-            //TODO
-            
-            return new objetoDom(padre);
-        };
-
-        /**
-         * Obtiene o establece una propiedad (atributo sin valor) de los elementos.
-         */
-        this.propiedad=function(nombre,valor) {
-            if(typeof valor==="boolean") this.atributo(nombre,valor);
-            return this;
-        };
-
-        /**
-         * Obtiene o establece el valor de un atributo de los elementos.
-         */
-        this.atributo=function(nombre,valor) {
-            for(var i=0;i<elementos.length;i++) elementos[i][nombre]=valor;
-            return this;
-        };
-
-        /**
-         * Obtiene o establece el texto de los elementos.
-         */
-        this.texto=function(valor) {
-            for(var i=0;i<elementos.length;i++) elementos[i].innerText=valor;
-            return this;
-        };
-
-        /**
-         * Obtiene o establece el html de los elementos.
-         */
-        this.html=function(valor) {
-            for(var i=0;i<elementos.length;i++) elementos[i].innerHTML=valor;
-            return this;
-        };
-
-        /**
-         * Limpia los hijos y texto de los elementos.
-         */
-        this.limpiar=function() {
-            for(var i=0;i<elementos.length;i++) elementos[i].innerHTML=null;
-            return this;
-        };
-
-        /**
-         * Devuelve o establece un metadato del elemento (valores internos de Dom).
-         */
-        this.metadatos=function(nombre,valor) {
-            if(typeof valor==="undefined") {
-                return metadatos(elementos[0],nombre);
-            }
-
-            for(var i=0;i<elementos.length;i++) {
-                metadatos(elementos[i],nombre,valor);
-            }
-            return this;
-        };
-
-        /**
-         * Devuelve o establece un atributo data de los elementos.
-         */
-        this.data=function(nombre,valor) {
-            if(typeof valor==="undefined") {
-                return elementos[0].dataset[nombre];
-            }
-
-            for(var i=0;i<elementos.length;i++) elementos[i].dataset[nombre]=valor;
-            return this;
-        };
-
-        /**
-         * Asigna un ID a cada elemento para identificarlo en los diferentes objetos como los metadatos o el (futuro) caché.
-         */
-        function actualizarIds() {
-            for(var i=0;i<elementos.length;i++)
-                if(!elementos[i].hasOwnProperty("_dom_id"))
-                    elementos[i]._dom_id=id++;
-        }
-
-        /**
-         * Devuelve el ID interno del elemento.
-         */
-        this.id=function() {
-            return elementos[0]._dom_id;
-        };
-
-        /**
-         * Constructor.
-         */
-        (function(consulta,buscarEn,busquedaProfunda) {
-            if(typeof consulta==="undefined") return;
-            if(typeof buscarEn==="undefined") buscarEn=null;
-            if(typeof busquedaProfunda==="undefined") busquedaProfunda=true;
-
-            if(consulta instanceof Element||consulta===window||consulta===document) {
-                //Elemento
-                elementos.push(consulta);
-            } else if(typeof consulta==="string") {
-                if(/^[a-zA-Z0-9#\.\s-]+$/.test(consulta)) {
-                    //Selector            
-                    var nodos=(buscarEn||d).querySelectorAll(consulta);
-                    elementos=Array.from(nodos);
-                    if(!busquedaProfunda) elementos=elementos.filter(e=>e.parent===buscarEn);
-                } else {
-                    //Código (asumimos html válido)
-                    var div=d.createElement("div");
-                    div.innerHTML=consulta;
-                    for(var i=0;i<div.children.length;i++) elementos.push(div.children[i]);
-                }
-            }
-
-            actualizarIds();
-        })(consulta,buscarEn,busquedaProfunda);
-    }
-
-    /**
-     * Atajo para crear y devolver una instancia de objetoDom.
-     * @param {String} consulta 
-     */
-    window["$"]=function(consulta) {
-        if(typeof consulta==="undefined") return new objetoDom();
-
-        //Recibimos otra instancia, devolver para seguir trabajando con ella directamente
-        if(consulta instanceof objetoDom) return consulta;
-        
-        if(typeof consulta!=="string"&&!(consulta instanceof Element)&&consulta!==window&&consulta!==document) return null;
-
-        return new objetoDom(consulta);
+    Node.prototype.inicializarMetadatos=function() {
+        var obj=this.metadatos(elemento);
+        if(!obj.hasOwnProperty("eventos")) obj.eventos={};
+        if(!obj.hasOwnProperty("valores")) obj.valores={};
     };
 
     /**
-     * Objeto público con funciones útiles.
+     * Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
      */
-    window["dom"]={
-        /**
-         * Devuelve el prototipo de objetoDom.
-         */
-        prototipo:function() {
-            return objetoDom.prototype;
-        },
+    Node.prototype.metadato=function(clave,valor) {
+        var id=this.obtenerId();
 
-        /**
-         * Agrega un nuevo método a las instancias de objetoDom.
-         */
-        agregarMetodo:function(nombre,funcion) {
-            dom.prototipo()[nombre]=funcion;
-        },
+        if(!almacenMetadatos.hasOwnProperty(id)) almacenMetadatos[id]={};
+        var obj=almacenMetadatos[id];
 
-        /**
-         * Determina si un objeto es instancia de objetoDom.
-         */
-        esInstancia:function(obj) {
-            return obj instanceof objetoDom;
-        },
+        if(!util.esIndefinido(clave)&&!obj.hasOwnProperty(clave)) obj[clave]=null;
 
-        /**
-         * Determina si un objeto es un elemento del DOM (Element).
-         */
-        esElemento:function(obj) {
-            return obj instanceof Element;
-        },
+        if(util.esIndefinido(clave)) return obj;
 
-        //Utilidades varias
+        if(util.esIndefinido(valor)) return obj[clave];
 
-        /**
-         * Determina si una expresión es indefinida o no.
-         */
-        esIndefinido:function(expr) {
-            return typeof expr==="undefined";
-        },
+        obj[clave]=valor;
+        return this;
+    };
 
-        /**
-         * Determina si un objeto es un array.
-         */
-        esArray:function(obj) {
-            return Array.isArray(obj);
-        },
+    /**
+     * Devuelve todos los metadatos del elemento.
+     */
+    Node.prototype.metadatos=function() {
+        return this.metadato();
+    };
 
-        /**
-         * Clona un objeto.
-         */
-        clonar:function(obj) {
-            return Object.assign({},obj);
+    /**
+     * Acceso directo a querySelectorAll(sel).
+     */
+    Node.prototype.buscar=function(sel) {
+        return this.querySelectorAll(sel);
+    };
+
+    /**
+     * Determina si el elemento coincide con el filtro. Propiedades de filtro:
+     * clase            Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.
+     * nombre           Atributo name. Coincidencia exacta o RegExp.
+     * id               Atributo id. Coincidencia exacta o RegExp.
+     * etiqueta         Nombre de tag. Coincidencia exacta o RegExp.
+     * atributos        Valor de atributos. Objeto {atributo:valor}. Coincidencia exacta o RegExp.
+     * propiedades      Propiedades (readonly, disabled, etc.). Cadena o Array. Coincidencia exacta.
+     * datos            Datos (dataset). Objeto {nombre:valor}. Coincidencia exacta o RegExp.
+     * metadatos        Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
+     * tipo             Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
+     * Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos se evalúan como OR. Se evalúan como string (no es sensible al tipo).
+     */
+    Node.prototype.es=function(filtro) {
+        var resultado=false;
+
+        function coincide(origen,valor) {
+            if(typeof origen!=="string") origen=new Object(origen).toString();
+            if(typeof valor!=="string"&&!(valor instanceof RegExp)) valor=new Object(valor).toString();
+            return (typeof valor==="string"&&origen.toLowerCase()==valor.toLowerCase())||(valor instanceof RegExp&&valor.test(origen));
         }
+
+        if(filtro.hasOwnProperty("clase")) {
+            if(typeof filtro.clase==="string") {
+                resultado=this.classList.contains(filtro.clase);
+            } else if(filtro.clase instanceof RegExp) {
+                for(var i=0;i<this.classList.length;i++) {
+                    if(filtro.clase.test(this.classList[i])) {
+                        resultado=true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(filtro.hasOwnProperty("nombre")) {
+            resultado=coincide(this.name,filtro.nombre);
+        }
+
+        if(filtro.hasOwnProperty("id")) {
+            resultado=coincide(this.id,filtro.id);
+        }
+
+        if(filtro.hasOwnProperty("etiqueta")) {
+            resultado=coincide(this.nodeName,filtro.etiqueta);
+        }
+
+        /*function buscarObjeto(origen,propiedad,objeto) {
+            for(var i=0;i<origen.length;i++) {
+                for(var j in objeto) {
+                    if(!objeto.hasOwnProperty(j)) continue;
+                    
+                    var v=origen[i],
+                        f=objeto[j];
+                    if(propiedad) v=v[propiedad];
+                    v=v.toLowerCase();
+
+                    if(coincide(v,f)) return true;
+                }            
+            }
+            return false;
+        }*/
+
+        function buscarObjeto(origen,propiedad,objeto) {
+            for(var i in objeto) {
+                if(!objeto.hasOwnProperty(i)||!origen.hasOwnProperty(i)) continue;
+                
+                var v=origen[i],
+                    f=objeto[i];
+                if(propiedad) v=v[propiedad];
+                v=v.toLowerCase();
+
+                if(coincide(v,f)) return true;
+            }
+            return false;
+        }
+
+        function buscarArray(origen,propiedad,array) {
+            for(var i=0;i<origen.length;i++) {
+                for(var j=0;j<array.length;j++) {
+                    var v=origen[i],
+                        f=array[j];
+                    if(propiedad) v=v[propiedad];
+                    v=v.toLowerCase();
+
+                    if(coincide(v,f)) return true;
+                }            
+            }
+            return false;
+        }
+
+        if(filtro.hasOwnProperty("atributos")) {
+            resultado=buscarObjeto(this.attributes,"value",filtro.atributos);
+        }
+
+        if(filtro.hasOwnProperty("propiedades")) {
+            var p=typeof filtro.propiedades==="string"?[filtro.propiedades]:filtro.propiedades;
+            resultado=buscarArray(this.attributes,"name",p);
+        }
+
+        if(filtro.hasOwnProperty("datos")) {
+            resultado=buscarObjeto(this.dataset,null,filtro.datos);
+        }
+
+        if(filtro.hasOwnProperty("metadatos")) {
+            resultado=buscarObjeto(this.metadatos(),null,filtro.metadatos);
+        }
+
+        if(filtro.hasOwnProperty("tipo")) {
+            resultado=coincide(this.nodeType,filtro.tipo);
+        }
+
+        return resultado;
+    };
+
+    /**
+     * Determina si el nodo es un campo de formulario.
+     */
+    Node.prototype.esCampo=function() {
+        return this.es({
+            etiqueta:/(input|select|textarea|button)/i
+        });
+    };
+
+    /**
+     * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
+     */
+    Node.prototype.padre=function(filtro) {
+
+    };
+
+    ////// Métodos para NodeList
+
+    /**
+     * Filtra los elementos y devuelve un nuevo listado.
+     */
+    NodeList.prototype.filtrar=function(filtro,negado) {
+        if(util.esIndefinido(negado)) negado=false;
+
     };
 })();
+

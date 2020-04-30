@@ -7,7 +7,7 @@
 
  "use strict";
 
-$(window).evento("load",function() {
+window.evento("load",function() {
     ui.ejecutar();
     editor.activar();
 });

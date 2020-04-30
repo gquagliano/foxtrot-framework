@@ -28,7 +28,7 @@
      * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
      */
     Node.prototype.inicializarMetadatos=function() {
-        var obj=this.metadatos(elemento);
+        var obj=this.metadatos(this);
         if(!obj.hasOwnProperty("eventos")) obj.eventos={};
         if(!obj.hasOwnProperty("valores")) obj.valores={};
     };
@@ -60,6 +60,22 @@
     };
 
     /**
+     * Establece o devuelve datos (dataset) del elemento.
+     */
+    Node.prototype.dato=function(clave,valor) {
+        if(util.esIndefinido(valor)) return this.dataset[clave];
+        this.dataset[clave]=valor;
+        return this;
+    };
+
+    /**
+     * Devuelve todos los datos (dataset) del elemento.
+     */
+    Node.prototype.dato=function() {
+        return Object.assign({},this.dataset);
+    };
+
+    /**
      * Acceso directo a querySelectorAll(sel).
      */
     Node.prototype.buscar=function(sel) {
@@ -67,7 +83,8 @@
     };
 
     /**
-     * Determina si el elemento coincide con el filtro. Propiedades de filtro:
+     * Determina si el elemento coincide con el filtro (¿por qué tiene que ser un selector como string?).
+     * Propiedades de filtro:
      * clase            Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.
      * nombre           Atributo name. Coincidencia exacta o RegExp.
      * id               Atributo id. Coincidencia exacta o RegExp.
@@ -197,6 +214,147 @@
 
     };
 
+    /**
+     * Agrega una clase css a los elementos. Soporta múltiples clases separadas por espacios.
+     */
+    Node.prototype.agregarClase=function(clase) {
+        var t=this;
+        clase=clase.split(" ");
+        clase.forEach(function(v) {
+            t.classList.add(v);
+        });
+        return this;
+    };
+
+    /**
+     * Remueve una clase css de los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     */
+    Node.prototype.removerClase=function(clase) {
+        var t=this;
+
+        if(clase instanceof RegExp) {
+            var remover=[];
+            this.classList.forEach(function(v) {
+                if(clase.test(v)) remover.push(v);
+            });
+            remover.map(function(v) {
+                t.classList.remove(v);
+            });
+            return this;
+        }
+
+        clase=clase.split(" ");
+        clase.forEach(function(v) {
+            t.classList.remove(v);
+        });
+        return this;
+    };
+
+    /**
+     * Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     */
+    Node.prototype.alternarClase=function(clase) {
+        var t=this;
+
+        if(clase instanceof RegExp) {
+            var alternar=[];
+            this.classList.forEach(function(v) {
+                if(clase.test(v)) alternar.push(v);
+            });
+            alternar.map(function(v) {
+                t.classList.toggle(v);
+            });
+            return this;
+        }
+
+        clase=clase.split(" ");
+        clase.forEach(function(v) {
+            t.classList.toggle(v);
+        });
+        return this;
+    };
+
+    /**
+     * Establece o devuelve el valor de un atributo.
+     */
+    Node.prototype.atributo=function(nombre,valor) {
+        var atrib;
+
+        if(util.esIndefinido(valor)) {
+            atrib=this.attributes.getNamedItem(nombre);
+            return atrib?atrib.value:null;
+        }
+
+        atrib=document.createAttribute(nombre);
+        atrib.value=valor;
+        this.attributes.setNamedItem(atrib);
+
+        return this;
+    };
+
+    /**
+     * Remueve un atributo.
+     */
+    Node.prototype.removerAtributo=function(nombre) {
+        if(!this.attributes.getNamedItem(nombre)) return this;
+        this.attributes.removeNamedItem(nombre);
+        return this;
+    };
+
+    /**
+     * Devuelve o asigna una propiedad.
+     */
+    Node.prototype.propiedad=function(nombre,valor) {
+        if(util.esIndefinido(valor)) return this[nombre];
+        this[nombre]=valor;
+        return this;
+    };
+
+    ////// Eventos
+
+    EventTarget.prototype.evento=function(nombre,funcion,captura) {
+        //Usamos un ID para poder encapsularla pero aún así poder identificar la función para removerla en removerEvento
+        if(util.esIndefinido(funcion._id)) funcion._id=id++;
+
+        var fn=function(ev) {
+            funcion.call(this,ev);
+        };
+
+        //Almacenar para poder remover todo con removerEvento
+        this.inicializarMetadatos();
+        var meta=this.metadato("eventos");
+        if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
+        meta[nombre][funcion._id]=[funcion,fn]; 
+
+        this.addEventListener(nombre,fn,captura);
+
+        return this;
+    };
+
+    EventTarget.prototype.removerEvento=function(nombre,funcion) {
+        if(util.esIndefinido(nombre)) {
+            //Remover todos los eventos registrados mediante evento()
+
+            return this;
+        }
+
+        if(util.esIndefinido(funcion)) {
+            //Remover todos los eventos nombre registrados mediante evento()
+
+            return this;
+        }
+
+        //Buscar la funcion real
+        if(util.esIndefinido(funcion._id)) return this;
+        var meta=this.metadato("eventos");
+        if(!meta.hasOwnProperty(nombre)) return this;
+        var fn=meta[nombre][funcion._id][1];
+        
+        this.removeEventListener(nombre,fn);
+
+        return this;
+    };
+
     ////// Métodos para NodeList
 
     /**
@@ -205,6 +363,29 @@
     NodeList.prototype.filtrar=function(filtro,negado) {
         if(util.esIndefinido(negado)) negado=false;
 
+    };
+
+    //Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
+    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo",
+        "propiedad"].forEach(function(m) {
+            NodeList.prototype[m]=function() {
+                var args=Array.from(arguments);
+                this.forEach(function(elem) {
+                    elem[m].apply(elem,args);
+                });
+                return this;
+            };
+        });
+
+    ////// Otros métodos útiles
+
+    /**
+     * Implementación de forEach en objetos.
+     */
+    Object.prototype.forEach=function(fn) {
+        Object.keys(this).forEach(function(clave) {
+            fn.call(this,clave,this[clave]);
+        });
     };
 })();
 

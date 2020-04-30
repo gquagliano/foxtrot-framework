@@ -12,18 +12,16 @@
 (function() {
     "use strict";
 
-    var $ventana=$(window),
-        $doc=$(document),
-        opcionesArrastre={},
+    var opcionesArrastre={},
         opcionesColocacion={};
 
-    function removerArrastre(elem) {
+    Node.prototype.removerArrastre=function(elem) {
 
-    }
+    };
 
-    function removerColocacion(elem) {
+    Node.prototype.removerDestino=function(elem) {
 
-    }
+    };
 
     function dragStart(e) {
         var $t=$(this),

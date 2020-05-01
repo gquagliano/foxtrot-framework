@@ -17,25 +17,25 @@ var editor=new function() {
     var claseBotonesBarrasHerramientas="btn btn-sm";
 
     function configurarBarrasHerramientas() {
-        $("#foxtrot-barra-componentes").arrastrable({
-            asa:$("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
+        document.querySelector("#foxtrot-barra-componentes").arrastrable({
+            asa:document.querySelector("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
             mover:true
         });
     };
 
     function contruirBarrasHerramientas() {
-        var $barra=$("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas"),
+        var barra=document.querySelector("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas"),
             componentes=ui.obtenerComponentes();
         for(var nombre in componentes) {
             if(!componentes.hasOwnProperty(nombre)) continue;
-            $barra.anexar(
-                $("<button class='"+claseBotonesBarrasHerramientas+"'>")
+            barra.anexar(
+                document.crear("<button class='"+claseBotonesBarrasHerramientas+"'>")
                     .anexar(
-                        $("<img>")
+                        document.crear("<img>")
                             .atributo("src",componentes[nombre].config.icono)
                             .atributo("title",componentes[nombre].config.descripcion)
                     )
-                    .metadatos("componente",nombre)
+                    .metadato("componente",nombre)
                 );
         }
 
@@ -54,33 +54,33 @@ var editor=new function() {
         var componente=ui.crearComponente(datos.componente),
         datosElemento=componente.obtenerElemento();
 
-        $(this).anexar(datosElemento.$elemento);
+        this.anexar(datosElemento.elemento);
 
-        if(datosElemento.$contenedorHijos) {
-            datosElemento.$contenedorHijos.aceptarColocacion({
+        if(datosElemento.contenedorHijos) {
+            datosElemento.contenedorHijos.crearDestino({
                 drop:componenteSoltado
             });
         }
     }
 
-    function prapararArrastrarYSoltar() {
-        var componentes=$("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas button").obtener();
+    function prepararArrastrarYSoltar() {
+        var componentes=document.querySelectorAll("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas button");
         for(var i=0;i<componentes.length;i++) {
-            var $comp=$(componentes[i]);
-            $comp.arrastrable({
-                icono:$comp.buscar("img").obtener(0),
-                datos:JSON.stringify({componente:$comp.metadatos("componente")})
+            var comp=componentes[i];
+            comp.arrastrable({
+                icono:comp.buscar("img").obtener(0),
+                datos:JSON.stringify({componente:comp.metadato("componente")})
             });
         }
 
-        ui.$cuerpo.aceptarColocacion({
+        ui.obtenerCuerpo().crearDestino({
             drop:componenteSoltado
         });
     };
 
     this.activar=function() {
         contruirBarrasHerramientas();
-        prapararArrastrarYSoltar();
+        prepararArrastrarYSoltar();
         ui.establecerModoEdicion(true);
     };
 }();

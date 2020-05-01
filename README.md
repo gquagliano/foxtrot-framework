@@ -11,7 +11,7 @@ Dicen que [es una mala práctica](http://perfectionkills.com/whats-wrong-with-ex
 - No es una librería de propósito general, sino que trabajará en un ambiente controlado.
 - Este repositorio se llama experiental por algo.
 
-3. El API de todas las librerías se desarrolla íntegramente en español.
+3. El API de todas las librerías se desarrolla totalmente en español. Solo mantenemos los nombres internos (eventos, etc.) y siglas en inglés.
 
 ### Más información
 

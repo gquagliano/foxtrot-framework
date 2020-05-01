@@ -15,11 +15,11 @@ function componenteContenedor() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.$elemento=$("<div class='container vacio'>");
-        this.$contenedor=this.$elemento;
+        this.elemento=document.crear("<div class='container vacio'>");
+        this.contenedor=this.elemento;
 
-        this.datosElemento.$elemento=this.$elemento;
-        this.datosElemento.$contenedorHijos=this.$contenedor;
+        this.datosElemento.elemento=this.elemento;
+        this.datosElemento.contenedorHijos=this.contenedor;
         this.datosElemento.instancia=this;
 
         return this;
@@ -32,7 +32,7 @@ function componenteContenedor() {
 }
 componenteContenedor.prototype=new componente();
 
-var config=dom.clonar(configComponente);
+var config=util.clonar(configComponente);
 config.descripcion="Contenedor";
 config.icono="componentes/iconos/contenedor.png";
 

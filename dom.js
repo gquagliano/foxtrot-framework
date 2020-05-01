@@ -83,6 +83,22 @@
     };
 
     /**
+     * Agrega los elementos especificados a los elementos de esta instancia.
+     */
+    Node.prototype.anexar=function(elemento) {
+        if(elemento instanceof NodeList||elemento instanceof HTMLCollection) {
+            var t=this;
+            elemento.forEach(function(elem) {
+                t.appendChild(elem);
+            });
+            return this;
+        }
+
+        this.appendChild(elemento);
+        return this;
+    };
+
+    /**
      * Determina si el elemento coincide con el filtro (¿por qué tiene que ser un selector como string?).
      * Propiedades de filtro:
      * clase            Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.
@@ -310,6 +326,78 @@
         return this;
     };
 
+    /**
+     * Devuelve un objeto {x,y} con la posición relativa del elemento.
+     */
+    Node.prototype.posicion=function() {
+        //TODO
+    };
+    
+    /**
+     * Devuelve un objeto {x,y} con la posición absoluta del elemento.
+     */
+    Node.prototype.posicionAbsoluta=function() {
+        return {
+            x: this.offsetLeft,
+            y: this.offsetTop
+        };
+    };
+
+    /**
+     * Prepara un valor arbitrario para que pueda ser asignado como valor de un estilo css.
+     */
+    function normalizarValorCss(valor) {
+        if(typeof valor==="number") valor=valor+"px";
+        return valor;
+    }
+
+    /**
+     * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
+     */
+    Node.prototype.estilos=function(estilo,valor) {
+        if(util.esCadena(estilo)) {
+            if(util.esIndefinido(valor)) return this.style[estilo];
+            this.style[estilo]=normalizarValorCss(valor);
+            return this;
+        }        
+
+        //Objeto de estilos
+        var t=this;
+        estilo.forEach(function(clave,valor) {
+            t.estilos(clave,valor);
+        });
+
+        return this;
+    };
+
+    /**
+     * Devuelve el ancho del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el ancho de la página. Si el elemento
+     * es window, devolverá el ancho de la ventana (viewport).
+     */
+    Node.prototype.ancho=function() {
+        if(this===document) return document.body.offsetWidth;
+        if(this===window) return window.innerWidth;
+        return this.offsetWidth;
+    };
+
+    /**
+     * Devuelve el alto del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el alto de la página. Si el elemento
+     * es window, devolverá el alto de la ventana (viewport).
+     */
+    Node.prototype.alto=function() {
+        if(this===document) return document.body.offsetHeight;
+        if(this===window) return window.innerHeight;
+        return this.offsetHeight;
+    };
+
+    /**
+     * Devuelve a sí mismo. El único propósito es que pueda llamarse obtener(x) en un elemento tal como si fuera NodeList, ahorrando verificar el tipo primero.
+     */
+    Node.prototype.obtener=function(i) {
+        if(i==0) return this;
+        return null;
+    };
+
     ////// Eventos
 
     EventTarget.prototype.evento=function(nombre,funcion,captura) {
@@ -365,17 +453,29 @@
 
     };
 
+    /**
+     * Devuelve un elemento dado su índice, o null.
+     */
+    NodeList.prototype.obtener=function(i) {
+        if(i<0||i>=this.length) return null;
+        return this[i];
+    };
+
     //Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
-    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo",
-        "propiedad"].forEach(function(m) {
-            NodeList.prototype[m]=function() {
-                var args=Array.from(arguments);
-                this.forEach(function(elem) {
-                    elem[m].apply(elem,args);
-                });
-                return this;
-            };
-        });
+    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo","propiedad","estilos"].forEach(function(m) {
+        NodeList.prototype[m]=function() {
+            var args=Array.from(arguments);
+            this.forEach(function(elem) {
+                elem[m].apply(elem,args);
+            });
+            return this;
+        };
+    });
+
+    //Copiar métodos de Node a Window
+    ["obtenerId","inicializarMetadatos","metadato","metadatos","propiedad","ancho","alto"].forEach(function(m) {
+        Window.prototype[m]=Node.prototype[m];
+    });
 
     ////// Otros métodos útiles
 
@@ -383,9 +483,22 @@
      * Implementación de forEach en objetos.
      */
     Object.prototype.forEach=function(fn) {
-        Object.keys(this).forEach(function(clave) {
-            fn.call(this,clave,this[clave]);
+        var t=this;
+        Object.keys(t).forEach(function(clave) {
+            fn.call(t,clave,t[clave]);
         });
+        return this;
+    };
+
+    /**
+     * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
+     */
+    HTMLDocument.prototype.crear=function(html) {
+        var div=document.createElement("div");
+        div.innerHTML=html.trim();
+
+        if(div.children.length==1) return div.children[0];
+        return div.childNodes;
     };
 })();
 

@@ -25,9 +25,7 @@
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
 
-    <div id="foxtrot-cuerpo">
-    <input name="test" readonly data-x="1">
-    </div>
+    <div id="foxtrot-cuerpo"></div>
 
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
     <script src="util.js"></script>

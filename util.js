@@ -26,6 +26,13 @@ var util={
     },
 
     /**
+     * Determina si una expresión es una cadena.
+     */
+    esCadena:function(expr) {
+        return typeof expr==="string";
+    },
+
+    /**
      * Determina si un objeto es un array.
      */
     esArray:function(obj) {

@@ -13,9 +13,9 @@
 function componente() {
     this.base=this;
     this.nombre=null;
-    this.$elemento=null;
-    this.$contenedor=null;
-    this.datosElemento=dom.clonar(elementoComponente);
+    this.elemento=null;
+    this.contenedor=null;
+    this.datosElemento=util.clonar(elementoComponente);
 
     /**
      * Inicializa la instancia.
@@ -28,7 +28,7 @@ function componente() {
      * Devuelve el elemento correspondiente a esta instancia, o uno nuevo si es una nueva instancia.
      */
     this.obtenerElemento=function() {
-        if(!this.$elemento) this.crear();
+        if(!this.elemento) this.crear();
         return this.datosElemento;
     };
 

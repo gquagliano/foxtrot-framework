@@ -16,15 +16,15 @@ var ui=new function() {
     var componentes={},
         instanciasComponentes=[];
 
-    //Cache de instancias objetoDom
-    //Por convención utilizaremos el signo $ al comienzo de cada variable que almacene una instancia de objetoDom. La idea es facilitar la visualización
-    //de qué variables contienen elementos del DOM (Element) y cuáles instancias de objetoDom a fin de mantener la creación de instancias al mínimo.
-    this.$doc=$(document),
-    this.$body=$("body"),
-    this.$ventana=$(window),
-    this.$cuerpo=$("#foxtrot-cuerpo");
+    var doc=document,
+        body=document.body,
+        cuerpo=doc.querySelector("#foxtrot-cuerpo");
 
     this.modoEdicion=false;
+
+    this.obtenerCuerpo=function() {
+        return cuerpo;
+    };
 
     this.registrarComponente=function(nombre,funcion,configuracion) {
         configuracion.nombre=nombre;
@@ -49,7 +49,7 @@ var ui=new function() {
 
     this.establecerModoEdicion=function(valor) {
         this.modoEdicion=valor;
-        this.$body.alternarClase("foxtrot-modo-edicion");
+        body.alternarClase("foxtrot-modo-edicion");
     };
 
     this.ejecutar=function() {
@@ -77,8 +77,8 @@ var configComponente={
  * Plantilla para los objetos que contienen la relación entre elementos del DOM e instancias de componentes.
  */
 var elementoComponente={
-    $elemento:null,
-    $contenedorHijos:null,
+    elemento:null,
+    contenedorHijos:null,
     instancia:null
 };
 

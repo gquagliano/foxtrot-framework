@@ -95,7 +95,7 @@ var editor=new function() {
      */
     this.limpiarHtml=function(html) {
         var temp=document.crear("<div>");
-        temp.anexar(html);
+        temp.html(html);
         temp.querySelectorAll("*").removerClase(/^foxtrot-arrastrable-.+/).propiedad("contentEditable",null);
         return temp.innerHTML;
     };

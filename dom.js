@@ -420,6 +420,24 @@
         return null;
     };
 
+    /**
+     * Acceso a innerHTML.
+     */
+    Node.prototype.html=function(html) {
+        if(util.esIndefinido(html)) return this.innerHTML;
+        this.innerHTML=html;
+        return this;
+    };
+
+    /**
+     * Acceso a innerText.
+     */
+    Node.prototype.texto=function(texto) {
+        if(util.esIndefinido(texto)) return this.innerText;
+        this.innerText=texto;
+        return this;        
+    };
+
     ////// Eventos
 
     EventTarget.prototype.evento=function(nombre,funcion,captura) {

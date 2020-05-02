@@ -27,7 +27,7 @@
         var elem=this.metadato("arrastra"),
             opciones=opcionesArrastre[elem.obtenerId()];
 
-        elem.agregarClase("foxtrot-arrastrando");
+        elem.agregarClase("foxtrot-arrastrable-arrastrando");
         
         if(opciones.icono) {
             var ic=opciones.icono;
@@ -43,13 +43,13 @@
     function dragEnd(e) {
         var pciones=opcionesArrastre[this.obtenerId()];
 
-        this.removerClase("foxtrot-arrastrando");
+        this.removerClase("foxtrot-arrastrable-arrastrando");
     }
 
     function dragEnter(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
         
-        this.agregarClase("foxtrot-arrastrando-sobre");
+        this.agregarClase("foxtrot-arrastrable-arrastrando-sobre");
     }
 
     function dragOver(e) {
@@ -64,13 +64,13 @@
     function dragLeave(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
         
-        this.removerClase("foxtrot-arrastrando-sobre");        
+        this.removerClase("foxtrot-arrastrable-arrastrando-sobre");        
     }
 
     function drop(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
         
-        this.removerClase("foxtrot-arrastrando-sobre");  
+        this.removerClase("foxtrot-arrastrable-arrastrando-sobre");  
 
         e.preventDefault();
         e.stopPropagation();           
@@ -128,7 +128,7 @@
         }
 
         arrastrable.propiedad("draggable",true)
-            .agregarClase("foxtrot-arrastrable");
+            .agregarClase("foxtrot-arrastrable-arrastrable");
 
         arrastrable.metadato("arrastra",elem);
 
@@ -162,7 +162,7 @@
         
         opcionesDestinos[elem.obtenerId()]=opciones;
         
-        elem.agregarClase("foxtrot-receptor-arrastrable");
+        elem.agregarClase("foxtrot-arrastrable-receptor-arrastrable");
 
         if(opciones.dragenter) elem.evento("dragenter",opciones.dragenter);
         if(opciones.dragover) elem.evento("dragover",opciones.dragover);
@@ -238,5 +238,16 @@
     function moverDragend(e) {
         document.removerEvento("dragover",moverDragover);
     }
+
+    document.body.anexar("<style>\
+    [draggable] {\
+        -moz-user-select: none;\
+        -khtml-user-select: none;\
+        -webkit-user-select: none;\
+        user-select: none;\
+        -khtml-user-drag: element;\
+        -webkit-user-drag: element;\
+    }\
+    </style>");
 })();
 

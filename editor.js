@@ -5,8 +5,6 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
  * Editor de vistas.
  */
@@ -19,6 +17,10 @@ var editor=new function() {
     function configurarBarrasHerramientas() {
         document.querySelector("#foxtrot-barra-componentes").arrastrable({
             asa:document.querySelector("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
+            mover:true
+        });
+        document.querySelector("#foxtrot-barra-propiedades").arrastrable({
+            asa:document.querySelector("#foxtrot-barra-propiedades .foxtrot-asa-arrastre"),
             mover:true
         });
     };
@@ -49,18 +51,9 @@ var editor=new function() {
             if(!datos||!datos.hasOwnProperty("componente")) return;
         } catch {
             return;
-        }       
-            
-        var componente=ui.crearComponente(datos.componente),
-        datosElemento=componente.obtenerElemento();
-
-        this.anexar(datosElemento.elemento);
-
-        if(datosElemento.contenedorHijos) {
-            datosElemento.contenedorHijos.crearDestino({
-                drop:componenteSoltado
-            });
         }
+
+        editor.insertarComponente(this,datos.componente);
     }
 
     function prepararArrastrarYSoltar() {
@@ -83,7 +76,47 @@ var editor=new function() {
         prepararArrastrarYSoltar();
         ui.establecerModoEdicion(true);
     };
+
+    this.insertarComponente=function(destino,nombre) {
+        var obj=ui.crearComponente(nombre),
+            datos=obj.obtenerElemento();
+
+        destino.anexar(datos.elemento);
+
+        if(datos.contenedor) {
+            datos.contenedor.crearDestino({
+                drop:componenteSoltado
+            });
+        }
+    };
+
+    /**
+     * Remueve todas las clases y propiedades del modo de edición del código html dado.
+     */
+    this.limpiarHtml=function(html) {
+        var temp=document.crear("<div>");
+        temp.anexar(html);
+        temp.querySelectorAll("*").removerClase(/^foxtrot-arrastrable-.+/).propiedad("contentEditable",null);
+        return temp.innerHTML;
+    };
+
+    this.guardar=function() {
+        //Método de prueba para guardar a un archivo salida.html
+        
+        document.body.agregarClase("trabajando");
+
+        new ajax({
+            url:"guardar.php",
+            parametros:{
+                nombre:"salida",
+                html:ui.obtenerHtml(),
+                json:ui.obtenerJson()
+            },
+            listo:function() {
+                document.body.removerClase("trabajando");
+            }
+        });
+    };
 }();
 
-//Exportar para Closure
 window["editor"]=editor;

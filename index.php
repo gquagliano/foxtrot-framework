@@ -12,15 +12,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="test.css">
-    <title>Test</title>
+    <link rel="stylesheet" href="editor.css">
+    <title>Editor de vistas</title>
   </head>
   <body>
-    <div id="foxtrot-barra-componentes" class="foxtrot-barra-herramientas">
+    <div id="foxtrot-barra-principal" class="foxtrot-barra-herramientas">
+        <button class="btn btn-sm" onclick="editor.guardar()" title="Guardar"><img src="img/guardar.png"></button>
+        <img src="img/cargando.svg" id="foxtrot-cargando">
+    </div>
+    <div id="foxtrot-barra-componentes" class="foxtrot-barra-herramientas-flotante">
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
-    <div id="foxtrot-barra-propiedades" class="foxtrot-barra-herramientas">
+    <div id="foxtrot-barra-propiedades" class="foxtrot-barra-herramientas-flotante">
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
@@ -30,8 +34,8 @@
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
     <script src="util.js"></script>
     <script src="dom.js"></script>
+    <script src="ajax.js"></script>
     <script src="arrastra.js"></script>
-    <link rel="stylesheet" href="dom.css">
     <script src="ui.js"></script>
     <script src="componente.js"></script>
     <script src="componentes/contenedor.js"></script>

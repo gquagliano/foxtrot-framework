@@ -1,0 +1,66 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+ /**
+ * Utilidades para consultas AJAX
+ */
+var ajax=function(param) {
+    "use strict";
+
+    var self=this;
+
+    var predeterminados={
+        url:null,
+        metodo:"post",
+        parametros:null,
+        listo:null,
+        error:null
+    };
+    param=Object.assign(predeterminados,param);
+
+    var xhr=new XMLHttpRequest();
+
+    this.obtenerXhr=function() {
+        return xhr;
+    };
+
+    this.abortar=function() {
+        xhr.abort();
+        return this;
+    };
+
+    xhr.onload=function(ev) {
+        if(this.status==200) {
+            if(param.listo) param.listo.call(self,ev);
+        } else {
+            if(param.error) param.error.call(self,ev);
+        }
+    };
+
+    var url=param.url,
+        cuerpo=param.parametros,
+        contentType="application/x-www-form-urlencoded";
+
+    if(typeof cuerpo instanceof FormData) {
+        //FormData se envia tal cual
+        contentType="multipart/form-data";
+    } else if(typeof cuerpo=="object") {
+        //Construir query string (si parametros es una cadena, enviar tal cual)
+        var arr=[];
+        Object.keys(cuerpo).forEach(function(clave) {
+            arr.push(clave+"="+encodeURIComponent(cuerpo[clave]));
+        });
+        cuerpo=arr.join("&");
+    }
+
+    if(param.metodo.toLowerCase()=="get"&&cuerpo) url+"?"+cuerpo;
+    xhr.open(param.metodo,url,true);
+    if(param.metodo.toLowerCase()=="post"&&contentType) xhr.setRequestHeader("Content-type",contentType);
+    xhr.send(cuerpo);
+};
+
+window["ajax"]=ajax;

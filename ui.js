@@ -13,43 +13,118 @@
 var ui=new function() {
     "use strict";
 
-    var componentes={},
-        instanciasComponentes=[];
+    var componentesRegistrados={},
+        instanciasComponentes=[],
+        modoEdicion=false,
+        id=1;
 
     var doc=document,
         body=document.body,
         cuerpo=doc.querySelector("#foxtrot-cuerpo");
 
-    this.modoEdicion=false;
-
     this.obtenerCuerpo=function() {
         return cuerpo;
     };
 
+    this.generarId=function() {
+        return id++;
+    };
+
     this.registrarComponente=function(nombre,funcion,configuracion) {
         configuracion.nombre=nombre;
-        componentes[nombre]={
+        componentesRegistrados[nombre]={
             fn:funcion,
             config:configuracion
         };
     };
 
     this.obtenerComponentes=function() {
-        return componentes;
+        return componentesRegistrados;
     };
 
     /**
      * Crea una instancia de un componente dado su nombre.
      */
     this.crearComponente=function(nombre) {
-        var obj=new componentes[nombre].fn;
+        var obj=new componentesRegistrados[nombre].fn;
+        obj.establecerId(this.generarId());
+        
         instanciasComponentes.push(obj);
+
         return obj;
     };
 
+    /**
+     * Devuelve las instancias de los componentes existentes.
+     */
+    this.obtenerInstanciasComponentes=function() {
+        return instanciasComponentes;
+    };
+
     this.establecerModoEdicion=function(valor) {
-        this.modoEdicion=valor;
+        modoEdicion=valor;
         body.alternarClase("foxtrot-modo-edicion");
+    };
+
+    this.enModoEdicion=function() {
+        return modoEdicion;
+    };    
+
+    /**
+     * Devuelve el HTML de la vista.
+     */
+    this.obtenerHtml=function() {
+        return editor.limpiarHtml(cuerpo.innerHTML);
+    };
+
+    /**
+     * Genera y devuelve un JSON con las relaciones entre el DOM y los componentes.
+     */
+    this.obtenerJson=function() {
+        var resultado={
+            ver:1,
+            componentes:[],
+            vista:{
+                nombre:null,
+                parametros:{}
+            }
+        };
+
+        instanciasComponentes.forEach(function(obj) {
+            resultado.componentes.push({
+                id:obj.id,
+                nombre:obj.nombre,
+                componente:obj.componente,
+                parametros:obj.obtenerParametros()
+            });
+        });
+
+        return JSON.stringify(resultado);
+    };
+
+    /**
+     * Inserta el código html en el cuerpo del editor. Este método solo debería utilizarse en modo edición.
+     */
+    this.reemplazarHtml=function(html) {
+        cuerpo.innerHTML=html;
+        return this;        
+    };
+
+    /**
+     * Establece e inicializa l a vista y sus componentes dado su json.
+     */
+    this.establecerJson=function(json) {
+        json=JSON.parse(json);
+        
+        json.componentes.forEach(function(componente) {
+            ui.crearComponente(componente.componente)
+                .establecerId(componente.id)
+                .establecerNombre(componente.nombre)
+                .establecerParametros(componente.parametros)
+                .restaurar();
+        });
+
+        return this;  
     };
 
     this.ejecutar=function() {
@@ -78,9 +153,9 @@ var configComponente={
  */
 var elementoComponente={
     elemento:null,
-    contenedorHijos:null,
+    contenedor:null,
     instancia:null
 };
 
-//Exportar para Closure
 window["ui"]=ui;
+window["componentes"]={};

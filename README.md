@@ -20,3 +20,5 @@ contacto@foxtrot.ar
 www.foxtrot.ar
 
 Licencia: Apache 2.0
+
+Íconos por Icons8 - https://icons8.com/icons/material-outlined

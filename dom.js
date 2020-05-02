@@ -86,6 +86,11 @@
      * Agrega los elementos especificados a los elementos de esta instancia.
      */
     Node.prototype.anexar=function(elemento) {
+        if(typeof elemento==="string") {
+            this.anexar(document.crear(elemento));
+            return this;
+        }
+
         if(elemento instanceof NodeList||elemento instanceof HTMLCollection) {
             var t=this;
             elemento.forEach(function(elem) {
@@ -224,6 +229,18 @@
     };
 
     /**
+     * Activa o desactiva el modo de edición.
+     */
+    Node.prototype.editable=function(estado) {
+        if(util.esIndefinido(estado)) estado=true;
+        this.propiedad("contentEditable",estado);
+
+        //TODO controles de formato
+
+        return this;
+    };
+
+    /**
      * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
      */
     Node.prototype.padre=function(filtro) {
@@ -322,7 +339,12 @@
      */
     Node.prototype.propiedad=function(nombre,valor) {
         if(util.esIndefinido(valor)) return this[nombre];
-        this[nombre]=valor;
+        if(valor===null) {
+            this[nombre]=false;
+            this.removeAttribute(nombre);
+        } else {
+            this[nombre]=valor;
+        }
         return this;
     };
 

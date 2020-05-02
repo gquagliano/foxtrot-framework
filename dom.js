@@ -71,7 +71,7 @@
     /**
      * Devuelve todos los datos (dataset) del elemento.
      */
-    Node.prototype.dato=function() {
+    Node.prototype.datos=function() {
         return Object.assign({},this.dataset);
     };
 

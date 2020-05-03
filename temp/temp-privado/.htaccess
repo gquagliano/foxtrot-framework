@@ -1,0 +1,5 @@
+# temp-privado
+# Directorio donde se almacenan aquellos archivos temporales que deben estar fuera del alcance de solicitudes HTTP, como archivos intermedios y archivos
+# subidos por el usuario en curso de ser procesados.
+
+Deny From All

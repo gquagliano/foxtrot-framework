@@ -18,6 +18,9 @@
   <body>
     <div id="foxtrot-barra-principal" class="foxtrot-barra-herramientas">
         <button class="btn btn-sm" onclick="editor.guardar()" title="Guardar"><img src="img/guardar.png"></button>
+        <button class="btn btn-sm" onclick="editor.previsualizar()" title="Previsualizar la vista en una nueva ventana (sin guardar los cambios)"><img src="img/previsualizar.png"></button>
+        <button class="btn btn-sm" onclick="editor.deshacer()" disabled id="foxtrot-btn-deshacer" title="Deshacer"><img src="img/deshacer.png"></button>
+        <button class="btn btn-sm" onclick="editor.rehacer()" disabled id="foxtrot-btn-rehacer" title="Rehacer"><img src="img/rehacer.png"></button>
         <img src="img/cargando.svg" id="foxtrot-cargando">
     </div>
     <div id="foxtrot-barra-componentes" class="foxtrot-barra-herramientas-flotante">

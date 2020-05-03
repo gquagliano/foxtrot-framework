@@ -14,6 +14,8 @@ var editor=new function() {
     //Configuración
     var claseBotonesBarrasHerramientas="btn btn-sm";
 
+    var self=this;
+
     function configurarBarrasHerramientas() {
         document.querySelector("#foxtrot-barra-componentes").arrastrable({
             asa:document.querySelector("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
@@ -100,21 +102,37 @@ var editor=new function() {
         return temp.innerHTML;
     };
 
-    this.guardar=function() {
-        //Método de prueba para guardar a un archivo salida.html
+    /**
+     * Guarda la vista actual (actualmente en modo de pruebas, guarda a /salida.html).
+     */
+    this.guardar=function(previsualizar,cbk) {
+        if(util.esIndefinido(previsualizar)) previsualizar=false;
+        if(util.esIndefinido(cbk)) cbk=null;
         
         document.body.agregarClase("trabajando");
 
         new ajax({
             url:"guardar.php",
             parametros:{
+                previsualizar:previsualizar,
                 nombre:"salida",
                 html:ui.obtenerHtml(),
                 json:ui.obtenerJson()
             },
-            listo:function() {
+            listo:function(resp) {
+                if(!resp) {
+                    alert("No fue posible guardar la vista.");
+                } else {
+                    if(cbk) cbk.call(self,resp);
+                }
                 document.body.removerClase("trabajando");
             }
+        });
+    };
+
+    this.previsualizar=function() {
+        this.guardar(true,function(resp) {
+            window.open(resp.url,"previsualizacion");
         });
     };
 }();

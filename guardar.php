@@ -8,7 +8,19 @@
 
 //Script de prueba para guardar los datos provenientes del editor
 
-$nombre=preg_replace('/[^a-z]/i','',$_POST['nombre']);
+//Lógicamente, esto tiene que cambiar, es solo una prueba
+$url='http://localhost/experimental-foxtrot-framework/';
+
+$previsualizar=$_POST['previsualizar'];
+
+if($previsualizar) {
+    $ruta='temp/';
+    $nombre=basename(tempnam($ruta,'p')).'.html';
+} else {
+    $ruta='';
+    $nombre=preg_replace('/[^a-z]/i','',$_POST['nombre']).'.html';
+}
+
 $html=$_POST['html'];
 $json=str_replace('\'','\\\'',$_POST['json']);
 
@@ -38,4 +50,9 @@ $resultado=<<<RE
 </html>
 RE;
 
-file_put_contents(__DIR__.'/'.$nombre.'.html',$resultado);
+file_put_contents(__DIR__.'/'.$ruta.$nombre,$resultado);
+
+echo json_encode([
+    'nombre'=>$nombre,
+    'url'=>$url.$ruta.$nombre 
+]);

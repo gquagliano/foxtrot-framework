@@ -18,7 +18,9 @@ var ajax=function(param) {
         metodo:"post",
         parametros:null,
         listo:null,
-        error:null
+        error:null,
+        //Por defecto, siempre vamos a validar y procesar las respuestas como JSON, ya que es el lenguaje que hablará el framework
+        json:true
     };
     param=Object.assign(predeterminados,param);
 
@@ -35,7 +37,11 @@ var ajax=function(param) {
 
     xhr.onload=function(ev) {
         if(this.status==200) {
-            if(param.listo) param.listo.call(self,ev);
+            var resp=null;
+            try {
+                resp=JSON.parse(ev.target.responseText);
+            } catch { }
+            if(param.listo) param.listo.call(self,resp,ev);
         } else {
             if(param.error) param.error.call(self,ev);
         }

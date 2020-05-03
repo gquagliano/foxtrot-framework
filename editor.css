@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-html,body {
+html {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
@@ -14,7 +14,6 @@ html,body {
     transition: all .2s;
 }
 body.foxtrot-modo-edicion {
-    background: url(img/fondo.png);
 }
 .foxtrot-modo-edicion * {
 }
@@ -24,9 +23,10 @@ body.foxtrot-modo-edicion {
 }
 .foxtrot-modo-edicion #foxtrot-cuerpo {
     background: #fff;
-    min-height: 80px;
+    min-height: calc(100vh - 56px);
     z-index: 1;
-    box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1);
+    top: 56px;
+    background: url(img/fondo.png);
 }
 #foxtrot-cargando {
     float: right;
@@ -37,12 +37,16 @@ body.trabajando #foxtrot-cargando {
     opacity: 1;
 }
 .foxtrot-barra-herramientas {
-    position: relative;
+    position: fixed;
     z-index: 100;
     background-color: #fff;
     padding: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,.07);
     border-bottom: 2px solid #e6e6e6;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 56px;
 }
 .foxtrot-barra-herramientas-flotante {
     position: fixed;
@@ -63,15 +67,24 @@ body.trabajando #foxtrot-cargando {
     background-color: #e6e6e6;
     border-radius: 3px;
 }
-.foxtrot-barra-herramientas .btn,.foxtrot-contenidos-barra-herramientas .btn {
+.foxtrot-barra-herramientas .btn,
+.foxtrot-contenidos-barra-herramientas .btn {
     line-height: 0;
+}
+.foxtrot-barra-herramientas .btn.disabled,
+.foxtrot-barra-herramientas .btn:disabled,
+.foxtrot-contenidos-barra-herramientas .btn.disabled 
+.foxtrot-contenidos-barra-herramientas .btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
 }
 .foxtrot-barra-herramientas .btn:hover,.foxtrot-contenidos-barra-herramientas .btn:hover,
 .foxtrot-barra-herramientas .btn:focus,.foxtrot-contenidos-barra-herramientas .btn:focus,
 .foxtrot-barra-herramientas .btn:active,.foxtrot-contenidos-barra-herramientas .btn:active {
     background-color: #ececec;
 }
-.foxtrot-barra-herramientas button img,.foxtrot-contenidos-barra-herramientas button img {
+.foxtrot-barra-herramientas button img,
+.foxtrot-contenidos-barra-herramientas button img {
     width: 24px;
 }
 
@@ -95,5 +108,5 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .container.vacio {
     min-height: 40px;
     border-radius: 10px;
-    border: dashed 2px #eee;
+    border: dashed 2px #c7c7c7;
 }

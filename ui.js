@@ -15,6 +15,8 @@ var ui=new function() {
 
     var componentesRegistrados={},
         instanciasComponentes=[],
+        instanciasComponentesId={},
+        instanciasComponentesNombre={},
         modoEdicion=false,
         id=1;
 
@@ -46,10 +48,13 @@ var ui=new function() {
      * Crea una instancia de un componente dado su nombre.
      */
     this.crearComponente=function(nombre) {
-        var obj=new componentesRegistrados[nombre].fn;
-        obj.establecerId(this.generarId());
+        var obj=new componentesRegistrados[nombre].fn,
+            id=this.generarId();
+        obj.establecerId(id);
         
-        instanciasComponentes.push(obj);
+        var i=instanciasComponentes.push(obj);
+        //Índices
+        instanciasComponentesId[id]=i-1;
 
         return obj;
     };
@@ -125,6 +130,14 @@ var ui=new function() {
         });
 
         return this;  
+    };
+
+    /**
+     * Devuelve la instancia de un componente dado su ID.
+     */
+    this.obtenerComponente=function(id) {
+        if(!instanciasComponentesId.hasOwnProperty(id)) return null;
+        return instanciasComponentes[instanciasComponentesId[id]];
     };
 
     this.ejecutar=function() {

@@ -26,13 +26,16 @@
     function dragStart(e) {
         var elem=this.metadato("arrastra"),
             opciones=opcionesArrastre[elem.obtenerId()];
+            
+        //Detener la propagación permitirá arrastrables anidados
+        e.stopPropagation();
 
         elem.agregarClase("foxtrot-arrastrable-arrastrando");
         
         if(opciones.icono) {
             var ic=opciones.icono;
             if(!(ic instanceof Element)) ic=document.crear("<img>").atributo("src",ic).obtener(0);
-            e.dataTransfer.setDragImage(ic,-5,-5);
+            e.dataTransfer.setDragImage(ic,-15,-15);
         }
         
         if(opciones.datos) {
@@ -41,13 +44,16 @@
     }
     
     function dragEnd(e) {
-        var pciones=opcionesArrastre[this.obtenerId()];
+        var opciones=opcionesArrastre[this.obtenerId()];
 
         this.removerClase("foxtrot-arrastrable-arrastrando");
     }
 
     function dragEnter(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
+        
+        //Detener la propagación permitirá destinos anidados
+        e.stopPropagation();
         
         this.agregarClase("foxtrot-arrastrable-arrastrando-sobre");
     }
@@ -56,6 +62,7 @@
         var opciones=opcionesDestinos[this.obtenerId()];
 
         e.preventDefault();
+        //Detener la propagación permitirá destinos anidados
         e.stopPropagation();
 
         e.dataTransfer.dropEffect="move";     
@@ -63,6 +70,9 @@
 
     function dragLeave(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
+        
+        //Detener la propagación permitirá destinos anidados
+        e.stopPropagation();
         
         this.removerClase("foxtrot-arrastrable-arrastrando-sobre");        
     }
@@ -90,7 +100,8 @@
             icono:null,
             mover:false,
             limite:null,
-            datos:null
+            datos:null,
+            pausado:false
         };
         opciones=Object.assign(predeterminados,opciones);
 
@@ -162,7 +173,7 @@
         
         opcionesDestinos[elem.obtenerId()]=opciones;
         
-        elem.agregarClase("foxtrot-arrastrable-receptor-arrastrable");
+        elem.agregarClase("foxtrot-arrastrable-destino");
 
         if(opciones.dragenter) elem.evento("dragenter",opciones.dragenter);
         if(opciones.dragover) elem.evento("dragover",opciones.dragover);
@@ -183,6 +194,74 @@
     Node.prototype.crearDestinoArchivo=function(opciones) {
 
 
+        return this;
+    };
+
+    /**
+     * Detiene momentáneamente o reestablece las operaciones de arrastre para el elemento.
+     */
+    Node.prototype.pausarArrastre=function(pausar) {
+        if(util.esIndefinido(pausar)) pausar=true;
+
+        //Verificar que sea un arrastrable, de esta forma el cliente puede llamar pausarArrastre() en cualquier elemento sin verificarlo por su cuenta
+
+        var id=this.obtenerId();
+
+        if(opcionesArrastre.hasOwnProperty(id)&&opcionesArrastre[id].pausado!=pausar) {
+            var opciones=opcionesArrastre[id],
+                arrastrable=this.metadato("arrastra");
+
+            opciones.pausado=pausar;
+
+            if(pausar) {
+                //Almacenar los listeners que vamos a remover para poder reestablecerlos luego
+                opciones._eventosPausados_dragstart=arrastrable.evento("dragstart");
+
+                arrastrable.propiedad("draggable",false)
+                    .removerClase("foxtrot-arrastrable-arrastrable")
+                    .removerEvento("dragstart");
+            } else {
+                arrastrable.propiedad("draggable",true)
+                    .agregarClase("foxtrot-arrastrable-arrastrable")
+                    .evento("dragstart",opciones._eventosPausados_dragstart);
+            }
+        }
+
+        if(opcionesDestinos.hasOwnProperty(id)&&opcionesDestinos[id].pausado!=pausar) {
+            var opciones=opcionesDestinos[id];
+
+            opciones.pausado=pausar;
+
+            if(pausar) {
+                //Almacenar los listeners que vamos a remover para poder reestablecerlos luego
+                opciones._eventosPausados_dragenter=this.evento("dragenter");
+                opciones._eventosPausados_dragover=this.evento("dragover");
+                opciones._eventosPausados_drop=this.evento("drop");
+                
+                this.removerClase("foxtrot-arrastrable-destino")
+                    .removerEvento("dragenter")
+                    .removerEvento("dragover")
+                    .removerEvento("drop");
+            } else {
+                this.agregarClase("foxtrot-arrastrable-destino")
+                    .evento("dragenter",opciones._eventosPausados_dragenter)
+                    .evento("dragover",opciones._eventosPausados_dragover)
+                    .evento("drop",opciones._eventosPausados_drop);
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * Aplica pausarArrastre(estado) en el elemento y toda su ascendencia.
+     */
+    Node.prototype.pausarArrastreArbol=function(estado) {
+        var elem=this;
+        while(elem!==null&&!(elem instanceof HTMLBodyElement)) { //Parar al llegar a <body>
+            elem.pausarArrastre(estado);
+            elem=elem.padre();
+        }
         return this;
     };
 
@@ -238,16 +317,5 @@
     function moverDragend(e) {
         document.removerEvento("dragover",moverDragover);
     }
-
-    document.body.anexar("<style>\
-    [draggable] {\
-        -moz-user-select: none;\
-        -khtml-user-select: none;\
-        -webkit-user-select: none;\
-        user-select: none;\
-        -khtml-user-drag: element;\
-        -webkit-user-drag: element;\
-    }\
-    </style>");
 })();
 

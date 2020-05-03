@@ -104,9 +104,23 @@ body.trabajando #foxtrot-cargando {
 #foxtrot-cuerpo.foxtrot-arrastrable-arrastrando-sobre {
     box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1), inset 0 0 0 4px rgba(0,123,255,.25) !important;
 }
+.foxtrot-modo-edicion [contenteditable]:focus {
+    outline: none;
+    border-radius: 2px;
+    box-shadow: 0 0 0 4px rgba(0,123,255,.25) !important;
+}
 
 .foxtrot-modo-edicion .container.vacio {
     min-height: 40px;
     border-radius: 10px;
     border: dashed 2px #c7c7c7;
+}
+
+[draggable] {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -khtml-user-drag: element;
+    -webkit-user-drag: element;
 }

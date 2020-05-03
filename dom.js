@@ -244,7 +244,8 @@
      * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
      */
     Node.prototype.padre=function(filtro) {
-
+        return this.parentNode;
+        //TODO filtro
     };
 
     /**
@@ -438,15 +439,59 @@
         return this;        
     };
 
+    /**
+     * Clona el elemento.
+     */
+    Node.prototype.clonar=function(conEventosDatos) {
+        var clon=this.cloneNode(true);
+
+        //TODO conEventosDatos
+
+        return clon;
+    };
+
     ////// Eventos
 
+    /**
+     * Devuelve todos los eventos con las funciones asignadas.
+     */
+    EventTarget.prototype.eventos=function() {
+        
+    };
+
     EventTarget.prototype.evento=function(nombre,funcion,captura) {
+        //Si nombre es el único parámetro, devolvemos todas las funciones asignadas
+        if(util.esIndefinido(funcion)) {
+            this.inicializarMetadatos();
+            var meta=this.metadato("eventos");
+
+            if(!meta.hasOwnProperty(nombre)) return [];
+
+            var arr=[];
+            //Necesitamos solo las funciones del usario, que están en el índice 0 de cada elemento
+            meta[nombre].aArray().forEach(function(e) {
+                arr.push(e[0]);
+            });            
+            return arr;
+        }
+
+        //funcion puede ser un array para asignar múltiples listeners a la vez
+        if(util.esArray(funcion)) {
+            var t=this;
+            funcion.forEach(function(fn) {
+                t.evento(nombre,fn,captura);
+            });
+            return this;
+        }
+
         //Usamos un ID para poder encapsularla pero aún así poder identificar la función para removerla en removerEvento
         if(util.esIndefinido(funcion._id)) funcion._id=id++;
 
-        var fn=function(ev) {
-            funcion.call(this,ev);
-        };
+        var t=this,
+            fn=function(ev) {
+                //this siempre será el elemento al cual se le asignó el evento
+                funcion.call(t,ev);
+            };
 
         //Almacenar para poder remover todo con removerEvento
         this.inicializarMetadatos();
@@ -460,22 +505,41 @@
     };
 
     EventTarget.prototype.removerEvento=function(nombre,funcion) {
-        if(util.esIndefinido(nombre)) {
-            //Remover todos los eventos registrados mediante evento()
-
+        //funcion puede ser un array para remover múltiples listeners a la vez
+        if(util.esArray(funcion)) {
+            var t=this;
+            funcion.forEach(function(fn) {
+                t.removerEvento(nombre,fn);
+            });
             return this;
         }
+
+        var meta=this.metadato("eventos");
+
+        if(util.esIndefinido(nombre)) {
+            //Remover todos los eventos registrados mediante evento()
+            var t=this;
+            meta.forEach(function(nombre,arr) {
+                arr.forEach(function(id,ev) {
+                    t.removeEventListener(nombre,ev[1]);
+                });
+            });
+            return this;
+        }
+
+        if(!meta.hasOwnProperty(nombre)) return this;
 
         if(util.esIndefinido(funcion)) {
             //Remover todos los eventos nombre registrados mediante evento()
-
+            var t=this;
+            meta[nombre].forEach(function(id,ev) {
+                t.removeEventListener(nombre,ev[1]);
+            });
             return this;
         }
 
-        //Buscar la funcion real
+        //Buscar la funcion asignada al listener (que difiere de la función del usuario ya que es un contenedor)
         if(util.esIndefinido(funcion._id)) return this;
-        var meta=this.metadato("eventos");
-        if(!meta.hasOwnProperty(nombre)) return this;
         var fn=meta[nombre][funcion._id][1];
         
         this.removeEventListener(nombre,fn);
@@ -528,6 +592,13 @@
             fn.call(t,clave,t[clave]);
         });
         return this;
+    };
+
+    /**
+     * Devuelve un array con los valores del objeto (descartando las propiedades).
+     */
+    Object.prototype.aArray=function() {
+        return Object.values(this);
     };
 
     /**

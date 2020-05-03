@@ -14,7 +14,8 @@ var editor=new function() {
     //Configuración
     var claseBotonesBarrasHerramientas="btn btn-sm";
 
-    var self=this;
+    var self=this,
+        iconosComponentes={};
 
     function configurarBarrasHerramientas() {
         document.querySelector("#foxtrot-barra-componentes").arrastrable({
@@ -32,12 +33,17 @@ var editor=new function() {
             componentes=ui.obtenerComponentes();
         for(var nombre in componentes) {
             if(!componentes.hasOwnProperty(nombre)) continue;
+
+            var icono=document.crear("<img>")
+                .atributo("src",componentes[nombre].config.icono)
+                .atributo("title",componentes[nombre].config.descripcion);
+            iconosComponentes[nombre]=icono;
+
             barra.anexar(
                 document.crear("<button class='"+claseBotonesBarrasHerramientas+"'>")
                     .anexar(
-                        document.crear("<img>")
-                            .atributo("src",componentes[nombre].config.icono)
-                            .atributo("title",componentes[nombre].config.descripcion)
+                        icono.clonar()  //Clonamos el ícono para que no afecte la instancia almacenada en iconosComponentes
+                                        //(al arrastrar, toma los estilos que pueda tener al momento de iniciar la operación de arraastre)
                     )
                     .metadato("componente",nombre)
                 );
@@ -50,12 +56,21 @@ var editor=new function() {
         var datos=e.dataTransfer.getData("text/plain");
         try {
             datos=JSON.parse(datos);
-            if(!datos||!datos.hasOwnProperty("componente")) return;
         } catch {
             return;
         }
 
-        editor.insertarComponente(this,datos.componente);
+        if(!datos) return;
+
+        if(datos.hasOwnProperty("componente")) {
+            editor.insertarComponente(this,datos.componente);
+            return;
+        }
+
+        if(datos.hasOwnProperty("idcomponente")) {
+            editor.moverComponente(this,datos.idcomponente);
+            return;
+        }        
     }
 
     function prepararArrastrarYSoltar() {
@@ -63,8 +78,10 @@ var editor=new function() {
         for(var i=0;i<componentes.length;i++) {
             var comp=componentes[i];
             comp.arrastrable({
-                icono:comp.buscar("img").obtener(0),
-                datos:JSON.stringify({componente:comp.metadato("componente")})
+                icono:iconosComponentes[comp.metadato("componente")],
+                datos:JSON.stringify({
+                    componente:comp.metadato("componente")
+                })
             });
         }
 
@@ -79,8 +96,15 @@ var editor=new function() {
         ui.establecerModoEdicion(true);
     };
 
+    this.moverComponente=function(destino,id) {
+        var obj=ui.obtenerComponente(id);
+        if(!obj||destino===obj.elemento) return;
+        destino.anexar(obj.elemento);
+    };
+
     this.insertarComponente=function(destino,nombre) {
         var obj=ui.crearComponente(nombre),
+            id=obj.obtenerId(),
             datos=obj.obtenerElemento();
 
         destino.anexar(datos.elemento);
@@ -90,6 +114,13 @@ var editor=new function() {
                 drop:componenteSoltado
             });
         }
+        
+        datos.elemento.arrastrable({
+            icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
+            datos:JSON.stringify({
+                idcomponente:id
+            })
+        });
     };
 
     /**

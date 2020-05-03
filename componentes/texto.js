@@ -13,6 +13,8 @@
 function componenteTexto() {
     this.componente="texto";
 
+    var self=this;
+
     /**
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
      */
@@ -20,13 +22,36 @@ function componenteTexto() {
         return this;
     };
 
+    this.configurarEventos=function() {
+        this.elemento.evento("dblclick",function(ev) {
+            if(ui.enModoEdicion()) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                
+                this.editable(true).focus();
+
+                //Deshabilitar arrastre en todo el árbol para que se pueda arrastrar el texto seleccionado dentro del editor
+                this.pausarArrastreArbol();
+            }
+        }).evento("blur",function(ev) {
+            if(ui.enModoEdicion()) {
+                this.editable(false);
+
+                //Reestablecer arrastre en todo el árbol
+                this.pausarArrastreArbol(false);
+            }
+        });
+    };
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(ui.enModoEdicion()) this.elemento.editable(true);
         this.datosElemento.elemento=this.elemento;
         this.datosElemento.instancia=this;
+
+        this.configurarEventos();
+
         return this;
     };
 
@@ -34,7 +59,7 @@ function componenteTexto() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='texto'><p>Hacé click para comenzar a escribir...</p></div>");
+        this.elemento=document.crear("<div class='texto'><p>Hacé doble click para comenzar a escribir...</p></div>");
         this.establecerId();
         this.inicializar();        
         return this;

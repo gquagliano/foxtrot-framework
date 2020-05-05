@@ -110,7 +110,7 @@ body.trabajando #foxtrot-cargando {
     box-shadow: 0 0 0 4px rgba(0,123,255,.25) !important;
 }
 
-.foxtrot-modo-edicion .container.vacio {
+.foxtrot-modo-edicion .contenedor.vacio {
     min-height: 40px;
     border-radius: 10px;
     border: dashed 2px #c7c7c7;

@@ -8,10 +8,10 @@
  "use strict";
 
 /**
- * Componente concreto Contenedor.
+ * Componente concreto Columna.
  */
-function componenteContenedor() {
-    this.componente="contenedor";
+function componenteColumna() {
+    this.componente="columna";
 
     /**
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
@@ -35,17 +35,16 @@ function componenteContenedor() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='container contenedor vacio'/>");
+        this.elemento=document.crear("<div class='col-3 contenedor vacio'/>");
         this.establecerId();
         this.inicializar();
         return this;
     };
 }
-componenteContenedor.prototype=new componente();
+componenteColumna.prototype=new componente();
 
-var config=util.clonar(configComponente);
-config.descripcion="Contenedor";
-config.icono="componentes/iconos/contenedor.png";
-
-ui.registrarComponente("contenedor",componenteContenedor,config);
+ui.registrarComponente("columna",componenteColumna,util.clonar(configComponente,{
+    descripcion:"Columna",
+    icono:"componentes/iconos/columna.png"
+}));
 

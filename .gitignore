@@ -2,3 +2,4 @@ temp/*
 !temp/temp-privado
 temp/temp-privado/*
 !temp/temp-privado/.htaccess
+salida.html

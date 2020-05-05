@@ -42,8 +42,14 @@ var util={
     /**
      * Clona un objeto.
      */
-    clonar:function(obj) {
-        return Object.assign({},obj);
+    clonar:function(obj,asignar) {
+        var nuevo=Object.assign({},obj);
+        if(!util.esIndefinido(asignar)) {
+            asignar.forEach(function(prop,val) {
+                nuevo[prop]=val;
+            });
+        }
+        return nuevo;
     }
 };
 

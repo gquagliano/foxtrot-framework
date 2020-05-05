@@ -11,7 +11,7 @@
 //Lógicamente, esto tiene que cambiar, es solo una prueba
 $url='http://localhost/experimental-foxtrot-framework/';
 
-$previsualizar=$_POST['previsualizar'];
+$previsualizar=$_POST['previsualizar']=='true';
 
 if($previsualizar) {
     $ruta='temp/';

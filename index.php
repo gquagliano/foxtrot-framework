@@ -43,6 +43,8 @@
     <script src="componente.js"></script>
     <script src="componentes/contenedor.js"></script>
     <script src="componentes/texto.js"></script>
+    <script src="componentes/fila.js"></script>
+    <script src="componentes/columna.js"></script>
     <script src="editor.js"></script>
     <script src="test.js"></script>
     

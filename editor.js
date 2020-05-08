@@ -15,7 +15,10 @@ var editor=new function() {
     var claseBotonesBarrasHerramientas="btn btn-sm";
 
     var self=this,
-        iconosComponentes={};
+        iconosComponentes={},
+        eventosPausados=false;
+
+    this.componenteSeleccionado=null;
 
     function configurarBarrasHerramientas() {
         document.querySelector("#foxtrot-barra-componentes").arrastrable({
@@ -90,16 +93,78 @@ var editor=new function() {
         });
     };
 
+    function establecerEventos() {
+        ui.obtenerCuerpo().eventoFiltrado("click",{
+            clase:"componente"
+        },function(ev) {
+            ev.stopPropagation();
+            self.limpiarSeleccion();
+            self.establecerSeleccion(this);
+        })
+        .evento("click",function() {
+            self.limpiarSeleccion();
+        });
+
+        document.evento("keydown",function(ev) {
+            if(eventosPausados) return;
+
+            if(ev.which==27) {
+                self.limpiarSeleccion();
+            } else if(ev.which==46) {
+                if(self.componenteSeleccionado) {
+                    self.eliminarComponente(self.componenteSeleccionado);
+                    self.componenteSeleccionado=null;
+                    ev.preventDefault();
+                }
+            }
+        });
+    }
+
+    this.eliminarComponente=function(comp) {
+        console.log("eliminar",comp);
+
+        return this;
+    };
+
+    this.establecerSeleccion=function(obj) {
+        var elem,comp;
+        
+        if(obj instanceof window.componente) {
+            comp=obj;
+            elem=comp.obtenerElemento();
+        } else {
+            comp=ui.obtenerInstanciaComponente(obj);
+            elem=obj;
+        }
+
+        elem.agregarClase("seleccionado");
+        this.componenteSeleccionado=comp;
+
+        return this;
+    };
+
+    this.limpiarSeleccion=function() {
+        ui.obtenerCuerpo().querySelectorAll(".componente").removerClase("seleccionado");
+        this.componenteSeleccionado=null;
+
+        return this;
+    };
+
     this.activar=function() {
         contruirBarrasHerramientas();
         prepararArrastrarYSoltar();
+        establecerEventos();
         ui.establecerModoEdicion(true);
+
+        return this;
     };
 
     this.moverComponente=function(destino,id) {
-        var obj=ui.obtenerComponente(id);
-        if(!obj||destino===obj.elemento) return;
+        var obj=ui.obtenerInstanciaComponente(id);
+        if(!obj||destino===obj.elemento) return this;
         destino.anexar(obj.elemento);
+
+        return this;
     };
 
     this.insertarComponente=function(destino,nombre) {
@@ -121,6 +186,8 @@ var editor=new function() {
                 idcomponente:id
             })
         });
+
+        return this;
     };
 
     /**
@@ -159,12 +226,22 @@ var editor=new function() {
                 document.body.removerClase("trabajando");
             }
         });
+
+        return this;
     };
 
     this.previsualizar=function() {
         this.guardar(true,function(resp) {
             window.open(resp.url,"previsualizacion");
         });
+
+        return this;
+    };
+
+    this.pausarEventos=function(valor) {
+        if(util.esIndefinido(valor)) valor=true;
+        eventosPausados=valor;
+        return this;
     };
 }();
 

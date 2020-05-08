@@ -28,6 +28,7 @@ function componenteContenedor() {
         this.datosElemento.elemento=this.elemento;
         this.datosElemento.contenedor=this.contenedor;
         this.datosElemento.instancia=this;
+        this.base.inicializar.call(this);
         return this;
     };
     
@@ -35,7 +36,7 @@ function componenteContenedor() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='container contenedor vacio'/>");
+        this.elemento=document.crear("<div class='container vacio'/>");
         this.establecerId();
         this.inicializar();
         return this;

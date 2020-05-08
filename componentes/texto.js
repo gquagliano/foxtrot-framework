@@ -23,22 +23,19 @@ function componenteTexto() {
     };
 
     this.configurarEventos=function() {
+        if(!ui.enModoEdicion()) return;
+
         this.elemento.evento("dblclick",function(ev) {
-            if(ui.enModoEdicion()) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            self.iniciarEdicion();
+        }).evento("blur",function(ev) {
+            self.finalizarEdicion();
+        }).evento("keydown",function(ev) {
+            if(ev.which==27) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                
-                this.editable(true).focus();
-
-                //Deshabilitar arrastre en todo el árbol para que se pueda arrastrar el texto seleccionado dentro del editor
-                this.pausarArrastreArbol();
-            }
-        }).evento("blur",function(ev) {
-            if(ui.enModoEdicion()) {
-                this.editable(false);
-
-                //Reestablecer arrastre en todo el árbol
-                this.pausarArrastreArbol(false);
+                self.finalizarEdicion();
             }
         });
     };
@@ -51,6 +48,8 @@ function componenteTexto() {
         this.datosElemento.instancia=this;
 
         this.configurarEventos();
+        
+        this.base.inicializar.call(this);
 
         return this;
     };

@@ -18,6 +18,8 @@ function componente() {
     this.elemento=null;
     this.contenedor=null;
     this.datosElemento=util.clonar(elementoComponente);
+    this.hijos=[];
+    this.padre=null;
 
     /**
      * Inicializa la instancia.
@@ -31,7 +33,7 @@ function componente() {
      */
     this.establecerId=function(id) {
         if(!util.esIndefinido(id)) this.id=id;
-        if(this.elemento) this.elemento.dato("fxid",this.id);
+        if(this.elemento) this.elemento.dato(ui._nombreDatoId,this.id);
         return this;
     };
 
@@ -66,7 +68,7 @@ function componente() {
      * Devuelve un objeto con todos los parámetros de configuración.
      */
     this.obtenerParametros=function() {
-        return "test";
+        return {};
     };
 
     /**
@@ -80,6 +82,15 @@ function componente() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
+        //Las clases css que se mantengan al salir del modo de edición, deben ser breves
+        this.elemento.agregarClase("componente");
+
+        if(this.contenedor) {
+            this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
+                                                        //.container que es la clase de Bootstrap.
+            if(!this.hijos.length) this.contenedor.agregarClase("vacio");
+        }        
+
         return this;
     };
 
@@ -94,17 +105,30 @@ function componente() {
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
     this.restaurar=function() {
-        this.elemento=document.querySelector("[data-fxid='"+this.id+"']");
+        this.elemento=document.querySelector("[data-"+ui._nombreDatoId+"='"+this.id+"']");
+
+
+
         this.inicializar();
         return this;
     };
     
-    /**
-     * Constructor.
-     */
-    (function() {
-
-    })();
+    this.iniciarEdicion=function() {        
+        this.elemento.editable(true).focus();
+        //Deshabilitar arrastre en todo el árbol para que se pueda arrastrar el texto seleccionado dentro del editor
+        this.elemento.pausarArrastreArbol();
+        //Deshabilitar otros eventos del editor (para evitar interferencias con la redacción de texto, por ejemplo, SUPR)
+        editor.pausarEventos();                
+        return this;
+    };
+    
+    this.finalizarEdicion=function() {
+        this.elemento.editable(false);
+        //Reestablecer eventos
+        this.elemento.pausarArrastreArbol(false);
+        editor.pausarEventos(false);                
+        return this;
+    };
 }
 
 //Exportar para Closure

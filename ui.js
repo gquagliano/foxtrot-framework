@@ -20,6 +20,8 @@ var ui=new function() {
         modoEdicion=false,
         id=1;
 
+    this._nombreDatoId="fxid";
+
     var doc=document,
         body=document.body,
         cuerpo=doc.querySelector("#foxtrot-cuerpo");
@@ -133,10 +135,16 @@ var ui=new function() {
     };
 
     /**
-     * Devuelve la instancia de un componente dado su ID.
+     * Devuelve la instancia de un componente dado su ID o elemento del DOM.
      */
-    this.obtenerComponente=function(id) {
-        if(!instanciasComponentesId.hasOwnProperty(id)) return null;
+    this.obtenerInstanciaComponente=function(param) {
+        var id;
+        if(typeof param==="number") {
+            id=param;
+        } else {
+            id=param.dato(this._nombreDatoId);
+        }
+        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
         return instanciasComponentes[instanciasComponentesId[id]];
     };
 

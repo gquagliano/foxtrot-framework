@@ -35,16 +35,21 @@
     <div id="foxtrot-cuerpo"></div>
 
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
+
     <script src="util.js"></script>
     <script src="dom.js"></script>
     <script src="ajax.js"></script>
     <script src="arrastra.js"></script>
     <script src="ui.js"></script>
     <script src="componente.js"></script>
+
     <script src="componentes/contenedor.js"></script>
+    <link rel="stylesheet" href="componentes/css/contenedor.edicion.css">
+
     <script src="componentes/texto.js"></script>
     <script src="componentes/fila.js"></script>
     <script src="componentes/columna.js"></script>
+
     <script src="editor.js"></script>
     <script src="test.js"></script>
     

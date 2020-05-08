@@ -11,7 +11,6 @@ html {
     overflow-x: hidden;
 }
 * {
-    transition: all .2s;
 }
 body.foxtrot-modo-edicion {
 }
@@ -102,18 +101,25 @@ body.trabajando #foxtrot-cargando {
     box-shadow: inset 0 0 0 4px rgba(0,123,255,.25) !important;
 }
 #foxtrot-cuerpo.foxtrot-arrastrable-arrastrando-sobre {
-    box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1), inset 0 0 0 4px rgba(0,123,255,.25) !important;
-}
-.foxtrot-modo-edicion [contenteditable]:focus {
-    outline: none;
-    border-radius: 2px;
-    box-shadow: 0 0 0 4px rgba(0,123,255,.25) !important;
+    /*box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1), inset 0 0 0 4px rgba(0,123,255,.25) !important;*/
+    outline: 4px solid rgba(0,123,255,.25) !important;
 }
 
 .foxtrot-modo-edicion .contenedor.vacio {
     min-height: 40px;
-    border-radius: 10px;
     border: dashed 2px #c7c7c7;
+}
+.foxtrot-modo-edicion .componente {
+    cursor: pointer;
+}
+.foxtrot-modo-edicion .componente.seleccionado {
+    outline: 4px solid rgba(255, 0, 64, 0.25) !important;
+}
+
+.foxtrot-modo-edicion [contenteditable]:focus {
+    outline: none;
+    border-radius: 2px;
+    outline: 4px solid rgba(115, 255, 0, 0.25) !important;
 }
 
 [draggable] {

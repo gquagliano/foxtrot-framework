@@ -459,11 +459,11 @@
         
     };
 
-    EventTarget.prototype.evento=function(nombre,funcion,captura) {
+    function establecerEvento(elem,nombre,funcionInterna,funcion,captura) {
         //Si nombre es el único parámetro, devolvemos todas las funciones asignadas
         if(util.esIndefinido(funcion)) {
-            this.inicializarMetadatos();
-            var meta=this.metadato("eventos");
+            elem.inicializarMetadatos();
+            var meta=elem.metadato("eventos");
 
             if(!meta.hasOwnProperty(nombre)) return [];
 
@@ -475,6 +475,21 @@
             return arr;
         }
 
+        //Usamos un ID para poder encapsularla pero aún así poder identificar la función para removerla en removerEvento
+        if(util.esIndefinido(funcion._id)) funcion._id=id++;
+
+        //Almacenar para poder remover todo con removerEvento
+        elem.inicializarMetadatos();
+        var meta=elem.metadato("eventos");
+        if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
+        meta[nombre][funcion._id]=[funcion,funcionInterna]; 
+
+        elem.addEventListener(nombre,funcionInterna,captura);
+
+        return elem;
+    }
+
+    EventTarget.prototype.evento=function(nombre,funcion,captura) {
         //funcion puede ser un array para asignar múltiples listeners a la vez
         if(util.esArray(funcion)) {
             var t=this;
@@ -484,24 +499,57 @@
             return this;
         }
 
-        //Usamos un ID para poder encapsularla pero aún así poder identificar la función para removerla en removerEvento
-        if(util.esIndefinido(funcion._id)) funcion._id=id++;
-
         var t=this,
             fn=function(ev) {
                 //this siempre será el elemento al cual se le asignó el evento
                 funcion.call(t,ev);
             };
 
-        //Almacenar para poder remover todo con removerEvento
-        this.inicializarMetadatos();
-        var meta=this.metadato("eventos");
-        if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
-        meta[nombre][funcion._id]=[funcion,fn]; 
+        return establecerEvento(this,nombre,fn,funcion,captura);
+    };
 
-        this.addEventListener(nombre,fn,captura);
+    /**
+     * Establece una función que será invocada cuando el evento suceda en los hijos que coincidan con el filtro. Si estricto es true, sólo se invocará cuando el 
+     * elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
+     */
+    EventTarget.prototype.eventoFiltrado=function(nombre,filtro,funcion,estricto) {
+        if(util.esIndefinido(estricto)) estricto=false;
 
-        return this;
+        //funcion puede ser un array para asignar múltiples listeners a la vez
+        if(util.esArray(funcion)) {
+            var t=this;
+            funcion.forEach(function(fn) {
+                t.eventoFiltrado(nombre,filtro,fn);
+            });
+            return this;
+        }
+
+        var t=this,
+            fn=function(ev) {
+                var elemento=null;
+
+                if(estricto) {
+                    elemento=ev.path[0];
+                    if(!elemento.es(filtro)) return;                    
+                } else {
+                    //Buscar en ev.path un elemento que coincida con el filtro
+                    var elemento=null;
+                    for(var i=0;i<ev.path.length;i++) {
+                        var elem=ev.path[i];
+                        if(elem instanceof HTMLBodyElement||elem==this) break;
+                        if(elem.es(filtro)) {
+                            elemento=elem;
+                            break;
+                        }
+                    }
+                    if(!elemento) return;
+                }
+
+                //this siempre será el elemento en el cual se disparó el evento
+                funcion.call(elemento,ev);
+            };
+            
+        return establecerEvento(this,nombre,fn,funcion,true);
     };
 
     EventTarget.prototype.removerEvento=function(nombre,funcion) {

@@ -6,6 +6,7 @@
  */
 
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
 html {
     width: 100%;
@@ -31,10 +32,18 @@ body.foxtrot-modo-edicion {
     background: url(img/fondo.png);
 }
 
+/* Establecer los estilos para los componentes del editor, ya que la página cargará los estilos del usuario */
+
+.foxtrot-editor {
+    font-family: "Montserrat", sans-serif;
+    line-height: 13px;
+    font-size: 13px;
+    color: #2d2e2f;
+}
+
 /* Barras de herramientas */
 
 .foxtrot-barra-herramientas {
-    font-family: "Source Sans Pro", sans-serif;
     position: fixed;
     z-index: 100;
     background-color: #fff;
@@ -47,20 +56,19 @@ body.foxtrot-modo-edicion {
     height: 56px;
 }
 .foxtrot-grupo-herramientas {
-
 }
 .foxtrot-grupo-herramientas label {
     display: block;
     margin: 0;
     text-transform: uppercase;
-    font-weight: 300;
-    font-size: 13px;
-    letter-spacing: .9px;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: .7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #2d2e2f;
-    padding: 8px 0;
+    padding: 14px 0 7px;
+    color: #6b6f73;
 }
 
 /* Barra superior */
@@ -77,7 +85,6 @@ body.trabajando #foxtrot-cargando {
 /* Barras flotantes */
 
 .foxtrot-barra-herramientas-flotante {
-    font-family: "Source Sans Pro", sans-serif;
     position: fixed;
     z-index: 999;
     background-color: #fff;
@@ -93,7 +100,7 @@ body.trabajando #foxtrot-cargando {
     top: 3px;
     right: 3px;
     height: 10px;
-    background-color: #e6e6e6;
+    background-color: #e8ebf1;
     border-radius: 3px;
 }
 .foxtrot-barra-herramientas .btn,
@@ -127,9 +134,13 @@ body.trabajando #foxtrot-cargando {
 /* Barra de propiedades */
 
 #foxtrot-barra-propiedades {
-    left: calc(100% - 20px);
-    transform: translateX(-100%);
+    right: 20px;
     top: 75px;
+}
+.foxtrot-barra-propiedades-vacia .foxtrot-contenidos-barra-herramientas {
+    white-space: nowrap;
+    color: #cbced4;
+    padding: 20px 14px;
 }
 
 /* Arrastrar y soltar */

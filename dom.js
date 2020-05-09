@@ -363,6 +363,23 @@
      */
     Node.prototype.posicion=function() {
         //TODO
+        return {
+            x: null,
+            y: null
+        };
+    };
+
+    /**
+     * Devuelve un objeto {x,y} con la posición del elemento según está establecido en sus estilos.
+     */
+    Node.prototype.posicionEstilos=function() {
+        var estilos=this.estilos();
+        return {
+            top: parseFloat(estilos.top),
+            bottom: parseFloat(estilos.bottom),
+            left: parseFloat(estilos.left),
+            right: parseFloat(estilos.right)
+        };
     };
     
     /**
@@ -387,8 +404,10 @@
      * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
      */
     Node.prototype.estilos=function(estilo,valor) {
+        if(util.esIndefinido(estilo)) return getComputedStyle(this);
+        
         if(util.esCadena(estilo)) {
-            if(util.esIndefinido(valor)) return this.style[estilo];
+            if(util.esIndefinido(valor)) return getComputedStyle(this)[estilo];
             this.style[estilo]=normalizarValorCss(valor);
             return this;
         }        
@@ -400,6 +419,13 @@
         });
 
         return this;
+    };
+
+    /**
+     * Alias de estilos(estilo,valor).
+     */
+    Node.prototype.estilo=function(estilo,valor) {
+        return this.estilos(estilo,valor);
     };
 
     /**
@@ -623,15 +649,16 @@
     };
 
     //Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
-    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo","propiedad","estilos"].forEach(function(m) {
-        NodeList.prototype[m]=function() {
-            var args=Array.from(arguments);
-            this.forEach(function(elem) {
-                elem[m].apply(elem,args);
-            });
-            return this;
-        };
-    });
+    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo","propiedad","estilos","estilo",
+        "texto","html","anexar","anexarA"].forEach(function(m) {
+            NodeList.prototype[m]=function() {
+                var args=Array.from(arguments);
+                this.forEach(function(elem) {
+                    elem[m].apply(elem,args);
+                });
+                return this;
+            };
+        });
 
     //Copiar métodos de Node a Window
     ["obtenerId","inicializarMetadatos","metadato","metadatos","propiedad","ancho","alto"].forEach(function(m) {

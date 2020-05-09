@@ -297,7 +297,7 @@
         moverX=e.clientX;
         moverY=e.clientY;
 
-        var pos=elem.posicionAbsoluta(),
+        var pos=elem.posicionEstilos(),
             ancho=elem.ancho(),
             alto=elem.alto(),
             anchoVentana=window.ancho(),
@@ -309,8 +309,12 @@
         }
 
         elem.estilos({
-            left:pos.x+dx,
-            top:pos.y+dy
+            left:pos.left+dx,
+            top:pos.top+dy,
+            //Cambiamos el posicionamiento de right a left y bottom a top 
+            //TODO Poder configurar este comportamiento
+            right:"auto",
+            bottom:"auto"
         });
     }
 

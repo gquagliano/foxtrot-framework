@@ -20,6 +20,15 @@ function componente() {
     this.datosElemento=util.clonar(elementoComponente);
     this.hijos=[];
     this.padre=null;
+    this.propiedades={};
+
+    this.definicionPropiedades={
+        //nombre:{
+        //    tipo (predeterminado texto|multilinea|opciones)
+        //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+        //    grupo
+        //}
+    };
 
     /**
      * Inicializa la instancia.
@@ -50,6 +59,23 @@ function componente() {
     };
 
     /**
+     * Establece o devuelve el valor de una propiedad.
+     */
+    this.propiedad=function(nombre,valor) {
+        if(util.esIndefinido(valor)) return this.propiedades.hasOwnProperty(nombre)?this.propiedades[nombre]:null;
+        this.propiedades[nombre]=valor;
+        this.actualizar();
+        return this;
+    };
+    
+    /**
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     */
+    this.actualizar=function(propiedad) {
+        return this;
+    };
+
+    /**
      * Devuelve el ID de la instancia.
      */
     this.obtenerId=function() {
@@ -61,7 +87,14 @@ function componente() {
      */
     this.obtenerElemento=function() {
         if(!this.elemento) this.crear();
-        return this.datosElemento;
+        return this.elemento;
+    };
+
+    /**
+     * Devuelve el elemento correspondiente al contenedor de los hijos de esta instancia.
+     */
+    this.obtenerContenedor=function() {
+        return this.contenedor;
     };
 
     /**

@@ -29,6 +29,7 @@ $resultado=<<<RE
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <base href="$url">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <title></title>
@@ -38,11 +39,14 @@ $resultado=<<<RE
     
     <script src="util.js"></script>
     <script src="dom.js"></script>
-    <link rel="stylesheet" href="dom.css">
+    <script src="ajax.js"></script>
+    <script src="arrastra.js"></script>
     <script src="ui.js"></script>
     <script src="componente.js"></script>
     <script src="componentes/contenedor.js"></script>
     <script src="componentes/texto.js"></script>
+    <script src="componentes/fila.js"></script>
+    <script src="componentes/columna.js"></script>
     <script>
     ui.establecerJson('$json').ejecutar();
     </script>    

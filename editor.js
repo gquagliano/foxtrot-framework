@@ -16,7 +16,9 @@ var editor=new function() {
 
     var self=this,
         iconosComponentes={},
-        eventosPausados=false;
+        eventosPausados=false,
+        barraPropiedades=document.querySelector("#foxtrot-barra-propiedades"),
+        cuerpoBarraPropiedades=barraPropiedades.querySelector(".foxtrot-contenidos-barra-herramientas");
 
     this.componenteSeleccionado=null;
 
@@ -90,14 +92,15 @@ var editor=new function() {
         if(!datos) return;
 
         if(datos.hasOwnProperty("componente")) {
-            editor.insertarComponente(this,datos.componente);
+            var obj=self.insertarComponente(this,datos.componente);
+            self.establecerSeleccion(obj);
             return;
         }
 
         if(datos.hasOwnProperty("idcomponente")) {
-            editor.moverComponente(this,datos.idcomponente);
+            self.moverComponente(this,datos.idcomponente);
             return;
-        }        
+        }
     }
 
     function prepararArrastrarYSoltar() {
@@ -122,6 +125,9 @@ var editor=new function() {
             clase:"componente"
         },function(ev) {
             ev.stopPropagation();
+
+            //TODO Selección múltiple
+
             self.limpiarSeleccion();
             self.establecerSeleccion(this);
         })
@@ -150,8 +156,82 @@ var editor=new function() {
         return this;
     };
 
+    function construirPropiedades() {
+        if(!self.componenteSeleccionado) {
+            barraPropiedades.agregarClase("foxtrot-barra-propiedades-vacia");
+            cuerpoBarraPropiedades.html("Ningún componente seleccionado");
+            return;
+        }
+        
+        barraPropiedades.removerClase("foxtrot-barra-propiedades-vacia");
+        cuerpoBarraPropiedades.html("");
+
+        var agregarPropiedad=function(barra,prop,valor) {
+            var fila=document.crear("<div class='foxtrot-propiedad'>");
+            
+            document.crear("<label>").html(prop.etiqueta).anexarA(fila);
+
+            var tipo=prop.hasOwnProperty("tipo")?prop.tipo:"texto",
+                fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
+                nombre=prop.hasOwnProperty("nombre")?prop.nombre:null,
+                timeout=0,
+                componente=editor.componenteSeleccionado;
+
+            if(tipo=="texto") {
+                var campo=document.crear("<input type='text' class='form-control'>").valor(valor);
+                fila.anexar(campo);
+
+                campo.evento("input",function(ev) {
+                    var t=this;
+                    clearTimeout(timeout);
+                    timeout=setTimeout(function() {
+                        if(fn) fn.call(editor,componente,nombre,t.valor());
+                    },200);
+                }).evento("blur",function(ev) {
+                    if(fn) fn.call(editor,componente,nombre,this.valor());
+                });
+            }
+
+            fila.anexarA(barra);
+        };
+
+        //Propiedades especiales
+
+        ({
+            0:[
+                {
+                    etiqueta:"Nombre",
+                    funcion:function(componentes,prop,valor) {
+                        componentes.establecerNombre(valor);
+                    }
+                }
+            ]
+        }).forEach(function(grupo,propiedades) {
+            var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
+            if(grupo!=0) document.crear("<label>").html(grupo).anexarA(barra);
+            barra.anexarA(cuerpoBarraPropiedades);
+
+            propiedades.forEach(function(prop) {
+                //TODO Selección múltiple: No mostrar los valores
+                var valor=editor.componenteSeleccionado.nombre;
+
+                agregarPropiedad(barra,prop,valor);
+            });
+        });
+
+        //Propiedades del componente
+
+        //TODO Selección múltiple: Solo mostrar propiedades comunes a todos los elementos seleccionados
+
+
+    }
+
     this.establecerSeleccion=function(obj) {
         var elem,comp;
+
+        //TODO Selección múltiple
+
+        this.limpiarSeleccion();
         
         if(obj instanceof window.componente) {
             comp=obj;
@@ -164,12 +244,16 @@ var editor=new function() {
         elem.agregarClase("seleccionado");
         this.componenteSeleccionado=comp;
 
+        construirPropiedades();
+
         return this;
     };
 
     this.limpiarSeleccion=function() {
         ui.obtenerCuerpo().querySelectorAll(".componente").removerClase("seleccionado");
         this.componenteSeleccionado=null;
+
+        construirPropiedades();
 
         return this;
     };
@@ -194,24 +278,25 @@ var editor=new function() {
     this.insertarComponente=function(destino,nombre) {
         var obj=ui.crearComponente(nombre),
             id=obj.obtenerId(),
-            datos=obj.obtenerElemento();
+            elem=obj.obtenerElemento(),
+            conte=obj.obtenerContenedor();
 
-        destino.anexar(datos.elemento);
+        destino.anexar(elem);
 
-        if(datos.contenedor) {
-            datos.contenedor.crearDestino({
+        if(conte) {
+            conte.crearDestino({
                 drop:componenteSoltado
             });
         }
         
-        datos.elemento.arrastrable({
+        elem.arrastrable({
             icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
             datos:JSON.stringify({
                 idcomponente:id
             })
         });
 
-        return this;
+        return obj;
     };
 
     /**

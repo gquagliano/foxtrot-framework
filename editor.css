@@ -40,6 +40,34 @@ body.foxtrot-modo-edicion {
     font-size: 13px;
     color: #2d2e2f;
 }
+.foxtrot-editor .form-control,.foxtrot-editor .custom-select {
+    display: block;
+    width: 100%;
+    height: 28px;
+    padding: 4px 8px;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: inherit;
+    color: inherit;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 2px;
+}
+.foxtrot-editor .btn {
+    display: inline-block;
+    font-weight: 400;
+    color: inherit;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: none;
+    padding: 4px 8px;
+    font-size: inherit;
+    line-height: inherit;
+    border-radius: 2px;
+}
 
 /* Barras de herramientas */
 
@@ -57,7 +85,7 @@ body.foxtrot-modo-edicion {
 }
 .foxtrot-grupo-herramientas {
 }
-.foxtrot-grupo-herramientas label {
+.foxtrot-grupo-herramientas>label {
     display: block;
     margin: 0;
     text-transform: uppercase;
@@ -141,6 +169,27 @@ body.trabajando #foxtrot-cargando {
     white-space: nowrap;
     color: #cbced4;
     padding: 20px 14px;
+}
+.foxtrot-propiedad {
+    display: flex;
+    margin-bottom: 13px;
+    width: 330px;
+}
+.foxtrot-propiedad:last-child {
+    margin-bottom: 0;
+}
+.foxtrot-propiedad label {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+    flex: 0 0 100px;
+    margin: 0;
+    font-weight: normal;
+    padding-top: 8px;
+}
+.foxtrot-propiedad .form-control,.foxtrot-propiedad .custom-select {
+    flex: 1;
 }
 
 /* Arrastrar y soltar */

@@ -88,7 +88,7 @@
     Node.prototype.valor=function(valor) {
         //TODO select (valor de la opción seleccionada)
         //TODO checkbox (booleano)
-        if(util.esIndefinido(valor)) return this.value;
+        if(util.esIndefinido(valor)) return this.value?this.value:"";
         this.value=valor;
         return this;
     };

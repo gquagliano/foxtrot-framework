@@ -16,20 +16,20 @@
     <title>Editor de vistas</title>
   </head>
   <body>
-    <div id="foxtrot-barra-principal" class="foxtrot-barra-herramientas">
+    <div id="foxtrot-barra-principal" class="foxtrot-editor foxtrot-barra-herramientas">
         <button class="btn btn-sm" onclick="editor.guardar()" title="Guardar"><img src="img/guardar.png"></button>
         <button class="btn btn-sm" onclick="editor.previsualizar()" title="Previsualizar la vista en una nueva ventana (sin guardar los cambios)"><img src="img/previsualizar.png"></button>
         <button class="btn btn-sm" onclick="editor.deshacer()" disabled id="foxtrot-btn-deshacer" title="Deshacer"><img src="img/deshacer.png"></button>
         <button class="btn btn-sm" onclick="editor.rehacer()" disabled id="foxtrot-btn-rehacer" title="Rehacer"><img src="img/rehacer.png"></button>
         <img src="img/cargando.svg" id="foxtrot-cargando">
     </div>
-    <div id="foxtrot-barra-componentes" class="foxtrot-barra-herramientas-flotante">
+    <div id="foxtrot-barra-componentes" class="foxtrot-editor foxtrot-barra-herramientas-flotante">
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas"></div>
     </div>
-    <div id="foxtrot-barra-propiedades" class="foxtrot-barra-herramientas-flotante">
+    <div id="foxtrot-barra-propiedades" class="foxtrot-editor foxtrot-barra-herramientas-flotante foxtrot-barra-propiedades-vacia">
         <div class="foxtrot-asa-arrastre"></div>
-        <div class="foxtrot-contenidos-barra-herramientas"></div>
+        <div class="foxtrot-contenidos-barra-herramientas">Ningún componente seleccionado</div>
     </div>
 
     <div id="foxtrot-cuerpo"></div>

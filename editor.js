@@ -63,7 +63,7 @@ var editor=new function() {
                 var icono=document.crear("<img>")
                     .atributo("src",comp.config.icono)
                     .atributo("title",comp.config.descripcion);
-                iconosComponentes[nombre]=icono;
+                iconosComponentes[comp.config.nombre]=icono;
 
                 barraGrupo.anexar(
                     document.crear("<button class='"+claseBotonesBarrasHerramientas+"'>")
@@ -71,7 +71,7 @@ var editor=new function() {
                             icono.clonar()  //Clonamos el ícono para que no afecte la instancia almacenada en iconosComponentes
                                             //(al arrastrar, toma los estilos que pueda tener al momento de iniciar la operación de arraastre)
                         )
-                        .metadato("componente",nombre)
+                        .metadato("componente",comp.config.nombre)
                     );
             }
         }

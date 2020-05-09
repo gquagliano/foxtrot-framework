@@ -104,6 +104,15 @@
     };
 
     /**
+     * Agrega este elemento a los elementos especificados.
+     */
+    Node.prototype.anexarA=function(elemento) {
+        //TODO Si elemento es un NodeList, ¿clonar?
+        elemento.anexar(this);
+        return this;
+    };
+
+    /**
      * Determina si el elemento coincide con el filtro (¿por qué tiene que ser un selector como string?).
      * Propiedades de filtro:
      * clase            Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.

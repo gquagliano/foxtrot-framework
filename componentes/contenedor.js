@@ -44,9 +44,9 @@ function componenteContenedor() {
 }
 componenteContenedor.prototype=new componente();
 
-var config=util.clonar(configComponente);
-config.descripcion="Contenedor";
-config.icono="componentes/iconos/contenedor.png";
-
-ui.registrarComponente("contenedor",componenteContenedor,config);
+ui.registrarComponente("contenedor",componenteContenedor,util.clonar(configComponente,{
+    descripcion:"Contenedor",
+    grupo:"Estructura",
+    icono:"componentes/iconos/contenedor.png"
+}));
 

@@ -46,6 +46,7 @@ componenteFila.prototype=new componente();
 
 ui.registrarComponente("fila",componenteFila,util.clonar(configComponente,{
     descripcion:"Fila",
+    grupo:"Estructura",
     icono:"componentes/iconos/fila.png"
 }));
 

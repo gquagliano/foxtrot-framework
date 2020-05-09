@@ -36,7 +36,7 @@ function componenteColumna() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='col-3 contenedor vacio'/>");
+        this.elemento=document.crear("<div class='col-sm-3 contenedor vacio'/>");
         this.establecerId();
         this.inicializar();
         return this;
@@ -46,6 +46,7 @@ componenteColumna.prototype=new componente();
 
 ui.registrarComponente("columna",componenteColumna,util.clonar(configComponente,{
     descripcion:"Columna",
+    grupo:"Estructura",
     icono:"componentes/iconos/columna.png"
 }));
 

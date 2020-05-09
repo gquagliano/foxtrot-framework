@@ -66,10 +66,9 @@ function componenteTexto() {
 }
 componenteTexto.prototype=new componente();
 
-var config=util.clonar(configComponente);
-config.descripcion="Texto";
-config.icono="componentes/iconos/texto.png";
-config.aceptaHijos=false;
-
-ui.registrarComponente("texto",componenteTexto,config);
+ui.registrarComponente("texto",componenteTexto,util.clonar(configComponente,{
+    descripcion:"Texto",
+    icono:"componentes/iconos/texto.png",
+    aceptaHijos:false
+}));
 

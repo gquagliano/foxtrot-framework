@@ -166,7 +166,8 @@ var configComponente={
      * - false              Ninguno
      * - [ nombre, ... ]    Nombre de componentes de los cualqes puede ser hijo, o que acepta como hijos
      */
-    aceptaHijos: true
+    aceptaHijos: true,
+    grupo:null
 };
 
 /**

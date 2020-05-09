@@ -5,6 +5,8 @@
  * @version 1.0
  */
 
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap");
+
 html {
     width: 100%;
     height: 100%;
@@ -16,6 +18,7 @@ body.foxtrot-modo-edicion {
 }
 .foxtrot-modo-edicion * {
 }
+
 #foxtrot-cuerpo {
     position: relative;
     z-index: 1;
@@ -27,15 +30,11 @@ body.foxtrot-modo-edicion {
     top: 56px;
     background: url(img/fondo.png);
 }
-#foxtrot-cargando {
-    float: right;
-    height: 34px;
-    opacity: 0;
-}
-body.trabajando #foxtrot-cargando {
-    opacity: 1;
-}
+
+/* Barras de herramientas */
+
 .foxtrot-barra-herramientas {
+    font-family: "Source Sans Pro", sans-serif;
     position: fixed;
     z-index: 100;
     background-color: #fff;
@@ -47,7 +46,38 @@ body.trabajando #foxtrot-cargando {
     top: 0;
     height: 56px;
 }
+.foxtrot-grupo-herramientas {
+
+}
+.foxtrot-grupo-herramientas label {
+    display: block;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: .9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #2d2e2f;
+    padding: 8px 0;
+}
+
+/* Barra superior */
+
+#foxtrot-cargando {
+    float: right;
+    height: 34px;
+    opacity: 0;
+}
+body.trabajando #foxtrot-cargando {
+    opacity: 1;
+}
+
+/* Barras flotantes */
+
 .foxtrot-barra-herramientas-flotante {
+    font-family: "Source Sans Pro", sans-serif;
     position: fixed;
     z-index: 999;
     background-color: #fff;
@@ -87,15 +117,22 @@ body.trabajando #foxtrot-cargando {
     width: 24px;
 }
 
+/* Barra de componentes */
+
 #foxtrot-barra-componentes {
     left: 20px;
     top: 75px;
 }
+
+/* Barra de propiedades */
+
 #foxtrot-barra-propiedades {
     left: calc(100% - 20px);
     transform: translateX(-100%);
     top: 75px;
 }
+
+/* Arrastrar y soltar */
 
 .foxtrot-arrastrable-arrastrando-sobre {
     box-shadow: inset 0 0 0 4px rgba(0,123,255,.25) !important;
@@ -104,6 +141,16 @@ body.trabajando #foxtrot-cargando {
     /*box-shadow: 0 1px 5px rgba(0,0,0,.07), 0 0 40px rgba(0,0,0,.1), inset 0 0 0 4px rgba(0,123,255,.25) !important;*/
     outline: 4px solid rgba(0,123,255,.25) !important;
 }
+[draggable] {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -khtml-user-drag: element;
+    -webkit-user-drag: element;
+}
+
+/* Componentes */
 
 .foxtrot-modo-edicion .contenedor.vacio {
     min-height: 40px;
@@ -115,18 +162,8 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .componente.seleccionado {
     outline: 4px solid rgba(255, 0, 64, 0.25) !important;
 }
-
 .foxtrot-modo-edicion [contenteditable]:focus {
     outline: none;
     border-radius: 2px;
     outline: 4px solid rgba(115, 255, 0, 0.25) !important;
-}
-
-[draggable] {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    -khtml-user-drag: element;
-    -webkit-user-drag: element;
 }

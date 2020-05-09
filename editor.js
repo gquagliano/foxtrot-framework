@@ -34,22 +34,46 @@ var editor=new function() {
     function contruirBarrasHerramientas() {
         var barra=document.querySelector("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas"),
             componentes=ui.obtenerComponentes();
+
+        var grupos={
+            0:[]
+        };
+        
         for(var nombre in componentes) {
             if(!componentes.hasOwnProperty(nombre)) continue;
 
-            var icono=document.crear("<img>")
-                .atributo("src",componentes[nombre].config.icono)
-                .atributo("title",componentes[nombre].config.descripcion);
-            iconosComponentes[nombre]=icono;
+            var comp=componentes[nombre],
+                gr=comp.config.grupo;
 
-            barra.anexar(
-                document.crear("<button class='"+claseBotonesBarrasHerramientas+"'>")
-                    .anexar(
-                        icono.clonar()  //Clonamos el ícono para que no afecte la instancia almacenada en iconosComponentes
-                                        //(al arrastrar, toma los estilos que pueda tener al momento de iniciar la operación de arraastre)
-                    )
-                    .metadato("componente",nombre)
-                );
+            if(!gr) gr=0;
+            if(!grupos.hasOwnProperty(gr)) grupos[gr]=[];
+            grupos[gr].push(comp);
+        }
+
+        for(var grupo in grupos) {
+            if(!grupos.hasOwnProperty(grupo)) continue;
+
+            var barraGrupo=document.crear("<div class='foxtrot-grupo-herramientas'>");
+            if(grupo!=0) document.crear("<label>").html(grupo).anexarA(barraGrupo);
+            barraGrupo.anexarA(barra);
+
+            for(var i=0;i<grupos[grupo].length;i++) {
+                var comp=grupos[grupo][i];
+
+                var icono=document.crear("<img>")
+                    .atributo("src",comp.config.icono)
+                    .atributo("title",comp.config.descripcion);
+                iconosComponentes[nombre]=icono;
+
+                barraGrupo.anexar(
+                    document.crear("<button class='"+claseBotonesBarrasHerramientas+"'>")
+                        .anexar(
+                            icono.clonar()  //Clonamos el ícono para que no afecte la instancia almacenada en iconosComponentes
+                                            //(al arrastrar, toma los estilos que pueda tener al momento de iniciar la operación de arraastre)
+                        )
+                        .metadato("componente",nombre)
+                    );
+            }
         }
 
         configurarBarrasHerramientas();

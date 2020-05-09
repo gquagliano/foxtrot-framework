@@ -83,6 +83,17 @@
     };
 
     /**
+     * Devuelve o establece el valor del campo.
+     */
+    Node.prototype.valor=function(valor) {
+        //TODO select (valor de la opción seleccionada)
+        //TODO checkbox (booleano)
+        if(util.esIndefinido(valor)) return this.value;
+        this.value=valor;
+        return this;
+    };
+
+    /**
      * Agrega los elementos especificados a los elementos de esta instancia.
      */
     Node.prototype.anexar=function(elemento) {
@@ -535,7 +546,7 @@
         }        
 
         //nombre puede contener múltiples eventos separados por espacios
-        if(nombre.indexOf(" ")) {
+        if(nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
                 t.evento(n,funcion,captura);
@@ -569,7 +580,7 @@
         }  
 
         //nombre puede contener múltiples eventos separados por espacios
-        if(nombre.indexOf(" ")) {
+        if(nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
                 t.eventoFiltrado(n,filtro,funcion,estricto);
@@ -616,7 +627,7 @@
         }
 
         //nombre puede contener múltiples eventos separados por espacios
-        if(nombre.indexOf(" ")) {
+        if(nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
                 t.removerEvento(n,funcion);

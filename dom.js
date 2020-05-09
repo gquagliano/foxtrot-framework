@@ -532,6 +532,15 @@
                 t.evento(nombre,fn,captura);
             });
             return this;
+        }        
+
+        //nombre puede contener múltiples eventos separados por espacios
+        if(nombre.indexOf(" ")) {
+            var t=this;
+            nombre.split(" ").forEach(function(n) {
+                t.evento(n,funcion,captura);
+            });
+            return this;
         }
 
         var t=this,
@@ -555,6 +564,15 @@
             var t=this;
             funcion.forEach(function(fn) {
                 t.eventoFiltrado(nombre,filtro,fn);
+            });
+            return this;
+        }  
+
+        //nombre puede contener múltiples eventos separados por espacios
+        if(nombre.indexOf(" ")) {
+            var t=this;
+            nombre.split(" ").forEach(function(n) {
+                t.eventoFiltrado(n,filtro,funcion,estricto);
             });
             return this;
         }
@@ -593,6 +611,15 @@
             var t=this;
             funcion.forEach(function(fn) {
                 t.removerEvento(nombre,fn);
+            });
+            return this;
+        }
+
+        //nombre puede contener múltiples eventos separados por espacios
+        if(nombre.indexOf(" ")) {
+            var t=this;
+            nombre.split(" ").forEach(function(n) {
+                t.removerEvento(n,funcion);
             });
             return this;
         }

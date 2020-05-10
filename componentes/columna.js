@@ -13,6 +13,17 @@
 function componenteColumna() {
     this.componente="columna";
 
+    this.propiedadesConcretas={
+        "Tamaño":{
+            //nombre:{
+            //    etiqueta
+            //    tipo (predeterminado texto|multilinea|opciones|color)
+            //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+            //    grupo
+            //}
+        }
+    };
+
     /**
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
      */

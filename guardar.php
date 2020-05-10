@@ -16,12 +16,15 @@ $previsualizar=$_POST['previsualizar']=='true';
 if($previsualizar) {
     $ruta='temp/';
     $nombre=basename(tempnam($ruta,'p')).'.html';
+    $nombreCss=basename(tempnam($ruta,'e')).'.css';
 } else {
     $ruta='';
     $nombre=preg_replace('/[^a-z]/i','',$_POST['nombre']).'.html';
+    $nombreCss='sitio.css';
 }
 
 $html=$_POST['html'];
+$css=$_POST['css'];
 $json=str_replace('\'','\\\'',$_POST['json']);
 
 $resultado=<<<RE
@@ -32,7 +35,9 @@ $resultado=<<<RE
     <base href="$url">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="$ruta$nombreCss">
     <title></title>
+    <style id="foxtrot-estilos"></style>
   </head>
   <body>
     $html
@@ -49,12 +54,15 @@ $resultado=<<<RE
     <script src="componentes/columna.js"></script>
     <script>
     ui.establecerJson('$json').ejecutar();
-    </script>    
+    </script>
   </body>
 </html>
 RE;
 
 file_put_contents(__DIR__.'/'.$ruta.$nombre,$resultado);
+
+//En la versión real, debe incorporarse el css a la hoja de estilos de la aplicación
+file_put_contents(__DIR__.'/'.$ruta.$nombreCss,$css);
 
 echo json_encode([
     'nombre'=>$nombre,

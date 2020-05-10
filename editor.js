@@ -166,19 +166,22 @@ var editor=new function() {
         barraPropiedades.removerClase("foxtrot-barra-propiedades-vacia");
         cuerpoBarraPropiedades.html("");
 
-        var agregarPropiedad=function(barra,prop,valor) {
+        var agregarPropiedad=function(barra,nombre,prop) {
             var fila=document.crear("<div class='foxtrot-propiedad'>");
             
             document.crear("<label>").html(prop.etiqueta).anexarA(fila);
 
             var tipo=prop.hasOwnProperty("tipo")?prop.tipo:"texto",
                 fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
-                nombre=prop.hasOwnProperty("nombre")?prop.nombre:null,
                 timeout=0,
                 componente=editor.componenteSeleccionado;
 
-            if(tipo=="texto") {
-                var campo=document.crear("<input type='text' class='form-control'>").valor(valor);
+            if(tipo=="?") {
+                //TODO
+            } else {
+                //Campo de texto como predeterminado
+                
+                var campo=document.crear("<input type='text' class='form-control'>").valor(prop.valor);
                 fila.anexar(campo);
 
                 campo.evento("input",function(ev) {
@@ -195,35 +198,47 @@ var editor=new function() {
             fila.anexarA(barra);
         };
 
-        //Propiedades especiales
+        var propiedades=editor.componenteSeleccionado.obtenerPropiedades();
 
-        ({
-            0:[
-                {
-                    etiqueta:"Nombre",
-                    funcion:function(componentes,prop,valor) {
-                        componentes.establecerNombre(valor);
-                    }
-                }
-            ]
-        }).forEach(function(grupo,propiedades) {
+        //Propiedades especiales
+        propiedades[-1]={
+            nombre: {
+                etiqueta:"Nombre",
+                funcion:function(componentes,prop,valor) {
+                    componentes.establecerNombre(valor);
+                },
+                //TODO Selección múltiple: No mostrar los valores
+                valor:editor.componenteSeleccionado.nombre
+            }
+        };
+
+        //Ordenar por propiedad del objeto propiedades
+        var claves=Object.keys(propiedades).sort();
+
+        claves.forEach(function(grupo) {
+            var props=propiedades[grupo];
+            if(props.vacio()) return;
+
             var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
-            if(grupo!=0) document.crear("<label>").html(grupo).anexarA(barra);
+
+            if(grupo==-1) {
+                document.crear("<label>").html(
+                        ui.obtenerConfigComponente(editor.componenteSeleccionado.componente).nombre
+                    ).anexarA(barra);
+            } else if(grupo!=0) {
+                document.crear("<label>").html(grupo).anexarA(barra);
+            }
+
             barra.anexarA(cuerpoBarraPropiedades);
 
-            propiedades.forEach(function(prop) {
-                //TODO Selección múltiple: No mostrar los valores
-                var valor=editor.componenteSeleccionado.nombre;
-
-                agregarPropiedad(barra,prop,valor);
+            var orden=Object.keys(props).sort();
+            orden.forEach(function(nombre) {
+                var prop=props[nombre];
+                agregarPropiedad(barra,nombre,prop);
             });
         });
 
-        //Propiedades del componente
-
         //TODO Selección múltiple: Solo mostrar propiedades comunes a todos los elementos seleccionados
-
-
     }
 
     this.establecerSeleccion=function(obj) {
@@ -324,6 +339,7 @@ var editor=new function() {
                 previsualizar:previsualizar,
                 nombre:"salida",
                 html:ui.obtenerHtml(),
+                css:ui.obtenerCss(),
                 json:ui.obtenerJson()
             },
             listo:function(resp) {

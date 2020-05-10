@@ -33,6 +33,7 @@
     </div>
 
     <div id="foxtrot-cuerpo"></div>
+    <style id="foxtrot-estilos"></style>
 
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
 

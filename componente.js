@@ -13,22 +13,34 @@
 function componente() {
     this.base=this;
     this.id=null;
+    this.selector=null;
     this.componente=null;
     this.nombre=null;
     this.elemento=null;
     this.contenedor=null;
-    this.datosElemento=util.clonar(elementoComponente);
+    this.datosElemento=util.clonar(elementoComponente); //TODO ¿Remover?
     this.hijos=[];
     this.padre=null;
     this.propiedades={};
 
-    this.definicionPropiedades={
-        //nombre:{
-        //    tipo (predeterminado texto|multilinea|opciones)
-        //    opciones (array {valor,etiqueta} cuando tipo=opciones)
-        //    grupo
-        //}
+    this.propiedadesComunes={
+        "Estilo":{
+            //nombre:{
+            //    etiqueta
+            //    tipo (predeterminado texto|multilinea|opciones|color)
+            //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+            //    grupo
+            //}
+            color:{
+                etiqueta:"Color",
+                tipo:"color"
+            }
+        }
     };
+
+    this.propiedadesConcretas={};
+
+    var propiedadesCombinadas=null;
 
     /**
      * Inicializa la instancia.
@@ -64,14 +76,54 @@ function componente() {
     this.propiedad=function(nombre,valor) {
         if(util.esIndefinido(valor)) return this.propiedades.hasOwnProperty(nombre)?this.propiedades[nombre]:null;
         this.propiedades[nombre]=valor;
-        this.actualizar();
+        this.actualizar(nombre);
         return this;
+    };
+
+    /**
+     * Devuelve el listado de propiedades ordenadas por grupo.
+     */
+    this.obtenerPropiedades=function() {
+        var t=this;
+
+        if(!propiedadesCombinadas) {
+            propiedadesCombinadas={};
+
+            ["propiedadesComunes","propiedadesConcretas"].forEach(function(v) {
+                t[v].forEach(function(grupo,propiedades) {
+                    propiedades.forEach(function(nombre,propiedad) {
+                        if(!propiedadesCombinadas.hasOwnProperty(grupo)) propiedadesCombinadas[grupo]={};
+                                            
+                        propiedad.funcion=function(componentes,prop,valor) {
+                            //TODO Selección múltiple
+                            componentes.propiedad.call(componentes,prop,valor);
+                        };
+                        
+                        propiedadesCombinadas[grupo][nombre]=propiedad;
+                    });
+                });
+            });
+        }
+
+        propiedadesCombinadas.forEach(function(grupo,propiedades) {
+            propiedades.forEach(function(nombre,propiedad) {
+                propiedad.valor=t.propiedad(nombre);
+            });
+        });
+
+        return propiedadesCombinadas;
     };
     
     /**
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
     this.actualizar=function(propiedad) {
+        var estilos=ui.obtenerEstilos(this.selector);
+
+        if(propiedad=="color") {
+            ui.establecerEstilosSelector(this.selector,"color:"+this.propiedades.color);
+        }
+
         return this;
     };
 
@@ -80,6 +132,10 @@ function componente() {
      */
     this.obtenerId=function() {
         return this.id;
+    };
+
+    this.obtenerDatosElemento=function() {
+        return this.datosElemento;
     };
 
     /**
@@ -115,7 +171,10 @@ function componente() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        //Las clases css que se mantengan al salir del modo de edición, deben ser breves
+        this.selector="#fox"+this.id;
+        this.elemento.atributo("id","fox"+this.id);
+
+        //Las clases css que se mantengan al salir del modo de edición deben ser breves
         this.elemento.agregarClase("componente");
 
         if(this.contenedor) {

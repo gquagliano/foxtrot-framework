@@ -24,10 +24,58 @@ var ui=new function() {
 
     var doc=document,
         body=document.body,
-        cuerpo=doc.querySelector("#foxtrot-cuerpo");
+        cuerpo=doc.querySelector("#foxtrot-cuerpo"),
+        estilos=doc.querySelector("#foxtrot-estilos");
 
     this.obtenerCuerpo=function() {
         return cuerpo;
+    };
+
+    this.obtenerElementoEstilos=function() {
+        return estilos;
+    };
+
+    this.obtenerEstilos=function(selector) {
+        if(util.esIndefinido(selector)) selector=null;
+
+        var reglas=[];
+        for(var i in estilos.sheet.cssRules) {
+            if(!estilos.sheet.cssRules.hasOwnProperty(i)) continue;
+            var regla=estilos.sheet.cssRules[i];
+
+            var obj={
+                selector:regla.selectorText,
+                estilos:regla.style,
+                texto:regla.style.cssText,
+                indice:i
+            };
+
+            if(selector&&regla.selectorText==selector) return obj;
+            
+            reglas.push(obj);
+        }
+
+        return selector?null:reglas;
+    };
+
+    this.establecerEstilos=function(css) {
+        estilos.innerText=css;
+        return this;
+    };
+
+    this.establecerEstilosSelector=function(selector,css) {
+        for(var i in estilos.sheet.cssRules) {
+            if(!estilos.sheet.cssRules.hasOwnProperty(i)) continue;
+
+            var regla=estilos.sheet.cssRules[i];
+
+            if(selector==regla.selectorText) {
+                estilos.sheet.deleteRule(i);
+                break;
+            }
+        };
+        estilos.sheet.insertRule(selector+"{"+css+"}",estilos.sheet.cssRules.length);
+        return this;
     };
 
     this.generarId=function() {
@@ -40,6 +88,10 @@ var ui=new function() {
             fn:funcion,
             config:configuracion
         };
+    };
+
+    this.obtenerConfigComponente=function(nombre) {
+        return componentesRegistrados[nombre].config;
     };
 
     this.obtenerComponentes=function() {
@@ -82,6 +134,17 @@ var ui=new function() {
      */
     this.obtenerHtml=function() {
         return editor.limpiarHtml(cuerpo.innerHTML);
+    };
+
+    /**
+     * Devuelve el CSS de la vista.
+     */
+    this.obtenerCss=function() {
+        var css="";
+        this.obtenerEstilos().forEach(function(regla) {
+            css+=regla.selector+"{"+regla.texto+"}";
+        });
+        return css;        
     };
 
     /**
@@ -149,7 +212,7 @@ var ui=new function() {
     };
 
     this.ejecutar=function() {
-        
+
     };
 }();
 

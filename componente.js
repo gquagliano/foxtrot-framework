@@ -21,7 +21,11 @@ function componente() {
     this.datosElemento=util.clonar(elementoComponente); //TODO ¿Remover?
     this.hijos=[];
     this.padre=null;
-    this.propiedades={};
+
+    //Propiedades: Listado de posibles parámetros.
+    //Parámetros: Valores de los parámetros.
+
+    this.parametros={};
 
     this.propiedadesComunes={
         "Estilo":{
@@ -37,9 +41,7 @@ function componente() {
             }
         }
     };
-
     this.propiedadesConcretas={};
-
     var propiedadesCombinadas=null;
 
     /**
@@ -73,9 +75,9 @@ function componente() {
     /**
      * Establece o devuelve el valor de una propiedad.
      */
-    this.propiedad=function(nombre,valor) {
-        if(util.esIndefinido(valor)) return this.propiedades.hasOwnProperty(nombre)?this.propiedades[nombre]:null;
-        this.propiedades[nombre]=valor;
+    this.parametro=function(nombre,valor) {
+        if(util.esIndefinido(valor)) return this.parametros.hasOwnProperty(nombre)?this.parametros[nombre]:null;
+        this.parametros[nombre]=valor;
         this.actualizar(nombre);
         return this;
     };
@@ -96,7 +98,7 @@ function componente() {
                                             
                         propiedad.funcion=function(componentes,prop,valor) {
                             //TODO Selección múltiple
-                            componentes.propiedad.call(componentes,prop,valor);
+                            componentes.parametro.call(componentes,prop,valor);
                         };
                         
                         propiedadesCombinadas[grupo][nombre]=propiedad;
@@ -107,7 +109,7 @@ function componente() {
 
         propiedadesCombinadas.forEach(function(grupo,propiedades) {
             propiedades.forEach(function(nombre,propiedad) {
-                propiedad.valor=t.propiedad(nombre);
+                propiedad.valor=t.parametro(nombre);
             });
         });
 
@@ -118,10 +120,10 @@ function componente() {
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
     this.actualizar=function(propiedad) {
-        var estilos=ui.obtenerEstilos(this.selector);
+        //var estilos=ui.obtenerEstilos(this.selector);
 
         if(propiedad=="color") {
-            ui.establecerEstilosSelector(this.selector,"color:"+this.propiedades.color);
+            ui.establecerEstilosSelector(this.selector,"color:"+this.parametros.color);
         }
 
         return this;
@@ -157,13 +159,14 @@ function componente() {
      * Devuelve un objeto con todos los parámetros de configuración.
      */
     this.obtenerParametros=function() {
-        return {};
+        return this.parametros;
     };
 
     /**
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
      */
     this.establecerParametros=function(obj) {
+        this.parametros=obj;
         return this;
     };
 

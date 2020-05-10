@@ -184,7 +184,7 @@ var ui=new function() {
      * Establece e inicializa l a vista y sus componentes dado su json.
      */
     this.establecerJson=function(json) {
-        json=JSON.parse(json);
+        if(typeof json==="string") json=JSON.parse(json);
         
         json.componentes.forEach(function(componente) {
             ui.crearComponente(componente.componente)

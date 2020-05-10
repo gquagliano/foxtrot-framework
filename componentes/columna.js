@@ -25,13 +25,6 @@ function componenteColumna() {
     };
 
     /**
-     * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
-     */
-    this.establecerParametros=function(obj) {
-        return this;
-    };
-
-    /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {

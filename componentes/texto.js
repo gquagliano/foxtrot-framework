@@ -15,13 +15,6 @@ function componenteTexto() {
 
     var self=this;
 
-    /**
-     * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
-     */
-    this.establecerParametros=function(obj) {
-        return this;
-    };
-
     this.configurarEventos=function() {
         if(!ui.enModoEdicion()) return;
 

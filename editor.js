@@ -325,7 +325,7 @@ var editor=new function() {
     };
 
     /**
-     * Guarda la vista actual (actualmente en modo de pruebas, guarda a /salida.html).
+     * Guarda la vista actual (actualmente en modo de pruebas, guarda a /salida/salida.html).
      */
     this.guardar=function(previsualizar,cbk) {
         if(util.esIndefinido(previsualizar)) previsualizar=false;
@@ -347,6 +347,39 @@ var editor=new function() {
                     alert("No fue posible guardar la vista.");
                 } else {
                     if(cbk) cbk.call(self,resp);
+                }
+                document.body.removerClase("trabajando");
+            }
+        });
+
+        return this;
+    };
+
+    /**
+     * Abre una vista (actualmente en modo de pruebas, abre /salida/salida.html).
+     */
+    this.abrir=function(cbk) {
+        if(util.esIndefinido(cbk)) cbk=null;
+        
+        document.body.agregarClase("trabajando");
+
+        new ajax({
+            url:"abrir.php",
+            parametros:{
+                nombre:"salida"
+            },
+            listo:function(resp) {
+                if(!resp) {
+                    alert("No fue posible abrir la vista.");
+                } else {
+                    if(cbk) {
+                        cbk.call(self,resp);
+                    } else {
+                        ui.reemplazarHtml(resp.html);
+                        ui.establecerEstilos(resp.css);
+                        ui.establecerJson(resp.json);
+                        ui.ejecutar();
+                    }
                 }
                 document.body.removerClase("trabajando");
             }

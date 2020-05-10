@@ -724,6 +724,15 @@
     };
 
     /**
+     * Determina si el objeto es un objeto vacío.
+     */
+    Object.prototype.vacio=function() {
+        for(var prop in this)
+            if(this.hasOwnProperty(prop)) return false;
+        return JSON.stringify(this)===JSON.stringify({});
+    };
+
+    /**
      * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
      */
     HTMLDocument.prototype.crear=function(html) {

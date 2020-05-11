@@ -19,7 +19,8 @@ var editor=new function() {
 
     var self=this,
         iconosComponentes={},
-        eventosPausados=false;
+        eventosPausados=false,
+        bordesVisibles=false;
 
     this.componenteSeleccionado=null;
 
@@ -112,6 +113,9 @@ var editor=new function() {
             clase:"componente"
         },function(ev) {
             ev.stopPropagation();
+
+            //TODO Mostrar el menú contextual con click derecho
+            //TODO Selección de componentes anidados
 
             //TODO Selección múltiple
 
@@ -410,6 +414,20 @@ var editor=new function() {
 
     ////Gestión del editor
 
+    this.alternarBordes=function() {
+        bordesVisibles=!bordesVisibles;
+        var b=ui.obtenerDocumento().body,
+            btn=document.querySelector("#foxtrot-btn-alternar-bordes");
+        if(bordesVisibles) {
+            b.agregarClase("foxtrot-bordes");
+            btn.agregarClase("activo");
+        } else {
+            b.removerClase("foxtrot-bordes");
+            btn.removerClase("activo");
+        }
+        return this;
+    };
+
     this.pausarEventos=function(valor) {
         if(util.esIndefinido(valor)) valor=true;
         eventosPausados=valor;
@@ -418,6 +436,7 @@ var editor=new function() {
 
     this.activar=function() {
         ui.establecerModoEdicion(true);
+        this.alternarBordes();
 
         contruirBarrasHerramientas();
         prepararArrastrarYSoltar();

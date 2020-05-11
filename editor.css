@@ -13,16 +13,18 @@ html {
     height: 100%;
     overflow-x: hidden;
 }
-body {
-    background-color: #fdfdfd;
-}
-* {
-}
 body.foxtrot-modo-edicion {
     background-color: #fff;
 }
-.foxtrot-modo-edicion * {
+body.foxtrot-editor {
+    background-color: #fdfdfd;    
+    font-family: "Montserrat", sans-serif;
+    line-height: 13px;
+    font-size: 13px;
+    color: #2d2e2f;
 }
+
+/* Estilos del editor */
 
 #foxtrot-marco {
     position: fixed;
@@ -46,15 +48,6 @@ body.foxtrot-modo-edicion {
     z-index: 1;
     top: 0;
     background: url(img/fondo.png);
-}
-
-/* Establecer los estilos para los componentes del editor, ya que la página cargará los estilos del usuario */
-
-.foxtrot-editor {
-    font-family: "Montserrat", sans-serif;
-    line-height: 13px;
-    font-size: 13px;
-    color: #2d2e2f;
 }
 .foxtrot-editor .form-control,.foxtrot-editor .custom-select {
     display: block;
@@ -87,6 +80,33 @@ body.foxtrot-modo-edicion {
     line-height: inherit;
     border-radius: 2px;
 }
+.foxtrot-editor .btn img {
+    transition: filter .2s;
+}
+.foxtrot-editor .btn.activo img {
+    filter: saturate(3) brightness(1.8) contrast(.8);
+}
+
+/* Menú contextual */
+
+#foxtrot-menu {
+    position: fixed;
+    display: none;
+    opacity: 0;
+    z-index: 200;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07);
+}
+#foxtrot-menu a {
+    display: block;
+    padding: 5px 10px;
+    background-color: transparent;
+    transition: background-color .2s;    
+}
+#foxtrot-menu a:hover {
+    background-color: #e8ebf1;
+}
 
 /* Barras de herramientas */
 
@@ -101,8 +121,6 @@ body.foxtrot-modo-edicion {
     right: 0;
     top: 0;
     height: 56px;
-}
-.foxtrot-grupo-herramientas {
 }
 .foxtrot-grupo-herramientas>label {
     display: block;
@@ -125,7 +143,6 @@ body.foxtrot-modo-edicion {
 }
 #foxtrot-barra-principal .custom-select {
     display: inline-block;
-    margin-top: 2px;
     width: 82px;
 }
 #foxtrot-cargando {
@@ -235,9 +252,9 @@ body.trabajando #foxtrot-cargando {
 
 /* Componentes */
 
-.foxtrot-modo-edicion .contenedor.vacio {
+.foxtrot-modo-edicion.foxtrot-bordes .contenedor.vacio {
     min-height: 40px;
-    border: dotted 2px rgba(0, 0, 0, 0.2);
+    outline: dotted 2px rgba(0, 0, 0, 0.2);
 }
 .foxtrot-modo-edicion .componente {
     cursor: pointer;

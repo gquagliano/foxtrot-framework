@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="editor.css">
     <title>Editor de vistas</title>
   </head>
-  <body>
+  <body class="foxtrot-editor">
 
     <div id="foxtrot-barra-principal" class="foxtrot-editor foxtrot-barra-herramientas">
         <button class="btn btn-sm" onclick="editor.abrir()" title="Abrir"><img src="img/abrir.png"></button>
@@ -25,6 +25,7 @@
         <button class="btn btn-sm" onclick="editor.rehacer()" disabled id="foxtrot-btn-rehacer" title="Rehacer"><img src="img/rehacer.png"></button>
         <div class="float-right text-nowrap">
             <img src="img/cargando.svg" id="foxtrot-cargando">
+            <button class="btn btn-sm" onclick="editor.alternarBordes()" id="foxtrot-btn-alternar-bordes" title="Activar / desactivar bordes"><img src="img/bordes.png"></button>
             <select class="custom-select" title="Previsualizar en otros tamaños" onchange="editor.tamanoMarco(this.valor())">
                 <option value="100%">100%</option>
                 <option value="1000">Grande</option>
@@ -43,6 +44,7 @@
         <div class="foxtrot-contenidos-barra-herramientas">Ningún componente seleccionado</div>
     </div>
     <iframe id="foxtrot-marco" src="marco.html"></iframe>
+    <div id="foxtrot-menu"></div>
     
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
 

@@ -18,9 +18,6 @@ function componenteFila() {
      */
     this.inicializar=function() {
         this.contenedor=this.elemento;
-        this.datosElemento.elemento=this.elemento;
-        this.datosElemento.contenedor=this.contenedor;
-        this.datosElemento.instancia=this;
         this.base.inicializar.call(this);
         return this;
     };

@@ -11,31 +11,40 @@
 var editor=new function() {
     "use strict";
 
-    //Configuración
+    ////Configuración
+
     var claseBotonesBarrasHerramientas="btn btn-sm";
+
+    ////Almacenes y parámetros
 
     var self=this,
         iconosComponentes={},
-        eventosPausados=false,
-        barraPropiedades=document.querySelector("#foxtrot-barra-propiedades"),
-        cuerpoBarraPropiedades=barraPropiedades.querySelector(".foxtrot-contenidos-barra-herramientas");
+        eventosPausados=false;
 
     this.componenteSeleccionado=null;
 
+    ////Elementos del dom
+    
+    var barraComponentes=document.querySelector("#foxtrot-barra-componentes"),
+        cuerpoBarraComponentes=barraComponentes.querySelector(".foxtrot-contenidos-barra-herramientas"),
+        barraPropiedades=document.querySelector("#foxtrot-barra-propiedades"),
+        cuerpoBarraPropiedades=barraPropiedades.querySelector(".foxtrot-contenidos-barra-herramientas");
+
+    ////Construcción de la interfaz
+
     function configurarBarrasHerramientas() {
-        document.querySelector("#foxtrot-barra-componentes").arrastrable({
-            asa:document.querySelector("#foxtrot-barra-componentes .foxtrot-asa-arrastre"),
+        barraComponentes.arrastrable({
+            asa:barraComponentes.querySelector(".foxtrot-asa-arrastre"),
             mover:true
         });
-        document.querySelector("#foxtrot-barra-propiedades").arrastrable({
-            asa:document.querySelector("#foxtrot-barra-propiedades .foxtrot-asa-arrastre"),
+        barraPropiedades.arrastrable({
+            asa:barraPropiedades.querySelector(".foxtrot-asa-arrastre"),
             mover:true
         });
-    };
+    }
 
     function contruirBarrasHerramientas() {
-        var barra=document.querySelector("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas"),
-            componentes=ui.obtenerComponentes();
+        var componentes=ui.obtenerComponentes();
 
         var grupos={
             0:[]
@@ -57,7 +66,7 @@ var editor=new function() {
 
             var barraGrupo=document.crear("<div class='foxtrot-grupo-herramientas'>");
             if(grupo!=0) document.crear("<label>").html(grupo).anexarA(barraGrupo);
-            barraGrupo.anexarA(barra);
+            barraGrupo.anexarA(cuerpoBarraComponentes);
 
             for(var i=0;i<grupos[grupo].length;i++) {
                 var comp=grupos[grupo][i];
@@ -79,32 +88,10 @@ var editor=new function() {
         }
 
         configurarBarrasHerramientas();
-    };
-
-    function componenteSoltado(e) {
-        var datos=e.dataTransfer.getData("text/plain");
-        try {
-            datos=JSON.parse(datos);
-        } catch {
-            return;
-        }
-
-        if(!datos) return;
-
-        if(datos.hasOwnProperty("componente")) {
-            var obj=self.insertarComponente(this,datos.componente);
-            self.establecerSeleccion(obj);
-            return;
-        }
-
-        if(datos.hasOwnProperty("idcomponente")) {
-            self.moverComponente(this,datos.idcomponente);
-            return;
-        }
-    }
+    }  
 
     function prepararArrastrarYSoltar() {
-        var componentes=document.querySelectorAll("#foxtrot-barra-componentes .foxtrot-contenidos-barra-herramientas button");
+        var componentes=cuerpoBarraComponentes.querySelectorAll("button");
         for(var i=0;i<componentes.length;i++) {
             var comp=componentes[i];
             comp.arrastrable({
@@ -118,7 +105,7 @@ var editor=new function() {
         ui.obtenerCuerpo().crearDestino({
             drop:componenteSoltado
         });
-    };
+    }    
 
     function establecerEventos() {
         ui.obtenerCuerpo().eventoFiltrado("click",{
@@ -148,13 +135,7 @@ var editor=new function() {
                 }
             }
         });
-    }
-
-    this.eliminarComponente=function(comp) {
-        console.log("eliminar",comp);
-
-        return this;
-    };
+    }    
 
     function construirPropiedades() {
         if(!self.componenteSeleccionado) {
@@ -241,6 +222,30 @@ var editor=new function() {
         //TODO Selección múltiple: Solo mostrar propiedades comunes a todos los elementos seleccionados
     }
 
+    ////Eventos
+
+    function componenteSoltado(e) {
+        var datos=e.dataTransfer.getData("text/plain");
+        try {
+            datos=JSON.parse(datos);
+        } catch {
+            return;
+        }
+
+        if(!datos) return;
+
+        if(datos.hasOwnProperty("componente")) {
+            var obj=self.insertarComponente(this,datos.componente);
+            self.establecerSeleccion(obj);
+            return;
+        }
+
+        if(datos.hasOwnProperty("idcomponente")) {
+            self.moverComponente(this,datos.idcomponente);
+            return;
+        }
+    }
+
     this.establecerSeleccion=function(obj) {
         var elem,comp;
 
@@ -273,11 +278,10 @@ var editor=new function() {
         return this;
     };
 
-    this.activar=function() {
-        contruirBarrasHerramientas();
-        prepararArrastrarYSoltar();
-        establecerEventos();
-        ui.establecerModoEdicion(true);
+    ////Gestión de componentes
+
+    this.eliminarComponente=function(comp) {
+        console.log("eliminar",comp);
 
         return this;
     };
@@ -313,6 +317,14 @@ var editor=new function() {
 
         return obj;
     };
+
+    ////Gestión de la vista
+
+    this.tamanoMarco=function(ancho) {
+        ui.obtenerMarco().estilo("maxWidth",ancho);
+    };
+
+    ////Cargar/guardar
 
     /**
      * Remueve todas las clases y propiedades del modo de edición del código html dado.
@@ -396,9 +408,21 @@ var editor=new function() {
         return this;
     };
 
+    ////Gestión del editor
+
     this.pausarEventos=function(valor) {
         if(util.esIndefinido(valor)) valor=true;
         eventosPausados=valor;
+        return this;
+    };
+
+    this.activar=function() {
+        ui.establecerModoEdicion(true);
+
+        contruirBarrasHerramientas();
+        prepararArrastrarYSoltar();
+        establecerEventos();
+
         return this;
     };
 }();

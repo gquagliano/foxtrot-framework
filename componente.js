@@ -11,6 +11,13 @@
  * Objeto base (prototipo) de los componentes.
  */
 function componente() {
+
+    ////Privado
+    
+    var propiedadesCombinadas=null;
+
+    ////Propiedades
+
     this.base=this;
     this.id=null;
     this.selector=null;
@@ -18,15 +25,21 @@ function componente() {
     this.nombre=null;
     this.elemento=null;
     this.contenedor=null;
-    this.datosElemento=util.clonar(elementoComponente); //TODO ¿Remover?
     this.hijos=[];
     this.padre=null;
 
-    //Propiedades: Listado de posibles parámetros.
-    //Parámetros: Valores de los parámetros.
+    //Definiciones:
+    // - Propiedades: Listado de posibles parámetros.
+    // - Parámetro/Parámetros: Valores.
 
+    /**
+     * Almacen de valores de parámetros.
+     */
     this.parametros={};
 
+    /**
+     * Propiedades comunes a todos los componentes.
+     */
     this.propiedadesComunes={
         "Estilo":{
             //nombre:{
@@ -41,14 +54,79 @@ function componente() {
             }
         }
     };
+
+    /**
+     * Propiedades del componente concreto (a sobreescribir).
+     */
     this.propiedadesConcretas={};
-    var propiedadesCombinadas=null;
+
+    ////Acceso a propiedades    
+
+    /**
+     * Devuelve el ID de la instancia.
+     */
+    this.obtenerId=function() {
+        return this.id;
+    };
+
+    /**
+     * Devuelve el elemento correspondiente a esta instancia, o uno nuevo si es una nueva instancia.
+     */
+    this.obtenerElemento=function() {
+        if(!this.elemento) this.crear();
+        return this.elemento;
+    };
+
+    /**
+     * Devuelve el elemento correspondiente al contenedor de los hijos de esta instancia.
+     */
+    this.obtenerContenedor=function() {
+        return this.contenedor;
+    };
+
+    /**
+     * Devuelve un objeto con todos los parámetros de configuración.
+     */
+    this.obtenerParametros=function() {
+        return this.parametros;
+    };
+
+    ////Gestión de la instancia
 
     /**
      * Inicializa la instancia.
-     */
+     */    
     this.inicializar=function() {
+        this.selector="#fox"+this.id;
+        this.elemento.atributo("id","fox"+this.id);
 
+        //Las clases css que se mantengan al salir del modo de edición deben ser breves
+        this.elemento.agregarClase("componente");
+
+        if(this.contenedor) {
+            this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
+                                                        //.container que es la clase de Bootstrap.
+            if(!this.hijos.length) this.contenedor.agregarClase("vacio");
+        }        
+
+        return this;
+    };
+
+    /**
+     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     */
+    this.crear=function() {
+        return this;
+    };
+
+    /**
+     * Inicializa la instancia en base a su ID y sus parámetros.
+     */
+    this.restaurar=function() {
+        this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
+
+        this.inicializar();
+        return this;
     };
 
     /**
@@ -56,7 +134,7 @@ function componente() {
      */
     this.establecerId=function(id) {
         if(!util.esIndefinido(id)) this.id=id;
-        if(this.elemento) this.elemento.dato(ui._nombreDatoId,this.id);
+        if(this.elemento) this.elemento.dato("fxid",this.id);
         return this;
     };
 
@@ -71,6 +149,21 @@ function componente() {
         if(nombre) window["componentes"][nombre]=this;
         return this;
     };
+    
+    /**
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     */
+    this.actualizar=function(propiedad) {
+        //var estilos=ui.obtenerEstilos(this.selector);
+
+        if(propiedad=="color") {
+            ui.establecerEstilosSelector(this.selector,"color:"+this.parametros.color);
+        }
+
+        return this;
+    };
+
+    ////Propiedades y parámetros
 
     /**
      * Establece o devuelve el valor de una propiedad.
@@ -115,52 +208,6 @@ function componente() {
 
         return propiedadesCombinadas;
     };
-    
-    /**
-     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
-     */
-    this.actualizar=function(propiedad) {
-        //var estilos=ui.obtenerEstilos(this.selector);
-
-        if(propiedad=="color") {
-            ui.establecerEstilosSelector(this.selector,"color:"+this.parametros.color);
-        }
-
-        return this;
-    };
-
-    /**
-     * Devuelve el ID de la instancia.
-     */
-    this.obtenerId=function() {
-        return this.id;
-    };
-
-    this.obtenerDatosElemento=function() {
-        return this.datosElemento;
-    };
-
-    /**
-     * Devuelve el elemento correspondiente a esta instancia, o uno nuevo si es una nueva instancia.
-     */
-    this.obtenerElemento=function() {
-        if(!this.elemento) this.crear();
-        return this.elemento;
-    };
-
-    /**
-     * Devuelve el elemento correspondiente al contenedor de los hijos de esta instancia.
-     */
-    this.obtenerContenedor=function() {
-        return this.contenedor;
-    };
-
-    /**
-     * Devuelve un objeto con todos los parámetros de configuración.
-     */
-    this.obtenerParametros=function() {
-        return this.parametros;
-    };
 
     /**
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
@@ -170,43 +217,7 @@ function componente() {
         return this;
     };
 
-    /**
-     * Inicializa la instancia tras ser creada o restaurada.
-     */
-    this.inicializar=function() {
-        this.selector="#fox"+this.id;
-        this.elemento.atributo("id","fox"+this.id);
-
-        //Las clases css que se mantengan al salir del modo de edición deben ser breves
-        this.elemento.agregarClase("componente");
-
-        if(this.contenedor) {
-            this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
-                                                        //.container que es la clase de Bootstrap.
-            if(!this.hijos.length) this.contenedor.agregarClase("vacio");
-        }        
-
-        return this;
-    };
-
-    /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
-     */
-    this.crear=function() {
-        return this;
-    };
-
-    /**
-     * Inicializa la instancia en base a su ID y sus parámetros.
-     */
-    this.restaurar=function() {
-        this.elemento=document.querySelector("[data-"+ui._nombreDatoId+"='"+this.id+"']");
-
-
-
-        this.inicializar();
-        return this;
-    };
+    ////Editor de texto WYSIWYG
     
     this.iniciarEdicion=function() {        
         this.elemento.editable(true).focus();

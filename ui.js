@@ -13,6 +13,8 @@
 var ui=new function() {
     "use strict";
 
+    ////Almacenes y parámetros
+
     var componentesRegistrados={},
         instanciasComponentes=[],
         instanciasComponentesId={},
@@ -20,12 +22,23 @@ var ui=new function() {
         modoEdicion=false,
         id=1;
 
-    this._nombreDatoId="fxid";
+    ////Elementos del dom
 
     var doc=document,
-        body=document.body,
-        cuerpo=doc.querySelector("#foxtrot-cuerpo"),
-        estilos=doc.querySelector("#foxtrot-estilos");
+        body=doc.body,
+        cuerpo=body,
+        estilos=doc.querySelector("#foxtrot-estilos"),
+        marco=doc.querySelector("#foxtrot-marco");
+
+    ////Acceso a variables
+
+    this.obtenerMarco=function() {
+        return marco;
+    };
+
+    this.obtenerDocumento=function() {
+        return doc;
+    };
 
     this.obtenerCuerpo=function() {
         return cuerpo;
@@ -34,6 +47,8 @@ var ui=new function() {
     this.obtenerElementoEstilos=function() {
         return estilos;
     };
+
+    ////Estilos
 
     this.obtenerEstilos=function(selector) {
         if(util.esIndefinido(selector)) selector=null;
@@ -78,6 +93,8 @@ var ui=new function() {
         return this;
     };
 
+    ////Gestión de componentes
+
     this.generarId=function() {
         return id++;
     };
@@ -88,6 +105,7 @@ var ui=new function() {
             fn:funcion,
             config:configuracion
         };
+        return this;
     };
 
     this.obtenerConfigComponente=function(nombre) {
@@ -120,14 +138,21 @@ var ui=new function() {
         return instanciasComponentes;
     };
 
-    this.establecerModoEdicion=function(valor) {
-        modoEdicion=valor;
-        body.alternarClase("foxtrot-modo-edicion");
+    /**
+     * Devuelve la instancia de un componente dado su ID o elemento del DOM.
+     */
+    this.obtenerInstanciaComponente=function(param) {
+        var id;
+        if(typeof param==="number") {
+            id=param;
+        } else {
+            id=param.dato("fxid");
+        }
+        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
+        return instanciasComponentes[instanciasComponentesId[id]];
     };
 
-    this.enModoEdicion=function() {
-        return modoEdicion;
-    };    
+    ////Cargar/guardar
 
     /**
      * Devuelve el HTML de la vista.
@@ -197,22 +222,30 @@ var ui=new function() {
         return this;  
     };
 
-    /**
-     * Devuelve la instancia de un componente dado su ID o elemento del DOM.
-     */
-    this.obtenerInstanciaComponente=function(param) {
-        var id;
-        if(typeof param==="number") {
-            id=param;
-        } else {
-            id=param.dato(this._nombreDatoId);
-        }
-        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
-        return instanciasComponentes[instanciasComponentesId[id]];
+    ////Gestión de la UI
+
+    this.establecerModoEdicion=function(valor) {
+        modoEdicion=valor;
+        body.alternarClase("foxtrot-modo-edicion");
+        
+        //En modo de ejecución, trabajamos con el body entero, pero en modo edición trabajamos con #foxtrot-cuerpo
+        cuerpo=valor?doc.querySelector("#foxtrot-cuerpo"):body;
+
+        return this;
     };
 
-    this.ejecutar=function() {
+    this.enModoEdicion=function() {
+        return modoEdicion;
+    };
 
+    this.ejecutar=function(nuevoDoc) {
+        if(!util.esIndefinido(nuevoDoc)) {
+            //Si se activa para un documento diferente, reemplazar las referencias al dom
+            doc=nuevoDoc;
+            body=doc.body;
+            cuerpo=body;
+            estilos=doc.querySelector("#foxtrot-estilos");
+        }
     };
 }();
 
@@ -231,15 +264,6 @@ var configComponente={
      */
     aceptaHijos: true,
     grupo:null
-};
-
-/**
- * Plantilla para los objetos que contienen la relación entre elementos del DOM e instancias de componentes.
- */
-var elementoComponente={
-    elemento:null,
-    contenedor:null,
-    instancia:null
 };
 
 window["ui"]=ui;

@@ -37,13 +37,8 @@ function componenteTexto() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        this.datosElemento.elemento=this.elemento;
-        this.datosElemento.instancia=this;
-
-        this.configurarEventos();
-        
+        this.configurarEventos();        
         this.base.inicializar.call(this);
-
         return this;
     };
 

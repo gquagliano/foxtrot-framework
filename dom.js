@@ -86,7 +86,6 @@
      * Devuelve o establece el valor del campo.
      */
     Node.prototype.valor=function(valor) {
-        //TODO select (valor de la opción seleccionada)
         //TODO checkbox (booleano)
         if(util.esIndefinido(valor)) return this.value?this.value:"";
         this.value=valor;
@@ -407,7 +406,7 @@
      * Prepara un valor arbitrario para que pueda ser asignado como valor de un estilo css.
      */
     function normalizarValorCss(valor) {
-        if(typeof valor==="number") valor=valor+"px";
+        if(typeof valor==="number"||!isNaN(valor)) valor=valor+"px";
         return valor;
     }
 
@@ -417,11 +416,11 @@
     Node.prototype.estilos=function(estilo,valor) {
         if(util.esIndefinido(estilo)) return getComputedStyle(this);
         
-        if(util.esCadena(estilo)) {
+        if(!util.esIndefinido(valor)) {
             if(util.esIndefinido(valor)) return getComputedStyle(this)[estilo];
             this.style[estilo]=normalizarValorCss(valor);
             return this;
-        }        
+        }
 
         //Objeto de estilos
         var t=this;

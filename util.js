@@ -40,6 +40,13 @@ var util={
     },
 
     /**
+     * Determina si un objeto es estrictamente un objeto (está definido y no es un array).
+     */
+    esObjeto:function(obj) {
+        return typeof obj==="object"&&!util.esArray(obj);
+    },
+
+    /**
      * Clona un objeto.
      */
     clonar:function(obj,asignar) {

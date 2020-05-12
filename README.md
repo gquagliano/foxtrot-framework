@@ -2,11 +2,34 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.
 
 ### Qué estamos desarrollando
 
-1. Editor de vistas WYSIWYG: Nuestro editor de vistas actual trabaja íntegramente con objetos y cada vista es dibujada en tiempo de ejecución. Buscamos un editor que "compile" la vista, almacenándola en html, pero sin perder la relación entre elementos del DOM y los objetos del framework.
+##### Editor
 
-2. El API de todas las librerías se desarrolla totalmente en español. Solo mantenemos los nombres internos (eventos, etc.) y siglas en inglés.
+Editor de vistas WYSIWYG: Nuestro editor de vistas actual trabaja íntegramente con objetos y cada vista es dibujada en tiempo de ejecución. Buscamos un editor que "compile" la vista, almacenándola en html, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
-3. Backend.
+El editor se acerca a su versión final. En líneas generales, falta (entre otros detalles y TODOs):
+- Cortar, copiar, pegar, eliminar
+- Selección múltiple
+- Barra de formatos (negrita, cursiva, etc.) al editar textos
+- Determinar si un elemento puede ser hijo o no de otro al arrastrar y soltar
+
+La siguiente etapa consistirá de:
+- Definición de propiedades comunes a todos los componentes
+- Desarrollo de componentes concretos
+- Integración con un gestor de vistas y archivos; finalización de los métodos de guardado/previsualización/apertura
+- Desarrollo del framework del frontend (vistas, etc.)
+
+##### API JS / Frontend
+
+El frontend de Foxtrot tiene las siguientes particularidades:
+
+- La interfaz está formada por componentes, cada uno con propiedades y métodos
+- Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o (nuevo en esta versión) compilarse en archivos HTML independientes
+- Permite comunicación cliente-servidor bidireccional y transparente
+- Debe estar desacoplada del backend y ser extremadamente liviana y optimizada para dispositivos / Cordova
+- Gestor del DOM propio.
+- El API de todas las librerías se desarrolla totalmente en español. Solo mantenemos los nombres internos (eventos, etc.) y siglas en inglés.
+
+##### API PHP / Backend
 
 El backend de Foxtrot tiene las siguientes particularidades:
 

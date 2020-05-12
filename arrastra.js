@@ -47,6 +47,11 @@
         var opciones=opcionesArrastre[this.obtenerId()];
 
         this.removerClase("foxtrot-arrastrable-arrastrando");
+        
+        //Limpiar también todos los destinos
+        var a="foxtrot-arrastrable-arrastrando-sobre";
+        document.querySelectorAll("."+a).removerClase(a);
+        if(typeof ui!=="undefined") ui.obtenerDocumento().querySelectorAll("."+a).removerClase(a);
     }
 
     function dragEnter(e) {
@@ -54,6 +59,8 @@
         
         //Detener la propagación permitirá destinos anidados
         e.stopPropagation();
+
+        //TODO Determinar si se acepta el elemento que se está arrastrando
         
         this.agregarClase("foxtrot-arrastrable-arrastrando-sobre");
     }
@@ -272,7 +279,7 @@
     function moverDragover(e) {
         e=(e||event);
         e.preventDefault();
-        e.stopPropagation();
+        //e.stopPropagation();
         e.dataTransfer.dropEffect="move";
     }
 

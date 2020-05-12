@@ -256,14 +256,17 @@ body.trabajando #foxtrot-cargando {
     min-height: 40px;
     outline: dotted 2px rgba(0, 0, 0, 0.2);
 }
-.foxtrot-modo-edicion .componente {
-    cursor: pointer;
+.foxtrot-modo-edicion .componente,
+.foxtrot-modo-edicion .componente * {
+    cursor: grab;
 }
 .foxtrot-modo-edicion .componente.seleccionado {
     outline: 4px solid rgba(255, 0, 64, 0.25) !important;
 }
+.foxtrot-modo-edicion [contenteditable] {
+    cursor: text;
+}
 .foxtrot-modo-edicion [contenteditable]:focus {
     outline: none;
-    border-radius: 2px;
     outline: 4px solid rgba(115, 255, 0, 0.25) !important;
 }

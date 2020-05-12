@@ -10,25 +10,25 @@
 /**
  * Componente concreto Texto.
  */
-function componenteTexto() {
+var componenteTexto=function() {    
     this.componente="texto";
-
-    var self=this;
 
     this.configurarEventos=function() {
         if(!ui.enModoEdicion()) return;
 
+        var t=this;
+
         this.elemento.evento("dblclick",function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            self.iniciarEdicion();
+            t.iniciarEdicion();
         }).evento("blur",function(ev) {
-            self.finalizarEdicion();
+            t.finalizarEdicion();
         }).evento("keydown",function(ev) {
             if(ev.which==27) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                self.finalizarEdicion();
+                t.finalizarEdicion();
             }
         });
     };
@@ -38,7 +38,7 @@ function componenteTexto() {
      */
     this.inicializar=function() {
         this.configurarEventos();        
-        this.base.inicializar.call(this);
+        this.inicializarComponente();
         return this;
     };
 
@@ -51,12 +51,10 @@ function componenteTexto() {
         this.inicializar();        
         return this;
     };
-}
-componenteTexto.prototype=new componente();
+};
 
-ui.registrarComponente("texto",componenteTexto,util.clonar(configComponente,{
+ui.registrarComponente("texto",componenteTexto,configComponente.clonar({
     descripcion:"Texto",
     icono:"componentes/iconos/texto.png",
     aceptaHijos:false
 }));
-

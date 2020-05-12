@@ -120,7 +120,7 @@ var ui=new function() {
      * Crea una instancia de un componente dado su nombre.
      */
     this.crearComponente=function(nombre) {
-        var obj=new componentesRegistrados[nombre].fn,
+        var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn),
             id=this.generarId();
         obj.establecerId(id);
         

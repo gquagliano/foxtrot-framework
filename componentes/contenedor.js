@@ -10,7 +10,7 @@
 /**
  * Componente concreto Contenedor.
  */
-function componenteContenedor() {
+var componenteContenedor=function() {
     this.componente="contenedor";
 
     /**
@@ -18,7 +18,7 @@ function componenteContenedor() {
      */
     this.inicializar=function() {
         this.contenedor=this.elemento;
-        this.base.inicializar.call(this);
+        this.inicializarComponente();
         return this;
     };
     
@@ -31,10 +31,9 @@ function componenteContenedor() {
         this.inicializar();
         return this;
     };
-}
-componenteContenedor.prototype=new componente();
+};
 
-ui.registrarComponente("contenedor",componenteContenedor,util.clonar(configComponente,{
+ui.registrarComponente("contenedor",componenteContenedor,configComponente.clonar({
     descripcion:"Contenedor",
     grupo:"Estructura",
     icono:"componentes/iconos/contenedor.png"

@@ -10,7 +10,7 @@
 /**
  * Componente concreto Columna.
  */
-function componenteColumna() {
+var componenteColumna=function() {
     this.componente="columna";
 
     this.propiedadesConcretas={
@@ -29,7 +29,7 @@ function componenteColumna() {
      */
     this.inicializar=function() {
         this.contenedor=this.elemento;
-        this.base.inicializar.call(this);
+        this.inicializarComponente();
         return this;
     };
     
@@ -42,10 +42,9 @@ function componenteColumna() {
         this.inicializar();
         return this;
     };
-}
-componenteColumna.prototype=new componente();
+};
 
-ui.registrarComponente("columna",componenteColumna,util.clonar(configComponente,{
+ui.registrarComponente("columna",componenteColumna,configComponente.clonar({
     descripcion:"Columna",
     grupo:"Estructura",
     icono:"componentes/iconos/columna.png"

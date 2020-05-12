@@ -8,24 +8,22 @@
  "use strict";
 
 /**
- * Objeto base (prototipo) de los componentes.
+ * Objeto base de los componentes.
  */
-function componente() {
-
+var componente=new function() {
     ////Privado
     
     var propiedadesCombinadas=null;
 
     ////Propiedades
 
-    this.base=this;
     this.id=null;
     this.selector=null;
     this.componente=null;
     this.nombre=null;
     this.elemento=null;
     this.contenedor=null;
-    this.hijos=[];
+    this.hijos=null;
     this.padre=null;
 
     //Definiciones:
@@ -35,7 +33,7 @@ function componente() {
     /**
      * Almacen de valores de parámetros.
      */
-    this.parametros={};
+    this.parametros=null;
 
     /**
      * Propiedades comunes a todos los componentes.
@@ -58,7 +56,7 @@ function componente() {
     /**
      * Propiedades del componente concreto (a sobreescribir).
      */
-    this.propiedadesConcretas={};
+    this.propiedadesConcretas=null;
 
     ////Acceso a propiedades    
 
@@ -94,9 +92,32 @@ function componente() {
     ////Gestión de la instancia
 
     /**
-     * Inicializa la instancia.
+     * Fabrica una instancia de un componente concreto dada su función.
+    */
+    this.fabricarComponente=function(fn) {
+        //Heredar prototipo
+        fn.prototype=new (this.cttr());
+
+        var obj=new fn;
+
+        //Inicializar las propiedades que son objetos (de otro modo, se copiará las referencias desde el prototipo)
+        obj.hijos=[];
+        obj.parametros={};
+
+        return obj;
+    };
+
+    /**
+     * Inicializa la instancia (método para sobreescribir).
      */    
     this.inicializar=function() {
+        this.inicializarComponente();
+    };
+
+    /**
+     * Inicializa la instancia (método común para todos los componentes).
+     */ 
+    this.inicializarComponente=function() {
         this.selector="#fox"+this.id;
         this.elemento.atributo("id","fox"+this.id);
 
@@ -176,7 +197,7 @@ function componente() {
     };
 
     /**
-     * Devuelve el listado de propiedades ordenadas por grupo.
+     * Devuelve el listado de propiedades ordenadas por grupo con valores.
      */
     this.obtenerPropiedades=function() {
         var t=this;
@@ -185,6 +206,7 @@ function componente() {
             propiedadesCombinadas={};
 
             ["propiedadesComunes","propiedadesConcretas"].forEach(function(v) {
+                if(!t[v]) return;
                 t[v].forEach(function(grupo,propiedades) {
                     propiedades.forEach(function(nombre,propiedad) {
                         if(!propiedadesCombinadas.hasOwnProperty(grupo)) propiedadesCombinadas[grupo]={};
@@ -235,6 +257,6 @@ function componente() {
         editor.pausarEventos(false);                
         return this;
     };
-}
+};
 
 window["componente"]=componente;

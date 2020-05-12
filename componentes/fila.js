@@ -10,7 +10,7 @@
 /**
  * Componente concreto Fila.
  */
-function componenteFila() {
+var componenteFila=function() {
     this.componente="fila";
 
     /**
@@ -18,7 +18,7 @@ function componenteFila() {
      */
     this.inicializar=function() {
         this.contenedor=this.elemento;
-        this.base.inicializar.call(this);
+        this.inicializarComponente();
         return this;
     };
     
@@ -31,12 +31,10 @@ function componenteFila() {
         this.inicializar();
         return this;
     };
-}
-componenteFila.prototype=new componente();
+};
 
-ui.registrarComponente("fila",componenteFila,util.clonar(configComponente,{
+ui.registrarComponente("fila",componenteFila,configComponente.clonar({
     descripcion:"Fila",
     grupo:"Estructura",
     icono:"componentes/iconos/fila.png"
 }));
-

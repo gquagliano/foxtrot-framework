@@ -757,6 +757,20 @@
     };
 
     /**
+     * Devuelve el prototipo del objeto (atajo).
+     */
+    Object.prototype.prototipo=function() {
+        return Object.getPrototypeOf(this);
+    };
+
+    /**
+     * Devuelve el prototipo del objeto (atajo).
+     */
+    Object.prototype.cttr=function() {
+        return Object.getPrototypeOf(this).constructor;
+    };
+
+    /**
      * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
      */
     HTMLDocument.prototype.crear=function(html) {

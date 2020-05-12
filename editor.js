@@ -257,7 +257,7 @@ var editor=new function() {
 
         this.limpiarSeleccion();
         
-        if(obj instanceof window.componente) {
+        if(obj instanceof componente.cttr()) {
             comp=obj;
             elem=comp.obtenerElemento();
         } else {

@@ -44,19 +44,6 @@ var util={
      */
     esObjeto:function(obj) {
         return typeof obj==="object"&&!util.esArray(obj);
-    },
-
-    /**
-     * Clona un objeto.
-     */
-    clonar:function(obj,asignar) {
-        var nuevo=Object.assign({},obj);
-        if(!util.esIndefinido(asignar)) {
-            asignar.forEach(function(prop,val) {
-                nuevo[prop]=val;
-            });
-        }
-        return nuevo;
     }
 };
 

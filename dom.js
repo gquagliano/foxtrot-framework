@@ -732,6 +732,31 @@
     };
 
     /**
+     * Clona el objeto. El parámetro asignar permite asignar o reemplazar propiedades en la nueva instancia.
+     */
+    Object.prototype.clonar=function(asignar) {
+        var nuevo=Object.assign({},this);
+        if(!util.esIndefinido(asignar)) {
+            asignar.forEach(function(prop,val) {
+                nuevo[prop]=val;
+            });
+        }
+        return nuevo;
+    };
+
+    /**
+     * Copia las propiedades desde el objeto asignado.
+     */
+    Object.prototype.copiarDe=function(obj,reemplazar) {
+        if(util.esIndefinido(reemplazar)) reemplazar=true;
+        var t=this;
+        Object.keys(obj).forEach(function(clave) {
+            if(reemplazar||!t.hasOwnProperty(clave)) t[clave]=obj[clave];
+        });
+        return this;
+    };
+
+    /**
      * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
      */
     HTMLDocument.prototype.crear=function(html) {

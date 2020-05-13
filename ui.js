@@ -20,7 +20,14 @@ var ui=new function() {
         instanciasComponentesId={},
         instanciasComponentesNombre={},
         modoEdicion=false,
-        id=1;
+        id=1,
+        tamanos={ //TODO Configurable
+            xl:1200,
+            lg:992,
+            md:768,
+            sm:576,
+            xs:0
+        };
 
     ////Elementos del dom
 
@@ -50,22 +57,39 @@ var ui=new function() {
 
     ////Estilos
 
-    this.obtenerEstilos=function(selector) {
+    this.obtenerEstilos=function(selector,origen) {        
         if(util.esIndefinido(selector)) selector=null;
+        if(util.esIndefinido(origen)) origen=estilos.sheet.cssRules;
 
         var reglas=[];
-        for(var i in estilos.sheet.cssRules) {
-            if(!estilos.sheet.cssRules.hasOwnProperty(i)) continue;
-            var regla=estilos.sheet.cssRules[i];
+        for(var i=0;i<origen.length;i++) {
+            var regla=origen[i],
+                obj=null;
 
-            var obj={
-                selector:regla.selectorText,
-                estilos:regla.style,
-                texto:regla.style.cssText,
-                indice:i
-            };
+            if(regla.type==CSSRule.MEDIA_RULE) {
+                var arr=this.obtenerEstilos(selector,regla.cssRules);
+                //Ignorar media queries vacíos o sin coincidencias
+                if(arr.length) {
+                    obj={
+                        tipo:"media",
+                        media:regla.conditionText,
+                        reglas:arr,
+                        texto:regla.cssText,
+                        indice:i
+                    };
+                }
+            } else if(regla.type==CSSRule.STYLE_RULE) {
+                obj={
+                    selector:regla.selectorText,
+                    estilos:regla.style,
+                    texto:regla.cssText,
+                    indice:i
+                };
+            }
+            //Por el momento vamos a ignorar otros tipos. No deberían existir (no se supone que el usuario deba modificar los estilos generados por el editor,
+            //sus estilos adicionales deben ir en un archivo distinto.)
 
-            if(selector&&regla.selectorText==selector) return obj;
+            if(obj&&selector&&regla.selectorText==selector) return obj;
             
             reglas.push(obj);
         }
@@ -78,18 +102,75 @@ var ui=new function() {
         return this;
     };
 
-    this.establecerEstilosSelector=function(selector,css) {
-        for(var i in estilos.sheet.cssRules) {
-            if(!estilos.sheet.cssRules.hasOwnProperty(i)) continue;
+    this.establecerEstilosSelector=function(selector,css,tamano) {
+        if(util.esIndefinido(tamano)||!tamano) tamano="g";
 
-            var regla=estilos.sheet.cssRules[i];
+        var tamanoPx=tamanos[tamano],
+            hoja=estilos.sheet,
+            reglas=hoja.cssRules,
+            indicesMedia=[],
+            indicePrimerMedia=0;
+  
+        if(tamano!="xs"&&tamano!="g") {
+            //Los tamaños xs y g (global) son sinónimos
+            //Buscar o crear mediaquery en caso contrario
+            var media=null;
+            for(var i=0;i<reglas.length;i++) {
+                var regla=reglas[i];
+                //regla instanceof CSSMediaRule falla por algún motivo que estoy investigando
+                //Por el momento verificamos tipo por propiedad type
+                //TODO Verificar compatibilidad de este método (probado solo en Opera)
+                if(regla.type==CSSRule.MEDIA_RULE) {
+                    if(indicePrimerMedia==0) indicePrimerMedia=i;
+                    
+                    var coincidencia=regla.conditionText.match(/min-width:.*?([0-9]+)/i);
+                    if(!coincidencia) continue;
+                    var minWidth=coincidencia[1];
 
-            if(selector==regla.selectorText) {
-                estilos.sheet.deleteRule(i);
+                    //Almacenamos la posición de cada media query en la hoja para poder insertar nuevas en el orden correcto
+                    indicesMedia.push([ minWidth, i ]);
+
+                    if(minWidth==tamanoPx) media=regla;
+                }
+            }
+            if(media!==null) {
+                //Insertar/reemplazar dentro del media existente
+                hoja=media;
+            } else {
+                //Buscar el orden correcto para el nuevo media (primero las reglas globales, luego los media de menor a mayor)
+                //Si no hay ninguno, agregar al final del archivo
+                var i=hoja.cssRules.length;
+                if(indicesMedia.length) {
+                    for(var j=0;j<indicesMedia.length;j++) {
+                        if(indicesMedia[j][0]>tamanoPx) {
+                            i=indicesMedia[j][1];
+                            break;
+                        }
+                    }
+                }
+
+                hoja.insertRule("@media (min-width: "+tamanoPx+"px) { }",i);
+
+                //Insertar/reemplazar dentro del media nuevo
+                hoja=hoja.cssRules[i];
+            }
+        }
+
+        reglas=hoja.cssRules;
+        
+        for(var i=0;i<reglas.length;i++) {
+            var regla=reglas[i];
+
+            if(regla.type==CSSRule.STYLE_RULE&&selector==regla.selectorText) {
+                hoja.deleteRule(i);
                 break;
             }
         };
-        estilos.sheet.insertRule(selector+"{"+css+"}",estilos.sheet.cssRules.length);
+        hoja.insertRule(
+                selector+"{"+css+"}",
+                //Insertar las reglas globales antes del primer mediaquery
+                tamano=="xs"||tamano=="g"?indicePrimerMedia:reglas.length
+            );
         return this;
     };
 
@@ -167,8 +248,13 @@ var ui=new function() {
     this.obtenerCss=function() {
         var css="";
         this.obtenerEstilos().forEach(function(regla) {
-            css+=regla.selector+"{"+regla.texto+"}";
+            css+=regla.texto;
         });
+        //Comprimir
+        css=css.replace(["\r","\n"],"")
+            .replace(/([\):;\}\{])[\s]+/g,"$1")
+            .replace(/[\s]+([\{\(#])/g,"$1")
+            .replace(";}","}");
         return css;        
     };
 
@@ -181,7 +267,7 @@ var ui=new function() {
             componentes:[],
             vista:{
                 nombre:null,
-                parametros:{}
+                propiedades:{}
             }
         };
 
@@ -190,7 +276,7 @@ var ui=new function() {
                 id:obj.id,
                 nombre:obj.nombre,
                 componente:obj.componente,
-                parametros:obj.obtenerParametros()
+                propiedades:obj.obtenerPropiedades()
             });
         });
 
@@ -215,7 +301,7 @@ var ui=new function() {
             ui.crearComponente(componente.componente)
                 .establecerId(componente.id)
                 .establecerNombre(componente.nombre)
-                .establecerParametros(componente.parametros)
+                .establecerPropiedades(componente.propiedades)
                 .restaurar();
         });
 
@@ -236,6 +322,19 @@ var ui=new function() {
 
     this.enModoEdicion=function() {
         return modoEdicion;
+    };
+
+    /**
+     * Devuelve el tamaño de pantalla como string: xs|sm|md|lg|xl.
+     */
+    this.obtenerTamano=function() {
+        //TODO Configurable
+        var ancho=(modoEdicion?marco:window).ancho();
+        if(ancho>=tamanos.xl) return "xl";
+        if(ancho>=tamanos.lg) return "lg";
+        if(ancho>=tamanos.md) return "md";
+        if(ancho>=tamanos.sm) return "sm";
+        return "xs";
     };
 
     this.ejecutar=function(nuevoDoc) {

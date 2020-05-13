@@ -20,7 +20,8 @@ var editor=new function() {
     var self=this,
         iconosComponentes={},
         eventosPausados=false,
-        bordesVisibles=false;
+        bordesVisibles=false,
+        tamanoActual="g";
 
     this.componenteSeleccionado=null;
 
@@ -173,23 +174,23 @@ var editor=new function() {
                     var t=this;
                     clearTimeout(timeout);
                     timeout=setTimeout(function() {
-                        if(fn) fn.call(editor,componente,nombre,t.valor());
+                        if(fn) fn.call(editor,componente,tamanoActual,nombre,t.valor());
                     },200);
                 }).evento("blur",function(ev) {
-                    if(fn) fn.call(editor,componente,nombre,this.valor());
+                    if(fn) fn.call(editor,componente,tamanoActual,nombre,this.valor());
                 });
             }
 
             fila.anexarA(barra);
         };
 
-        var propiedades=editor.componenteSeleccionado.obtenerPropiedades();
+        var propiedades=editor.componenteSeleccionado.obtenerListadoPropiedades(tamanoActual);
 
         //Propiedades especiales
         propiedades[-1]={
             nombre: {
                 etiqueta:"Nombre",
-                funcion:function(componentes,prop,valor) {
+                funcion:function(componentes,t,prop,valor) {
                     componentes.establecerNombre(valor);
                 },
                 //TODO Selección múltiple: No mostrar los valores
@@ -324,8 +325,22 @@ var editor=new function() {
 
     ////Gestión de la vista
 
-    this.tamanoMarco=function(ancho) {
+    this.obtenerTamano=function() {
+        return tamanoActual;
+    };
+
+    this.tamanoMarco=function(t) {
+        var ancho={
+            "g":"100%",
+            "xl":"100%",
+            "lg":1000,
+            "md":780,
+            "sm":580,
+            "xs":500
+        }[t];
         ui.obtenerMarco().estilo("maxWidth",ancho);
+        tamanoActual=t;
+        construirPropiedades();
     };
 
     ////Cargar/guardar

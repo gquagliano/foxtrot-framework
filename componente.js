@@ -26,14 +26,10 @@ var componente=new function() {
     this.hijos=null;
     this.padre=null;
 
-    //Definiciones:
-    // - Propiedades: Listado de posibles parámetros.
-    // - Parámetro/Parámetros: Valores.
-
     /**
      * Almacen de valores de parámetros.
      */
-    this.parametros=null;
+    this.valoresPropiedades=null;
 
     /**
      * Propiedades comunes a todos los componentes.
@@ -85,8 +81,8 @@ var componente=new function() {
     /**
      * Devuelve un objeto con todos los parámetros de configuración.
      */
-    this.obtenerParametros=function() {
-        return this.parametros;
+    this.obtenerPropiedades=function() {
+        return this.valoresPropiedades;
     };
 
     ////Gestión de la instancia
@@ -102,7 +98,7 @@ var componente=new function() {
 
         //Inicializar las propiedades que son objetos (de otro modo, se copiará las referencias desde el prototipo)
         obj.hijos=[];
-        obj.parametros={};
+        obj.valoresPropiedades={};
 
         return obj;
     };
@@ -174,11 +170,14 @@ var componente=new function() {
     /**
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
-    this.actualizar=function(propiedad) {
+    this.actualizar=function(propiedad,valor,tamano) {
+        if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
+        if(util.esIndefinido(tamano)) tamano=null;
+
         //var estilos=ui.obtenerEstilos(this.selector);
 
         if(propiedad=="color") {
-            ui.establecerEstilosSelector(this.selector,"color:"+this.parametros.color);
+            ui.establecerEstilosSelector(this.selector,"color:"+valor,tamano);
         }
 
         return this;
@@ -187,19 +186,55 @@ var componente=new function() {
     ////Propiedades y parámetros
 
     /**
+     * Establece o devuelve el valor de una propiedad como objeto (sin filtrar por tamaño).
+     */
+    this.propiedadObj=function(nombre,valor) {
+        if(util.esIndefinido(valor)) {
+            if(!this.valoresPropiedades.hasOwnProperty(nombre)) return null;
+            return this.valoresPropiedades[nombre];
+        }
+
+        this.valoresPropiedades[nombre]=valor;
+        this.actualizar(nombre,valor);
+        return this;
+    };
+
+    /**
      * Establece o devuelve el valor de una propiedad.
      */
-    this.parametro=function(nombre,valor) {
-        if(util.esIndefinido(valor)) return this.parametros.hasOwnProperty(nombre)?this.parametros[nombre]:null;
-        this.parametros[nombre]=valor;
-        this.actualizar(nombre);
+    this.propiedad=function(tamano,nombre,valor) {
+        //xs y g son sinónmos, ya que en ambos casos los estilos son globales
+        if(!tamano||tamano=="xs") tamano="g";
+
+        if(util.esIndefinido(valor)) {
+            if(!this.valoresPropiedades.hasOwnProperty(nombre)) return null;
+
+            var obj=this.valoresPropiedades[nombre];
+
+            if(obj.hasOwnProperty(tamano)) return obj[tamano];
+
+            var tamanos=["g","sm","md","lg","xl"],
+                i=tamanos.indexOf(tamano)+1; //ya sabemos que el tamaño actual no existe, probamos el siguiente
+            if(i<0) return null;
+            for(;i<tamanos.length;i++) 
+                if(obj.hasOwnProperty(tamano)) return obj[tamano];
+            
+            return null;
+        }
+
+        if(!this.valoresPropiedades.hasOwnProperty(nombre)) this.valoresPropiedades[nombre]={};
+        this.valoresPropiedades[nombre][tamano]=valor;
+
+        this.actualizar(nombre,valor,tamano);
+
         return this;
     };
 
     /**
      * Devuelve el listado de propiedades ordenadas por grupo con valores.
      */
-    this.obtenerPropiedades=function() {
+    this.obtenerListadoPropiedades=function(tamano) {
+        if(util.esIndefinido(tamano)) tamano="g";
         var t=this;
 
         if(!propiedadesCombinadas) {
@@ -211,9 +246,9 @@ var componente=new function() {
                     propiedades.forEach(function(nombre,propiedad) {
                         if(!propiedadesCombinadas.hasOwnProperty(grupo)) propiedadesCombinadas[grupo]={};
                                             
-                        propiedad.funcion=function(componentes,prop,valor) {
+                        propiedad.funcion=function(componentes,tamano,prop,valor) {
                             //TODO Selección múltiple
-                            componentes.parametro.call(componentes,prop,valor);
+                            componentes.propiedad.call(componentes,tamano,prop,valor);
                         };
                         
                         propiedadesCombinadas[grupo][nombre]=propiedad;
@@ -224,7 +259,7 @@ var componente=new function() {
 
         propiedadesCombinadas.forEach(function(grupo,propiedades) {
             propiedades.forEach(function(nombre,propiedad) {
-                propiedad.valor=t.parametro(nombre);
+                propiedad.valor=t.propiedad(tamano,nombre);
             });
         });
 
@@ -232,10 +267,10 @@ var componente=new function() {
     };
 
     /**
-     * Reestablece la configuración a partir de un objeto previamente generado con obtenerParametros().
+     * Reestablece la configuración a partir de un objeto previamente generado con obtenerPropiedades().
      */
-    this.establecerParametros=function(obj) {
-        this.parametros=obj;
+    this.establecerPropiedades=function(obj) {
+        this.valoresPropiedades=obj;
         return this;
     };
 

@@ -26,12 +26,13 @@
         <div class="float-right text-nowrap">
             <img src="img/cargando.svg" id="foxtrot-cargando">
             <button class="btn btn-sm" onclick="editor.alternarBordes()" id="foxtrot-btn-alternar-bordes" title="Activar / desactivar bordes"><img src="img/bordes.png"></button>
-            <select class="custom-select" title="Previsualizar en otros tamaños" onchange="editor.tamanoMarco(this.valor())">
-                <option value="100%">100%</option>
-                <option value="1000">Grande</option>
-                <option value="780">Medio</option>
-                <option value="580">Pequeño</option>
-                <option value="500">Extra pequeño</option>
+            <select class="custom-select" title="Tamaño de pantalla" onchange="editor.tamanoMarco(this.valor())">
+                <option value="g">Global</option>
+                <option value="xl">Extra grande</option>
+                <option value="lg">Grande</option>
+                <option value="md">Medio</option>
+                <option value="sm">Pequeño</option>
+                <option value="xs">Extra pequeño</option>
             </select>
         </div>
     </div>

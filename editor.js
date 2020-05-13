@@ -351,7 +351,10 @@ var editor=new function() {
     this.limpiarHtml=function(html) {
         var temp=document.crear("<div>");
         temp.html(html);
-        temp.querySelectorAll("*").removerClase(/^foxtrot-arrastrable-.+/).propiedad("contentEditable",null);
+        temp.querySelectorAll("*")  
+            .removerClase("seleccionado")
+            .removerClase(/^foxtrot-arrastrable-.+/)
+            .propiedad("contentEditable",null);
         return temp.innerHTML;
     };
 

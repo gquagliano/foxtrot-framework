@@ -15,9 +15,13 @@ var componenteColumna=function() {
 
     this.propiedadesConcretas={
         "Tamaño":{
+            tamano:{
+                etiqueta:"Tamaño",
+                tipo:"numero"
+            }
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|color)
+            //    tipo (predeterminado texto|multilinea|opciones|color|numero)
             //    opciones (array {valor,etiqueta} cuando tipo=opciones)
             //    grupo
             //}
@@ -34,12 +38,31 @@ var componenteColumna=function() {
     };
     
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='col-sm-3 contenedor vacio'/>");
         this.establecerId();
         this.inicializar();
+        return this;
+    };
+    
+    /**
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     */
+    this.actualizar=function(propiedad,valor,tamano) {
+        var e=this.elemento;
+
+        if(propiedad=="tamano") {
+            //Debemos remover todos los col-* y volver a generarlos en el orden correcto, no podemos simplemente desactivar y activar las clases de a una
+            e.removerClase(/col-.+/);
+            var tamanos=this.propiedadObj(propiedad);
+            ["g","sm","md","lg","xl"].forEach(function(p) {
+                if(tamanos.hasOwnProperty(p)) e.agregarClase("col-"+(p=="g"?"":p+"-")+tamanos[p]);
+            });
+        }
+
+        this.actualizarComponente(propiedad,valor,tamano);
         return this;
     };
 };

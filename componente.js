@@ -38,9 +38,8 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|color)
+            //    tipo (predeterminado texto|multilinea|opciones|color|numero)
             //    opciones (array {valor,etiqueta} cuando tipo=opciones)
-            //    grupo
             //}
             color:{
                 etiqueta:"Color",
@@ -168,9 +167,17 @@ var componente=new function() {
     };
     
     /**
-     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad (método para sobreescribir).
      */
     this.actualizar=function(propiedad,valor,tamano) {
+        this.actualizarComponente(propiedad,valor,tamano);
+        return this;
+    };
+    
+    /**
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     */
+    this.actualizarComponente=function(propiedad,valor,tamano) {
         if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
         if(util.esIndefinido(tamano)) tamano=null;
 

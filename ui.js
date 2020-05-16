@@ -18,7 +18,6 @@ var ui=new function() {
     var componentesRegistrados={},
         instanciasComponentes=[],
         instanciasComponentesId={},
-        instanciasComponentesNombre={},
         modoEdicion=false,
         id=1,
         tamanos={ //TODO Configurable
@@ -220,18 +219,36 @@ var ui=new function() {
     };
 
     /**
-     * Devuelve la instancia de un componente dado su ID o elemento del DOM.
+     * Devuelve el ID de un componente dado su ID, instancia, nombre o elemento del DOM.
+     */
+    function identificarComponente(param) {
+        if(typeof param==="number") return param;
+        if(typeof param=="string"&&componentes.hasOwnProperty(param)) return componentes[param];
+        if(typeof param=="object"&&param.esComponente()) return param.obtenerId();
+        if(param instanceof Node) return param.dato("fxid");
+        return null;
+    }
+
+    /**
+     * Devuelve la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
      */
     this.obtenerInstanciaComponente=function(param) {
-        var id;
-        if(typeof param==="number") {
-            id=param;
-        } else {
-            id=param.dato("fxid");
-        }
+        var id=identificarComponente(param);
         if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
         return instanciasComponentes[instanciasComponentesId[id]];
     };
+
+    /**
+     * Elimina la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
+     */
+    this.eliminarInstanciaComponente=function(param) {
+        var id=identificarComponente(param);
+        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
+        delete instanciasComponentes[instanciasComponentesId[id]];
+        delete instanciasComponentesId[id];
+        return this;
+    }
+
 
     ////Cargar/guardar
 

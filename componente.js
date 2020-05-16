@@ -11,6 +11,9 @@
  * Objeto base de los componentes.
  */
 var componente=new function() {
+    //Los métodos para sobreescribir en el componente concreto tienen una versión nnnComponente que permiten invocar
+    //la funcionalidad por defecto.
+
     ////Privado
     
     var propiedadesCombinadas=null;
@@ -87,6 +90,13 @@ var componente=new function() {
     ////Gestión de la instancia
 
     /**
+     * Determina si un objeto es instancia de un componente.
+     */
+    Object.prototype.esComponente=function() {
+        return this.cttr()==componente.cttr();
+    };
+
+    /**
      * Fabrica una instancia de un componente concreto dada su función.
     */
     this.fabricarComponente=function(fn) {
@@ -132,37 +142,85 @@ var componente=new function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
+        this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Crea el elemento del DOM para esta instancia.
+     */
+    this.crearComponente=function() {
+        return this;
+    };
+
+    /**
+     * Elimina el componente (método para sobreescribir).
+     */
+    this.eliminar=function() {
+        this.eliminarComponente();
+        return this;
+    };
+
+    /**
+     * Elimina el componente.
+     */
+    this.eliminarComponente=function() {
+        this.elemento.remover();
+        if(this.nombre) delete componentes[this.nombre];
+        return this;
+    };
+
+    /**
+     * Inicializa la instancia en base a su ID y sus parámetros (método para sobreescribir).
+     */
+    this.restaurar=function() {
+        this.restaurarComponente();
         return this;
     };
 
     /**
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
-    this.restaurar=function() {
+    this.restaurarComponente=function() {
         this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
-
         this.inicializar();
+        return this;
+    };
+
+    /**
+     * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado (método para sobreescribir).
+     */
+    this.establecerId=function(id) {
+        this.establecerIdComponente(id);
         return this;
     };
 
     /**
      * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado.
      */
-    this.establecerId=function(id) {
+    this.establecerIdComponente=function(id) {
         if(!util.esIndefinido(id)) this.id=id;
         if(this.elemento) this.elemento.dato("fxid",this.id);
         return this;
     };
 
     /**
+     * Establece el nombre de la instancia (método para sobreescribir).
+     */
+    this.establecerNombreComponente=function(nombre) {
+        this.establecerNombreComponente(nombre);
+        return this;
+    };
+
+    /**
      * Establece el nombre de la instancia.
      */
-    this.establecerNombre=function(nombre) {
+    this.establecerNombreComponente=function(nombre) {
         //Eliminar de componentes si cambia el nombre
         if(this.nombre!=nombre) delete window["componentes"][this.nombre];
         this.nombre=nombre;
-        //Registrar en window.componentes para acceso rápido (debe accederse de esta forma para que quede exportado al compilar con Closure)
-        if(nombre) window["componentes"][nombre]=this;
+        //Registrar en window.componentes para acceso rápido
+        if(nombre) componentes[nombre]=this;
         return this;
     };
     

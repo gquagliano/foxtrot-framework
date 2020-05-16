@@ -131,13 +131,12 @@ var editor=new function() {
             if(eventosPausados) return;
 
             if(ev.which==27) {
+                //ESC
                 self.limpiarSeleccion();
             } else if(ev.which==46) {
-                if(self.componenteSeleccionado) {
-                    self.eliminarComponente(self.componenteSeleccionado);
-                    self.componenteSeleccionado=null;
-                    ev.preventDefault();
-                }
+                //DEL
+                if(self.componenteSeleccionado) self.eliminarComponente(self.componenteSeleccionado.obtenerId());
+                ev.preventDefault();
             }
         });
     }    
@@ -285,9 +284,11 @@ var editor=new function() {
 
     ////Gestión de componentes
 
-    this.eliminarComponente=function(comp) {
-        console.log("eliminar",comp);
-
+    this.eliminarComponente=function(id) {
+        var obj=ui.obtenerInstanciaComponente(id);
+        obj.eliminar();
+        ui.eliminarInstanciaComponente(id);
+        this.limpiarSeleccion();
         return this;
     };
 

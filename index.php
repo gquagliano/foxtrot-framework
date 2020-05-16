@@ -44,8 +44,6 @@
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas">Ningún componente seleccionado</div>
     </div>
-    <iframe id="foxtrot-marco" src="marco.html"></iframe>
-    <div id="foxtrot-menu"></div>
     
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
 
@@ -64,5 +62,8 @@
     <script src="componentes/columna.js"></script>
 
     <script src="editor.js"></script>    
+    
+    <iframe id="foxtrot-marco" src="marco.html"></iframe>
+    <div id="foxtrot-menu"></div>
   </body>
 </html>

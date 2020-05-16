@@ -495,6 +495,21 @@
         return clon;
     };
 
+    /**
+     * Elimina el elemento.
+     */
+    Node.prototype.remover=function() {
+        this.remove();
+    };
+
+    /**
+     * Desacopla el elemento del DOM (sin eliminarlo).
+     */
+    Node.prototype.desacoplar=function() {
+        var elem=this.parentNode.removeChild(this);
+        return elem;
+    };
+
     ////// Eventos
 
     /**

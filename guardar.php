@@ -64,6 +64,9 @@ $resultado=<<<RE
     <script src="componentes/fila.js"></script>
     <script src="componentes/columna.js"></script>
     <script src="frontend/backend.js"></script>
+
+    <!-- Prototipo de controlador de la vista -->
+    <script src="apps/test/frontend/test.js"></script>
     <script>
     ui.establecerJson('$json').ejecutar();
     </script>

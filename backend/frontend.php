@@ -6,11 +6,25 @@
  * @version 1.0
  */
 
+//¡Prototipo!
+
 /**
- * Prototipo de comunicación servidor->cliente.
+ * Gestor de comunicación servidor->cliente.
  */
 class frontend {
+    /**
+     * Envía una respuesta como texto plano al frontend.
+     */
+    public static function responder($data) {
+        echo json_encode([
+            'r'=>$data
+        ]);
+    }
+
     public static function __callStatic($nombre,$args) {
-        var_dump($nombre,$args);
+        echo json_encode([
+            'm'=>$nombre,
+            'p'=>$args
+        ]);
     }
 }

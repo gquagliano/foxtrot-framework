@@ -18,6 +18,8 @@ var ui=new function() {
     var componentesRegistrados={},
         instanciasComponentes=[],
         instanciasComponentesId={},
+        controladores={},
+        instanciasControladores={},
         modoEdicion=false,
         id=1,
         tamanos={ //TODO Configurable
@@ -323,6 +325,22 @@ var ui=new function() {
         });
 
         return this;  
+    };
+
+    ////Controladores (¡Protitopo!)
+
+    this.registrarControlador=function(nombre,funcion) {
+        controladores[nombre]=funcion;
+        return this;
+    };
+
+    this.obtenerInstanciaControlador=function(nombre) {
+        //TODO Esto debería migrarse a una fábrica de controladores
+        if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
+        var obj=new controladores[nombre];
+        instanciasControladores[nombre]=obj;
+        //TODO Preparar obj (prototipo, inicializacion)
+        return obj;
     };
 
     ////Gestión de la UI

@@ -19,6 +19,30 @@ La siguiente etapa consistirá en:
 - Integración con un gestor de vistas y archivos; finalización de los métodos de guardado/previsualización/apertura.
 - Desarrollo del framework del frontend (controladores, etc.).
 
+##### Comunicación cliente<->servidor transparente
+
+Ya existe un prototipo funcional demostrando esto, ver frontend/backend.js.
+
+Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC 😋.
+
+Es posible incovar métodos desde uno a otro en forma transparente para el desarrollador. Lógicamente, el backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (`ctl` es el nombre del controlador para la vista actual):
+
+*js:*
+
+    backend.foo(function(respuesta) {           //Invocará ctl.foo(1,2,3) (php) y devolverá el retorno de la misma al callback
+        ...
+    },1,2,3);
+
+    backend.bar(1,2,3);                         //Invocará ctl.bar(1,2,3) (php)
+
+*php:*
+
+    function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback
+        return 'Hola';
+    }
+
+    frontend.bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
+
 ##### API js / Frontend
 
 El frontend de Foxtrot tiene las siguientes particularidades:

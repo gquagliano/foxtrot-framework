@@ -62,7 +62,7 @@
     <script src="componentes/columna.js"></script>
     <script src="componentes/etiqueta.js"></script>
     
-    <script src="editor.js"></script>    
+    <script src="editor.js"></script>
     
     <iframe id="foxtrot-marco" src="marco.html"></iframe>
     <div id="foxtrot-menu"></div>

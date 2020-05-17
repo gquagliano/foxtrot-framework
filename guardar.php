@@ -63,6 +63,7 @@ $resultado=<<<RE
     <script src="componentes/texto.js"></script>
     <script src="componentes/fila.js"></script>
     <script src="componentes/columna.js"></script>
+    <script src="frontend/backend.js"></script>
     <script>
     ui.establecerJson('$json').ejecutar();
     </script>

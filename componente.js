@@ -28,6 +28,8 @@ var componente=new function() {
     this.contenedor=null;
     this.hijos=null;
     this.padre=null;
+    this.contenidoEditable=false;
+    this.inicializado=false;
 
     /**
      * Almacen de valores de parámetros.
@@ -66,6 +68,13 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve el selector para el elemento.
+     */
+    this.obtenerSelector=function() {
+        return this.selector;
+    };
+
+    /**
      * Devuelve el elemento correspondiente a esta instancia, o uno nuevo si es una nueva instancia.
      */
     this.obtenerElemento=function() {
@@ -87,6 +96,14 @@ var componente=new function() {
         return this.valoresPropiedades;
     };
 
+    /**
+     * Determina si el componente debe poder arrastrarse para reposicionarse o no.
+     */
+    this.esArrastrable=function() {
+        //Si es editable, debemos evitar el arrastrar/soltar predeterminado del editor
+        return !this.contenidoEditable;
+    };
+
     ////Gestión de la instancia
 
     /**
@@ -105,7 +122,7 @@ var componente=new function() {
 
         var obj=new fn;
 
-        //Inicializar las propiedades que son objetos (de otro modo, se copiará las referencias desde el prototipo)
+        //Inicializar las propiedades que son objetos (de otro modo, se copiarán las referencias desde el prototipo)
         obj.hijos=[];
         obj.valoresPropiedades={};
 
@@ -123,8 +140,7 @@ var componente=new function() {
      * Inicializa la instancia (método común para todos los componentes).
      */ 
     this.inicializarComponente=function() {
-        this.selector="#fox"+this.id;
-        this.elemento.atributo("id","fox"+this.id);
+        if(this.inicializado) return this;
 
         //Las clases css que se mantengan al salir del modo de edición deben ser breves
         this.elemento.agregarClase("componente");
@@ -133,7 +149,16 @@ var componente=new function() {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
                                                         //.container que es la clase de Bootstrap.
             if(!this.hijos.length) this.contenedor.agregarClase("vacio");
-        }        
+        }
+
+        if(this.contenidoEditable) {
+            this.iniciarEdicion(false);
+
+            //TODO El componente debe tener alguna forma de arrastrar
+            //TODO El componente debe tener alguna forma de ser eliminado/cortar/pegar ya que al darle foco siempre se estará trabajando con su contenido
+        }
+
+        this.inicializado=true;
 
         return this;
     };
@@ -150,6 +175,9 @@ var componente=new function() {
      * Crea el elemento del DOM para esta instancia.
      */
     this.crearComponente=function() {
+        this.establecerId();
+        this.selector="#fox"+this.id;
+        this.elemento.atributo("id","fox"+this.id);
         return this;
     };
 
@@ -167,6 +195,7 @@ var componente=new function() {
     this.eliminarComponente=function() {
         this.elemento.remover();
         if(this.nombre) delete componentes[this.nombre];
+        ui.eliminarInstanciaComponente(this.id);
         return this;
     };
 
@@ -183,6 +212,7 @@ var componente=new function() {
      */
     this.restaurarComponente=function() {
         this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
+        this.inicializado=false;
         this.inicializar();
         return this;
     };
@@ -207,7 +237,7 @@ var componente=new function() {
     /**
      * Establece el nombre de la instancia (método para sobreescribir).
      */
-    this.establecerNombreComponente=function(nombre) {
+    this.establecerNombre=function(nombre) {
         this.establecerNombreComponente(nombre);
         return this;
     };
@@ -341,20 +371,28 @@ var componente=new function() {
 
     ////Editor de texto WYSIWYG
     
-    this.iniciarEdicion=function() {        
-        this.elemento.editable(true).focus();
-        //Deshabilitar arrastre en todo el árbol para que se pueda arrastrar el texto seleccionado dentro del editor
-        this.elemento.pausarArrastreArbol();
-        //Deshabilitar otros eventos del editor (para evitar interferencias con la redacción de texto, por ejemplo, SUPR)
-        editor.pausarEventos();                
+    this.iniciarEdicion=function(pausar) {   
+        if(util.esIndefinido(pausar)) pausar=true;
+
+        this.elemento.iniciarEdicion();
+        
+        if(pausar) {
+            //Deshabilitar arrastre en todo el árbol
+            this.elemento.pausarArrastreArbol();
+            //Deshabilitar otros eventos del editor
+            editor.pausarEventos();
+        }
+
         return this;
     };
     
     this.finalizarEdicion=function() {
-        this.elemento.editable(false);
+        this.elemento.finalizarEdicion();
+
         //Reestablecer eventos
         this.elemento.pausarArrastreArbol(false);
-        editor.pausarEventos(false);                
+        editor.pausarEventos(false);       
+
         return this;
     };
 };

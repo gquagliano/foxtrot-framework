@@ -92,55 +92,6 @@ var editor=new function() {
         configurarBarrasHerramientas();
     }  
 
-    function prepararArrastrarYSoltar() {
-        var componentes=cuerpoBarraComponentes.querySelectorAll("button");
-        for(var i=0;i<componentes.length;i++) {
-            var comp=componentes[i];
-            comp.arrastrable({
-                icono:iconosComponentes[comp.metadato("componente")],
-                datos:JSON.stringify({
-                    componente:comp.metadato("componente")
-                })
-            });
-        }
-
-        ui.obtenerCuerpo().crearDestino({
-            drop:componenteSoltado
-        });
-    }    
-
-    function establecerEventos() {
-        ui.obtenerCuerpo().eventoFiltrado("click",{
-            clase:"componente"
-        },function(ev) {
-            ev.stopPropagation();
-
-            //TODO Mostrar el menú contextual con click derecho
-            //TODO Selección de componentes anidados
-
-            //TODO Selección múltiple
-
-            self.limpiarSeleccion();
-            self.establecerSeleccion(this);
-        })
-        .evento("click",function() {
-            self.limpiarSeleccion();
-        });
-
-        document.evento("keydown",function(ev) {
-            if(eventosPausados) return;
-
-            if(ev.which==27) {
-                //ESC
-                self.limpiarSeleccion();
-            } else if(ev.which==46) {
-                //DEL
-                if(self.componenteSeleccionado) self.eliminarComponente(self.componenteSeleccionado.obtenerId());
-                ev.preventDefault();
-            }
-        });
-    }    
-
     function construirPropiedades() {
         if(!self.componenteSeleccionado) {
             barraPropiedades.agregarClase("foxtrot-barra-propiedades-vacia");
@@ -228,7 +179,17 @@ var editor=new function() {
 
     ////Eventos
 
+    function stopPropagation(e) {
+        //Detener la propagación permitirá destinos anidados
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     function componenteSoltado(e) {
+        e.preventDefault();
+        //Detener la propagación permitirá destinos anidados
+        e.stopPropagation();
+
         var datos=e.dataTransfer.getData("text/plain");
         try {
             datos=JSON.parse(datos);
@@ -248,7 +209,126 @@ var editor=new function() {
             self.moverComponente(this,datos.idcomponente);
             return;
         }
+    }    
+
+    function prepararArrastrarYSoltar() {
+        var componentes=cuerpoBarraComponentes.querySelectorAll("button");
+        for(var i=0;i<componentes.length;i++) {
+            var comp=componentes[i];
+            comp.arrastrable({
+                icono:iconosComponentes[comp.metadato("componente")],
+                datos:JSON.stringify({
+                    componente:comp.metadato("componente")
+                })
+            });
+        }
+
+        ui.obtenerCuerpo().crearDestino({
+            drop:componenteSoltado,
+            dragenter:stopPropagation,
+            dragover:stopPropagation,
+            dragleave:stopPropagation
+        });
+    }    
+
+    function establecerEventos() {
+        ui.obtenerCuerpo().eventoFiltrado("click",{
+            clase:"componente"
+        },function(ev) {
+            ev.stopPropagation();
+
+            //TODO Mostrar el menú contextual con click derecho
+            //TODO Selección de componentes anidados
+
+            //TODO Selección múltiple
+
+            self.limpiarSeleccion();
+            self.establecerSeleccion(this);
+        })
+        .evento("click",function() {
+            self.limpiarSeleccion();
+        });
+
+        document.evento("keydown",function(ev) {
+            if(eventosPausados) return;
+
+            if(ev.which==27) {
+                //ESC
+                self.limpiarSeleccion();
+            } else if(ev.which==46) {
+                //DEL
+                if(self.componenteSeleccionado) self.eliminarComponente(self.componenteSeleccionado.obtenerId());
+                ev.preventDefault();
+            }
+        });
+    }    
+
+    ////Gestión de componentes
+
+    this.eliminarComponente=function(id) {
+        var obj=ui.obtenerInstanciaComponente(id);
+        obj.eliminar();
+        this.limpiarSeleccion();
+        return this;
+    };
+
+    this.moverComponente=function(destino,id) {
+        var obj=ui.obtenerInstanciaComponente(id);
+        if(!obj||destino===obj.elemento) return this;
+        destino.anexar(obj.elemento);
+
+        return this;
+    };
+
+    this.prepararComponenteInsertado=function(obj) {        
+        var elem=obj.obtenerElemento(),
+            nombre=obj.componente,
+            id=obj.obtenerId(),
+            conte=obj.obtenerContenedor(),
+            arrastrable=obj.esArrastrable();
+
+        if(conte) {
+            conte.crearDestino({
+                drop:componenteSoltado,
+                dragenter:stopPropagation,
+                dragover:stopPropagation,
+                dragleave:stopPropagation
+            });
+        }
+        
+        if(arrastrable) {
+            elem.arrastrable({
+                icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
+                datos:JSON.stringify({
+                    idcomponente:id
+                })
+            });
+        }
+
+        return this;
+    };
+
+    /**
+     * Asigna los eventos y prepara todos los componentes existentes (putil luego de reemplazar todo el html de la vista).
+     */
+    function prepararComponentesInsertados() {
+        ui.obtenerInstanciasComponentes().forEach(function(comp) {
+            editor.prepararComponenteInsertado(comp);
+        });
     }
+
+    this.insertarComponente=function(destino,nombre) {
+        var obj=ui.crearComponente(nombre),
+            elem=obj.obtenerElemento();
+
+        destino.anexar(elem);
+        
+        obj.inicializar();
+
+        this.prepararComponenteInsertado(obj);
+
+        return obj;
+    };
 
     this.establecerSeleccion=function(obj) {
         var elem,comp;
@@ -280,48 +360,6 @@ var editor=new function() {
         construirPropiedades();
 
         return this;
-    };
-
-    ////Gestión de componentes
-
-    this.eliminarComponente=function(id) {
-        var obj=ui.obtenerInstanciaComponente(id);
-        obj.eliminar();
-        ui.eliminarInstanciaComponente(id);
-        this.limpiarSeleccion();
-        return this;
-    };
-
-    this.moverComponente=function(destino,id) {
-        var obj=ui.obtenerInstanciaComponente(id);
-        if(!obj||destino===obj.elemento) return this;
-        destino.anexar(obj.elemento);
-
-        return this;
-    };
-
-    this.insertarComponente=function(destino,nombre) {
-        var obj=ui.crearComponente(nombre),
-            id=obj.obtenerId(),
-            elem=obj.obtenerElemento(),
-            conte=obj.obtenerContenedor();
-
-        destino.anexar(elem);
-
-        if(conte) {
-            conte.crearDestino({
-                drop:componenteSoltado
-            });
-        }
-        
-        elem.arrastrable({
-            icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
-            datos:JSON.stringify({
-                idcomponente:id
-            })
-        });
-
-        return obj;
     };
 
     ////Gestión de la vista
@@ -414,6 +452,7 @@ var editor=new function() {
                         ui.establecerEstilos(resp.css);
                         ui.establecerJson(resp.json);
                         ui.ejecutar();
+                        prepararComponentesInsertados();
                     }
                 }
                 document.body.removerClase("trabajando");

@@ -222,7 +222,7 @@ var ui=new function() {
      * Devuelve el ID de un componente dado su ID, instancia, nombre o elemento del DOM.
      */
     function identificarComponente(param) {
-        if(typeof param==="number") return param;
+        if(typeof param==="number"||!isNaN(parseInt(param))) return parseInt(param);
         if(typeof param=="string"&&componentes.hasOwnProperty(param)) return componentes[param];
         if(typeof param=="object"&&param.esComponente()) return param.obtenerId();
         if(param instanceof Node) return param.dato("fxid");
@@ -382,5 +382,7 @@ var configComponente={
     grupo:null
 };
 
+var componentes={};
+
 window["ui"]=ui;
-window["componentes"]={};
+window["componentes"]=componentes;

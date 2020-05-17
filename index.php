@@ -45,22 +45,23 @@
         <div class="foxtrot-contenidos-barra-herramientas">Ningún componente seleccionado</div>
     </div>
     
-    <!-- Eventualmente, todo esto estará compilado en un solo script con Closure -->
+    <!-- Eventualmente, todo esto estará compilado en un solo script con Closure, y los css combinados en un solo archivo -->
 
     <script src="util.js"></script>
-    <script src="dom.js"></script>
     <script src="ajax.js"></script>
+    <script src="dom.js"></script>
     <script src="arrastra.js"></script>
-    <script src="ui.js"></script>
+    <script src="editable.js"></script>
     <script src="componente.js"></script>
-
+    <script src="ui.js"></script>
+    
     <script src="componentes/contenedor.js"></script>
-    <link rel="stylesheet" href="componentes/css/contenedor.edicion.css">
-
     <script src="componentes/texto.js"></script>
+    <script src="componentes/imagen.js"></script>
     <script src="componentes/fila.js"></script>
     <script src="componentes/columna.js"></script>
-
+    <script src="componentes/etiqueta.js"></script>
+    
     <script src="editor.js"></script>    
     
     <iframe id="foxtrot-marco" src="marco.html"></iframe>

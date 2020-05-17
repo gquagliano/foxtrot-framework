@@ -253,8 +253,8 @@ body.trabajando #foxtrot-cargando {
 /* Componentes */
 
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor.vacio {
-    min-height: 40px;
     outline: dotted 2px rgba(0, 0, 0, 0.2);
+    min-height: 40px;
 }
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {
@@ -263,8 +263,12 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .componente.seleccionado {
     outline: 4px solid rgba(255, 0, 64, 0.25) !important;
 }
-.foxtrot-modo-edicion [contenteditable] {
+.foxtrot-modo-edicion [contenteditable],
+.foxtrot-modo-edicion [contenteditable] * {
     cursor: text;
+}
+.foxtrot-modo-edicion [contenteditable] .componente {
+    cursor: grab;
 }
 .foxtrot-modo-edicion [contenteditable]:focus {
     outline: none;

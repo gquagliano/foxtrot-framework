@@ -56,9 +56,6 @@
 
     function dragEnter(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
-        
-        //Detener la propagación permitirá destinos anidados
-        e.stopPropagation();
 
         //TODO Determinar si se acepta el elemento que se está arrastrando
         
@@ -68,29 +65,22 @@
     function dragOver(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
 
-        e.preventDefault();
-        //Detener la propagación permitirá destinos anidados
-        e.stopPropagation();
-
+        //TODO Determinar si se acepta el elemento que se está arrastrando
+    
         e.dataTransfer.dropEffect="move";     
     }
 
     function dragLeave(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
-        
-        //Detener la propagación permitirá destinos anidados
-        e.stopPropagation();
-        
         this.removerClase("foxtrot-arrastrable-arrastrando-sobre");        
     }
 
     function drop(e) {
         var opciones=opcionesDestinos[this.obtenerId()];
-        
-        this.removerClase("foxtrot-arrastrable-arrastrando-sobre");  
 
-        e.preventDefault();
-        e.stopPropagation();           
+        //TODO Determinar si se acepta el elemento que se está soltando (y comunicar de alguna manera a los otros listeners de drop)
+        
+        this.removerClase("foxtrot-arrastrable-arrastrando-sobre");
     }
 
     /**

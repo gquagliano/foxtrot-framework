@@ -32,6 +32,7 @@ var componenteColumna=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
+        if(this.inicializado) return this;
         this.contenedor=this.elemento;
         this.inicializarComponente();
         return this;
@@ -42,8 +43,7 @@ var componenteColumna=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='col-sm-3 contenedor vacio'/>");
-        this.establecerId();
-        this.inicializar();
+        this.crearComponente();
         return this;
     };
     

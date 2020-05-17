@@ -63,6 +63,7 @@
      * Establece o devuelve datos (dataset) del elemento.
      */
     Node.prototype.dato=function(clave,valor) {
+        if(!this.dataset) return null; //Algunos nodos pueden no tener dataset (por ejemplo Text)
         if(util.esIndefinido(valor)) return this.dataset[clave];
         this.dataset[clave]=valor;
         return this;
@@ -245,18 +246,6 @@
         return this.es({
             etiqueta:/(input|select|textarea|button)/i
         });
-    };
-
-    /**
-     * Activa o desactiva el modo de edición.
-     */
-    Node.prototype.editable=function(estado) {
-        if(util.esIndefinido(estado)) estado=true;
-        this.propiedad("contentEditable",estado);
-
-        //TODO controles de formato
-
-        return this;
     };
 
     /**

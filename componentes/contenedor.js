@@ -17,6 +17,7 @@ var componenteContenedor=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
+        if(this.inicializado) return this;
         this.contenedor=this.elemento;
         this.inicializarComponente();
         return this;
@@ -27,8 +28,7 @@ var componenteContenedor=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='container vacio'/>");
-        this.establecerId();
-        this.inicializar();
+        this.crearComponente();
         return this;
     };
 };

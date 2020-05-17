@@ -2,7 +2,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.
 
 ### Qué estamos desarrollando
 
-##### Editor
+#### Editor
 
 Editor de vistas WYSIWYG: Nuestro editor de vistas actual trabaja íntegramente con objetos y cada vista es dibujada en tiempo de ejecución. Buscamos un editor que "compile" la vista, almacenándola en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
@@ -19,23 +19,23 @@ La siguiente etapa consistirá en:
 - Integración con un gestor de vistas y archivos; finalización de los métodos de guardado/previsualización/apertura.
 - Desarrollo del framework del frontend (controladores, etc.).
 
-##### Comunicación cliente<->servidor transparente
+#### Comunicación cliente<->servidor transparente
 
 Ya existe un prototipo funcional demostrando esto, ver frontend/backend.js.
 
 Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC 😋.
 
-Es posible incovar métodos desde uno a otro en forma transparente para el desarrollador. Lógicamente, el backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (`ctl` es el nombre del controlador para la vista actual):
+Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. Lógicamente, el backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (`ctl` es el nombre del controlador para la vista actual):
 
-*js:*
+_js:_
 
-    backend.foo(function(respuesta) {           //Invocará ctl.foo(1,2,3) (php) y devolverá el retorno de la misma al callback
+    backend.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) (php) y devolverá el retorno de la misma al callback
         ...
     },1,2,3);
 
-    backend.bar(1,2,3);                         //Invocará ctl.bar(1,2,3) (php)
+    backend.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) (php)
 
-*php:*
+_php:_
 
     function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback
         return 'Hola';
@@ -43,26 +43,27 @@ Es posible incovar métodos desde uno a otro en forma transparente para el desar
 
     frontend.bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
 
-##### API js / Frontend
+#### API js / Frontend
 
 El frontend de Foxtrot tiene las siguientes particularidades:
 
 - La interfaz está formada por componentes, cada uno con propiedades y métodos.
 - Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o compilarse en archivos html independientes (lo nuevo de esta versión).
-- Permite comunicación cliente-servidor bidireccional y transparente.
+- Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Debe estar desacoplado del backend y ser extremadamente liviano y optimizado para dispositivos / Cordova.
 - Sin embargo, estamos considerando introducir algún mecanismo que permita que la vista sea preprocesada en el servidor (php), en lugar de la carga normal por ajax, solo disponible para aquellas aplicaciones que se implementen junto con el backend en el mismo servidor web.
 - Gestor del DOM propio (adiós jQuery).
-- El API de todas las librerías se desarrolla totalmente en español. Solo mantendremos los nombres internos (eventos, etc.) y siglas en inglés.
+- El API se desarrolla totalmente en español. Solo mantendremos los nombres internos (eventos, etc.) y siglas en inglés.
 
-##### API php / Backend
+#### API php / Backend
 
 El backend de Foxtrot tiene las siguientes particularidades:
 
 - Es headless, totalmente desacoplado del frontend.
 - Es multiaplicación (una instalación puede contener varias aplicaciones y la aplicación solicitada se determina a partir del dominio).
-- Permite una comunicación bidireccional php<->js totalmente transparente para el desarrollador.
+- Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Permite exponer métodos php en forma automática de manera segura.
+- El API se desarrolla totalmente en español. Solo mantendremos los nombres internos (eventos, etc.) y siglas en inglés.
 
 La mejora principal en esta versión viene en el último punto: No era tan automático.
 

@@ -249,7 +249,7 @@ var editor=new function() {
             self.limpiarSeleccion();
         });
 
-        document.evento("keydown",function(ev) {
+        ui.obtenerDocumento().evento("keydown",function(ev) {
             if(eventosPausados) return;
 
             if(ev.which==27) {

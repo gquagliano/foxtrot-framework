@@ -58,9 +58,41 @@
     <script src="componentes/contenedor.js"></script>
     <script src="componentes/texto.js"></script>
     <script src="componentes/imagen.js"></script>
+    <script src="componentes/boton.js"></script>
+    <script src="componentes/icono.js"></script>
+    <script src="componentes/espaciador.js"></script>
+
     <script src="componentes/fila.js"></script>
     <script src="componentes/columna.js"></script>
+    <script src="componentes/form.js"></script>
+    <script src="componentes/dialogo.js"></script>
+    <script src="componentes/menu-lateral.js"></script>
+    <script src="componentes/pestanas.js"></script>
+    <script src="componentes/pestana.js"></script>
+    <script src="componentes/deslizable.js"></script>
+    <script src="componentes/navegacion.js"></script>
+
     <script src="componentes/etiqueta.js"></script>
+    <script src="componentes/condicional.js"></script>
+    <script src="componentes/bucle.js"></script>
+    <script src="componentes/codigo.js"></script>
+    <script src="componentes/importar.js"></script>
+
+    <script src="componentes/campo.js"></script>
+    <script src="componentes/desplegable.js"></script>
+    <script src="componentes/buscador.js"></script>
+    <script src="componentes/checkbox.js"></script>
+    <script src="componentes/opciones.js"></script>
+    <script src="componentes/alternar.js"></script>
+    <script src="componentes/fecha.js"></script>
+    <script src="componentes/hora.js"></script>
+    <script src="componentes/agenda.js"></script>
+    <script src="componentes/menu.js"></script>
+    <script src="componentes/archivo.js"></script>
+
+    <script src="componentes/tabla.js"></script>    
+    <script src="componentes/tabla-columna.js"></script>
+    <script src="componentes/tabla-fila.js"></script>
     
     <script src="editor.js"></script>
     

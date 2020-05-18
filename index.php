@@ -72,6 +72,7 @@
     <script src="componentes/pestana.js"></script>
     <script src="componentes/deslizable.js"></script>
     <script src="componentes/navegacion.js"></script>
+    <script src="componentes/arbol.js"></script>
 
     <script src="componentes/etiqueta.js"></script>
     <script src="componentes/condicional.js"></script>

@@ -1,0 +1,16 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+ /* Estilos comunes de Foxtrot */
+
+picture {
+    display: inline-block;
+}
+picture img {
+    display: block;
+    width: 100%;
+}

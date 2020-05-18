@@ -132,8 +132,11 @@ body.foxtrot-editor {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 14px 0 7px;
+    padding: 24px 0 7px;
     color: #6b6f73;
+}
+.foxtrot-grupo-herramientas:first-child>label {
+    padding-top: 7px;
 }
 
 /* Barra superior */
@@ -164,6 +167,9 @@ body.trabajando #foxtrot-cargando {
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15);
     transition: none;
+    max-height: calc(100vh - 95px);
+    overflow: auto;
+    /* TODO Barra de desplazamiento flotante estilo mobile (que no afecte las dimensiones) */
 }
 .foxtrot-asa-arrastre {
     position: absolute;

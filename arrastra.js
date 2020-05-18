@@ -15,12 +15,35 @@
     var opcionesArrastre={},
         opcionesDestinos={};
 
-    Node.prototype.removerArrastre=function(elem) {
+    Node.prototype.removerArrastre=function() {
+        var id=this.obtenerId();
+        if(!opcionesArrastre.hasOwnProperty(id)) return this;
+        var opciones=opcionesArrastre[id];
 
+        var arrastrable=this;
+        if(typeof opciones.asa==="string") {
+            arrastrable=elem.querySelector(opciones.asa);
+        } else if(opciones.asa instanceof Element) {
+            arrastrable=opciones.asa;
+        }
+
+        arrastrable.propiedad("draggable",false)
+            .removerClase("foxtrot-arrastrable-arrastrable")
+            .metadato("arrastra",null)
+            .removerEvento("dragstart drag dragend");
+
+        delete opcionesArrastre[this.obtenerId()];
+
+        return this;
     };
 
-    Node.prototype.removerDestino=function(elem) {
-
+    Node.prototype.removerDestino=function() {
+        var id=this.obtenerId();
+        if(!opcionesDestinos.hasOwnProperty(id)) return this;
+        delete opcionesDestinos[id];
+        this.removerClase("foxtrot-arrastrable-destino")
+            .removerEvento("dragenter dragover dragleave drop");
+        return this;
     };
 
     function dragStart(e) {
@@ -160,7 +183,8 @@
             dragenter:null,
             dragover:null,
             dragleave:null,
-            drop:null
+            drop:null,
+            pausado:false
         };
         opciones=Object.assign(predeterminados,opciones);
 

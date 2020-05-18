@@ -103,14 +103,21 @@ var editor=new function() {
         cuerpoBarraPropiedades.html("");
 
         var agregarPropiedad=function(barra,nombre,prop) {
-            var fila=document.crear("<div class='foxtrot-propiedad'>");
-            
-            document.crear("<label>").html(prop.etiqueta).anexarA(fila);
+            var fila=document.crear("<div class='foxtrot-propiedad'>"),
+                label=document.crear("<label>").html(prop.etiqueta).anexarA(fila);
 
             var tipo=prop.hasOwnProperty("tipo")?prop.tipo:"texto",
                 fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
+                placeholder=prop.hasOwnProperty("placeholder")?prop.placeholder:null,
+                ayuda=prop.hasOwnProperty("ayuda")?prop.ayuda:null,
                 timeout=0,
                 componente=editor.componenteSeleccionado;
+
+            if(ayuda) {
+                document.crear("<img src='img/ayuda.png'>")
+                    .atributo("title",ayuda)
+                    .anexarA(label);
+            }
 
             if(tipo=="?") {
                 //TODO
@@ -118,6 +125,7 @@ var editor=new function() {
                 //Campo de texto como predeterminado
                 
                 var campo=document.crear("<input type='text' class='form-control'>").valor(prop.valor);
+                if(placeholder) campo.atributo("placeholder",placeholder);
                 fila.anexar(campo);
 
                 campo.evento("input",function(ev) {

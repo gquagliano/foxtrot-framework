@@ -29,6 +29,7 @@ var componente=new function() {
     this.hijos=null;
     this.padre=null;
     this.contenidoEditable=false;
+    this.arrastrable=true;
     this.inicializado=false;
 
     /**
@@ -45,6 +46,9 @@ var componente=new function() {
             //    etiqueta
             //    tipo (predeterminado texto|multilinea|opciones|color|numero)
             //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+            //    placeholder
+            //    funcion
+            //    adaptativa (predeterminado true)
             //}
             color:{
                 etiqueta:"Color",
@@ -100,8 +104,7 @@ var componente=new function() {
      * Determina si el componente debe poder arrastrarse para reposicionarse o no.
      */
     this.esArrastrable=function() {
-        //Si es editable, debemos evitar el arrastrar/soltar predeterminado del editor
-        return !this.contenidoEditable;
+        return this.arrastrable;
     };
 
     ////Gestión de la instancia
@@ -152,10 +155,19 @@ var componente=new function() {
         }
 
         if(this.contenidoEditable) {
-            this.iniciarEdicion(false);
+            var t=this;
+            this.elemento.evento("dblclick",function() {
+                t.iniciarEdicion(false);
 
-            //TODO El componente debe tener alguna forma de arrastrar
-            //TODO El componente debe tener alguna forma de ser eliminado/cortar/pegar ya que al darle foco siempre se estará trabajando con su contenido
+                var fn=function(e) {
+                    if(e.which==27) {
+                        t.finalizarEdicion();
+                        t.elemento.removerEvento("keydown",fn);
+                        e.preventDefault();
+                    }
+                };
+                t.elemento.evento("keydown",fn);
+            });
         }
 
         this.inicializado=true;
@@ -295,16 +307,42 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve la definición de una propiedad.
+     */
+    this.buscarPropiedad=function(nombre) {
+        var props=[this.propiedadesComunes,this.propiedadesConcretas];
+        for(var i=0;i<2;i++) {
+            for(var grupo in props[i]) {
+                if(!props[i].hasOwnProperty(grupo)) continue;
+                for(var prop in props[i][grupo]) {
+                    if(!props[i][grupo].hasOwnProperty(prop)) continue;
+                    if(prop==nombre) return props[i][grupo][nombre];
+                }
+            }
+        }
+        return null;        
+    };
+
+    /**
      * Establece o devuelve el valor de una propiedad.
      */
     this.propiedad=function(tamano,nombre,valor) {
+        if(nombre=="nombre") return;
+
         //xs y g son sinónmos, ya que en ambos casos los estilos son globales
         if(!tamano||tamano=="xs") tamano="g";
+
+        //Determinar si la propiedad es adaptativa (por defecto, si)
+        var adaptativa=true,
+            definicion=this.buscarPropiedad(nombre);
+        if(definicion&&definicion.hasOwnProperty("adaptativa")) adaptativa=definicion.adaptativa;
 
         if(util.esIndefinido(valor)) {
             if(!this.valoresPropiedades.hasOwnProperty(nombre)) return null;
 
             var obj=this.valoresPropiedades[nombre];
+
+            if(!adaptativa) return obj;
 
             if(obj.hasOwnProperty(tamano)) return obj[tamano];
 
@@ -317,8 +355,12 @@ var componente=new function() {
             return null;
         }
 
-        if(!this.valoresPropiedades.hasOwnProperty(nombre)) this.valoresPropiedades[nombre]={};
-        this.valoresPropiedades[nombre][tamano]=valor;
+        if(adaptativa) {
+            if(!this.valoresPropiedades.hasOwnProperty(nombre)) this.valoresPropiedades[nombre]={};
+            this.valoresPropiedades[nombre][tamano]=valor;
+        } else {
+            this.valoresPropiedades[nombre]=valor;
+        }
 
         this.actualizar(nombre,valor,tamano);
 

@@ -58,9 +58,17 @@ var ui=new function() {
 
     ////Estilos
 
-    this.obtenerEstilos=function(selector,origen) {        
+    this.obtenerEstilos=function(selector,tamano,origen) {        
         if(util.esIndefinido(selector)) selector=null;
-        if(util.esIndefinido(origen)) origen=estilos.sheet.cssRules;
+        if(util.esIndefinido(tamano)) tamano=null;
+
+        if(tamano=="xs") tamano="g";
+
+        var raiz=false;
+        if(util.esIndefinido(origen)) {
+            raiz=true;
+            origen=estilos.sheet.cssRules;
+        }
 
         var reglas=[];
         for(var i=0;i<origen.length;i++) {
@@ -68,18 +76,37 @@ var ui=new function() {
                 obj=null;
 
             if(regla.type==CSSRule.MEDIA_RULE) {
-                var arr=this.obtenerEstilos(selector,regla.cssRules);
+                //Determinar si corresponde a un tamaño estandar
+                var tam=null,
+                    coincidencia=regla.conditionText.match(/min-width:.+?([0-9]+)/i);
+                if(tamano&&!coincidencia) continue;
+
+                if(coincidencia[1]==tamanos.xl) tam="xl";
+                else if(coincidencia[1]==tamanos.xl) tam="xl";
+                else if(coincidencia[1]==tamanos.lg) tam="lg";
+                else if(coincidencia[1]==tamanos.md) tam="md";
+                else if(coincidencia[1]==tamanos.sm) tam="sm";
+                                
+                if(tamano&&tam!=tamano) continue;
+
+                var arr=this.obtenerEstilos(selector,null,regla.cssRules);
                 //Ignorar media queries vacíos o sin coincidencias
-                if(arr.length) {
-                    obj={
-                        tipo:"media",
-                        media:regla.conditionText,
-                        reglas:arr,
-                        texto:regla.cssText,
-                        indice:i
-                    };
-                }
+                if(!arr||!arr.length) continue;
+
+                obj={
+                    tipo:"media",
+                    media:regla.conditionText,
+                    reglas:arr,
+                    texto:regla.cssText,
+                    indice:i,
+                    tamano:tam
+                };
             } else if(regla.type==CSSRule.STYLE_RULE) {
+                //Ignorar reglas globales si se está filtrando por tamaño
+                if(tamano&&tamano!="g"&&raiz) continue;
+
+                if(selector&&regla.selectorText!=selector) continue;
+
                 obj={
                     selector:regla.selectorText,
                     estilos:regla.style,
@@ -89,13 +116,25 @@ var ui=new function() {
             }
             //Por el momento vamos a ignorar otros tipos. No deberían existir (no se supone que el usuario deba modificar los estilos generados por el editor,
             //sus estilos adicionales deben ir en un archivo distinto.)
-
-            if(obj&&selector&&regla.selectorText==selector) return obj;
             
             reglas.push(obj);
         }
 
-        return selector?null:reglas;
+        //Si se filtró por tamaño, devolver solo las reglas del mismo
+        if(tamano) {
+            var res=[];
+            for(var i=0;i<reglas.length;i++) {
+                //Media query
+                if(reglas[i].hasOwnProperty("tamano")) {
+                    if(reglas[i].tamano==tamano) return reglas[i].reglas;
+                    continue;
+                }
+                if(tamano=="g") res.push(reglas[i]);
+            }
+            return res;            
+        }
+
+        return reglas;
     };
 
     this.establecerEstilos=function(css) {
@@ -225,9 +264,10 @@ var ui=new function() {
      */
     function identificarComponente(param) {
         if(typeof param==="number"||!isNaN(parseInt(param))) return parseInt(param);
-        if(typeof param=="string"&&componentes.hasOwnProperty(param)) return componentes[param];
-        if(typeof param=="object"&&param.esComponente()) return param.obtenerId();
-        if(param instanceof Node) return param.dato("fxid");
+        if(typeof param==="string"&&componentes.hasOwnProperty(param)) return componentes[param];
+        if(typeof param==="object"&&param.esComponente()) return param.obtenerId();
+        //if(param instanceof Node) return param.dato("fxid"); TODO ¿Revisar?
+        if(typeof param==="object"&&param.nodeName) return param.dato("fxid"); //TODO Agregar Object.esNodo()
         return null;
     }
 

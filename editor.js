@@ -250,7 +250,6 @@ var editor=new function() {
 
             //TODO Selección múltiple
 
-            self.limpiarSeleccion();
             self.establecerSeleccion(this);
         })
         .evento("click",function() {

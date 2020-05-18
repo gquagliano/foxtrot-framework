@@ -691,7 +691,7 @@
 
     //Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
     ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo","propiedad","estilos","estilo",
-        "texto","html","anexar","anexarA"].forEach(function(m) {
+        "texto","html","anexar","anexarA","remover","desacoplar"].forEach(function(m) {
             NodeList.prototype[m]=function() {
                 var args=Array.from(arguments);
                 this.forEach(function(elem) {

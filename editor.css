@@ -224,14 +224,22 @@ body.trabajando #foxtrot-cargando {
     margin-bottom: 0;
 }
 .foxtrot-propiedad label {
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
     padding-right: 10px;
     flex: 0 0 100px;
     margin: 0;
     font-weight: normal;
     padding-top: 8px;
+}
+.foxtrot-propiedad label img {
+    height: 16px;
+    background: #e8ebf1;
+    border-radius: 100%;
+    padding: 2px;
+    vertical-align: middle;
+    margin-left: 4px;
+    margin-top: -1px;
+    cursor: pointer;
 }
 .foxtrot-propiedad .form-control,.foxtrot-propiedad .custom-select {
     flex: 1;
@@ -264,14 +272,14 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .componente.seleccionado {
     outline: 4px solid rgba(255, 0, 64, 0.25) !important;
 }
-.foxtrot-modo-edicion [contenteditable],
-.foxtrot-modo-edicion [contenteditable] * {
+.foxtrot-modo-edicion [contenteditable=true],
+.foxtrot-modo-edicion [contenteditable=true] * {
     cursor: text;
 }
-.foxtrot-modo-edicion [contenteditable] .componente {
+.foxtrot-modo-edicion [contenteditable=true] .componente {
     cursor: grab;
 }
-.foxtrot-modo-edicion [contenteditable]:focus {
+.foxtrot-modo-edicion [contenteditable=true]:focus {
     outline: none;
     outline: 4px solid rgba(115, 255, 0, 0.25) !important;
 }

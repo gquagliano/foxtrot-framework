@@ -35,8 +35,8 @@ var ui=new function() {
     var doc=document,
         body=doc.body,
         cuerpo=body,
-        estilos=doc.querySelector("#foxtrot-estilos"),
-        marco=doc.querySelector("#foxtrot-marco");
+        estilos,
+        marco;
 
     ////Acceso a variables
 
@@ -311,7 +311,7 @@ var ui=new function() {
     };
 
     /**
-     * Establece e inicializa l a vista y sus componentes dado su json.
+     * Establece e inicializa la vista y sus componentes dado su json.
      */
     this.establecerJson=function(json) {
         if(typeof json==="string") json=JSON.parse(json);
@@ -365,11 +365,27 @@ var ui=new function() {
     this.obtenerTamano=function() {
         //TODO Configurable
         var ancho=(modoEdicion?marco:window).ancho();
+        //TODO Cuando esto sea configurable se debe des-harcodear
         if(ancho>=tamanos.xl) return "xl";
         if(ancho>=tamanos.lg) return "lg";
         if(ancho>=tamanos.md) return "md";
         if(ancho>=tamanos.sm) return "sm";
         return "xs";
+    };
+
+    /**
+     * Devuelve todos los posibles tamaños con formato {nombre:ancho máximo}.
+     */
+    this.obtenerTamanos=function() {
+        return tamanos;
+    };
+
+    /**
+     * Devuelve los nombres de los posibles tamaños como array ordenado de menor a mayor.
+     */
+    this.obtenerArrayTamanos=function() {
+        //TODO Cuando esto sea configurable se debe des-harcodear
+        return ["xs","sm","md","lg","xl"];
     };
 
     this.ejecutar=function(nuevoDoc) {
@@ -379,6 +395,7 @@ var ui=new function() {
             body=doc.body;
             cuerpo=body;
             estilos=doc.querySelector("#foxtrot-estilos");
+            marco=document.querySelector("#foxtrot-marco");
         }
     };
 }();

@@ -181,6 +181,13 @@ var editable=new function() {
         //Evitar que al arrastrar se arrastre el elemento completo o alguno de sus padres
         e.stopPropagation();
     }
+
+    function keyDown(e) {
+        if(e.which==46) { //DEL
+            //Evitar que se elimine el componente
+            e.stopPropagation();
+        }
+    }
     
     /**
      * Activa el modo de edición.
@@ -205,7 +212,8 @@ var editable=new function() {
 
         this.evento("focus",onFocus)
             .evento("blur",onBlur)
-            .evento("dragstart",dragStart);
+            .evento("dragstart",dragStart)
+            .evento("keydown",keyDown);
 
         //Escuchar cambios para detectar cuando se elimina/reestablece (ctrl+z) contenido que corresponde a un componente hijo
         this.observador=new MutationObserver(contenidoModificado);
@@ -227,9 +235,9 @@ var editable=new function() {
 
         //Remover eventos
         this.removerDestino()
-        .removerEvento("focus",onFocus)
-        .removerEvento("blur",onBlur)
-        .removerEvento("dragstart",dragStart);
+            .removerEvento("focus",onFocus)
+            .removerEvento("blur",onBlur)
+            .removerEvento("dragstart",dragStart);
 
         this.observador.disconnect();         
         return this;

@@ -44,8 +44,8 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|color|numero)
-            //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero)
+            //    opciones (objeto {valor,etiqueta} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion
             //    adaptativa (predeterminado true)
@@ -53,6 +53,46 @@ var componente=new function() {
             color:{
                 etiqueta:"Color",
                 tipo:"color"
+            }
+        },
+        "Posicionamiento":{
+            flotar:{ //TODO ¿Traducción?
+                etiqueta:"Alineacion",
+                tipo:"opciones",
+                opciones:{
+                    ninguna:"Ninguna - Predeterminado",
+                    izquierda:"Izquierda",
+                    derecha:"Derecha"
+                    //TODO centro (establece margen izq y der = auto)
+                }
+            },
+            margen:{
+                etiqueta:"Margen"
+                //TODO Tipo de campo personalizado que permita, por ejemplo, crear los 4 campos para los márgenes
+            }
+        },
+        "Tamaño":{
+            ancho:{
+                etiqueta:"Ancho"
+            },
+            anchoMaximo:{
+                etiqueta:"Ancho máximo"
+            }
+        },
+        "Texto":{
+            alineacion:{
+                etiqueta:"Alineación",
+                tipo:"opciones",
+                opciones:{
+                    ninguna:"Ninguna - Heredada",
+                    izquierda:"Izquierda",
+                    derecha:"Derecha",
+                    centro:"Centro",
+                    justificado:"Justificado",
+                    //TODO
+                    //justificadoCentro:"Justificado al centro",
+                    //justificadoDerecha:"Justificado a la derecha"
+                }
             }
         }
     };
@@ -224,6 +264,7 @@ var componente=new function() {
      */
     this.restaurarComponente=function() {
         this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
+        this.selector="#"+this.elemento.atributo("id");
         this.inicializado=false;
         this.inicializar();
         return this;
@@ -273,6 +314,50 @@ var componente=new function() {
         this.actualizarComponente(propiedad,valor,tamano);
         return this;
     };
+
+    /**
+     * Devuelve los estilos del componente.
+     */
+    this.obtenerEstilos=function(tamano) {
+        var estilos=ui.obtenerEstilos(this.selector,tamano);
+
+        if(!estilos.length) {
+            //Inicializar
+            ui.establecerEstilosSelector(this.selector,"",tamano);
+            estilos=ui.obtenerEstilos(this.selector,tamano);
+        }
+        
+        return estilos[0].estilos;
+    };
+
+    /**
+     * Valida, corrige y agrega unidades a los valores de propiedades CSS.
+     */
+    this.normalizarValorCss=function(valor,tipo) {
+        if(util.esIndefinido(tipo)) tipo="numerico";
+
+        if(tipo=="numerico") {
+            //Agregar unidad a los números (px por defecto)
+            if(typeof valor==="number"||/^[0-9]+$/.test(valor)) return valor.toString()+"px";
+
+            //Si es solo números con espacios (por ejemplo margin:10 20), agregar unidades a todos los números (margin:10px 20px)
+            if(/^[0-9\s]+$/.test(valor)) {
+                valor=valor.split(" ");
+                valor.forEach(function(v,i) {
+                    if(/^[0-9]+$/.test(v)) valor[i]=v.toString()+"px";
+                });
+                return valor.join(" ");
+            }
+
+            //TODO ¿Otros?
+        } else if(tipo=="color") {
+            //TODO
+        }
+
+        //TODO ¿Otros?
+
+        return valor;
+    };
     
     /**
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
@@ -281,10 +366,60 @@ var componente=new function() {
         if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
         if(util.esIndefinido(tamano)) tamano=null;
 
-        //var estilos=ui.obtenerEstilos(this.selector);
+        var estilos=this.obtenerEstilos(tamano);
 
         if(propiedad=="color") {
-            ui.establecerEstilosSelector(this.selector,"color:"+valor,tamano);
+            estilos.color=this.normalizarValorCss(valor,"color");
+            return this;
+        }
+        
+        if(propiedad=="flotar") {
+            var float=null;
+            if(valor=="izquierda") float="left";
+            else if(valor=="derecha") float="right";
+
+            if(tamano=="g") {
+                this.elemento.removerClase(/float-(left|right|none)/);
+                if(float) this.elemento.agregarClase("float-"+float);                
+            } else {
+                this.elemento.removerClase(new RegExp("float-"+tamano+"-.+"));
+                if(float) this.elemento.agregarClase("float-"+tamano+"-"+float);
+            }
+            return this;
+        }
+        
+        if(propiedad=="margen") {
+            //TODO Margen izq/der/arr/ab
+            estilos.margin=this.normalizarValorCss(valor);
+            return this;
+        }
+        
+        if(propiedad=="ancho") {
+            estilos.width=this.normalizarValorCss(valor);
+            return this;
+        }
+        
+        if(propiedad=="anchoMaximo") {
+            estilos.maxWidth=this.normalizarValorCss(valor);
+            return this;
+        }
+
+        if(propiedad=="alineacion") {
+            var opc={
+                    izquierda:"left",
+                    derecha:"right",
+                    centro:"center",
+                    justificado:"justify"
+                },
+                align=opc.hasOwnProperty(valor)?opc[valor]:null;
+            if(tamano=="g") {
+                this.elemento.removerClase(/text-(left|right|center|justify)/);
+                if(align) this.elemento.agregarClase("text-"+align);                
+            } else {
+                this.elemento.removerClase(new RegExp("text-"+tamano+"-.+"));
+                if(align) this.elemento.agregarClase("text-"+tamano+"-"+align);
+            }
+            return this;
         }
 
         return this;
@@ -416,7 +551,7 @@ var componente=new function() {
     this.iniciarEdicion=function(pausar) {   
         if(util.esIndefinido(pausar)) pausar=true;
 
-        this.elemento.iniciarEdicion();
+        this.elemento.iniciarEdicion().focus();
         
         if(pausar) {
             //Deshabilitar arrastre en todo el árbol

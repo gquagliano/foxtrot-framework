@@ -27,7 +27,7 @@ Ya existe un prototipo funcional demostrando esto, ver frontend/backend.js.
 
 Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC 😋.
 
-Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (`ctl` es el nombre del controlador para la vista actual):
+Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (donde `ctl` es el nombre del controlador para la vista actual):
 
 _js:_
 
@@ -51,8 +51,8 @@ El frontend de Foxtrot tiene las siguientes particularidades:
 
 - Editor de vistas WYSIWYG.
 - La interfaz está formada por componentes, cada uno con propiedades y métodos. Abstrae por completo la maquetación de la vista.
-- Componentes que cumplen la función de estructuras de control (condicional, bucle), posibilidad de insertar valores de variables en cualquier ubicación y en cualquier propiedad de componente, y posibilidad de configurar llamados a métodos del controlador (tanto del frontend y como del backend agregando el prefijo `backend:` al nombre del método) desde el editor.
-- Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o compilarse en archivos html independientes (lo nuevo de esta versión).
+- Cuenta con componentes que cumplen la función de estructuras de control (condicional, bucle), y con la posibilidad de insertar valores de variables en cualquier ubicación y en cualquier propiedad de componente, y con la posibilidad de configurar llamados a métodos del controlador desde el editor (tanto del frontend y como del backend agregando el prefijo `backend:` al nombre del método).
+- Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o compilarse en archivos html independientes.
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Debe estar desacoplado del backend y ser extremadamente liviano y optimizado para dispositivos / Cordova.
 - Sin embargo, estamos considerando introducir algún mecanismo que permita que la vista sea preprocesada en el servidor (php), en lugar de la carga normal por ajax, solo disponible para aquellas aplicaciones que se implementen junto con el backend en el mismo servidor web.
@@ -60,32 +60,32 @@ El frontend de Foxtrot tiene las siguientes particularidades:
 - El API se desarrolla totalmente en español. Solo mantendremos los nombres internos del lenguaje (eventos, etc.) y siglas en inglés.
 - Estamos evaluando posibilidad crear un lenguaje de programación visual para el controlador.
 
-##### Intérprete lógico-matemático
+#### Intérprete lógico-matemático (js)
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto (las expresiones se encerrarán entre { y }) y en las propiedades de los componentes, tanto para sus propiedades, como para sus estilos y eventos.
+Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto (las expresiones se encierran entre ``{` y `}`) y en las propiedades de los componentes, tanto para sus propiedades, como para sus estilos y sus eventos.
 
 Sintaxis:
 
-- `+ - * / % ^` Operaciones aritméticas
-- `== != < > <= >=` Igualdad/desigualdad
-- `! y o ox` Operaciones lógicas (en español)
-- `?:` Operador ternario
-- `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos
-- `foo(a,b,c)` Llamado a funciones
-- `v verdadero f falso nulo` Constantes lógicas y otras (en español)
-- Variables sin prefijo
+- `+ - * / % ^` Operaciones aritméticas.
+- `== != < > <= >=` Igualdad/desigualdad.
+- `! y o ox` Operaciones lógicas (en español).
+- `?:` Operador ternario.
+- `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.
+- `foo(a,b,c)` Llamado a funciones.
+- `v verdadero f falso nulo` Constantes lógicas y otras (en español).
+- Variables sin prefijo.
 
 Ejemplo:
 
-`{variable?funcA(1,2,3):2/bar}`
+`{var1?func1(1,2,3):var2%3}`
 
-Se implementará de forma que tenga acceso automático a las propiedades del controlador (ejemplo, `test` hará referencia a la propiedad `test` del controlador de la vista) y múltiples propiedades y funciones utiles del framework (ejemplo, `ui....`).
+Se implementará de forma que tenga acceso automático a las propiedades del controlador (ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`).
 
 #### API php / Backend
 
 El backend de Foxtrot tiene las siguientes particularidades:
 
-- Es headless, totalmente desacoplado del frontend.
+- Es _headless_, totalmente desacoplado del frontend.
 - Es multiaplicación (una instalación puede contener varias aplicaciones y la aplicación solicitada se determina a partir del dominio).
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Permite exponer métodos php en forma automática de manera segura.

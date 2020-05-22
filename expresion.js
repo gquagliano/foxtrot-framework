@@ -21,9 +21,7 @@ var expresion=function(expr) {
     this.cadena=null;
     this.variables={
         //Predefinidos
-        a:1,
-        b:[1,2,3],
-        c:function(x,y,z) { console.log("c",x,y,z); return x+y+z; },
+        //...
         //Constantes
         "nul":null,
         "nulo":null,
@@ -38,8 +36,6 @@ var expresion=function(expr) {
     this.funciones={
         //Predefinidos
         eco:function(v) { return v; }, //para pruebas
-        fn:function(x) { console.log("fn",x); return 99; },
-        bar:function() { console.log("bar"); return 2; }
     };
 
     var lexico=[],

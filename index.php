@@ -49,6 +49,7 @@
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure, y los css combinados en un solo archivo -->
 
     <script src="util.js"></script>
+    <script src="expresion.js"></script>
     <script src="ajax.js"></script>
     <script src="dom.js"></script>
     <script src="arrastra.js"></script>

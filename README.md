@@ -4,7 +4,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 
 #### Editor
 
-![](img/editor.jpg)
+![](recursos/img/editor.jpg)
 
 Editor de vistas WYSIWYG: Nuestro editor de vistas viejo trabajaba íntegramente con objetos y cada vista rea dibujada en tiempo de ejecución. En esta versión, buscamos un editor que "compile" la vista, almacenándola en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework. Debe, además, permitir editar en la versión real de la vista, con todos sus estilos y cualquier otra maquetación que se añada externamente.
 

@@ -5,25 +5,18 @@
  * @version 1.0
  */
 
-//¡Prototipo!
-
-
-//Pruebas:
-//  Abriendo la vista previa de una vista o el archivo de salida, ejecutar:
-//      backend.metodo(function(a) { console.log(a); })
-//          Debería invocar el método test.metodo() y mostrar "Hola" en la consola
-//      backend.suma(x,y)
-//          Debería invocar el método test.suma($x,$y), el cual, a su vez invoca metodoJs de la vista test, mostrando un diálogo con el número (x+y).
-
-
-var vistaActual="test"; //La vista actual será consultada a la ui
-
 /**
  * Gestor de comunicación cliente->servidor.
  */
 var backend=new Proxy(new function() {
     this.funcionesError=[];
     this.ajax=[];
+    this.url="backend/";
+
+    this.establecerUrl=function(url) {
+        this.url=url;
+        return this;
+    };
 
     this.abortarTodo=function() {
         this.ajax.forEach(function(obj) {
@@ -50,10 +43,8 @@ var backend=new Proxy(new function() {
 
         if(opciones.abortar) this.abortarTodo();
 
-        var url="http://localhost/experimental-foxtrot-framework/backend/"; //La url del backend, lógicamente, será configurable
-
         this.ajax.push(new ajax({
-            url:url,
+            url:this.url,
             parametros:{
                 __c:opciones.controlador,
                 __m:opciones.metodo,
@@ -66,8 +57,10 @@ var backend=new Proxy(new function() {
     };
 
     this.evaluarRespuesta=function(resp,opciones) {
+        var ctl=ui.controlador();
+
         if(!resp||!util.esObjeto(resp)) {
-            opciones.error.call(this); //this debería ser la instancia del controlador
+            if(opciones.error) opciones.error.call(ctl);
             return;
         }
 
@@ -76,17 +69,17 @@ var backend=new Proxy(new function() {
         //resp.e    Evaluar código arbitrario (¿es seguro? ¿tiene sentido?)
 
         if(resp.hasOwnProperty("r")) {
-            opciones.retorno.call(this,resp.r); //this debería ser la instancia del controlador
+            if(opciones.retorno) opciones.retorno.call(ctl,resp.r);
         } else if(resp.hasOwnProperty("m")) {
             var params=resp.hasOwnProperty("p")?resp.p:[];
-            ui.obtenerInstanciaControlador(vistaActual)[resp.m].apply(this,params); //this debería ser la instancia del controlador
+            if(ctl.hasOwnProperty(resp.m)) ctl[resp.m].apply(ctl,params);
             procesado=true;
         } else if(resp.hasOwnProperty("e")) {
             cuerpo=resp.m;
             eval(cuerpo);
             procesado=true;
         } else{
-            opciones.error.call(this); //this debería ser la instancia del controlador
+            if(opciones.error) opciones.error.call(resp.m);
             return;
         }
 
@@ -100,7 +93,7 @@ var backend=new Proxy(new function() {
         return function() {
             var args=arguments.aArray(),
                 opc={
-                    controlador:vistaActual,
+                    controlador:ui.obtenerNombreVistaActual(),
                     metodo:nombre
                 };
 

@@ -5,8 +5,6 @@
  * @version 1.0
  */
 
-//¡Prototipo!
-
 /**
  * Controlador de vista.
  */

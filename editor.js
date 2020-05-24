@@ -72,6 +72,7 @@ var editor=new function() {
 
             for(var i=0;i<grupos[grupo].length;i++) {
                 var comp=grupos[grupo][i];
+                if(!comp.config.icono) continue;
 
                 var icono=document.crear("<img>")
                     .atributo("src",comp.config.icono)
@@ -231,12 +232,14 @@ var editor=new function() {
             });
         }
 
+        /*
+        Ahora que la vista es un componente, los demás componentes deben soltarse dentro de la misma, en lugar de en el cuerpo de la página.
         ui.obtenerCuerpo().crearDestino({
             drop:componenteSoltado,
             dragenter:stopPropagation,
             dragover:stopPropagation,
             dragleave:stopPropagation
-        });
+        });*/
     }    
 
     function establecerEventos() {
@@ -455,6 +458,7 @@ var editor=new function() {
                     if(cbk) {
                         cbk.call(self,resp);
                     } else {
+                        ui.limpiar();
                         ui.reemplazarHtml(resp.html);
                         ui.establecerEstilos(resp.css);
                         ui.establecerJson(resp.json);
@@ -506,6 +510,11 @@ var editor=new function() {
         contruirBarrasHerramientas();
         prepararArrastrarYSoltar();
         establecerEventos();
+
+        //Cuando el editor se active, estaremos trabajando con una interfaz en blanco sin controlador
+        //Crear nueva vista y preparar su componente
+        var obj=ui.obtenerInstanciaControlador("test",true);
+        this.prepararComponenteInsertado(obj.obtenerComponente());
 
         return this;
     };

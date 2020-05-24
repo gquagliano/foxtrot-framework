@@ -55,6 +55,7 @@
     <script src="arrastra.js"></script>
     <script src="editable.js"></script>
     <script src="componente.js"></script>
+    <script src="controlador.js"></script>
     <script src="ui.js"></script>
     
     <script src="componentes/contenedor.js"></script>
@@ -96,6 +97,10 @@
     <script src="componentes/tabla.js"></script>    
     <script src="componentes/tabla-columna.js"></script>
     <script src="componentes/tabla-fila.js"></script>
+    
+    <script src="componentes/vista.js"></script>
+    
+    <script src="apps/test/frontend/test.js"></script>
     
     <script src="editor.js"></script>
     

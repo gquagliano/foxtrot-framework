@@ -20,6 +20,7 @@ var ui=new function() {
         instanciasComponentesId={},
         controladores={},
         instanciasControladores={},
+        instanciaControladorPrincipal=null,
         modoEdicion=false,
         id=1,
         tamanos={ //TODO Configurable
@@ -291,7 +292,6 @@ var ui=new function() {
         return this;
     }
 
-
     ////Cargar/guardar
 
     /**
@@ -325,8 +325,8 @@ var ui=new function() {
             ver:1,
             componentes:[],
             vista:{
-                nombre:null,
-                propiedades:{}
+                nombre:instanciaControladorPrincipal.obtenerNombre(),
+                propiedades:instanciaControladorPrincipal.obtenerPropiedades()
             }
         };
 
@@ -355,7 +355,12 @@ var ui=new function() {
      */
     this.establecerJson=function(json) {
         if(typeof json==="string") json=JSON.parse(json);
+
+        //Crear el controlador
+        this.obtenerInstanciaControlador(json.vista.nombre,true);
+        instanciaControladorPrincipal.inicializar(json.vista.propiedades);
         
+        //Preparar componentes        
         json.componentes.forEach(function(componente) {
             ui.crearComponente(componente.componente)
                 .establecerId(componente.id)
@@ -367,19 +372,73 @@ var ui=new function() {
         return this;  
     };
 
-    ////Controladores (¡Protitopo!)
-
-    this.registrarControlador=function(nombre,funcion) {
-        controladores[nombre]=funcion;
+    /**
+     * Limpia todos los parámetros de la ui.
+     */
+    this.limpiar=function() {
+        instanciasComponentes=[];
+        instanciasComponentesId={};
+        controladores={};
+        instanciasControladores={};
+        instanciaControladorPrincipal=null;
+        id=1;
         return this;
     };
 
-    this.obtenerInstanciaControlador=function(nombre) {
-        //TODO Esto debería migrarse a una fábrica de controladores
+    ////Controladores
+
+    this.registrarControlador=function(nombre,funcion) {
+        controladores[nombre]=funcion;        
+        return this;
+    };
+
+    /**
+     * Devuelve el controlador de la vista principal.
+     */
+    this.obtenerInstanciaControladorPrincipal=function() {
+        return instanciaControladorPrincipal;
+    };
+
+    /**
+     * Acceso directo a la instancia del controlador de la vista principal (alias de obtenerInstanciaControladorPrincipal).
+     */
+    this.controlador=function() {
+        return this.obtenerInstanciaControladorPrincipal();
+    };
+
+    /**
+     * Acceso directo a la instancia del componente de la vista principal (alias de obtenerInstanciaControladorPrincipal().obtenerComponente()).
+     */
+    this.vista=function() {
+        return this.obtenerInstanciaControladorPrincipal().obtenerComponente();
+    };
+
+    /**
+     * Devuelve el nombre de la vista.
+     */
+    this.obtenerNombreVistaActual=function() {
+        return instanciaControladorPrincipal.obtenerNombre();
+    };
+
+    /**
+     * Busca y devuelve un controlador dado su nombre, creándolo si no existe.
+     */
+    this.obtenerInstanciaControlador=function(nombre,principal) {
+        if(util.esIndefinido(principal)) principal=false;
+        
         if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
-        var obj=new controladores[nombre];
+
+        for(var i=0;i<controladores.length;i++)
+            if(controladores[i].obtenerNombre()==nombre)
+                return controladores[i];
+        
+        var obj=controlador.fabricarControlador(nombre,controladores[nombre]);
         instanciasControladores[nombre]=obj;
-        //TODO Preparar obj (prototipo, inicializacion)
+        if(principal) {
+            obj.crearVista(cuerpo);
+            instanciaControladorPrincipal=obj;
+        }
+
         return obj;
     };
 
@@ -458,6 +517,8 @@ var configComponente={
 };
 
 var componentes={};
+var controladores={};
 
 window["ui"]=ui;
 window["componentes"]=componentes;
+window["controladores"]=controladores;

@@ -13,6 +13,12 @@
 var componenteImportar=function() {    
     this.componente="importar";
 
+    this.propiedadesConcretas={
+        "Configuración":{
+            
+        }
+    };
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */

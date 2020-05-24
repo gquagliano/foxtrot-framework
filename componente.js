@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
- "use strict";
+"use strict";
 
 /**
  * Objeto base de los componentes.
@@ -44,7 +44,7 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero)
+            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando)
             //    opciones (objeto {valor,etiqueta} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion
@@ -109,6 +109,13 @@ var componente=new function() {
      */
     this.obtenerId=function() {
         return this.id;
+    };
+
+    /**
+     * Devuelve el nombre de la instancia.
+     */
+    this.obtenerNombre=function() {
+        return this.nombre;
     };
 
     /**
@@ -251,6 +258,20 @@ var componente=new function() {
         return this;
     };
 
+    this.establecerElemento=function(elem) {
+        this.elemento=elem;
+
+        var id=this.elemento.atributo("id");
+        if(!id) id="fox"+this.id;
+        this.elemento.atributo("id",id);
+
+        this.selector="#"+id;
+        
+        this.inicializado=false;
+        this.inicializar();
+        return this;
+    };
+
     /**
      * Inicializa la instancia en base a su ID y sus parámetros (método para sobreescribir).
      */
@@ -263,10 +284,14 @@ var componente=new function() {
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
     this.restaurarComponente=function() {
-        this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
-        this.selector="#"+this.elemento.atributo("id");
-        this.inicializado=false;
-        this.inicializar();
+        if(!this.elemento) {
+            this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
+            if(this.elemento) {
+                this.selector="#"+this.elemento.atributo("id");
+                this.inicializado=false;
+                this.inicializar();
+            }
+        }        
         return this;
     };
 
@@ -300,7 +325,7 @@ var componente=new function() {
      */
     this.establecerNombreComponente=function(nombre) {
         //Eliminar de componentes si cambia el nombre
-        if(this.nombre!=nombre) delete window["componentes"][this.nombre];
+        if(this.nombre!=nombre) delete componentes[this.nombre];
         this.nombre=nombre;
         //Registrar en window.componentes para acceso rápido
         if(nombre) componentes[nombre]=this;

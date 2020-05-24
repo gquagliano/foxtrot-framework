@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-//¡Prototipo!
+defined('_inc') or exit;
 
 /**
  * Gestor de comunicación servidor->cliente.

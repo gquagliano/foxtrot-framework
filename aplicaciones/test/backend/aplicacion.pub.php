@@ -6,8 +6,11 @@
  * @version 1.0
  */
 
-define('_inc',1);
+namespace aplicaciones\test\publico;
 
-include(__DIR__.'/backend/foxtrot.php');
-foxtrot::inicializar();
-foxtrot::ejecutar();
+defined('_inc') or exit;
+
+class aplicacion extends \aplicacion {
+    
+}
+

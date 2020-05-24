@@ -6,16 +6,21 @@
  * @version 1.0
  */
 
-//¡Prototipo!
+defined('_inc') or exit;
 
+/**
+ * Clase base de los enrutadores.
+ */
 class enrutador {
-    var $uri=null;
-    var $params=null;
-
-    var $error=false;
-    var $controlador=null;
-    var $metodo=null;
-    var $parametros=null;
+    protected $uri=null;
+    protected $params=null;
+    protected $pagina=null;
+    protected $vista=null;
+    protected $error=false;
+    protected $controlador=null;
+    protected $metodo=null;
+    protected $parametros=null;
+    protected $recurso=null;
 
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
@@ -26,11 +31,6 @@ class enrutador {
     }
 
     public function analizar() {
-        $this->controlador=$this->params->__c;
-        $this->metodo=$this->params->__m;
-        $this->parametros=json_decode($this->params->__p);
-        //TODO Validar que exista, visibilidad
-        return $this;
     }
 
     public function obtenerError() {
@@ -47,5 +47,17 @@ class enrutador {
 
     public function obtenerParametros() {
         return is_array($this->parametros)?$this->parametros:[];
+    }
+
+    public function obtenerVista() {
+        return $this->vista;
+    }
+
+    public function obtenerPagina() {
+        return $this->pagina;
+    }
+
+    public function obtenerRecurso() {
+        return $this->recurso;
     }
 }

@@ -1,0 +1,26 @@
+Options -Indexes -MultiViews
+
+RewriteEngine On
+RewriteBase /experimental-foxtrot-framework/
+
+## Redireccionamiento a HTTPS
+
+#RewriteRule ^.well-known/ - [L,NC]
+#RewriteCond %{HTTPS} off
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+RewriteRule ^favicon.ico recursos/favicon.png [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L,QSA]
+
+Header set Access-Control-Allow-Origin "*" 
+
+## Caché y compresión
+
+#<FilesMatch "\.(js|css|ico|pdf|xlsx|jpg|jpeg|png|gif|php|html|json|woff|woff2|ttf|eot|xml|svg)$">
+#SetOutputFilter DEFLATE
+#Header set Cache-Control "public"
+#Header set Expires "Fri, 1 Jan 2100 20:00:00 GMT"
+#</FilesMatch>

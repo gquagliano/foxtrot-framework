@@ -21,15 +21,75 @@ La siguiente etapa consistirá en:
 - Integración con un gestor de vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/previsualización/apertura.
 - Desarrollo del framework del frontend (controladores, etc.).
 
+**Acceso al editor**
+
+`http://localhost/editor/?vista=[ruta sin extensión relativa a la raíz del sistema]&modo=[embebible|independiente]&cordova=[1|0]` (próximamente, será un mini-IDE).
+
+Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/test&modo=independiente
+
+_modo:_
+- `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>` y demás, a fin de que sea una vista para insertar dentro de otra.
+- `independiente` Almacenará la vista en un archivo html que podrá abrirse en forma independiente (Predeterminado).
+
+_cordova:_
+- Establecer a `1` para que, al guardar, genere un archivo html compatible con Cordova.
+
+#### Estructura de una aplicación
+
+Las aplicaciones se definen dentro de subdirectorios de `aplicaciones`.
+
+Cada aplicación cuenta con los siguientes archivos:
+
+- `config.php` Primer archivo que se carga, donde puede establecerse la configuración específica, como, por ejemplo, las credenciales de la base de datos (Opcional).
+- `backend/` Directorio donde se almacenan las clases de backend.
+- `backend/aplicacion.php` Clase principal de la aplicación.
+- `backend/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación.
+- `backend/*.pub.php` Métodos públicos (http) de los distintos controladores.
+- `frontend/` Archivos html, css y controladores js de la aplicación.
+- `frontend/inicio.html` Página principal de la aplicación (al menos con el enrutador predeterminado).
+- `recursos/` Otros recursos (imágenes, estilos) de la aplicación.
+- `recursos/sitio.css` Archivo principal de estilos, generado por el editor (no se debe modificar, ya que será reemplazado; estilos adicionales deben ir en otro archivo css).
+- `recursos/estilos.css` Archivo principal de estilos de usuario, se incluye en forma automática (en el futuro, se podrán configurar otros).
+
+**Nombres y espacios de nombre:**
+
+- Todos los archivos de la aplicación usarán el espacio `\aplicaciones\apl` donde `apl` es el nombre de la aplicación.
+- Todos los archivos públicos (http) de la aplicación usarán el espacio `\aplicaciones\apl\publico` donde `apl` es el nombre de la aplicación.
+- Las clases princales de la aplicación (ambas, la privada como la pública) deben llamarse `aplicacion` y extender `\aplicacion`.
+- Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse  igual que el controlador y extender `\controlador`.
+- Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para frontend, `.php` para backend y `.pub.php` para métodos públicos de backend.
+
+**Además:**
+
+- Dentro de `backend/` puede crearse un enrutador de solicitudes personalizado.
+- El archivo `config.php` en el raíz de foxtrot contiene la configuración común a todas las aplicaciones.
+- A nivel global, puede crearse un enrutador de aplicación personalizado que determine la aplicación a ejecutar de otra forma distinta a la predeterminada, que es según el dominio.
+
+Nota: Todas las rutas y URLs deben finalizar con `/`.
+
+#### Compilación
+
+Eventualmente, una aplicación debe podes compliarse de una de las siguientes formas:
+
+- Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework, compilado con Closure) + Un único archivo css
+- Un único archivo js para todos los archivos del framework (compilado con Closure) + Todos los arhivos js de la aplicación compilados con Closure + Un único archivo css
+
+En todos los casos, debe limpiarse el código html y css que use almacena dentro de los datos json, que están allí solo para el editor.
+
+**Cordova:**
+
+La aplicación debe funcionar en Cordova apuntando la página inicial a cualquier vista html.
+
+
 #### Comunicación cliente<->servidor transparente
 
 Ya existe un prototipo funcional demostrando esto, ver frontend/backend.js.
 
-Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC 😋.
+Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC.
 
 Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (donde `ctl` es el nombre del controlador para la vista actual):
 
-_js:_
+**js:**
 
     backend.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) (php) y devolverá el retorno de la misma al callback
         ...
@@ -37,7 +97,7 @@ _js:_
 
     backend.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) (php)
 
-_php:_
+**php:**
 
     function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback
         return 'Hola';
@@ -103,6 +163,10 @@ Tipos de clases (se determina en forma automática según espacio de nombres y a
 - Clases de métodos públicos http.
 - Modelo de datos.
 - Otras clases del del framework (enrutamiento, librerías de terceros, módulos, componentes, etc.).
+
+#### Windows
+
+Está en desarrollo un cliente para Windows basado en CEFSharp.
 
 ### Más información
 

@@ -1,0 +1,41 @@
+<!--
+ Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+
+ @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ @version 1.0
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../recursos/foxtrot.css">
+    <title>Marco del editor de vistas</title>
+  </head>
+  <body>
+    <div id="foxtrot-cuerpo"></div>
+    <style id="foxtrot-estilos"></style>
+    
+    <!-- Eventualmente, todo esto estará compilado en un solo script con Closure, y los css combinados en un solo archivo -->
+    
+    <script src="../frontend/util.js"></script>
+    <script src="../frontend/dom.js"></script>
+    <script src="../frontend/arrastra.js"></script>
+    <script src="../frontend/editable.js"></script>
+    <script src="../frontend/componente.js"></script>
+    <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="../frontend/componentes/css/etiqueta.css"> 
+    <link rel="stylesheet" href="../frontend/componentes/css/etiqueta.edicion.css">
+    <script>
+    "use strict";
+    var ui,editor;
+    window.evento("load",function() {
+        ui=window.parent.ui;
+        editor=window.parent.editor;
+        ui.ejecutar(document);
+        editor.activar();
+    });
+    </script>
+  </body>
+</html>

@@ -6,8 +6,10 @@
  * @version 1.0
  */
 
-define('_inc',1);
+defined('_inc') or exit;
 
-include(__DIR__.'/backend/foxtrot.php');
-foxtrot::inicializar();
-foxtrot::ejecutar();
+/**
+ * Clase base de las aplicaciones.
+ */
+class aplicacion extends controlador {
+}

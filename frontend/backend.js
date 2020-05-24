@@ -11,7 +11,7 @@
 var backend=new Proxy(new function() {
     this.funcionesError=[];
     this.ajax=[];
-    this.url="backend/";
+    this.url="";
 
     this.establecerUrl=function(url) {
         this.url=url;

@@ -1,4 +1,4 @@
-Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos. 
+Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos. 
 
 ### Qué estamos desarrollando
 
@@ -6,7 +6,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 6 (https://github.
 
 ![](img/editor.jpg)
 
-Editor de vistas WYSIWYG: Nuestro editor de vistas viejo trabaja íntegramente con objetos y cada vista es dibujada en tiempo de ejecución. En esta versión, buscamos un editor que "compile" la vista, almacenándola en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework. Debe, además, permitir editar en la versión real de la vista, con todos sus estilos y cualquier otra maquetación que se añada manualmente.
+Editor de vistas WYSIWYG: Nuestro editor de vistas viejo trabajaba íntegramente con objetos y cada vista rea dibujada en tiempo de ejecución. En esta versión, buscamos un editor que "compile" la vista, almacenándola en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework. Debe, además, permitir editar en la versión real de la vista, con todos sus estilos y cualquier otra maquetación que se añada externamente.
 
 El editor se acerca a su versión final. En líneas generales, falta (entre otros detalles y TODOs):
 - Cortar, copiar, pegar.
@@ -19,16 +19,20 @@ La siguiente etapa consistirá en:
 - Definición de propiedades comunes a todos los componentes.
 - Desarrollo de componentes concretos (ya están planteados los componentes básicos).
 - Integración con un gestor de vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/previsualización/apertura.
-- Desarrollo del framework del frontend (controladores, etc.).
 
 **Acceso al editor**
 
-`http://localhost/editor/?vista=[ruta sin extensión relativa a la raíz del sistema]&modo=[embebible|independiente]&cordova=[1|0]` (próximamente, será un mini-IDE).
+`http://localhost/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
 
-Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/test&modo=independiente
+(Próximamente, `/editor/` será un mini-IDE).
+
+Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/test
+
+_ruta:_
+Ruta sin extensión relativa a la raíz del sistema.
 
 _modo:_
-- `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>` y demás, a fin de que sea una vista para insertar dentro de otra.
+- `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, etc., a fin de que sea una vista para insertar dentro de otra.
 - `independiente` Almacenará la vista en un archivo html que podrá abrirse en forma independiente (Predeterminado).
 
 _cordova:_
@@ -42,13 +46,12 @@ Cada aplicación cuenta con los siguientes archivos:
 
 - `config.php` Primer archivo que se carga, donde puede establecerse la configuración específica, como, por ejemplo, las credenciales de la base de datos (Opcional).
 - `backend/` Directorio donde se almacenan las clases de backend.
-- `backend/aplicacion.php` Clase principal de la aplicación.
-- `backend/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación.
+- `backend/aplicacion.php` Clase principal de la aplicación (Opcional).
+- `backend/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación (Opcional).
 - `backend/*.pub.php` Métodos públicos (http) de los distintos controladores.
 - `frontend/` Archivos html, css y controladores js de la aplicación.
 - `frontend/inicio.html` Página principal de la aplicación (al menos con el enrutador predeterminado).
 - `recursos/` Otros recursos (imágenes, estilos) de la aplicación.
-- `recursos/sitio.css` Archivo principal de estilos, generado por el editor (no se debe modificar, ya que será reemplazado; estilos adicionales deben ir en otro archivo css).
 - `recursos/estilos.css` Archivo principal de estilos de usuario, se incluye en forma automática (en el futuro, se podrán configurar otros).
 
 **Nombres y espacios de nombre:**
@@ -69,7 +72,7 @@ Nota: Todas las rutas y URLs deben finalizar con `/`.
 
 #### Compilación
 
-Eventualmente, una aplicación debe podes compliarse de una de las siguientes formas:
+Eventualmente, una aplicación debe poder compliarse de una de las siguientes formas:
 
 - Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework, compilado con Closure) + Un único archivo css
 - Un único archivo js para todos los archivos del framework (compilado con Closure) + Todos los arhivos js de la aplicación compilados con Closure + Un único archivo css
@@ -79,7 +82,6 @@ En todos los casos, debe limpiarse el código html y css que use almacena dentro
 **Cordova:**
 
 La aplicación debe funcionar en Cordova apuntando la página inicial a cualquier vista html.
-
 
 #### Comunicación cliente<->servidor transparente
 

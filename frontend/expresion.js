@@ -379,7 +379,6 @@ var expresion=function(expr) {
                 }
 
                 if(p==simboloComillas) {
-                    bufer.push(p);
                     comillas=true;
                     continue;
                 }
@@ -449,15 +448,15 @@ var expresion=function(expr) {
                         continue;
                     }
                 }
-
-                bufer.push(p);
                 
                 if(p==simboloComillas) {
-                    temp.push(new simbolo(tS.valor,bufer));
+                    temp.push(new simbolo(tS.valor,bufer.join("")));
                     bufer=[];
                     comillas=false;
                     continue;
                 }
+
+                bufer.push(p);
             }
         }
 

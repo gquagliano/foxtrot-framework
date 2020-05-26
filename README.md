@@ -9,7 +9,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 Editor de vistas WYSIWYG: Nuestro editor de vistas viejo trabajaba íntegramente con objetos y cada vista era dibujada en tiempo de ejecución. En esta versión, buscamos un editor que "compile" la vista, almacenándola en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework. Debe, además, permitir editar en la versión real de la vista, con todos sus estilos y cualquier otra maquetación que se añada externamente.
 
 El editor se acerca a su versión final. En líneas generales, falta (entre otros detalles y TODOs):
-- Cortar, copiar, pegar.
+- Cortar, copiar, pegar, deshacer, rehacer.
 - Al arrastrar sobre un componente, deben aparecer las áreas a su alrededor para poder soltar arriba/a la izquierda o abajo/a la derecha del mismo.
 - Selección múltiple.
 - Barra de formatos (negrita, cursiva, etc.) al editar textos.
@@ -18,7 +18,7 @@ El editor se acerca a su versión final. En líneas generales, falta (entre otro
 La siguiente etapa consistirá en:
 - Definición de propiedades comunes a todos los componentes.
 - Desarrollo de componentes concretos (ya están planteados los componentes básicos).
-- Integración con un gestor de vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/previsualización/apertura.
+- Integración con un gestor de vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/apertura (previsualización posiblemente se remueva).
 
 **Acceso al editor**
 

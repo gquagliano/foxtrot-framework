@@ -151,7 +151,7 @@ El frontend de Foxtrot tiene las siguientes particularidades:
 
 ### Intérprete lógico-matemático (js)
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto (las expresiones se encierran entre `{` y `}`) y en las propiedades de los componentes, tanto para sus propiedades, como para sus estilos y sus eventos.
+Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
 
 Sintaxis:
 
@@ -164,7 +164,7 @@ Sintaxis:
 - `v verdadero f falso nulo` Constantes lógicas y otras (en español).
 - Variables sin prefijo.
 
-Ejemplo: `{var1?func1(1,2,3):var2%3}`
+Ejemplo:
 
     new expresion("{a(b?'Hola':'Adios')}")
         .establecerFunciones({
@@ -177,7 +177,7 @@ Ejemplo: `{var1?func1(1,2,3):var2%3}`
     
 `ejecutar()` devolverá como resultado el valor final de la expresión, o `null`.
 
-Se implementará de forma que tenga acceso automático a las propiedades del controlador (ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`).
+Se implementará de forma que tenga acceso en forma predefinida a las propiedades del controlador (por ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`). Se utilizará en propiedades, eventos y otros contenidos (como ser el componente Etiqueta) en forma automática.
 
 Nota: Debe portarse a php si se implementa un preprocesamiento de vistas.
 

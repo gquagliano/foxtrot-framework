@@ -778,6 +778,9 @@
      * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
      */
     HTMLDocument.prototype.crear=function(html) {
+        //Si html es un nombre de tag, utilizar createElement
+        if(!/[^a-z]/.test(html)) return document.createElement(html);
+
         var div=document.createElement("div");
         div.innerHTML=html.trim();
 

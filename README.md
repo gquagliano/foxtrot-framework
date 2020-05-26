@@ -24,9 +24,9 @@ La siguiente etapa consistirá en:
 
 `http://localhost/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
 
-(Próximamente, `/editor/` será un mini-IDE).
+Próximamente, `/editor/` será un mini-IDE.
 
-Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/test
+Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/inicio
 
 _ruta:_
 Ruta sin extensión relativa a la raíz del sistema.

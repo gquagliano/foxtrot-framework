@@ -78,7 +78,7 @@ Nota: Todas las rutas y URLs deben finalizar con `/`.
 Eventualmente, una aplicación debe poder compliarse de una de las siguientes formas:
 
 - Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework) + Un único archivo css
-- Un único archivo html + Un único archivo js para todos los archivos del framework + Un único archivo js de la aplicación (contiene todo el html, js y json de todas las vistas) + Un único archivo css
+- Un archivo html por vista + Un único archivo js para todos los archivos del framework + Un único archivo js de la aplicación (contiene todo el html, js y json de todas las vistas) + Un único archivo css
 
 En todos los casos, los archivos js serán compilados con Closure. Debe limpiarse el código html y css que use almacena dentro de los datos json, que están allí solo para el editor.
 
@@ -88,9 +88,9 @@ Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensi�
 
 **Cordova:**
 
-Debe configurarse en `config.xml` para apuntar al archivo `index-cordova.html`. La aplicación puede probarse localmente accediendo al mismo archivo.
+Debe configurarse el `config.xml` para apuntar al archivo `/index-cordova.html`. La aplicación puede probarse localmente accediendo al mismo archivo.
 
-Algunos parámetros deben ser configurados dentro de `index-cordova.html` antes de construir la aplicación Cordova:
+Algunos parámetros deben ser configurados dentro de `/index-cordova.html` antes de construir la aplicación Cordova:
 
     var _nombreApl="test",              //Nombre de la aplicación
         _vistaInicial="inicio.html";    //Nombre de archivo de la vista inicial
@@ -99,20 +99,18 @@ La vista inicial debe ser independiente (no embebible).
 
 Los siguientes archivos y directorios deben copiarse al directorio `www` de la aplicación Cordova:
 
-- `index-cordova.html`
-- `frontend/`
-- `aplicaciones/aplicación/` donde `aplicación` es la aplicación actual (Deben removerse el directorio `backend` y otros los archivos php).
-- `recursos/` (Puede eliminarse cualquier imagen u otro archivo que no esté en uso).
+- `/index-cordova.html`
+- `/frontend/`
+- `/aplicaciones/apl/` donde `apl` es la aplicación actual (Deben removerse el directorio `backend` y otros los archivos php).
+- `/recursos/` (Puede eliminarse cualquier imagen u otros archivos que no estén en uso).
 
 Eventualmente, el editor realizará este proceso automáticemente.
 
 #### Comunicación cliente<->servidor transparente
 
-Ya existe un prototipo funcional demostrando esto, ver frontend/backend.js.
+Cada vista cuenta con dos controladores: Uno de servidor (php) y otro de cliente (js). Podría decirse que es un modelo MVCC.
 
-Cada vista cuenta con dos controladores: Uno de backend (php) y otro de frontend (js). Podría decirse que es un modelo MVCC.
-
-Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo (donde `ctl` es el nombre del controlador para la vista actual):
+Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo: (`ctl` es el nombre del controlador para la vista actual)
 
 **js:**
 
@@ -130,7 +128,7 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
     frontend::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
 
-#### API js / Frontend
+#### API Cliente / js
 
 El frontend de Foxtrot tiene las siguientes particularidades:
 
@@ -141,9 +139,10 @@ El frontend de Foxtrot tiene las siguientes particularidades:
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Debe estar desacoplado del backend y ser extremadamente liviano y optimizado para dispositivos / Cordova.
 - Sin embargo, estamos considerando introducir algún mecanismo que permita que la vista sea preprocesada en el servidor (php), en lugar de la carga normal por ajax, solo disponible para aquellas aplicaciones que se implementen junto con el backend en el mismo servidor web.
+- Permite implementar fácilmente sitios de una página (vista inicial + vistas embebibles), opcionalmente con carga progresiva (las vistas y controladores pueden descargarse combinadas en un solo archivo, o progresivamente a medida que se navega la aplicación).
 - Gestor del DOM propio (adiós jQuery).
 - El API se desarrolla totalmente en español. Solo mantendremos los nombres internos del lenguaje (eventos, etc.) y siglas en inglés.
-- Estamos evaluando posibilidad crear un lenguaje de programación visual para el controlador.
+- Estamos evaluando posibilidad crear un lenguaje de programación visual para los controladores de ambos lados.
 
 #### Intérprete lógico-matemático (js)
 
@@ -166,7 +165,9 @@ Ejemplo:
 
 Se implementará de forma que tenga acceso automático a las propiedades del controlador (ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`).
 
-#### API php / Backend
+Nota: Debe portarse a php si se implementa un preprocesamiento de vistas.
+
+#### API Servidor / php
 
 El backend de Foxtrot tiene las siguientes particularidades:
 
@@ -175,9 +176,8 @@ El backend de Foxtrot tiene las siguientes particularidades:
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Permite exponer métodos php en forma automática de manera segura.
 - El API se desarrolla totalmente en español. Solo mantendremos los nombres internos del lenguaje y siglas en inglés.
+- ORM.
 - Estamos evaluando posibilidad crear un lenguaje de programación visual para el controlador.
-
-La mejora principal en esta versión viene en el último punto:
 
 No es posible simplemente asumir que un método público (`public`) lo es en el sentido _hacia afuera_ de la aplicación (normalmente, un método será público porque debe ser accesible por otras clases, _no_ por el usuario). La idea para simplificar la apertura de métodos HTTP es crear un nuevo tipo de clase que sólo contenga dichos métodos (todos expuestos).
 
@@ -191,7 +191,7 @@ Tipos de clases (se determina en forma automática según espacio de nombres y a
 
 #### Windows
 
-Está en desarrollo un cliente para Windows basado en CEFSharp. Su funcionamiento e implementación será idéntico a Cordova (no así a nivel API).
+Está en desarrollo un cliente para Windows basado en CEFSharp (Chromium). Su funcionamiento e implementación será idéntico a Cordova (no así a nivel API).
 
 ### Más información
 

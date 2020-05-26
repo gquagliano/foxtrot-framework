@@ -64,7 +64,7 @@ RE;
 RE;
     } else {
         $resultado.=<<<RE
-    <base href="<?=\foxtrot::obtenerUrl()?>">
+    <base href="<?=\\foxtrot::obtenerUrl()?>">
 
 RE;
     }
@@ -130,7 +130,8 @@ RE;
 
     $titulo=h($json->vista->metadatos->titulo);
     $favicon=$rutaSistema.'recursos/img/favicon.png';
-    //TODO Otroso metadatos
+    //TODO Otros metadatos
+    //TODO Entre ellos, podría ser útil configurar el fondo de la página en Cordova (antes de que cargue el css)
 
     $resultado.=<<<RE
     <meta name="msapplication-tap-highlight" content="no">

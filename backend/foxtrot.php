@@ -162,12 +162,21 @@ class foxtrot {
         if($vista) {
             //Devuelve el contenido html de la vista
 
-            //Validar que el archivo solicitado no salga del directorio de frontend
+            //Validar que el archivo solicitado exista y no salga del directorio de frontend
             $dir=realpath(_frontendAplicacion);
-            $ruta=realpath($dir.'/'.$vista.'.html');
-            if(substr($ruta,0,strlen($dir))!=$dir||!file_exists($ruta)) self::error();            
-
-            $html=file_get_contents($ruta);
+            $rutaPhp=realpath($dir.'/'.$vista.'.php');
+            $rutaHtml=realpath($dir.'/'.$vista.'.html');
+            if($rutaPhp) {
+                if(substr($rutaPhp,0,strlen($dir))!=$dir) self::error();
+                ob_start();
+                include($rutaPhp);
+                $html=ob_get_clean();
+            } elseif($rutaHtml) {
+                if(substr($rutaHtml,0,strlen($dir))!=$dir) self::error();
+                $html=file_get_contents($rutaHtml);
+            } else {
+                self::error();
+            }
         }
 
         if($ctl) {

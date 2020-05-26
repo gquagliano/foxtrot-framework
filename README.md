@@ -1,8 +1,8 @@
 Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos. 
 
-### Qué estamos desarrollando
+## Qué estamos desarrollando
 
-#### Editor
+### Editor
 
 ![](recursos/img/editor.jpg)
 
@@ -38,7 +38,7 @@ _cordova:_
 
 Próximamente, `/editor/` se reemplazará por el gestor y se automatizará el acceso al editor.
 
-#### Estructura de una aplicación
+### Estructura de una aplicación
 
 Las aplicaciones se definen dentro de subdirectorios de `/aplicaciones/`.
 
@@ -73,9 +73,9 @@ Nota: Se evalúa renombrar `frontend` a `cliente` y `backend` a `servidor` para 
 
 Nota: Todas las rutas y URLs deben finalizar con `/`.
 
-#### Compilación
+### Compilación
 
-Eventualmente, una aplicación debe poder compliarse de una de las siguientes formas:
+Cada aplicación debe poder compliarse de una de las siguientes formas:
 
 - Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework) + Un único archivo css
 - Un archivo html por vista + Un único archivo js para todos los archivos del framework + Un único archivo js de la aplicación (contiene todo el html, js y json de todas las vistas) + Un único archivo css
@@ -107,7 +107,11 @@ Los siguientes archivos y directorios deben copiarse al directorio `www` de la a
 
 Eventualmente, el editor realizará este proceso automáticemente.
 
-#### Comunicación cliente<->servidor transparente
+**Desktop (Windows):**
+
+Se encuentra en desarrollo un cliente para Windows basado en CEFSharp (Chromium). Su funcionamiento e implementación será igual a Cordova (no así a nivel API).
+
+### Comunicación cliente<->servidor transparente
 
 Cada vista cuenta con dos controladores: Uno de servidor (php) y otro de cliente (js). Podría decirse que es un modelo MVCC.
 
@@ -129,7 +133,7 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
     frontend::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
 
-#### API Cliente / js
+### API Cliente / js
 
 El frontend de Foxtrot tiene las siguientes particularidades:
 
@@ -145,7 +149,7 @@ El frontend de Foxtrot tiene las siguientes particularidades:
 - El API se desarrolla totalmente en español. Solo mantendremos los nombres internos del lenguaje (eventos, etc.) y siglas en inglés.
 - Estamos evaluando posibilidad crear un lenguaje de programación visual para los controladores de ambos lados.
 
-#### Intérprete lógico-matemático (js)
+### Intérprete lógico-matemático (js)
 
 Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto (las expresiones se encierran entre ``{` y `}`) y en las propiedades de los componentes, tanto para sus propiedades, como para sus estilos y sus eventos.
 
@@ -168,7 +172,7 @@ Se implementará de forma que tenga acceso automático a las propiedades del con
 
 Nota: Debe portarse a php si se implementa un preprocesamiento de vistas.
 
-#### API Servidor / php
+### API Servidor / php
 
 El backend de Foxtrot tiene las siguientes particularidades:
 
@@ -190,11 +194,7 @@ Tipos de clases (se determina en forma automática según espacio de nombres y a
 - Modelo de datos.
 - Otras clases del del framework (enrutamiento, librerías de terceros, módulos, componentes, etc.).
 
-#### Windows
-
-Está en desarrollo un cliente para Windows basado en CEFSharp (Chromium). Su funcionamiento e implementación será idéntico a Cordova (no así a nivel API).
-
-### Más información
+## Más información
 
 contacto@foxtrot.ar
 

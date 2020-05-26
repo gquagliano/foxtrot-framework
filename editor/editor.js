@@ -482,9 +482,10 @@ var editor=new function() {
                         ui.establecerEstilos(resp.css);
                         ui.establecerJson(resp.json);
 
+                        if(typeof resp.json==="string") resp.json=JSON.parse(resp.json);
+
                         ui.cargarJs("../"+opciones.ruta+".js",function() {
-                            var json=JSON.parse(resp.json),
-                                obj=ui.crearControlador(json.vista.nombre,json.vista.propiedades);
+                            var obj=ui.crearControlador(resp.json.vista.nombre,resp.json.vista.propiedades);
                             editor.prepararComponenteInsertado(obj.obtenerComponente());
                         });
 

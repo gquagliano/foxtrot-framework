@@ -29,7 +29,9 @@ var ui=new function() {
             md:768,
             sm:576,
             xs:0
-        };
+        },
+        urlBase=null,
+        esCordova=false;
 
     ////Elementos del dom
 
@@ -55,6 +57,14 @@ var ui=new function() {
 
     this.obtenerElementoEstilos=function() {
         return estilos;
+    };
+
+    this.obtenerUrlBase=function() {
+        return urlBase;
+    };
+
+    this.esCordova=function() {
+        return esCordova;
     };
 
     ////Estilos
@@ -136,6 +146,22 @@ var ui=new function() {
         }
 
         return reglas;
+    };
+
+    /**
+     * Agrega una hoja o un listado de hojas de estilos.
+     */
+    this.agregarHojaEstilos=function(url) {
+        if(typeof url==="string") url=[url];
+        var h=document.querySelector("head");
+        url.forEach(function(u) {
+            h.anexar(
+                document.crear("link")
+                    .atributo("rel","stylesheet")
+                    .atributo("href",u)
+            );
+        });
+        return this;
     };
 
     this.establecerEstilos=function(css) {
@@ -514,6 +540,13 @@ var ui=new function() {
 
     //TODO Reemplazar alert y confirm por versiones html
     //TODO Preloader
+
+    this.cordova=function() {
+        esCordova=true;
+        urlBase=localStorage.getItem("_urlBase");
+        document.head.anexar(document.crear("base").atributo("href",urlBase));
+        return this;
+    };
 
     this.ejecutar=function(nuevoDoc) {
         if(!util.esIndefinido(nuevoDoc)) {

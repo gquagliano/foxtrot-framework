@@ -18,13 +18,13 @@ El editor se acerca a su versión final. En líneas generales, falta (entre otro
 La siguiente etapa consistirá en:
 - Definición de propiedades comunes a todos los componentes.
 - Desarrollo de componentes concretos (ya están planteados los componentes básicos).
-- Integración con un gestor de vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/apertura (previsualización posiblemente se remueva).
+- Integración con un gestor de aplicaciones vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/apertura (previsualización posiblemente se remueva, abrir y guardar, si se realiza el gestor externo, también).
 
 **Acceso al editor**
 
-`http://localhost/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
+`http://localhost/experimental-foxtrot-framework/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
 
-Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/inicio
+Ejemplo: http://localhost/experimental-foxtrot-framework/editor?vista=aplicaciones/test/frontend/inicio
 
 _ruta:_
 Ruta sin extensión relativa a la raíz del sistema.
@@ -36,7 +36,7 @@ _modo:_
 _cordova:_
 - Establecer a `1` para que, al guardar, genere un archivo html compatible con Cordova (Predeterminado, `0`).
 
-Próximamente, `/editor/` será un mini-IDE.
+Próximamente, `/editor/` se reemplazará por el gestor y se automatizará el acceso al editor.
 
 #### Estructura de una aplicación
 
@@ -60,7 +60,7 @@ Cada aplicación cuenta con los siguientes archivos:
 - Todos los archivos de la aplicación usarán el espacio `\aplicaciones\apl` donde `apl` es el nombre de la aplicación.
 - Todos los archivos públicos (http) de la aplicación usarán el espacio `\aplicaciones\apl\publico` donde `apl` es el nombre de la aplicación.
 - Las clases princales de la aplicación (ambas, la privada como la pública) deben llamarse `aplicacion` y extender `\aplicacion`.
-- Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse  igual que el controlador y extender `\controlador`.
+- Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse igual que el archivo que las contienen y extender `\controlador`.
 - Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para frontend, `.php` para backend y `.pub.php` para métodos públicos de backend.
 
 Nota: Se evalúa renombrar `frontend` a `cliente` y `backend` a `servidor` para mantenerlo alineado con el concepto de API en español.
@@ -79,12 +79,13 @@ Eventualmente, una aplicación debe poder compliarse de una de las siguientes fo
 
 - Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework) + Un único archivo css
 - Un archivo html por vista + Un único archivo js para todos los archivos del framework + Un único archivo js de la aplicación (contiene todo el html, js y json de todas las vistas) + Un único archivo css
+- Un archivo html por vista + Un único archivo js para todos los archivos del framework + Un archivo js por vista (carga progresiva) + Un único archivo css
 
 En todos los casos, los archivos js serán compilados con Closure. Debe limpiarse el código html y css que use almacena dentro de los datos json, que están allí solo para el editor.
 
 El editor realizará este proceso automáticemente.
 
-Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensión sea en realidad .php si se va a implementar en servidor web.
+Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensión sea en realidad .php si se va a implementar en servidor web. De esa forma pueden aprovecharse características del backend, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código html (ejemplo, `<base>`).
 
 **Cordova:**
 

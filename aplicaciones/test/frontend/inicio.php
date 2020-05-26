@@ -17,8 +17,9 @@
   <body>
     <div class="container vacio componente contenedor" data-fxid="2" id="fox2" draggable="true"><div class="texto componente" data-fxid="3" id="fox3" draggable="true"><p>Hola</p></div></div>
         <script src="frontend/util.js"></script>
-        <script src="frontend/dom.js"></script>
+        <script src="frontend/expresion.js"></script>
         <script src="frontend/ajax.js"></script>
+        <script src="frontend/dom.js"></script>
         <script src="frontend/arrastra.js"></script>
         <script src="frontend/componente.js"></script>
         <script src="frontend/controlador.js"></script>
@@ -62,7 +63,7 @@
         <script src="frontend/backend.js"></script>
         <script src="aplicacion/frontend/inicio.js"></script>
     <script>
-            ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{"color":{"g":"red"}}},{"id":3,"nombre":"test","componente":"texto","propiedades":{}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"vista","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"vista","propiedades":{}},{"id":8,"nombre":null,"componente":"vista","propiedades":{}},{"id":9,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
+            ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{"color":{"g":"red"}}},{"id":3,"nombre":"test","componente":"texto","propiedades":{}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"vista","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"vista","propiedades":{}},{"id":8,"nombre":null,"componente":"vista","propiedades":{}},{"id":9,"nombre":null,"componente":"vista","propiedades":{}},{"id":10,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
                 .ejecutar();
     </script>
   </body>

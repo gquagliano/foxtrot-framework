@@ -80,8 +80,9 @@ RE;
     //TODO Modificar cuando se compile
     $scripts=[
         'frontend/util.js',
-        'frontend/dom.js',
+        'frontend/expresion.js',
         'frontend/ajax.js',
+        'frontend/dom.js',
         'frontend/arrastra.js',
         'frontend/componente.js',
         'frontend/controlador.js',

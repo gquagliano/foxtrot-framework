@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-//Script de prueba para abrir los datos en el editor
+//Script de PRUEBA para abrir los datos en el editor
 
 $ruta=__DIR__.'/../'.$_POST['ruta'];
 $nombre=basename($ruta);

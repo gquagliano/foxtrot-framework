@@ -153,11 +153,16 @@ var ui=new function() {
      */
     this.agregarHojaEstilos=function(url) {
         if(typeof url==="string") url=[url];
-        var h=document.querySelector("head");
+        var h=document.querySelector("head"),
+            listas=0;
         url.forEach(function(u) {
             h.anexar(
                 document.crear("link")
                     .atributo("rel","stylesheet")
+                    .evento("load",function() {
+                        listas++;
+                        if(esCordova&&listas==url.length) document.querySelector("#contenedor-cordova").agregarClase("listo");
+                    })
                     .atributo("href",u)
             );
         });

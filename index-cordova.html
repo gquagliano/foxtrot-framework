@@ -1,0 +1,30 @@
+<!--
+Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+@author Gabriel Quagliano - gabriel.quagliano@gmail.com
+@version 1.0
+-->
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="generator" content="Foxtrot 7">
+    </head>
+    <body>
+        <script>
+        //// Configuración
+        var _nombreApl="test",              //Nombre de la aplicación
+            _vistaInicial="inicio.html";    //Nombre de archivo de la vista inicial
+        ////
+
+        window.onload=function() {
+            var h=window.location.href,
+                urlBase=h.substr(0,h.lastIndexOf("/")+1);
+            localStorage.setItem("_urlBase",urlBase);
+            window.location.href="aplicaciones/"+_nombreApl+"/frontend/"+_vistaInicial;
+        };
+        </script>
+    </body>
+</html>

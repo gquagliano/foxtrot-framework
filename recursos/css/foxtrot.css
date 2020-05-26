@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
- /* Estilos comunes de Foxtrot */
+/* Estilos comunes de Foxtrot */
 
 picture {
     display: inline-block;
@@ -13,4 +13,16 @@ picture {
 picture img {
     display: block;
     width: 100%;
+}
+
+/* Cordova */
+
+@keyframes cordova-listo {
+    from { opacity: 0 }
+    to { opacity: 1 }
+}
+#contenedor-cordova.listo {
+    display: block!important;
+    animation: cordova-listo 1s;
+    animation-fill-mode: forwards;
 }

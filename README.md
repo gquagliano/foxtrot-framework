@@ -74,14 +74,34 @@ Nota: Todas las rutas y URLs deben finalizar con `/`.
 
 Eventualmente, una aplicación debe poder compliarse de una de las siguientes formas:
 
-- Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework, compilado con Closure) + Un único archivo css
-- Un único archivo js para todos los archivos del framework (compilado con Closure) + Todos los arhivos js de la aplicación compilados con Closure + Un único archivo css
+- Un único archivo html + Un único archivo js (contiene tódo el html, js y json de todas las vistas y de todo el framework) + Un único archivo css
+- Un único archivo html + Un único archivo js para todos los archivos del framework + Un único archivo js de la aplicación (contiene todo el html, js y json de todas las vistas) + Un único archivo css
 
-En todos los casos, debe limpiarse el código html y css que use almacena dentro de los datos json, que están allí solo para el editor.
+En todos los casos, los archivos js serán compilados con Closure. Debe limpiarse el código html y css que use almacena dentro de los datos json, que están allí solo para el editor.
+
+El editor realizará este proceso automáticemente.
+
+Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensión sea en realidad .php si se va a implementar en servidor web.
 
 **Cordova:**
 
-La aplicación debe funcionar en Cordova apuntando la página inicial a cualquier vista html.
+Debe configurarse en `config.xml` para apuntar al archivo `index-cordova.html`. La aplicación puede probarse localmente accediendo al mismo archivo.
+
+Algunos parámetros deben ser configurados dentro de `index-cordova.html` antes de construir la aplicación Cordova:
+
+    var _nombreApl="test",              //Nombre de la aplicación
+        _vistaInicial="inicio.html";    //Nombre de archivo de la vista inicial
+
+La vista inicial debe ser independiente (no embebible).
+
+Los siguientes archivos y directorios deben copiarse al directorio `www` de la aplicación Cordova:
+
+- `index-cordova.html`
+- `frontend/`
+- `aplicaciones/aplicación/` donde `aplicación` es la aplicación actual (Deben removerse el directorio `backend` y otros los archivos php).
+- `recursos/` (Puede eliminarse cualquier imagen u otro archivo que no esté en uso).
+
+Eventualmente, el editor realizará este proceso automáticemente.
 
 #### Comunicación cliente<->servidor transparente
 
@@ -168,7 +188,7 @@ Tipos de clases (se determina en forma automática según espacio de nombres y a
 
 #### Windows
 
-Está en desarrollo un cliente para Windows basado en CEFSharp.
+Está en desarrollo un cliente para Windows basado en CEFSharp. Su funcionamiento e implementación será idéntico a Cordova (no así a nivel API).
 
 ### Más información
 

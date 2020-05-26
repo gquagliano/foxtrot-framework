@@ -2,75 +2,48 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <base href="http://192.168.0.4/experimental-foxtrot-framework/">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="recursos/css/foxtrot.css">
-    <link rel="stylesheet" href="aplicacion/recursos/estilos.css">
-    <link rel="stylesheet" href="aplicacion/frontend/inicio.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta name="generator" content="Foxtrot 7">
     <link rel="icon" href="recursos/img/favicon.png">
     <title></title>
     <style id="foxtrot-estilos"></style>
   </head>
   <body>
+    <div id="contenedor-cordova" style="display:none;opacity:0">
     <div class="container vacio componente contenedor" data-fxid="2" id="fox2" draggable="true"><div class="texto componente" data-fxid="3" id="fox3" draggable="true"><p>Hola</p></div></div>
-    
-    <script src="frontend/util.js"></script>
-    <script src="frontend/dom.js"></script>
-    <script src="frontend/ajax.js"></script>
-    <script src="frontend/arrastra.js"></script>
-    <script src="frontend/componente.js"></script>
-    <script src="frontend/controlador.js"></script>    
-    <script src="frontend/ui.js"></script>
-    
-    <script src="frontend/componentes/contenedor.js"></script>
-    <script src="frontend/componentes/texto.js"></script>
-    <script src="frontend/componentes/imagen.js"></script>
-    <script src="frontend/componentes/boton.js"></script>
-    <script src="frontend/componentes/icono.js"></script>
-    <script src="frontend/componentes/espaciador.js"></script>
-
-    <script src="rontend/componentes/fila.js"></script>
-    <script src="rontend/componentes/columna.js"></script>
-    <script src="rontend/componentes/form.js"></script>
-    <script src="rontend/componentes/dialogo.js"></script>
-    <script src="rontend/componentes/menu-lateral.js"></script>
-    <script src="rontend/componentes/pestanas.js"></script>
-    <script src="rontend/componentes/pestana.js"></script>
-    <script src="rontend/componentes/deslizable.js"></script>
-    <script src="rontend/componentes/navegacion.js"></script>
-    <script src="rontend/componentes/arbol.js"></script>
-
-    <script src="frontend/componentes/etiqueta.js"></script>
-    <script src="frontend/componentes/condicional.js"></script>
-    <script src="frontend/componentes/bucle.js"></script>
-    <script src="frontend/componentes/codigo.js"></script>
-    <script src="frontend/componentes/importar.js"></script>
-
-    <script src="frontend/componentes/campo.js"></script>
-    <script src="frontend/componentes/desplegable.js"></script>
-    <script src="frontend/componentes/buscador.js"></script>
-    <script src="frontend/componentes/checkbox.js"></script>
-    <script src="frontend/componentes/opciones.js"></script>
-    <script src="frontend/componentes/alternar.js"></script>
-    <script src="frontend/componentes/fecha.js"></script>
-    <script src="frontend/componentes/hora.js"></script>
-    <script src="frontend/componentes/agenda.js"></script>
-    <script src="frontend/componentes/menu.js"></script>
-    <script src="frontend/componentes/archivo.js"></script>
-
-    <script src="frontend/componentes/tabla.js"></script>    
-    <script src="frontend/componentes/tabla-columna.js"></script>
-    <script src="frontend/componentes/tabla-fila.js"></script>
-
-    <script src="frontend/componentes/vista.js"></script>
-
-    <script src="frontend/backend.js"></script>
-
-    <script src="aplicacion/frontend/inicio.js"></script>
-    <script>
-    ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{"color":{"g":"red"}}},{"id":3,"nombre":"test","componente":"texto","propiedades":{}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"vista","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}').ejecutar();
+    </div>
+            <script>
+    (function() {
+        "use strict";
+        var urlBase=localStorage.getItem("_urlBase"),
+            scripts=[],
+            listos=0,
+            scriptOnLoad=function() {
+                listos++;
+                if(listos>=scripts.length) scriptsListos();
+                else agregarScript();
+            },
+            agregarScript=function() {
+                var elem=document.createElement("script");
+                elem.onload=scriptOnLoad;
+                elem.src=urlBase+scripts[listos];
+                document.body.appendChild(elem);
+            },
+            agregarScripts=function(urls) {
+                scripts=urls;
+                agregarScript();
+            },
+            scriptsListos=function() {
+                ui.cordova()
+                    .agregarHojaEstilos(['recursos/css/bootstrap.min.css','recursos/css/foxtrot.css','aplicaciones/test/recursos/estilos.css','aplicaciones/test/frontend/inicio.css'])
+                    .establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{"color":{"g":"red"}}},{"id":3,"nombre":"test","componente":"texto","propiedades":{}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"vista","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"vista","propiedades":{}},{"id":8,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
+                    .ejecutar();
+            };
+            agregarScripts(['frontend/util.js','frontend/dom.js','frontend/ajax.js','frontend/arrastra.js','frontend/componente.js','frontend/controlador.js','frontend/ui.js','frontend/componentes/contenedor.js','frontend/componentes/texto.js','frontend/componentes/imagen.js','frontend/componentes/boton.js','frontend/componentes/icono.js','frontend/componentes/espaciador.js','frontend/componentes/fila.js','frontend/componentes/columna.js','frontend/componentes/form.js','frontend/componentes/dialogo.js','frontend/componentes/menu-lateral.js','frontend/componentes/pestanas.js','frontend/componentes/pestana.js','frontend/componentes/deslizable.js','frontend/componentes/navegacion.js','frontend/componentes/arbol.js','frontend/componentes/etiqueta.js','frontend/componentes/condicional.js','frontend/componentes/bucle.js','frontend/componentes/codigo.js','frontend/componentes/importar.js','frontend/componentes/campo.js','frontend/componentes/desplegable.js','frontend/componentes/buscador.js','frontend/componentes/checkbox.js','frontend/componentes/opciones.js','frontend/componentes/alternar.js','frontend/componentes/fecha.js','frontend/componentes/hora.js','frontend/componentes/agenda.js','frontend/componentes/menu.js','frontend/componentes/archivo.js','frontend/componentes/tabla.js','frontend/componentes/tabla-columna.js','frontend/componentes/tabla-fila.js','frontend/componentes/vista.js','frontend/backend.js','aplicaciones/test/frontend/inicio.js']);
+    })();
     </script>
   </body>
 </html>

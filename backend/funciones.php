@@ -18,6 +18,20 @@ function redir($uri) {
 }
 
 /**
+ * Alias de htmlentites().
+ */
+function h($cadena) {
+    return htmlentities($cadena,ENT_COMPAT,'utf-8');
+}
+
+/**
+ * Alias de html_entity_decode().
+ */
+function uh($cadena) {
+    return html_entity_decode($cadena,ENT_COMPAT,'utf-8');
+}
+
+/**
  * Determina y devuelve el tipo MIME de un archivo.
  */
 function mime($ruta) {

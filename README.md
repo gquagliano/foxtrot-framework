@@ -24,8 +24,6 @@ La siguiente etapa consistirá en:
 
 `http://localhost/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
 
-Próximamente, `/editor/` será un mini-IDE.
-
 Ejemplo: http://localhost/editor?vista=aplicaciones/test/frontend/inicio
 
 _ruta:_
@@ -36,11 +34,13 @@ _modo:_
 - `independiente` Almacenará la vista en un archivo html que podrá abrirse en forma independiente (Predeterminado).
 
 _cordova:_
-- Establecer a `1` para que, al guardar, genere un archivo html compatible con Cordova.
+- Establecer a `1` para que, al guardar, genere un archivo html compatible con Cordova (Predeterminado, `0`).
+
+Próximamente, `/editor/` será un mini-IDE.
 
 #### Estructura de una aplicación
 
-Las aplicaciones se definen dentro de subdirectorios de `aplicaciones`.
+Las aplicaciones se definen dentro de subdirectorios de `/aplicaciones/`.
 
 Cada aplicación cuenta con los siguientes archivos:
 
@@ -48,6 +48,7 @@ Cada aplicación cuenta con los siguientes archivos:
 - `backend/` Directorio donde se almacenan las clases de backend.
 - `backend/aplicacion.php` Clase principal de la aplicación (Opcional).
 - `backend/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación (Opcional).
+- `backend/*.php` Controladores.
 - `backend/*.pub.php` Métodos públicos (http) de los distintos controladores.
 - `frontend/` Archivos html, css y controladores js de la aplicación.
 - `frontend/inicio.html` Página principal de la aplicación (al menos con el enrutador predeterminado).
@@ -62,9 +63,11 @@ Cada aplicación cuenta con los siguientes archivos:
 - Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse  igual que el controlador y extender `\controlador`.
 - Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para frontend, `.php` para backend y `.pub.php` para métodos públicos de backend.
 
+Nota: Se evalúa renombrar `frontend` a `cliente` y `backend` a `servidor` para mantenerlo alineado con el concepto de API en español.
+
 **Además:**
 
-- Dentro de `backend/` puede crearse un enrutador de solicitudes personalizado.
+- Dentro de `/backend/` puede crearse un enrutador de solicitudes personalizado.
 - El archivo `config.php` en el raíz de foxtrot contiene la configuración común a todas las aplicaciones.
 - A nivel global, puede crearse un enrutador de aplicación personalizado que determine la aplicación a ejecutar de otra forma distinta a la predeterminada, que es según el dominio.
 

@@ -8,6 +8,11 @@
 
 //Script de PRUEBA para abrir los datos en el editor
 
+define('_inc',1);
+
+include(__DIR__.'/../servidor/foxtrot.php');
+foxtrot::inicializar();
+
 $ruta=__DIR__.'/../'.$_POST['ruta'];
 $nombre=basename($ruta);
 $rutaJson=$ruta.'.json';

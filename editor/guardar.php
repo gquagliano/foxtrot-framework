@@ -6,12 +6,12 @@
  * @version 1.0
  */ 
 
+//Script de PRUEBA para guardar los datos provenientes del editor
+
 define('_inc',1);
 
-include(__DIR__.'/../backend/foxtrot.php');
+include(__DIR__.'/../servidor/foxtrot.php');
 foxtrot::inicializar();
-
-//Script de PRUEBA para guardar los datos provenientes del editor
 
 /*
 El guardado funcionará de la siguiente manera:
@@ -74,57 +74,57 @@ RE;
         'recursos/css/bootstrap.min.css',
         'recursos/css/foxtrot.css',
         $rutaApp.'recursos/estilos.css',
-        $rutaApp.'frontend/'.$nombre.'.css'
+        $rutaApp.'cliente/'.$nombre.'.css'
     ];
 
     //TODO Modificar cuando se compile
     $scripts=[
-        'frontend/util.js',
-        'frontend/expresion.js',
-        'frontend/ajax.js',
-        'frontend/dom.js',
-        'frontend/arrastra.js',
-        'frontend/componente.js',
-        'frontend/controlador.js',
-        'frontend/ui.js',
-        'frontend/componentes/contenedor.js',
-        'frontend/componentes/texto.js',
-        'frontend/componentes/imagen.js',
-        'frontend/componentes/boton.js',
-        'frontend/componentes/icono.js',
-        'frontend/componentes/espaciador.js',
-        'frontend/componentes/fila.js',
-        'frontend/componentes/columna.js',
-        'frontend/componentes/form.js',
-        'frontend/componentes/dialogo.js',
-        'frontend/componentes/menu-lateral.js',
-        'frontend/componentes/pestanas.js',
-        'frontend/componentes/pestana.js',
-        'frontend/componentes/deslizable.js',
-        'frontend/componentes/navegacion.js',
-        'frontend/componentes/arbol.js',
-        'frontend/componentes/etiqueta.js',
-        'frontend/componentes/condicional.js',
-        'frontend/componentes/bucle.js',
-        'frontend/componentes/codigo.js',
-        'frontend/componentes/importar.js',
-        'frontend/componentes/campo.js',
-        'frontend/componentes/desplegable.js',
-        'frontend/componentes/buscador.js',
-        'frontend/componentes/checkbox.js',
-        'frontend/componentes/opciones.js',
-        'frontend/componentes/alternar.js',
-        'frontend/componentes/fecha.js',
-        'frontend/componentes/hora.js',
-        'frontend/componentes/agenda.js',
-        'frontend/componentes/menu.js',
-        'frontend/componentes/archivo.js',
-        'frontend/componentes/tabla.js',
-        'frontend/componentes/tabla-columna.js',
-        'frontend/componentes/tabla-fila.js',
-        'frontend/componentes/vista.js',
-        'frontend/backend.js',
-        $rutaApp.'frontend/'.$nombre.'.js'
+        'cliente/util.js',
+        'cliente/expresion.js',
+        'cliente/ajax.js',
+        'cliente/dom.js',
+        'cliente/arrastra.js',
+        'cliente/componente.js',
+        'cliente/controlador.js',
+        'cliente/ui.js',
+        'cliente/componentes/contenedor.js',
+        'cliente/componentes/texto.js',
+        'cliente/componentes/imagen.js',
+        'cliente/componentes/boton.js',
+        'cliente/componentes/icono.js',
+        'cliente/componentes/espaciador.js',
+        'cliente/componentes/fila.js',
+        'cliente/componentes/columna.js',
+        'cliente/componentes/form.js',
+        'cliente/componentes/dialogo.js',
+        'cliente/componentes/menu-lateral.js',
+        'cliente/componentes/pestanas.js',
+        'cliente/componentes/pestana.js',
+        'cliente/componentes/deslizable.js',
+        'cliente/componentes/navegacion.js',
+        'cliente/componentes/arbol.js',
+        'cliente/componentes/etiqueta.js',
+        'cliente/componentes/condicional.js',
+        'cliente/componentes/bucle.js',
+        'cliente/componentes/codigo.js',
+        'cliente/componentes/importar.js',
+        'cliente/componentes/campo.js',
+        'cliente/componentes/desplegable.js',
+        'cliente/componentes/buscador.js',
+        'cliente/componentes/checkbox.js',
+        'cliente/componentes/opciones.js',
+        'cliente/componentes/alternar.js',
+        'cliente/componentes/fecha.js',
+        'cliente/componentes/hora.js',
+        'cliente/componentes/agenda.js',
+        'cliente/componentes/menu.js',
+        'cliente/componentes/archivo.js',
+        'cliente/componentes/tabla.js',
+        'cliente/componentes/tabla-columna.js',
+        'cliente/componentes/tabla-fila.js',
+        'cliente/componentes/vista.js',
+        'cliente/servidor.js',
+        $rutaApp.'cliente/'.$nombre.'.js'
     ];
 
     if($cordova) $scrits[]='cordova.js';

@@ -8,7 +8,7 @@
 /**
  * Gestor de comunicación cliente->servidor.
  */
-var backend=new Proxy(new function() {
+var servidor=new Proxy(new function() {
     this.funcionesError=[];
     this.ajax=[];
     this.url="";
@@ -51,7 +51,7 @@ var backend=new Proxy(new function() {
                 __p:JSON.stringify(opciones.parametros)
             },
             listo:function(resp) {
-                backend.evaluarRespuesta(resp,opciones);
+                servidor.evaluarRespuesta(resp,opciones);
             }
         }));
     };
@@ -99,17 +99,17 @@ var backend=new Proxy(new function() {
 
             //Los métodos admiten múltiples formas:
 
-            //backend.foo()
+            //servidor.foo()
             
-            //backend.foo(opciones)
+            //servidor.foo(opciones)
             if(args.length==1&&util.esObjeto(args[0])) {
                 opc=Obj.assign(opc,args[0]);
             } else {
-                //backend.foo(retorno)
+                //servidor.foo(retorno)
                 if(typeof args[0]=="function") opc.retorno=args.shift();
                 
-                //backend.foo(retorno,...args)
-                //backend.foo(...args)
+                //servidor.foo(retorno,...args)
+                //servidor.foo(...args)
                 if(args.length>0) opc.parametros=args;
             }
 
@@ -118,4 +118,4 @@ var backend=new Proxy(new function() {
     }
 });
 
-window["backend"]=backend;
+window["servidor"]=servidor;

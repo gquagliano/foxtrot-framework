@@ -45,28 +45,28 @@ class foxtrot {
 
     protected static function definirConstantes() {
         define('_raiz',realpath(__DIR__.'/..').'/');
-        define('_backend',_raiz.'backend/');
+        define('_servidor',_raiz.'servidor/');
         define('_aplicaciones',_raiz.'aplicaciones/');
     }
 
     protected static function definirConstantesAplicacion() {
         define('_apl',self::$aplicacion);
         define('_raizAplicacion',_aplicaciones._apl.'/');
-        define('_backendAplicacion',_raizAplicacion.'backend/');
-        define('_frontendAplicacion',_raizAplicacion.'frontend/');
+        define('_servidorAplicacion',_raizAplicacion.'servidor/');
+        define('_clienteAplicacion',_raizAplicacion.'cliente/');
     }
 
     protected static function incluirArchivos() {
-        include(_backend.'funciones.php');
-        include(_backend.'configuracion.php');
-        include(_backend.'frontend.php');
-        include(_backend.'controlador.php');
-        include(_backend.'aplicacion.php');
-        include(_backend.'enrutador.php');
-        include(_backend.'enrutadorAplicacion.php');
+        include(_servidor.'funciones.php');
+        include(_servidor.'configuracion.php');
+        include(_servidor.'cliente.php');
+        include(_servidor.'controlador.php');
+        include(_servidor.'aplicacion.php');
+        include(_servidor.'enrutador.php');
+        include(_servidor.'enrutadorAplicacion.php');
 
-        include(_backend.'enrutadores/enrutadorPredeterminado.php');
-        include(_backend.'enrutadores/enrutadorAplicacionPredeterminado.php');
+        include(_servidor.'enrutadores/enrutadorPredeterminado.php');
+        include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
     }
 
     protected static function cargarAplicacion() {
@@ -77,16 +77,16 @@ class foxtrot {
         if(!self::$enrutador&&!configuracion::$enrutador) {
             self::$enrutador=new enrutadorPredetermiando;
         } elseif(configuracion::$enrutador) {
-            include(_backendAplicacion.configuracion::$enrutador.'.php');            
+            include(_servidorAplicacion.configuracion::$enrutador.'.php');            
             $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
             self::$enrutador=new $cls;
         }
 
-        if(file_exists(_backendAplicacion.'aplicacion.php')) include(_backendAplicacion.'aplicacion.php');
+        if(file_exists(_servidorAplicacion.'aplicacion.php')) include(_servidorAplicacion.'aplicacion.php');
         $cls='\\aplicaciones\\'._apl.'\\aplicacion';
         self::$instanciaAplicacion=new $cls;
 
-        if(file_exists(_backendAplicacion.'aplicacion.pub.php')) include(_backendAplicacion.'aplicacion.pub.php');
+        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) include(_servidorAplicacion.'aplicacion.pub.php');
         $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
         self::$instanciaAplicacion=new $cls;
     }
@@ -162,8 +162,8 @@ class foxtrot {
         if($vista) {
             //Devuelve el contenido html de la vista
 
-            //Validar que el archivo solicitado exista y no salga del directorio de frontend
-            $dir=realpath(_frontendAplicacion);
+            //Validar que el archivo solicitado exista y no salga del directorio de cliente
+            $dir=realpath(_clienteAplicacion);
             $rutaPhp=realpath($dir.'/'.$vista.'.php');
             $rutaHtml=realpath($dir.'/'.$vista.'.html');
             if($rutaPhp) {
@@ -182,7 +182,7 @@ class foxtrot {
         if($ctl) {
             if(preg_match('/[^a-z0-9_-]/i',$ctl)) self::error();
 
-            $ruta=_backendAplicacion.$ctl.'.pub.php';
+            $ruta=_servidorAplicacion.$ctl.'.pub.php';
             if(!file_exists($ruta)) self::error();
 
             include($ruta);
@@ -204,7 +204,7 @@ class foxtrot {
             echo $html;
         } elseif($res!==null) {
             header('Content-Type: text/plain; charset=utf-8',true);
-            frontend::responder($res);         
+            cliente::responder($res);         
         }   
         exit;     
     }

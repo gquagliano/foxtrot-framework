@@ -15,16 +15,16 @@ defined('_inc') or exit;
  */
 class inicio extends \controlador {
     /**
-     * Método que al ser invocado desde el frontend (backend.metodo()) devuelve "Hola" directamente al callback.
+     * Método que al ser invocado desde el cliente (servidor.metodo()) devuelve "Hola" directamente al callback.
      */
     public function metodo() {
         return 'Hola';
     }
 
     /**
-     * Método que al ser invocado desde el frontend (backend.suma(x,y)) invoca metodoJs en el controlador con x+y como parámetro.
+     * Método que al ser invocado desde el cliente (servidor.suma(x,y)) invoca metodoJs en el controlador con x+y como parámetro.
      */
     public function suma($a,$b) {
-        \frontend::metodoJs($a+$b);
+        \cliente::metodoJs($a+$b);
     }
 }

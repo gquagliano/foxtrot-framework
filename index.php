@@ -8,6 +8,6 @@
 
 define('_inc',1);
 
-include(__DIR__.'/backend/foxtrot.php');
+include(__DIR__.'/servidor/foxtrot.php');
 foxtrot::inicializar();
 foxtrot::ejecutar();

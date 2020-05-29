@@ -24,7 +24,7 @@ La siguiente etapa consistirá en:
 
 `http://localhost/experimental-foxtrot-framework/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
 
-Ejemplo: http://localhost/experimental-foxtrot-framework/editor?vista=aplicaciones/test/frontend/inicio
+Ejemplo: http://localhost/experimental-foxtrot-framework/editor?vista=aplicaciones/test/cliente/inicio
 
 _ruta:_
 Ruta sin extensión relativa a la raíz del sistema.
@@ -45,13 +45,13 @@ Las aplicaciones se definen dentro de subdirectorios de `/aplicaciones/`.
 Cada aplicación cuenta con los siguientes archivos:
 
 - `config.php` Primer archivo que se carga, donde puede establecerse la configuración específica, como, por ejemplo, las credenciales de la base de datos (Opcional).
-- `backend/` Directorio donde se almacenan las clases de backend.
-- `backend/aplicacion.php` Clase principal de la aplicación (Opcional).
-- `backend/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación (Opcional).
-- `backend/*.php` Controladores.
-- `backend/*.pub.php` Métodos públicos (http) de los distintos controladores.
-- `frontend/` Archivos html, css y controladores js de la aplicación.
-- `frontend/inicio.html` Página principal de la aplicación (al menos con el enrutador predeterminado).
+- `servidor/` Directorio donde se almacenan las clases de servidor.
+- `servidor/aplicacion.php` Clase principal de la aplicación (Opcional).
+- `servidor/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación (Opcional).
+- `servidor/*.php` Controladores.
+- `servidor/*.pub.php` Métodos públicos (http) de los distintos controladores.
+- `cliente/` Archivos html, css y controladores js de la aplicación.
+- `cliente/inicio.html` Página principal de la aplicación (al menos con el enrutador predeterminado).
 - `recursos/` Otros recursos (imágenes, estilos) de la aplicación.
 - `recursos/estilos.css` Archivo principal de estilos de usuario, se incluye en forma automática (en el futuro, se podrán configurar otros).
 
@@ -61,13 +61,11 @@ Cada aplicación cuenta con los siguientes archivos:
 - Todos los archivos públicos (http) de la aplicación usarán el espacio `\aplicaciones\apl\publico` donde `apl` es el nombre de la aplicación.
 - Las clases princales de la aplicación (ambas, la privada como la pública) deben llamarse `aplicacion` y extender `\aplicacion`.
 - Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse igual que el archivo que las contienen y extender `\controlador`.
-- Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para frontend, `.php` para backend y `.pub.php` para métodos públicos de backend.
-
-Nota: Se evalúa renombrar `frontend` a `cliente` y `backend` a `servidor` para mantenerlo alineado con el concepto de API en español.
+- Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para cliente, `.php` para servidor y `.pub.php` para métodos públicos de servidor.
 
 **Además:**
 
-- Dentro de `/backend/` puede crearse un enrutador de solicitudes personalizado.
+- Dentro de `/servidor/` puede crearse un enrutador de solicitudes personalizado.
 - El archivo `config.php` en el raíz de foxtrot contiene la configuración común a todas las aplicaciones.
 - A nivel global, puede crearse un enrutador de aplicación personalizado que determine la aplicación a ejecutar de otra forma distinta a la predeterminada, que es según el dominio.
 
@@ -85,7 +83,7 @@ En todos los casos, los archivos js serán compilados con Closure. Debe limpiars
 
 El editor realizará este proceso automáticemente.
 
-Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensión sea en realidad .php si se va a implementar en servidor web. De esa forma pueden aprovecharse características del backend, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código html (ejemplo, `<base>`).
+Nota: En algunos casos, cuando hablamos de _archivo html_, puede que su extensión sea en realidad .php si se va a implementar en servidor web. De esa forma pueden aprovecharse características del servidor, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código html (ejemplo, `<base>`).
 
 **Cordova:**
 
@@ -101,8 +99,8 @@ La vista inicial debe ser independiente (no embebible).
 Los siguientes archivos y directorios deben copiarse al directorio `www` de la aplicación Cordova:
 
 - `/index-cordova.html`
-- `/frontend/`
-- `/aplicaciones/apl/` donde `apl` es la aplicación actual (Deben removerse el directorio `backend` y otros los archivos php).
+- `/cliente/`
+- `/aplicaciones/apl/` donde `apl` es la aplicación actual (Deben removerse el directorio `servidor` y otros los archivos php).
 - `/recursos/` (Puede eliminarse cualquier imagen u otros archivos que no estén en uso).
 
 Eventualmente, el editor realizará este proceso automáticemente.
@@ -115,15 +113,15 @@ Se encuentra en desarrollo un cliente para Windows basado en CEFSharp (Chromium)
 
 Cada vista cuenta con dos controladores: Uno de servidor (php) y otro de cliente (js). Podría decirse que es un modelo MVCC.
 
-Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El backend solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo: (`ctl` es el nombre del controlador para la vista actual)
+Es posible invocar métodos desde uno a otro en forma transparente para el desarrollador. El servidor solo puede hacerlo como respuesta a una solicitud y es asincrónico. Por ejemplo: (`ctl` es el nombre del controlador para la vista actual)
 
 **js:**
 
-    backend.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) (php) y devolverá el retorno de la misma al callback
+    servidor.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) (php) y devolverá el retorno de la misma al callback
         ...
     },1,2,3);
 
-    backend.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) (php)
+    servidor.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) (php)
 
 **php:**
 
@@ -131,19 +129,19 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
         return 'Hola';
     }
 
-    frontend::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
+    cliente::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (js)
 
 ### API Cliente / js
 
-El frontend de Foxtrot tiene las siguientes particularidades:
+El cliente de Foxtrot tiene las siguientes particularidades:
 
 - Editor de vistas WYSIWYG.
 - La interfaz está formada por componentes, cada uno con propiedades y métodos. Abstrae por completo la maquetación de la vista.
-- Cuenta con componentes que cumplen la función de estructuras de control (condicional, bucle), y con la posibilidad de insertar valores de variables en cualquier ubicación y en cualquier propiedad de componente, y con la posibilidad de configurar llamados a métodos del controlador desde el editor (tanto del frontend y como del backend agregando el prefijo `backend:` al nombre del método).
+- Cuenta con componentes que cumplen la función de estructuras de control (condicional, bucle), y con la posibilidad de insertar valores de variables en cualquier ubicación y en cualquier propiedad de componente, y con la posibilidad de configurar llamados a métodos del controlador desde el editor (tanto del cliente y como del servidor agregando el prefijo `servidor:` al nombre del método).
 - Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o compilarse en archivos html independientes.
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
-- Debe estar desacoplado del backend y ser extremadamente liviano y optimizado para dispositivos / Cordova.
-- Sin embargo, estamos considerando introducir algún mecanismo que permita que la vista sea preprocesada en el servidor (php), en lugar de la carga normal por ajax, solo disponible para aquellas aplicaciones que se implementen junto con el backend en el mismo servidor web.
+- Debe estar desacoplado del servidor y ser extremadamente liviano y optimizado para dispositivos / Cordova.
+- Sin embargo, estamos considerando introducir algún mecanismo que permita que la vista sea preprocesada en el servidor (php), en lugar de la carga normal por ajax, solo disponible para aquellas aplicaciones que se implementen junto con el servidor en el mismo servidor web.
 - Permite implementar fácilmente sitios de una página (vista inicial + vistas embebibles), opcionalmente con carga progresiva (las vistas y controladores pueden descargarse combinadas en un solo archivo, o progresivamente a medida que se navega la aplicación).
 - Gestor del DOM propio (adiós jQuery).
 - El API se desarrolla totalmente en español. Solo mantendremos los nombres internos del lenguaje (eventos, etc.) y siglas en inglés.
@@ -183,9 +181,9 @@ Nota: Debe portarse a php si se implementa un preprocesamiento de vistas.
 
 ### API Servidor / php
 
-El backend de Foxtrot tiene las siguientes particularidades:
+El servidor de Foxtrot tiene las siguientes particularidades:
 
-- Es _headless_, totalmente desacoplado del frontend.
+- Es _headless_, totalmente desacoplado del cliente.
 - Es multiaplicación (una instalación puede contener varias aplicaciones y la aplicación solicitada se determina a partir del dominio).
 - Permite una comunicación cliente-servidor bidireccional totalmente transparente para el desarrollador.
 - Permite exponer métodos php en forma automática de manera segura.
@@ -197,7 +195,7 @@ No es posible simplemente asumir que un método público (`public`) lo es en el 
 
 Tipos de clases (se determina en forma automática según espacio de nombres y ascendencia):
 
-- Controlador de vista (controlador de backend--también existe el de frontend, en js).
+- Controlador de vista (controlador de servidor--también existe el de cliente, en js).
 - Clases de la aplicación.
 - Clases de métodos públicos http.
 - Modelo de datos.

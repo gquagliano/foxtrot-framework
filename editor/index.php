@@ -5,6 +5,11 @@
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
  */
+
+define('_inc',1);
+
+include(__DIR__.'/../servidor/foxtrot.php');
+foxtrot::inicializar();
 ?>
 <!doctype html>
 <html lang="es">
@@ -59,57 +64,57 @@
     
     <!-- Eventualmente, todo esto estará compilado en un solo script con Closure, y los css combinados en un solo archivo -->
 
-    <script src="../frontend/util.js"></script>
-    <script src="../frontend/expresion.js"></script>
-    <script src="../frontend/ajax.js"></script>
-    <script src="../frontend/dom.js"></script>
-    <script src="../frontend/arrastra.js"></script>
-    <script src="../frontend/editable.js"></script>
-    <script src="../frontend/componente.js"></script>
-    <script src="../frontend/controlador.js"></script>
-    <script src="../frontend/ui.js"></script>
+    <script src="../cliente/util.js"></script>
+    <script src="../cliente/expresion.js"></script>
+    <script src="../cliente/ajax.js"></script>
+    <script src="../cliente/dom.js"></script>
+    <script src="../cliente/arrastra.js"></script>
+    <script src="../cliente/editable.js"></script>
+    <script src="../cliente/componente.js"></script>
+    <script src="../cliente/controlador.js"></script>
+    <script src="../cliente/ui.js"></script>
     
-    <script src="../frontend/componentes/contenedor.js"></script>
-    <script src="../frontend/componentes/texto.js"></script>
-    <script src="../frontend/componentes/imagen.js"></script>
-    <script src="../frontend/componentes/boton.js"></script>
-    <script src="../frontend/componentes/icono.js"></script>
-    <script src="../frontend/componentes/espaciador.js"></script>
+    <script src="../cliente/componentes/contenedor.js"></script>
+    <script src="../cliente/componentes/texto.js"></script>
+    <script src="../cliente/componentes/imagen.js"></script>
+    <script src="../cliente/componentes/boton.js"></script>
+    <script src="../cliente/componentes/icono.js"></script>
+    <script src="../cliente/componentes/espaciador.js"></script>
 
-    <script src="../frontend/componentes/fila.js"></script>
-    <script src="../frontend/componentes/columna.js"></script>
-    <script src="../frontend/componentes/form.js"></script>
-    <script src="../frontend/componentes/dialogo.js"></script>
-    <script src="../frontend/componentes/menu-lateral.js"></script>
-    <script src="../frontend/componentes/pestanas.js"></script>
-    <script src="../frontend/componentes/pestana.js"></script>
-    <script src="../frontend/componentes/deslizable.js"></script>
-    <script src="../frontend/componentes/navegacion.js"></script>
-    <script src="../frontend/componentes/arbol.js"></script>
+    <script src="../cliente/componentes/fila.js"></script>
+    <script src="../cliente/componentes/columna.js"></script>
+    <script src="../cliente/componentes/form.js"></script>
+    <script src="../cliente/componentes/dialogo.js"></script>
+    <script src="../cliente/componentes/menu-lateral.js"></script>
+    <script src="../cliente/componentes/pestanas.js"></script>
+    <script src="../cliente/componentes/pestana.js"></script>
+    <script src="../cliente/componentes/deslizable.js"></script>
+    <script src="../cliente/componentes/navegacion.js"></script>
+    <script src="../cliente/componentes/arbol.js"></script>
 
-    <script src="../frontend/componentes/etiqueta.js"></script>
-    <script src="../frontend/componentes/condicional.js"></script>
-    <script src="../frontend/componentes/bucle.js"></script>
-    <script src="../frontend/componentes/codigo.js"></script>
-    <script src="../frontend/componentes/importar.js"></script>
+    <script src="../cliente/componentes/etiqueta.js"></script>
+    <script src="../cliente/componentes/condicional.js"></script>
+    <script src="../cliente/componentes/bucle.js"></script>
+    <script src="../cliente/componentes/codigo.js"></script>
+    <script src="../cliente/componentes/importar.js"></script>
 
-    <script src="../frontend/componentes/campo.js"></script>
-    <script src="../frontend/componentes/desplegable.js"></script>
-    <script src="../frontend/componentes/buscador.js"></script>
-    <script src="../frontend/componentes/checkbox.js"></script>
-    <script src="../frontend/componentes/opciones.js"></script>
-    <script src="../frontend/componentes/alternar.js"></script>
-    <script src="../frontend/componentes/fecha.js"></script>
-    <script src="../frontend/componentes/hora.js"></script>
-    <script src="../frontend/componentes/agenda.js"></script>
-    <script src="../frontend/componentes/menu.js"></script>
-    <script src="../frontend/componentes/archivo.js"></script>
+    <script src="../cliente/componentes/campo.js"></script>
+    <script src="../cliente/componentes/desplegable.js"></script>
+    <script src="../cliente/componentes/buscador.js"></script>
+    <script src="../cliente/componentes/checkbox.js"></script>
+    <script src="../cliente/componentes/opciones.js"></script>
+    <script src="../cliente/componentes/alternar.js"></script>
+    <script src="../cliente/componentes/fecha.js"></script>
+    <script src="../cliente/componentes/hora.js"></script>
+    <script src="../cliente/componentes/agenda.js"></script>
+    <script src="../cliente/componentes/menu.js"></script>
+    <script src="../cliente/componentes/archivo.js"></script>
 
-    <script src="../frontend/componentes/tabla.js"></script>    
-    <script src="../frontend/componentes/tabla-columna.js"></script>
-    <script src="../frontend/componentes/tabla-fila.js"></script>
+    <script src="../cliente/componentes/tabla.js"></script>    
+    <script src="../cliente/componentes/tabla-columna.js"></script>
+    <script src="../cliente/componentes/tabla-fila.js"></script>
     
-    <script src="../frontend/componentes/vista.js"></script>
+    <script src="../cliente/componentes/vista.js"></script>
     
     <script src="editor.js"></script>
     

@@ -11,9 +11,9 @@ defined('_inc') or exit;
 /**
  * Gestor de comunicación servidor->cliente.
  */
-class frontend {
+class cliente {
     /**
-     * Envía una respuesta como texto plano al frontend.
+     * Envía una respuesta como texto plano al cliente.
      */
     public static function responder($data) {
         echo json_encode([

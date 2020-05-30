@@ -33,7 +33,7 @@ var componenteMenu=function() {
 };
 
 ui.registrarComponente("menu",componenteMenu,configComponente.clonar({
-    descripcion:"Menú contextual",
-    grupo:"Formulario",
+    descripcion:"Menú desplegable o contextual",
+    grupo:"Estructura",
     icono:"menu.png"
 }));

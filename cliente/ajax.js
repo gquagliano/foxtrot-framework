@@ -51,7 +51,7 @@ var ajax=function(param) {
         cuerpo=param.parametros,
         contentType="application/x-www-form-urlencoded";
 
-    if(typeof cuerpo instanceof FormData) {
+    if(cuerpo instanceof FormData) {
         //FormData se envia tal cual
         contentType="multipart/form-data";
     } else if(typeof cuerpo=="object") {
@@ -63,7 +63,7 @@ var ajax=function(param) {
         cuerpo=arr.join("&");
     }
 
-    if(param.metodo.toLowerCase()=="get"&&cuerpo) url+"?"+cuerpo;
+    if(param.metodo.toLowerCase()=="get"&&cuerpo) url+="?"+cuerpo;
     xhr.open(param.metodo,url,true);
     if(param.metodo.toLowerCase()=="post"&&contentType) xhr.setRequestHeader("Content-type",contentType);
     xhr.send(cuerpo);

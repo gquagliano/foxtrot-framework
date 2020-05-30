@@ -209,15 +209,6 @@ var expresion=function(expr) {
                     });
                 }
             },
-            ".":{
-                precedencia:8,
-                asociatividad:"i",
-                funcion:function(expresion,indice) {
-                    operadorPredeterminado(expresion,indice,function(a,b) {
-                        return a[b];
-                    });
-                }
-            },
             "*":{
                 precedencia:9,
                 asociatividad:"i",
@@ -546,7 +537,7 @@ var expresion=function(expr) {
     }.bind(this); 
 
     function parametrosFuncion(s) {
-        if(!s instanceof simbolo||s.tipo!=tS.retorno) throw "Error: Argumento inválido.";
+        if(!(s instanceof simbolo)||s.tipo!=tS.retorno) throw "Error: Argumento inválido.";
         var res=[];
         if(s.valor===null) return res;
         if(!(s.valor instanceof Array)) return [s.valor];

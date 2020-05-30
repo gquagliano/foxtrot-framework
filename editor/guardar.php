@@ -73,6 +73,8 @@ RE;
     $estilos=[
         'recursos/css/bootstrap.min.css',
         'recursos/css/foxtrot.css',
+        'recursos/componentes/css/etiqueta.css',
+        'recursos/componentes/css/espaciador.css',
         $rutaApp.'recursos/estilos.css',
         $rutaApp.'cliente/'.$nombre.'.css'
     ];

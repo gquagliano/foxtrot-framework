@@ -79,7 +79,7 @@ var editor=new function() {
                 if(!comp.config.icono) continue;
 
                 var icono=document.crear("<img>")
-                    .atributo("src","iconos/"+comp.config.icono)
+                    .atributo("src","../recursos/componentes/iconos/"+comp.config.icono)
                     .atributo("title",comp.config.descripcion);
                 iconosComponentes[comp.config.nombre]=icono;
 

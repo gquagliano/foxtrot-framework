@@ -75,7 +75,7 @@ body.foxtrot-editor {
     user-select: none;
     background-color: transparent;
     border: none;
-    padding: 4px 8px;
+    padding: 4px;
     font-size: inherit;
     line-height: inherit;
     border-radius: 2px;
@@ -147,6 +147,7 @@ body.foxtrot-editor {
 #foxtrot-barra-principal .custom-select {
     display: inline-block;
     width: 82px;
+    margin-left: 5px;
 }
 #foxtrot-cargando {
     height: 34px;

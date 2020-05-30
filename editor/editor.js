@@ -21,6 +21,7 @@ var editor=new function() {
         iconosComponentes={},
         eventosPausados=false,
         bordesVisibles=false,
+        invisiblesVisibles=true,
         tamanoActual="g";
 
     this.listo=false;
@@ -520,6 +521,20 @@ var editor=new function() {
         } else {
             b.removerClase("foxtrot-bordes");
             btn.removerClase("activo");
+        }
+        return this;
+    };
+
+    this.alternarInvisibles=function() {
+        invisiblesVisibles=!invisiblesVisibles;
+        var b=ui.obtenerDocumento().body,
+            btn=document.querySelector("#foxtrot-btn-alternar-invisibles");
+        if(invisiblesVisibles) {
+            b.agregarClase("foxtrot-mostrar-invisibles");
+            btn.removerClase("activo");
+        } else {
+            b.removerClase("foxtrot-mostrar-invisibles");
+            btn.agregarClase("activo");
         }
         return this;
     };

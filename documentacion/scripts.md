@@ -26,7 +26,17 @@ Construye y compila todos los archivos cliente (js, html y css) de la aplicació
 
     php construir-embebible.php nombre_aplicacion
 
-## Requerimientos
+### Requerimientos
 
 - Java (JRE), disponible en PATH
 - Google Closure https://github.com/google/closure-compiler/wiki/Binary-Downloads
+
+## Más información
+
+contacto@foxtrot.ar
+
+www.foxtrot.ar
+
+Licencia: Apache 2.0
+
+Íconos por Icons8 - https://icons8.com/icons/material-outlined

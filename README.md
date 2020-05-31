@@ -7,7 +7,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) PHP headless.
 
 Persigue los objetivos de:
-- Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones
+- Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones.
 - Permitir la realización con una única herramientas de aplicaciones que en otros frameworks pueden demandar la inclusión de una docena de librerías.
 - Ser extremadamente liviano y rápido, especialmente en dispositivos.
 
@@ -15,15 +15,15 @@ Desarrollado en Argentina, con su API en español.
 
 ## Estructura del proyecto
 
-`fuente` Código fuente del framework.
+`/fuente/` Código fuente del framework.
 
-`desarrollo` Framework compilado + Código fuente de las aplicaciones.
+`/desarrollo/` Framework compilado + Código fuente de las aplicaciones.
 
-`produccion` Framework y aplicaciones compilados.
+`/produccion/` Framework y aplicaciones compilados.
 
-`embeber` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
+`/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
 
-`scripts` Scripts de compilación.
+`/scripts/` Scripts de compilación.
 
 ## Qué estamos desarrollando
 

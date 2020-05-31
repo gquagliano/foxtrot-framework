@@ -1,22 +1,22 @@
 ## Índice
 
-- (Introducción)[../README.md]
-- (Estructura)[estructura.md]
-- (API)[api.md]
-- (Editor)[editor.md]
-- (Scripts de compilación)[scripts.md]
+- [Introducción](../README.md)
+- [Estructura](estructura.md)
+- [API](api.md)
+- [Editor](editor.md)
+- [Scripts de compilación](scripts.md)
 
 ## Estructura general del proyecto
 
-`fuente` Código fuente del framework. Debería existir solo en instalaciones de desarrollo del núcleo del framework.
+`/fuente/` Código fuente del framework. Debería existir solo en instalaciones de desarrollo del núcleo del framework.
 
-`desarrollo` Framework compilado + Código fuente de las aplicaciones. Debería existir en instalaciones de desarrollo de aplicaciones.
+`/desarrollo/` Framework compilado + Código fuente de las aplicaciones. Debería existir en instalaciones de desarrollo de aplicaciones.
 
-`produccion` Framework y aplicaciones compilados. Su contenido es el que se debe implementar en el servidor de producción.
+`/produccion/` Framework y aplicaciones compilados. Su contenido es el que se debe implementar en el servidor de producción.
 
-`embeber` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
+`/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
 
-`scripts` Scripts de compilación.
+`/scripts/` Scripts de compilación.
 
 ## Estructura de una aplicación
 

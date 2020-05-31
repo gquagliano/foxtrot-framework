@@ -1,10 +1,10 @@
 ## Índice
 
-- (Introducción)[../README.md]
-- (Estructura)[estructura.md]
-- (API)[api.md]
-- (Editor)[editor.md]
-- (Scripts de compilación)[scripts.md]
+- [Introducción](../README.md)
+- [Estructura](estructura.md)
+- [API](api.md)
+- [Editor](editor.md)
+- [Scripts de compilación](scripts.md)
 
 ## Scripts de compilación
 

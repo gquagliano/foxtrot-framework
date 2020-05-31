@@ -44,11 +44,12 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando)
-            //    opciones (objeto {valor,etiqueta} cuando tipo=opciones o tipo=multiple)
+            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool)
+            //    opciones (objeto {valor:{etiqueta,clase}} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion
             //    adaptativa (predeterminado true)
+            //    clase
             //}
             color:{
                 etiqueta:"Color",

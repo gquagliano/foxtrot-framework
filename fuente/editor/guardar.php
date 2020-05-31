@@ -126,6 +126,7 @@ RE;
         'cliente/componentes/tabla-fila.js',
         'cliente/componentes/vista.js',
         'cliente/servidor.js',
+        $rutaApp.'cliente/'.$nombre.'.js',
         $rutaApp.'cliente/'.$nombre.'.js'
     ];
 

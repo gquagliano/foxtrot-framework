@@ -44,16 +44,23 @@ class foxtrot {
     }
 
     protected static function definirConstantes() {
+        //TODO Las rutas, a excepción de _raiz, deberían consultarse con métodos, en lugar de usar constantes
         define('_raiz',realpath(__DIR__.'/..').'/');
         define('_servidor',_raiz.'servidor/');
         define('_aplicaciones',_raiz.'aplicaciones/');
     }
 
     protected static function definirConstantesAplicacion() {
+        //TODO Las rutas deberían consultarse con métodos, en lugar de usar constantes
         define('_apl',self::$aplicacion);
         define('_raizAplicacion',_aplicaciones._apl.'/');
         define('_servidorAplicacion',_raizAplicacion.'servidor/');
+        define('_controladoresServidorAplicacion',_raizAplicacion.'servidor/controladores/');
+        define('_modeloAplicacion',_raizAplicacion.'servidor/modelo/');
         define('_clienteAplicacion',_raizAplicacion.'cliente/');
+        define('_controladoresClienteAplicacion',_raizAplicacion.'cliente/controladores/');
+        define('_vistasAplicacion',_raizAplicacion.'cliente/vistas/');
+        define('_recursosAplicacion',_raizAplicacion.'recursos/');
     }
 
     protected static function incluirArchivos() {
@@ -163,7 +170,8 @@ class foxtrot {
             //Devuelve el contenido html de la vista
 
             //Validar que el archivo solicitado exista y no salga del directorio de cliente
-            $dir=realpath(_clienteAplicacion);
+            //TODO Verificar tipo de vista en aplicacion.json
+            $dir=realpath(_vistasAplicacion);
             $rutaPhp=realpath($dir.'/'.$vista.'.php');
             $rutaHtml=realpath($dir.'/'.$vista.'.html');
             if($rutaPhp) {
@@ -182,7 +190,7 @@ class foxtrot {
         if($ctl) {
             if(preg_match('/[^a-z0-9_-]/i',$ctl)) self::error();
 
-            $ruta=_servidorAplicacion.$ctl.'.pub.php';
+            $ruta=_controladoresServidorAplicacion.$ctl.'.pub.php';
             if(!file_exists($ruta)) self::error();
 
             include($ruta);

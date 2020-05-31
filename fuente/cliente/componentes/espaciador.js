@@ -13,6 +13,30 @@
 var componenteEspaciador=function() {    
     this.componente="espaciador";
 
+    this.propiedadesConcretas={
+        "Comportamiento":{
+            tipo:{
+                etiqueta:"Tipo",
+                tipo:"opciones",
+                opciones:{
+                    horizontal:{
+                        etiqueta:"Horizontal",
+                        clase:"horizontal"
+                    },
+                    vertical:{
+                        etiqueta:"Vertical",
+                        clase:"vertical"
+                    }
+                }
+            },
+            borde:{
+                etiqueta:"Borde",
+                tipo:"bool",
+                clase:"borde"
+            }
+        }
+    };
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
@@ -26,7 +50,7 @@ var componenteEspaciador=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<div class='espaciador horizontal'></div>"); 
         this.crearComponente();
         return this;
     };

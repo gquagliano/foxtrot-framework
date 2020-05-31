@@ -1,5 +1,5 @@
-temp/*
-!temp/temp-privado
-temp/temp-privado/*
-!temp/temp-privado/.htaccess
+**/temp/*
+!**/temp/temp-privado
+**/temp/temp-privado/*
+!**/temp/temp-privado/.htaccess
 .vscode

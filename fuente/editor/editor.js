@@ -124,8 +124,35 @@ var editor=new function() {
                     .anexarA(label);
             }
 
-            if(tipo=="?") {
-                //TODO
+            if(tipo=="bool") {
+                //Para las propiedades booleanas utilizaremos un desplegable en lugar de un checkbox
+                var campo=document.crear("<select class='custom-select'>");
+                fila.anexar(campo);
+
+                campo.anexar("<option value=''></option>");
+                campo.anexar("<option value='s'>Si</option>");
+                campo.anexar("<option value='n'>No</option>");
+
+                if(prop.valor===true||prop.valor===false) campo.valor(prop.valor?"s":"n");
+
+                campo.evento("change",function(ev) {
+                    var v=this.valor();
+                    if(v=="s") v=true;
+                    else if(v=="n") v=false;
+                    else v=null;
+                    if(fn) fn.call(editor,componente,tamanoActual,nombre,v);
+                });
+            } else if(tipo=="opciones") {
+                var campo=document.crear("<select class='custom-select'>");
+                fila.anexar(campo);
+
+                //Costruir opciones
+
+                campo.valor(prop.valor);
+
+                campo.evento("change",function(ev) {
+                    if(fn) fn.call(editor,componente,tamanoActual,nombre,this.valor());
+                });
             } else {
                 //Campo de texto como predeterminado
                 

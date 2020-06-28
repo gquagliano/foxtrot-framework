@@ -69,65 +69,17 @@ RE;
 RE;
     }
 
-    //TODO Modificar cuando se compile
+    //TODO Modificar cuando se compile la aplicación
     $estilos=[
-        'recursos/css/bootstrap.min.css',
         'recursos/css/foxtrot.css',
-        'recursos/componentes/css/etiqueta.css',
-        'recursos/componentes/css/espaciador.css',
         $rutaApp.'recursos/estilos.css',
-        $rutaApp.'cliente/'.$nombre.'.css'
+        $rutaApp.'cliente/vistas/'.$nombre.'.css'
     ];
 
-    //TODO Modificar cuando se compile
+    //TODO Modificar cuando se compile la aplicación
     $scripts=[
-        'cliente/util.js',
-        'cliente/expresion.js',
-        'cliente/ajax.js',
-        'cliente/dom.js',
-        'cliente/arrastra.js',
-        'cliente/componente.js',
-        'cliente/controlador.js',
-        'cliente/ui.js',
-        'cliente/componentes/contenedor.js',
-        'cliente/componentes/texto.js',
-        'cliente/componentes/imagen.js',
-        'cliente/componentes/boton.js',
-        'cliente/componentes/icono.js',
-        'cliente/componentes/espaciador.js',
-        'cliente/componentes/fila.js',
-        'cliente/componentes/columna.js',
-        'cliente/componentes/form.js',
-        'cliente/componentes/dialogo.js',
-        'cliente/componentes/menu-lateral.js',
-        'cliente/componentes/pestanas.js',
-        'cliente/componentes/pestana.js',
-        'cliente/componentes/deslizable.js',
-        'cliente/componentes/navegacion.js',
-        'cliente/componentes/arbol.js',
-        'cliente/componentes/etiqueta.js',
-        'cliente/componentes/condicional.js',
-        'cliente/componentes/bucle.js',
-        'cliente/componentes/codigo.js',
-        'cliente/componentes/importar.js',
-        'cliente/componentes/campo.js',
-        'cliente/componentes/desplegable.js',
-        'cliente/componentes/buscador.js',
-        'cliente/componentes/checkbox.js',
-        'cliente/componentes/opciones.js',
-        'cliente/componentes/alternar.js',
-        'cliente/componentes/fecha.js',
-        'cliente/componentes/hora.js',
-        'cliente/componentes/agenda.js',
-        'cliente/componentes/menu.js',
-        'cliente/componentes/archivo.js',
-        'cliente/componentes/tabla.js',
-        'cliente/componentes/tabla-columna.js',
-        'cliente/componentes/tabla-fila.js',
-        'cliente/componentes/vista.js',
-        'cliente/servidor.js',
-        $rutaApp.'cliente/'.$nombre.'.js',
-        $rutaApp.'cliente/'.$nombre.'.js'
+        'cliente/foxtrot.js',
+        $rutaApp.'cliente/vistas/'.$nombre.'.js'
     ];
 
     if($cordova) $scrits[]='cordova.js';

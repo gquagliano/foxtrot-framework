@@ -16,7 +16,6 @@ foxtrot::inicializar();
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../recursos/css/foxtrot.css">
     <link rel="stylesheet" href="editor.css">
     <title>Editor de vistas</title>
@@ -62,61 +61,8 @@ foxtrot::inicializar();
             });
         };
     </script>
-    
-    <!-- Eventualmente, todo esto estará compilado en un solo script con Closure, y los css combinados en un solo archivo -->
 
-    <script src="../cliente/util.js"></script>
-    <script src="../cliente/expresion.js"></script>
-    <script src="../cliente/ajax.js"></script>
-    <script src="../cliente/dom.js"></script>
-    <script src="../cliente/arrastra.js"></script>
-    <script src="../cliente/editable.js"></script>
-    <script src="../cliente/componente.js"></script>
-    <script src="../cliente/controlador.js"></script>
-    <script src="../cliente/ui.js"></script>
-    
-    <script src="../cliente/componentes/contenedor.js"></script>
-    <script src="../cliente/componentes/texto.js"></script>
-    <script src="../cliente/componentes/imagen.js"></script>
-    <script src="../cliente/componentes/boton.js"></script>
-    <script src="../cliente/componentes/icono.js"></script>
-    <script src="../cliente/componentes/espaciador.js"></script>
-
-    <script src="../cliente/componentes/fila.js"></script>
-    <script src="../cliente/componentes/columna.js"></script>
-    <script src="../cliente/componentes/form.js"></script>
-    <script src="../cliente/componentes/dialogo.js"></script>
-    <script src="../cliente/componentes/menu-lateral.js"></script>
-    <script src="../cliente/componentes/pestanas.js"></script>
-    <script src="../cliente/componentes/pestana.js"></script>
-    <script src="../cliente/componentes/deslizable.js"></script>
-    <script src="../cliente/componentes/navegacion.js"></script>
-    <script src="../cliente/componentes/arbol.js"></script>
-
-    <script src="../cliente/componentes/etiqueta.js"></script>
-    <script src="../cliente/componentes/condicional.js"></script>
-    <script src="../cliente/componentes/bucle.js"></script>
-    <script src="../cliente/componentes/codigo.js"></script>
-    <script src="../cliente/componentes/importar.js"></script>
-
-    <script src="../cliente/componentes/campo.js"></script>
-    <script src="../cliente/componentes/desplegable.js"></script>
-    <script src="../cliente/componentes/buscador.js"></script>
-    <script src="../cliente/componentes/checkbox.js"></script>
-    <script src="../cliente/componentes/opciones.js"></script>
-    <script src="../cliente/componentes/alternar.js"></script>
-    <script src="../cliente/componentes/fecha.js"></script>
-    <script src="../cliente/componentes/hora.js"></script>
-    <script src="../cliente/componentes/agenda.js"></script>
-    <script src="../cliente/componentes/menu.js"></script>
-    <script src="../cliente/componentes/archivo.js"></script>
-
-    <script src="../cliente/componentes/tabla.js"></script>    
-    <script src="../cliente/componentes/tabla-columna.js"></script>
-    <script src="../cliente/componentes/tabla-fila.js"></script>
-    
-    <script src="../cliente/componentes/vista.js"></script>
-    
+    <script src="../cliente/foxtrot.js"></script>    
     <script src="editor.js"></script>
     
     <iframe id="foxtrot-marco" src="marco.html"></iframe>

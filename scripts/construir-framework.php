@@ -18,10 +18,10 @@ define('_desarrollo',__DIR__.'/../desarrollo/');
 
 include(__DIR__.'/funciones.php');
 
-////php, html, css y otros recursos (se copian tal cual)
+////php, html, css y otros recursos
 
 //Copiar
-$tipos=['*.php','*.css','*.html','*.jpg','*.png'];
+$tipos=['*.php','*.html','*.jpg','*.png'];
 copiar(_fuente,$tipos,_desarrollo,false);
 copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
 copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');
@@ -29,17 +29,28 @@ copiar(_fuente.'temp/',null,_desarrollo.'temp/');
 copiar(_fuente.'editor/',$tipos,_desarrollo.'editor/');
 copiar(_fuente.'editor/img/',null,_desarrollo.'editor/img/');
 
-//Comprimir css
-//No podemos buscar directamente en /desarrollo/ ya que debemos evitar tocar los css de la aplicación
-buscarArchivos(_desarrollo.'recursos/','*.css','comprimirCss');
-buscarArchivos(_desarrollo.'editor/','*.css','comprimirCss');
+//Combinar todos los archivos css del framework (excepto el editor) y comprimir
+$css='';
+$archivos=buscarArchivos(_fuente.'recursos/','*.css');
+foreach($archivos as $arch) $css.=file_get_contents($arch);
+$ruta=_desarrollo.'recursos/css/foxtrot.css';
+file_put_contents($ruta,$css);
+comprimirCss($ruta);
+
+//Remover el directorio recursos/componentes/css (quedó vacío al combinar los css)
+rmdir(_desarrollo.'recursos/componentes/css');
+
+//Editor
+$ruta=_desarrollo.'editor/editor.css';
+copy(_fuente.'editor/editor.css',$ruta);
+comprimirCss($ruta);
 
 ////Librerías de terceros (se compian tal cual)
 //TOOD
 
 ////js cliente (framework + componentes)
 
-//Compilar archivo combinado
+//Compilar archivo combinado (excepto el editor)
 $archivos=[
     'util.js',
     'dom.js',

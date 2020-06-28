@@ -15,11 +15,11 @@ function copiar($ruta,$filtro,$destino,$rec=true) {
         return;
     }
 
-    if(!$filtro) $filtro='*';
+    if(!$filtro) $filtro='{,.}*';
 
     if(!file_exists($destino)) mkdir($destino);
 
-    $arr=glob($ruta.$filtro);
+    $arr=glob($ruta.$filtro,GLOB_BRACE);
 
     if($rec) $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
 
@@ -34,18 +34,23 @@ function copiar($ruta,$filtro,$destino,$rec=true) {
     }
 }
 
-function buscarArchivos($ruta,$filtro,$funcion) {
+function buscarArchivos($ruta,$filtro,$funcion=null) {
+    $res=[];
+
     $arr=glob($ruta.$filtro);
     $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
     foreach($arr as $archivo) {
         $archivo=basename($archivo);
         if($archivo=='.'||$archivo=='..') continue;
         if(is_dir($ruta.$archivo)) {
-            buscarArchivos($ruta.$archivo.'/',$filtro,$funcion);
+            $res=array_merge($res,buscarArchivos($ruta.$archivo.'/',$filtro,$funcion));
         } else {
-            call_user_func($funcion,$ruta.$archivo);
+            $res[]=$ruta.$archivo;
+            if($funcion) call_user_func($funcion,$ruta.$archivo);
         }
     }
+
+    return $res;
 }
 
 function comprimirCss($archivo) {

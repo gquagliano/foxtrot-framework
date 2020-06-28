@@ -3,3 +3,8 @@
 **/temp/temp-privado/*
 !**/temp/temp-privado/.htaccess
 .vscode
+produccion/*
+desarrollo/*
+!desarrollo/aplicaciones
+!desarrollo/.htaccess
+!desarrollo/config.php

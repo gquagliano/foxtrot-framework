@@ -15,6 +15,8 @@ Construye y compila todos los archivos js y css del framework y del editor, gene
 
     php construir-framework.php
 
+Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
+
 #### construir-apl
 
 Construye y compila todos los archivos cliente (js, html y css) de la aplicación, generando el entorno de producción (`/produccion/`).

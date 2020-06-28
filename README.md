@@ -1,7 +1,5 @@
 Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos. 
 
-**Nota: Dada una reestructuración reciente, el proyecto tal como se encuentra actualmente en el repositorio no funciona (se publicarán los ajustes pendientes en las próximas horas).**
-
 ## Qué es Foxtrot Framework
 
 Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) PHP headless.
@@ -12,6 +10,10 @@ Persigue los objetivos de:
 - Ser extremadamente liviano y rápido, especialmente en dispositivos.
 
 Desarrollado en Argentina, con su API en español.
+
+## Primeros pasos
+
+[Guía de inicio rápido](documentacion/primeros-pasos.md).
 
 ## Estructura del proyecto
 

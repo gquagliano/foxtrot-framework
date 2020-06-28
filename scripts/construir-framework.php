@@ -31,7 +31,11 @@ copiar(_fuente.'editor/img/',null,_desarrollo.'editor/img/');
 
 //Combinar todos los archivos css del framework (excepto el editor) y comprimir
 $css='';
-$archivos=buscarArchivos(_fuente.'recursos/','*.css');
+$archivos=[
+    _fuente.'recursos/css/bootstrap.min.css',
+    _fuente.'recursos/css/foxtrot.css'
+];
+$archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.css'));
 foreach($archivos as $arch) $css.=file_get_contents($arch);
 $ruta=_desarrollo.'recursos/css/foxtrot.css';
 file_put_contents($ruta,$css);

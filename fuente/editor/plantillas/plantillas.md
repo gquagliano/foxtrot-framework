@@ -6,9 +6,9 @@ Código fuente para almacenar una vista autónoma o independiente.
 
 Código fuente para almacenar una vista para Cordova.
 
-El framework redireccionará a esta vista desde `index-cordova.html`, habiendo establecido en Local Storage la clave `_urlBase` con la URL local de la aplicación (ej. `file:///android_asset/www/`.)
+El framework redireccionará a esta vista desde `index-cordova.html`, habiendo establecido en Local Storage la clave `_urlBase` con la url local de la aplicación (ej. `file:///android_asset/www/`.)
 
-Una vista preparada para Cordova cuenta con un mecanismo para cargar los recursos del sistema desde la dirección almacenada en `_urlBase`, ya que la URL raíz no puede determinarse de forma fehaciente e independiente de la plataforma.
+Una vista preparada para Cordova cuenta con un mecanismo para cargar los recursos del sistema desde la dirección almacenada en `_urlBase`, ya que la url raíz no puede determinarse de forma fehaciente e independiente de la plataforma.
 
 `escritorio.html`
 

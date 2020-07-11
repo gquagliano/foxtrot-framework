@@ -15,6 +15,12 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español (¡no _spanglish_!).
 
+## ¿Por qué?
+
+- Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos hace años detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
+- Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
+- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre y gratuita (es cierto que existen editores para Bootstrap muy buenos, pero de código cerrado e incluso algunos te obligan a almacenar tu proyecto en su servidor 🤢).
+
 ## Primeros pasos
 
 [Guía de inicio rápido](documentacion/primeros-pasos.md).
@@ -67,7 +73,11 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 
 **Intérprete lógico-matemático (js)**
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
+Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`. La finalidad del mismo es simplificar el enlace de la UI al código fuente y a los datos, reemplazando código JavaScript por este pequeño lenguaje (por ejemplo, una cadena como `{var}` sería equivalente a agregar código para buscar el elemento del DOM y reemplazar su contenido por la propiedad `var` del controlador de la vista.)
+
+**Intérprete lógico-matemático (php)**
+
+(TODO) El intérprete deberá portarse a php si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
 [Más información sobre el API](documentacion/api.md).
 

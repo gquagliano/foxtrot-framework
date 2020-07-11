@@ -57,7 +57,7 @@ foxtrot::inicializar();
             editor.abrir({
                 ruta:"<?=$_GET['vista']?>",
                 modo:"<?=$_GET['modo']?$_GET['modo']:'independiente'?>",
-                cordova:<?=$_GET['cordova']=='1'?'true':'false'?>
+                cliente:"<?=$_GET['cliente']?$_GET['cliente']:'web'?>"
             });
         };
     </script>

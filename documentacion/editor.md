@@ -27,7 +27,7 @@ La siguiente etapa consistirá en:
 
 **Acceso al editor**
 
-`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?vista=[ruta]&modo=[embebible|independiente]&cordova=[1|0]`
+`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?vista=[ruta]&modo=[embebible|independiente]&cliente=[web|cordova|escritorio]`
 
 Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?vista=aplicaciones/test/cliente/inicio
 
@@ -38,10 +38,12 @@ _modo:_
 - `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, etc., a fin de que sea una vista para insertar dentro de otra.
 - `independiente` Almacenará la vista en un archivo html que podrá abrirse en forma independiente (Predeterminado).
 
-_cordova:_
-- Establecer a `1` para que, al guardar, genere un archivo html compatible con Cordova (Predeterminado, `0`).
+_cliente:_
+- `web` Almacenará la vista para funcionar en un servidor web (Predeterminado).
+- `corcoda` Al guardar, generará un archivo html compatible con Cordova.
+- `escritorio` Al guardar, generará un archivo html compatible con el cliente de escritorio de Foxtrot.
 
-Próximamente, `/desarrollo/editor/` se reemplazará por el gestor y se automatizará el acceso al editor.
+Próximamente, `/desarrollo/editor/` se reemplazará por el gestor completo y se automatizará el acceso al editor.
 
 ## Más información
 

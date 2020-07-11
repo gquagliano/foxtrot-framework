@@ -10,13 +10,7 @@
 
 //TODO Deben exportarse todos los símbolos para poder utilizar --compilation_level ADVANCED con Closure
 
-chdir(__DIR__);
-
-define('_closure','java -jar closure-compiler-v20200517.jar');
-define('_fuente',__DIR__.'/../fuente/');
-define('_desarrollo',__DIR__.'/../desarrollo/');
-
-include(__DIR__.'/funciones.php');
+include(__DIR__.'/configuracion.php');
 
 ////php, html, css y otros recursos
 

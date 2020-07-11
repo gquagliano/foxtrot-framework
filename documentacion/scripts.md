@@ -27,7 +27,9 @@ Construye y compila todos los archivos cliente (js, html y css) de la aplicació
 
 Construye y compila todos los archivos cliente (js, html y css) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php nombre_aplicacion
+    php construir-embebible.php nombre_aplicacion [nombre_vista_inicial]
+
+Nota: Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante el segundo parámetro, a fin de poder alojar en una única aplicación ambas versiones.
 
 ### Requerimientos
 

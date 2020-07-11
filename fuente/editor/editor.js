@@ -26,6 +26,8 @@ var editor=new function() {
 
     this.listo=false;
     this.rutaArchivoAbierto=null;
+    this.modoArchivoAbierto=null;
+    this.clienteArchivoAbierto=null;
 
     this.componenteSeleccionado=null;
 
@@ -445,19 +447,19 @@ var editor=new function() {
     this.guardar=function(cbk) {
         var ruta=this.rutaArchivoAbierto,
             modo=this.modoArchivoAbierto,
-            cordova=this.archivoCordova,
+            cliebte=this.clienteArchivoAbierto,
             previsualizar=false;
         if(util.esIndefinido(cbk)) cbk=null;
         
         document.body.agregarClase("trabajando");
 
         new ajax({
-            url:"guardar.php",
+            url:"operaciones/guardar.php",
             parametros:{
                 previsualizar:previsualizar?"1":"0",
                 ruta:ruta,
                 modo:modo,
-                cordova:cordova?"1":"0",
+                cliente:cliente,
                 html:ui.obtenerHtml(),
                 css:ui.obtenerCss(),
                 json:ui.obtenerJson()
@@ -483,18 +485,18 @@ var editor=new function() {
         opciones=Object.assign({
             ruta:null,
             moodo:"independiente",
-            cordova:false,
+            cliente:"web",
             cbk:null
         },opciones);
         
         this.rutaArchivoAbierto=opciones.ruta;
         this.modoArchivoAbierto=opciones.modo;
-        this.archivoCordova=opciones.cordova;
+        this.clienteArchivoAbierto=opciones.cliente;
         
         document.body.agregarClase("trabajando");
 
         new ajax({
-            url:"abrir.php",
+            url:"operaciones/abrir.php",
             parametros:{
                 ruta:opciones.ruta
             },

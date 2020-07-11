@@ -1,6 +1,8 @@
-Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework) y otros productos. 
+Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework). 
 
 **Nota: No todo lo que se establece en la documentación funciona actualmente.**
+
+**Nota: A raiz de unas modificaciones en curso, el guardado de vistas desde el editor no está en funcionamiento.**
 
 ## Qué es Foxtrot Framework
 
@@ -11,7 +13,7 @@ Persigue los objetivos de:
 - Permitir la realización con una única herramientas de aplicaciones que en otros frameworks pueden demandar la inclusión de una docena de librerías.
 - Ser extremadamente liviano y rápido, especialmente en dispositivos.
 
-Desarrollado en Argentina, con su API en español.
+Desarrollado en Argentina, con su API en español (¡no _spanglish_!).
 
 ## Primeros pasos
 
@@ -68,6 +70,14 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
 
 [Más información sobre el API](documentacion/api.md).
+
+## Colaboraciones
+
+Foxtrot (como compañía detrás de este framework) es solo un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad toda; es decir, seremos _usuarios_, no _dueños_, de Foxtrot Framework.
+
+Por lo tanto, toda colaboración es bienvenida y muy apreciada. Si este proyecto te parece una buena propuesta, sentite libre de colaborar. Solo pedimos código limpio y simple, respetando los estilos del código preexistente en cuanto a formato y nomenclatura (detallaremos estos requisitos próximamente).
+
+Podés ponerte en contacto con nosotros en contacto@foxtrot.ar para conversar y aclarar todas las dudas acerca del proyecto.
 
 ## Más información
 

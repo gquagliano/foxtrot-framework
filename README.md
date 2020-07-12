@@ -6,7 +6,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 
 ## Qué es Foxtrot Framework
 
-Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) PHP headless.
+Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) PHP _headless_.
 
 Persigue los objetivos de:
 - Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones.
@@ -17,9 +17,10 @@ Desarrollado en Argentina, con su API en español (¡no _spanglish_!).
 
 ## ¿Por qué?
 
-- Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos hace años detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
+- Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
 - Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
-- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre y gratuita (es cierto que existen editores para Bootstrap muy buenos, pero de código cerrado e incluso algunos te obligan a almacenar tu proyecto en su servidor 🤢).
+- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre y gratuita. Es cierto que existen editores para Bootstrap muy buenos, pero de código cerrado; lo que es peor, algunos te obligan a almacenar tu proyecto en su servidor 🤢.
+- Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
 
 ## Primeros pasos
 
@@ -43,9 +44,11 @@ Desarrollado en Argentina, con su API en español (¡no _spanglish_!).
 
 ![](documentacion/editor.jpg)
 
-Editor de vistas WYSIWYG. Almacena la vista lista para mostrar en html/css, pero sin perder la relación entre elementos del DOM y los objetos del framework.
+Editor de vistas WYSIWYG. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
-Próximamente, no solo será un editor, sino que se desarrollará un gestor interactivo de vistas, controladores, configuración, modelo de datos y demás recursos.
+El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc.), variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
+
+En el futuro, no solo será un editor, sino que se desarrollará un gestor interactivo de vistas, controladores, configuración, modelo de datos y demás recursos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
 
 [Más información sobre el editor](documentacion/editor.md).
 
@@ -57,7 +60,7 @@ El framework es multi-aplicación, simplificando el desarrollo y mantenimiento d
 
 ### API
 
-El framework está dividido en cliente y servidor, pero desacoplados. Ambos pueden residir en la misma ubicación (el cliente se descarga desde el mismo servidor web) o separados (por ejemplo, cliente local en una aplicación móvil o de escritorio).
+El framework está dividido en cliente y servidor, pero desacoplados: Ambos pueden residir en la misma ubicación (el cliente se descarga desde el mismo servidor web) o separados (por ejemplo, cliente local en una aplicación móvil o de escritorio).
 
 El lado del servidor está compuesto por controladores de servidor y el modelo de datos (incluye ORM propio).
 
@@ -69,19 +72,17 @@ El framework permite una comunicación transparente entre controladores del lado
 
 **Automatización**
 
-(Idea/TODO) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones php/js para procesos específicos más complejos.
+(Idea/TODO) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos.
 
 **Compilación**
 
 Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ejecución rápidos, tanto en web como en dispositivos. Es compatible con Cordova y un cliente Windows que se encuentra en desarrollo.
 
-**Intérprete lógico-matemático (js)**
+**Intérprete lógico-matemático (JS)**
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`. La finalidad del mismo es simplificar el enlace de la UI al código fuente y a los datos, reemplazando código JavaScript por este pequeño lenguaje (por ejemplo, una cadena como `{var}` sería equivalente a agregar código para buscar el elemento del DOM y reemplazar su contenido por la propiedad `var` del controlador de la vista.)
+Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`. La finalidad del mismo es simplificar el enlace de la UI al código fuente y a los datos, reemplazando código JS por este pequeño lenguaje (por ejemplo, una cadena como `{var}` sería equivalente a agregar código para buscar el elemento del DOM y reemplazar su contenido por la propiedad `var` del controlador de la vista.)
 
-**Intérprete lógico-matemático (php)**
-
-(TODO) El intérprete deberá portarse a php si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
+El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
 [Más información sobre el API](documentacion/api.md).
 

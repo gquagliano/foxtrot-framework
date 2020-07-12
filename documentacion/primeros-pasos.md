@@ -9,7 +9,7 @@
 
 ## Primeros pasos
 
-1. Debe construirse el código fuente del framework (eventualmente se separarán las versiones de desarrollo y de producción ya construído) utilizando el script `construir-framework` (ver [Scripts de compilación](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso.
+1. Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído.
 
 2. Debe crearse la aplicación en `desarrollo/aplicaciones` (ver [Estructura](estructura.md)). La aplicación `test` puede utilizarse como plantilla, simplemente copiando el contenido del directorio `/desarrollo/aplicaciones/test`.
 
@@ -20,6 +20,8 @@
 5. Puede ejecutarse la aplicación en el navegador web simplemente ingresando a `http://localhost/experimental-foxtrot-framework/desarrollo/` (reemplácese `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
 6. Para construir la aplicación, puede utilizarse el script `construir-apl` (ver [Scripts de compilación](scripts.md)). Luego puede publicarse el contenido del directorio `produccion` directamente en el servidor web.
+
+7. Para construir la aplicación para Cordova, puede utilizarse el script `construir-embebible` (ver [Scripts de compilación](scripts.md)). Luego puede copiarse el contenido del directorio `embeber` directamente al directorio `www` de la aplicación Cordova previamente creada mediante el [cliente de Cordova](https://cordova.apache.org/docs/es/latest/guide/cli/). Ampliaremos los pasos para crear aplicaciones Cordova próximamente.
 
 ## Más información
 

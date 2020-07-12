@@ -35,8 +35,8 @@ Cada aplicación cuenta con los siguientes archivos:
 - `servidor/modelo/*.php` Entidades del modelo de datos.
 - `cliente/` Archivos del lado del cliente de la aplicación.
 - `cliente/aplicacion.js` Controlador principal de la aplicación.
-- `cliente/controladores/` Controladores js de la aplicación.
-- `cliente/vistas/` Archivos html, json y css de las vistas de la aplicación.
+- `cliente/controladores/` Controladores JS de la aplicación.
+- `cliente/vistas/` Archivos HTML, JSON y CSS de las vistas de la aplicación.
 - `cliente/vistas/inicio.html` Vista principal de la aplicación (al menos con el enrutador predeterminado).
 - `recursos/` Otros recursos (imágenes, estilos) de la aplicación.
 - `recursos/estilos.css` Archivo principal de estilos de usuario, se incluye en forma automática (en el futuro, se podrán configurar otros).

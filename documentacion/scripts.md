@@ -11,7 +11,7 @@
 
 #### construir-framework
 
-Construye y compila todos los archivos js y css del framework y del editor, generando el entorno de desarrollo (`/desarrollo/`) desde los archivos fuente (`/fuente/`). Debe ejecutarse tras realizarse modificaciones al framework.
+Construye y compila todos los archivos JS y CSS del framework y del editor, generando el entorno de desarrollo (`/desarrollo/`) desde los archivos fuente (`/fuente/`). Debe ejecutarse tras realizarse modificaciones al framework.
 
     php construir-framework.php
 
@@ -19,13 +19,13 @@ Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son ree
 
 #### construir-apl
 
-Construye y compila todos los archivos cliente (js, html y css) de la aplicación, generando el entorno de producción (`/produccion/`).
+Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
     php construir-apl.php nombre_aplicacion
 
 #### construir-embebible
 
-Construye y compila todos los archivos cliente (js, html y css) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
+Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
     php construir-embebible.php nombre_aplicacion [nombre_vista_inicial]
 

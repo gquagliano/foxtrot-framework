@@ -134,6 +134,18 @@ Tipos de clases (se determina en forma automática según espacio de nombres y a
 - Modelo de datos.
 - Otras clases del del framework (enrutamiento, librerías de terceros, módulos, componentes, etc.).
 
+**ORM**
+
+Si bien en php, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue los siguientes objetivos:
+
+- Abstracción: Mediante el uso de métodos en lugar de cadenas de texto, eliminar o reducir al mínimo el código SQL haciéndolo más abstracto flexible, permitiendo, en el futuro, implementar otros orígenes de datos, ya sean otros motores de bases de datos como cualquier otra fuente (APIs, archivos, etc.).
+- Realizar consultas en español.
+- Convertir las entidades a clases para poder extenderlas, modificando o agregando métodos o verbos que resuelvan tareas comunes, como validaciones.
+
+**Automatización**
+
+(Idea/TODO) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones php/js para procesos específicos más complejos.
+
 ## Más información
 
 contacto@foxtrot.ar

@@ -67,6 +67,10 @@ El lado del cliente está compuesto por controladores de cliente y vistas. Cada 
 
 El framework permite una comunicación transparente entre controladores del lado del cliente y controladores del lado del servidor. El desarrollador puede invocar un método desde uno hacia el otro como si se tratara de un mismo lenguaje.
 
+**Automatización**
+
+(Idea/TODO) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones php/js para procesos específicos más complejos.
+
 **Compilación**
 
 Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ejecución rápidos, tanto en web como en dispositivos. Es compatible con Cordova y un cliente Windows que se encuentra en desarrollo.

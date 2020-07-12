@@ -32,7 +32,7 @@ Cada aplicación cuenta con los siguientes archivos:
 - `servidor/aplicacion.pub.php` Métodos públicos (http) de la clase principal de la aplicación (Opcional).
 - `servidor/controladores/*.php` Controladores.
 - `servidor/controladores/*.pub.php` Métodos públicos (http) de los distintos controladores.
-- `servidor/mdoelo/*.php` Entidades del modelo de datos.
+- `servidor/modelo/*.php` Entidades del modelo de datos.
 - `cliente/` Archivos del lado del cliente de la aplicación.
 - `cliente/aplicacion.js` Controlador principal de la aplicación.
 - `cliente/controladores/` Controladores js de la aplicación.

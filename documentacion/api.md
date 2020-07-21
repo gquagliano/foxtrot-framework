@@ -31,19 +31,19 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
 **JS:**
 
-    servidor.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) (PHP) y devolverá el retorno de la misma al callback
+    servidor.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) en PHP y devolverá el retorno de la misma al callback
         ...
     },1,2,3);
 
-    servidor.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) (PHP)
+    servidor.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) en PHP
 
 **PHP:**
 
-    function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback
+    function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback JS
         return 'Hola';
     }
 
-    cliente::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) (JS)
+    cliente::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) en JS
 
 ### Intérprete lógico-matemático (JS)
 
@@ -91,7 +91,7 @@ El editor realizará este proceso automáticemente.
 
 Nota: En algunos casos, cuando hablamos de _archivo HTML_, puede que su extensión sea en realidad `.php` si se va a implementar en servidor web. De esa forma pueden aprovecharse características del servidor, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código HTML (ejemplo, `<base>`).
 
-[Scripts de compilación](scripts.md).
+Ver: [Scripts de compilación](scripts.md).
 
 **Cordova:**
 

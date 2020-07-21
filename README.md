@@ -6,25 +6,25 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 
 ## Qué es Foxtrot Framework
 
-Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) PHP _headless_.
+Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) _headless_ en PHP.
 
 Persigue los objetivos de:
 - Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones.
 - Permitir la realización con una única herramientas de aplicaciones que en otros frameworks pueden demandar la inclusión de una docena de librerías.
 - Ser extremadamente liviano y rápido, especialmente en dispositivos.
 
-Desarrollado en Argentina, con su API en español (¡no _spanglish_!).
+Desarrollado en Argentina, con su API en español.
 
 ## ¿Por qué?
 
 - Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
 - Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
-- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre y gratuita. Es cierto que existen editores para Bootstrap muy buenos, pero de código cerrado; lo que es peor, algunos te obligan a almacenar tu proyecto en su servidor 🤢.
+- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre, gratuita, que no te obligue a almacenar tu código en su _nube_ y que persiga el mismo nivel de integración que Foxtrot.
 - Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
 
 ## Primeros pasos
 
-[Guía de inicio rápido](documentacion/primeros-pasos.md).
+Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
 
 ## Estructura del proyecto
 
@@ -68,7 +68,7 @@ El lado del cliente está compuesto por controladores de cliente y vistas. Cada 
 
 **Comunicación cliente<->servidor transparente**
 
-El framework permite una comunicación transparente entre controladores del lado del cliente y controladores del lado del servidor. El desarrollador puede invocar un método desde uno hacia el otro como si se tratara de un mismo lenguaje.
+El framework permite una comunicación transparente entre controladores del lado del cliente y controladores del lado del servidor. El desarrollador puede invocar un método desde uno hacia el otro como si se tratara de una misma plataforma.
 
 **Automatización**
 
@@ -88,7 +88,7 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 ## Colaboraciones
 
-Foxtrot (como compañía detrás de este framework) es solo un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad toda; es decir, seremos _usuarios_, no _dueños_, de Foxtrot Framework.
+Foxtrot (como compañía detrás de este framework) es solo un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad y que todos los desarrolladores, independientes o competidores, puedan sacar provecho de esta herramienta; es decir, seremos _usuarios_, no _dueños_, de Foxtrot Framework. Esto responde a un deseo más profundo de levantar la calidad general del software y que la competencia sea por realizar el mejor trabajo de ingeniería y por dar el mejor servicio al cliente.
 
 Por lo tanto, toda colaboración es bienvenida y muy apreciada. Si este proyecto te parece una buena propuesta, sentite libre de colaborar. Solo pedimos código limpio y simple, respetando los estilos del código preexistente en cuanto a formato y nomenclatura (detallaremos estos requisitos próximamente).
 

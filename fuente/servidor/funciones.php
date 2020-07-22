@@ -82,3 +82,16 @@ function mime($ruta) {
     if(!array_key_exists($ext,$tipos)) return 'text/plain';
     return $tipos[$ext];
 }
+
+/**
+ * Alias de str_replace() donde $arr es un array asociativo.
+ */
+function str_replace_array($arr,$cadena) {
+    $a=[];
+    $b=[];
+    foreach($arr as $c=>$v) {
+        $a[]=$c;
+        $b[]=$v;
+    }
+    return str_replace($a,$b,$cadena);
+}

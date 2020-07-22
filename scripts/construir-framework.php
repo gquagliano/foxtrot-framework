@@ -22,6 +22,8 @@ copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');
 copiar(_fuente.'temp/',null,_desarrollo.'temp/');
 copiar(_fuente.'editor/',$tipos,_desarrollo.'editor/');
 copiar(_fuente.'editor/img/',null,_desarrollo.'editor/img/');
+copiar(_fuente.'editor/operaciones/',null,_desarrollo.'editor/operaciones/');
+copiar(_fuente.'editor/plantillas/',null,_desarrollo.'editor/plantillas/');
 
 //Combinar todos los archivos css del framework (excepto el editor) y comprimir
 $css='';
@@ -50,21 +52,19 @@ comprimirCss($ruta);
 
 //Compilar archivo combinado (excepto el editor)
 $archivos=[
-    'util.js',
-    'dom.js',
-    'arrastra.js',
-    'editable.js',
-    'servidor.js',
-    'ajax.js',
-    'componente.js',
-    'controlador.js',
-    'ui.js',
-    'expresion.js',
-    'componentes/**.js'
+    _fuente.'cliente/util.js',
+    _fuente.'cliente/dom.js',
+    _fuente.'cliente/arrastra.js',
+    _fuente.'cliente/editable.js',
+    _fuente.'cliente/servidor.js',
+    _fuente.'cliente/ajax.js',
+    _fuente.'cliente/componente.js',
+    _fuente.'cliente/controlador.js',
+    _fuente.'cliente/ui.js',
+    _fuente.'cliente/expresion.js',
+    _fuente.'cliente/componentes/**.js' //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
 ];
-$arg='';
-foreach($archivos as $arch) $arg.=' "'.escapeshellarg(_fuente.'cliente/'.$arch).'"';
-exec(_closure.' --js_output_file "'.escapeshellarg(_desarrollo.'cliente/foxtrot.js').'" '.$arg);
+compilarJs($archivos,_desarrollo.'cliente/foxtrot.js');
 
 //Editor
-exec(_closure.' --js_output_file "'.escapeshellarg(_desarrollo.'editor/editor.js').'" --js "'.escapeshellarg(_fuente.'editor/editor.js').'"');
+compilarJs(_fuente.'editor/editor.js',_desarrollo.'editor/editor.js');

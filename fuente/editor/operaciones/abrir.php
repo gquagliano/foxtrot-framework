@@ -10,22 +10,21 @@
 
 define('_inc',1);
 
-include(__DIR__.'/../servidor/foxtrot.php');
+include(__DIR__.'/../../servidor/foxtrot.php');
 foxtrot::inicializar();
 
-$ruta=__DIR__.'/../'.$_POST['ruta'];
+$ruta=__DIR__.'/../../'.$_POST['ruta'];
 $nombre=basename($ruta);
 $rutaJson=$ruta.'.json';
 $rutaJs=$ruta.'.js';
 
 if(!file_exists($rutaJs)) {
     //Controlador nuevo
-    file_put_contents($rutaJs,'/**
- * Controlador de la vista '.$nombre.'.
- */
-ui.registrarControlador("'.$nombre.'",function() {
-});
-');
+    $codigo=file_get_contents(__DIR__.'/../plantillas/controlador.js');
+    $codigo=str_replace_array([
+        '{nombre}'=>$nombre
+    ],$codigo);
+    file_put_contents($rutaJs,$codigo);
 }
 
 if(!file_exists($rutaJson)) {

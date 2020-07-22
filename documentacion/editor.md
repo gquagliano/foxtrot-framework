@@ -39,15 +39,15 @@ _ruta:_
 Ruta sin extensión relativa a la raíz del sistema.
 
 _modo:_
-- `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, etc., a fin de que sea una vista para insertar dentro de otra.
+- `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, scripts ni estilos, a fin de que sea una vista para insertar dentro de otra en tiempo de ejecución.
 - `independiente` Almacenará la vista en un archivo HTML que podrá abrirse en forma independiente (Predeterminado).
 
 _cliente:_
 - `web` Almacenará la vista para funcionar en un servidor web (Predeterminado).
-- `corcoda` Al guardar, generará un archivo HTML compatible con Cordova.
+- `cordova` Al guardar, generará un archivo HTML compatible con Cordova.
 - `escritorio` Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
 
-Próximamente, `/desarrollo/editor/` se reemplazará por el gestor completo y se automatizará el acceso al editor.
+En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo y se automatizará el acceso al editor (acceso directo desde el listado de vistas).
 
 ## Más información
 

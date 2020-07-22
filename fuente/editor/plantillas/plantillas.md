@@ -14,6 +14,10 @@ Una vista preparada para Cordova cuenta con un mecanismo para cargar los recurso
 
 Código fuente para almacenar una vista para el cliente de escritorio (por el momento, no tiene diferencias con una vista normal para servidor web).
 
+`controlador.js`
+
+Código predeterminado de nuevos controladores de cliente.
+
 ##### Vista embebible
 
 Las vistas embebibles se almacenan en JSON, por lo que no se requiere una plantilla para las mismas.

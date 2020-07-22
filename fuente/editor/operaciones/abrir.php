@@ -22,7 +22,7 @@ if(!file_exists($rutaJs)) {
     //Controlador nuevo
     $codigo=file_get_contents(__DIR__.'/../plantillas/controlador.js');
     $codigo=str_replace_array([
-        '{nombre}'=>$nombre
+        '{editor_nombre}'=>$nombre
     ],$codigo);
     file_put_contents($rutaJs,$codigo);
 }

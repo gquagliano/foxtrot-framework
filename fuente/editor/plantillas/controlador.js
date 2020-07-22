@@ -1,5 +1,5 @@
 /**
- * Controlador de la vista {$nombre}.
+ * Controlador de la vista {editor_nombre}.
  */
-ui.registrarControlador("{$nombre}",function() {
+ui.registrarControlador("{editor_nombre}",function() {
 });

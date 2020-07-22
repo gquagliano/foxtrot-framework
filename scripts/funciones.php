@@ -60,8 +60,8 @@ function comprimirCss($archivo) {
     $css=preg_replace('#/\*.*?\*/#sm','',$css);    
     //$css=preg_replace('#url\s*?\(\s*?(\'|")(.+?)\1\)#msi','url($2)',$css);
     $css=str_replace(["\r","\n"],'',$css);
-    $css=preg_replace('/([\):;\}\{])[\s]+/m','$1',$css);
-    $css=preg_replace('/[\s]+([\{\(#])/m','$1',$css);
+    $css=preg_replace('/[\s]*([\),>:;\}\{])[\s]+/m','$1',$css);
+    $css=preg_replace('/[\s]+\{/m','{',$css);
     $css=str_replace(';}','}',$css);
 
     file_put_contents($archivo,$css);

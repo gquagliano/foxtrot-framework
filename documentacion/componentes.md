@@ -11,112 +11,77 @@
 
 ## Componentes
 
-### Agenda
-![](img/iconos/agenda.png)
+#### ![](img/iconos/agenda.png) Agenda
 
-### Alternar (campo Si-No)
-![](img/iconos/alternar.png)
+#### ![](img/iconos/alternar.png) Alternar (campo Si-No)
 
-### Árbol
-![](img/iconos/arbol.png)
+#### ![](img/iconos/arbol.png) Árbol
 
-### Archivo (campo de carga de archivo)
-![](img/iconos/archivo.png)
+#### ![](img/iconos/archivo.png) Archivo (campo de carga de archivo)
 
-### Botón (botón o enlace)
-![](img/iconos/boton.png)
+#### ![](img/iconos/boton.png) Botón (botón o enlace)
 
-### Bucle (estructura de control)
-![](img/iconos/bucle.png)
+#### ![](img/iconos/bucle.png) Bucle (estructura de control)
 
-### Buscador (campo de búsqueda)
-![](img/iconos/buscador.png)
+#### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
-### Campo (texto, texto multilínea, numérico)
-![](img/iconos/campo.png)
+#### ![](img/iconos/campo.png) Campo (texto, texto multilínea, numérico)
 
-### Checkbox (campo de opción única o múltiple)
-![](img/iconos/checkbox.png)
+#### ![](img/iconos/checkbox.png) Checkbox (campo de opción única o múltiple)
 
-### Código (HTML)
-![](img/iconos/codigo.png)
+#### ![](img/iconos/codigo.png) Código (HTML)
 
-### Columna
-![](img/iconos/columna.png)
+#### ![](img/iconos/columna.png) Columna
 
-### Columna de tabla
-![](img/iconos/tabla-columna.png)
+#### ![](img/iconos/columna.png) Columna de tabla
 
-### Condicional (estructura de control)
-![](img/iconos/condicional.png)
+#### ![](img/iconos/condicional.png) Condicional (estructura de control)
 
-### Contenedor
-![](img/iconos/contenedor.png)
+#### ![](img/iconos/contenedor.png) Contenedor
 
-### Deslizable
-![](img/iconos/deslizable.png)
+#### ![](img/iconos/deslizable.png) Deslizable
 
-### Desplegable (campo)
-![](img/iconos/desplegable.png)
+#### ![](img/iconos/desplegable.png) Desplegable (campo)
 
-### Diálogo (modal)
-![](img/iconos/dialogo.png)
+#### ![](img/iconos/dialogo.png) Diálogo (modal)
 
-### Espaciador
-![](img/iconos/espaciador.png)
+#### ![](img/iconos/espaciador.png) Espaciador
 
-### Etiqueta (estructura de control)
-![](img/iconos/etiqueta.png)
+#### ![](img/iconos/etiqueta.png) Etiqueta (estructura de control)
 
-### Fecha (campo de selección de fecha)
-![](img/iconos/fecha.png)
+#### ![](img/iconos/fecha.png) Fecha (campo de selección de fecha)
 
-### Fila 
-![](img/iconos/fila.png)
+#### ![](img/iconos/fila.png) Fila 
 
-### Fila de tabla
-![](img/iconos/tabla-fila.png)
+#### ![](img/iconos/fila.png) Fila de tabla
 
-### Formulario
-![](img/iconos/formpng)
+#### ![](img/iconos/form.png) Formulario
 
-### Hora (campo de selección de hora)
-![](img/iconos/hora.png)
+#### ![](img/iconos/hora.png) Hora (campo de selección de hora)
 
-### Ícono (¿FontAwesome?)
-![](img/iconos/icono.png)
+#### ![](img/iconos/icono.png) Ícono (¿FontAwesome?)
 
-### Imagen
-![](img/iconos/imagen.png)
+#### ![](img/iconos/imagen.png) Imagen
 
-### Importar (estructura de control)
-![](img/iconos/importar.png)
+#### ![](img/iconos/importar.png) Importar (estructura de control)
 
-### Menú
-![](img/iconos/menu.png)
+#### ![](img/iconos/menu.png) Menú
 
-### Menú lateral (deslizable)
-![](img/iconos/menu-lateral.png)
+#### ![](img/iconos/menu-lateral.png) Menú lateral (deslizable)
 
-### Navegación (paginado)
-![](img/iconos/navegacion.png)
+#### ![](img/iconos/navegacion.png) Navegación (paginado)
 
-### Opciones (grupo de botones de opción)
-![](img/iconos/opciones.png)
+#### ![](img/iconos/opciones.png) Opciones (grupo de botones de opción)
 
-### Pestaña
-![](img/iconos/pestana.png)
+#### ![](img/iconos/pestana.png) Pestaña
 
-### Pestañas (contenedor de pestañas)
-![](img/iconos/pestanas.png)
+#### ![](img/iconos/pestanas.png) Pestañas (contenedor de pestañas)
 
-### Tabla
-![](img/iconos/tabla.png)
+#### ![](img/iconos/tabla.png) Tabla
 
-### Texto
-![](img/iconos/texto.png)
+#### ![](img/iconos/texto.png) Texto
 
-### Vista
+#### Vista
 
 Este componente es la representación lógica del cuerpo de la vista y no puede insertarse.
 

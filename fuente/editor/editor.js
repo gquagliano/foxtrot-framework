@@ -447,7 +447,7 @@ var editor=new function() {
     this.guardar=function(cbk) {
         var ruta=this.rutaArchivoAbierto,
             modo=this.modoArchivoAbierto,
-            cliebte=this.clienteArchivoAbierto,
+            cliente=this.clienteArchivoAbierto,
             previsualizar=false;
         if(util.esIndefinido(cbk)) cbk=null;
         

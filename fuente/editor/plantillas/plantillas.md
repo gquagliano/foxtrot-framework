@@ -1,4 +1,4 @@
-`autonoma.html`
+`independiente.html`, `independiente.php`
 
 Código fuente para almacenar una vista autónoma o independiente.
 
@@ -18,6 +18,6 @@ Código fuente para almacenar una vista para el cliente de escritorio (por el mo
 
 Código predeterminado de nuevos controladores de cliente.
 
-##### Vista embebible
+`embebible.html`, `embebible.php`
 
-Las vistas embebibles se almacenan en JSON, por lo que no se requiere una plantilla para las mismas.
+Código fuente para almacenar una vista embebible.

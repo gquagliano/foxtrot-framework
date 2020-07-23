@@ -50,6 +50,10 @@ En el futuro, no solo será un editor, sino que se desarrollará un gestor inter
 
 [Más información sobre el editor](documentacion/editor.md).
 
+[Listado de componentes](documentacion/componentes.md).
+
+[Estructura y guía de desarrollo de componentes](documentacion/componentes-estructura.md).
+
 ### Estructura de las aplicaciones
 
 El framework es multi-aplicación, simplificando el desarrollo y mantenimiento de múltiples proyectos en un servidor, tanto en desarrollo como en producción (una única instalación puede servir múltiples aplicaciones).

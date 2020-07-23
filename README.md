@@ -40,7 +40,7 @@ Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
 
 ### Editor
 
-![](documentacion/editor.jpg)
+![](documentacion/img/editor.jpg)
 
 Editor de vistas WYSIWYG. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
@@ -100,4 +100,4 @@ www.foxtrot.ar
 
 Licencia: Apache 2.0
 
-Íconos por Icons8 - https://icons8.com/icons/material-outlined
+Íconos (en su mayoría) por Icons8 - https://icons8.com/icons/material-outlined

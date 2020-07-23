@@ -5,6 +5,8 @@
 - [Estructura](estructura.md)
 - [API](api.md)
 - [Editor](editor.md)
+- [Componentes](editor.md)
+- [Desarrollo de componentes](componentes-estructura.md)
 - [Scripts de compilación](scripts.md)
 
 ## Scripts de compilación

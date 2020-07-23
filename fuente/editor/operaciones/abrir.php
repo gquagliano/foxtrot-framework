@@ -17,6 +17,9 @@ $ruta=__DIR__.'/../../'.$_POST['ruta'];
 $nombre=basename($ruta);
 $rutaJson=$ruta.'.json';
 $rutaJs=$ruta.'.js';
+$rutaHtml=$ruta.'.html';
+if(!file_exists($rutaHtml)) $rutaHtml=$ruta.'.php';
+$rutaCss=$ruta.'.css';
 
 if(!file_exists($rutaJs)) {
     //Controlador nuevo
@@ -44,4 +47,8 @@ if(!file_exists($rutaJson)) {
     exit;
 }
 
-echo file_get_contents($rutaJson);
+echo json_encode([
+    'json'=>file_get_contents($rutaJson),
+    'html'=>file_get_contents($rutaHtml),
+    'css'=>file_get_contents($rutaCss)
+]);

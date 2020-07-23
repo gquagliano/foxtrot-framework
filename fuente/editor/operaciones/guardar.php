@@ -42,8 +42,9 @@ $rutaJson=$ruta.'.json';
 
 $css=$_POST['css'];
 $html=$_POST['html'];
-$json=json_decode($_POST['json']);
-$jsonHtml=str_replace('\'','\\\'',json_encode($json));
+$json=$_POST['json'];
+$jsonObj=json_decode($json);
+$jsonHtml=str_replace('\'','\\\'',$json);
 
 $plantilla='independiente.'.($esPhp?'php':'html');
 if($modo=='embebible') {
@@ -70,9 +71,7 @@ file_put_contents($rutaHtml,$codigo);
 
 file_put_contents($rutaCss,$css);
 
-file_put_contents($rutaJson,json_encode([
-    'json'=>$json
-]));
+file_put_contents($rutaJson,$json);
 
 echo json_encode([
     'estado'=>'ok'

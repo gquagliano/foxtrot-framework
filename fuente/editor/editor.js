@@ -393,14 +393,26 @@ var editor=new function() {
 
         elem.agregarClase("seleccionado");
         this.componenteSeleccionado=comp;
+        
+        if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
+            document.createElement("span")
+                .agregarClase("foxtrot-etiqueta-componente")
+                .html(ui.obtenerComponentes()[this.componenteSeleccionado.componente].config.descripcion)
+                .anexarA(elem);
+        }
 
         construirPropiedades();
 
         return this;
     };
 
+    this.esCuerpo=function(obj) {
+        var c=ui.obtenerCuerpo();
+        return obj==c||(ui.esComponente(obj)&&obj.obtenerElemento()==c);
+    };
+
     this.limpiarSeleccion=function() {
-        ui.obtenerCuerpo().querySelectorAll(".componente").removerClase("seleccionado");
+        ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
         this.componenteSeleccionado=null;
         construirPropiedades();
         return this;
@@ -438,6 +450,7 @@ var editor=new function() {
             .removerClase("seleccionado")
             .removerClase(/^foxtrot-arrastrable-.+/)
             .propiedad("contentEditable",null);
+        temp.querySelectorAll(".foxtrot-etiqueta-componente").remover();
         return temp.innerHTML;
     };
 

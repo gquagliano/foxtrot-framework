@@ -48,6 +48,8 @@ body.foxtrot-editor {
     z-index: 1;
     top: 0;
     background: url(img/fondo.png);
+    padding-top: 1px;
+    outline: none !important;
 }
 .foxtrot-editor .form-control,.foxtrot-editor .custom-select {
     display: block;
@@ -268,6 +270,9 @@ body.trabajando #foxtrot-cargando {
 
 /* Componentes */
 
+.componente {
+    position: relative;
+}
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor.vacio {
     outline: dotted 2px rgba(0, 0, 0, 0.2);
     min-height: 40px;
@@ -277,7 +282,28 @@ body.trabajando #foxtrot-cargando {
     cursor: grab;
 }
 .foxtrot-modo-edicion .componente.seleccionado {
-    outline: 4px solid rgba(255, 0, 64, 0.25) !important;
+    outline: 1px solid rgb(126, 186, 229) !important;
+}
+.foxtrot-etiqueta-componente {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    background-color: #7ebae5d4;
+    font-family: "Montserrat",sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+    color: #fff;
+    line-height: 18px;
+    padding: 0 5px 0 20px;
+    border-bottom-right-radius: 3px;
+    background-image: url(img/asa.png);
+    background-repeat: no-repeat;
+    background-position: 5px 2px;
+}
+.foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {
+    display: block;
 }
 .foxtrot-modo-edicion [contenteditable=true],
 .foxtrot-modo-edicion [contenteditable=true] * {
@@ -287,6 +313,8 @@ body.trabajando #foxtrot-cargando {
     cursor: grab;
 }
 .foxtrot-modo-edicion [contenteditable=true]:focus {
-    outline: none;
-    outline: 4px solid rgba(115, 255, 0, 0.25) !important;
+    outline: 1px solid rgba(115, 255, 0) !important;
+}
+.foxtrot-modo-edicion [contenteditable=true]>.foxtrot-etiqueta-componente {
+    display: none !important;
 }

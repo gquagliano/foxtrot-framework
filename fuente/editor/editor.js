@@ -281,12 +281,36 @@ var editor=new function() {
         },function(ev) {
             ev.stopPropagation();
 
-            //TODO Mostrar el menú contextual con click derecho
-            //TODO Selección de componentes anidados
-
             //TODO Selección múltiple
 
             self.establecerSeleccion(this);
+        })
+        .eventoFiltrado("contextmenu",{
+            clase:"componente"
+        },function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            var arbol=[];
+            ui.abrirMenu([
+                {
+                    etiqueta:"Eliminar",
+                    accion:function() {
+                        ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
+                            self.eliminarComponente(self.componenteSeleccionado.obtenerId());
+                        });
+                    },
+                    habilitado:function() {
+                        return self.componenteSeleccionado?true:false;
+                    },
+                    separador:true
+                },
+                {
+                    etiqueta:"Seleccionar",
+                    submenu:arbol,
+                    habilitado:arbol.length
+                }
+            ]);
         })
         .evento("click",function() {
             self.limpiarSeleccion();

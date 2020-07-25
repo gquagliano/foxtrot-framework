@@ -15,7 +15,8 @@ var ui=new function() {
 
     ////Almacenes y parámetros
 
-    var componentesRegistrados={},
+    var self=this,
+        componentesRegistrados={},
         instanciasComponentes=[],
         instanciasComponentesId={},
         controladores={},
@@ -543,8 +544,145 @@ var ui=new function() {
         return this;
     };
 
-    //TODO Reemplazar alert y confirm por versiones html
+    ////Utilidades
+
+    this.construirDialogo=function(obj) {
+
+    };
+
+    this.abrirDialogo=function(dialogo) {
+
+    };
+
+    this.alerta=function(mensaje,funcion,etiquetaBoton) {
+        //TODO Integración con el plugin de Cordova de Foxtrot
+        //TODO Integración con el cliente de escritorio
+
+
+    };
+
+    this.confirmar=function(mensaje,funcion,etiquetaSi,etiquetaNo) {
+        //TODO Integración con el plugin de Cordova de Foxtrot
+        //TODO Integración con el cliente de escritorio
+
+
+    };
+
+    /**
+     * @callback callbackAccion
+     */
+
+    /**
+     * @callback callbackHabilitado
+     * @returns {boolean}
+     */
+
+    /**
+     * Construye un menú.
+     * @param {Object[]} items - Items del menú.
+     * @param {string} items[].etiqueta - Etiqueta.
+     * @param {callbackAccion) [items[].accion] - Función a ejecutar al seleccionarse la opción.
+     * @param {(callbackHabilitado|boolean)} [items[].habilitado=true] - Estado del item o función a ejecutar para determinar si el item se encuentra habilitado.
+     * @param {boolean} [separador=false] - Determina si el item es seguido de un separador.
+     * @param {Object[]} [submenu] - Items del submenú (admiten las mismas propiedades que items).
+     * @returns {Object}
+     */
+    this.construirMenu=function(items) {
+        //TODO Integración con Cordova
+        //TODO Integración con el cliente de escritorio
+
+        var click=function(item) {
+
+        },
+        abrirSubmenu=function(item) {
+
+        };
+
+        var fn=function(ul,items) {
+            for(var i=0;i<items.length;i++) {
+                var li=document.crear("<li>"),
+                    a=document.crear("<a>");
+
+                a.html(items[i].etiqueta);
+
+                if(items[i].hasOwnProperty("submenu")) {
+                    var ulSubmenu=document.crear("<ul>");
+                    fn(ulSubmenu,items[i].submenu);
+
+                    li.agregarClase("foxtrot-con-submenu");
+                    li.anexar(ulSubmenu);
+                    items[i].elemSubmenu=ulSubmenu;
+                }
+
+                if(items[i].hasOwnProperty("separador")&&items[i].separador) li.agregarClase("foxtrot-menu-separador");
+
+                li.anexar(a);
+                ul.anexar(li);
+                
+                items[i].elem=li;
+                items[i].elemA=a;
+
+                
+            }
+        };
+
+        var menu={
+            elem:document.crear("<ul class='foxtrot-menu foxtrot-menu-oculto'>"),
+            items:items.clonar()
+        };
+
+        fn(menu.elem,menu.items);
+
+        body.anexar(menu.elem);
+
+        return menu;
+    };
+
+    /**
+     * Actualiza el estado de los items del menú.
+     * @param {Object} menu - Menú generado con ui.construirMenu().
+     */
+    this.actualizarMenu=function(menu) {
+        var fn=function(items) {
+            for(var i=0;i<items.length;i++) {
+                if(items[i].hasOwnProperty("habilitado")) {
+                    var v=items[i].habilitado;
+                    if(typeof v==="function") v=v();
+                    if(v) items[i].elem.removerClase("foxtrot-deshabilitado");
+                    else items[i].elem.agregarClase("foxtrot-deshabilitado");
+                }
+                
+                if(items[i].hasOwnProperty("submenu")) fn(items[i].submenu);
+            }
+        };
+
+        fn(menu.items);
+    };
+
+    /**
+     * Abre un menú.
+     * @param {(Object[]|Object)} obj - Array de items de menú o un menú generado con ui.construirMenu().
+     * @param {(Node|Element)} [elem] - Si se especifica, posicionará el menú sobre el elemento; en caso contrario, abrirá un menú contextual.
+     */
+    this.abrirMenu=function(obj,elem) {
+        //TODO Integración con Cordova
+        //TODO Integración con el cliente de escritorio
+
+        if(util.esArray(obj)) {
+            obj=self.construirMenu(obj);
+            obj.eliminar=true;
+        }
+
+        self.actualizarMenu(obj);
+
+        obj.elem.removerClase("foxtrot-menu-oculto")
+            .agregarClase("fade-in");
+
+    };
+
     //TODO Preloader
+
+    ////Inicialización y ejecución del cliente
 
     this.cordova=function() {
         esCordova=true;

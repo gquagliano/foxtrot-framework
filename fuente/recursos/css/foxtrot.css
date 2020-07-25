@@ -15,6 +15,22 @@ picture img {
     width: 100%;
 }
 
+/* Menú y menú contextual */
+
+.foxtrot-menu {
+    position: fixed;
+    background: #fff;
+    z-index: 999999;
+    list-style-type: none;
+    margin: 0;
+    padding: .3rem 0;
+}
+.foxtrot-menu-oculto {
+    display: none;
+}
+
+/* Diálogos */
+
 /* Cordova */
 
 @keyframes cordova-listo {
@@ -25,4 +41,33 @@ picture img {
     display: block!important;
     animation: cordova-listo 1s;
     animation-fill-mode: forwards;
+}
+
+/* Utilidades */
+
+.fade-in {
+    animation: fade-in .1s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in;
+}
+.fade-out {
+    animation: fade-out .1s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in;
+}
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }

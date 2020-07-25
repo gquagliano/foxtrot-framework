@@ -739,7 +739,7 @@
      * Clona el objeto. El parámetro asignar permite asignar o reemplazar propiedades en la nueva instancia.
      */
     Object.prototype.clonar=function(asignar) {
-        var nuevo=Object.assign({},this);
+        var nuevo=Object.assign(util.esArray(this)?[]:{},this);
         if(!util.esIndefinido(asignar)) {
             asignar.forEach(function(prop,val) {
                 nuevo[prop]=val;

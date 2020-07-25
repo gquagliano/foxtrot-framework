@@ -90,7 +90,7 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 ## Colaboraciones
 
-Foxtrot (como compañía detrás de este framework) es solo un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad y que todos los desarrolladores, independientes o competidores, puedan sacar provecho de esta herramienta; es decir, seremos _usuarios_, no _dueños_, de Foxtrot Framework. Esto responde a un deseo más profundo de levantar la calidad general del software y que la competencia sea por realizar el mejor trabajo de ingeniería y por dar el mejor servicio al cliente.
+Foxtrot (como compañía detrás de este repositorio) es un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad y que todos los desarrolladores, independientes o empresas, puedan sacar provecho de esta herramienta; es decir, no seremos los _dueños_ del framework. Esto responde a un deseo más profundo de levantar la calidad general del software y que la competencia sea por realizar el mejor trabajo de ingeniería y por dar el mejor servicio al cliente.
 
 Por lo tanto, toda colaboración es bienvenida y muy apreciada. Si este proyecto te parece una buena propuesta, sentite libre de colaborar. Solo pedimos código limpio y simple, respetando los estilos del código preexistente en cuanto a formato y nomenclatura (detallaremos estos requisitos próximamente).
 
@@ -104,4 +104,4 @@ www.foxtrot.ar
 
 Licencia: Apache 2.0
 
-Íconos (en su mayoría) por Icons8 - https://icons8.com/icons/material-outlined
+Íconos (en su mayoría; algunos son originales) por Icons8 - https://icons8.com/icons/material-outlined

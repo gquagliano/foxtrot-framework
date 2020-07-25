@@ -279,7 +279,7 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {
-    cursor: grab;
+    cursor: pointer;
 }
 .foxtrot-modo-edicion .componente.seleccionado {
     outline: 1px solid rgb(126, 186, 229) !important;
@@ -300,6 +300,7 @@ body.trabajando #foxtrot-cargando {
     border-bottom-right-radius: 3px;
     background-image: url(img/asa.png);
     background-repeat: no-repeat;
+    cursor: grab !important;
     background-position: 5px 2px;
 }
 .foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {

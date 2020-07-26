@@ -17,16 +17,62 @@ picture img {
 
 /* Menú y menú contextual */
 
-.foxtrot-menu {
+.foxtrot-menu, .foxtrot-submenu {
     position: fixed;
     background: #fff;
     z-index: 999999;
     list-style-type: none;
     margin: 0;
-    padding: .3rem 0;
+    padding: 1em 0;
+    border: 1px solid #e8ebf1;
+    font-weight: normal;
+    font-family: Montserrat, sans-serif;
+    white-space: nowrap;
+    width: auto;
+    color: #212529;
+    line-height: 13px;
+    font-size: 13px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
+}
+.foxtrot-menu li, .foxtrot-menu a {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+}
+.foxtrot-submenu {
+    position: absolute;
+    left: 100%;
+    margin-left: -.3em;
+    top: -1em;
+}
+.foxtrot-menu a {
+    color: inherit !important;
+    text-decoration: none !important;
+    padding: .5em 1.4em;
+    display: block;
+    transition: background-color .2s;
+}
+.foxtrot-menu a:hover,
+.foxtrot-menu a:focus,
+.foxtrot-menu a:active {
+    background-color: #e8ebf1;
+}
+.foxtrot-menu .foxtrot-con-submenu>a {
+    background-repeat: no-repeat;
+    background-size: 14px;
+    padding-right: 2.5em;
+    background-position: calc(100% - .5em) .445em;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+");
 }
 .foxtrot-menu-oculto {
     display: none;
+}
+.foxtrot-menu li.foxtrot-deshabilitado>a {
+    opacity: .5;
+    cursor: not-allowed;
 }
 
 /* Diálogos */
@@ -54,6 +100,7 @@ picture img {
     animation: fade-out .1s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
+    pointer-events: none;
 }
 @keyframes fade-in {
     0% {

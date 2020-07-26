@@ -44,6 +44,14 @@ var util={
      */
     esObjeto:function(obj) {
         return typeof obj==="object"&&!util.esArray(obj);
+    },
+
+    /**
+     * Determina si un objeto es un componente.
+     * @param {Object} obj Objeto a evaluar.
+     */
+    esComponente:function(obj) {
+        return obj instanceof componente.cttr();
     }
 };
 

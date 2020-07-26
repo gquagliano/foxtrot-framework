@@ -291,7 +291,27 @@ var editor=new function() {
             ev.preventDefault();
             ev.stopPropagation();
 
+            //TODO Selección múltiple
+
+            self.establecerSeleccion(this);
+
             var arbol=[];
+
+            //Construir árbol de herencia
+            var comp=ui.obtenerInstanciaComponente(this);
+            do {
+                arbol.push({
+                    etiqueta:comp.obtenerConfigComponente().descripcion,
+                    accion:function(comp) {
+                        return function() {
+                            self.establecerSeleccion(comp);
+                        };
+                    }(comp)
+                });
+                comp=comp.obtenerPadre();
+            } while(comp!=null);
+            arbol.reverse();            
+
             ui.abrirMenu([
                 {
                     etiqueta:"Eliminar",
@@ -301,16 +321,18 @@ var editor=new function() {
                         });
                     },
                     habilitado:function() {
-                        return self.componenteSeleccionado?true:false;
+                        return self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)?true:false;
                     },
                     separador:true
                 },
                 {
                     etiqueta:"Seleccionar",
-                    submenu:arbol,
-                    habilitado:arbol.length
+                    submenu:arbol
                 }
-            ]);
+            ],{
+                x:ev.clientX,
+                y:ev.clientY
+            });
         })
         .evento("click",function() {
             self.limpiarSeleccion();
@@ -328,7 +350,11 @@ var editor=new function() {
             } else if(ev.which==46) {
                 //DEL
                 ev.preventDefault();
-                if(self.componenteSeleccionado) self.eliminarComponente(self.componenteSeleccionado.obtenerId());                
+                if(self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)) {
+                    ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
+                        self.eliminarComponente(self.componenteSeleccionado.obtenerId());
+                    });
+                }
             }
         });
     }    
@@ -407,7 +433,7 @@ var editor=new function() {
 
         this.limpiarSeleccion();
         
-        if(obj instanceof componente.cttr()) {
+        if(util.esComponente(obj)) {
             comp=obj;
             elem=comp.obtenerElemento();
         } else {

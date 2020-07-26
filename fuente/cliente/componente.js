@@ -120,6 +120,14 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve el nombre del tipo de componente.
+     * @returns {string}
+     */
+    this.obtenerTipo=function() {
+        return this.componente;
+    };
+
+    /**
      * Devuelve el selector para el elemento.
      */
     this.obtenerSelector=function() {
@@ -155,6 +163,14 @@ var componente=new function() {
         return this.arrastrable;
     };
 
+    /**
+     * Devuelve el componente padre.
+     * @returns {(Object|null)}
+     */
+    this.obtenerPadre=function() {
+        return this.padre;
+    };
+
     ////Gestión de la instancia
 
     /**
@@ -163,6 +179,7 @@ var componente=new function() {
     Object.prototype.esComponente=function() {
         return this.cttr()==componente.cttr();
     };
+    
 
     /**
      * Fabrica una instancia de un componente concreto dada su función.
@@ -599,6 +616,16 @@ var componente=new function() {
         editor.pausarEventos(false);       
 
         return this;
+    };
+
+    ////Utilidades
+
+    /**
+     * Devuelve la configuración del tipo de componente.
+     * @returns {Object}
+     */
+    this.obtenerConfigComponente=function() {
+        return ui.obtenerComponentes()[this.componente].config;
     };
 };
 

@@ -32,7 +32,8 @@ var ui=new function() {
             xs:0
         },
         urlBase=null,
-        esCordova=false;
+        esCordova=false,
+        menuAbierto=null;
 
     ////Elementos del dom
 
@@ -557,15 +558,35 @@ var ui=new function() {
     this.alerta=function(mensaje,funcion,etiquetaBoton) {
         //TODO Integración con el plugin de Cordova de Foxtrot
         //TODO Integración con el cliente de escritorio
-
-
+        alert(mensaje);
+        if(typeof funcion==="function") funcion();
     };
 
     this.confirmar=function(mensaje,funcion,etiquetaSi,etiquetaNo) {
         //TODO Integración con el plugin de Cordova de Foxtrot
         //TODO Integración con el cliente de escritorio
+        if(confirm(mensaje)&&typeof funcion==="function") funcion();
+    };
 
-
+    var abrirElementoMenu=function(elem) {
+        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
+        elem.removerClase("foxtrot-menu-oculto fade-out")
+            .agregarClase("fade-in");            
+    };
+    
+    var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar) {
+        elem.removerClase("fade-in")
+            .agregarClase("fade-out");
+    
+        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
+        elem._timeoutAnimMenu=setTimeout(function() {
+            if(eliminar) {
+                elem.remover();
+            } else {
+                elem.removerClase("fade-out")
+                    .agregarClase("foxtrot-menu-oculto");
+            }
+        },omitirAnimacion?0:1000);
     };
 
     /**
@@ -592,21 +613,35 @@ var ui=new function() {
         //TODO Integración con el cliente de escritorio
 
         var click=function(item) {
-
+            if(item.hasOwnProperty("accion")) item.accion();
+            self.cerrarMenu(menuAbierto);
+        },
+        toque=function(item) {
+            if(item.hasOwnProperty("elemSubmenu")) {
+                abrirSubmenu(item);
+            } else {
+                click(item);
+            }
         },
         abrirSubmenu=function(item) {
-
+            //TODO Posicionamiento según el espacio disponible
+            if(!item.hasOwnProperty("elemSubmenu")) return;
+            abrirElementoMenu(item.elemSubmenu);
+        },
+        cerrarSubmenu=function(item) {
+            if(!item.hasOwnProperty("elemSubmenu")) return;
+            cerrarElementoMenu(item.elemSubmenu);
         };
 
         var fn=function(ul,items) {
             for(var i=0;i<items.length;i++) {
                 var li=document.crear("<li>"),
-                    a=document.crear("<a>");
+                    a=document.crear("<a href='#'>");
 
                 a.html(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
-                    var ulSubmenu=document.crear("<ul>");
+                    var ulSubmenu=document.crear("<ul class='foxtrot-submenu foxtrot-menu-oculto'>");
                     fn(ulSubmenu,items[i].submenu);
 
                     li.agregarClase("foxtrot-con-submenu");
@@ -622,13 +657,39 @@ var ui=new function() {
                 items[i].elem=li;
                 items[i].elemA=a;
 
-                
+                //Eventos
+
+                a.evento("click",function(item) {
+                    return function(ev) {
+                        ev.preventDefault();
+                        click(item);
+                    };
+                }(items[i]))
+                .evento("touchstart",function(item) {
+                    return function(ev) {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        toque(item);
+                    };
+                }(items[i]));
+
+                li.evento("mouseenter",function(item) {
+                    return function() {
+                        abrirSubmenu(item);
+                    };
+                }(items[i]))
+                .evento("mouseleave",function(item) {
+                    return function() {
+                        cerrarSubmenu(item);
+                    };
+                }(items[i]));
             }
         };
 
         var menu={
             elem:document.crear("<ul class='foxtrot-menu foxtrot-menu-oculto'>"),
-            items:items.clonar()
+            items:items.clonar(),
+            eliminar:false
         };
 
         fn(menu.elem,menu.items);
@@ -659,14 +720,49 @@ var ui=new function() {
         fn(menu.items);
     };
 
+    var menuKeyDn=function(ev) {
+        var eventoValido=true;
+        if(ev.which==27) {
+            //ESC
+            self.cerrarMenu(menuAbierto);
+        } else if(ev.which==40) {
+            //Abajo
+            //TODO
+        } else if(ev.which==84) {
+            //Arriba
+            //TODO
+        } else if(ev.which==13) {
+            //Enter
+            //TODO
+        } else {
+            eventoValido=false;
+        }
+        if(eventoValido) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+    };
+
+    var menuMouseUp=function(ev) {
+        self.cerrarMenu(menuAbierto);
+    };
+
+    var removerEventosMenu=function() {
+        doc.removerEvento("keydown",menuKeyDn)
+            .removerEvento("mouseup",menuMouseUp);
+    };
+
     /**
      * Abre un menú.
      * @param {(Object[]|Object)} obj - Array de items de menú o un menú generado con ui.construirMenu().
-     * @param {(Node|Element)} [elem] - Si se especifica, posicionará el menú sobre el elemento; en caso contrario, abrirá un menú contextual.
+     * @param {(Node|Element|Object)} posicion - Si se especifica un elemento del DOM, se posicionará el menú sobre el mismo; en caso contrario, debe especificarse un objeto con las propiedades {x,y}.
      */
-    this.abrirMenu=function(obj,elem) {
+    this.abrirMenu=function(obj,posicion) {
         //TODO Integración con Cordova
         //TODO Integración con el cliente de escritorio
+
+        //Cerrar menú abierto
+        if(menuAbierto) self.cerrarMenu(menuAbierto);
 
         if(util.esArray(obj)) {
             obj=self.construirMenu(obj);
@@ -675,9 +771,42 @@ var ui=new function() {
 
         self.actualizarMenu(obj);
 
-        obj.elem.removerClase("foxtrot-menu-oculto")
-            .agregarClase("fade-in");
+        menuAbierto=obj;
 
+        //Posición
+
+        var x,y;
+        if(util.esElemento(posicion)) {
+            
+        } else {
+            x=posicion.x;
+            y=posicion.y;
+        }
+
+        obj.elem.estilos({
+                left:x,
+                top:y
+            });
+
+        abrirElementoMenu(obj.elem);
+
+        //Eventos
+
+        doc.evento("keydown",menuKeyDn)
+            .evento("mouseup",menuMouseUp);
+    };
+
+    /**
+     * Cierra el menú especificado.
+     * @param {Object} menu - Menú a cerrar (objeto generado con ui.construirMenu).
+     * @param {boolean} [omitirAnimacion=false] - Cierra el menú inmediatamente, sin animaciones.
+     */
+    this.cerrarMenu=function(menu,omitirAnimacion) {
+        if(!menu) return;
+        if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
+        cerrarElementoMenu(menu.elem,omitirAnimacion,menu.eliminar);
+        removerEventosMenu();
+        menuAbierto=null;
     };
 
     //TODO Preloader

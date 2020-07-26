@@ -32,6 +32,7 @@ var componente=new function() {
     this.elemento=null;
     this.contenedor=null;
     this.contenidoEditable=false;
+    this.elementoEditable=null;
     this.arrastrable=true;
     this.inicializado=false;
 
@@ -599,7 +600,8 @@ var componente=new function() {
     this.iniciarEdicion=function(pausar) {   
         if(util.esIndefinido(pausar)) pausar=true;
 
-        this.elemento.iniciarEdicion().focus();
+        var elem=this.elementoEditable?this.elementoEditable:this.elemento;
+        elem.iniciarEdicion().focus();
         
         if(pausar) {
             //Deshabilitar arrastre en todo el árbol
@@ -612,7 +614,8 @@ var componente=new function() {
     };
     
     this.finalizarEdicion=function() {
-        this.elemento.finalizarEdicion();
+        var elem=this.elementoEditable?this.elementoEditable:this.elemento;
+        elem.finalizarEdicion();
 
         //Reestablecer eventos
         this.elemento.pausarArrastreArbol(false);

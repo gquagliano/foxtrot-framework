@@ -23,7 +23,7 @@ picture img {
     z-index: 999999;
     list-style-type: none;
     margin: 0;
-    padding: 1em 0;
+    padding: 10px 0;
     border: 1px solid #e8ebf1;
     font-weight: normal;
     font-family: Montserrat, sans-serif;
@@ -45,13 +45,13 @@ picture img {
 .foxtrot-submenu {
     position: absolute;
     left: 100%;
-    margin-left: -.3em;
-    top: -1em;
+    margin-left: -5px;
+    top: -11px;
 }
 .foxtrot-menu a {
     color: inherit !important;
     text-decoration: none !important;
-    padding: .5em 1.4em;
+    padding: 10px 16px;
     display: block;
     transition: background-color .2s;
 }
@@ -63,15 +63,15 @@ picture img {
 .foxtrot-menu .foxtrot-con-submenu>a {
     background-repeat: no-repeat;
     background-size: 14px;
-    padding-right: 2.5em;
-    background-position: calc(100% - .5em) .445em;
+    padding-right: 32px;
+    background-position: calc(100% - 5px) center;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+");
 }
 .foxtrot-menu-oculto {
     display: none;
 }
 .foxtrot-menu li.foxtrot-deshabilitado>a {
-    opacity: .5;
+    opacity: .3;
     cursor: not-allowed;
 }
 

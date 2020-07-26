@@ -41,7 +41,7 @@ var ui=new function() {
         body=doc.body,
         cuerpo=body,
         estilos,
-        marco;
+        marco=null;
 
     ////Acceso a variables
 
@@ -750,9 +750,15 @@ var ui=new function() {
         self.cerrarMenu(menuAbierto);
     };
 
+    var menuBlur=function(ev) {
+        self.cerrarMenu(menuAbierto);
+    };
+
     var removerEventosMenu=function() {
         doc.removerEvento("keydown",menuKeyDn)
             .removerEvento("mouseup",menuMouseUp);
+        window.removerEvento("blur",menuBlur);
+        if(marco) marco.contentWindow.removerEvento("blur",menuBlur);
     };
 
     /**
@@ -797,6 +803,10 @@ var ui=new function() {
 
         doc.evento("keydown",menuKeyDn)
             .evento("mouseup",menuMouseUp);
+            
+        window.evento("blur",menuBlur);
+
+        if(marco) marco.contentWindow.evento("blur",menuBlur);
     };
 
     /**

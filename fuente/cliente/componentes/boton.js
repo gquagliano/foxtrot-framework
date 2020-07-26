@@ -18,6 +18,7 @@ var componenteBoton=function() {
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+        this.contenidoEditable=true;
         this.inicializarComponente();
         return this;
     };
@@ -26,7 +27,7 @@ var componenteBoton=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<a href='#'>Botón</a>"); 
         this.crearComponente();
         return this;
     };

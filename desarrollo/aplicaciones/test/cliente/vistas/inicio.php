@@ -15,12 +15,12 @@
     <style id="foxtrot-estilos"></style>
   </head>
   <body>
-    <div class="container vacio componente contenedor" data-fxid="2" id="fox2" draggable="true"><div class="texto componente" data-fxid="3" id="fox3" draggable="true"><p>Hola.</p></div></div>
+    <div class="container vacio componente contenedor" data-fxid="2" id="fox2" draggable="true"><a href="#" data-fxid="7" id="fox7" class="componente" draggable="true">Test</a></div><div class="container vacio componente contenedor" data-fxid="5" id="fox5" draggable="true"><div class="texto componente" data-fxid="3" id="fox3" draggable="true"><p>Hola <a href="#" data-fxid="8" id="fox8" class="componente" draggable="true">Botón</a>&nbsp;embebido en el texto.</p></div></div>
     <script src="cliente/foxtrot.js"></script>
     <script src="aplicaciones/test/cliente/vistas/inicio.js"></script>
     <script src="aplicaciones/test/cliente/aplicacion.js"></script>
     <script>
-    ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":3,"nombre":null,"componente":"texto","propiedades":{"color":{"g":"red"}}}],"vista":{"nombre":"inicio","propiedades":{}}}')
+    ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":3,"nombre":null,"componente":"texto","propiedades":{"color":{"g":"red"}}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"boton","propiedades":{}},{"id":8,"nombre":null,"componente":"boton","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
         .ejecutar();
     </script>
   </body>

@@ -13,6 +13,8 @@ define('_inc',1);
 include(__DIR__.'/../../servidor/foxtrot.php');
 foxtrot::inicializar();
 
+header('Content-Type: text/plain; charset=utf-8',true);
+
 $ruta=__DIR__.'/../../'.$_POST['ruta'];
 $nombre=basename($ruta);
 $rutaJson=$ruta.'.json';
@@ -47,8 +49,9 @@ if(!file_exists($rutaJson)) {
     exit;
 }
 
-echo json_encode([
-    'json'=>file_get_contents($rutaJson),
-    'html'=>file_get_contents($rutaHtml),
-    'css'=>file_get_contents($rutaCss)
-]);
+$json=json_decode(file_get_contents($rutaJson));
+
+//El archivo JSON contiene el cuerpo y el JSON de componentes, debemos sumar el CSS
+$json->css=file_get_contents($rutaCss);
+
+echo json_encode($json);

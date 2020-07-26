@@ -13,6 +13,8 @@ define('_inc',1);
 include(__DIR__.'/../../servidor/foxtrot.php');
 foxtrot::inicializar();
 
+header('Content-Type: text/plain; charset=utf-8',true);
+
 /*
 El guardado funcionará de la siguiente manera:
 - Se almacenará el html en un archivo completo independiente, o bien solo el cuerpo de la vista si se cargará en forma dinámica
@@ -71,7 +73,12 @@ file_put_contents($rutaHtml,$codigo);
 
 file_put_contents($rutaCss,$css);
 
-file_put_contents($rutaJson,$json);
+//En el archivo JSON guardamos además del JSON de componentes, una copia del cuerpo HTML de la vista (sin el resto de la estructura de la página) y otros metadatos
+file_put_contents($rutaJson,json_encode([
+    'html'=>$html,
+    'json'=>$json,
+    'version'=>1
+]));
 
 echo json_encode([
     'estado'=>'ok'

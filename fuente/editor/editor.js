@@ -499,7 +499,8 @@ var editor=new function() {
         temp.querySelectorAll("*")  
             .removerClase("seleccionado")
             .removerClase(/^foxtrot-arrastrable-.+/)
-            .propiedad("contentEditable",null);
+            .propiedad("contentEditable",null)
+            .propiedad("draggable",null);
         temp.querySelectorAll(".foxtrot-etiqueta-componente").remover();
         return temp.innerHTML;
     };

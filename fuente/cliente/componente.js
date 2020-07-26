@@ -8,6 +8,11 @@
 "use strict";
 
 /**
+ * Componente concreto.
+ * @typedef Componente
+ */
+
+/**
  * Objeto base de los componentes.
  */
 var componente=new function() {
@@ -26,8 +31,6 @@ var componente=new function() {
     this.nombre=null;
     this.elemento=null;
     this.contenedor=null;
-    this.hijos=null;
-    this.padre=null;
     this.contenidoEditable=false;
     this.arrastrable=true;
     this.inicializado=false;
@@ -216,7 +219,7 @@ var componente=new function() {
         if(this.contenedor) {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
                                                         //.container que es la clase de Bootstrap.
-            if(!this.hijos.length) this.contenedor.agregarClase("vacio");
+            //if(!this.hijos.length) this.contenedor.agregarClase("vacio");
         }
 
         if(this.contenidoEditable) {
@@ -627,6 +630,36 @@ var componente=new function() {
     this.obtenerConfigComponente=function() {
         return ui.obtenerComponentes()[this.componente].config;
     };
+
+    ////Árbol
+    
+    //La jerarquía estará definida exclusivamente por el DOM, no almacenaremos información de las relaciones entre los componentes en el JSON
+
+    /**
+     * Devuelve el componente padre.
+     * @returns {Componente}
+     */
+    this.obtenerPadre=function() {
+        var elem=this.elemento.padre({
+            clase:"componente"
+        });
+        if(!elem) return null;
+        var comp=ui.obtenerInstanciaComponente(elem);
+        return comp;
+    };
+
+    /**
+     * Devuelve un array de componentes hijos.
+     * @returns {Componente[]}
+     */
+    this.obtenerHijos=function() {
+        var hijos=[];
+        this.elemento.hijos().forEach(function(elem) {
+            hijos.push(ui.obtenerInstanciaComponente(elem));
+        });
+        return hijos;
+    };
+    
 };
 
 window["componente"]=componente;

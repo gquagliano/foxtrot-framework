@@ -84,6 +84,16 @@
     };
 
     /**
+     * Devuelve los hijos directos del elemento.
+     * @param {Object} [filtro] - Filtra los elementos resultantes.
+     */
+    Node.prototype.hijos=function(filtro) {
+        var hijos=this.childNodes;
+        if(typeof filtro==="undefined") return hijos;
+        return hijos.filtrar(filtro);
+    };
+
+    /**
      * Devuelve o establece el valor del campo.
      */
     Node.prototype.valor=function(valor) {
@@ -252,8 +262,9 @@
      * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
      */
     Node.prototype.padre=function(filtro) {
-        return this.parentNode;
-        //TODO filtro
+        var elem=this.parentNode;
+        while(!elem.es(filtro)&&elem!=document.body) elem=elem.parentNode;
+        return elem;        
     };
 
     /**

@@ -20,7 +20,7 @@
     <script src="aplicaciones/test/cliente/vistas/inicio.js"></script>
     <script src="aplicaciones/test/cliente/aplicacion.js"></script>
     <script>
-    ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":3,"nombre":null,"componente":"texto","propiedades":{"color":{"g":"red"}}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"boton","propiedades":{}},{"id":8,"nombre":null,"componente":"boton","propiedades":{}},{"id":9,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
+    ui.establecerJson('{"ver":1,"componentes":[{"id":1,"nombre":null,"componente":"vista","propiedades":{}},{"id":2,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":3,"nombre":null,"componente":"texto","propiedades":{"color":{"g":"red"}}},{"id":4,"nombre":null,"componente":"vista","propiedades":{}},{"id":5,"nombre":null,"componente":"contenedor","propiedades":{}},{"id":6,"nombre":null,"componente":"vista","propiedades":{}},{"id":7,"nombre":null,"componente":"boton","propiedades":{}},{"id":8,"nombre":null,"componente":"boton","propiedades":{}},{"id":9,"nombre":null,"componente":"vista","propiedades":{}},{"id":10,"nombre":null,"componente":"vista","propiedades":{}}],"vista":{"nombre":"inicio","propiedades":{}}}')
         .ejecutar();
     </script>
   </body>

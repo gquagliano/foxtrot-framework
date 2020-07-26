@@ -32,7 +32,11 @@ $archivos=[
     _fuente.'recursos/css/foxtrot.css'
 ];
 $archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.css'));
-foreach($archivos as $arch) $css.=file_get_contents($arch);
+foreach($archivos as $arch) {
+    //Excluir css de modo de edición
+    if(preg_match('/\.edicion\.css$/',$arch)) continue;
+    $css.=file_get_contents($arch);
+}
 $ruta=_desarrollo.'recursos/css/foxtrot.css';
 file_put_contents($ruta,$css);
 comprimirCss($ruta);
@@ -40,9 +44,15 @@ comprimirCss($ruta);
 //Remover el directorio recursos/componentes/css (quedó vacío al combinar los css)
 rmdir(_desarrollo.'recursos/componentes/css');
 
-//Editor
+//Css del editor
+$css='';
+$archivos=[
+    _fuente.'editor/editor.css'
+];
+$archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.edicion.css'));
+foreach($archivos as $arch) $css.=file_get_contents($arch);
 $ruta=_desarrollo.'editor/editor.css';
-copy(_fuente.'editor/editor.css',$ruta);
+file_put_contents($ruta,$css);
 comprimirCss($ruta);
 
 ////Librerías de terceros (se compian tal cual)

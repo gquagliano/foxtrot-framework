@@ -612,15 +612,21 @@ var ui=new function() {
         //TODO Integración con Cordova
         //TODO Integración con el cliente de escritorio
 
-        var click=function(item) {
-            if(item.hasOwnProperty("accion")) item.accion();
+        var click=function(item,ev) {
+            if(item.hasOwnProperty("accion")) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                item.accion();
+            }
             self.cerrarMenu(menuAbierto);
         },
-        toque=function(item) {
+        toque=function(item,ev) {
             if(item.hasOwnProperty("elemSubmenu")) {
                 abrirSubmenu(item);
+                ev.preventDefault();
+                ev.stopPropagation();
             } else {
-                click(item);
+                click(item,ev);
             }
         },
         abrirSubmenu=function(item) {
@@ -661,15 +667,12 @@ var ui=new function() {
 
                 a.evento("click",function(item) {
                     return function(ev) {
-                        ev.preventDefault();
-                        click(item);
+                        click(item,ev);
                     };
                 }(items[i]))
                 .evento("touchstart",function(item) {
                     return function(ev) {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        toque(item);
+                        toque(item,ev);
                     };
                 }(items[i]));
 

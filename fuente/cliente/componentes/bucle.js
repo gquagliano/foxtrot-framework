@@ -34,6 +34,7 @@ var componenteBucle=function() {
 
 ui.registrarComponente("bucle",componenteBucle,configComponente.clonar({
     descripcion:"Bucle",
+    etiqueta:"Bucle",
     grupo:"Control",
     icono:"bucle.png"
 }));

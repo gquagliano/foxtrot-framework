@@ -34,5 +34,6 @@ var componenteIcono=function() {
 
 ui.registrarComponente("icono",componenteIcono,configComponente.clonar({
     descripcion:"Ícono",
+    etiqueta:"Ícono",
     icono:"icono.png"
 }));

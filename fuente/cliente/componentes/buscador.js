@@ -34,6 +34,7 @@ var componenteBuscador=function() {
 
 ui.registrarComponente("buscador",componenteBuscador,configComponente.clonar({
     descripcion:"Campo de búsqueda",
+    etiqueta:"Búsqueda",
     grupo:"Formulario",
     icono:"buscador.png"
 }));

@@ -34,6 +34,7 @@ var componentePestanas=function() {
 
 ui.registrarComponente("pestanas",componentePestanas,configComponente.clonar({
     descripcion:"Bloque de pestañas",
+    etiqueta:"Pestañas",
     grupo:"Estructura",
     icono:"pestanas.png"
 }));

@@ -34,6 +34,7 @@ var componenteColumnaTabla=function() {
 
 ui.registrarComponente("tabla-columna",componenteColumnaTabla,configComponente.clonar({
     descripcion:"Columna de tabla",
-    grupo:"Tabla de datos",
+    etiqueta:"Columna",
+    grupo:"Tablas de datos",
     icono:"columna.png"
 }));

@@ -35,5 +35,6 @@ var componenteBoton=function() {
 
 ui.registrarComponente("boton",componenteBoton,configComponente.clonar({
     descripcion:"Botón o enlace",
+    etiqueta:"Botón",
     icono:"boton.png"
 }));

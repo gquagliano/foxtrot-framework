@@ -58,5 +58,6 @@ var componenteEspaciador=function() {
 
 ui.registrarComponente("espaciador",componenteEspaciador,configComponente.clonar({
     descripcion:"Espaciador horizontal o vertical",
+    etiqueta:"Espacio",
     icono:"espaciador.png"
 }));

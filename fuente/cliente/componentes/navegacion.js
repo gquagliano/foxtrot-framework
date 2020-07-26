@@ -33,7 +33,8 @@ var componenteNavegacion=function() {
 };
 
 ui.registrarComponente("navegacion",componenteNavegacion,configComponente.clonar({
-    descripcion:"Navegación",
+    descripcion:"Navegación o paginado",
+    etiqueta:"Navegación",
     grupo:"Estructura",
     icono:"navegacion.png"
 }));

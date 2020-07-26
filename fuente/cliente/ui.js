@@ -852,6 +852,7 @@ var ui=new function() {
 var configComponente={
     nombre: null,
     descripcion: null,
+    etiqueta: null,
     icono: null,
     /**
      * aceptaHijos:

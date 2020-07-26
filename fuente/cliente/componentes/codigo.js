@@ -33,7 +33,8 @@ var componenteCodigo=function() {
 };
 
 ui.registrarComponente("codigo",componenteCodigo,configComponente.clonar({
-    descripcion:"Código HTML",
+    descripcion:"Código",
+    etiqueta:"Código",
     grupo:"Control",
     icono:"codigo.png"
 }));

@@ -34,6 +34,7 @@ var componenteAgenda=function() {
 
 ui.registrarComponente("agenda",componenteAgenda,configComponente.clonar({
     descripcion:"Agenda diaria",
+    etiqueta:"Agenda",
     grupo:"Formulario",
     icono:"agenda.png"
 }));

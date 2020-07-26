@@ -34,6 +34,7 @@ var componenteTabla=function() {
 
 ui.registrarComponente("tabla",componenteTabla,configComponente.clonar({
     descripcion:"Tabla",
-    grupo:"Tabla de datos",
+    etiqueta:"Tabla",
+    grupo:"Tablas de datos",
     icono:"tabla.png"
 }));

@@ -34,6 +34,7 @@ var componenteCampo=function() {
 
 ui.registrarComponente("campo",componenteCampo,configComponente.clonar({
     descripcion:"Campo de texto, número o contraseña",
+    etiqueta:"Campo",
     grupo:"Formulario",
     icono:"campo.png"
 }));

@@ -34,6 +34,7 @@ var componenteMenuLateral=function() {
 
 ui.registrarComponente("menu-lateral",componenteMenuLateral,configComponente.clonar({
     descripcion:"Menú lateral",
+    etiqueta:"Menú lateral",
     grupo:"Estructura",
     icono:"menu-lateral.png"
 }));

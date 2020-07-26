@@ -225,7 +225,9 @@ var componente=new function() {
 
         if(this.contenidoEditable) {
             var t=this;
-            this.elemento.evento("dblclick",function() {
+            this.elemento.evento("dblclick",function(ev) {
+                ev.stopPropagation();
+                
                 t.iniciarEdicion(false);
 
                 var fn=function(e) {

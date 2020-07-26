@@ -34,6 +34,7 @@ var componenteGrupoOpciones=function() {
 
 ui.registrarComponente("opciones",componenteGrupoOpciones,configComponente.clonar({
     descripcion:"Grupo de opciones",
+    etiqueta:"Grupo",
     grupo:"Formulario",
     icono:"opciones.png"
 }));

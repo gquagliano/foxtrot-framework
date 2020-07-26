@@ -34,6 +34,7 @@ var componenteDesplegable=function() {
 
 ui.registrarComponente("desplegable",componenteDesplegable,configComponente.clonar({
     descripcion:"Campo desplegable",
+    etiqueta:"Desplegable",
     grupo:"Formulario",
     icono:"desplegable.png"
 }));

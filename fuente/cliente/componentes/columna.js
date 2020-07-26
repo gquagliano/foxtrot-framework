@@ -69,6 +69,7 @@ var componenteColumna=function() {
 
 ui.registrarComponente("columna",componenteColumna,configComponente.clonar({
     descripcion:"Columna",
+    etiqueta:"Columna",
     grupo:"Estructura",
     icono:"celda.png"
 }));

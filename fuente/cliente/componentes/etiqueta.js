@@ -25,6 +25,7 @@ var componenteEtiqueta=function() {
 
 ui.registrarComponente("etiqueta",componenteEtiqueta,configComponente.clonar({
     descripcion:"Etiqueta",
+    etiqueta:"Etiqueta",
     grupo:"Control",
     icono:"etiqueta.png"
 }));

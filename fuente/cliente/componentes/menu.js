@@ -34,6 +34,7 @@ var componenteMenu=function() {
 
 ui.registrarComponente("menu",componenteMenu,configComponente.clonar({
     descripcion:"Menú desplegable o contextual",
+    etiqueta:"Menú",
     grupo:"Estructura",
     icono:"menu.png"
 }));

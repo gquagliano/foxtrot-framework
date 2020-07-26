@@ -34,6 +34,7 @@ var componenteDialogo=function() {
 
 ui.registrarComponente("dialogo",componenteDialogo,configComponente.clonar({
     descripcion:"Diálogo",
+    etiqueta:"Diálogo",
     grupo:"Estructura",
     icono:"dialogo.png"
 }));

@@ -34,6 +34,7 @@ var componenteCheckbox=function() {
 
 ui.registrarComponente("checkbox",componenteCheckbox,configComponente.clonar({
     descripcion:"Campo de opción",
+    etiqueta:"Opción",
     grupo:"Formulario",
     icono:"checkbox.png"
 }));

@@ -34,6 +34,7 @@ var componenteCondicional=function() {
 
 ui.registrarComponente("condicional",componenteCondicional,configComponente.clonar({
     descripcion:"Condicional",
+    etiqueta:"Condicional",
     grupo:"Control",
     icono:"condicional.png"
 }));

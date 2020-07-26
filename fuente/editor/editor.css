@@ -16,6 +16,11 @@ html {
 body.foxtrot-modo-edicion {
     background-color: #fff;
 }
+body.foxtrot-modo-edicion.foxtrot-bordes {
+    box-shadow: 0 0 0 22px rgb(251, 251, 251);
+    margin-top: 22px !important;
+    margin-bottom: 22px !important;
+}
 body.foxtrot-editor {
     background-color: #fdfdfd;    
     font-family: "Montserrat", sans-serif;
@@ -281,6 +286,7 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor.vacio {
     outline: dotted 2px rgba(0, 0, 0, 0.2);
+    transition: outline .1s;
     min-height: 40px;
 }
 .foxtrot-modo-edicion .componente,
@@ -293,21 +299,27 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-etiqueta-componente {
     display: none;
     position: absolute;
-    left: 0;
-    top: 0;
+    left: -1px;
+    top: -18px;
     z-index: 9999;
     background-color: #7ebae5d4;
     font-family: "Montserrat",sans-serif;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 10px;
     color: #fff;
-    line-height: 18px;
+    line-height: 19px;
+    height: 18px;
     padding: 0 5px 0 20px;
-    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
     background-image: url(img/asa.png);
     background-repeat: no-repeat;
     cursor: grab !important;
     background-position: 5px 2px;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {
     display: block;
@@ -317,11 +329,9 @@ body.trabajando #foxtrot-cargando {
     cursor: text;
 }
 .foxtrot-modo-edicion [contenteditable=true] .componente {
-    cursor: grab;
+    cursor: pointer;
 }
-.foxtrot-modo-edicion [contenteditable=true]:focus {
-    outline: 1px solid rgba(115, 255, 0) !important;
-}
-.foxtrot-modo-edicion [contenteditable=true]>.foxtrot-etiqueta-componente {
-    display: none !important;
+.foxtrot-modo-edicion .componente[contenteditable=true],
+.foxtrot-modo-edicion .componente.seleccionado[contenteditable=true] {
+    outline: 1px solid rgb(213, 229, 126)!important;
 }

@@ -35,6 +35,7 @@ var componenteTexto=function() {
 
 ui.registrarComponente("texto",componenteTexto,configComponente.clonar({
     descripcion:"Texto",
+    etiqueta:"Texto",
     icono:"texto.png",
     aceptaHijos:false
 }));

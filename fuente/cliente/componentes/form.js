@@ -34,6 +34,7 @@ var componenteFormulario=function() {
 
 ui.registrarComponente("form",componenteFormulario,configComponente.clonar({
     descripcion:"Formulario o bloque de contenidos",
+    etiqueta:"Formulario",
     grupo:"Estructura",
     icono:"form.png"
 }));

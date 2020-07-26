@@ -34,6 +34,7 @@ var componenteArchivo=function() {
 
 ui.registrarComponente("archivo",componenteArchivo,configComponente.clonar({
     descripcion:"Campo de carga de archivo",
+    etiqueta:"Archivo",
     grupo:"Formulario",
     icono:"archivo.png"
 }));

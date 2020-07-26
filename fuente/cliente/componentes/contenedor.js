@@ -35,6 +35,7 @@ var componenteContenedor=function() {
 
 ui.registrarComponente("contenedor",componenteContenedor,configComponente.clonar({
     descripcion:"Contenedor",
+    etiqueta:"Contenedor",
     grupo:"Estructura",
     icono:"contenedor.png"
 }));

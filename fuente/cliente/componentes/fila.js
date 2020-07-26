@@ -35,6 +35,7 @@ var componenteFila=function() {
 
 ui.registrarComponente("fila",componenteFila,configComponente.clonar({
     descripcion:"Fila",
+    etiqueta:"Fila",
     grupo:"Estructura",
     icono:"fila.png"
 }));

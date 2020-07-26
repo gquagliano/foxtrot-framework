@@ -447,7 +447,7 @@ var editor=new function() {
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
             document.createElement("span")
                 .agregarClase("foxtrot-etiqueta-componente")
-                .html(ui.obtenerComponentes()[this.componenteSeleccionado.componente].config.descripcion)
+                .html(ui.obtenerComponentes()[this.componenteSeleccionado.componente].config.etiqueta)
                 .anexarA(elem);
         }
 

@@ -40,6 +40,7 @@ var componenteImportar=function() {
 
 ui.registrarComponente("importar",componenteImportar,configComponente.clonar({
     descripcion:"Importar vista o archivo HTML",
+    etiqueta:"Importar",
     grupo:"Control",
     icono:"importar.png"
 }));

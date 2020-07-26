@@ -34,6 +34,7 @@ var componenteArbol=function() {
 
 ui.registrarComponente("arbol",componenteArbol,configComponente.clonar({
     descripcion:"Lista jerárquica (árbol)",
+    etiqueta:"Árbol",
     grupo:"Estructura",
     icono:"arbol.png"
 }));

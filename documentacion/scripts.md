@@ -3,7 +3,7 @@
 - [Introducción](../README.md)
 - [Primeros pasos](primeros-pasos.md)
 - [Estructura](estructura.md)
-- [API](api.md)
+- [Descripción y documentación del API](api.md)
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
@@ -18,6 +18,18 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
     php construir-framework.php
 
 Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
+
+#### crear-apl
+
+Genera una nueva aplicación desde una plantilla.
+
+    php crear-apl.php nombre_aplicacion
+
+#### importar-bd
+
+Genera el modelo de datos a partir de las tablas de una base de datos. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
+
+    php importar-bd.php nombre_aplicacion
 
 #### construir-apl
 

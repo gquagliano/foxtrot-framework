@@ -88,6 +88,8 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 [Más información sobre el API](documentacion/api.md).
 
+[Documentación](api/indice.md).
+
 ## Colaboraciones
 
 Foxtrot (como compañía detrás de este repositorio) es un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad y que todos los desarrolladores, independientes o empresas, puedan sacar provecho de esta herramienta; es decir, no seremos los _dueños_ del framework. Esto responde a un deseo más profundo de levantar la calidad general del software y que la competencia sea por realizar el mejor trabajo de ingeniería y por dar el mejor servicio al cliente.

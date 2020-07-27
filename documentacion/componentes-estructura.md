@@ -3,7 +3,7 @@
 - [Introducción](../README.md)
 - [Primeros pasos](primeros-pasos.md)
 - [Estructura](estructura.md)
-- [API](api.md)
+- [Descripción y documentación del API](api.md)
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)

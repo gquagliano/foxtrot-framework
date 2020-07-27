@@ -5,8 +5,6 @@
 .vscode
 produccion/*
 desarrollo/*
-embeber/*
-produccion/*
 !desarrollo/aplicaciones
 !desarrollo/.htaccess
 !desarrollo/config.php

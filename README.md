@@ -88,7 +88,7 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 [Más información sobre el API](documentacion/api.md).
 
-[Documentación](api/indice.md).
+[Documentación](documentacion/api/indice.md).
 
 ## Colaboraciones
 

@@ -248,6 +248,12 @@ var ui=new function() {
         return this;
     };
 
+    ////Gestión de la aplicación
+
+    this.registrarAplicacion=function(funcion) {
+
+    };    
+
     ////Gestión de componentes
 
     this.generarId=function() {
@@ -331,7 +337,7 @@ var ui=new function() {
      * Devuelve el HTML de la vista.
      */
     this.obtenerHtml=function() {
-        return editor.limpiarHtml(cuerpo.innerHTML);
+        return editor.limpiarHtml(cuerpo.outerHTML);
     };
 
     /**
@@ -379,7 +385,7 @@ var ui=new function() {
      * Inserta el código html en el cuerpo del editor. Este método solo debería utilizarse en modo edición.
      */
     this.reemplazarHtml=function(html) {
-        cuerpo.innerHTML=html;
+        cuerpo.outerHTML=html;
         return this;        
     };
 

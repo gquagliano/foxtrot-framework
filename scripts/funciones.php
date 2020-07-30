@@ -67,7 +67,7 @@ function comprimirCss($archivo) {
     file_put_contents($archivo,$css);
 }
 
-function compilarJs($archivos,$destino) {
+function compilarJs($archivos,$destino,$omitirClosure=false) {
     //Agregaremos el hash del archivo original en el encabezado del archivo compilado a fin de poder omitirlo si el mismo no ha cambiado
     //En caso de tratarse de múltiples archivos, el hash será sobre la concatenación de todos ellos
     if(!is_array($archivos)) $archivos=[$archivos];
@@ -83,9 +83,12 @@ function compilarJs($archivos,$destino) {
     }
     $hash=md5($codigo);
 
-    if(file_exists($destino)&&trim(fgets(fopen($destino,'r')))=='//'.$hash) return;
-
-    exec(_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg);
+    if($omitirClosure) {
+        file_put_contents($destino,$codigo);
+    } else {
+        if(file_exists($destino)&&trim(fgets(fopen($destino,'r')))=='//'.$hash) return;
+        exec(_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg);
+    }
 
     file_put_contents($destino,'//'.$hash.PHP_EOL.file_get_contents($destino));
 }

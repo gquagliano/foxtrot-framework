@@ -12,10 +12,16 @@
 
 include(__DIR__.'/configuracion.php');
 
-$aplicacion=preg_replace('/[^a-z0-9 _\.-]/i','',$argv[1]);
+$opciones=getopt('a::');
+if(!$opciones['a']) {
+    fwrite(STDERR,'El parámetro -a es obligatorio.'.PHP_EOL.PHP_EOL);
+    exit;
+}
+
+$aplicacion=preg_replace('/[^a-z0-9 _\.-]/i','',$opciones['a']);
 define('_dirApl',_desarrollo.'aplicaciones/'.$aplicacion.'/');
 if(!$aplicacion||!is_dir(_dirApl)) {
-    echo 'Aplicación inexistente.'.PHP_EOL.PHP_EOL;
+    fwrite(STDERR,'Aplicación inexistente.'.PHP_EOL.PHP_EOL);
     exit;
 }
 

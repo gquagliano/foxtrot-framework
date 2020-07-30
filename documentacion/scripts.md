@@ -15,7 +15,9 @@
 
 Construye y compila todos los archivos JS y CSS del framework y del editor, generando el entorno de desarrollo (`/desarrollo/`) desde los archivos fuente (`/fuente/`). Debe ejecutarse tras realizarse modificaciones al framework.
 
-    php construir-framework.php
+    php construir-framework.php [-d]
+
+`-d` Depuración: Omite la compilación con Closure a fin de simplificar la depuración.
 
 Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
 
@@ -23,25 +25,25 @@ Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son ree
 
 Genera una nueva aplicación desde una plantilla.
 
-    php crear-apl.php nombre_aplicacion
+    php crear-apl.php -n nombre_aplicacion
 
 #### importar-bd
 
 Genera el modelo de datos a partir de las tablas de una base de datos. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
 
-    php importar-bd.php nombre_aplicacion
+    php importar-bd.php -a nombre_aplicacion
 
 #### construir-apl
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
-    php construir-apl.php nombre_aplicacion
+    php construir-apl.php -a nombre_aplicacion
 
 #### construir-embebible
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php nombre_aplicacion [nombre_vista_inicial]
+    php construir-embebible.php -a nombre_aplicacion [-i nombre_vista_inicial]
 
 Nota: Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante el segundo parámetro, a fin de poder alojar en una única aplicación ambas versiones.
 

@@ -12,6 +12,9 @@
 
 include(__DIR__.'/configuracion.php');
 
+$opciones=getopt('d');
+define('_depuracion',array_key_exists('d',$opciones));
+
 ////php, html, css y otros recursos
 
 //Copiar
@@ -74,7 +77,7 @@ $archivos=[
     _fuente.'cliente/expresion.js',
     _fuente.'cliente/componentes/**.js' //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
 ];
-compilarJs($archivos,_desarrollo.'cliente/foxtrot.js');
+compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
 
 //Editor
-compilarJs(_fuente.'editor/editor.js',_desarrollo.'editor/editor.js');
+compilarJs(_fuente.'editor/editor.js',_desarrollo.'editor/editor.js',_depuracion);

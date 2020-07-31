@@ -513,6 +513,20 @@ var ui=new function() {
     };
 
     /**
+     * Devuelve el listado de controladores disponibles.
+     */
+    this.obtenerControladores=function() {
+        return controladores;
+    };
+
+    /**
+     * Devuelve el listado de controladores instanciados.
+     */
+    this.obtenerInstanciasControladores=function() {
+        return instanciasControladores;
+    };
+
+    /**
      * Busca y devuelve un controlador dado su nombre, creándolo si no existe.
      */
     this.obtenerInstanciaControlador=function(nombre,principal) {

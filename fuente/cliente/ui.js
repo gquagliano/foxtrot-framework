@@ -909,11 +909,13 @@ var ui=new function() {
             var obj=ui.crearControlador(nombreVistaPrincipal,true);
             //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
             //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
-            obj.establecerVista(nombreVistaPrincipal);
-            instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
+            if(obj) {
+                obj.establecerVista(nombreVistaPrincipal);
+                instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
+            }
         }
 
-        
+
     };
 }();
 

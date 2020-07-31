@@ -723,7 +723,10 @@ var componente=new function() {
 
         //Agregar al intérprete el controlador y otros objetos y funciones útiles
         
-        var vars={},
+        var vars={
+                ui:ui,
+                util:util
+            },
             controladores=ui.obtenerInstanciasControladores();
 
         if(controladores) controladores.forEach(function(nombre,obj) {
@@ -752,13 +755,31 @@ var componente=new function() {
         if(typeof manejador==="function") {
             manejador(this,evento);
         } else if(typeof manejador==="string") {
-            //Propiedad del controlador
-            
-            //Método del controlador de servidor
+            var vista=ui.obtenerInstanciaVista(this.nombreVista),
+                ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador());
 
-            //Navegación
+            if(manejador.substring(0,9)=="servidor:") {
+                //Método del controlador de servidor
+                ctl.servidor[manejador.substring(9)]();
+            } else if(manejador.substring(0,3)=="ir:") {
+                //Navegación
+                
+                //URL
+                //TODO
 
+                //Navegación normal
+                //TODO
 
+                //Carga de vista secundaria
+                //TODO
+
+            } else if(manejador.substring(0,6)=="popup:") {
+                //Popup
+            } else {
+                //Propiedad del controlador
+                ctl[manejador](this,evento);
+            }
+            //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
         }
 
         if(procesado) {

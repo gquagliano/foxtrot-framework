@@ -8,7 +8,7 @@
 /**
  * Gestor de comunicación cliente->servidor.
  */
-var servidor=new Proxy(new function() {
+var servidor=new function() {
     this.funcionesError=[];
     this.ajax=[];
     this.url="";
@@ -30,7 +30,7 @@ var servidor=new Proxy(new function() {
         //Valores predeterminados
         opciones=Object.assign({
             metodo:null,
-            controlador:null,
+            controlador:ui.controlador().obtenerNombre(), //Por defecto, el controlador principal
             modelo:null,
             clase:null,
             retorno:null,
@@ -57,21 +57,22 @@ var servidor=new Proxy(new function() {
     };
 
     this.evaluarRespuesta=function(resp,opciones) {
-        var ctl=ui.controlador();
-
         if(!resp||!util.esObjeto(resp)) {
             if(opciones.error) opciones.error.call(ctl);
             return;
         }
 
+        var procesado=false;
+
         //resp.r    Devolver valor directo al callback
-        //resp.m    Invocar el método en el controlador de la vista actual, con los parámetros resp.p
-        //resp.e    Evaluar código arbitrario (¿es seguro? ¿tiene sentido?)
+        //resp.m    Invocar el método en el controlador resp.c, con los parámetros resp.p
+        //resp.e    Evaluar código arbitrario (TODO ¿es seguro? ¿tiene sentido?)
 
         if(resp.hasOwnProperty("r")) {
-            if(opciones.retorno) opciones.retorno.call(ctl,resp.r);
+            if(opciones.retorno) opciones.retorno(resp.r); //TODO usar call()
         } else if(resp.hasOwnProperty("m")) {
             var params=resp.hasOwnProperty("p")?resp.p:[];
+            var ctl=ui.obtenerInstanciaControlador(resp.c);
             if(ctl.hasOwnProperty(resp.m)) ctl[resp.m].apply(ctl,params);
             procesado=true;
         } else if(resp.hasOwnProperty("e")) {
@@ -83,39 +84,48 @@ var servidor=new Proxy(new function() {
             return;
         }
 
-        if(opciones.listo) opciones.listo.call(this,resp); //this debería ser la instancia del controlador
+        if(opciones.listo) opciones.listo(); //TODO usar call()
     };
-}(),{
-    get(target,nombre) {
-        if(target.hasOwnProperty(nombre)) return target[nombre];
 
-        //Los métodos inexistentes serán solicitados al servidor
-        return function() {
-            var args=arguments.aArray(),
-                opc={
-                    controlador:ui.obtenerNombreVistaActual(),
-                    metodo:nombre
-                };
-
-            //Los métodos admiten múltiples formas:
-
-            //servidor.foo()
-            
-            //servidor.foo(opciones)
-            if(args.length==1&&util.esObjeto(args[0])) {
-                opc=Obj.assign(opc,args[0]);
-            } else {
-                //servidor.foo(retorno)
-                if(typeof args[0]=="function") opc.retorno=args.shift();
-                
-                //servidor.foo(retorno,...args)
-                //servidor.foo(...args)
-                if(args.length>0) opc.parametros=args;
+    /**
+     * Genera una instancia de una clase que redirigirá todas las llamadas a métodos al controlador de servidor especificado.
+     * @param {string} controlador - Nombre del controlador.
+     */
+    this.fabricar=function(controlador) {
+        return new Proxy(new function() {    
+        }(),{
+            get(target,nombre) {
+                if(target.hasOwnProperty(nombre)) return target[nombre];
+        
+                //Los métodos inexistentes serán solicitados al servidor
+                return function() {
+                    var args=arguments.aArray(),
+                        opc={
+                            controlador:controlador,
+                            metodo:nombre
+                        };
+        
+                    //Los métodos admiten múltiples formas:
+        
+                    //servidor.foo()
+                    
+                    //servidor.foo(opciones)
+                    if(args.length==1&&util.esObjeto(args[0])) {
+                        opc=Obj.assign(opc,args[0]);
+                    } else {
+                        //servidor.foo(retorno)
+                        if(typeof args[0]=="function") opc.retorno=args.shift();
+                        
+                        //servidor.foo(retorno,...args)
+                        //servidor.foo(...args)
+                        if(args.length>0) opc.parametros=args;
+                    }
+        
+                    servidor.invocarMetodo(opc);
+                }
             }
-
-            target.invocarMetodo(opc);
-        }
-    }
-});
+        });
+    };
+}();
 
 window["servidor"]=servidor;

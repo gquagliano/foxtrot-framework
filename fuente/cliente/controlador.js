@@ -12,6 +12,7 @@
  */
 var controlador=new function() {
     this.nombre=null;
+    this.servidor=null;
 
     ////Acceso a propiedades    
 
@@ -20,6 +21,13 @@ var controlador=new function() {
      */
     this.obtenerNombre=function() {
         return this.nombre;
+    };
+
+    /**
+     * Devuelve el nombre de la instancia.
+     */
+    this.obtenerServidor=function() {
+        return this.servidor;
     };
 
     ////Gestión de la instancia
@@ -41,6 +49,11 @@ var controlador=new function() {
         this.nombre=nombre;
         //Registrar en window.componentes para acceso rápido
         if(nombre) controladores[nombre]=this;
+
+        //Inicializar comunicación con el servidor
+        //(Se realiza aquí ya que el nombre de los controladores de cliente y servidor siempre coinciden)
+        this.servidor=servidor.fabricar(nombre);
+
         return this;
     };
 
@@ -60,7 +73,7 @@ var controlador=new function() {
 
         var obj=new fn;
 
-        obj.nombre=nombre;
+        obj.establecerNombre(nombre);
 
         //Inicializar las propiedades que son objetos (de otro modo, se copiarán las referencias desde el prototipo)
         //obj.hijos=[];

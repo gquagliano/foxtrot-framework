@@ -37,19 +37,19 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
 **JS:**
 
-    servidor.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) en PHP y devolverá el retorno de la misma al callback
+    ctl.servidor.foo(function(respuesta) {           //Invocará ctl::foo(1,2,3) en PHP y devolverá el retorno de la misma al callback
         ...
     },1,2,3);
 
-    servidor.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) en PHP
+    ctl.servidor.bar(1,2,3);                         //Invocará ctl::bar(1,2,3) en PHP
 
 **PHP:**
 
-    function foo($a,$b,$c) {                    //El retorno de la función volverá automáticamente al callback JS
+    function foo($a,$b,$c) {                         //El retorno de la función volverá automáticamente al callback JS
         return 'Hola';
     }
 
-    cliente::bar(1,2,3);                        //Invocará ctl.bar(1,2,3) en JS
+    $ctl->cliente::bar(1,2,3);                       //Invocará ctl.bar(1,2,3) en JS
 
 ### Intérprete lógico-matemático (JS)
 

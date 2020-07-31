@@ -12,6 +12,26 @@ defined('_inc') or exit;
  * Clase base de los controladores.
  */
 class controlador {
+    protected $nombre;
+    protected $cliente;
+
+    function __construct() {
+        $clase=get_called_class();
+        $nombre=substr($clase,strrpos($clase,'\\')+1);
+        $this->nombre=$nombre;
+
+        //Inicializar comunicación con el cliente
+        $this->cliente=new cliente($this->nombre);
+    }
+
+    public function obtenerNombre() {
+        return $this->nombre;
+    }
+
+    public function obtenerCliente() {
+        return $this->cliente;
+    }
+
     public function html($html) {
         return $html;
     }

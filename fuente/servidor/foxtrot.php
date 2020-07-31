@@ -216,6 +216,10 @@ class foxtrot {
         }   
         exit;     
     }
+
+    public static function detener() {
+        exit;
+    }
 }
 
 //Crear una instancia de foxtrot para poder contar con un destructor global

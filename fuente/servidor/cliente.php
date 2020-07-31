@@ -12,6 +12,12 @@ defined('_inc') or exit;
  * Gestor de comunicación servidor->cliente.
  */
 class cliente {
+    protected $controlador;
+
+    function __construct($controlador) {
+        $this->controlador=$controlador;
+    }
+
     /**
      * Envía una respuesta como texto plano al cliente.
      */
@@ -19,12 +25,19 @@ class cliente {
         echo json_encode([
             'r'=>$data
         ]);
+        \foxtrot::detener();
     }
 
-    public static function __callStatic($nombre,$args) {
+    public static function invocar($controlador,$metodo,$args=null) {
         echo json_encode([
-            'm'=>$nombre,
+            'c'=>$controlador,
+            'm'=>$metodo,
             'p'=>$args
         ]);
+        \foxtrot::detener();
+    }
+
+    public function __call($nombre,$args) {
+        cliente::invocar($this->controlador,$nombre,$args);
     }
 }

@@ -685,11 +685,70 @@ expresion.esExpresion=function(obj) {
     return typeof obj==="string"&&obj.trim().length>1&&obj.trim().substr(0,1)=="{"&&obj.trim().substr(-1)=="}";
 };
 
+expresion.variablesGlobales={};
+expresion.funcionesGlobales={};
+
+/**
+ * Establece las variables que estarán siempre disponibles al utilizar expresion.evaluar().
+ * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de variables.
+ */
+expresion.establecerVariablesGlobales=function(obj) {
+    expresion.variablesGlobales=obj;
+    return expresion;
+};
+
+/**
+ * Establece las funciones que estarán siempre disponibles al utilizar expresion.evaluar().
+ * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de funciones.
+ */
+expresion.establecerFuncionesGlobales=function(obj) {
+    expresion.funcionesGlobales=obj;
+    return expresion;
+};
+
 /**
  * Busca y ejecuta todas las expresiones presentes en una cadena. Las llaves pueden escaparse con \{ \} para evitar que una expresión sea evaluada.
+ * @returns {*} Cuando la cadena contenga una única expresión, el valor de retorno puede ser cualquier tipo resultante de la misma. Cuando se trate de una cadena con múltiples expresiones, el retorno siempre será una cadena con las expresiones reemplazadas por sus valores.
  */
 expresion.evaluar=function(cadena) {
-    //TODO
+    if(typeof cadena!=="string") return null;
+
+    var bufer="",
+        enLlave=false,
+        resultado="",
+        valor=null,
+        total=cadena.length,
+        expr=new expresion();
+    
+    expr.establecerVariables(expresion.variablesGlobales);
+    expr.establecerFunciones(expresion.funcionesGlobales);
+
+    for(var i=0;i<=total;i++) {
+        var caracter=cadena[i],
+            anterior=i>0?cadena[i-1]:null;
+
+        //Final de la cadena sin cerrar una llave, descartar completa
+        if(i==total&&enLlave) return null;
+
+        if(enLlave&&caracter=="}"&&anterior!="\\") {
+            //Ejecutar expresión
+            valor=expresion.establecerExpresion(bufer).ejecutar();
+            if(valor!==null) resultado+=valor.toString();            
+
+            bufer="";
+            enLlave=false;
+        } else if((caracter=="{"&&anterior!="\\")||i==total) {
+            //Concatenar tal cual al comenzar una expresión o llegar al final de la cadena
+            resultado+=bufer;
+
+            bufer="";
+            enLlave=true;
+        } else {
+            bufer+=caracter;
+        }
+    }
+    
+    return resultado;
 };
 
 window["expresion"]=expresion;

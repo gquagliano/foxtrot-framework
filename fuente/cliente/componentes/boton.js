@@ -11,17 +11,8 @@
  * Componente concreto Botón.
  */
 var componenteBoton=function() {    
-    this.componente="boton";
-
-    /**
-     * Inicializa la instancia tras ser creada o restaurada.
-     */
-    this.inicializar=function() {
-        if(this.inicializado) return this; 
-        this.contenidoEditable=true;
-        this.inicializarComponente();
-        return this;
-    };
+    this.componente="boton"; 
+    this.contenidoEditable=true;
 
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).

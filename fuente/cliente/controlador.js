@@ -12,7 +12,6 @@
  */
 var controlador=new function() {
     this.nombre=null;
-    this.componente=null;
 
     ////Acceso a propiedades    
 
@@ -21,14 +20,6 @@ var controlador=new function() {
      */
     this.obtenerNombre=function() {
         return this.nombre;
-    };
-
-    this.obtenerComponente=function() {
-        return this.componente;
-    };
-
-    this.vista=function() {
-        return this.obtenerComponente();
     };
 
     ////Gestión de la instancia
@@ -50,13 +41,6 @@ var controlador=new function() {
         this.nombre=nombre;
         //Registrar en window.componentes para acceso rápido
         if(nombre) controladores[nombre]=this;
-        return this;
-    };
-
-    this.establecerVista=function(componente,elemento) {
-        if(util.esIndefinido(elemento)||!elemento) elemento=componente.obtenerElemento();
-        this.componente=componente;
-        componente.establecerElemento(elemento);
         return this;
     };
 
@@ -84,16 +68,6 @@ var controlador=new function() {
 
         return obj;
     };    
-
-    /**
-     * Crea y asigna un nuevo componente vista al controlador.
-     */
-    this.crearVista=function(elem) {
-        if(util.esIndefinido(elem)) elem=null;
-        var vista=ui.crearComponente("vista");
-        this.establecerVista(vista,elem);
-        return this;
-    };
 
     /**
      * Inicializa la instancia (método para sobreescribir).

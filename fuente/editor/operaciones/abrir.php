@@ -36,14 +36,11 @@ if(!file_exists($rutaJson)) {
     //Archivo nuevo
     echo json_encode([
         'json'=>[
-            'ver'=>1,
+            'version'=>1,
             'componentes'=>[],
-            'vista'=>[
-                'nombre'=>$nombre,
-                'propiedades'=>(object)[]
-            ]
+            'nombre'=>$nombre
         ],
-        'html'=>'',
+        'html'=>'<div id="foxtrot-cuerpo"></div>',
         'css'=>''
     ]);
     exit;

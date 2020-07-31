@@ -241,14 +241,14 @@ var editor=new function() {
 
         if(!datos) return;
 
-        if(datos.hasOwnProperty("componente")) {
-            var obj=self.insertarComponente(this,datos.componente);
+        if(datos.hasOwnProperty("insertarComponente")) {
+            var obj=self.insertarComponente(this,datos.insertarComponente);
             self.establecerSeleccion(obj);
             return;
         }
 
-        if(datos.hasOwnProperty("idcomponente")) {
-            self.moverComponente(this,datos.idcomponente);
+        if(datos.hasOwnProperty("idComponente")) {
+            self.moverComponente(this,datos.idComponente);
             return;
         }
     }    
@@ -256,23 +256,15 @@ var editor=new function() {
     function prepararArrastrarYSoltar() {
         var componentes=cuerpoBarraComponentes.querySelectorAll("button");
         for(var i=0;i<componentes.length;i++) {
-            var comp=componentes[i];
+            var comp=componentes[i],
+                nombre=comp.metadato("componente");
             comp.arrastrable({
-                icono:iconosComponentes[comp.metadato("componente")],
+                icono:iconosComponentes[nombre],
                 datos:JSON.stringify({
-                    componente:comp.metadato("componente")
+                    insertarComponente:nombre
                 })
             });
         }
-
-        /*
-        Ahora que la vista es un componente, los demás componentes deben soltarse dentro de la misma, en lugar de en el cuerpo de la página.
-        ui.obtenerCuerpo().crearDestino({
-            drop:componenteSoltado,
-            dragenter:stopPropagation,
-            dragover:stopPropagation,
-            dragleave:stopPropagation
-        });*/
     }    
 
     function establecerEventos() {
@@ -346,7 +338,7 @@ var editor=new function() {
                 self.limpiarSeleccion();
                 
                 //Al deseleccionar todo, mostrar las propiedades de la vista
-                editor.establecerSeleccion(ui.obtenerInstanciaControladorPrincipal().obtenerComponente());
+                editor.establecerSeleccion(ui.obtenerInstanciaVistaPrincipal().obtenerElemento());
             } else if(ev.which==46) {
                 //DEL
                 ev.preventDefault();
@@ -396,7 +388,7 @@ var editor=new function() {
             elem.arrastrable({
                 icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
                 datos:JSON.stringify({
-                    idcomponente:id
+                    idComponente:id
                 })
             });
         }
@@ -407,8 +399,9 @@ var editor=new function() {
     /**
      * Asigna los eventos y prepara todos los componentes existentes (putil luego de reemplazar todo el html de la vista).
      */
-    function prepararComponentesInsertados() {
-        ui.obtenerInstanciasComponentes().forEach(function(comp) {
+    function prepararComponentesInsertados(vista) {
+        var componentes=ui.obtenerInstanciasComponentes(vista);
+        componentes.forEach(function(comp) {
             editor.prepararComponenteInsertado(comp);
         });
     }
@@ -445,8 +438,7 @@ var editor=new function() {
         this.componenteSeleccionado=comp;
         
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
-            document.createElement("span")
-                .agregarClase("foxtrot-etiqueta-componente")
+            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'>")
                 .html(ui.obtenerComponentes()[this.componenteSeleccionado.componente].config.etiqueta)
                 .anexarA(elem);
         }
@@ -571,23 +563,31 @@ var editor=new function() {
                     if(opciones.cbk) {
                         opciones.cbk.call(self,resp);
                     } else {
+                        if(typeof resp.json==="string") resp.json=JSON.parse(resp.json);
+
                         ui.limpiar();
+
+                        var nombre=resp.json.nombre;
+
+                        //Si la vista está en blanco, se debe crear al menos el componente principal
+                        if(!resp.json.componentes.length) resp.json.componentes.push({
+                            componente:"vista"
+                        });
+
                         ui.reemplazarHtml(resp.html);
                         ui.establecerEstilos(resp.css);
                         ui.establecerJson(resp.json);
-
-                        if(typeof resp.json==="string") resp.json=JSON.parse(resp.json);
-
-                        ui.cargarJs("../"+opciones.ruta+".js",function() {
-                            var obj=ui.crearControlador(resp.json.vista.nombre,resp.json.vista.propiedades);
-                            editor.prepararComponenteInsertado(obj.obtenerComponente());
-                        });
+                        
+                        //ui.cargarJs("../"+opciones.ruta+".js",function() {
+                        //});
 
                         ui.ejecutar();
-                        prepararComponentesInsertados();
+
+                        prepararComponentesInsertados(nombre);
+
+                        document.body.removerClase("trabajando");                        
                     }
                 }
-                document.body.removerClase("trabajando");
             }
         });
 
@@ -595,9 +595,9 @@ var editor=new function() {
     };
 
     this.previsualizar=function() {
-        this.guardar(true,function(resp) {
-            window.open(resp.url,"previsualizacion");
-        });
+        //this.guardar(true,function(resp) {
+        //    window.open(resp.url,"previsualizacion");
+        //});
 
         return this;
     };

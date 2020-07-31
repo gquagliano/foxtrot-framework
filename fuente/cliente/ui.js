@@ -33,7 +33,9 @@ var ui=new function() {
         },
         urlBase=null,
         esCordova=false,
-        menuAbierto=null;
+        menuAbierto=null,
+        instanciasVistas={},
+        nombreVistaPrincipal=null;
 
     ////Elementos del dom
 
@@ -43,7 +45,7 @@ var ui=new function() {
         estilos,
         marco=null;
 
-    ////Acceso a variables
+    ////Acceso a variables generales
 
     this.obtenerMarco=function() {
         return marco;
@@ -53,8 +55,11 @@ var ui=new function() {
         return doc;
     };
 
-    this.obtenerCuerpo=function() {
-        return cuerpo;
+    this.obtenerCuerpo=function(vista) {
+        if(typeof vista==="undefined") return cuerpo;
+
+        //Buscar cuerpo de una vista secundaria (embebida)
+        if(instanciasVistas.hasOwnProperty(vista)) return instanciasVistas[vista].obtenerElemento();
     };
 
     this.obtenerElementoEstilos=function() {
@@ -280,13 +285,17 @@ var ui=new function() {
     /**
      * Crea una instancia de un componente dado su nombre.
      */
-    this.crearComponente=function(nombre) {
+    this.crearComponente=function(nombre,vista) {
+        if(typeof vista==="undefined") vista=nombreVistaPrincipal;
+        
         var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn),
-            id=this.generarId();
+            id=vista+"-"+this.generarId();
+        obj.establecerNombreVista(vista);
         obj.establecerId(id);
         
         var i=instanciasComponentes.push(obj);
-        //Índices
+
+        //Índice
         instanciasComponentesId[id]=i-1;
 
         return obj;
@@ -295,7 +304,7 @@ var ui=new function() {
     /**
      * Devuelve las instancias de los componentes existentes.
      */
-    this.obtenerInstanciasComponentes=function() {
+    this.obtenerInstanciasComponentes=function(vista) {
         return instanciasComponentes;
     };
 
@@ -303,11 +312,18 @@ var ui=new function() {
      * Devuelve el ID de un componente dado su ID, instancia, nombre o elemento del DOM.
      */
     function identificarComponente(param) {
-        if(typeof param==="number"||!isNaN(parseInt(param))) return parseInt(param);
-        if(typeof param==="string"&&componentes.hasOwnProperty(param)) return componentes[param];
-        if(typeof param==="object"&&param.esComponente()) return param.obtenerId();
+        if(typeof param=="string"&&instanciasComponentesId.hasOwnProperty(param)) {
+            return instanciasComponentes[instanciasComponentesId[param]].obtenerId();
+        } else if(typeof param==="object"&&param.esComponente()) {
+            return param.obtenerId();
+        } else if(typeof param==="object"&&param.nodeName) { //TODO Agregar Object.esNodo()
+            return param.dato("fxid");
+        }
+
+        //if(typeof param==="number"||!isNaN(parseInt(param))) return parseInt(param);
+        //if(typeof param==="string"&&componentes.hasOwnProperty(param)) return componentes[param];
         //if(param instanceof Node) return param.dato("fxid"); TODO ¿Revisar?
-        if(typeof param==="object"&&param.nodeName) return param.dato("fxid"); //TODO Agregar Object.esNodo()
+        
         return null;
     }
 
@@ -315,8 +331,8 @@ var ui=new function() {
      * Devuelve la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
      */
     this.obtenerInstanciaComponente=function(param) {
-        var id=identificarComponente(param);
-        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
+        var id=identificarComponente(param);    
+        if(!id) return null;    
         return instanciasComponentes[instanciasComponentesId[id]];
     };
 
@@ -325,9 +341,11 @@ var ui=new function() {
      */
     this.eliminarInstanciaComponente=function(param) {
         var id=identificarComponente(param);
-        if(!id||!instanciasComponentesId.hasOwnProperty(id)) return null;
+        if(!id) return this;
+
         delete instanciasComponentes[instanciasComponentesId[id]];
         delete instanciasComponentesId[id];
+        
         return this;
     }
 
@@ -361,12 +379,9 @@ var ui=new function() {
      */
     this.obtenerJson=function() {
         var resultado={
-            ver:1,
+            version:1,
             componentes:[],
-            vista:{
-                nombre:instanciaControladorPrincipal.obtenerNombre(),
-                propiedades:instanciaControladorPrincipal.obtenerPropiedades()
-            }
+            nombre:nombreVistaPrincipal
         };
 
         instanciasComponentes.forEach(function(obj) {
@@ -386,6 +401,8 @@ var ui=new function() {
      */
     this.reemplazarHtml=function(html) {
         cuerpo.outerHTML=html;
+        //Se asume un html con una estructura válida para una vista
+        cuerpo=doc.querySelector("#foxtrot-cuerpo");
         return this;        
     };
 
@@ -394,21 +411,28 @@ var ui=new function() {
      */
     this.establecerJson=function(json) {
         if(typeof json==="string") json=JSON.parse(json);
-        
-        //Preparar componentes        
-        json.componentes.forEach(function(componente) {
-            ui.crearComponente(componente.componente)
-                .establecerId(componente.id)
-                .establecerNombre(componente.nombre)
-                .establecerPropiedades(componente.propiedades)
-                .restaurar();
-        });
 
-        //Preparar controlador
-        var vista=json.vista.nombre;
-        if(controladores.hasOwnProperty(vista)) {
-            this.crearControlador(vista,json.vista.propiedades);
-        }
+        var nombreVista=json.nombre,
+            fn=function(componente) {
+                return ui.crearComponente(componente.componente,nombreVista)
+                    .establecerId(componente.id)
+                    .establecerNombre(componente.nombre)
+                    .establecerPropiedades(componente.propiedades)
+                    .restaurar();
+            };
+
+        //Preparar los componentes
+        json.componentes.forEach(function(componente) {
+            var obj=fn(componente);
+
+            //Almacenar en cache de instancias
+            if(componente.componente=="vista") {
+                instanciasVistas[nombreVista]=obj;
+
+                //Asumir el primer componente vista (debería ser el único) como vista principal
+                if(!nombreVistaPrincipal) nombreVistaPrincipal=nombreVista;
+            }
+        });
 
         return this;  
     };
@@ -416,10 +440,12 @@ var ui=new function() {
     /**
      * Crea la instancia del controlador.
      */
-    this.crearControlador=function(nombre,propiedades) {
-        this.obtenerInstanciaControlador(nombre,true);
-        instanciaControladorPrincipal.inicializar(propiedades);
-        return instanciaControladorPrincipal;
+    this.crearControlador=function(nombre,principal) {
+        if(typeof principal==="undefined") principal=false;
+
+        var obj=this.obtenerInstanciaControlador(nombre,principal);        
+        if(obj) obj.inicializar();
+        return obj;
     };
 
     /**
@@ -428,11 +454,41 @@ var ui=new function() {
     this.limpiar=function() {
         instanciasComponentes=[];
         instanciasComponentesId={};
+        instanciasVistas={};
+        nombreVistaPrincipal=null;
         controladores={};
         instanciasControladores={};
         instanciaControladorPrincipal=null;
         id=1;
         return this;
+    };
+
+    ////Vistas
+
+    //Cuando hablamos de vistas nos referimos al componente "padre" que es la representación lógica de la maquetación de la misma
+    //Este componente puede utilizarse para acceder al DOM o a estilos. Para la lógica de la aplicación, debe utilizarse el controlador.
+    //Asimismo, la recomendación es acceder a la vista a través del controlador; los siguientes métodos existen principalmente para 
+    //procesos internos de Foxtrot.
+
+    this.obtenerInstanciasVistas=function() {
+        return instanciasVistas;
+    };
+
+    this.obtenerInstanciaVista=function(nombre) {
+        if(!instanciasVistas.hasOwnProperty(nombre)) return null;
+        return instanciasVistas[nombre];
+    };
+
+    this.obtenerNombreVistaPrincipal=function() {
+        return nombreVistaPrincipal;
+    };
+
+    this.obtenerInstanciaVistaPrincipal=function() {
+        return instanciasVistas[nombreVistaPrincipal];
+    };
+
+    this.vista=function() {
+        return this.obtenerInstanciaVistaPrincipal();
     };
 
     ////Controladores
@@ -457,38 +513,21 @@ var ui=new function() {
     };
 
     /**
-     * Acceso directo a la instancia del componente de la vista principal (alias de obtenerInstanciaControladorPrincipal().obtenerComponente()).
-     */
-    this.vista=function() {
-        return this.obtenerInstanciaControladorPrincipal().obtenerComponente();
-    };
-
-    /**
-     * Devuelve el nombre de la vista.
-     */
-    this.obtenerNombreVistaActual=function() {
-        return instanciaControladorPrincipal.obtenerNombre();
-    };
-
-    /**
      * Busca y devuelve un controlador dado su nombre, creándolo si no existe.
      */
     this.obtenerInstanciaControlador=function(nombre,principal) {
         if(util.esIndefinido(principal)) principal=false;
+
+        if(!controladores.hasOwnProperty(nombre)) return null;
         
         if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
 
-        for(var i=0;i<controladores.length;i++)
-            if(controladores[i].obtenerNombre()==nombre)
-                return controladores[i];
-        
         var obj=controlador.fabricarControlador(nombre,controladores[nombre]);
-        instanciasControladores[nombre]=obj;
-        if(principal) {
-            obj.crearVista(cuerpo);
-            instanciaControladorPrincipal=obj;
-        }
+        obj.inicializar();
 
+        instanciasControladores[nombre]=obj;
+        if(principal) instanciaControladorPrincipal=obj;
+        
         return obj;
     };
 
@@ -497,10 +536,6 @@ var ui=new function() {
     this.establecerModoEdicion=function(valor) {
         modoEdicion=valor;
         body.alternarClase("foxtrot-modo-edicion");
-        
-        //En modo de ejecución, trabajamos con el body entero, pero en modo edición trabajamos con #foxtrot-cuerpo
-        cuerpo=valor?doc.querySelector("#foxtrot-cuerpo"):body;
-
         return this;
     };
 
@@ -844,9 +879,20 @@ var ui=new function() {
             //Si se activa para un documento diferente, reemplazar las referencias al dom
             doc=nuevoDoc;
             body=doc.body;
-            cuerpo=body;
+            cuerpo=doc.querySelector("#foxtrot-cuerpo");
             estilos=doc.querySelector("#foxtrot-estilos");
             marco=document.querySelector("#foxtrot-marco");
+        }        
+
+        //Preparar la vista
+        if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
+            //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
+            instanciasVistas[nombreVistaPrincipal].establecerElemento(cuerpo);
+        }
+        
+        if(!modoEdicion) {
+            //Por el momento, el controlador es el que tiene el mismo nombre que la vista
+            ui.crearControlador(nombreVistaPrincipal,true);
         }
 
     };

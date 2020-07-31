@@ -12,16 +12,7 @@
  */
 var componenteTexto=function() {    
     this.componente="texto";
-
-    /**
-     * Inicializa la instancia tras ser creada o restaurada.
-     */
-    this.inicializar=function() {
-        if(this.inicializado) return this; 
-        this.contenidoEditable=true;
-        this.inicializarComponente();
-        return this;
-    };
+    this.contenidoEditable=true;
 
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).

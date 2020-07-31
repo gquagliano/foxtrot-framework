@@ -14,8 +14,6 @@ var componenteVista=function() {
     this.componente="vista";
     this.arrastrable=false;
 
-    this.crear=function() {};
-
     this.inicializar=function() {
         this.contenedor=this.elemento;
         return this.inicializarComponente();

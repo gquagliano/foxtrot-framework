@@ -35,6 +35,7 @@ var componente=new function() {
     this.elementoEditable=null;
     this.arrastrable=true;
     this.inicializado=false;
+    this.nombreVista=null;
 
     /**
      * Almacen de valores de parámetros.
@@ -99,6 +100,11 @@ var componente=new function() {
                     //justificadoDerecha:"Justificado a la derecha"
                 }
             }
+        },
+        "Eventos":{
+            click:{
+                etiqueta:"Click"
+            }
         }
     };
 
@@ -114,6 +120,28 @@ var componente=new function() {
      */
     this.obtenerId=function() {
         return this.id;
+    };
+
+    /**
+     * Devuelve el nombre de la vista a la cual pertenece.
+     */
+    this.obtenerNombreVista=function() {
+        return this.nombreVista;
+    };
+
+    /**
+     * Asigna el nombre de la vista a la cual pertenece el componente.
+     */
+    this.establecerNombreVista=function(nombre) {
+        this.nombreVista=nombre;
+        return this;
+    };
+
+    /**
+     * Devuelve la instancia de la vista (componente) a la cual pertenece.
+     */
+    this.obtenerVista=function() {
+        return ui.obtenerInstanciaVista(this.nombreVista);
     };
 
     /**
@@ -136,6 +164,16 @@ var componente=new function() {
      */
     this.obtenerSelector=function() {
         return this.selector;
+    };
+
+    /**
+     * Establece el selector para el elemento, actualizando los estilos preexistentes.
+     */
+    this.establecerSelector=function(nuevo) {
+        //TODO Actualizar estilos
+
+        this.selector="#"+nuevo;
+        return this;
     };
 
     /**
@@ -182,8 +220,7 @@ var componente=new function() {
      */
     Object.prototype.esComponente=function() {
         return this.cttr()==componente.cttr();
-    };
-    
+    };    
 
     /**
      * Fabrica una instancia de un componente concreto dada su función.
@@ -202,6 +239,25 @@ var componente=new function() {
     };
 
     /**
+     * Establece el ID del elemento del DOM y actualiza el selector y los estilos si es necesario.
+     */
+    this.establecerIdElemento=function() {
+        if(!this.elemento) return this;
+
+        var id=this.elemento.atributo("id");
+        if(!id) {
+            if(this.nombre) {
+                id=this.nombre;
+            } else {
+                id="componente-"+this.id;
+            }
+            this.elemento.atributo("id",id);
+        }
+        
+        this.establecerSelector(id);
+    };
+
+    /**
      * Inicializa la instancia (método para sobreescribir).
      */    
     this.inicializar=function() {
@@ -210,8 +266,9 @@ var componente=new function() {
 
     /**
      * Inicializa la instancia (método común para todos los componentes).
+     * @param {boolean} [omitirEventos=false] - Si es true, se omitirá la asignación de los eventos predefinidos.
      */ 
-    this.inicializarComponente=function() {
+    this.inicializarComponente=function(omitirEventos) {
         if(this.inicializado) return this;
 
         //Las clases css que se mantengan al salir del modo de edición deben ser breves
@@ -221,28 +278,13 @@ var componente=new function() {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
                                                         //.container que es la clase de Bootstrap.
             //if(!this.hijos.length) this.contenedor.agregarClase("vacio");
-        }
+        }        
 
-        if(this.contenidoEditable) {
-            var t=this;
-            this.elemento.evento("dblclick",function(ev) {
-                ev.stopPropagation();
-                
-                t.iniciarEdicion(false);
+        this.establecerId()
+            .establecerIdElemento();
 
-                var fn=function(e) {
-                    if(e.which==27) {
-                        t.finalizarEdicion();
-                        t.elemento.removerEvento("keydown",fn);
-                        e.preventDefault();
-                    }
-                };
-                t.elemento.evento("keydown",fn);
-            });
-        }
-
-        this.inicializado=true;
-
+        if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
+        
         return this;
     };
 
@@ -259,8 +301,6 @@ var componente=new function() {
      */
     this.crearComponente=function() {
         this.establecerId();
-        this.selector="#fox"+this.id;
-        this.elemento.atributo("id","fox"+this.id);
         return this;
     };
 
@@ -285,16 +325,9 @@ var componente=new function() {
     this.establecerElemento=function(elem) {
         this.elemento=elem;
 
-        this.elemento.dato("fxid",this.id);
-
-        var id=this.elemento.atributo("id");
-        if(!id) id="fox"+this.id;
-        this.elemento.atributo("id",id);
-
-        this.selector="#"+id;
-        
         this.inicializado=false;
         this.inicializar();
+
         return this;
     };
 
@@ -310,13 +343,10 @@ var componente=new function() {
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
     this.restaurarComponente=function() {
-        if(!this.elemento) {
-            this.elemento=ui.obtenerDocumento().querySelector("[data-fxid='"+this.id+"']");
-            if(this.elemento) {
-                this.selector="#"+this.elemento.atributo("id");
-                this.inicializado=false;
-                this.inicializar();
-            }
+        this.elemento=ui.obtenerCuerpo().querySelector("[data-fxid='"+this.id+"']");
+        if(this.elemento) {
+            this.inicializado=false;
+            this.inicializar(); 
         }        
         return this;
     };
@@ -333,7 +363,7 @@ var componente=new function() {
      * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado.
      */
     this.establecerIdComponente=function(id) {
-        if(!util.esIndefinido(id)) this.id=id;
+        if(typeof id!=="undefined") this.id=id;
         if(this.elemento) this.elemento.dato("fxid",this.id);
         return this;
     };
@@ -350,11 +380,19 @@ var componente=new function() {
      * Establece el nombre de la instancia.
      */
     this.establecerNombreComponente=function(nombre) {
+        if(typeof nombre==="undefined") nombre=null;
+
         //Eliminar de componentes si cambia el nombre
         if(this.nombre!=nombre) delete componentes[this.nombre];
+
         this.nombre=nombre;
+
         //Registrar en window.componentes para acceso rápido
         if(nombre) componentes[nombre]=this;
+
+        //Actualizar ID
+        this.establecerIdElemento();
+
         return this;
     };
     
@@ -593,6 +631,7 @@ var componente=new function() {
      * Reestablece la configuración a partir de un objeto previamente generado con obtenerPropiedades().
      */
     this.establecerPropiedades=function(obj) {
+        if(typeof obj==="undefined") obj={};
         this.valoresPropiedades=obj;
         return this;
     };
@@ -624,6 +663,83 @@ var componente=new function() {
         editor.pausarEventos(false);       
 
         return this;
+    };
+
+    ////Eventos    
+
+    /**
+     * Establece los eventos predeterminados.
+     */
+    this.establecerEventos=function() {
+        if(!this.elemento) return this;
+
+        var t=this;
+
+        if(!ui.enModoEdicion()) {
+            var asignaciones={
+                "click":{}
+            };
+
+            asignaciones.forEach(function(evento,config) {
+                var metodo=config.hasOwnProperty("metodo")?config.metodo:evento,
+                    propiedad=config.hasOwnProperty("propiedad")?config.propiedad:evento;
+
+                t.elemento.evento(evento,function(ev) {
+                    t.procesarEvento(evento,propiedad,metodo,ev);
+                });
+            });
+        } else if(this.contenidoEditable) {
+            this.elemento.evento("dblclick",function(ev) {
+                ev.stopPropagation();
+                
+                t.iniciarEdicion(false);
+
+                var fn=function(e) {
+                    if(e.which==27) {
+                        t.finalizarEdicion();
+                        ui.obtenerDocumento().removerEvento("keydown",fn);
+                        e.preventDefault();
+                    }
+                };
+                ui.obtenerDocumento().evento("keydown",fn);
+            });
+        }
+
+        this.inicializado=true;
+
+        return this;
+    };
+
+    /**
+     * Procesa una cadena que representa el manejador de un evento, almacenada en las propiedades del componente.
+     * @param {string} nombre - Nombre de la propiedad a leer.
+     */
+    this.procesarCadenaEvento=function(nombre) {
+        var valor=this.propiedad(nombre);
+        if(!valor) return null;
+        
+        //Evaluar expresiones, si las contiene
+        valor=expresion.evaluar(valor);
+    };
+
+    this.procesarEvento=function(nombre,propiedad,metodo,evento) {
+        //Almacenar algunos metadatos en el objeto del evento
+        evento.nombre=nombre;
+        evento.componente=this;
+
+        //Método interno del componente
+        if(typeof this[metodo]==="function") this[metodo](evento);
+
+        //Manejador definido por el usuario
+        var funcion=this.procesarCadenaEvento(propiedad);
+        if(!funcion) return;
+
+        if(typeof funcion==="funcion") {
+            funcion(this,evento);
+        } else if(typeof funcion==="string") {
+            //Propiedad del controlador
+            
+        }
     };
 
     ////Utilidades

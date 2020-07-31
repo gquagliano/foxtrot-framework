@@ -48,11 +48,11 @@ body.foxtrot-editor {
     z-index: 1;
 }
 .foxtrot-modo-edicion #foxtrot-cuerpo {
-    background: #fff;
-    min-height: calc(100vh - 56px);
+    background-color: #fff;
+    min-height: calc(100vh - 78px);
     z-index: 1;
     top: 0;
-    background: url(img/fondo.png);
+    background-image: url(img/fondo.png);
     padding-top: 1px;
     outline: none !important;
 }

@@ -27,12 +27,14 @@ var editable=new function() {
 
     function insertarComponente(rango,componente) {
         var obj=null,
-            nuevo=false;
-        if(!isNaN(parseInt(componente))) {
-            obj=ui.obtenerInstanciaComponente(componente);
-        } else {
+            nuevo=false,
+            tipos=ui.obtenerComponentes();
+
+        if(tipos.hasOwnProperty(componente)) {
             obj=ui.crearComponente(componente);
             nuevo=true;
+        } else {
+            obj=ui.obtenerInstanciaComponente(componente);
         }
         var elem=obj.obtenerElemento();
 
@@ -69,6 +71,11 @@ var editable=new function() {
                     var comp=ui.obtenerInstanciaComponente(id);
                     if(comp) comp.eliminar();
                 }
+
+                //Evitar que se elimine todo el texto del componente
+                if(!item.target.childNodes.length||(item.target.childNodes.length==1&&item.target.childNodes[0].es({clase:"foxtrot-etiqueta-componente"}))) {
+                    item.target.anexar("&nbsp;");
+                }
             }
 
             if(item.addedNodes.length) {
@@ -104,12 +111,12 @@ var editable=new function() {
         try { obj=JSON.parse(datos); } catch {}
         
         if(obj) {
-            if(obj.hasOwnProperty("componente")) {
+            if(obj.hasOwnProperty("insertarComponente")) {
                 //Nuevo componente
-                comp=obj.componente;
-            } else if(obj.hasOwnProperty("idcomponente")) {
+                comp=obj.insertarComponente;
+            } else if(obj.hasOwnProperty("idComponente")) {
                 //Moviendo componente
-                comp=obj.idcomponente;
+                comp=obj.idComponente;
             } else {
                 //Tratar el json como texto
                 insertar=datos;

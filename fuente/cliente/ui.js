@@ -906,9 +906,14 @@ var ui=new function() {
         
         if(!modoEdicion) {
             //Por el momento, el controlador es el que tiene el mismo nombre que la vista
-            ui.crearControlador(nombreVistaPrincipal,true);
+            var obj=ui.crearControlador(nombreVistaPrincipal,true);
+            //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
+            //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
+            obj.establecerVista(nombreVistaPrincipal);
+            instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
         }
 
+        
     };
 }();
 

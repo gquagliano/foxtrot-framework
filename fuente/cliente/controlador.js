@@ -13,6 +13,7 @@
 var controlador=new function() {
     this.nombre=null;
     this.servidor=null;
+    this.nombreVista=null;
 
     ////Acceso a propiedades    
 
@@ -28,6 +29,21 @@ var controlador=new function() {
      */
     this.obtenerServidor=function() {
         return this.servidor;
+    };
+
+    /**
+     * Devuelve el nombre de la vista que está controlando actualmente.
+     */
+    this.obtenerNombreVista=function() {
+        return this.nombreVista;
+    };
+
+    /**
+     * Establece el nombre de la vista que está controlando actualmente.
+     * @param {string} nombre 
+     */
+    this.establecerVista=function(nombre) {
+        this.nombreVista=nombre;
     };
 
     ////Gestión de la instancia

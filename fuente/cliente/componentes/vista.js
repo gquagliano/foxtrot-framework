@@ -13,6 +13,22 @@
 var componenteVista=function() {    
     this.componente="vista";
     this.arrastrable=false;
+    this.nombreControlador=null;    
+
+    /**
+     * Devuelve el nombre del controlador actual de la vista.
+     */
+    this.obtenerNombreControlador=function() {
+        return this.nombreControlador;
+    };
+
+    /**
+     * Establece el nombre del controlador actual de la vista.
+     * @param {string} nombre 
+     */
+    this.establecerControlador=function(nombre) {
+        this.nombreControlador=nombre;
+    };
 
     this.inicializar=function() {
         this.contenedor=this.elemento;

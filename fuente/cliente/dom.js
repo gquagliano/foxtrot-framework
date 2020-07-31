@@ -148,6 +148,8 @@
      * Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos se evalúan como OR. Se evalúan como string (no es sensible al tipo).
      */
     Node.prototype.es=function(filtro) {
+        if(typeof filtro==="undefined") return true; //Un filtro indefinido coincide con todo
+
         var resultado=false;
 
         function coincide(origen,valor) {
@@ -263,7 +265,7 @@
      */
     Node.prototype.padre=function(filtro) {
         var elem=this.parentNode;
-        while(!elem.es(filtro)&&elem!=document.body) elem=elem.parentNode;
+        while(elem!==null&&!elem.es(filtro)&&elem!=document.body) elem=elem.parentNode;
         return elem;        
     };
 

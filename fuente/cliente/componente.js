@@ -103,7 +103,8 @@ var componente=new function() {
         },
         "Eventos":{
             click:{
-                etiqueta:"Click"
+                etiqueta:"Click",
+                adaptativa:false
             }
         }
     };
@@ -715,11 +716,23 @@ var componente=new function() {
      * @param {string} nombre - Nombre de la propiedad a leer.
      */
     this.procesarCadenaEvento=function(nombre) {
-        var valor=this.propiedad(nombre);
-        if(!valor) return null;
+        var valor=this.propiedad(null,nombre);
+        if(!valor||!valor.g) return null;
         
         //Evaluar expresiones, si las contiene
-        valor=expresion.evaluar(valor);
+
+        //Agregar al intérprete el controlador y otros objetos y funciones útiles
+        
+        var vars={},
+            controladores=ui.obtenerInstanciasControladores();
+
+        if(controladores) controladores.forEach(function(nombre,obj) {
+            vars[nombre]=obj;
+        });
+
+        expresion.establecerVariablesGlobales(vars);
+
+        return expresion.evaluar(valor.g);
     };
 
     this.procesarEvento=function(nombre,propiedad,metodo,evento) {
@@ -731,14 +744,26 @@ var componente=new function() {
         if(typeof this[metodo]==="function") this[metodo](evento);
 
         //Manejador definido por el usuario
-        var funcion=this.procesarCadenaEvento(propiedad);
-        if(!funcion) return;
+        var manejador=this.procesarCadenaEvento(propiedad);
+        if(!manejador) return;
 
-        if(typeof funcion==="funcion") {
-            funcion(this,evento);
-        } else if(typeof funcion==="string") {
+        var procesado=true;
+
+        if(typeof manejador==="function") {
+            manejador(this,evento);
+        } else if(typeof manejador==="string") {
             //Propiedad del controlador
             
+            //Método del controlador de servidor
+
+            //Navegación
+
+
+        }
+
+        if(procesado) {
+            evento.preventDefault();
+            evento.stopPropagation();
         }
     };
 

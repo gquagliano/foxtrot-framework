@@ -88,7 +88,6 @@ function compilarJs($archivos,$destino,$omitirClosure=false) {
     } else {
         if(file_exists($destino)&&trim(fgets(fopen($destino,'r')))=='//'.$hash) return;
         exec(_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg);
+        file_put_contents($destino,'//'.$hash.PHP_EOL.file_get_contents($destino));
     }
-
-    file_put_contents($destino,'//'.$hash.PHP_EOL.file_get_contents($destino));
 }

@@ -429,7 +429,9 @@ var expresion=function(expr) {
                 }
 
                 //Si llegamos hasta aquí es un símbolo inválido o no definido
-                throw "Error: `"+anterior+"` no está definido.";
+                //throw "Error: `"+p+"` no está definido.";
+                temp.push(new simbolo(tS.valor,p,p));
+                continue;
             } else {
                 if(p==simboloEscape&&siguiente) {
                     if(siguiente==simboloComillas) {
@@ -643,7 +645,7 @@ var expresion=function(expr) {
                 falso=lista.slice(posDosPuntos+1);           
 
             var retornoCondicion=recorrer(condicion),
-                retorno=retornoCondicion?recorrer(verdadero):recorrer(falso);
+                retorno=retornoCondicion?verdadero:falso;
 
             return subexpresion(retorno);
         } 
@@ -732,14 +734,23 @@ expresion.evaluar=function(cadena) {
 
         if(enLlave&&caracter=="}"&&anterior!="\\") {
             //Ejecutar expresión
-            valor=expresion.establecerExpresion(bufer).ejecutar();
-            if(valor!==null) resultado+=valor.toString();            
+            valor=expr.establecerExpresion("{"+bufer+"}").ejecutar();
+            if(valor!==null) {
+                if(typeof valor==="string") {
+                    resultado+=valor;            
+                } else if(typeof valor==="number") {
+                    resultado+=valor.toString();
+                } else {
+                    //Función u objeto
+                    resultado=valor;
+                }
+            }
 
             bufer="";
             enLlave=false;
         } else if((caracter=="{"&&anterior!="\\")||i==total) {
             //Concatenar tal cual al comenzar una expresión o llegar al final de la cadena
-            resultado+=bufer;
+            if(bufer!="") resultado+=bufer;
 
             bufer="";
             enLlave=true;

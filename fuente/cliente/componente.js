@@ -551,7 +551,7 @@ var componente=new function() {
     /**
      * Establece o devuelve el valor de una propiedad.
      */
-    this.propiedad=function(tamano,nombre,valor) {
+    this.propiedad=function(tamano,nombre,valor) { //TODO 'Sobrecarga' sin parámetro tamano para propiedades globales
         if(nombre=="nombre") return;
 
         //xs y g son sinónmos, ya que en ambos casos los estilos son globales
@@ -717,7 +717,8 @@ var componente=new function() {
      */
     this.procesarCadenaEvento=function(nombre) {
         var valor=this.propiedad(null,nombre);
-        if(!valor||!valor.g) return null;
+        if(!valor) return null;
+        if(typeof valor!=="string") return valor;
         
         //Evaluar expresiones, si las contiene
 

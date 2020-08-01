@@ -637,6 +637,14 @@ var componente=new function() {
         return this;
     };
 
+    /**
+     * Devuelve o establece el valor del componente (método para sobreescribir).
+     * @param {*} valor - Valor a establecer
+     * @returns {*}
+     */
+    this.valor=function(valor) {
+    };
+
     ////Editor de texto WYSIWYG
     
     this.iniciarEdicion=function(pausar) {   
@@ -858,10 +866,53 @@ var componente=new function() {
      */
     this.obtenerHijos=function() {
         var hijos=[];
-        this.elemento.hijos().forEach(function(elem) {
+        if(!this.contenedor) return hijos;
+        this.contenedor.hijos().forEach(function(elem) {
             hijos.push(ui.obtenerInstanciaComponente(elem));
         });
         return hijos;
+    };
+
+    /**
+     * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
+     * @returns {Object}
+     */
+    this.obtenerValores=function() {
+        var hijos=this.obtenerHijos(),
+            valores={};
+
+        hijos.forEach(function(hijo) {            
+            var nombre=hijo.obtenerNombre();
+            if(nombre) {
+                var valor=hijo.valor();
+                if(typeof valor!=="undefined") valores[nombre]=valor; //Un componente puede devolver nulo; se entiende que es un componente sin valor (como un contenedor) cuando devuelve indefinido
+            }
+            
+            //Continuar la búsqueda en forma recursiva
+            valores=Object.assign({},valores,hijo.obtenerValores());
+        });
+
+        return valores;
+    };
+
+    /**
+     * Establece los valores de todos los componentes cuyos nombres coincidan con las propiedades del objeto.
+     * @param {Object} valores - Pares nombre/valor a asignar.
+     */
+    this.establecerValores=function(valores) {
+        var hijos=this.obtenerHijos();
+
+        hijos.forEach(function(hijo) {   
+            var nombre=hijo.obtenerNombre();
+            if(nombre&&valores.hasOwnProperty(nombre)) {
+                hijo.valor(valores[nombre]);
+            }
+            
+            //Continuar la búsqueda en forma recursiva
+            hijo.establecerValores(valores);
+        });
+
+        return this;
     };
     
 };

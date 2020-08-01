@@ -349,6 +349,43 @@ var ui=new function() {
         return this;
     }
 
+    /**
+     * Busca todos los componentes con nombre y devuelve un objeto con sus valores.
+     * @param {string} [nombreVista] - Nombre de la vista. Si se omite, se devolverán todos los campos de la página.
+     * @returns {Object}
+     */
+    this.obtenerValores=function(nombreVista) {
+        if(typeof nombreVista==="undefined") nombreVista=null;
+
+        var valores={};
+
+        //La forma más fácil es solicitárselo a los componentes vista  
+        instanciasVistas.forEach(function(vista) {
+            if(nombreVista&&vista!=nombreVista) return;
+            var obj=self.obtenerInstanciaVista(vista).obtenerValores();
+            valores=Object.assign({},valores,obj);
+        });
+
+        return valores;
+    };
+
+    /**
+     * Establece los valores de todos los componentes cuyos nombres coincidan con las propiedades del objeto.
+     * @param {Object} valores - Pares nombre/valor a asignar.
+     * @param {string} [nombreVista] - Nombre de la vista. Si se omite, se aplicará sobre todos los campos de la página.
+     */
+    this.establecerValores=function(objeto,nombreVista) {
+        if(typeof nombreVista==="undefined") nombreVista=null;
+
+        //La forma más fácil es solicitárselo a los componentes vista  
+        instanciasVistas.forEach(function(vista) {
+            if(nombreVista&&vista!=nombreVista) return;
+            self.obtenerInstanciaVista(vista).establecerValores(objeto);
+        });
+
+        return this;
+    };
+
     ////Cargar/guardar
 
     /**

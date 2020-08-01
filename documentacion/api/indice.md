@@ -7,6 +7,7 @@ En desarrollo.
 - [Definición y configuración de una aplicación](aplicacion.md)
 - [Controlador de la aplicación (cliente)](aplicacion-js.md)
 - [Controlador de la aplicación (servidor)](aplicacion-php.md)
+- [Vistas](vistas.md)
 - [Controladores de cliente](cliente-js.md)
 
   Definición de controladores del lado del cliente (JS). Métodos, propiedades, eventos. Comunicación con el servidor.

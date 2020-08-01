@@ -15,6 +15,18 @@ var componenteCampo=function() {
     this.campo=null;
 
     /**
+     * Propiedades de Botón.
+     */
+    this.propiedadesConcretas={
+        "Estilo":{
+            relleno:{
+                etiqueta:"Texto de relleno",
+                adaptativa:false
+            }
+        }
+    };
+
+    /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
@@ -35,6 +47,17 @@ var componenteCampo=function() {
     };    
 
     /**
+     * Inicializa la instancia en base a su ID y sus parámetros (método para sobreescribir).
+     */
+    this.restaurar=function() {
+        this.restaurarComponente();
+                
+        this.campo=this.elemento.querySelector("input");
+
+        return this;
+    };
+
+    /**
      * Devuelve o establece el valor del componente (método para sobreescribir).
      * @param {*} valor - Valor a establecer
      * @returns {*}
@@ -46,6 +69,21 @@ var componenteCampo=function() {
             this.campo.valor(valor);
             return this;
         }
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizar=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        if(propiedad=="relleno") {
+            this.campo.atributo("placeholder",valor);
+            return this;
+        }
+
+        this.actualizarComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
     };
 };
 

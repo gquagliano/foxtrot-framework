@@ -744,6 +744,17 @@ var componente=new function() {
         evento.nombre=nombre;
         evento.componente=this;
 
+        var detener=true,
+            prevenir=true;
+        
+        evento.noDetener=function() {
+            detener=false;
+        };
+    
+        evento.noPrevenirPredeterminado=function() {
+            prevenir=false;
+        };
+
         //Método interno del componente
         if(typeof this[metodo]==="function") this[metodo](evento);
 
@@ -801,8 +812,8 @@ var componente=new function() {
         }
 
         if(procesado) {
-            evento.preventDefault();
-            evento.stopPropagation();
+            if(!prevenir) evento.preventDefault();
+            if(!detener) evento.stopPropagation();
         }
     };
 

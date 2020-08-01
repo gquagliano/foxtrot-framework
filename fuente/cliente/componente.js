@@ -767,25 +767,50 @@ var componente=new function() {
                 //URL
                 //TODO
 
-                //Navegación normal
-                //TODO
-
-                //Carga de vista secundaria
+                //Navegación normal (nombre de vista)
                 //TODO
 
             } else if(manejador.substring(0,6)=="popup:") {
                 //Popup
+
+                //URL
+                //TODO
+
+                //Nombre de vista
+                //TODO
+
+            } else if(manejador.indexOf(":")>0) {
+                //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
+                //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
+                //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
+                
+                //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
+                var nombre=manejador.substring(0,manejador.indexOf(":")),
+                    valor=manejador.substring(manejador.indexOf(":")+1);
+                componentes[nombre].eventoExterno(valor,evento);
             } else {
                 //Propiedad del controlador
                 ctl[manejador](this,evento);
             }
             //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
+            //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
+            //      un control de errores interno, que valide estos casos y arroje errores de Foxtrot.
+        } else {
+            procesado=false;
         }
 
         if(procesado) {
             evento.preventDefault();
             evento.stopPropagation();
         }
+    };
+
+    /**
+     * Recepción de eventos externos (método para sobreescribir).
+     * @param {*} valor 
+     * @param {Object} evento 
+     */
+    this.eventoExterno=function(valor,evento) {
     };
 
     ////Utilidades

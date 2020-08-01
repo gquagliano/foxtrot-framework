@@ -736,7 +736,7 @@ var componente=new function() {
 
         expresion.establecerVariablesGlobales(vars);
 
-        return expresion.evaluar(valor.g);
+        return expresion.evaluar(valor);
     };
 
     this.procesarEvento=function(nombre,propiedad,metodo,evento) {

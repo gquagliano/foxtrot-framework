@@ -7,6 +7,13 @@
 
 /* Estilos comunes de Foxtrot */
 
+body {
+}
+#foxtrot-cuerpo {
+    min-height: 100vh;
+    position: relative;
+}
+
 picture {
     display: inline-block;
 }
@@ -91,6 +98,12 @@ picture img {
 
 /* Utilidades */
 
+.centrar-contenido-verticalmente {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .fade-in {
     animation: fade-in .1s;
     animation-fill-mode: both;
@@ -116,5 +129,37 @@ picture img {
     }
     100% {
         opacity: 0;
+    }
+}
+
+@media(min-width:576px) {
+    .centrar-contenido-verticalmente-sm {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+@media(min-width:768px) {
+    .centrar-contenido-verticalmente-md {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+@media(min-width:992px) {    
+    .centrar-contenido-verticalmente-lg {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+@media(min-width:1200px) {
+    .centrar-contenido-verticalmente-xl {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 }

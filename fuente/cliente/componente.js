@@ -57,8 +57,15 @@ var componente=new function() {
             //    clase
             //}
             color:{
-                etiqueta:"Color",
+                etiqueta:"Color de texto",
                 tipo:"color"
+            },
+            clase:{
+                etiqueta:"Clase CSS",
+                //TODO En el futuro, sería bueno tener clases adaptativas. Ello puede servir para muchas clases de Bootstrap, donde no tiene sentido reescribirlas con
+                //sufijos (-md, -lg, etc.), pero por el momento es preferible evitar la carga de JS que implicaría verificar las clases de todos los componentes cada
+                //vez que se redimensiona la pantalla.
+                adaptativa:false
             }
         },
         "Posicionamiento":{
@@ -75,6 +82,20 @@ var componente=new function() {
             margen:{
                 etiqueta:"Margen"
                 //TODO Tipo de campo personalizado que permita, por ejemplo, crear los 4 campos para los márgenes
+            },
+            estructura:{
+                etiqueta:"Estructura",
+                tipo:"opciones",
+                opciones:{
+                    bloque:"Bloque",
+                    enLinea:"En línea",
+                    flex:"Flex",
+                    flexVertical:"Flex vertical"
+                }
+            },
+            centrarHijos:{
+                etiqueta:"Centrar hijos verticalmente",
+                tipo:"bool"
             }
         },
         "Tamaño":{
@@ -396,14 +417,6 @@ var componente=new function() {
 
         return this;
     };
-    
-    /**
-     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad (método para sobreescribir).
-     */
-    this.actualizar=function(propiedad,valor,tamano) {
-        this.actualizarComponente(propiedad,valor,tamano);
-        return this;
-    };
 
     /**
      * Devuelve los estilos del componente.
@@ -450,11 +463,20 @@ var componente=new function() {
     };
     
     /**
-     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     * Actualiza el componente (método para sobreescribir).
      */
-    this.actualizarComponente=function(propiedad,valor,tamano) {
+    this.actualizar=function(propiedad,valor,tamano,valorAnterior) {
+        this.actualizarComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+    
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizarComponente=function(propiedad,valor,tamano,valorAnterior) {
         if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
         if(util.esIndefinido(tamano)) tamano=null;
+        if(util.esIndefinido(valorAnterior)) valorAnterior=null;
 
         var estilos=this.obtenerEstilos(tamano);
 
@@ -512,6 +534,24 @@ var componente=new function() {
             return this;
         }
 
+        if(propiedad=="clase") {
+            if(valorAnterior) this.elemento.removerClase(valorAnterior)
+            if(valor.trim()!="") this.elemento.agregarClase(valor);
+            return this;
+        }
+
+        if(propiedad=="centrarHijos") {
+            var c="centrar-contenido-verticalmente";
+            if(tamano!="g"&&tamano!="xs") c+="-"+tamano;
+
+            if(valor) {
+                this.elemento.agregarClase(c);
+            } else {
+                this.elemento.removerClase(c);
+            }
+            return this;
+        }
+
         return this;
     };
 
@@ -526,8 +566,9 @@ var componente=new function() {
             return this.valoresPropiedades[nombre];
         }
 
+        var anterior=this.valoresPropiedades[nombre];
         this.valoresPropiedades[nombre]=valor;
-        this.actualizar(nombre,valor);
+        this.actualizar(nombre,valor,null,anterior);
         return this;
     };
 
@@ -580,14 +621,18 @@ var componente=new function() {
             return null;
         }
 
+        var anterior;
+
         if(adaptativa) {
             if(!this.valoresPropiedades.hasOwnProperty(nombre)) this.valoresPropiedades[nombre]={};
+            anterior=this.valoresPropiedades[nombre][tamano];
             this.valoresPropiedades[nombre][tamano]=valor;
         } else {
+            anterior=this.valoresPropiedades[nombre];
             this.valoresPropiedades[nombre]=valor;
         }
 
-        this.actualizar(nombre,valor,tamano);
+        this.actualizar(nombre,valor,tamano,anterior);
 
         return this;
     };

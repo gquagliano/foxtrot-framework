@@ -300,7 +300,7 @@ var editor=new function() {
             var comp=ui.obtenerInstanciaComponente(this);
             do {
                 arbol.push({
-                    etiqueta:comp.obtenerConfigComponente().descripcion,
+                    etiqueta:comp.obtenerConfigComponente().etiqueta,
                     accion:function(comp) {
                         return function() {
                             self.establecerSeleccion(comp);

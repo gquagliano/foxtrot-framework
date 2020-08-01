@@ -41,8 +41,8 @@ var ui=new function() {
 
     var doc=document,
         body=doc.body,
-        cuerpo=body,
-        estilos,
+        cuerpo=doc.querySelector("#foxtrot-cuerpo"),
+        estilos=doc.querySelector("#foxtrot-estilos"),
         marco=null;
 
     ////Acceso a variables generales

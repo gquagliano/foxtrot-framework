@@ -16,6 +16,14 @@ class configuracion {
     public static $rutaEror='error/';
     public static $enrutador=null;
     public static $rutaBase='/';
+    public static $zonaHoraria='America/Argentina/Buenos_Aires';
+    public static $zonaHorariaHoras=-3;
+    public static $servidorBd='localhost';
+    public static $puertoBd=3306;
+    public static $usuarioBd;
+    public static $contrasenaBd;
+    public static $nombreBd;
+    public static $prefijoBd='';
 
     public static function cargar() {
         include(_raiz.'config.php');

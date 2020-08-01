@@ -17,6 +17,7 @@ class foxtrot {
     protected static $aplicacion=null;
     protected static $instanciaAplicacion=null;
     protected static $instanciaPublicaAplicacion=null;
+    protected static $bd=null;
 
     public function __destruct() {
         foxtrot::destructor();
@@ -71,6 +72,8 @@ class foxtrot {
         include(_servidor.'aplicacion.php');
         include(_servidor.'enrutador.php');
         include(_servidor.'enrutadorAplicacion.php');
+        include(_servidor.'modelo.php');
+        include(_servidor.'mysql.php'); //TODO Configurable
 
         include(_servidor.'enrutadores/enrutadorPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
@@ -219,6 +222,31 @@ class foxtrot {
 
     public static function detener() {
         exit;
+    }
+
+    ////Base de datos
+
+    public static function obtenerInstanciaBd() {
+        if(!self::$bd) {
+            //El conector cambiará según qué clase `db` esté implementada
+            self::$bd=new db(
+                true,
+                true,
+                configuracion::$servidorBd,
+                configuracion::$usuarioBd,
+                configuracion::$contrasenaBd,
+                configuracion::$nombreBd,
+                configuracion::$prefijoBd,
+                configuracion::$puertoBd
+            );
+        }
+        return self::$bd;
+    }
+
+    public static function obtenerInstanciaModelo($nombre) {
+        include_once(_modeloAplicacion.$nombre.'.php');
+        $cls='\\aplicaciones\\'._apl.'\\modelo\\'.$nombre;
+        return new $cls(self::obtenerInstanciaBd());
     }
 }
 

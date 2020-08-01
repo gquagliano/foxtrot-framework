@@ -63,7 +63,7 @@ var editable=new function() {
                 //Verificar si alguno de los nodos eliminados correspondía a un componente
                 for(var i=0;i<item.removedNodes.length;i++) {
                     var nodo=item.removedNodes[i];
-                    if(nodo==moviendoNodo||!(nodo instanceof Node)) continue;
+                    if(nodo==moviendoNodo||!util.esElemento(nodo)) continue;
                     var id=nodo.dato("fxid");
                     if(!id) continue;
 
@@ -82,7 +82,7 @@ var editable=new function() {
                 //Verificar si alguno de los nodos insertados corresponde a un componente
                 for(var i=0;i<item.addedNodes.length;i++) {
                     var nodo=item.addedNodes[i];
-                    if(nodo==moviendoNodo||!(nodo instanceof Node)) continue;
+                    if(nodo==moviendoNodo||!util.esElemento(nodo)) continue;
                     var id=nodo.dato("fxid");
                     if(!id) continue;
 

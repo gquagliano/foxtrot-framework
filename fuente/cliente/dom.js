@@ -112,7 +112,7 @@
             return this;
         }
 
-        if(elemento instanceof NodeList||elemento instanceof HTMLCollection) {
+        if(util.esListaDeElementos(elemento)) {
             var t=this;
             elemento.forEach(function(elem) {
                 t.appendChild(elem);
@@ -154,14 +154,14 @@
 
         function coincide(origen,valor) {
             if(typeof origen!=="string") origen=new Object(origen).toString();
-            if(typeof valor!=="string"&&!(valor instanceof RegExp)) valor=new Object(valor).toString();
-            return (typeof valor==="string"&&origen.toLowerCase()==valor.toLowerCase())||(valor instanceof RegExp&&valor.test(origen));
+            if(typeof valor!=="string"&&!util.esExpresionRegular(valor)) valor=new Object(valor).toString();
+            return (typeof valor==="string"&&origen.toLowerCase()==valor.toLowerCase())||(util.esExpresionRegular(valor)&&valor.test(origen));
         }
 
         if(filtro.hasOwnProperty("clase")) {
             if(typeof filtro.clase==="string") {
                 resultado=this.classList.contains(filtro.clase);
-            } else if(filtro.clase instanceof RegExp) {
+            } else if(util.esExpresionRegular(filtro.clase)) {
                 for(var i=0;i<this.classList.length;i++) {
                     if(filtro.clase.test(this.classList[i])) {
                         resultado=true;
@@ -287,7 +287,7 @@
     Node.prototype.removerClase=function(clase) {
         var t=this;
 
-        if(clase instanceof RegExp) {
+        if(util.esExpresionRegular(clase)) {
             var remover=[];
             this.classList.forEach(function(v) {
                 if(clase.test(v)) remover.push(v);
@@ -311,7 +311,7 @@
     Node.prototype.alternarClase=function(clase) {
         var t=this;
 
-        if(clase instanceof RegExp) {
+        if(util.esExpresionRegular(clase)) {
             var alternar=[];
             this.classList.forEach(function(v) {
                 if(clase.test(v)) alternar.push(v);

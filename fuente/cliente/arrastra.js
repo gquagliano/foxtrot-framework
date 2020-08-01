@@ -23,7 +23,7 @@
         var arrastrable=this;
         if(typeof opciones.asa==="string") {
             arrastrable=elem.querySelector(opciones.asa);
-        } else if(opciones.asa instanceof Element) {
+        } else if(util.esElemento(opciones.asa)) {
             arrastrable=opciones.asa;
         }
 
@@ -57,7 +57,7 @@
         
         if(opciones.icono) {
             var ic=opciones.icono;
-            if(!(ic instanceof Element)) ic=document.crear("<img>").atributo("src",ic).obtener(0);
+            if(!util.esElemento(ic)) ic=document.crear("<img>").atributo("src",ic).obtener(0);
             e.dataTransfer.setDragImage(ic,-15,-15);
         }
         
@@ -154,7 +154,7 @@
         var arrastrable=elem;
         if(typeof opciones.asa==="string") {
             arrastrable=elem.querySelector(opciones.asa);
-        } else if(opciones.asa instanceof Element) {
+        } else if(util.esElemento(opciones.asa)) {
             arrastrable=opciones.asa;
         }
 
@@ -279,7 +279,7 @@
      */
     Node.prototype.pausarArrastreArbol=function(estado) {
         var elem=this;
-        while(elem!==null&&!(elem instanceof HTMLBodyElement)) { //Parar al llegar a <body>
+        while(elem!==null&&elem.nodeName!="BODY") { //Parar al llegar a <body>
             elem.pausarArrastre(estado);
             elem=elem.padre();
         }

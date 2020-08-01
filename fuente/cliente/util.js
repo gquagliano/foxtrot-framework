@@ -12,13 +12,6 @@
  */
 var util={
     /**
-     * Determina si un objeto es un elemento del DOM (Element).
-     */
-    esElemento:function(obj) {
-        return obj instanceof Element;
-    },
-
-    /**
      * Determina si una expresión es indefinida o no.
      */
     esIndefinido:function(expr) {
@@ -52,6 +45,33 @@ var util={
      */
     esComponente:function(obj) {
         return obj instanceof componente.cttr();
+    },
+
+    //instanceof falla cuando se evaluan objetos provinientes de otra ventana, caso muy común en el editor, que utiliza marcos, por lo que implementamos algunas
+    //funciones útiles para *estimar* tipos en formas alternativas.
+
+    /**
+     * Determina si un valor es una expresión regular.
+     * @param {*} obj - Valor a evaluar.
+     */
+    esExpresionRegular:function(obj) {
+        return obj!==null&&typeof obj==="object"&&(obj instanceof RegExp||typeof obj.test==="function");
+    },
+    
+    /**
+     * Determina si un valor es un elemento del DOM (Node o Element).
+     * @param {*} obj - Valor a evaluar.
+     */
+    esElemento:function(obj) {
+        return obj!==null&&typeof obj==="object"&&(obj instanceof Node||obj instanceof Element||typeof obj.nodeName==="string");
+    },
+
+    /**
+     * Determina si un valor es una lista de elementos del DOM (NodeList o HTMLCollection).
+     * @param {*} obj - Valor a evaluar.
+     */
+    esListaDeElementos:function(obj) {
+        return obj!==null&&typeof obj==="object"&&(obj instanceof NodeList||obj instanceof HTMLCollection||typeof obj.entries==="function");
     }
 };
 

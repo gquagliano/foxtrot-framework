@@ -12,6 +12,7 @@
  */
 var componenteCampo=function() {    
     this.componente="campo";
+    this.campo=null;
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
@@ -26,7 +27,9 @@ var componenteCampo=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<input class='form-control' type='text'>"); 
+        this.elemento=document.crear("<div>");
+        this.campo=document.crear("<input class='form-control' type='text'>"); 
+        this.elemento.anexar(this.campo);
         this.crearComponente();
         return this;
     };    
@@ -38,9 +41,9 @@ var componenteCampo=function() {
      */
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
-            return this.elemento.valor();
+            return this.campo.valor();
         } else {
-            this.elemento.valor(valor);
+            this.campo.valor(valor);
             return this;
         }
     };

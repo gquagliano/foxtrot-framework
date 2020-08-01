@@ -20,6 +20,10 @@ class modelo {
 
     //Usamos el prefijo __e_ ya que los campos del registro se corresponderán con propiedades de la entidad
     //y debemos evitar que un nombre de campo coincida con una propiedad de la clase.
+
+    /**
+     * @var \db
+     */
     protected $__e_db;
     protected $__e_owndb;
     protected $__e_entityName;
@@ -110,23 +114,23 @@ class modelo {
     }
 
     function open() {
-        $this->__e_db->connect();
+        $this->__e_db->conectar();
         return $this;
     }
 
     function close() {
-        if($this->__e_db) $this->__e_db->close();
+        if($this->__e_db) $this->__e_db->desconectar();
         return $this;
     }
 
     function beginTransaction() {
-        $this->__e_db->beginTransaction();
+        $this->__e_db->comenzarTransaccion();
         $this->__e_transact=true;
         return $this;
     }
 
     function commit() {
-        $this->__e_db->commit();
+        $this->__e_db->finalizarTransaccion();
         $this->__e_transact=false;
         return $this;
     }
@@ -138,7 +142,7 @@ class modelo {
     }
 
     function rollback() {
-        $this->__e_db->rollback();
+        $this->__e_db->descartarTransaccion();
         $this->__e_transact=false;
         return $this;
     }
@@ -355,13 +359,13 @@ class modelo {
         $this->__e_sql='"'.$sql.'"'.(count($this->__e_toprepare)?' '.implode('; ',$this->__e_toprepare).' as '.$this->__e_toprepare_types:'');
 
         if($this->__e_prepared&&$this->__e_reuseprepared) {
-            $this->__e_db->bindParams($this->__e_toprepare_types,$this->__e_toprepare);
+            $this->__e_db->asociarParametros($this->__e_toprepare_types,$this->__e_toprepare);
         } else {
-            $this->__e_db->prepare($sql,$this->__e_toprepare_types,$this->__e_toprepare);
+            $this->__e_db->preparar($sql,$this->__e_toprepare_types,$this->__e_toprepare);
         }
 
         $this->__e_error=$this->__e_db->error();
-        $this->__e_errordesc=$this->__e_db->errorDescription();
+        $this->__e_errordesc=$this->__e_db->descripcionError();
         $this->__e_reuseprepared=false; //reuse() solo es por una query
         $this->__e_prepared=true;
     }
@@ -465,7 +469,7 @@ class modelo {
     function getOne() {
         $this->limit(1);
         $this->buildSelect();
-        $q=$this->__e_db->query();
+        $q=$this->__e_db->consulta();
         
         if(!$q) throw new \Exception($this->errorDescription().' ejecutando la consulta: '.$this->lastSql());
 
@@ -513,7 +517,7 @@ class modelo {
 
     function get() {
         $this->buildSelect();
-        return $this->__e_db->query();
+        return $this->__e_db->consulta();
     }
 
     function getArray() {
@@ -553,7 +557,7 @@ class modelo {
 
         $this->prepare($sql);
 
-        $q=$this->__e_db->query();
+        $q=$this->__e_db->consulta();
 
         $this->id=$q->id();
 
@@ -589,7 +593,7 @@ class modelo {
 
         $this->prepare($sql);
 
-        $this->__e_db->query();
+        $this->__e_db->consulta();
 
         return $this;
     }
@@ -609,7 +613,7 @@ class modelo {
 
         $this->prepare($sql);
 
-        $this->__e_db->query();
+        $this->__e_db->consulta();
 
         return $this;
     }
@@ -623,19 +627,19 @@ class modelo {
     }
 
     function lock($mode='write') {
-        $this->__e_db->query('lock tables #__'.$this->__e_table.' '.($this->__e_alias?$this->__e_alias:'').' '.$mode);
+        $this->__e_db->consulta('lock tables #__'.$this->__e_table.' '.($this->__e_alias?$this->__e_alias:'').' '.$mode);
         
         return $this;
     }
 
     function unlock() {
-        $this->__e_db->query('unlock tables');
+        $this->__e_db->consulta('unlock tables');
 
         return $this;
     }
 
     function query($q) {
-        $result=$this->__e_db->query($q);
+        $result=$this->__e_db->consulta($q);
         
         return $this;
     }

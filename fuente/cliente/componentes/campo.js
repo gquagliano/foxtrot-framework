@@ -26,9 +26,23 @@ var componenteCampo=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<input class='form-control' type='text'>"); 
         this.crearComponente();
         return this;
+    };    
+
+    /**
+     * Devuelve o establece el valor del componente (método para sobreescribir).
+     * @param {*} valor - Valor a establecer
+     * @returns {*}
+     */
+    this.valor=function(valor) {
+        if(typeof valor==="undefined") {
+            return this.elemento.valor();
+        } else {
+            this.elemento.valor(valor);
+            return this;
+        }
     };
 };
 

@@ -149,6 +149,13 @@ var editor=new function() {
                 fila.anexar(campo);
 
                 //Costruir opciones
+                prop.opciones.forEach(function(clave,etiqueta) {
+                    campo.anexar(
+                        document.crear("<option>")
+                            .valor(clave)
+                            .texto(etiqueta)
+                    );
+                });
 
                 campo.valor(prop.valor);
 

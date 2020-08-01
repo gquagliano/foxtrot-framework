@@ -1,5 +1,9 @@
 {
-    "tabla":"tabla",
+    "tabla":"test",
     "campos":[
+        {
+            "nombre":"test",
+            "tipo":"numero"
+        }
     ]
 }

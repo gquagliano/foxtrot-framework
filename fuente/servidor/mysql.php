@@ -42,7 +42,7 @@ class db {
         
         $this->credentials=array($h,$u,$p,$n,$po,$pre);
 
-        if($connect) $this->connect();
+        if($connect) $this->conectar();
     }
 
     function setLink($l) {
@@ -56,16 +56,16 @@ class db {
     }
     
     function __destruct() {
-        $this->close();
+        $this->desconectar();
     }
 
     function conectar() {
         if(!$this->open) {
             $this->l=new \mysqli($this->credentials[0],$this->credentials[1],$this->credentials[2],$this->credentials[3],$this->credentials[4]);
             if(!$this->l->connect_error) {
-                $this->query("SET NAMES 'utf8'");
-                $this->query("SET sql_mode=''");
-                $this->query("SET @@session.time_zone='".\configuracion::$zonaHorariaHoras."'");
+                $this->consulta("SET NAMES 'utf8'");
+                $this->consulta("SET sql_mode=''");
+                $this->consulta("SET @@session.time_zone='".\configuracion::$zonaHorariaHoras."'");
                 $this->open=true;
                 $this->prepared=null;
                 $this->autocommit($this->ac);
@@ -85,7 +85,7 @@ class db {
 
     function desconectar() {
         if($this->open) {
-            $this->l->desconectar();
+            $this->l->close();
             $this->open=false;
         }
         
@@ -169,7 +169,7 @@ class db {
     }
     
     function primero() {
-        $this->seek(0);
+        $this->irA(0);
         return $this;
     }
     
@@ -269,7 +269,7 @@ class db {
             $this->error=true;
             $this->errorDesc=$this->l->error;
         } else {
-            $this->bindParams($a[0],$a[1]);
+            $this->asociarParametros($a[0],$a[1]);
         }
         return $this;
     }

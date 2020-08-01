@@ -70,12 +70,12 @@ class modelo {
         //Las propiedades title y keys están para la construcción de la tabla y los asistentes del IDE
         $this->__e_table=$structure->tabla;
 
-        $types=array('number'=>'d','text'=>'s'); //i, b?
+        $types=array('numero'=>'d','texto'=>'s'); //i, b?
 
         foreach($structure->campos as $field) {
             //TODO relación de entidades
-            $this->__e_fields[]=$field->name;
-            if($field->type) $this->__e_fieldTypes[$field->name]=$types[$field->type];
+            $this->__e_fields[]=$field->nombre;
+            if($field->tipo) $this->__e_fieldTypes[$field->nombre]=$types[$field->tipo];
         }
 
         //$this->__e_fields[]='id';
@@ -473,7 +473,7 @@ class modelo {
         
         if(!$q) throw new \Exception($this->errorDescription().' ejecutando la consulta: '.$this->lastSql());
 
-        $row=$q->next();
+        $row=$q->siguiente();
 
         return $row;
     }
@@ -488,7 +488,7 @@ class modelo {
         
         if(!$q) throw new \Exception($this->errorDescription().' ejecutando la consulta: '.$this->lastSql());
 
-        $res=$q->next();
+        $res=$q->siguiente();
 
         $this->__e_select=$origSelect;
         $this->__e_limit=$origLimit;
@@ -526,7 +526,7 @@ class modelo {
         if(!$res) throw new \Exception($this->errorDescription().' ejecutando la consulta: '.$this->lastSql());
 
         $o=array();
-        while($row=$res->next()) $o[]=$row;
+        while($row=$res->siguiente()) $o[]=$row;
 
         return $o;
     }

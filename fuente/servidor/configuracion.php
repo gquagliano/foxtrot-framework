@@ -18,7 +18,7 @@ class configuracion {
     public static $rutaBase='/';
     public static $zonaHoraria='America/Argentina/Buenos_Aires';
     public static $zonaHorariaHoras=-3;
-    public static $servidorBd='localhost';
+    public static $servidorBd='127.0.0.1';
     public static $puertoBd=3306;
     public static $usuarioBd;
     public static $contrasenaBd;

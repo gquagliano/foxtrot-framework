@@ -18,7 +18,6 @@ define('_depuracion',array_key_exists('d',$opciones));
 //Crear estructura de directorios
 $directorios=[
     'cliente',
-    'cliente/componentes',
     'editor',
     'editor/img',
     'editor/operaciones',
@@ -99,9 +98,11 @@ $archivos=[
     _fuente.'cliente/ajax.js',
     _fuente.'cliente/componente.js',
     _fuente.'cliente/controlador.js',
+    _fuente.'cliente/enrutador.js',
     _fuente.'cliente/ui.js',
     _fuente.'cliente/expresion.js',
-    _fuente.'cliente/componentes/**.js' //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
+    _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
+    _fuente.'cliente/enrutadores/**.js'
 ];
 compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
 

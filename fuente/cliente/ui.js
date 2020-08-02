@@ -35,7 +35,9 @@ var ui=new function() {
         esCordova=false,
         menuAbierto=null,
         instanciasVistas={},
-        nombreVistaPrincipal=null;
+        nombreVistaPrincipal=null,
+        enrutadores={},
+        instanciaEnrutador=null;
 
     ////Elementos del dom
 
@@ -923,6 +925,39 @@ var ui=new function() {
     };
 
     //TODO Preloader
+
+    ////Navegación
+
+    /**
+     * Registra un enrutador.
+     * @param {string} nombre 
+     * @param {function} funcion 
+     */
+    this.registrarEnrutador=function(nombre,funcion) {
+        enrutadores[nombre]=funcion;
+
+        //Creamos la instancia del enrutador, eventualmente la clase de la aplicación deberá definir el enrutador en uso
+        instanciaEnrutador=enrutador.fabricarEnrutador(nombre,funcion);
+    };
+
+    this.obtenerEnrutador=function() {
+        return instanciaEnrutador;
+    };    
+
+    /**
+     * Navega a la vista o URL especificada.
+     * @param {string} ruta - URL o nombre de vista de destino.
+     */
+    this.irA=function(ruta) {
+        var url;
+        if(/^https?:\/\//i.test(ruta)) {
+            url=ruta;
+        } else {
+            //Obtener URL de la vista dado su nombre
+            instanciaEnrutador.obtenerUrlVista(ruta);
+        }
+        window.location.href=url;
+    };
 
     ////Inicialización y ejecución del cliente
 

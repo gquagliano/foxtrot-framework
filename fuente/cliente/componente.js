@@ -865,8 +865,8 @@ var componente=new function() {
         }
 
         if(procesado) {
-            if(!prevenir) evento.preventDefault();
-            if(!detener) evento.stopPropagation();
+            if(prevenir) evento.preventDefault();
+            if(detener) evento.stopPropagation();
         }
     };
 

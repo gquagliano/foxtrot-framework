@@ -13,6 +13,8 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español.
 
+**[Mirá el video de demostración](https://www.youtube.com/watch?v=JLUBElGI7Q4)**
+
 ## ¿Por qué?
 
 - Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.

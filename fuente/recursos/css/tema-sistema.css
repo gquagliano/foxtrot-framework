@@ -1,0 +1,86 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+/* Tema: Sistema */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap');
+
+/*Estructura*/
+
+html {
+    font-size: 13px;
+    color: #3b3e40;
+}
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+body.cordova {
+    font-family: inherit;
+}
+
+/*Campos y botones*/
+
+.form-control,.custom-select {
+    height: calc(1.1em + .75rem + 2px);
+    padding: .375rem .5rem;
+    color: inherit;
+}
+.btn {
+    text-transform: uppercase;
+    font-weight: 600;
+    height: calc(1.1em + .75rem + 2px);
+    padding: .2rem .75rem;
+}
+.form-control:focus,
+.custom-select:focus,
+.btn:focus {
+    box-shadow: none !important;
+}
+
+/*Colores*/
+a {
+    text-decoration: none !important;
+    color: #3790dc;
+}
+a:hover,
+a:focus,
+a:active {
+    color: #337ab7;
+}
+.form-control:focus,
+.custom-select:focus {
+    border-color: #337ab7;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+.btn-primary.focus, .btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #3790dc;
+    border-color: #3790dc;
+}
+.btn-secondary {
+    color: #3b3e40;
+    background-color: #dedede;
+    border-color: #dedede;
+}
+.btn-secondary.focus, .btn-secondary:focus,
+.btn-secondary:hover,
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
+    color: #3b3e40;
+    background-color: #e8e8e8;
+    border-color: #e8e8e8;
+}
+
+/*
+337ab7
+b5cfe5
+*/

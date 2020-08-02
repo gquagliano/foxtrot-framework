@@ -588,6 +588,9 @@ var editor=new function() {
                         //ui.cargarJs("../"+opciones.ruta+".js",function() {
                         //});
 
+                        ui.cargarCss(resp.aplicacion.css)
+                            .cargarCss(resp.aplicacion.tema);
+
                         ui.ejecutar();
 
                         prepararComponentesInsertados(nombre);

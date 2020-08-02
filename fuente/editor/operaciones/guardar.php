@@ -55,6 +55,8 @@ if($modo=='embebible') {
     $plantilla=$cliente.'.html';
 }
 
+$aplicacion=json_decode(file_get_contents(_aplicaciones.$nombreApl.'/aplicacion.json'));
+
 $codigo=file_get_contents(__DIR__.'/../plantillas/'.$plantilla);
 
 $codigo=str_replace_array([
@@ -62,6 +64,7 @@ $codigo=str_replace_array([
     '{editor_nombreVista}'=>$nombreVista,
     '{editor_json}'=>$jsonHtml,
     '{editor_html}'=>$html,
+    '{editor_tema}'=>'tema-'.$aplicacion->tema,
     //TODO Construir desde las propiedades de la vista
     '{editor_urlBase}'=>'',
     '{editor_urlFavicon}'=>'',

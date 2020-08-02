@@ -5,9 +5,10 @@
     <base href="{editor_urlBase}">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-    <link rel="stylesheet" href="recursos/css/foxtrot.css">
-    <link rel="stylesheet" href="aplicaciones/{editor_nombreAplicacion}/recursos/css/aplicacion.css">
-    <link rel="stylesheet" href="aplicaciones/{editor_nombreAplicacion}/cliente/vistas/{editor_nombreVista}.css">
+    <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar>
+    <link rel="stylesheet" href="recursos/css/{editor_tema}.css" combinar tema>
+    <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css" combinar>
+    <link rel="stylesheet" href="aplicacion/cliente/vistas/{editor_nombreVista}.css">
     <meta name="generator" content="Foxtrot 7">
     <link rel="icon" href="{editor_urlFavicon}">
     <title>{editor_titulo}</title>
@@ -17,8 +18,8 @@
   <body>
     {editor_html}
     <script src="cliente/foxtrot.js"></script>
-    <script src="aplicaciones/{editor_nombreAplicacion}/cliente/controladores/{editor_nombreVista}.js"></script>
-    <script src="aplicaciones/{editor_nombreAplicacion}/cliente/aplicacion.js"></script>
+    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js"></script>
+    <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
     ui.establecerJson('{editor_json}')
         .ejecutar();

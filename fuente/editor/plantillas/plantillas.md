@@ -21,3 +21,11 @@ Código predeterminado de nuevos controladores de cliente.
 `embebible.html`, `embebible.php`
 
 Código fuente para almacenar una vista embebible.
+
+#### Compilación de archivos CSS
+
+Durante la compilación para producción o integración con Cordova, los archivos CSS enlazados con tags `<link ... combinar>` y los archivos CSS importados en páginas para Cordova se combinarán en uno solo.
+
+#### Reemplazo del tema de la aplicación
+
+El archivo CSS del tema se enlaza con un tag `<link ... tema>`, o en Cordova seguido del comentario `//tema` a fin de que el editor pueda reemplazar el mismo en las vistas preexistentes cuando se modifique el tema de la aplicación.

@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <base href="<?=\foxtrot::obtenerUrl()?>">
+    <base href="{editor_urlBase}">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar>
@@ -18,7 +18,7 @@
   <body>
     {editor_html}
     <script src="cliente/foxtrot.js"></script>
-    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js"></script>
+    <script src="aplicacion/cliente/vistas/{editor_nombreVista}.js"></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
     ui.establecerJson('{editor_json}')

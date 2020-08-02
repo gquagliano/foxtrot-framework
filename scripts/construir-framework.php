@@ -15,6 +15,28 @@ include(__DIR__.'/configuracion.php');
 $opciones=getopt('d');
 define('_depuracion',array_key_exists('d',$opciones));
 
+//Crear estructura de directorios
+$directorios=[
+    'cliente',
+    'cliente/componentes',
+    'editor',
+    'editor/img',
+    'editor/operaciones',
+    'editor/plantillas',
+    'recursos',
+    'recursos/componentes',
+    'recursos/css',
+    'recursos/img',
+    'servidor',
+    'servidor/componentes',
+    'servidor/enrutadores',
+    'temp',
+    'temp/temp-privado'
+];
+foreach($directorios as $dir)
+    if(!file_exists(_desarrollo.$dir))
+        mkdir(_desarrollo.$dir);
+
 ////php, html, css y otros recursos
 
 //Copiar
@@ -43,6 +65,10 @@ foreach($archivos as $arch) {
 $ruta=_desarrollo.'recursos/css/foxtrot.css';
 file_put_contents($ruta,$css);
 comprimirCss($ruta);
+
+//Temas (no se combinan hasta pasar a producción/embebible)
+$archivos=glob(_fuente.'recursos/css/tema-*');
+foreach($archivos as $arch) copy($arch,_desarrollo.'recursos/css/'.basename($arch));
 
 //Remover el directorio recursos/componentes/css (quedó vacío al combinar los css)
 rmdir(_desarrollo.'recursos/componentes/css');

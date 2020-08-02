@@ -15,40 +15,52 @@ foxtrot::inicializar();
 
 header('Content-Type: text/plain; charset=utf-8',true);
 
-$ruta=__DIR__.'/../../'.$_POST['ruta'];
-$nombre=basename($ruta);
-$rutaJson=$ruta.'.json';
-$rutaJs=dirname($ruta).'/../controladores/'.$nombre.'.js';
-$rutaHtml=$ruta.'.html';
-if(!file_exists($rutaHtml)) $rutaHtml=$ruta.'.php';
-$rutaCss=$ruta.'.css';
+$vista=__DIR__.'/../../'.$_POST['ruta'];
+$nombre=basename($vista);
+$ruta=dirname($vista).'/';
 
-if(!file_exists($rutaJs)) {
-    //Controlador nuevo
-    $codigo=file_get_contents(__DIR__.'/../plantillas/controlador.js');
-    $codigo=str_replace_array([
-        '{editor_nombre}'=>$nombre
-    ],$codigo);
-    file_put_contents($rutaJs,$codigo);
-}
+$rutaJson=$vista.'.json';
+//$rutaJs=$ruta.'.js';
+$rutaCss=$vista.'.css';
+$rutaJsonApl=$ruta.'../../aplicacion.json';
+$rutaRec=$ruta.'../../recursos/';
+
+//if(!file_exists($rutaJs)) {
+//    //Controlador nuevo
+//    file_put_contents($rutaJs,'/**
+// * Controlador de la vista '.$nombre.'.
+// */
+//ui.registrarControlador("'.$nombre.'",function() {
+//});
+//');
+//}
 
 if(!file_exists($rutaJson)) {
     //Archivo nuevo
-    echo json_encode([
+    $obj=(object)[
         'json'=>[
-            'version'=>1,
+            'ver'=>1,
             'componentes'=>[],
-            'nombre'=>$nombre
+            'vista'=>[
+                'nombre'=>$nombre,
+                'propiedades'=>(object)[]
+            ]
         ],
-        'html'=>'<div id="foxtrot-cuerpo"></div>',
+        'html'=>'',
         'css'=>''
-    ]);
-    exit;
+    ];
+} else {
+    $obj=json_decode(file_get_contents($rutaJson));
+    
+    //Agregar el CSS
+    $obj->css=file_get_contents($rutaCss);
 }
 
-$json=json_decode(file_get_contents($rutaJson));
+//Agregar propiedades de la aplicación
+$aplicacion=json_decode(file_get_contents($rutaJsonApl));
+$obj->aplicacion=[
+    'css'=>'../aplicaciones/test/recursos/css/estilos.css',
+    'tema'=>'../recursos/css/tema-'.$aplicacion->tema.'.css'
+];
 
-//El archivo JSON contiene el cuerpo y el JSON de componentes, debemos sumar el CSS
-$json->css=file_get_contents($rutaCss);
-
-echo json_encode($json);
+echo json_encode($obj);

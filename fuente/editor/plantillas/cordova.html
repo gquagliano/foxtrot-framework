@@ -9,7 +9,7 @@
     <meta name="generator" content="Foxtrot 7">
     <style id="foxtrot-estilos"></style>
   </head>
-  <body>
+  <body class="cordova">
     <div id="contenedor-cordova" style="display:none;opacity:0">
     {editor_html}
     </div>
@@ -24,8 +24,9 @@
             ],
             estilos=[
                 "recursos/css/foxtrot.css",
-                "aplicaciones/{editor_nombreAplicacion}/recursos/css/aplicacion.css",
-                "aplicaciones/{editor_nombreAplicacion}/cliente/vistas/{editor_nombreVista}.css"
+                "recursos/css/{editor_tema}.css", //tema
+                "aplicacion/recursos/css/estilos.css",
+                "aplicacion/cliente/vistas/{editor_nombreVista}.css"
             ],
             listos=0,
             agregarEstilos=function() {

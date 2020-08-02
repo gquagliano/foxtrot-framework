@@ -365,7 +365,10 @@ var componente=new function() {
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
     this.restaurarComponente=function() {
-        this.elemento=ui.obtenerCuerpo().querySelector("[data-fxid='"+this.id+"']");
+        if(!this.elemento) {
+            //El elemento puede haber sido asignado en restaurar() o durante la creación de la instancia
+            this.elemento=ui.obtenerCuerpo().querySelector("[data-fxid='"+this.id+"']");
+        }
         if(this.elemento) {
             this.inicializado=false;
             this.inicializar(); 

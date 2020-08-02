@@ -39,14 +39,12 @@ if(!file_exists($rutaJson)) {
     //Archivo nuevo
     $obj=(object)[
         'json'=>[
-            'ver'=>1,
+            'version'=>1,
             'componentes'=>[],
-            'vista'=>[
-                'nombre'=>$nombre,
-                'propiedades'=>(object)[]
-            ]
+            'nombre'=>$nombre,
+            'propiedades'=>(object)[]
         ],
-        'html'=>'',
+        'html'=>'<div id="foxtrot-cuerpo"></div>',
         'css'=>''
     ];
 } else {

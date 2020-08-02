@@ -96,6 +96,7 @@ $archivos=[
     _fuente.'cliente/editable.js',
     _fuente.'cliente/servidor.js',
     _fuente.'cliente/ajax.js',
+    _fuente.'cliente/aplicacion.js',
     _fuente.'cliente/componente.js',
     _fuente.'cliente/controlador.js',
     _fuente.'cliente/enrutador.js',

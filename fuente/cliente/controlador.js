@@ -8,6 +8,11 @@
 "use strict";
 
 /**
+ * Controlador concreto.
+ * @typedef Controlador
+ */
+
+/**
  * Objeto base para los controladores.
  */
 var controlador=new function() {
@@ -25,7 +30,7 @@ var controlador=new function() {
     };
 
     /**
-     * Devuelve el nombre de la instancia.
+     * Devuelve la instancia del gestor de la interfaz con el servidor.
      */
     this.obtenerServidor=function() {
         return this.servidor;

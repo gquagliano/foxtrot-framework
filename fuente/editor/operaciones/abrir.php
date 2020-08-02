@@ -20,20 +20,20 @@ $nombre=basename($vista);
 $ruta=dirname($vista).'/';
 
 $rutaJson=$vista.'.json';
-//$rutaJs=$ruta.'.js';
+$rutaJs=$ruta.'../controladores/'.$nombre.'.js';
 $rutaCss=$vista.'.css';
 $rutaJsonApl=$ruta.'../../aplicacion.json';
 $rutaRec=$ruta.'../../recursos/';
 
-//if(!file_exists($rutaJs)) {
-//    //Controlador nuevo
-//    file_put_contents($rutaJs,'/**
-// * Controlador de la vista '.$nombre.'.
-// */
-//ui.registrarControlador("'.$nombre.'",function() {
-//});
-//');
-//}
+if(!file_exists($rutaJs)) {
+    //Controlador un nuevo con el mismo nombre que la vista (en el futuro esto debería ser opcional ya que no es necesario que toda vista tenga un controlador de igual nombre)
+    file_put_contents($rutaJs,'/**
+ * Controlador de la vista '.$nombre.'.
+ */
+ui.registrarControlador("'.$nombre.'",function() {
+});
+');
+}
 
 if(!file_exists($rutaJson)) {
     //Archivo nuevo

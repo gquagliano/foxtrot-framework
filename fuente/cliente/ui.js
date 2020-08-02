@@ -37,7 +37,8 @@ var ui=new function() {
         instanciasVistas={},
         nombreVistaPrincipal=null,
         enrutadores={},
-        instanciaEnrutador=null;
+        instanciaEnrutador=null,
+        instanciaAplicacion=null;
 
     ////Elementos del dom
 
@@ -257,9 +258,32 @@ var ui=new function() {
 
     ////Gestión de la aplicación
 
+    /**
+     * Registra e instancia la clase principal de la aplicación.
+     * @param {function} funcion 
+     */
     this.registrarAplicacion=function(funcion) {
+        //En este caso no puede haber más de una clase, por lo que no tiene sentido llevar un almacén de funciones, instanciamos directamente
+        instanciaAplicacion=aplicacion.fabricarAplicacion(funcion);
+        instanciaAplicacion.inicializar();
+        return this;
+    };
 
-    };    
+    /**
+     * Devuelve la instancia de la clase principal de la aplicacion.
+     * @returns {Aplicacion}
+     */
+    this.obtenerAplicacion=function() {
+        return instanciaAplicacion;
+    };
+
+    /**
+     * Devuelve la instancia de la clase principal de la aplicacion (alias de ui.obtenerAplicacion()).
+     * @returns {Aplicacion}
+     */
+    this.aplicacion=function() {
+        return this.obtenerAplicacion();
+    };
 
     ////Gestión de componentes
 
@@ -331,11 +355,22 @@ var ui=new function() {
 
     /**
      * Devuelve la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
+     * @param {*} param - Valor a evaluar.
+     * @returns {Componente}
      */
     this.obtenerInstanciaComponente=function(param) {
         var id=identificarComponente(param);    
         if(!id) return null;    
         return instanciasComponentes[instanciasComponentesId[id]];
+    };
+
+    /**
+     * Devuelve la instancia de un componente dado su ID, instancia, nombre o elemento del DOM (alias de ui.obtenerInstanciaComponente(param)).
+     * @param {*} param - Valor a evaluar.
+     * @returns {Componente}
+     */
+    this.componente=function(param) {
+        return this.obtenerInstanciaComponente(param);
     };
 
     /**
@@ -545,7 +580,7 @@ var ui=new function() {
     };
 
     /**
-     * Acceso directo a la instancia del controlador de la vista principal (alias de obtenerInstanciaControladorPrincipal).
+     * Acceso directo a la instancia del controlador de la vista principal (alias de ui.obtenerInstanciaControladorPrincipal()).
      */
     this.controlador=function() {
         return this.obtenerInstanciaControladorPrincipal();
@@ -940,8 +975,18 @@ var ui=new function() {
         instanciaEnrutador=enrutador.fabricarEnrutador(nombre,funcion);
     };
 
+    /**
+     * Devuelve la instancia del enrutador.
+     */
     this.obtenerEnrutador=function() {
         return instanciaEnrutador;
+    };
+
+    /**
+     * Devuelve la instancia del enrutador (alias de ui.obtenerEnrutador()).
+     */
+    this.enrutador=function() {
+        return this.obtenerEnrutador();
     };    
 
     /**

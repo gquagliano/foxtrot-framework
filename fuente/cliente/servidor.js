@@ -43,13 +43,16 @@ var servidor=new function() {
 
         if(opciones.abortar) this.abortarTodo();
 
+        var param={
+            __m:opciones.metodo
+        };
+        if(opciones.controlador) param.__c=opciones.controlador;
+        var args=JSON.stringify(opciones.parametros);
+        if(args!==null) param.__p=args;
+
         this.ajax.push(new ajax({
             url:this.url,
-            parametros:{
-                __c:opciones.controlador,
-                __m:opciones.metodo,
-                __p:JSON.stringify(opciones.parametros)
-            },
+            parametros:param,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
             }
@@ -91,8 +94,11 @@ var servidor=new function() {
      * Genera una instancia de una clase que redirigirá todas las llamadas a métodos al controlador de servidor especificado.
      * @param {string} controlador - Nombre del controlador.
      */
-    this.fabricar=function(controlador) {
-        return new Proxy(new function() {    
+    this.fabricar=function(ctl) {
+        if(typeof controlador==="undefined") controlador=null;
+
+        return new Proxy(new function() {
+            this.controlador=ctl;
         }(),{
             get(target,nombre) {
                 if(target.hasOwnProperty(nombre)) return target[nombre];
@@ -101,7 +107,7 @@ var servidor=new function() {
                 return function() {
                     var args=arguments.aArray(),
                         opc={
-                            controlador:controlador,
+                            controlador:target.controlador,
                             metodo:nombre
                         };
         

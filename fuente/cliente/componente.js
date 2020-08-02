@@ -246,7 +246,7 @@ var componente=new function() {
 
     /**
      * Fabrica una instancia de un componente concreto dada su función.
-    */
+     */
     this.fabricarComponente=function(fn) {
         //Heredar prototipo
         fn.prototype=new (this.cttr());

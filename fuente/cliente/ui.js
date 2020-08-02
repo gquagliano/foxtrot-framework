@@ -954,7 +954,7 @@ var ui=new function() {
             url=ruta;
         } else {
             //Obtener URL de la vista dado su nombre
-            instanciaEnrutador.obtenerUrlVista(ruta);
+            url=instanciaEnrutador.obtenerUrlVista(ruta);
         }
         window.location.href=url;
     };

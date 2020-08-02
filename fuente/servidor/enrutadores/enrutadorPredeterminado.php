@@ -27,7 +27,7 @@ class enrutadorPredetermiando extends enrutador {
                 $this->vista='inicio';
             } elseif(preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias)) {
                 $this->recurso=$coincidencias[1];
-            } elseif(preg_match('#^([a-z0-9_/-])/#',$this->url)) {
+            } elseif(preg_match('#^([A-Za-z0-9_/-]+)#',$this->url)) {
                 $this->vista=trim($this->url,'/');
             }
             if($this->vista||$this->recurso) return $this;

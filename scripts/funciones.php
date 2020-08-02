@@ -64,6 +64,14 @@ function comprimirCss($archivo) {
     $css=preg_replace('/[\s]+\{/m','{',$css);
     $css=str_replace(';}','}',$css);
 
+    //Subir los @import al comienzo del archivo
+    if(preg_match_all('/(@import url\(.+?\);)/i',$css,$coincidencias)) {
+        foreach($coincidencias[0] as $coincidencia) {
+            $css=str_replace($coincidencia,'',$css);
+            $css=$coincidencia.$css;
+        }
+    }
+
     file_put_contents($archivo,$css);
 }
 

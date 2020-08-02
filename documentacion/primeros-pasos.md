@@ -13,9 +13,9 @@
 
 1. Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído.
 
-2. Debe crearse la aplicación en `desarrollo/aplicaciones` (ver [Estructura](estructura.md)). La aplicación `test` puede utilizarse como plantilla, simplemente copiando el contenido del directorio `/desarrollo/aplicaciones/test`.
+2. Debe crearse la aplicación en `desarrollo/aplicaciones` (ver [Estructura](estructura.md)). La aplicación `ejemplo` puede utilizarse como plantilla, simplemente copiando el contenido del directorio `/desarrollo/aplicaciones/ejemplo`.
 
-3. Debe configurarse el sistema en el archivo `/desarrollo/config.php`.
+3. Debe configurarse el sistema en el archivo `/desarrollo/config.php`. Además, cada aplicación cuenta con un archivo `config.php` que sobrescribe los parámetros de la configuración global.
 
 4. Ver [Editor](editor.md) para información sobre el acceso al editor de vistas.
 

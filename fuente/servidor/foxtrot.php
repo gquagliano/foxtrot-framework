@@ -207,16 +207,17 @@ class foxtrot {
         if($metodo) {
             if(!$obj||!method_exists($obj,$metodo)) self::error();
             $res=call_user_func_array([$obj,$metodo],$params);
+
+            header('Content-Type: text/plain; charset=utf-8',true);
+            cliente::responder($res);   
         }
 
         if($html!==null) {
             //Pasaremos el html por el método html() del controlador para que pueda hacer algún preproceso si lo desea
             $html=$obj->html($html);
             echo $html;
-        } elseif($res!==null) {
-            header('Content-Type: text/plain; charset=utf-8',true);
-            cliente::responder($res);         
-        }   
+        }
+        
         exit;     
     }
 

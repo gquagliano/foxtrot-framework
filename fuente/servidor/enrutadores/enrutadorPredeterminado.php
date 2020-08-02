@@ -30,14 +30,14 @@ class enrutadorPredetermiando extends enrutador {
             } elseif(preg_match('#^([a-z0-9_/-])/#',$this->url)) {
                 $this->vista=trim($this->url,'/');
             }
-            return $this;
+            if($this->vista||$this->recurso) return $this;
         }
 
         $this->controlador=$this->params->__c; //Si no se determinó __c, por defecto foxtrot buscará el método público de la aplicación
         $this->metodo=$this->params->__m;
         $this->parametros=json_decode($this->params->__p);
 
-        if(!$this->controlador&&!$this->metodo&&!$this->vista&&!$this->pagina) $this->error=true;
+        if(!$this->controlador&&!$this->metodo&&!$this->vista&&!$this->pagina&&!$this->recurso) $this->error=true;
 
         return $this;
     }

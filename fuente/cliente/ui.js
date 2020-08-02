@@ -637,6 +637,14 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * Inlcuye un archivo CSS.
+     */
+    this.cargarCss=function(ruta) {
+        doc.head.anexar(doc.crear("<link rel='stylesheet' href='"+ruta+"'>"));
+        return this;
+    };
+
     ////Utilidades
 
     this.construirDialogo=function(obj) {

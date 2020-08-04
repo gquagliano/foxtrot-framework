@@ -12,14 +12,13 @@ defined('_inc') or exit;
 //enrutador nunevo que determine la aplicación por cualquier otro mecanismo. Soporta expresiones regulares. Las claves deben ser expresiones
 //regulares.
 $dominios=[
-    'localhost'=>'test',
-    '192\.168\.0\.4'=>'test'
+    'localhost'=>'test'
 ];
 
 foxtrot::establecerEnrutadorAplicacion(new enrutadorAplicacionPredeterminado($dominios));
 
 configuracion::establecer([
-    'url'=>'http://192.168.0.4/experimental-foxtrot-framework/desarrollo/',
+    'url'=>'http://localhost/experimental-foxtrot-framework/desarrollo/',
     //El parámetro rutaBase permite configurar el sistema en un subdirectorio (omitir si se instala en el raíz del servidor web)
     'rutaBase'=>'/experimental-foxtrot-framework/desarrollo/'
 ]);

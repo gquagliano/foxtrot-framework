@@ -72,6 +72,7 @@ class foxtrot {
         include(_servidor.'aplicacion.php');
         include(_servidor.'enrutador.php');
         include(_servidor.'enrutadorAplicacion.php');
+        include(_servidor.'entidad.php');
         include(_servidor.'modelo.php');
         include(_servidor.'mysql.php'); //TODO Configurable
 
@@ -99,6 +100,10 @@ class foxtrot {
         if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) include(_servidorAplicacion.'aplicacion.pub.php');
         $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
         self::$instanciaAplicacion=new $cls;
+
+        //Modelo de datos (importar completo)
+        $archivos=glob(_modeloAplicacion.'*.php');
+        foreach($archivos as $archivo) include($archivo);
     }
 
     public static function inicializar() {
@@ -242,12 +247,6 @@ class foxtrot {
             );
         }
         return self::$bd;
-    }
-
-    public static function obtenerInstanciaModelo($nombre) {
-        include_once(_modeloAplicacion.$nombre.'.php');
-        $cls='\\aplicaciones\\'._apl.'\\modelo\\'.$nombre;
-        return new $cls(self::obtenerInstanciaBd());
     }
 }
 

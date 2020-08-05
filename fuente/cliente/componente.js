@@ -777,22 +777,7 @@ var componente=new function() {
         if(typeof valor!=="string") return valor;
         
         //Evaluar expresiones, si las contiene
-
-        //Agregar al intérprete el controlador y otros objetos y funciones útiles
-        
-        var vars={
-                ui:ui,
-                util:util
-            },
-            controladores=ui.obtenerInstanciasControladores();
-
-        if(controladores) controladores.forEach(function(nombre,obj) {
-            vars[nombre]=obj;
-        });
-
-        expresion.establecerVariablesGlobales(vars);
-
-        return expresion.evaluar(valor);
+        return ui.evaluarExpresion(valor);
     };
 
     this.procesarEvento=function(nombre,propiedad,metodo,evento) {

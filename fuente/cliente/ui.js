@@ -685,6 +685,28 @@ var ui=new function() {
 
     ////Utilidades
 
+    /**
+     * Evalúa una expresión utilizando el intérprete configurado con diferentes objetos predefinidos relacionados a la interfaz y la aplicación.
+     * @param {string} cadena Cadena a evaluar.
+     */
+    this.evaluarExpresion=function(cadena) {
+        //Agregar al intérprete el controlador y otros objetos y funciones útiles
+        var vars={
+            ui:ui,
+            util:util,
+            aplicacion:instanciaAplicacion,
+            componentes:componentes
+        };
+
+        if(instanciasControladores) instanciasControladores.forEach(function(nombre,obj) {
+                vars[nombre]=obj;
+            });
+
+        expresion.establecerVariablesGlobales(vars);
+
+        return expresion.evaluar(cadena);
+    };
+
     this.construirDialogo=function(obj) {
 
     };

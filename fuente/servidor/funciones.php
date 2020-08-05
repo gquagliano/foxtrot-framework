@@ -95,3 +95,14 @@ function str_replace_array($arr,$cadena) {
     }
     return str_replace($a,$b,$cadena);
 }
+
+/**
+ * Convierte el número de minutos en H:i.
+ * @param integer $min Minutos. Admite valores negativos.
+ * @return string
+ */
+function minutosAHoras($min) {
+    $horas=floor($min/60);
+    $minutos=str_pad(round(abs($min)-abs($horas*60)),2,'0',STR_PAD_LEFT);
+    return $horas.':'.$minutos;
+}

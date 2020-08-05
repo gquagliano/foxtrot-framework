@@ -611,10 +611,11 @@ var ui=new function() {
         if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
 
         var obj=controlador.fabricarControlador(nombre,controladores[nombre]);
-        obj.inicializar();
 
         instanciasControladores[nombre]=obj;
         if(principal) instanciaControladorPrincipal=obj;
+        
+        obj.inicializar();
         
         return obj;
     };

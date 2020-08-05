@@ -91,4 +91,6 @@ Es posible filtrar consultas por coincidencia exacta con objetos o cadenas SQL; 
 
 Consultar la documentación de la clase para más información.
 
-En el futuro, se incluirán scripts para generar y actualizar la estructura de la base de datos a partir del modelo.
+Consultá los [Scripts de compilación](../scripts.md) para información sobre la sincronización de la base de datos con el modelo de datos (creación y actualización de tablas a partir de la estructura de las clases PHP).
+
+**Nota:** El ORM solo está probado con MySQL. Si bien está diseñado de forma que el motor de base de datos pueda variar, desacoplando el modelo de la interfaz con el servidor de bases de datos, es muy probable que el código SQL que genera el modelo no sea 100% compatible con otros motores, aunque se escriba otra interfaz perfectmente funcional. Esto es un tema a mejorar en el futuro.

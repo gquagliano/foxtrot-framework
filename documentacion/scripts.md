@@ -27,11 +27,13 @@ Genera una nueva aplicación desde una plantilla.
 
     php crear-apl.php -n nombre_aplicacion
 
-#### importar-bd
+#### sincronizar-bd
 
-Genera el modelo de datos a partir de las tablas de una base de datos. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
+Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
 
-    php importar-bd.php -a nombre_aplicacion
+    php sincronizar-bd.php -a nombre_aplicacion [-m nombre_modelo]
+
+Si no se especifica `-m`, se procesará el modelo de datos completo.
 
 #### construir-apl
 

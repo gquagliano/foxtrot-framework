@@ -6,326 +6,286 @@
  * @version 1.0
  */
 
-//NOTA: Esta clase está siendo migrada desde Foxtrot 6. Hay mucho que debe revisarse en cuanto a eficiencia, código limpio, documentación, spanglish y seguridad/visibilidad.
-
-defined('_inc') or exit;
+ defined('_inc') or exit;
 
 /**
  * Interfaz de bases de datos MySQL.
  */
-class db {
-    /**
-     * @var $l \mysqli
-     */
-    protected $l;
-    protected $result;
-    protected $prepared=null;
-
-    protected $credentials;
-
-    protected $open=false;
-    protected $ac;
-
-    protected $id;
-    protected $numRows;
-    protected $error;
-    protected $errorDesc;
-
-    protected $table;
-
-    protected $index;
-
-    protected $columns;
-
-    function __construct($connect,$autocommit,$h,$u,$p,$n,$pre,$po) {
-        $this->autocommit($autocommit);
-        
-        $this->credentials=array($h,$u,$p,$n,$po,$pre);
-
-        if($connect) $this->conectar();
-    }
-
-    function setLink($l) {
-        $this->open=true;
-        $this->l=$l;
-        return $this;
-    }
-
-    function getLink() {
-        return $this->l;
-    }
+class bd {
+	protected $e;
+    protected $stmt=null;
     
-    function __destruct() {
+    protected $credenciales=null;
+
+	/**
+	 * Información de la última consulta.
+	 * @var $id Último ID insertado.
+	 * @var $filas Número de filas afectadas o encontradas.
+	 * @var $error Error (bool).
+	 * @var $descripcionError Descripción del último error.
+	 */
+	protected $id=null;
+	protected $filas=0;
+	protected $error=0;
+	protected $descripcionError=null;
+
+	function __construct($conectar=false,$servidor=null,$usuario=null,$contrasena=null,$nombre=null,$prefijo=null,$puerto=3306) {
+        $this->establecerCredenciales($servidor,$usuario,$contrasena,$nombre,$prefijo,$puerto);
+        if($conectar) $this->conectar();
+	}
+
+	function __destruct() {
         $this->desconectar();
     }
 
-    function conectar() {
-        if(!$this->open) {
-            $this->l=new \mysqli($this->credentials[0],$this->credentials[1],$this->credentials[2],$this->credentials[3],$this->credentials[4]);
-            if(!$this->l->connect_error) {
-                $this->consulta("SET NAMES 'utf8'");
-                $this->consulta("SET sql_mode=''");
-                $horas=floor(\configuracion::$zonaHorariaMinutos/60);
-                $minutos=str_pad(round(abs(\configuracion::$zonaHorariaMinutos)-abs($horas*60)),2,'0',STR_PAD_LEFT);
-                $this->consulta("SET @@session.time_zone='".$horas.':'.$minutos."'");
-                $this->open=true;
-                $this->prepared=null;
-                $this->autocommit($this->ac);
-            }
-        }
-        
-        return $this;
-    }
-
-    function ping() {
-        try {
-            $this->l->ping();
-        } catch(Exception $x) {
-            $this->conectar();
-        }
-    }
-
-    function desconectar() {
-        if($this->open) {
-            $this->l->close();
-            $this->open=false;
-        }
-        
-        return $this;
-    }
-
-    function id() {
+    /**
+     * Devuelve el último ID insertado.
+     */
+    public function obtenerId() {
         return $this->id;
     }
 
-    function numeroFilas() {
-        return $this->numRows;
+    /**
+     * Devuelve el número de filas afectadas por la última consulta, ya sea una selección (cantidad de filas seleccionadas) como una actualización (cantidad de filas afectadas.)
+     */
+    public function obtenerNumeroFilas() {
+        return $this->filas;
     }
 
-    function error() {
+    /**
+     * Devuelve la descripción del último error.
+     */
+    public function obtenerError() {
+        return $this->descripcionError;
+    }
+
+    /**
+     * Devuelve el número o código del último error.
+     */
+    public function obtenerNumeroError() {
         return $this->error;
     }
-    
-    function descripcionError() {
-        return $this->errorDesc;
-    }
 
-    function siguiente() {
-        if($this->prepared!=null) {
-            if($this->prepared->fetch()){
-                $result=new \stdClass;
-                foreach($this->columns as $k => $v) {
-                    //detectar tipos numericos
-                    if(is_numeric($v)) $v+=0;
-                    $result->$k=$v;
-                }
-                return $result;
-            }else{
-                return false;
-            }
-        }
-
-        if(!is_object($this->result)) return false;
-        $this->index++;
-        return $this->result->fetch_object();
-    }
-
-    function siguienteAsociativo() {
-        if($this->prepared!=null) {
-            if($this->prepared->fetch()){
-                $result=array();
-                foreach($this->columns as $k => $v) {
-                    //detectar tipos numericos
-                    if(is_numeric($v)) $v+=0;
-                    $result[$k]=$v;
-                }
-                return $result;
-            }else{
-                return false;
-            }
-        }
-
-        if(!is_object($this->result)) return false;
-        $this->index++;
-        return $this->result->fetch_assoc();
-    }
-
-    function siguienteArray() {
-        if($this->prepared!=null) {
-            if($this->prepared->fetch()){
-                $result=array();
-                foreach($this->columns as $k => $v) {
-                    //detectar tipos numericos
-                    if(is_numeric($v)) $v+=0;
-                    $result[]=$v;
-                }
-                return $result;
-            }else{
-                return false;
-            }
-        }
-
-        if(!is_object($this->result)) return false;
-        $this->index++;
-        return $this->result->fetch_array();
-    }
-    
-    function primero() {
-        $this->irA(0);
+    /**
+     * Establece las credenciales.
+     */
+    public function establecerCredenciales($servidor=null,$usuario=null,$contrasena=null,$nombre=null,$prefijo=null,$puerto=3306) {
+        $this->credenciales=(object)[
+            'servidor'=>$servidor,
+            'usuario'=>$usuario,
+            'contrasena'=>$contrasena,
+            'nombre'=>$nombre,
+            'prefijo'=>$prefijo,
+            'puerto'=>$puerto
+        ];
         return $this;
     }
-    
-    function ultimo() {
-        $this->irA($this->numeroFilas()-1);
-        return $this;
-    }
-    
-    function irA($i) {
-        if($this->prepared!=null) {
-            $this->prepared->data_seek($i);
+
+    /**
+     * Abre la conexión a la base de datos.
+     */
+    public function conectar() {
+		$this->e=new mysqli(
+            $this->credenciales->servidor.':'.$this->credenciales->puerto,
+            $this->credenciales->usuario,
+            $this->credenciales->contrasena,
+            $this->credenciales->nombre
+        );
+
+		if($this->e->connect_errno) {
+            $this->error=$this->e->connect_errno;
+            $this->descripcionError=$this->e->connect_error;
             return $this;
         }
 
-        if(is_object($this->result)) $this->result->data_seek($i);
-        $this->index=$i;
-        return $this;
-    }
-    
-    function escapar($q) {
-        if(is_array($q)) {
-            foreach($q as $k=>$v) $q[$k]=$this->escapar($v);
-            return $q;
-        } else {
-            return $this->l->escape_string($q);
-        }
-    }
-
-    function comenzarTransaccion() {
-        //$this->l->begin_transaction();
-        $this->autocommit(false);
-        return $this;
-    }
-
-    function autocommit($a) {
-        $this->ac=$a;
-        if($this->open) $this->l->autocommit($a);
-        return $this;
-    }
-
-    function finalizarTransaccion() {
-        return $this->l->commit();
-    }
-
-    function descartarTransaccion() {
-        return $this->l->rollback();
-    }	
-
-    function consulta($q=null) {
-        $q = preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim", $this->prefix, $q);
-
-        if($q) {
-            $this->result=$this->l->query($q);
-            $this->prepared=null;
-        } elseif($this->prepared!=null) {
-            $this->prepared->execute();
-            $this->prepared->store_result();
-            $md=$this->prepared->result_metadata();
-            if($md) {
-                $params=array();
-                $this->columns=array();
-                while($field=$md->fetch_field()) $params[]=&$this->columns[$field->name];
-                call_user_func_array(array($this->prepared,'bind_result'),$params);
-            }
-        } else {
-            return null;
-        }
-
-        $this->errorDesc=$this->l->error;
-        if($this->errorDesc) {
-            $this->error=true;
-        } else {
-            $this->error=false;
-        }
-        $this->id=$this->l->insert_id;
-        if($this->l->affected_rows) {
-            $this->numRows=$this->l->affected_rows;
-        } else {
-            $this->numRows=$this->result->num_rows;
-        }
+        $this->e->query('set sql_mode=""');
+        //$this->e->query('set names "utf8"');
+        $this->e->set_charset('utf8');
+        $this->e->query("set @@session.time_zone='".minutosAHoras(\configuracion::$zonaHorariaMinutos)."'");        
         
-        $this->primero();
-
         return $this;
     }
 
-    //prepare(sql) = sin parámetros / los parámetros serán añadidos posteriormente
-    //prepare(sql,types,vars...)
-    //Types: s = string, i = integer, d = double,  b = blob
-    function preparar() {
-        $a=func_get_args();
-        $q=array_shift($a);			
-        $q = preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim", $this->prefix, $q);
-        //mysqli_report(MYSQLI_REPORT_ALL);
-        $this->prepared=$this->l->prepare($q);
-        if(!$this->prepared) {
-            $this->error=true;
-            $this->errorDesc=$this->l->error;
-        } elseif(count($a)) {
-            $this->asociarParametros($a[0],$a[1]);
+    /**
+     * Cierra la conexión a la base de datos.
+     */
+    public function desconectar() {
+        if($this->e) {
+            try {           
+                $this->e->close;
+                if($this->stmt) $this->stmt->close();
+            } catch(Exception $x) { }
         }
         return $this;
-    }
-    
-    function asociarParametros() {
-        $a=func_get_args();
-        if(count($a)>1&&(!is_array($a[1])||count($a[1]))) {
-            $p=array($a[0]);
-            if(is_array($a[1])) {
-                for($i=0;$i<count($a[1]);$i++) $p[]=&$a[1][$i];
-            } else {
-                for($i=1;$i<count($a);$i++) $p[]=&$a[$i];
-            }
-            call_user_func_array(array($this->prepared,'bind_param'),$p);
-        }
-        return $this;
-    }
-    
-    function aArray() {
-        $res=array();
-        while($r=$this->siguiente()) {
-            $res[]=$r;
-        }
-        return $res;
-    }
-    
-    function aArrayAsociativo() {
-        $res=array();
-        while($r=$this->siguienteAsociativo()) {
-            $res[]=$r;
-        }
-        return $res;
-    }
-    
+	}
+
+    /**
+     * Reemplaza el prefijo #__ antes de los nombres de tabla por el prefijo real de las mismas.
+     */
+	protected function reemplazarPrefijo($q) {
+		return preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim",$this->credenciales->prefijo,$q);
+	}
+
+    /**
+     * Abre una transacción.
+     */
+	public function comenzarTransaccion() {
+		$this->e->autocommit(false);
+		return $this;
+	}
+
+    /**
+     * Finaliza la transacción.
+     */
+	public function finalizarTransaccion() {
+		$this->e->commit();
+		$this->e->autocommit(true);
+		return $this;
+	}
+
+    /**
+     * Descarta la transacción, revirtiendo sus efectos.
+     */
+	public function descartarTransaccion() {
+		$this->e->rollback();
+		return $this;
+	}
+
     /**
      * Bloquea las tablas.
+     * @param string $modo Modo: 'lectura' o 'escritura'.
+     * @param string[] $tablas Tablas a bloquear.
      */
-    function bloquear() {
-        $args=func_get_args();
-        if(is_string($args[count($args)-1])) {
-            $mode=array_pop($args);
-            $models=$args;
-        } else {
-            $mode='write';
-            $models=$args;
-        }
-        $tables=array();
-        foreach($models as $ent) {
-            $tables[]='#__'.$ent;
-        }
-        $this->consulta('lock tables '.implode(',',$tables).' '.$mode);
-    }
+	public function bloquear($modo,$tablas) {
+		$modo=$modo=='escritura'?' write':' read';
 
-    function desbloquear() {
-        $this->consulta('unlock tables');
-    }
+		foreach($tablas as $i=>$t) $tablas[$i].=$modo;
+		$tablas=join(',',$tablas);
+
+		$this->e->query('lock tables '.$tablas);
+
+		return $this;
+	}
+
+    /**
+     * Desbloquea las tablas.
+     */
+	public function desbloquear() {
+		$this->e->query('unlock tables');
+		return $this;
+	}
+
+	/**
+	 * Ejecuta una consulta MySQL y devuelve una instancia de resultado. La cadena #__ previo a un nombre de tabla se reemplazará
+	 * por el prefijo.
+	 * @var $q Consulta.
+	 * @var $parametros Array de parámetros. Opcional, si se incluye, se preparará y ejecutará la sentencia preparada en una sola operación.
+	 * @var $tipos String de tipos en caso de usar parámetros (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 */
+	public function consulta($q,$parametros=null,$tipos=null) {
+		if($parametros) {
+			return $this->preparar($q,$parametros,$tipos)
+				->ejecutar();
+		}
+
+		$this->liberar();
+
+		$query=$this->e->query($this->reemplazarPrefijo($q));
+
+		$res=null;
+		if(!$this->e->errno) $res=(new resultado)->establecer($query);
+
+		$this->id=$this->e->insert_id;
+		$this->filas=$this->e->affected_rows?$this->e->affected_rows:$this->e->num_rows;
+		$this->error=$this->e->errno;
+		$this->descripcionError=$this->e->error;
+
+		return $res;
+	}
+
+	/**
+	 * Comienza una consulta preparada. La cadena #__ previo a un nombre de tabla se reemplazará
+	 * por el prefijo.
+	 * @var $q Consulta.
+	 * @var $parametros Array de parámetros.
+	 * @var $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 */
+	public function preparar($q,$parametros=null,$tipos=null) {
+		$this->liberar();
+
+		$this->stmt=$this->e->prepare($this->reemplazarPrefijo($q));
+		
+		if(!$this->stmt||$this->stmt->error) {
+			$this->error=$this->stmt->errno;
+			$this->descripcionError=$this->stmt->error;
+			return $this;
+		}
+
+		if($parametros) $this->asignar($parametros,$tipos);
+
+		return $this;
+	}
+
+	/**
+	 * Ejecuta una sentencia preparada y devuelve una instancia de resultado.
+	 */
+	public function ejecutar() {
+		if(!$this->stmt) return null;
+
+		$this->stmt->execute();
+
+		$this->id=$this->stmt->insert_id;
+		$this->filas=$this->stmt->affected_rows?$this->stmt->affected_rows:$this->stmt->num_rows;
+		
+		if($this->stmt->error) {
+			$this->error=$this->stmt->errno;
+			$this->descripcionError=$this->stmt->error;
+			return $this;
+		}
+
+		return (new resultado)
+			->establecerStmt($this->stmt);
+	}
+
+	/**
+	 * Asigna nuevos parámetros a una sentencia preparada.
+	 * @var $parametros Array de parámetros.
+	 * @var $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 */
+	public function asignar($parametros,$tipos=null) {
+        if(!count($parametros)) return $this;
+        
+		if(!$tipos) {
+			$tipos='';
+			foreach($parametros as $v) {
+				if(is_integer($v)) {
+					$tipos.='i';
+				} elseif(is_numeric($v)||preg_match('/^[0-9]*\.[0-9]+$/',$v)) {
+					$tipos.='d';
+				} else {
+					$tipos.='s';
+				}
+				//TODO blob
+			}
+		}
+		
+		$arr=[$tipos];
+        for($i=0;$i<count($parametros);$i++) $arr[]=&$parametros[$i];
+        
+        call_user_func_array([$this->stmt,'bind_param'],$arr);
+
+		return $this;
+	}
+
+	/**
+	 * Destruye la sentencia preparada.
+	 */
+	public function liberar() {
+		if($this->stmt) {
+			//debe cerrarse desde resultado, de lo contrario no podrán leerse las filas tras otra consulta intermedia
+			//$this->stmt->close();
+			$this->stmt=null;
+		}
+		return $this;
+	}
 }

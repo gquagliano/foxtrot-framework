@@ -74,7 +74,10 @@ class foxtrot {
         include(_servidor.'enrutadorAplicacion.php');
         include(_servidor.'entidad.php');
         include(_servidor.'modelo.php');
-        include(_servidor.'mysql.php'); //TODO Configurable
+
+        //TODO Hacer configurable. En teoría, debería poderse implementar cualquier motor de base de datos o repositorio (archivo, API) implementando clases compatibles con bd
+        include(_servidor.'mysql.php');
+        include(_servidor.'mysql-resultado.php');
 
         include(_servidor.'enrutadores/enrutadorPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
@@ -235,8 +238,7 @@ class foxtrot {
     public static function obtenerInstanciaBd() {
         if(!self::$bd) {
             //El conector cambiará según qué clase `db` esté implementada
-            self::$bd=new db(
-                true,
+            self::$bd=new bd(
                 true,
                 configuracion::$servidorBd,
                 configuracion::$usuarioBd,

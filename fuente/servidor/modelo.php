@@ -14,7 +14,12 @@ defined('_inc') or exit;
  * Clase base de los repositorios del modelo de datos.
  */
 class modelo {
+    /**
+     * @var bd $bd
+     * @var resultado $resultado
+     */
     protected $bd;
+    protected $resultado;
 
     protected $nombre;
     protected $tipoEntidad;
@@ -164,7 +169,9 @@ class modelo {
             'sql'=>$this->sql,
             'parametros'=>$this->parametros,
             'tipos'=>$this->tipos,
-            'error'=>$this->bd->descripcionError()
+            'error'=>$this->bd->obtenerError(),
+            'bd'=>$this->bd,
+            'resultado'=>$this->resultado
         ];
     }
 
@@ -404,6 +411,8 @@ class modelo {
      * Ejecuta la consulta, sin devolver ningún elemento.
      */
     public function ejecutarConsulta($operacion='seleccionar') {
+        if($this->consultaProcesarRelaciones&&($operacion=='insertar'||$operacion=='actualizar')) $this->ejecutarConsultasRelacionadas();
+
         if(!$this->consultaPreparada||!$this->reutilizarConsultaPreparada) {
             $this->prepararConsulta($operacion);
         } else {
@@ -411,13 +420,11 @@ class modelo {
             //TODO Definir cómo pueden ser reemplazados los parámetros. Por el momento, solo los valores a insertar/actualizar se pueden modificar entre consultas.
             $this->construirConsulta($operacion);
         }
-        $this->bd->asociarParametros(implode('',$this->tipos),$this->parametros);
-        $this->bd->consulta();
+        $this->bd->asignar($this->parametros,implode('',$this->tipos));
+        $this->resultado=$this->bd->ejecutar();
 
-        $this->ultimoId=$this->bd->id();
+        $this->ultimoId=$this->bd->obtenerId();
         if($operacion=='insertar') $this->consultaValores->id=$this->ultimoId;
-
-        if($this->consultaProcesarRelaciones&&($operacion=='insertar'||$operacion=='actualizar')) $this->ejecutarConsultasRelacionadas();
 
         return $this;
     }
@@ -440,14 +447,7 @@ class modelo {
 
                 $idInsertado=$entidad->id;
 
-                if($idInsertado&&$this->consultaValores->$columna!=$idInsertado) {
-                    //Fila insertada, actualizar entidad propia
-                    //TODO Hay que cambiar la interfaz bd porque (entre otros temas) al realizar una consulta secundaria se perdería la consulta preparada y, con ello, la posibilidad de reutilizarla
-                    $this->bd->preparar('update #__'.$this->nombre.' set `'.$columna.'`=? where `id`=?','dd',[
-                        $idInsertado,
-                        $this->consultaValores->id
-                    ])->consulta();
-                }
+                $this->consultaValores->$columna=$idInsertado;
             }
         }
         return $this;
@@ -459,7 +459,7 @@ class modelo {
     public function obtenerUno() {
         $this->consultaCantidad=1;
         $this->ejecutarConsulta();
-        $fila=$this->bd->siguiente();
+        $fila=$this->resultado->siguiente();
         if(!$fila) return null;
         return $this->fabricarEntidad($fila);
     }
@@ -471,7 +471,7 @@ class modelo {
         $this->ejecutarConsulta();
 
         $resultado=[];
-        while($fila=$this->bd->siguiente()) {
+        while($fila=$this->resultado->siguiente()) {
             $resultado[]=$this->fabricarEntidad($fila);
         }
 
@@ -482,7 +482,7 @@ class modelo {
      * Devuelve la cantidad de elementos encontrados o afectados por la última consulta.
      */
     public function obtenerCantidad() {
-        return $this->bd->numRows;
+        return $this->bd->obtenerNumeroFilas();
     }
 
     /**
@@ -501,7 +501,7 @@ class modelo {
 
         $this->ejecutarConsulta();
 
-        $resultado=$this->bd->siguiente()->cantidad;
+        $resultado=$this->resultado->siguiente()->cantidad;
 
         //Restaurar parámetros
         $this->consultaColumnas=$columnas;
@@ -584,8 +584,7 @@ class modelo {
      */
     public function bloquear($modo,...$modelos) {
         if($modo=='lectura') $modo='read'; else $modo='write';
-        $modelos[]=$modo;
-        call_user_func_array([$this->bd,'bloquear'],$modelos);
+        $this->bd->bloquear($modo,$modelos);
         return $this;
     }
 
@@ -601,7 +600,7 @@ class modelo {
      * 
      */
     public function obtenerError() {
-        return $this->bd->descripcionError();
+        return $this->bd->obtenerError();
     }
 
     /**
@@ -826,11 +825,10 @@ class modelo {
      * Determina (o estima) y establece el tipo de un valor dado, devolviendo 'i', 'd', 's' o 'b'.
      */
     protected function determinarTipo($valor) { //TODO Es muy específico de PDO, ¿debería estar en la clase bd?
-        if(is_numeric($valor)) return 'd';
-        //i: Tratar como decimal
-        //TODO b
-        //Por defecto, enviar como cadena
+        if(is_integer($valor)) return 'i';
+        if(is_numeric($valor)||preg_match('/^[0-9]*\.[0-9]+$/',$valor)) return 'd';
         return 's';
+        //TODO b
     }
 
     //TODO Métodos útiles para búsqueda fonética - Ver otras utilidades posibles

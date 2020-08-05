@@ -42,6 +42,7 @@ class modelo {
 
     protected $consultaProcesarRelaciones=true;
     protected $consultaProcesarRelaciones1n=true;
+    protected $consultaSeleccionarEliminados=false;
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -106,7 +107,8 @@ class modelo {
         //@indice ([sin valor, índice normal]|unico)
 
         $this->campos=(object)[
-            'id'=>(object)[]
+            'id'=>(object)[],
+            'e'=>(object)[]
         ];
 
         $propiedades=get_class_vars($this->tipoEntidad);
@@ -155,6 +157,7 @@ class modelo {
         $this->alias='t1';
         $this->consultaProcesarRelaciones=true;
         $this->consultaProcesarRelaciones1n=true;
+        $this->consultaSeleccionarEliminados=false;
 
         $this->ultimoId=null;
 
@@ -247,10 +250,18 @@ class modelo {
     }
 
     /**
+     * Permite que se seleccionen registros eliminados en la próxima consulta.
+     */
+    public function seleccionarEliminados() {
+        $this->consultaSeleccionarEliminados=true;
+        return $this;
+    }
+
+    /**
      * Procesa los campos relacionados sobre la instancia especificada luego de haber realizado una consulta con las relaciones desactivadas.
      */
     public function procesarRelaciones($obj,...$campos) {
-
+        //TODO
         return $this;
     }
 
@@ -472,6 +483,7 @@ class modelo {
     public function obtenerUno() {
         $this->consultaCantidad=1;
         $this->ejecutarConsulta();
+        if(!$this->resultado) return null;
         $fila=$this->resultado->siguiente();
         if(!$fila) return null;
         return $this->fabricarEntidad($fila);
@@ -482,6 +494,7 @@ class modelo {
      */
     public function obtenerListado() {
         $this->ejecutarConsulta();
+        if(!$this->resultado) return [];
 
         $resultado=[];
         while($fila=$this->resultado->siguiente()) {
@@ -722,8 +735,11 @@ class modelo {
         if(count($this->consultaCondiciones)) {
             $sql.=' where ';
 
+            if(!$this->consultaSeleccionarEliminados) {
+                $sql.=$this->alias.'.`e`=0 and ';
+            }
+
             $condiciones=[];
-            $parametros=[];
             
             foreach($this->consultaCondiciones as $condicion) {
                 $condiciones[]=$condicion->condicion;
@@ -738,6 +754,8 @@ class modelo {
             $sql.=' where '.$this->alias.'.`id`=? ';
             $parametros[]=$this->consultaValores->id;
             $tipos[]='d';
+        } elseif(!$this->consultaSeleccionarEliminados) {
+            $sql.='where '.$this->alias.'.`e`=0 ';
         }
 
         if($operacion=='seleccionar') {
@@ -753,7 +771,6 @@ class modelo {
                 $sql.=' having ';
 
                 $condiciones=[];
-                $parametros=[];
                 
                 foreach($this->consultaTeniendo as $condicion) {
                     $condiciones[]=$condicion->condicion;

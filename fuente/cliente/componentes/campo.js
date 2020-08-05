@@ -104,7 +104,7 @@ var componenteCampo=function() {
     /**
      * Actualiza el componente.
      */
-    this.actualizar=function(propiedad,valor,tamano,valorAnterior) {
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
         if(propiedad=="relleno") {
@@ -167,7 +167,7 @@ var componenteCampo=function() {
             return this;
         }
 
-        this.actualizarComponente(propiedad,valor,tamano,valorAnterior);
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

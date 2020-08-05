@@ -565,6 +565,15 @@ var ui=new function() {
         return this.obtenerInstanciaVistaPrincipal();
     };
 
+    /**
+     * Desencadena la actualización de componentes en toda la vista. Este método no redibuja todos los componentes ni reasigna todas las propiedades de cada uno. Está diseñado
+     * para poder solicitar a los componentes que se refresquen o vuelvan a cargar determinadas propiedades, como el origen de datos. Cada componente lo implementa, o no, de
+     * forma específica.
+     */
+    this.actualizar=function() {
+        instanciasVistas[nombreVistaPrincipal].actualizar();
+    };
+
     ////Controladores
 
     this.registrarControlador=function(nombre,funcion) {

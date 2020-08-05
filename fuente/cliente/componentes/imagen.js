@@ -50,7 +50,7 @@ var componenteImagen=function() {
     /**
      * Actualiza el componente.
      */
-    this.actualizar=function(propiedad,valor,tamano) {
+    this.propiedadModificada=function(propiedad,valor,tamano) {
         if(propiedad=="src") {
             //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
             
@@ -82,7 +82,7 @@ var componenteImagen=function() {
             this.img.atributo("alt",valor);
         }
         
-        this.actualizarComponente(propiedad,valor,tamano);
+        this.propiedadModificadaComponente(propiedad,valor,tamano);
         return this;
     };
 };

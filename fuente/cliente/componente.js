@@ -422,6 +422,27 @@ var componente=new function() {
     };
 
     /**
+     * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
+     * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
+     * forma específica.
+     */
+    this.actualizar=function() {
+        this.actualizarComponente();
+        return this;
+    };
+
+    /**
+     * Actualiza el componente y sus hijos en forma recursiva.
+     */
+    this.actualizarComponente=function() {
+        this.obtenerHijos().forEach(function(hijo) {
+            hijo.actualizar();
+        });
+
+        return this;
+    };
+
+    /**
      * Devuelve los estilos del componente.
      */
     this.obtenerEstilos=function(tamano) {
@@ -466,17 +487,17 @@ var componente=new function() {
     };
     
     /**
-     * Actualiza el componente (método para sobreescribir).
+     * Actualiza el componente tras la modificación de una propiedad (método para sobreescribir).
      */
-    this.actualizar=function(propiedad,valor,tamano,valorAnterior) {
-        this.actualizarComponente(propiedad,valor,tamano,valorAnterior);
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
     
     /**
-     * Actualiza el componente.
+     * Actualiza el componente tras la modificación de una propiedad.
      */
-    this.actualizarComponente=function(propiedad,valor,tamano,valorAnterior) {
+    this.propiedadModificadaComponente=function(propiedad,valor,tamano,valorAnterior) {
         if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
         if(util.esIndefinido(tamano)) tamano=null;
         if(util.esIndefinido(valorAnterior)) valorAnterior=null;
@@ -571,7 +592,7 @@ var componente=new function() {
 
         var anterior=this.valoresPropiedades[nombre];
         this.valoresPropiedades[nombre]=valor;
-        this.actualizar(nombre,valor,null,anterior);
+        this.propiedadModificada(nombre,valor,null,anterior);
         return this;
     };
 
@@ -635,7 +656,7 @@ var componente=new function() {
             this.valoresPropiedades[nombre]=valor;
         }
 
-        this.actualizar(nombre,valor,tamano,anterior);
+        this.propiedadModificada(nombre,valor,tamano,anterior);
 
         return this;
     };

@@ -23,6 +23,36 @@ var componenteCampo=function() {
                 etiqueta:"Texto de relleno",
                 adaptativa:false
             }
+        },
+        "Campo":{
+            tipo:{
+                etiqueta:"Tipo",
+                tipo:"opciones",
+                opciones:{
+                    texto:"Texto",
+                    multilinea:"Texto multilínea",
+                    contrasena:"Contraseña",
+                    numero:"Numérico"
+                },
+                adaptativa:false
+            },
+            valor:{
+                etiqueta:"Valor inicial"
+            }
+        },
+        "Formato":{
+            longitud:{
+                etiqueta:"Longitud máxima",
+                tipo:"numero"
+            },
+            paso:{
+                etiqueta:"Paso (campo numérico)",
+                tipo:"numero"
+            },
+            ocultarControl:{
+                etiqueta:"Ocultar control +/-",
+                tipo:"bool"
+            }
         }
     };
 
@@ -79,6 +109,61 @@ var componenteCampo=function() {
 
         if(propiedad=="relleno") {
             this.campo.atributo("placeholder",valor);
+            return this;
+        }
+
+        if(propiedad=="tipo") {
+            if(valor=="multilinea") {
+                //Reemplazar por textarea
+
+                this.campo.valor("");
+                this.campo.outerHTML=this.campo.outerHTML.replace("<input ","<textarea ").replace(/type=".*?"/,"");
+
+                //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
+                this.campo=this.elemento.querySelector("textarea");
+            } else {
+                if(valorAnterior=="multilinea") {
+                    //Reemplazar por input
+
+                    this.campo.valor("");
+                    this.campo.outerHTML=this.campo.outerHTML.replace("<textarea ","<input ").replace("</textarea>","");
+
+                    //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
+                    this.campo=this.elemento.querySelector("input");
+                }
+
+                var tipos={
+                    texto:"text",
+                    contrasena:"password",
+                    numero:"number"
+                };
+                this.campo.atributo("type",tipos[valor]);
+            }
+        
+            return this;
+        } 
+        
+        if(propiedad=="valor") {
+            this.campo.atributo("value",valor);
+            return this;
+        }
+        
+        if(propiedad=="longitud") {
+            this.campo.propiedad("maxlength",valor);
+            return this;
+        }
+
+        if(propiedad=="paso") {
+            this.campo.propiedad("step",valor);
+            return this;
+        }
+
+        if(propiedad=="ocultarControl") {
+            if(valor) {
+                this.campo.agregarClase("ocultar-control");
+            } else {
+                this.campo.removerClase("ocultar-control");
+            }
             return this;
         }
 

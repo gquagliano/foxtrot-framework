@@ -119,6 +119,8 @@ class foxtrot {
 
         configuracion::cargar();
 
+        sesion::inicializar();
+
         //Establecer url por defecto
         if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
@@ -157,7 +159,7 @@ class foxtrot {
 
             //Por el momento queda harcodeado ya que es muy limitado y, además, necesitamos tener control preciso de esta funcionalidad. Eventualmente puede implementarse
             //algún mecanismo para abstraerlo adecuadamente.
-            
+
             header('Content-Type: text/plain; charset=utf-8',true);
 
             if($foxtrot=='sesion') {

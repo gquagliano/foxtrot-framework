@@ -86,7 +86,7 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 
 Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en muchos casos, el uso de código SQL, aumentando así la seguridad y mejorando el diseño de los objetos de la aplicación. Además, como todo en Foxtrot, sus métodos están en español.
 
-[Documentación del ORM](api/orm.md).
+[Documentación del ORM](documentacion/api/orm.md).
 
 **Intérprete lógico-matemático (JS)**
 

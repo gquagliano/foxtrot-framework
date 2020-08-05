@@ -411,7 +411,7 @@ class modelo {
      * Ejecuta la consulta, sin devolver ningún elemento.
      */
     public function ejecutarConsulta($operacion='seleccionar') {
-        if($this->consultaProcesarRelaciones&&($operacion=='insertar'||$operacion=='actualizar')) $this->ejecutarConsultasRelacionadas();
+        if($operacion=='insertar'||$operacion=='actualizar') $this->ejecutarConsultasRelacionadas();
 
         if(!$this->consultaPreparada||!$this->reutilizarConsultaPreparada) {
             $this->prepararConsulta($operacion);
@@ -439,6 +439,12 @@ class modelo {
                 $columna=$campo->columna;
 
                 if($entidad===null) continue;
+
+                if(!$this->consultaProcesarRelaciones) {
+                    //Cuando se inserte o actualice con las relaciones desactivadas, solo debemos copiar el ID a la columna correspondiente
+                    if(is_object($entidad)) $this->consultaValores->$columna=$entidad->id;
+                    continue;
+                }
 
                 $modelo=$entidad->fabricarModelo($this->db);
 

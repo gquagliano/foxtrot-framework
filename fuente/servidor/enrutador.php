@@ -21,6 +21,7 @@ class enrutador {
     protected $metodo=null;
     protected $parametros=null;
     protected $recurso=null;
+    protected $foxtrot=null;
 
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
@@ -59,5 +60,9 @@ class enrutador {
 
     public function obtenerRecurso() {
         return $this->recurso;
+    }
+
+    public function obtenerFoxtrot() {
+        return $this->foxtrot;
     }
 }

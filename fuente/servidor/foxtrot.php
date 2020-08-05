@@ -68,6 +68,7 @@ class foxtrot {
         include(_servidor.'funciones.php');
         include(_servidor.'configuracion.php');
         include(_servidor.'cliente.php');
+        include(_servidor.'sesion.php');
         include(_servidor.'controlador.php');
         include(_servidor.'aplicacion.php');
         include(_servidor.'enrutador.php');
@@ -146,14 +147,28 @@ class foxtrot {
         $metodo=self::$enrutador->obtenerMetodo();
         $params=self::$enrutador->obtenerParametros();
         $recurso=self::$enrutador->obtenerRecurso();
-
-        header('Content-Type: text/html; charset=utf-8',true);
+        $foxtrot=self::$enrutador->obtenerFoxtrot();
 
         $html=null;
         $res=null;
 
+        if($foxtrot) {
+            //Acceso HTTP a funciones internas de Foxtrot
+
+            //Por el momento queda harcodeado ya que es muy limitado y, además, necesitamos tener control preciso de esta funcionalidad. Eventualmente puede implementarse
+            //algún mecanismo para abstraerlo adecuadamente.
+            
+            header('Content-Type: text/plain; charset=utf-8',true);
+
+            if($foxtrot=='sesion') {
+                sesion::responderSolicitud();
+            }
+        }
+
         if($pagina) {
             //Cargar una página independiente
+
+            header('Content-Type: text/html; charset=utf-8',true);
 
             //TODO Validación configurable de páginas disponibles públicamente.
             if(!in_array($pagina,['error'])) self::error();
@@ -179,6 +194,8 @@ class foxtrot {
 
         if($vista) {
             //Devuelve el contenido html de la vista
+            
+            header('Content-Type: text/html; charset=utf-8',true);
 
             //Validar que el archivo solicitado exista y no salga del directorio de cliente
             //TODO Verificar tipo de vista en aplicacion.json

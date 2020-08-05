@@ -21,6 +21,12 @@ class enrutadorPredetermiando extends enrutador {
             return $this;
         }
 
+        //Acceso a funciones internas de Foxtrot
+        if($this->params->__f) {
+            $this->foxtrot=$this->params->__f;
+            return $this;
+        }
+
         //Sin parámetros, intentar cargar archivos de la aplicación
         if(!$this->params->__c&&!$this->params->__m) {
             if($this->url=='') {

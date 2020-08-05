@@ -38,14 +38,15 @@ var servidor=new function() {
             listo:null,
             parametros:null,
             silencio:false,
-            abortar:true
+            abortar:true,
+            foxtrot:null
         },opciones);
 
         if(opciones.abortar) this.abortarTodo();
 
-        var param={
-            __m:opciones.metodo
-        };
+        var param={};
+        if(opciones.foxtrot) param.__f=opciones.foxtrot;
+        if(opciones.metodo) param.__m=opciones.metodo;
         if(opciones.controlador) param.__c=opciones.controlador;
         var args=JSON.stringify(opciones.parametros);
         if(args!==null) param.__p=args;

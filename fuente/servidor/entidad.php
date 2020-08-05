@@ -17,8 +17,9 @@ class entidad {
     protected $tipoModelo;
 
     public $id;
+    public $e;
 
-    public function fabricarModelo() {
-        return new $this->tipoModelo;
+    public function fabricarModelo($bd=null) {
+        return new $this->tipoModelo($bd);
     }
 }

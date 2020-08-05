@@ -65,7 +65,9 @@ class db {
             if(!$this->l->connect_error) {
                 $this->consulta("SET NAMES 'utf8'");
                 $this->consulta("SET sql_mode=''");
-                $this->consulta("SET @@session.time_zone='".\configuracion::$zonaHorariaHoras."'");
+                $horas=floor(\configuracion::$zonaHorariaMinutos/60);
+                $minutos=str_pad(round(abs(\configuracion::$zonaHorariaMinutos)-abs($horas*60)),2,'0',STR_PAD_LEFT);
+                $this->consulta("SET @@session.time_zone='".$horas.':'.$minutos."'");
                 $this->open=true;
                 $this->prepared=null;
                 $this->autocommit($this->ac);
@@ -268,7 +270,7 @@ class db {
         if(!$this->prepared) {
             $this->error=true;
             $this->errorDesc=$this->l->error;
-        } else {
+        } elseif(count($a)) {
             $this->asociarParametros($a[0],$a[1]);
         }
         return $this;

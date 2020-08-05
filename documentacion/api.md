@@ -150,6 +150,8 @@ Si bien en PHP, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue lo
 - Realizar consultas en español.
 - Convertir las entidades a clases para poder extenderlas, modificando o agregando métodos o verbos que resuelvan tareas comunes, como validaciones.
 
+[Documentación del ORM](api/orm.md).
+
 **Automatización**
 
 - Asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)

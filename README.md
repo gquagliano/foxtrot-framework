@@ -82,6 +82,12 @@ El framework permite una comunicación transparente entre controladores del lado
 
 Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ejecución rápidos, tanto en web como en dispositivos. Es compatible con Cordova y un cliente Windows que se encuentra en desarrollo.
 
+**ORM**
+
+Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en muchos casos, el uso de código SQL, aumentando así la seguridad y mejorando el diseño de los objetos de la aplicación. Además, como todo en Foxtrot, sus métodos están en español.
+
+[Documentación del ORM](api/orm.md).
+
 **Intérprete lógico-matemático (JS)**
 
 Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`. La finalidad del mismo es simplificar el enlace de la UI al código fuente y a los datos, reemplazando código JS por este pequeño lenguaje (por ejemplo, una cadena como `{var}` sería equivalente a agregar código para buscar el elemento del DOM y reemplazar su contenido por la propiedad `var` del controlador de la vista.)

@@ -15,7 +15,7 @@ Las clases de modelos, o repositorios, se corresponden con las tablas y heredan 
 
 La propiedad `tipoEntidad` relaciona el modelo con el tipo de entidades que representa.
 
-Las clases de entidades se corresponden con las filas y definen las propiedades y relaciones con otros modelos de datos. Estos parámetros se establecen mediante comentarios.
+Las clases de entidades se corresponden con las filas y definen las propiedades y relaciones con otros modelos de datos. Estos parámetros se establecen mediante comentarios. Todas las tablas deben tener las columnas `id` como clave principal y autoicremental, y `e` (tipo `tinyint(1)`) a utilizarse como baja lógica (*`e`liminado*.)
 
     namespace aplicaciones\ejemplo\modelo;
     class usuario extends \entidad {
@@ -24,21 +24,34 @@ Las clases de entidades se corresponden con las filas y definen las propiedades 
         //id y e (campo de baja lógica) son automáticos, no requieren propiedad ni comentario
 
         /**
-        * @tipo cadena(50)
-        * @indice
-        */
+         * @tipo cadena(50)
+         * @indice
+         */
         public $usuario;
 
         /** @tipo cadena(255) */
         public $contrasena;
 
         /**
-        * @tipo relacional
-        * @modelo direcciones
-        * @relacion 1:n
-        * @condicion usuario.id=direcciones.id
-        */
+         * @tipo relacional
+         * @modelo direcciones
+         * @relacion 1:n
+         * @columna idusuario
+         */
         public $direcciones;
+
+        /**
+         * @tipo relacional
+         * @modelo imagenes
+         * @relacion 1:0
+         * @columna idfoto
+         */
+        public $foto;
+
+        /**
+         * @tipo entero
+         */
+        public $idfoto;
     }
 
 La propiedad `tipoModelo` guarda la relación con el modelo al que pertenece la entidad. La clase puede tener otras propiedades que no se correspondan con campos, simplemente evitando el uso de las etiquetas reservadas en su documentación.
@@ -51,13 +64,11 @@ Etiquetas:
 
 `@modelo` Nombre del modelo relacionado.
 
-`@relacion` Tipo de relación: `1:1` (uno a uno), `1:0` (uno a uno, o nulo), `1:n` (uno a muchos). Es importante considerar durante el diseño de una entidad que las relaciones uno a muchos se procesan iterando sobre todo el resultado y relacionando fila por fila, luego de realizar la consulta.
+`@relacion` Tipo de relación: `1:1` (uno a uno), `1:0` (uno a uno, o nulo), `1:n` (uno a muchos). Es importante considerar durante el diseño de una entidad que las relaciones uno a muchos se procesan iterando sobre todo el resultado y relacionando fila por fila, luego de realizar la consulta principal, por lo que debe utilizarse con precaución en grandes conjuntos de resultados.
 
-`@condicion` Condición de la relación, utilizando los nombres de los modelos como alias.
+`@columna` Columna de la tabla. Las propiedades que reciben el elemento foráneo no deben necesariamente coincidir con los nombres de las columnas. Sin embargo, *se requiere* que exista una propiedad para las columnas especificadas. Por defecto, se realizará la relación por la columna especificada contra la clave primaria (`id`). Nótese que cuando la relación es `1:n`, `@columna` hace referencia a la columna de la tabla foránea. Cabe mencionar que la clase del modelo permite establecer relaciones más complejas en forma manual.
 
-Cabe mencionar que el modelo permite establecer relaciones más complejas en forma manual.
-
-El modo de uso es tan simple como instanciar el modelo e invocar algunos métodos del mismo.
+El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus métodos.
 
     $usuarios=new usuarios;
     $usuario=$usuarios
@@ -65,6 +76,18 @@ El modo de uso es tan simple como instanciar el modelo e invocar algunos método
             'usuario'=>$nombre
         ])
         ->obtenerUno();
+
+Durante las operaciones de inserción y actualización, serán procesados los campos relacionales en forma recursiva, creando o actualizando las mismas según corresponda. Este comportamiento se puede deshabilitar incovando `omitirRelaciones()`, en cuyo caso solo se tomará el ID de la entidad asignada al campo. Los campos nulos serán excluidos de las operaciones (en otras palabras, se debe dejar una propiedad sin asignar o asignar `null` para evitar que se modifique).
+
+    $usuario=new usuario;
+    $usuario->usuario=$nombreDeUsuario,
+    $usuario->foto=new foto;
+    $usuario->foto->archivo='foto.jpg';
+    (new usuarios)
+        ->establecerValores($usuario)
+        ->guardar(); //Creará la foto y luego el usuario
+
+Es posible filtrar consultas por coincidencia exacta con objetos o cadenas SQL; estas últimas aceptan parámetros con nombre precedidos por `@`.
 
 Consultar la documentación de la clase para más información.
 

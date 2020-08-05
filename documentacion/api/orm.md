@@ -77,6 +77,17 @@ El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus 
         ])
         ->obtenerUno();
 
+Es posible filtrar consultas por coincidencia exacta con objetos, o bien utilizando cadenas SQL; estas últimas aceptan parámetros con nombre precedidos por `@`:
+
+
+    $usuarios=new usuarios;
+    $usuario=$usuarios
+        ->establecerAlias('u')
+        ->donde('u.usuario=@usr',[
+            'usr'=>$nombre
+        ])
+        ->obtenerUno();
+
 Durante las operaciones de inserción y actualización, serán procesados los campos relacionales en forma recursiva, creando o actualizando las mismas según corresponda. Este comportamiento se puede deshabilitar incovando `omitirRelaciones()`, en cuyo caso solo se tomará el ID de la entidad asignada al campo. Los campos nulos serán excluidos de las operaciones (en otras palabras, se debe dejar una propiedad sin asignar o asignar `null` para evitar que se modifique).
 
     $usuario=new usuario;
@@ -87,7 +98,7 @@ Durante las operaciones de inserción y actualización, serán procesados los ca
         ->establecerValores($usuario)
         ->guardar(); //Creará la foto y luego el usuario
 
-Es posible filtrar consultas por coincidencia exacta con objetos o cadenas SQL; estas últimas aceptan parámetros con nombre precedidos por `@`.
+
 
 Consultar la documentación de la clase para más información.
 

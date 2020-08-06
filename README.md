@@ -13,7 +13,7 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español.
 
-**[Mirá el video de demostración](https://www.youtube.com/watch?v=JLUBElGI7Q4)**
+**[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8).**
 
 ## ¿Por qué?
 
@@ -25,6 +25,18 @@ Desarrollado en Argentina, con su API en español.
 ## Primeros pasos
 
 Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
+
+#### Aplicación de ejemplo
+
+En `/desarrollo/aplicaciones/ejemplo` se incluye una aplicación de ejemplo que presenta un login completo demostrando:
+
+- Vistas, componentes básicos, uso de las funciones de acceso a datos e intérprete de expresiones.
+- Eventos.
+- Llamados a métodos del servidor.
+- Llamados a métodos del controlador principal de la aplicación.
+- Respuestas y redireccionamientos desde el servidor.
+- Modelo de datos, uso del ORM.
+- Uso del gestor de sesión, desde el servidor y desde el cliente.
 
 ## Estructura del proyecto
 

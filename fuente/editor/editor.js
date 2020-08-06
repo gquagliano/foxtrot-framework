@@ -445,8 +445,9 @@ var editor=new function() {
         this.componenteSeleccionado=comp;
         
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
-            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'>")
-                .html(ui.obtenerComponentes()[this.componenteSeleccionado.componente].config.etiqueta)
+            var config=ui.obtenerComponentes()[this.componenteSeleccionado.componente].config;
+            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='../recursos/componentes/iconos/"+config.icono+"'></span>")
+                .atributo("title",config.etiqueta)
                 .anexarA(elem);
         }
 

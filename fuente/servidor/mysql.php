@@ -253,7 +253,7 @@ class bd {
 	 * @var $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
 	 */
 	public function asignar($parametros,$tipos=null) {
-        if(!count($parametros)) return $this;
+        if(!count($parametros)||!$this->stmt) return $this;
         
 		if(!$tipos) {
 			$tipos='';

@@ -438,7 +438,7 @@ class modelo {
             //TODO Definir cómo pueden ser reemplazados los parámetros. Por el momento, solo los valores a insertar/actualizar se pueden modificar entre consultas.
             $this->construirConsulta($operacion);
         }
-        $this->bd->asignar($this->parametros,implode('',$this->tipos));
+        if(count($this->parametros)) $this->bd->asignar($this->parametros,implode('',$this->tipos));
         $this->resultado=$this->bd->ejecutar();
 
         $this->ultimoId=$this->bd->obtenerId();

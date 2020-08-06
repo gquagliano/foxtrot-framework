@@ -256,6 +256,10 @@ var ui=new function() {
         return this;
     };
 
+    this.removerEstilos=function(selector,tamano) {
+        return this.establecerEstilos(selector,null,tamano);
+    };
+
     ////Gestión de la aplicación
 
     /**

@@ -435,6 +435,9 @@ var componente=new function() {
         if(this.nombre) delete componentes[this.nombre];
         ui.eliminarInstanciaComponente(this.id);
 
+        //Eliminar estilos
+        ui.removerEstilos(this.selector);
+
         //Avanzar recursivamente
         this.obtenerHijos().forEach(function(hijo) {
             hijo.eliminar();

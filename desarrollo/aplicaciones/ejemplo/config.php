@@ -9,5 +9,8 @@
 defined('_inc') or exit;
 
 configuracion::establecer([
-    'enrutador'=>'miEnrutador'
+    'enrutador'=>'miEnrutador',
+    'usuarioBd'=>'root',
+    'contrasenaBd'=>'toor',
+    'nombreBd'=>'test'
 ]);

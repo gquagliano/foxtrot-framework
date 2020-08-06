@@ -1,9 +1,0 @@
-{
-    "tabla":"test",
-    "campos":[
-        {
-            "nombre":"test",
-            "tipo":"numero"
-        }
-    ]
-}

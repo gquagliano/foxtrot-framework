@@ -697,21 +697,29 @@ var ui=new function() {
     /**
      * Evalúa una expresión utilizando el intérprete configurado con diferentes objetos predefinidos relacionados a la interfaz y la aplicación.
      * @param {string} cadena Cadena a evaluar.
+     * @param {Object} [variables] Variables adicionales.
+     * @param {Object} [funciones] Funciones adicionales.
      */
-    this.evaluarExpresion=function(cadena) {
+    this.evaluarExpresion=function(cadena,variables,funciones) {
         //Agregar al intérprete el controlador y otros objetos y funciones útiles
+        
         var vars={
             ui:ui,
             util:util,
             aplicacion:instanciaAplicacion,
             componentes:componentes
         };
-
         if(instanciasControladores) instanciasControladores.forEach(function(nombre,obj) {
                 vars[nombre]=obj;
             });
+        if(typeof variables!=="undefined") Object.assign(vars,variables);
+
+        var funcs={
+        };
+        if(typeof funciones!=="undefined") Object.assign(funcs,funciones);
 
         expresion.establecerVariablesGlobales(vars);
+        expresion.establecerFuncionesGlobales(funcs);
 
         return expresion.evaluar(cadena);
     };

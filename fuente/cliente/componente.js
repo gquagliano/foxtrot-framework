@@ -36,6 +36,7 @@ var componente=new function() {
     this.arrastrable=true;
     this.inicializado=false;
     this.nombreVista=null;
+    this.datos=null;
 
     /**
      * Almacen de valores de parámetros.
@@ -233,6 +234,34 @@ var componente=new function() {
      */
     this.obtenerPadre=function() {
         return this.padre;
+    };
+
+    /**
+     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
+     * @param {Object} obj - Objeto a asignar.
+     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
+     * @returns Componente
+     */
+    this.establecerDatos=function(obj,actualizar) {
+        if(typeof actualizar==="undefined") actualizar=true;
+
+        this.datos=obj;
+
+        this.obtenerHijos().forEach(function(hijo) {
+            hijo.establecerDatos(obj,false);
+        });
+
+        if(actualizar) this.actualizar();
+
+        return this;
+    };
+
+    /**
+     * Devuelve el origen de datos actual.
+     * @returns {Object}
+     */
+    this.obtenerDatos=function() {
+        return this.datos;
     };
 
     ////Gestión de la instancia

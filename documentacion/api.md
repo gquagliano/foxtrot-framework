@@ -17,7 +17,7 @@ Acceder al [índice de la documentación](api/indice.md).
 
 El cliente de Foxtrot tiene las siguientes particularidades:
 
-- Editor de vistas WYSIWYG.
+- Editor de vistas WYSIWYG - Drag&Drop.
 - La interfaz está formada por componentes, cada uno con propiedades y métodos. Abstrae por completo la maquetación de la vista.
 - Cuenta con componentes que cumplen la función de estructuras de control (condicional, bucle), y con la posibilidad de insertar valores de variables en cualquier ubicación y en cualquier propiedad de componente, y con la posibilidad de configurar llamados a métodos del controlador desde el editor (tanto del cliente y como del servidor agregando el prefijo `servidor:` al nombre del método).
 - Las vistas pueden cargarse dentro de una única página (con transición entre las mismas) o compilarse en archivos HTML independientes.
@@ -149,6 +149,8 @@ Si bien en PHP, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue lo
 - Abstracción: Mediante el uso de métodos en lugar de cadenas de texto, eliminar o reducir al mínimo el código SQL haciéndolo más abstracto flexible, permitiendo, en el futuro, implementar otros orígenes de datos, ya sean otros motores de bases de datos como cualquier otra fuente (APIs, archivos, etc.).
 - Realizar consultas en español.
 - Convertir las entidades a clases para poder extenderlas, modificando o agregando métodos o verbos que resuelvan tareas comunes, como validaciones.
+- Al definirse íntegramente mediante objetos, contribuye con el control de errores y el autocompletado al escribir código.
+- Permite crear y mantener actualizada la estructura de la base de datos a partir del código PHP del modelo de datos.
 
 [Documentación del ORM](api/orm.md).
 

@@ -100,8 +100,6 @@ Durante las operaciones de inserción y actualización, serán procesados los ca
         ->establecerValores($usuario)
         ->guardar(); //Creará la foto y luego el usuario
 
-
-
 Consultar la documentación de la clase para más información.
 
 Consultá los [Scripts de compilación](../scripts.md) para información sobre la sincronización de la base de datos con el modelo de datos (creación y actualización de tablas a partir de la estructura de las clases PHP).

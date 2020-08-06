@@ -159,13 +159,17 @@
         }
 
         if(filtro.hasOwnProperty("clase")) {
-            if(typeof filtro.clase==="string") {
-                resultado=this.classList.contains(filtro.clase);
-            } else if(util.esExpresionRegular(filtro.clase)) {
-                for(var i=0;i<this.classList.length;i++) {
-                    if(filtro.clase.test(this.classList[i])) {
-                        resultado=true;
-                        break;
+            if(!this.classList) {
+                resultado=false;
+            } else {
+                if(typeof filtro.clase==="string") {
+                    resultado=this.classList.contains(filtro.clase);
+                } else if(util.esExpresionRegular(filtro.clase)) {
+                    for(var i=0;i<this.classList.length;i++) {
+                        if(filtro.clase.test(this.classList[i])) {
+                            resultado=true;
+                            break;
+                        }
                     }
                 }
             }

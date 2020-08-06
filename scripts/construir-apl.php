@@ -14,7 +14,7 @@ include(__DIR__.'/configuracion.php');
 
 $opciones=getopt('a::');
 if(!$opciones['a']) {
-    fwrite(STDERR,'El parámetro -a es obligatorio.'.PHP_EOL.PHP_EOL);
+    fwrite(STDERR,'El parámetro -a es requerido.'.PHP_EOL.PHP_EOL);
     exit;
 }
 

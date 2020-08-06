@@ -35,6 +35,8 @@ Crea o actualiza las tablas a partir de la estructura del modelo de datos de la 
 
 Si no se especifica `-m`, se procesará el modelo de datos completo.
 
+Acumulará un registro de consultas SQL en el archivo `scripts/sincronizacion.sql`.
+
 #### construir-apl
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).

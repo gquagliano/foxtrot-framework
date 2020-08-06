@@ -58,7 +58,7 @@ La propiedad `tipoModelo` guarda la relación con el modelo al que pertenece la 
 
 Etiquetas:
 
-`@tipo` Define el tipo de dato: `texto`, `cadena(longitud)`, `entero(longitud)`, `decimal(entero.decimales)` o `relacional` (en el futuro, se agregarán otros tipos, como *fulltext* o campos geoespaciales.)
+`@tipo` Define el tipo de dato: `texto`, `cadena(longitud)`, `entero(longitud)`, `entero(longitud) sin signo`, `decimal(entero.decimales)`, `decimal(entero.decimales) sin signo`, `opcional` (booleano) o `relacional` (en el futuro, se agregarán otros tipos, como *fulltext* o campos geoespaciales.) Puede omitirse la longitud en `entero`.
 
 `@indice` Define un índice. Puede omitirse el valor para definir un índice normal, o agregar el valor `unico` para definir un índice único.
 
@@ -88,7 +88,7 @@ Es posible filtrar consultas por coincidencia exacta con objetos, o bien utiliza
         ])
         ->obtenerUno();
 
-Durante las operaciones de inserción y actualización, serán procesados los campos relacionales en forma recursiva, creando o actualizando las mismas según corresponda. Este comportamiento se puede deshabilitar invocando `omitirRelaciones()`, en cuyo caso solo se tomará el ID de la entidad asignada al campo. Los campos nulos serán excluidos de las operaciones (en otras palabras, se debe dejar una propiedad sin asignar o asignar `null` para evitar que se modifique).
+Durante las operaciones de inserción y actualización, serán procesados los campos relacionales en forma recursiva, creando o actualizando las mismas según corresponda. Este comportamiento se puede deshabilitar invocando `omitirRelaciones()`, en cuyo caso solo se tomará el ID de la entidad asignada al campo. Los campos nulos serán excluidos de las operaciones (en otras palabras, se debe dejar una propiedad sin asignar o asignar `null` para evitar que se modifique). Puede utilizarse `$obj->campo=new \nulo;` si desea realmente insertarse un valor `NULL`.
 
     $usuario=new usuario;
     $usuario->usuario=$nombreDeUsuario,

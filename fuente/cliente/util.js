@@ -72,6 +72,24 @@ var util={
      */
     esListaDeElementos:function(obj) {
         return obj!==null&&typeof obj==="object"&&(obj instanceof NodeList||obj instanceof HTMLCollection||typeof obj.entries==="function");
+    },
+
+    /**
+     * Busca una propiedad anidada dada su ruta separada por puntos.
+     * @param {Object} objeto - Objeto.
+     * @param {string} ruta - Ruta a evaluar.
+     * @returns {*|undefined}
+     */
+    obtenerPropiedad:function(objeto,ruta) {
+        ruta=ruta.split(".");
+        for(var i=0;i<ruta.length;i++) {
+            if(typeof objeto==="object") {
+                objeto=objeto[ruta[i]];
+            } else {
+                break;
+            }
+        }
+        return objeto;
     }
 };
 

@@ -38,11 +38,18 @@ var componenteEtiqueta=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        var valor=this.propiedad(null,"etiqueta"),
+        var propiedad=this.propiedad(null,"propiedad"),
+            contenido=this.propiedad(null,"contenido"),
             resultado="";
 
         if(this.datos) {
-            resultado=util.obtenerPropiedad(valor);
+            if(propiedad) {
+                //Como propiedad específica
+                resultado=util.obtenerPropiedad(this.datos,propiedad);
+            } else if(contenido) {
+                //Como expresion
+                resultado=ui.evaluarExpresion(contenido,this.datos);
+            }
         }
 
         this.elemento.html(resultado);

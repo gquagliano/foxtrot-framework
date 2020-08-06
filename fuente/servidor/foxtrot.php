@@ -110,7 +110,7 @@ class foxtrot {
         foreach($archivos as $archivo) include($archivo);
     }
 
-    public static function inicializar() {
+    public static function inicializar($aplicacion=null) {
         error_reporting(E_ALL^E_NOTICE^E_DEPRECATED);
         //TODO Registro de errores
 
@@ -124,8 +124,12 @@ class foxtrot {
         //Establecer url por defecto
         if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
-        self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
-        if(!self::$aplicacion) self::error();
+        if(!$aplicacion) {
+            self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+            if(!self::$aplicacion) self::error();
+        } else {
+            self::$aplicacion=$aplicacion;
+        }
 
         self::cargarAplicacion();
     }

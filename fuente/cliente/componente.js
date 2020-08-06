@@ -434,6 +434,12 @@ var componente=new function() {
         this.elemento.remover();
         if(this.nombre) delete componentes[this.nombre];
         ui.eliminarInstanciaComponente(this.id);
+
+        //Avanzar recursivamente
+        this.obtenerHijos().forEach(function(hijo) {
+            hijo.eliminar();
+        });
+        
         return this;
     };
 

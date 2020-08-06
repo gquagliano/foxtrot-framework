@@ -12,6 +12,18 @@
  */
 var componenteEtiqueta=function() {
     this.componente="etiqueta";
+
+    /**
+     * Propiedades de Etiqueta.
+     */
+    this.propiedadesConcretas={
+        "Etiqueta":{
+            contenido:{
+                etiqueta:"Contenido",
+                adaptativa:false
+            }
+        }
+    };
     
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
@@ -19,6 +31,23 @@ var componenteEtiqueta=function() {
     this.crear=function() {
         this.elemento=document.crear("<label class='etiqueta'/>");
         this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizar=function() {
+        var valor=this.propiedad(null,"etiqueta"),
+            resultado="";
+
+        if(this.datos) {
+            resultado=util.obtenerPropiedad(valor);
+        }
+
+        this.elemento.html(resultado);
+
+        this.actualizarComponente();
         return this;
     };
 };

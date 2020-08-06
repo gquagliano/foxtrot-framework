@@ -37,10 +37,12 @@ Durante el diseño de la vista, pueden establecerse los manejadores de eventos c
 
 - `ir:URL` Navega a una URL arbitraria.
 - `ir:nombreDeVista` Navega a una vista, dado su nombre.
-- `popup:URL` Abre una ventana emergente con una URL arbitraria.
-- `popup:nombreDeVista` Abre una ventana emergente con una vista, dado su nombre.
+- `abrir:URL` Abre una ventana emergente con una URL arbitraria.
+- `abrir:nombreDeVista` Abre una ventana emergente con una vista, dado su nombre.
 - `servidor:metodo` Invoca el método `metodo` en el controlador del lado del servidor (clase pública del mismo nombre que el controlador de la vista, ver [Controladores de servidor](cliente-php.md)).
+- `servidor-apl:metodo`  Invoca el método `metodo` en el controlador de la aplicación del lado del servidor.
 - `nombreDeComponente:valor` Envía el valor `valor` al componente de nombre `nombreDeComponente`. Cada componente interpreta este suceso en forma específica, pero su función principal es la de implementar la navegación a vistas secundarias con el componente Importar (ver [Componentes](../componentes.md)).
+- `aplicacion:metodo`  Invoca el método `metodo` en el controlador JS de la aplicación.
 - `metodo` Invoca el método `metodo` en el controlador JS de la vista.
 
 Las expresiones presentes en la cadena serán ejecutadas previo a la evaluación anterior (ver descripción del intérprete en la [Descripción y documentación del API](../api.md)). El valor puede contener una o múltiples expresiones, cada una encerrada entre `{` y `}`.

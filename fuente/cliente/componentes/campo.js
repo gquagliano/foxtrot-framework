@@ -15,7 +15,7 @@ var componenteCampo=function() {
     this.campo=null;
 
     /**
-     * Propiedades de Botón.
+     * Propiedades de Campo.
      */
     this.propiedadesConcretas={
         "Estilo":{

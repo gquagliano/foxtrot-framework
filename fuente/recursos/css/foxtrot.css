@@ -96,6 +96,16 @@ picture img {
 
 /* Utilidades */
 
+.tachado {
+    text-decoration: line-through;
+}
+.subrayado {
+    text-decoration: underline;
+}
+.font-weight-medium {
+    font-weight: 500;
+}
+
 .centrar-contenido-verticalmente {
     display: flex;
     flex-direction: column;

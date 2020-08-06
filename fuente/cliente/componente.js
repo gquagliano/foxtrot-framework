@@ -97,9 +97,22 @@ var componente=new function() {
             centrarHijos:{
                 etiqueta:"Centrar hijos verticalmente",
                 tipo:"bool"
+            },
+            visibilidad:{
+                etiqueta:"Visibilidad",
+                tipo:"opciones",
+                opciones:{
+                    visible:"Visible",
+                    invisible:"Invisible",
+                    oculto:"Oculto"
+                }
+            },
+            opacidad:{
+                etiqueta:"Opacidad",
+                tipo:"numero"
             }
         },
-        "Tamaño":{
+        "Dimensiones":{
             ancho:{
                 etiqueta:"Ancho"
             },
@@ -121,11 +134,62 @@ var componente=new function() {
                     //justificadoCentro:"Justificado al centro",
                     //justificadoDerecha:"Justificado a la derecha"
                 }
+            },
+            formato:{
+                etiqueta:"Formato",
+                tipo:"opciones",
+                opciones:{
+                    p:"Párrafo",
+                    h1:"Título 1",
+                    h2:"Título 2",
+                    h3:"Título 3",
+                    h4:"Título 4",
+                    h5:"Título 5",
+                    h6:"Título 6"
+                },
+                adaptativa:false
+            },
+            //TODO Barra de formato
+            peso:{
+                etiqueta:"Peso",
+                tipo:"opciones",
+                opciones:{
+                    fino:"Fino",
+                    normal:"Normal",
+                    medio:"Medio",
+                    negrita:"Negrita"
+                },
+                adaptativa:false
+            },
+            cursiva:{
+                etiqueta:"Cursiva",
+                tipo:"bool",
+                adaptativa:false
+            },
+            subrayado:{
+                etiqueta:"Subrayado",
+                tipo:"bool",
+                adaptativa:false
+            },
+            tachado:{
+                etiqueta:"Tachado",
+                tipo:"bool",
+                adaptativa:false
+            },
+            tamano:{
+                etiqueta:"Tamaño de texto",
+                tipo:"numero"
             }
         },
         "Eventos":{
             click:{
                 etiqueta:"Click",
+                adaptativa:false
+            }
+        },
+        "Datos":{
+            propiedad:{
+                etiqueta:"Propiedad",
                 adaptativa:false
             }
         }
@@ -602,6 +666,93 @@ var componente=new function() {
             } else {
                 this.elemento.removerClase(c);
             }
+            return this;
+        }
+
+        if(propiedad=="estructura") {
+            var clases={
+                bloque:"block",
+                enLinea:"inline",
+                flex:"flex",
+                flexVertical:"flex"
+            };
+            this.elemento.removerClase(/d-(sm-|md-|lg-|xl-)?(block|flex|inline)/)
+                .agregarClase("d-"+(tamano!="g"&&tamano!="xs"?tamano+"-":"")+clases[valor]);
+            
+            if(valor=="flexVertical") {
+                this.elemento.agregarClase("flex-column");
+            } else {
+                this.elemento.agregarClase("flex-column");
+            }
+
+            return this;
+        }
+
+        if(propiedad=="formato") {
+            if(valor=="p") {
+                this.elemento.removerClase(/h[1-6]/);
+            } else {
+                this.elemento.agregarClase(valor);
+            }
+            return this;
+        }
+
+        if(propiedad=="visibilidad") {
+            this.elemento.removerClase(/(invisible|d-none)/);
+            if(valor=="invisible") {
+                this.elemento.agregarClase("invisible");
+            } else if(valor=="oculto") {
+                this.elemento.agregarClase("d-none");
+            }
+            return this;
+        }
+
+        if(propiedad=="opacidad") {
+            estilos.opacity=valor;
+            return this;
+        }
+        
+        if(propiedad=="peso") {
+            var clases={
+                fino:"light",
+                normal:"normal",
+                medio:"medium",
+                negrita:"bold"
+            };
+            this.elemento.removerClase(/font-weight-(light|normal|medium|bold)/)
+                .agregarClase("font-weight-"+clases[valor]);
+            return this;
+        }
+
+        if(propiedad=="cursiva") {
+            if(valor) {
+                this.elemento.agregarClase("font-italic");
+            } else {
+                this.elemento.removerClase("font-italic");
+            }
+            return this;
+        }
+
+        if(propiedad=="subrayado") {
+            if(valor) {
+                this.elemento.agregarClase("subrayado");
+            } else {
+                this.elemento.removerClase("subrayado");
+            }
+            return this;
+        }
+
+        if(propiedad=="tachado") {
+            if(valor) {
+                this.elemento.agregarClase("tachado");
+            } else {
+                this.elemento.removerClase("tachado");
+            }
+            return this;
+        }
+
+        if(propiedad=="tamano") {
+            estilos.fontSize=this.normalizarValorCss(valor);
             return this;
         }
 

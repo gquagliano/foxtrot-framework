@@ -1100,10 +1100,23 @@ var componente=new function() {
      */
     this.obtenerHijos=function() {
         var hijos=[];
-        if(!this.contenedor) return hijos;
-        this.contenedor.hijos().forEach(function(elem) {
-            hijos.push(ui.obtenerInstanciaComponente(elem));
-        });
+        
+        //Los componentes no serán necesariamente hijos directos, por lo tanto debemos profundizar en la descendencia hasta en contrar un componente (no puede utilizarse
+        //querySelectorAll para esto ya que seleccionaría *todos* los componentes)
+        
+        var fn=function(padre) {
+            var elementos=padre.hijos();
+            for(var i=0;i<elementos.length;i++) {
+                if(elementos[i].es({clase:"componente"})) {
+                    hijos.push(ui.obtenerInstanciaComponente(elementos[i]));
+                } else {
+                    fn(elementos[i]);
+                }
+            }
+        };
+
+        fn(this.contenedor||this.elemento);       
+
         return hijos;
     };
 

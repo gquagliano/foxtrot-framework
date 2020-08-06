@@ -1024,24 +1024,15 @@ var componente=new function() {
             if(manejador.substring(0,9)=="servidor:") {
                 //Método del controlador de servidor
                 ctl.servidor[manejador.substring(9)]();
+            } else if(manejador.substring(0,13)=="servidor-apl:") {
+                //Método del controlador de servidor de la aplicación
+                ui.aplicacion().servidor[manejador.substring(13)]();
             } else if(manejador.substring(0,3)=="ir:") {
                 //Navegación
-                
-                //URL
-                //TODO
-
-                //Navegación normal (nombre de vista)
-                //TODO
-
-            } else if(manejador.substring(0,6)=="popup:") {
+                ui.irA(manejador.substring(3));
+            } else if(manejador.substring(0,6)=="abrir:") {
                 //Popup
-
-                //URL
-                //TODO
-
-                //Nombre de vista
-                //TODO
-
+                ui.abrirVentana(manejador.substring(6));
             } else if(manejador.indexOf(":")>0) {
                 //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                 //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
@@ -1051,6 +1042,9 @@ var componente=new function() {
                 var nombre=manejador.substring(0,manejador.indexOf(":")),
                     valor=manejador.substring(manejador.indexOf(":")+1);
                 componentes[nombre].eventoExterno(valor,evento);
+            } else if(manejador.substring(0,4)=="apl:") {
+                //Propiedad del controlador de aplicacion
+                ui.aplicacion()[manejador.substring(4)](this,evento);
             } else {
                 //Propiedad del controlador
                 ctl[manejador](this,evento);

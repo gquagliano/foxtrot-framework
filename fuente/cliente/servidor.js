@@ -71,6 +71,7 @@ var servidor=new function() {
         //resp.r    Devolver valor directo al callback
         //resp.m    Invocar el método en el controlador resp.c, con los parámetros resp.p
         //resp.e    Evaluar código arbitrario (TODO ¿es seguro? ¿tiene sentido?)
+        //resp.n    Navegar a resp.n
 
         if(resp.hasOwnProperty("r")) {
             if(opciones.retorno) opciones.retorno(resp.r); //TODO usar call()
@@ -83,6 +84,8 @@ var servidor=new function() {
             cuerpo=resp.m;
             eval(cuerpo);
             procesado=true;
+        } else if(resp.hasOwnProperty("n")) {
+            ui.irA(resp.n);
         } else{
             if(opciones.error) opciones.error.call(resp.m);
             return;

@@ -37,6 +37,13 @@ class cliente {
         \foxtrot::detener();
     }
 
+    public static function irA($ruta) {
+        echo json_encode([
+            'n'=>$ruta
+        ]);
+        \foxtrot::detener();
+    }
+
     public function __call($nombre,$args) {
         cliente::invocar($this->controlador,$nombre,$args);
     }

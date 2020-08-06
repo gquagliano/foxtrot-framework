@@ -1031,21 +1031,36 @@ var ui=new function() {
      */
     this.enrutador=function() {
         return this.obtenerEnrutador();
-    };    
+    };
+
+    this.procesarUrl=function(url) {
+        var resultado;
+        if(/^https?:\/\//i.test(url)) {
+            resultado=url;
+        } else {
+            //Obtener URL de la vista dado su nombre
+            resultado=instanciaEnrutador.obtenerUrlVista(url);
+        }
+        return resultado;
+    };
 
     /**
      * Navega a la vista o URL especificada.
      * @param {string} ruta - URL o nombre de vista de destino.
      */
     this.irA=function(ruta) {
-        var url;
-        if(/^https?:\/\//i.test(ruta)) {
-            url=ruta;
-        } else {
-            //Obtener URL de la vista dado su nombre
-            url=instanciaEnrutador.obtenerUrlVista(ruta);
-        }
-        window.location.href=url;
+        window.location.href=this.procesarUrl(ruta);
+        return this;
+    };
+
+    /**
+     * Abre una ventana emergente con la vista o URL especificada.
+     * @param {string} ruta - URL o nombre de vista de destino.
+     */
+    this.abrirVentana=function(ruta) {
+        var ancho=window.ancho()*.75,
+            alto=window.alto();
+        return window.open(this.procesarUrl(ruta),"_ventana","height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
     };
 
     ////Inicialización y ejecución del cliente

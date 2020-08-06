@@ -11,6 +11,12 @@
 defined('_inc') or exit;
 
 /**
+ * Valor nulo. Permite insertar un valor NULL en la base de datos, a diferencia de un valor NULL real, que es ignorado.
+ */
+class nulo {
+}
+
+/**
  * Clase base de los repositorios del modelo de datos.
  */
 class modelo {
@@ -330,15 +336,21 @@ class modelo {
             $parametros=[];
             foreach($condicion as $clave=>$valor) {
                 if($valor===null||!array_key_exists($clave,$this->campos)) continue;
-
-                $sql[]=$this->alias.'.`'.$clave.'`=?';
                 
                 if($valor===true) {
                     $valor=1;
                 } elseif($valor===false) {
                     $valor=0;
+                } elseif($valor instanceof nulo) {
+                    $valor=null;
                 }
-                $parametros[]=$valor;
+
+                if($valor===null) {
+                    $sql[]=$this->alias.'.`'.$clave.'` is null';
+                } else {
+                    $sql[]=$this->alias.'.`'.$clave.'`=?';
+                    $parametros[]=$valor;
+                }
             }
             $condicion=implode(' and ',$sql);
         } elseif(is_string($condicion)) {
@@ -842,9 +854,21 @@ class modelo {
                 }
                 if($valor===null) continue;
 
-                $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=?';
-                $parametros[]=$valor;
-                $tipos[]=$this->determinarTipo($valor);
+                if($valor===true) {
+                    $valor=1;
+                } elseif($valor===false) {
+                    $valor=0;
+                } elseif($valor instanceof nulo) {
+                    $valor=null;
+                }
+
+                if($valor===null) {
+                    $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=null';
+                } else {
+                    $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=?';
+                    $parametros[]=$valor;
+                    $tipos[]=$this->determinarTipo($valor);
+                }
             }
         }
 

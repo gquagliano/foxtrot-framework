@@ -7,7 +7,7 @@ produccion/*
 desarrollo/*
 !desarrollo/aplicaciones
 !desarrollo/.htaccess
-!desarrollo/config.php
+!desarrollo/config-ejemplo.php
 
 # Aplicación de pruebas (se incluye otra de ejemplo como plantilla)
 desarrollo/aplicaciones/test

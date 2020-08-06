@@ -68,6 +68,8 @@ Etiquetas:
 
 `@columna` Columna de la tabla. Las propiedades que reciben el elemento foráneo no deben necesariamente coincidir con los nombres de las columnas. Sin embargo, *se requiere* que exista una propiedad para las columnas especificadas. Por defecto, se realizará la relación por la columna especificada contra la clave primaria (`id`). Nótese que cuando la relación es `1:n`, `@columna` hace referencia a la columna de la tabla foránea. Cabe mencionar que la clase del modelo permite establecer relaciones más complejas en forma manual.
 
+`@predeterminado` Valor predeterminado. Si se omite, será `NULL`, o `0` para los campos booleanos.
+
 El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus métodos.
 
     $usuarios=new usuarios;

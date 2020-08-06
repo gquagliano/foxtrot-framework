@@ -121,7 +121,7 @@ class modelo {
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
 
-            if(preg_match_all('/@(tipo|modelo|relacion|columna|indice)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all('/@(tipo|modelo|relacion|columna|indice|predeterminado)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
 
                 foreach($coincidencias[1] as $i=>$etiqueta) {

@@ -27,6 +27,8 @@ Genera una nueva aplicación desde una plantilla.
 
     php crear-apl.php -n nombre_aplicacion
 
+Este script eventualmente se integraría con el editor.
+
 #### sincronizar-bd
 
 Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
@@ -37,11 +39,15 @@ Si no se especifica `-m`, se procesará el modelo de datos completo.
 
 Acumulará un registro de consultas SQL en el archivo `scripts/sincronizacion.sql`.
 
+Este script eventualmente se integraría con el editor.
+
 #### construir-apl
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
     php construir-apl.php -a nombre_aplicacion
+
+Este script eventualmente se integraría con el editor.
 
 #### construir-embebible
 
@@ -50,6 +56,8 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
     php construir-embebible.php -a nombre_aplicacion [-i nombre_vista_inicial]
 
 Nota: Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante el segundo parámetro, a fin de poder alojar en una única aplicación ambas versiones.
+
+Este script eventualmente se integraría con el editor. En el futuro, también se incluirá la función compilar la aplicación directamente desde el editor.
 
 ### Requerimientos
 

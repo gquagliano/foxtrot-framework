@@ -8,6 +8,6 @@ desarrollo/*
 !desarrollo/aplicaciones
 !desarrollo/.htaccess
 !desarrollo/config-ejemplo.php
-
-# Aplicación de pruebas (se incluye otra de ejemplo como plantilla)
+scripts/sincronizar.sql
+# Aplicación de pruebas (se incluye otra aplicación de ejemplo que recibe actualizaciones cuando la funcionalidad está estable)
 desarrollo/aplicaciones/test

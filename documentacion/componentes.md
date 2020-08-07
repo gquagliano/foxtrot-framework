@@ -89,7 +89,7 @@ Dentro del editor, los menús no responderán al paso del cursor sobre ellos (*h
 
 Genera un menú independiente, inicialmente oculto, el cual puede utilizarse luego como menú desplegable cuando el usario interactúe con otro componente (por ejemplo, un botón) o como menú contextual (click secundario). Admite como hijos componentes Item de menú.
 
-Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder editarse, a menos que se oculten los elementos invisibles con el comando correspondiente de la barra de tareas.
+Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder visualizar y modificar los mismos, a menos que se oculten los elementos invisibles con el comando correspondiente de la barra de herramientas.
 
 #### ![](img/iconos/navegacion.png) Navegación (paginado)
 

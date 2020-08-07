@@ -21,15 +21,19 @@
 
 #### ![](img/iconos/boton.png) Botón (botón o enlace)
 
+Doble click iniciará la edición de texto.
+
 #### ![](img/iconos/bucle.png) Bucle (estructura de control)
 
 #### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
-#### ![](img/iconos/campo.png) Campo (texto, texto multilínea, numérico)
+#### ![](img/iconos/campo.png) Campo (texto, texto multilínea, numérico, contraseña)
 
 #### ![](img/iconos/checkbox.png) Checkbox (campo de opción única o múltiple)
 
 #### ![](img/iconos/codigo.png) Código (HTML)
+
+Doble click abrirá la ventana de edición de código.
 
 #### ![](img/iconos/columna.png) Columna
 
@@ -39,7 +43,11 @@
 
 #### ![](img/iconos/contenedor.png) Contenedor
 
-#### ![](img/iconos/deslizable.png) Deslizable
+#### ![](img/iconos/contenedor-menu.png) Contenedor de menú: Barra de navegación o menú lateral (deslizable)
+
+Genera un menú de navegación, el cual puede utilizarse como barra de navegación (fija o flotante) o como menú lateral (deslizable). Admite como hijos componentes Item de menú (*no componentes Menú*).
+
+#### ![](img/iconos/deslizable.png) Deslizable (*slider*)
 
 #### ![](img/iconos/desplegable.png) Desplegable (campo)
 
@@ -49,6 +57,8 @@
 
 #### ![](img/iconos/etiqueta.png) Etiqueta (estructura de control)
 
+Este componente permite insertar valores del origen de datos. Presenta dos posibles comportamientos: Puede especificarse una propiedad (o una ruta con formato `foo.bar`) en la propiedad Propiedad, o bien una expresión en la propiedad Contenido. Todas las propiedades del origen de datos estarán disponibles en las expresiones, además de los valores estándar ([más información sobre las expresiones](../api.md).)
+
 #### ![](img/iconos/fecha.png) Fecha (campo de selección de fecha)
 
 #### ![](img/iconos/fila.png) Fila 
@@ -57,17 +67,29 @@
 
 #### ![](img/iconos/form.png) Formulario
 
+Este componente es solo una representación lógica de un formulario, sin otra funcionalidad que la de un contenedor.
+
 #### ![](img/iconos/hora.png) Hora (campo de selección de hora)
 
 #### ![](img/iconos/icono.png) Ícono (¿FontAwesome?)
 
 #### ![](img/iconos/imagen.png) Imagen
 
+Permite insertar una imagen cuyo origen es adaptativo, es decir, la URL de la imagen puede variar según el tamaño de pantalla.
+
 #### ![](img/iconos/importar.png) Importar (estructura de control)
 
-#### ![](img/iconos/menu.png) Menú
+#### ![](img/iconos/item-menu.png) Item de menú
 
-#### ![](img/iconos/menu-lateral.png) Menú lateral (deslizable)
+Permite agregar un ítem de menú. Puede utilizarse dentro del componente Menú o dentro del componente Contenedor de menú. Cada Item puede contener, a su vez, componentes Menú para generar submenús.
+
+Dentro del editor, los menús no responderán al paso del cursor sobre ellos (*hover*), sino que debe hacerse un click para desplegar y poder editar sus contenidos. Cabe aclarar que el doble click iniciará la edición de texto, al igual que en otros componentes.
+
+#### ![](img/iconos/menu.png) Menú desplegable o contextual
+
+Genera un menú independiente, inicialmente oculto, el cual puede utilizarse luego como menú desplegable cuando el usario interactúe con otro componente (por ejemplo, un botón) o como menú contextual (click secundario). Admite como hijos componentes Item de menú.
+
+Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder editarse, a menos que se oculten los elementos invisibles con el comando correspondiente de la barra de tareas.
 
 #### ![](img/iconos/navegacion.png) Navegación (paginado)
 
@@ -80,6 +102,8 @@
 #### ![](img/iconos/tabla.png) Tabla
 
 #### ![](img/iconos/texto.png) Texto
+
+Doble click iniciará la edición de texto.
 
 #### Vista
 

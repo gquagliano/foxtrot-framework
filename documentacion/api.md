@@ -83,6 +83,17 @@ Se implementará de forma que tenga acceso en forma predefinida a las propiedade
 
 El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
+#### Valores predefinidos
+
+En las propiedades de componentes que admiten expresiones, como así también al utilizar el método `ui.evaluarExpresion()`, los siguientes objetos estarán disponibles:
+
+- `ui`
+- `util`
+- `aplicacion` Instancia del controlador de la aplicación
+- `componentes`
+
+Cada componente [puede definir otras variables o fuciones específicas](componentes.md).
+
 ### Compilación
 
 Cada aplicación debe poder compliarse de una de las siguientes formas:

@@ -57,7 +57,7 @@ Genera un menú de navegación, el cual puede utilizarse como barra de navegaci�
 
 #### ![](img/iconos/etiqueta.png) Etiqueta (estructura de control)
 
-Este componente permite insertar valores del origen de datos. Presenta dos posibles comportamientos: Puede especificarse una propiedad (o una ruta con formato `foo.bar`) en la propiedad Propiedad, o bien una expresión en la propiedad Contenido. Todas las propiedades del origen de datos estarán disponibles en las expresiones, además de los valores estándar ([más información sobre las expresiones](../api.md).)
+Este componente permite insertar valores del origen de datos. Presenta dos posibles comportamientos: Puede especificarse una propiedad (o una ruta con formato `foo.bar`) en la propiedad Propiedad, o bien una expresión en la propiedad Contenido. Todas las propiedades del origen de datos estarán disponibles en las expresiones, además de los valores estándar ([más información sobre las expresiones](api.md).)
 
 #### ![](img/iconos/fecha.png) Fecha (campo de selección de fecha)
 

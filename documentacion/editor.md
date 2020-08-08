@@ -31,7 +31,7 @@ La siguiente etapa consistirá en:
 - Desarrollo de componentes concretos (ya están planteados los componentes básicos).
 - Integración con un gestor de aplicaciones vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/apertura (previsualización posiblemente se remueva, abrir y guardar, si se realiza el gestor externo, también).
 
-**Acceso al editor**
+### Acceso al editor
 
 `http://localhost/experimental-foxtrot-framework/desarrollo/editor/?vista=[ruta]&modo=[embebible|independiente]&cliente=[web|cordova|escritorio]`
 
@@ -50,6 +50,14 @@ Ruta sin extensión relativa a la raíz del sistema.
 - `escritorio` Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
 
 En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo y se automatizará el acceso al editor (acceso directo desde el listado de vistas).
+
+### Consejos útiles
+
+- Al arrastrar un componente sobre otro, tanto si se trata de uno nuevo o se está moviendo uno existente, esperando 3 segundos aparecerán áreas alrededor del componente para poder soltarlo antes/arriba o después/debajo del componente de destino.
+
+- Para seleccionar un componente sobre el cual no se puede hacer click, haciendo click secundario sobre uno de sus hijos se desplegará un menú contextual con opciones para seleccionar cualquier componente en su ascendencia.
+
+- Pueden seleccionarse múltiples componetes manteniendo presionada la tecla Shift.
 
 ## Más información
 

@@ -13,6 +13,28 @@
 var componenteContenedor=function() {
     this.componente="contenedor";
 
+    this.propiedadesConcretas={
+        "Contenedor":{
+            tipo:{
+                etiqueta:"Tipo",
+                tipo:"opciones",
+                opciones:{
+                    normal:"Normal",
+                    fluido:"Fluido",
+                    bloque:"Bloque"
+                },
+                adaptativa:false,
+                ayuda:"Establecer a Bloque para una etiqueta <div> sin restricción de ancho."
+            }
+            //nombre:{
+            //    etiqueta
+            //    tipo (predeterminado texto|multilinea|opciones|color|numero)
+            //    opciones (array {valor,etiqueta} cuando tipo=opciones)
+            //    grupo
+            //}
+        }
+    };
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
@@ -29,6 +51,23 @@ var componenteContenedor=function() {
     this.crear=function() {
         this.elemento=document.crear("<div class='container vacio'/>");
         this.crearComponente();
+        return this;
+    };
+    
+    /**
+     * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano) {
+        if(propiedad=="tipo") {
+            this.elemento.removerClase(/(container|container-fluid)/);
+            if(!valor||valor=="normal") {
+                this.elemento.agregarClase("container");
+            } else if(valor=="fluido") {
+                this.elemento.agregarClase("container-fluid");
+            }
+        }
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano);
         return this;
     };
 };

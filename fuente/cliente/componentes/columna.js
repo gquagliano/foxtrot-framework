@@ -17,7 +17,8 @@ var componenteColumna=function() {
         "Tamaño":{
             tamano:{
                 etiqueta:"Tamaño",
-                tipo:"numero"
+                tipo:"numero",
+                ayuda:"Tamaño en proporción de la grilla de 12 columnas de Bootstrap. Pueden utilizarse las propiedades de Flexbox para establecer dimensiones personalizadas."
             }
             //nombre:{
             //    etiqueta

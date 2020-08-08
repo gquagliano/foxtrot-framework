@@ -37,5 +37,6 @@ var componenteVista=function() {
 };
 
 ui.registrarComponente("vista",componenteVista,configComponente.clonar({
-    descripcion:"Vista"
+    descripcion:"Vista",
+    etiqueta:"Vista"
 }));

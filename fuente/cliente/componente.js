@@ -56,6 +56,7 @@ var componente=new function() {
             //    funcion
             //    adaptativa (predeterminado true)
             //    clase
+            //    ayuda
             //}
             color:{
                 etiqueta:"Color de texto",
@@ -70,7 +71,7 @@ var componente=new function() {
             }
         },
         "Posicionamiento":{
-            flotar:{ //TODO ¿Traducción?
+            flotar:{
                 etiqueta:"Alineacion",
                 tipo:"opciones",
                 opciones:{
@@ -91,12 +92,35 @@ var componente=new function() {
                     bloque:"Bloque",
                     enLinea:"En línea",
                     flex:"Flex",
-                    flexVertical:"Flex vertical"
+                    flexInverso:"Flex inverso",
+                    flexVertical:"Flex vertical",
+                    flexVerticalInverso:"Flex vertical inverso"
                 }
             },
-            centrarHijos:{
-                etiqueta:"Centrar hijos verticalmente",
-                tipo:"bool"
+            flex:{
+                etiqueta:"Flex"
+            },
+            alineacionItems:{
+                etiqueta:"Alineación de items (Flex)",
+                tipo:"opciones",
+                opciones:{
+                    inicio:"Inicio",
+                    fin:"Fin",
+                    centro:"Centro",
+                    entre:"Entre items",
+                    envolver:"Envolver"
+                }
+            },
+            justificacionItems:{
+                etiqueta:"Justificación de items (Flex)",
+                tipo:"opciones",
+                opciones:{
+                    inicio:"Inicio",
+                    fin:"Fin",
+                    centro:"Centro",
+                    base:"Línea base",
+                    estirar:"Estirar"
+                }
             },
             visibilidad:{
                 etiqueta:"Visibilidad",
@@ -118,6 +142,12 @@ var componente=new function() {
             },
             anchoMaximo:{
                 etiqueta:"Ancho máximo"
+            },            
+            alto:{
+                etiqueta:"Alto"
+            },
+            altoMaximo:{
+                etiqueta:"Alto máximo"
             }
         },
         "Texto":{
@@ -190,7 +220,8 @@ var componente=new function() {
         "Datos":{
             propiedad:{
                 etiqueta:"Propiedad",
-                adaptativa:false
+                adaptativa:false,
+                ayuda:"Propiedad del origen de datos. Admite rutas para acceder a propiedades anidadas, separadas por punto."
             }
         }
     };
@@ -604,6 +635,8 @@ var componente=new function() {
         if(util.esIndefinido(tamano)) tamano=null;
         if(util.esIndefinido(valorAnterior)) valorAnterior=null;
 
+        var claseTamano=(tamano!="g"&&tamano!="xs"?tamano+"-":"");
+
         var estilos=this.obtenerEstilos(tamano);
 
         if(propiedad=="color") {
@@ -616,13 +649,9 @@ var componente=new function() {
             if(valor=="izquierda") float="left";
             else if(valor=="derecha") float="right";
 
-            if(tamano=="g") {
-                this.elemento.removerClase(/float-(left|right|none)/);
-                if(float) this.elemento.agregarClase("float-"+float);                
-            } else {
-                this.elemento.removerClase(new RegExp("float-"+tamano+"-.+"));
-                if(float) this.elemento.agregarClase("float-"+tamano+"-"+float);
-            }
+            this.elemento.removerClase(new RegExp("float-"+claseTamano+"(left|right|none)"));
+            if(float) this.elemento.agregarClase("float-"+claseTamano+float);                
+            
             return this;
         }
         
@@ -641,6 +670,16 @@ var componente=new function() {
             estilos.maxWidth=this.normalizarValorCss(valor);
             return this;
         }
+        
+        if(propiedad=="alto") {
+            estilos.height=this.normalizarValorCss(valor);
+            return this;
+        }
+        
+        if(propiedad=="altoMaximo") {
+            estilos.maxHeight=this.normalizarValorCss(valor);
+            return this;
+        }
 
         if(propiedad=="alineacion") {
             var opc={
@@ -650,13 +689,10 @@ var componente=new function() {
                     justificado:"justify"
                 },
                 align=opc.hasOwnProperty(valor)?opc[valor]:null;
-            if(tamano=="g") {
-                this.elemento.removerClase(/text-(left|right|center|justify)/);
-                if(align) this.elemento.agregarClase("text-"+align);                
-            } else {
-                this.elemento.removerClase(new RegExp("text-"+tamano+"-.+"));
-                if(align) this.elemento.agregarClase("text-"+tamano+"-"+align);
-            }
+
+            this.elemento.removerClase(new RegExp("text-"+claseTamano+"(left|right|center|justify)"));
+            if(align) this.elemento.agregarClase("text-"+claseTamano+align);
+            
             return this;
         }
 
@@ -666,33 +702,63 @@ var componente=new function() {
             return this;
         }
 
-        if(propiedad=="centrarHijos") {
-            var c="centrar-contenido-verticalmente";
-            if(tamano!="g"&&tamano!="xs") c+="-"+tamano;
+        if(propiedad=="estructura") {
+            var clases={
+                    bloque:"block",
+                    enLinea:"inline",
+                    flex:"flex",
+                    flexInverso:"flex",
+                    flexVertical:"flex",
+                    flexVerticalInverso:"flex"
+                };
 
-            if(valor) {
-                this.elemento.agregarClase(c);
-            } else {
-                this.elemento.removerClase(c);
+            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline)"))
+                .agregarClase("d-"+claseTamano+clases[valor]);
+
+            this.elemento.removerClase(new RegExp("flex-"+claseTamano+"(row|column)(-reverse)?"));
+            
+            if(valor=="flexVertical") {
+                this.elemento.agregarClase("flex-"+claseTamano+"column");
+            } else if(valor=="flexInverso") {
+                this.elemento.agregarClase("flex-"+claseTamano+"row-reverse");
+            } else if(valor=="flexVerticalInverso") {
+                this.elemento.agregarClase("flex-"+claseTamano+"column-reverse");
             }
+
             return this;
         }
 
-        if(propiedad=="estructura") {
+        if(propiedad=="flex") {
+            estilos.flex=valor;
+            return this;
+        }
+
+        if(propiedad=="alineacionItems") {
             var clases={
-                bloque:"block",
-                enLinea:"inline",
-                flex:"flex",
-                flexVertical:"flex"
+                inicio:"start",
+                fin:"end",
+                centro:"center",
+                entre:"between",
+                envolver:"around"
             };
-            this.elemento.removerClase(/d-(sm-|md-|lg-|xl-)?(block|flex|inline)/)
-                .agregarClase("d-"+(tamano!="g"&&tamano!="xs"?tamano+"-":"")+clases[valor]);
-            
-            if(valor=="flexVertical") {
-                this.elemento.agregarClase("flex-column");
-            } else {
-                this.elemento.agregarClase("flex-column");
-            }
+
+            this.elemento.removerClase(new RegExp("justify-content-"+claseTamano+"(start|end|center|betwen|around)"))
+                .agregarClase("justify-content-"+claseTamano+clases[valor]);            
+
+            return this;
+        }
+
+        if(propiedad=="justificacionItems") {
+            var clases={
+                inicio:"start",
+                fin:"end",
+                centro:"center",
+                base:"baseline",
+                estirar:"stretch"
+            };
+
+            this.elemento.removerClase(new RegExp("align-items-"+claseTamano+"(start|end|center|baseline|stretch)"))
+                .agregarClase("align-items-"+claseTamano+clases[valor]);            
 
             return this;
         }

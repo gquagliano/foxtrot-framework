@@ -20,7 +20,8 @@ var componenteEtiqueta=function() {
         "Etiqueta":{
             contenido:{
                 etiqueta:"Contenido",
-                adaptativa:false
+                adaptativa:false,
+                ayuda:"Admite expresiones."
             }
         }
     };

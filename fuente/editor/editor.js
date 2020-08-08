@@ -147,6 +147,9 @@ var editor=new function() {
             } else if(tipo=="opciones") {
                 var campo=document.crear("<select class='custom-select'>");
                 fila.anexar(campo);
+                
+                //Opción en blanco para revertir al valor predeterminado
+                campo.anexar("<option value=''></option>");
 
                 //Costruir opciones
                 prop.opciones.forEach(function(clave,etiqueta) {
@@ -184,35 +187,31 @@ var editor=new function() {
         };
 
         var propiedades=editor.componenteSeleccionado.obtenerListadoPropiedades(tamanoActual);
-
+        
         //Propiedades especiales
-        propiedades[-1]={
-            nombre: {
-                etiqueta:"Nombre",
-                funcion:function(componentes,t,prop,valor) {
-                    componentes.establecerNombre(valor);
-                },
-                //TODO Selección múltiple: No mostrar los valores
-                valor:editor.componenteSeleccionado.nombre
-            }
+        //Crear un grupo con el nombre del tipo de componente para que cada componente concreto pueda agregar más propiedades allí, este grupo siempre
+        //se mostrará primero.
+        var nombreTipoComponente=ui.obtenerConfigComponente(editor.componenteSeleccionado.componente).etiqueta;
+        if(!propiedades.hasOwnProperty(nombreTipoComponente)) propiedades[nombreTipoComponente]={};
+        propiedades[nombreTipoComponente].nombre={
+            etiqueta:"Nombre",
+            funcion:function(componentes,t,prop,valor) {
+                componentes.establecerNombre(valor);
+            },
+            //TODO Selección múltiple: No mostrar los valores
+            valor:editor.componenteSeleccionado.nombre
         };
 
         //Ordenar por propiedad del objeto propiedades
         var claves=Object.keys(propiedades).sort();
 
-        claves.forEach(function(grupo) {
+        var fn=function(grupo) {
             var props=propiedades[grupo];
             if(props.vacio()) return;
 
             var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
 
-            if(grupo==-1) {
-                document.crear("<label>").html(
-                        ui.obtenerConfigComponente(editor.componenteSeleccionado.componente).nombre
-                    ).anexarA(barra);
-            } else if(grupo!=0) {
-                document.crear("<label>").html(grupo).anexarA(barra);
-            }
+            document.crear("<label>").html(grupo).anexarA(barra);
 
             barra.anexarA(cuerpoBarraPropiedades);
 
@@ -221,6 +220,13 @@ var editor=new function() {
                 var prop=props[nombre];
                 agregarPropiedad(barra,nombre,prop);
             });
+        };
+
+        //Agregar primer grupo
+        fn(nombreTipoComponente);
+        //Agregar el resto en orden
+        claves.forEach(function(grupo) {
+            if(grupo!=nombreTipoComponente) fn(grupo);            
         });
 
         //TODO Selección múltiple: Solo mostrar propiedades comunes a todos los elementos seleccionados

@@ -339,7 +339,8 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-etiqueta-componente img {
     filter: brightness(5);
-    height: 14px;
+    height: 14px !important;
+    width: auto !important;
     display: block;
 }
 .foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {

@@ -42,7 +42,7 @@ var componenteImagen=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<picture/>");
-        this.img=document.crear("<img src='componentes/iconos/imagen.png'>").anexarA(this.elemento);
+        this.img=document.crear("<img src='recursos/componentes/iconos/imagen.png'>").anexarA(this.elemento);
         this.crearComponente();
         return this;
     };
@@ -55,7 +55,7 @@ var componenteImagen=function() {
             //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
             
             if(tamano=="g") {
-                this.img.atributo("src",valor.trim()!=""?valor:"componentes/iconos/imagen.png");
+                this.img.atributo("src",valor.trim()!=""?valor:"recursos/componentes/iconos/imagen.png");
             } else {
                 //Construir <source>s
 

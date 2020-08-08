@@ -284,6 +284,7 @@ var editor=new function() {
         ui.obtenerDocumento().eventoFiltrado("click",{
             clase:"componente"
         },function(ev) {
+            ev.preventDefault();
             ev.stopPropagation();
 
             //TODO Selección múltiple
@@ -463,7 +464,7 @@ var editor=new function() {
         
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
             var config=ui.obtenerComponentes()[this.componenteSeleccionado.componente].config;
-            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='../recursos/componentes/iconos/"+config.icono+"'></span>")
+            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='recursos/componentes/iconos/"+config.icono+"'></span>")
                 .atributo("title",config.etiqueta)
                 .anexarA(elem);
         }

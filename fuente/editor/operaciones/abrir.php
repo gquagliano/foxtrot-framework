@@ -57,8 +57,8 @@ if(!file_exists($rutaJson)) {
 //Agregar propiedades de la aplicación
 $aplicacion=json_decode(file_get_contents($rutaJsonApl));
 $obj->aplicacion=[
-    'css'=>'../aplicaciones/test/recursos/css/estilos.css',
-    'tema'=>'../recursos/css/tema-'.$aplicacion->tema.'.css'
+    'css'=>'aplicaciones/test/recursos/css/estilos.css',
+    'tema'=>'recursos/css/tema-'.$aplicacion->tema.'.css'
 ];
 
 echo json_encode($obj);

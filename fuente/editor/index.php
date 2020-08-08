@@ -65,6 +65,6 @@ foxtrot::inicializar();
     <script src="../cliente/foxtrot.js"></script>    
     <script src="editor.js"></script>
     
-    <iframe id="foxtrot-marco" src="marco.html"></iframe>
+    <iframe id="foxtrot-marco" src="marco.php"></iframe>
   </body>
 </html>

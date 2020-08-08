@@ -39,7 +39,7 @@ foreach($directorios as $dir)
 ////php, html, css y otros recursos
 
 //Copiar
-$tipos=['*.php','*.html','*.jpg','*.png'];
+$tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg'];
 copiar(_fuente,$tipos,_desarrollo,false);
 copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
 copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');

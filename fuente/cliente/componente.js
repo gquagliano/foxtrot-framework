@@ -215,6 +215,11 @@ var componente=new function() {
             click:{
                 etiqueta:"Click",
                 adaptativa:false
+            },
+            menuContextual:{
+                etiqueta:"Menú contextual",
+                adaptativa:false,
+                ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú."
             }
         },
         "Datos":{
@@ -712,8 +717,8 @@ var componente=new function() {
                     flexVerticalInverso:"flex"
                 };
 
-            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline)"))
-                .agregarClase("d-"+claseTamano+clases[valor]);
+            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline)"));
+            if(valor) this.elemento.agregarClase("d-"+claseTamano+clases[valor]);
 
             this.elemento.removerClase(new RegExp("flex-"+claseTamano+"(row|column)(-reverse)?"));
             
@@ -742,8 +747,8 @@ var componente=new function() {
                 envolver:"around"
             };
 
-            this.elemento.removerClase(new RegExp("justify-content-"+claseTamano+"(start|end|center|betwen|around)"))
-                .agregarClase("justify-content-"+claseTamano+clases[valor]);            
+            this.elemento.removerClase(new RegExp("justify-content-"+claseTamano+"(start|end|center|between|around)"));
+            if(valor) this.elemento.agregarClase("justify-content-"+claseTamano+clases[valor]);            
 
             return this;
         }
@@ -757,8 +762,8 @@ var componente=new function() {
                 estirar:"stretch"
             };
 
-            this.elemento.removerClase(new RegExp("align-items-"+claseTamano+"(start|end|center|baseline|stretch)"))
-                .agregarClase("align-items-"+claseTamano+clases[valor]);            
+            this.elemento.removerClase(new RegExp("align-items-"+claseTamano+"(start|end|center|baseline|stretch)"));
+            if(valor) this.elemento.agregarClase("align-items-"+claseTamano+clases[valor]);            
 
             return this;
         }
@@ -794,8 +799,8 @@ var componente=new function() {
                 medio:"medium",
                 negrita:"bold"
             };
-            this.elemento.removerClase(/font-weight-(light|normal|medium|bold)/)
-                .agregarClase("font-weight-"+clases[valor]);
+            this.elemento.removerClase(/font-weight-(light|normal|medium|bold)/);
+            if(valor) this.elemento.agregarClase("font-weight-"+clases[valor]);
             return this;
         }
 
@@ -1001,16 +1006,28 @@ var componente=new function() {
     ////Eventos    
 
     /**
-     * Establece los eventos predeterminados.
+     * Establece los eventos predeterminados (método para sobreescribir).
      */
     this.establecerEventos=function() {
+        this.establecerEventosComponente();
+        return this;
+    };
+    
+    /**
+     * Establece los eventos predeterminados.
+     */
+    this.establecerEventosComponente=function() {
         if(!this.elemento) return this;
 
         var t=this;
 
         if(!ui.enModoEdicion()) {
             var asignaciones={
-                "click":{}
+                click:{},
+                contextmenu:{
+                    metodo:"menuContextual",
+                    propiedad:"menuContextual"
+                }
             };
 
             asignaciones.forEach(function(evento,config) {
@@ -1021,6 +1038,8 @@ var componente=new function() {
                     t.procesarEvento(evento,propiedad,metodo,ev);
                 });
             });
+
+            
         } else if(this.contenidoEditable) {
             this.elemento.evento("dblclick",function(ev) {
                 ev.stopPropagation();
@@ -1063,7 +1082,7 @@ var componente=new function() {
 
         var detener=true,
             prevenir=true;
-        
+
         evento.noDetener=function() {
             detener=false;
         };
@@ -1073,7 +1092,11 @@ var componente=new function() {
         };
 
         //Método interno del componente
-        if(typeof this[metodo]==="function") this[metodo](evento);
+        if(typeof this[metodo]==="function") {
+            var ret=this[metodo](evento);
+            //Los métodos que devuelvan true, detendrán el procesamiento del manejador
+            if(ret===true) return this;
+        }
 
         //Manejador definido por el usuario
         var manejador=this.procesarCadenaEvento(propiedad);
@@ -1134,6 +1157,57 @@ var componente=new function() {
      * @param {Object} evento 
      */
     this.eventoExterno=function(valor,evento) {
+    };
+
+    /**
+     * Evento Click (método para sobreescribir).
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.click=function(evento) {
+        return this.clickComponente(evento);
+    };
+
+    /**
+     * Evento Click.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.clickComponente=function(evento) {
+        return false;
+    };
+
+    /**
+     * Evento Menú contextual (método para sobreescribir).
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.menuContextual=function(evento) {
+        return this.menuContextualComponente(evento);
+    };
+
+    /**
+     * Evento Menú contextual.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.menuContextualComponente=function(evento) {
+        var valor=this.procesarCadenaEvento("menuContextual");
+        if(valor) {
+            var componente=ui.obtenerInstanciaComponente(valor);
+            if(componente) {
+                //var posicion=this.elemento;
+                //Mostrar siempre sobre el cursor
+                var posicion={
+                    x:evento.clientX,
+                    y:evento.clientY
+                };
+
+                ui.abrirMenu(componente.obtenerElemento(),posicion);
+                
+                evento.preventDefault();
+                evento.stopPropagation();
+            }
+        }
+
+        //Siempre se detiene, aunque no haya sido procesado
+        return true;
     };
 
     ////Utilidades

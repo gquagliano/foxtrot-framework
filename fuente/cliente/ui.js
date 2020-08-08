@@ -368,7 +368,11 @@ var ui=new function() {
      */
     function identificarComponente(param) {
         if(typeof param=="string"&&instanciasComponentesId.hasOwnProperty(param)) {
+            //Por ID
             return instanciasComponentes[instanciasComponentesId[param]].obtenerId();
+        } if(typeof param=="string"&&componentes.hasOwnProperty(param)) {
+            //Por nombre
+            return componentes[param].obtenerId();
         } else if(typeof param==="object"&&param.esComponente()) {
             return param.obtenerId();
         } else if(typeof param==="object"&&param.nodeName) { //TODO Agregar Object.esNodo()
@@ -807,11 +811,14 @@ var ui=new function() {
      * @param {string} items[].etiqueta - Etiqueta.
      * @param {callbackAccion) [items[].accion] - Función a ejecutar al seleccionarse la opción.
      * @param {(callbackHabilitado|boolean)} [items[].habilitado=true] - Estado del item o función a ejecutar para determinar si el item se encuentra habilitado.
-     * @param {boolean} [separador=false] - Determina si el item es seguido de un separador.
-     * @param {Object[]} [submenu] - Items del submenú (admiten las mismas propiedades que items).
+     * @param {boolean} [items[].separador=false] - Determina si el item es seguido de un separador.
+     * @param {Object[]} [items[].submenu] - Items del submenú (admiten las mismas propiedades que items).
+     * @param {string} [clase] - Clase CSS.
      * @returns {Object}
      */
-    this.construirMenu=function(items) {
+    this.construirMenu=function(items,clase) {
+        if(typeof clase==="undefined") clase=null;
+
         //TODO Integración con Cordova
         //TODO Integración con el cliente de escritorio
 
@@ -898,6 +905,8 @@ var ui=new function() {
             eliminar:false
         };
 
+        if(clase) menu.elem.agregarClase(clase);
+
         fn(menu.elem,menu.items);
 
         body.anexar(menu.elem);
@@ -966,41 +975,58 @@ var ui=new function() {
 
     /**
      * Abre un menú.
-     * @param {(Object[]|Object)} obj - Array de items de menú o un menú generado con ui.construirMenu().
-     * @param {(Node|Element|Object)} posicion - Si se especifica un elemento del DOM, se posicionará el menú sobre el mismo; en caso contrario, debe especificarse un objeto con las propiedades {x,y}.
+     * @param {(Object[]|Object)} obj - Array de items de menú, un menú generado con ui.construirMenu() o cualquier elemento del DOM compatible.
+     * @param {(Node|Element|Object)} [posicion] - Si se especifica un elemento del DOM, se posicionará el menú sobre el mismo; en caso contrario, debe especificarse un objeto con las propiedades {x,y}.
+     * @param {string} [clase] - Clase CSS.
      */
-    this.abrirMenu=function(obj,posicion) {
+    this.abrirMenu=function(obj,posicion,clase) {
+        if(typeof posicion==="undefined") posicion=null;
+        if(typeof clase==="undefined") clase=null;
+
         //TODO Integración con Cordova
         //TODO Integración con el cliente de escritorio
 
         //Cerrar menú abierto
-        if(menuAbierto) self.cerrarMenu(menuAbierto);
+        //if(menuAbierto) self.cerrarMenu(menuAbierto);
 
         if(util.esArray(obj)) {
-            obj=self.construirMenu(obj);
+            obj=self.construirMenu(obj,clase);
             obj.eliminar=true;
         }
 
-        self.actualizarMenu(obj);
+        var elem;
+        if(util.esElemento(obj)) {
+            elem=obj;
+        } else {
+            elem=obj.elem;
+            self.actualizarMenu(obj);
+        }
 
         menuAbierto=obj;
 
         //Posición
 
-        var x,y;
-        if(util.esElemento(posicion)) {
-            
-        } else {
-            x=posicion.x;
-            y=posicion.y;
-        }
+        if(posicion) {
+            var x,y;
+            if(util.esElemento(posicion)) {
+                var pos=posicion.posicionAbsoluta(),
+                    alto=posicion.alto();
+                x=pos.x;
+                y=pos.y+alto;
+            } else {
+                x=posicion.x;
+                y=posicion.y;
+            }
 
-        obj.elem.estilos({
-                left:x,
-                top:y
-            });
+            elem.estilos({
+                    left:x,
+                    top:y
+                });
+        }        
+        
+        //Reposicionar si se sale de pantalla
 
-        abrirElementoMenu(obj.elem);
+        abrirElementoMenu(elem);
 
         //Eventos
 
@@ -1014,15 +1040,22 @@ var ui=new function() {
 
     /**
      * Cierra el menú especificado.
-     * @param {Object} menu - Menú a cerrar (objeto generado con ui.construirMenu).
+     * @param {Object} menu - Menú a cerrar (objeto generado con ui.construirMenu o cualquier elemento del DOM compatible).
      * @param {boolean} [omitirAnimacion=false] - Cierra el menú inmediatamente, sin animaciones.
      */
     this.cerrarMenu=function(menu,omitirAnimacion) {
-        if(!menu) return;
+        if(typeof menu==="undefined") menu=menuAbierto;
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
-        cerrarElementoMenu(menu.elem,omitirAnimacion,menu.eliminar);
+        
+        if(!menu) return this;
+
+        var elem=util.esElemento(menu)?menu:menu.elem; //Si no es un elemento del DOM, se asume un objeto menú
+        cerrarElementoMenu(elem,omitirAnimacion,menu.eliminar);
+
         removerEventosMenu();
         menuAbierto=null;
+
+        return this;
     };
 
     //TODO Preloader

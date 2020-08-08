@@ -18,6 +18,7 @@ var componenteMenu=function() {
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+        this.contenedor=this.elemento;
         this.inicializarComponente();
         return this;
     };
@@ -26,7 +27,9 @@ var componenteMenu=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        //El menú debe ser compatible con el gestor de menús de ui, para poder aprovechar los métodos existentes
+        this.elemento=document.crear("<ul class='foxtrot-menu foxtrot-menu-oculto menu-contextual'>"); 
+        this.contenedor=this.elemento;
         this.crearComponente();
         return this;
     };
@@ -35,6 +38,7 @@ var componenteMenu=function() {
 ui.registrarComponente("menu",componenteMenu,configComponente.clonar({
     descripcion:"Menú desplegable o contextual",
     etiqueta:"Menú",
-    grupo:"Estructura",
-    icono:"menu.png"
+    grupo:"Menú",
+    icono:"menu.png",
+    aceptaHijos:["item-menu"]
 }));

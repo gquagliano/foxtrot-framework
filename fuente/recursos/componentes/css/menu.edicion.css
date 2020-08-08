@@ -1,0 +1,27 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+ 
+.foxtrot-mostrar-invisibles :not(li)>.menu-contextual {
+    display: inline-block;
+    opacity: 1;
+    position: relative;
+    margin: 20px;
+    width: auto;
+    clear: both;
+    min-width: 80px;
+}
+.foxtrot-mostrar-invisibles .nav .menu-contextual {
+    display: none;
+    opacity: 0;
+    margin: 0;
+    min-width: 0;
+    position: absolute;
+}
+.nav .seleccionado>.menu-contextual, .nav .menu-contextual.hijo-seleccionado {
+    display: block;
+    opacity: 1;
+}

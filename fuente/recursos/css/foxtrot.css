@@ -30,14 +30,7 @@ picture img {
     margin: 0;
     padding: 10px 0;
     border: 1px solid #e8ebf1;
-    font-weight: normal;
-    font-family: Montserrat, sans-serif;
-    white-space: nowrap;
     width: auto;
-    color: #212529;
-    line-height: 13px;
-    font-size: 13px;
-    border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
 }
 .foxtrot-menu li, .foxtrot-menu a {
@@ -56,9 +49,12 @@ picture img {
 .foxtrot-menu a {
     color: inherit !important;
     text-decoration: none !important;
-    padding: 10px 16px;
+    padding: 6px 16px;
     display: block;
     transition: background-color .2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .foxtrot-menu a:hover,
 .foxtrot-menu a:focus,

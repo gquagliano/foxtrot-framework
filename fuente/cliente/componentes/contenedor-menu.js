@@ -8,23 +8,21 @@
  "use strict";
 
 /**
- * Componente concreto Contenedor.
+ * Componente concreto Contenedor de menú.
  */
-var componenteContenedor=function() {
-    this.componente="contenedor";
-
+var componenteContenedorMenu=function() {    
+    this.componente="contenedor-menu";
+    
     this.propiedadesConcretas={
-        "Contenedor":{
-            tipo:{
-                etiqueta:"Tipo",
+        "Contenedor de menú":{
+            comportamiento:{
+                etiqueta:"Comportamiento",
                 tipo:"opciones",
                 opciones:{
                     normal:"Normal",
-                    fluido:"Fluido",
-                    bloque:"Bloque"
+                    click:"Abrir submenús solo con click"
                 },
-                adaptativa:false,
-                ayuda:"Establecer a Bloque para una etiqueta <div> sin restricción de ancho."
+                adaptativa:false
             }
         }
     };
@@ -33,17 +31,17 @@ var componenteContenedor=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this;
+        if(this.inicializado) return this; 
         this.contenedor=this.elemento;
         this.inicializarComponente();
         return this;
     };
-    
+
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='container'/>");
+        this.elemento=document.crear("<ul class='nav'>");
         this.crearComponente();
         return this;
     };
@@ -52,12 +50,11 @@ var componenteContenedor=function() {
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano) {
-        if(propiedad=="tipo") {
-            this.elemento.removerClase(/(container|container-fluid)/);
-            if(!valor||valor=="normal") {
-                this.elemento.agregarClase("container");
-            } else if(valor=="fluido") {
-                this.elemento.agregarClase("container-fluid");
+        if(propiedad=="comportamiento") {
+            if(valor=="click") {
+                this.elemento.agregarClase("menu-click");
+            } else {
+                this.elemento.removerClase("menu-click");
             }
         }
 
@@ -66,10 +63,10 @@ var componenteContenedor=function() {
     };
 };
 
-ui.registrarComponente("contenedor",componenteContenedor,configComponente.clonar({
-    descripcion:"Contenedor",
-    etiqueta:"Contenedor",
-    grupo:"Estructura",
-    icono:"contenedor.png"
+ui.registrarComponente("contenedor-menu",componenteContenedorMenu,configComponente.clonar({
+    descripcion:"Contenedor o barra de menú",
+    etiqueta:"Contenedor de menú",
+    grupo:"Menú",
+    icono:"contenedor-menu.png",
+    aceptaHijos:["item-menu"]
 }));
-

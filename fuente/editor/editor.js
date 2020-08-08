@@ -315,29 +315,31 @@ var editor=new function() {
                 });
                 comp=comp.obtenerPadre();
             } while(comp!=null);
-            arbol.reverse();            
+            arbol.reverse();
 
-            ui.abrirMenu([
-                {
-                    etiqueta:"Eliminar",
-                    accion:function() {
-                        ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
-                            self.eliminarComponente(self.componenteSeleccionado.obtenerId());
-                        });
+            ui.cerrarMenu()
+                .abrirMenu([
+                    {
+                        etiqueta:"Eliminar",
+                        accion:function() {
+                            ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
+                                self.eliminarComponente(self.componenteSeleccionado.obtenerId());
+                            });
+                        },
+                        habilitado:function() {
+                            return self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)?true:false;
+                        },
+                        separador:true
                     },
-                    habilitado:function() {
-                        return self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)?true:false;
-                    },
-                    separador:true
+                    {
+                        etiqueta:"Seleccionar",
+                        submenu:arbol
+                    }
+                ],{
+                    x:ev.clientX,
+                    y:ev.clientY
                 },
-                {
-                    etiqueta:"Seleccionar",
-                    submenu:arbol
-                }
-            ],{
-                x:ev.clientX,
-                y:ev.clientY
-            });
+                "foxtrot-menu-editor");
         })
         .evento("click",function() {
             self.limpiarSeleccion();
@@ -448,6 +450,15 @@ var editor=new function() {
         }
 
         elem.agregarClase("seleccionado");
+
+        //Agregar clase a toda la ascendencia
+        var padre=comp;
+        while(1) {
+            padre=padre.obtenerPadre();
+            if(!padre) break;
+            padre.obtenerElemento().agregarClase("hijo-seleccionado");
+        }
+
         this.componenteSeleccionado=comp;
         
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
@@ -469,6 +480,7 @@ var editor=new function() {
 
     this.limpiarSeleccion=function() {
         ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
+        ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
         this.componenteSeleccionado=null;
         construirPropiedades();
         return this;
@@ -504,6 +516,7 @@ var editor=new function() {
         temp.html(html);
         temp.querySelectorAll("*")  
             .removerClase("seleccionado")
+            .removerClase("hijo-seleccionado")
             .removerClase(/^foxtrot-arrastrable-.+/)
             .propiedad("contentEditable",null)
             .propiedad("draggable",null);

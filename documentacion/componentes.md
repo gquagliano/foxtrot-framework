@@ -21,7 +21,7 @@
 
 #### ![](img/iconos/boton.png) Botón (botón o enlace)
 
-Doble click iniciará la edición de texto.
+Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
 
 #### ![](img/iconos/bucle.png) Bucle (estructura de control)
 
@@ -83,7 +83,9 @@ Permite insertar una imagen cuyo origen es adaptativo, es decir, la URL de la im
 
 Permite agregar un ítem de menú. Puede utilizarse dentro del componente Menú o dentro del componente Contenedor de menú. Cada Item puede contener, a su vez, componentes Menú para generar submenús.
 
-Dentro del editor, los menús no responderán al paso del cursor sobre ellos (*hover*), sino que debe hacerse un click para desplegar y poder editar sus contenidos. Cabe aclarar que el doble click iniciará la edición de texto, al igual que en otros componentes.
+Dentro del editor, los menús no responderán al paso del cursor sobre ellos (*hover*), sino que debe hacerse un click para desplegar y poder editar sus contenidos. Al deseleccionar el ítem de menú, el submenú se cerrará automáticamente.
+
+Cabe aclarar que el doble click iniciará la edición de texto, al igual que en otros componentes. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
 
 #### ![](img/iconos/menu.png) Menú desplegable o contextual
 
@@ -103,7 +105,7 @@ Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder vis
 
 #### ![](img/iconos/texto.png) Texto
 
-Doble click iniciará la edición de texto.
+Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
 
 #### Vista
 

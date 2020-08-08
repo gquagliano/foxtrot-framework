@@ -265,6 +265,27 @@ body.trabajando #foxtrot-cargando {
     flex: 1;
 }
 
+/* Menú contextual (sobreescribir todos los estilos para intentar evitar que los modifique el CSS de la aplicación) */
+
+.foxtrot-menu-editor, .foxtrot-menu-editor .foxtrot-menu {
+    position: fixed;
+    background: #fff;
+    z-index: 999999;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0;
+    border: 1px solid #e8ebf1;
+    font-weight: normal;
+    font-family: Montserrat, sans-serif;
+    white-space: nowrap;
+    width: auto;
+    color: #212529;
+    line-height: 13px;
+    font-size: 13px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
+}
+
 /* Arrastrar y soltar */
 
 .foxtrot-arrastrable-arrastrando-sobre {
@@ -285,7 +306,7 @@ body.trabajando #foxtrot-cargando {
     position: relative;
 }
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor {
-    outline: dotted 2px rgba(0, 0, 0, 0.2);
+    outline: dashed 1px rgba(0, 0, 0, 0.2);
     transition: outline .1s;
     min-height: 1em;
 }

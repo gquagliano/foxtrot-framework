@@ -22,6 +22,7 @@ var componenteItemMenu=function() {
     this.inicializar=function() {
         if(this.inicializado) return this; 
         this.contenedor=this.elemento;
+
         this.inicializarComponente();
         return this;
     };
@@ -68,9 +69,8 @@ var componenteItemMenu=function() {
                 t.submenuAbierto=false;
 
                 //Remover clase
-                elem.padres({etiqueta:"li"}).forEach(function(padre) {
-                    padre.removerClase("submenu-abierto");
-                });
+                var padre=elem.padre({etiqueta:"li"});
+                if(padre) padre.removerClase("submenu-abierto");
             },
             alternar=function(submenu) {
                 if(t.submenuAbierto) {

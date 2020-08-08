@@ -19,6 +19,11 @@ var componenteMenu=function() {
     this.inicializar=function() {
         if(this.inicializado) return this; 
         this.contenedor=this.elemento;
+
+        //Agregar una clase al padre si se está utilizando como submenú
+        var padre=this.elemento.padre();
+        if(padre.es({etiqueta:"li"})) padre.agregarClase("con-submenu");
+
         this.inicializarComponente();
         return this;
     };

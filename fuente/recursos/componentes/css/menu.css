@@ -5,32 +5,31 @@
  * @version 1.0
  */
  
-.nav>ul {
+.nav {
     display: flex;
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-.nav>ul>li {
+.nav>li {
     position: relative;
-    flex: auto;
 }
-.nav>ul>li>a {
+.nav>li>a {
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
 }
-.nav>ul li .foxtrot-menu {
+.nav li .foxtrot-menu {
     position: absolute;
     left: 0;
     top: 100%;
     min-width: 100%;
     margin: 0;
 }
-.nav>ul li .foxtrot-menu .foxtrot-menu {
-    top: -11px;
+.nav li .foxtrot-menu .foxtrot-menu {
+    top: -10px;
     left: 100%;
     width: auto;
     min-width: 80px;

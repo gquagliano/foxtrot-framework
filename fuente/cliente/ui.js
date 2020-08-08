@@ -860,7 +860,7 @@ var ui=new function() {
                     var ulSubmenu=document.crear("<ul class='foxtrot-submenu foxtrot-menu-oculto'>");
                     fn(ulSubmenu,items[i].submenu);
 
-                    li.agregarClase("foxtrot-con-submenu");
+                    li.agregarClase("con-submenu");
                     li.anexar(ulSubmenu);
                     items[i].elemSubmenu=ulSubmenu;
                 }

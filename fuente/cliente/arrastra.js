@@ -90,6 +90,9 @@
 
         //TODO Determinar si se acepta el elemento que se está arrastrando
     
+        //Si no se invoca preventDefault, no recibirá ninguna operación
+        e.preventDefault();
+        
         e.dataTransfer.dropEffect="move";     
     }
 

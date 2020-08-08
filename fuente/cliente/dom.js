@@ -268,9 +268,39 @@
      * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
      */
     Node.prototype.padre=function(filtro) {
-        var elem=this.parentNode;
-        while(elem!==null&&!elem.es(filtro)&&elem!=document.body) elem=elem.parentNode;
+        var elem=this.parentNode,
+            coincidencia=false;
+
+        while(1) {
+            if(elem.es(filtro)) {
+                coincidencia=true;
+                break;
+            }
+            if(!elem||elem==document.body) break;
+            elem=elem.parentNode;
+        }
+
+        //Devolver nulo si se estaba filtrando y no hubo coincidencias
+        if(typeof filtro!=="undefined"&&!coincidencia) return null;
+
         return elem;        
+    };
+
+    /**
+     * Busca en la ascendencia todos los elementos que coincidan con el filtro.
+     */
+    Node.prototype.padres=function(filtro) {
+        var resultado=[],
+            elem=this.parentNode;
+
+        while(1) {
+            if(!elem||elem==document.html) break;
+            if(elem.es(filtro)) resultado.push(elem);
+            elem=elem.parentNode;
+        }
+
+        //TODO Devolver un NodeList
+        return resultado;
     };
 
     /**

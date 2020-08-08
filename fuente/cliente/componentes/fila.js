@@ -27,7 +27,7 @@ var componenteFila=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='row contenedor vacio'/>");
+        this.elemento=document.crear("<div class='row contenedor'/>");
         this.crearComponente();
         return this;
     };

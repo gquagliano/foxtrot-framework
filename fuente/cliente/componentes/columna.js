@@ -43,7 +43,7 @@ var componenteColumna=function() {
      * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='col-sm-3 contenedor vacio'/>");
+        this.elemento=document.crear("<div class='col-sm-3 contenedor'/>");
         this.crearComponente();
         return this;
     };

@@ -284,10 +284,10 @@ body.trabajando #foxtrot-cargando {
 .componente {
     position: relative;
 }
-.foxtrot-modo-edicion.foxtrot-bordes .contenedor.vacio {
+.foxtrot-modo-edicion.foxtrot-bordes .contenedor {
     outline: dotted 2px rgba(0, 0, 0, 0.2);
     transition: outline .1s;
-    min-height: 40px;
+    min-height: 1em;
 }
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {

@@ -49,7 +49,7 @@ var componenteContenedor=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='container vacio'/>");
+        this.elemento=document.crear("<div class='container'/>");
         this.crearComponente();
         return this;
     };

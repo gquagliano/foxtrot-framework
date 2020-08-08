@@ -112,18 +112,18 @@ picture img {
     justify-content: center;
 }
 
-.fade-in {
-    animation: fade-in .1s;
+.aparece {
+    animation: aparece .1s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
 }
-.fade-out {
-    animation: fade-out .1s;
+.desaparece {
+    animation: desaparece .1s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
     pointer-events: none;
 }
-@keyframes fade-in {
+@keyframes aparece {
     0% {
         opacity: 0;
     }
@@ -131,7 +131,7 @@ picture img {
         opacity: 1;
     }
 }
-@keyframes fade-out {
+@keyframes desaparece {
     0% {
         opacity: 1;
     }

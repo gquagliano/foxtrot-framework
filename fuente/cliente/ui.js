@@ -292,7 +292,13 @@ var ui=new function() {
     ////Gestión de componentes
 
     this.generarId=function() {
-        return id++;
+        var elem;
+        do {
+            id++;
+            //Verificar que el ID esté libre
+            elem=doc.querySelector("[data-fxid$='-"+id+"']");
+        } while(elem);
+        return id;
     };
 
     this.registrarComponente=function(nombre,funcion,configuracion) {
@@ -314,14 +320,33 @@ var ui=new function() {
 
     /**
      * Crea una instancia de un componente dado su nombre.
+     * @param {Object|string} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente previamente guardado (desde JSON).
+     * @param {string} vista - Nombre de la vista.
      */
-    this.crearComponente=function(nombre,vista) {
+    this.crearComponente=function(comp,vista) {
         if(typeof vista==="undefined") vista=nombreVistaPrincipal;
-        
-        var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn),
+
+        var nombre,id;
+        if(typeof comp==="string") {
+            //Nuevo
+            nombre=comp;
             id=vista+"-"+this.generarId();
-        obj.establecerNombreVista(vista);
-        obj.establecerId(id);
+        } else {
+            //Restaurar
+            nombre=comp.componente;
+            id=comp.id;
+        }
+        
+        var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn);
+
+        obj.establecerNombreVista(vista)
+            .establecerId(id);
+
+        if(typeof comp==="object") {
+            //Restaurar
+            obj.establecerNombre(comp.nombre)
+                .establecerPropiedades(comp.propiedades);
+        }
         
         var i=instanciasComponentes.push(obj);
 
@@ -492,10 +517,7 @@ var ui=new function() {
 
         var nombreVista=json.nombre,
             fn=function(componente) {
-                return ui.crearComponente(componente.componente,nombreVista)
-                    .establecerId(componente.id)
-                    .establecerNombre(componente.nombre)
-                    .establecerPropiedades(componente.propiedades)
+                return ui.crearComponente(componente,nombreVista)
                     .restaurar();
             };
 
@@ -751,20 +773,20 @@ var ui=new function() {
 
     var abrirElementoMenu=function(elem) {
         if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
-        elem.removerClase("foxtrot-menu-oculto fade-out")
-            .agregarClase("fade-in");            
+        elem.removerClase("foxtrot-menu-oculto desaparece")
+            .agregarClase("aparece");            
     };
     
     var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar) {
-        elem.removerClase("fade-in")
-            .agregarClase("fade-out");
+        elem.removerClase("aparece")
+            .agregarClase("desaparece");
     
         if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
         elem._timeoutAnimMenu=setTimeout(function() {
             if(eliminar) {
                 elem.remover();
             } else {
-                elem.removerClase("fade-out")
+                elem.removerClase("desaparece")
                     .agregarClase("foxtrot-menu-oculto");
             }
         },omitirAnimacion?0:1000);

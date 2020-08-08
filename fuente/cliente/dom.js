@@ -125,6 +125,48 @@
     };
 
     /**
+     * Agrega los elementos especificados a antes de los elementos de esta instancia.
+     */
+    Node.prototype.insertarAntes=function(elemento) {
+        if(typeof elemento==="string") {
+            this.insertarAntes(document.crear(elemento));
+            return this;
+        }
+
+        if(util.esListaDeElementos(elemento)) {
+            var t=this;
+            elemento.forEach(function(elem) {
+                t.parentNode.insertBefore(elem,t);
+            });
+            return this;
+        }
+
+        this.parentNode.insertBefore(elemento,this);
+        return this;
+    };
+
+    /**
+     * Agrega los elementos especificados después de los elementos de esta instancia.
+     */
+    Node.prototype.insertarDespues=function(elemento) {
+        if(typeof elemento==="string") {
+            this.insertarDespues(document.crear(elemento));
+            return this;
+        }
+
+        if(util.esListaDeElementos(elemento)) {
+            var t=this;
+            elemento.forEach(function(elem) {
+                t.parentNode.insertAfter(elem,t);
+            });
+            return this;
+        }
+
+        this.parentNode.insertAfter(elemento,this);
+        return this;
+    };
+
+    /**
      * Agrega este elemento a los elementos especificados.
      */
     Node.prototype.anexarA=function(elemento) {
@@ -432,9 +474,10 @@
      * Devuelve un objeto {x,y} con la posición absoluta del elemento.
      */
     Node.prototype.posicionAbsoluta=function() {
+        var pos=this.getBoundingClientRect();
         return {
-            x: this.offsetLeft,
-            y: this.offsetTop
+            x: pos.left,
+            y: pos.top
         };
     };
 

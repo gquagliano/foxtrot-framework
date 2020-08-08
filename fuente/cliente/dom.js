@@ -604,7 +604,7 @@
             elem.inicializarMetadatos();
             var meta=elem.metadato("eventos");
 
-            if(!meta.hasOwnProperty(nombre)) return [];
+            if(!meta||!meta.hasOwnProperty(nombre)) return [];
 
             var arr=[];
             //Necesitamos solo las funciones del usario, que están en el índice 0 de cada elemento
@@ -620,7 +620,7 @@
         //Almacenar para poder remover todo con removerEvento
         elem.inicializarMetadatos();
         var meta=elem.metadato("eventos");
-        if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
+        if(!meta||!meta.hasOwnProperty(nombre)) meta[nombre]={};
         meta[nombre][funcion._id]=[funcion,funcionInterna]; 
 
         elem.addEventListener(nombre,funcionInterna,captura);
@@ -741,7 +741,7 @@
             return this;
         }
 
-        if(!meta.hasOwnProperty(nombre)) return this;
+        if(!meta||!meta.hasOwnProperty(nombre)) return this;
 
         if(util.esIndefinido(funcion)) {
             //Remover todos los eventos nombre registrados mediante evento()

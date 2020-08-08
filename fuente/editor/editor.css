@@ -299,6 +299,32 @@ body.trabajando #foxtrot-cargando {
     -khtml-user-drag: element;
     -webkit-user-drag: element;
 }
+.foxtrot-zona {
+    position: fixed;
+    z-index: 9999;
+    background-color: rgba(0,123,255,.15);
+    transition: background-color .2s;
+}
+.foxtrot-zona.foxtrot-arrastrable-arrastrando-sobre {
+    background-color: rgba(0,123,255,.35);
+    box-shadow: none !important;
+}
+.foxtrot-zona-1 {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.foxtrot-zona-2 {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.foxtrot-zona-3 {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.foxtrot-zona-4 {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 
 /* Componentes */
 

@@ -43,11 +43,17 @@ var editor=new function() {
     function configurarBarrasHerramientas() {
         barraComponentes.arrastrable({
             asa:barraComponentes.querySelector(".foxtrot-asa-arrastre"),
-            mover:true
+            mover:true,
+            dragend:function() {
+                removerZonas();
+            }
         });
         barraPropiedades.arrastrable({
             asa:barraPropiedades.querySelector(".foxtrot-asa-arrastre"),
-            mover:true
+            mover:true,
+            dragend:function() {
+                removerZonas();
+            }
         });
     }
 
@@ -240,10 +246,24 @@ var editor=new function() {
         e.preventDefault();
     }
 
+    /**
+     * Inserta (crea o mueve) el componente soltado.
+     * @param {Object} e - Evento.
+     */
     function componenteSoltado(e) {
         e.preventDefault();
         //Detener la propagación permitirá destinos anidados
         e.stopPropagation();
+
+        var destino=this,
+            ubicacion="dentro";
+
+        if(e.target.es({clase:"foxtrot-zona"})) {
+            ubicacion=this.es({clase:"foxtrot-zona-anterior"})?"antes":"despues";
+            destino=this.metadato("destino");
+        } else if(!destino.es({clase:"contenedor"})) {
+            return;
+        }
 
         var datos=e.dataTransfer.getData("text/plain");
         try {
@@ -255,13 +275,13 @@ var editor=new function() {
         if(!datos) return;
 
         if(datos.hasOwnProperty("insertarComponente")) {
-            var obj=self.insertarComponente(this,datos.insertarComponente);
+            var obj=self.insertarComponente(destino,datos.insertarComponente,ubicacion);
             self.establecerSeleccion(obj);
             return;
         }
 
         if(datos.hasOwnProperty("idComponente")) {
-            self.moverComponente(this,datos.idComponente);
+            self.moverComponente(destino,datos.idComponente,ubicacion);
             return;
         }
     }    
@@ -275,7 +295,10 @@ var editor=new function() {
                 icono:iconosComponentes[nombre],
                 datos:JSON.stringify({
                     insertarComponente:nombre
-                })
+                }),
+                dragend:function() {
+                    removerZonas();
+                }
             });
         }
     }    
@@ -364,6 +387,8 @@ var editor=new function() {
                     });
                 }
             }
+        }).evento("mouseup",function(ev) {
+            removerZonas();
         });
     }    
 
@@ -376,36 +401,150 @@ var editor=new function() {
         return this;
     };
 
-    this.moverComponente=function(destino,id) {
+    /**
+     * Mueve un componente hacia otro elemento.
+     * @param {Node|Element} destino - Elemento de destino.
+     * @param {string} id - ID del componente a mover.
+     * @param {string} [ubicacion="dentro"] - Ubicación donde insertar el componente: "dentro", "antes" o "despues".
+     */
+    this.moverComponente=function(destino,id,ubicacion) {
+        if(typeof ubicacion==="undefined") ubicacion="dentro";
+
         var obj=ui.obtenerInstanciaComponente(id);
         if(!obj||destino===obj.elemento) return this;
-        destino.anexar(obj.elemento);
+
+        if(ubicacion=="dentro") {
+            destino.anexar(obj.elemento);
+        } else if(ubicacion=="antes") {
+            destino.insertarAntes(obj.elemento);
+        } else if(ubicacion=="despues") {
+            destino.insertarDespues(obj.elemento);            
+        }
 
         return this;
+    };
+
+    var temporizadorZonas,
+    /**
+     * Muestra las zonas para soltar componentes alrededor del componente donde se produce el evento, transcurridos 3 segundos.
+     */
+    mostrarZonas=function(ev) {
+        clearTimeout(temporizadorZonas);
+
+        if(ev.target==ui.obtenerCuerpo()) return;
+
+        temporizadorZonas=setTimeout(function() {
+            removerZonas();
+
+            //Buscar el elemento del componente (ev.target puede ser cualquier hijo)
+            var elem=ev.target;
+            if(!ev.target.es({clase:"componente"})) elem=elem.padre({clase:"componente"});
+            if(!elem) return;
+
+            var posicion=elem.posicionAbsoluta(),
+                ancho=elem.ancho(),
+                alto=elem.alto(),
+                doc=ui.obtenerDocumento(),
+                zona1=doc.crear("<div class='foxtrot-zona foxtrot-zona-anterior foxtrot-zona-1'>"),
+                zona2=doc.crear("<div class='foxtrot-zona foxtrot-zona-anterior foxtrot-zona-2'>"),
+                zona3=doc.crear("<div class='foxtrot-zona foxtrot-zona-siguiente foxtrot-zona-3'>"),
+                zona4=doc.crear("<div class='foxtrot-zona foxtrot-zona-siguiente foxtrot-zona-4'>");
+
+            zona1.metadato("destino",elem)
+                .anexarA(doc.body);
+
+            zona2.metadato("destino",elem)
+                .anexarA(doc.body);
+
+            zona3.metadato("destino",elem)
+                .anexarA(doc.body);
+
+            zona4.metadato("destino",elem)
+                .anexarA(doc.body);
+
+
+            var anchoZona=14;
+
+            zona1.estilos({
+                left:posicion.x,
+                top:posicion.y-anchoZona,
+                width:ancho,
+                height:anchoZona
+            });
+
+            zona2.estilos({
+                left:posicion.x-anchoZona,
+                top:posicion.y,
+                width:anchoZona,
+                height:alto
+            });
+
+            zona3.estilos({
+                left:posicion.x,
+                top:posicion.y+alto,
+                width:ancho,
+                height:anchoZona
+            });
+
+            zona4.estilos({
+                left:posicion.x+ancho,
+                top:posicion.y,
+                width:anchoZona,
+                height:alto
+            });
+
+            var params={
+                drop:componenteSoltado,
+                dragenter:function(ev) {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    clearTimeout(temporizadorZonas);
+                }
+            };
+
+            zona1.crearDestino(params);
+            zona2.crearDestino(params);
+            zona3.crearDestino(params);
+            zona4.crearDestino(params);
+        },1500);
+    },
+    /**
+     * Remueve las zonas de soltado alrededor del componente.
+     */
+    removerZonas=function() {
+        clearTimeout(temporizadorZonas);
+        ui.obtenerDocumento().querySelectorAll(".foxtrot-zona").remover();
     };
 
     this.prepararComponenteInsertado=function(obj) {        
         var elem=obj.obtenerElemento(),
             nombre=obj.componente,
             id=obj.obtenerId(),
-            conte=obj.obtenerContenedor(),
             arrastrable=obj.esArrastrable();
 
-        if(conte) {
-            conte.crearDestino({
-                drop:componenteSoltado,
-                dragenter:stopPropagation,
-                dragover:stopPropagation,
-                dragleave:stopPropagation
-            });
-        }
+        //Creamos el destino en todos los elementos (no solo los contenedores) para poder mostrar las zonas de
+        //soltado alrededor del componente (componenteSoltado validará si puede recibir hijos.)
+        elem.crearDestino({
+            drop:componenteSoltado,
+            dragenter:function(ev) {
+                //Detener la propagación permitirá destinos anidados
+                ev.stopPropagation();
+                ev.preventDefault();
+                mostrarZonas(ev);
+            },
+            dragover:stopPropagation,
+            dragleave:stopPropagation
+        });
         
         if(arrastrable) {
             elem.arrastrable({
                 icono:iconosComponentes[nombre], //Al arrastrar, que presente el ícono del tipo de componente
                 datos:JSON.stringify({
                     idComponente:id
-                })
+                }),
+                dragend:function() {
+                    removerZonas();
+                }
             });
         }
 
@@ -422,11 +561,25 @@ var editor=new function() {
         });
     }
 
-    this.insertarComponente=function(destino,nombre) {
+    /**
+     * Crea e inserta un componente.
+     * @param {Element|Node} destino - Elemento de destino.
+     * @param {string} nombre - Nombre del tipo de componente a crear.
+     * @param {string} [ubicacion="dentro"] - Ubicación donde insertar el componente: "dentro", "antes" o "despues".
+     */
+    this.insertarComponente=function(destino,nombre,ubicacion) {
+        if(typeof ubicacion==="undefined") ubicacion="dentro";
+
         var obj=ui.crearComponente(nombre),
             elem=obj.obtenerElemento();
 
-        destino.anexar(elem);
+        if(ubicacion=="dentro") {
+            destino.anexar(elem);
+        } else if(ubicacion=="antes") {
+            destino.insertarAntes(elem);
+        } else if(ubicacion=="despues") {
+            destino.insertarDespues(elem);            
+        }
         
         obj.inicializar();
 

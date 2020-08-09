@@ -609,11 +609,15 @@ var componente=new function() {
         if(util.esIndefinido(tipo)) tipo="numerico";
 
         if(tipo=="numerico") {
+            //Admitir 'auto'
+            if(valor.trim()=="auto") return "auto";
+
             //Agregar unidad a los números (px por defecto)
             if(typeof valor==="number"||/^[0-9]+$/.test(valor)) return valor.toString()+"px";
 
             //Si es solo números con espacios (por ejemplo margin:10 20), agregar unidades a todos los números (margin:10px 20px)
-            if(/^[0-9\s]+$/.test(valor)) {
+            //Admitir 'auto'
+            if(/^([0-9\s]|auto)+$/.test(valor)) {
                 valor=valor.split(" ");
                 valor.forEach(function(v,i) {
                     if(/^[0-9]+$/.test(v)) valor[i]=v.toString()+"px";

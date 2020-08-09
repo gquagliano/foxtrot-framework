@@ -111,6 +111,8 @@ var editor=new function() {
             cuerpoBarraPropiedades.html("Ningún componente seleccionado");
             return;
         }
+
+        var seleccionMultiple=self.componentesSeleccionados.length>1;
         
         barraPropiedades.removerClase("foxtrot-barra-propiedades-vacia");
         cuerpoBarraPropiedades.html("");
@@ -140,7 +142,7 @@ var editor=new function() {
                 campo.anexar("<option value='s'>Si</option>");
                 campo.anexar("<option value='n'>No</option>");
 
-                if(prop.valor===true||prop.valor===false) campo.valor(prop.valor?"s":"n");
+                if(!seleccionMultiple&&(prop.valor===true||prop.valor===false)) campo.valor(prop.valor?"s":"n");
 
                 campo.evento("change",function(ev) {
                     var v=this.valor();
@@ -169,7 +171,7 @@ var editor=new function() {
                     );
                 });
 
-                campo.valor(prop.valor);
+                if(!seleccionMultiple) campo.valor(prop.valor);
 
                 campo.evento("change",function(ev) {
                     if(fn)  {
@@ -182,7 +184,8 @@ var editor=new function() {
             } else {
                 //Campo de texto como predeterminado
                 
-                var campo=document.crear("<input type='text' class='form-control'>").valor(prop.valor);
+                var campo=document.crear("<input type='text' class='form-control'>");
+                if(!seleccionMultiple) campo.valor(prop.valor);
                 if(placeholder) campo.atributo("placeholder",placeholder);
                 fila.anexar(campo);
 
@@ -262,12 +265,6 @@ var editor=new function() {
                 var propiedadesComponente=componente.obtenerListadoPropiedades(tamanoActual);
                 propiedadesComponente.forEach(function(grupo,props) {
                     if(!propiedades.hasOwnProperty(grupo)) propiedades[grupo]={};
-
-                    //Remover valores
-                    props.forEach(function(nombre,prop) {
-                        prop.valor=null;
-                    });
-
                     Object.assign(propiedades[grupo],props);
                 });
             });

@@ -66,7 +66,7 @@
             cuerpo.html(parametros.cuerpo);
         } else {
             //Almacenar la ubicación anterior del contenido para poder restaurarlo
-            parametros.padreAnterior=parametros.elem.parentNode;
+            parametros.padreAnterior=parametros.cuerpo.parentNode;
             cuerpo.anexar(parametros.cuerpo);
         }
 

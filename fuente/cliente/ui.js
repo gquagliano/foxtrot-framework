@@ -1152,10 +1152,10 @@ var ui=new function() {
             if(obj) {
                 obj.establecerVista(nombreVistaPrincipal);
                 instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
+                //Evento 'Listo'
+                instanciaControladorPrincipal.listo();
             }
         }
-
-
     };
 }();
 

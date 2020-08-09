@@ -1,6 +1,6 @@
 Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.com/foxtrotarg/foxtrot-framework). 
 
-**Nota: No todo lo que se establece en la documentación funciona actualmente.**
+**Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión (*MVP*)!**
 
 ## Qué es Foxtrot Framework
 
@@ -21,6 +21,30 @@ Desarrollado en Argentina, con su API en español.
 - Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
 - Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre, gratuita, que no te obligue a almacenar tu código en su _nube_ y que persiga el mismo nivel de integración que Foxtrot.
 - Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
+
+## Estado
+
+![](documentacion/img/tick.jpg) Editor de vistas completamente funcional.
+![](documentacion/img/tick.jpg) Integración *vista-controlador JS-controlador PHP* completa.
+![](documentacion/img/tick.jpg) Acceso a datos y ORM, completos.
+![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, compltos.
+![](documentacion/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
+![](documentacion/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
+
+## Pendientes
+
+En líneas generales,
+
+- Implementar más componentes.
+- Edición de metadatos de las vistas.
+- Desarrollar la navegación de una sola página (ideal para aplicaciones móviles).
+- Completar funcionalidad útil del editor, como copiar, cortar, pegar, deshacer, rehacer y la barra de formato de texto.
+- Completar la documentación, revisar y completar JSDOC y PHPDOC.
+- Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
+
+...¡Y listo!
+
+Luego seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
 
 ## Primeros pasos
 

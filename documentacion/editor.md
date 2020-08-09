@@ -49,7 +49,13 @@ Ruta sin extensión relativa a la raíz del sistema.
 - `cordova` Al guardar, generará un archivo HTML compatible con Cordova.
 - `escritorio` Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
 
-En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo y se automatizará el acceso al editor (acceso directo desde el listado de vistas).
+En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo de aplicaciones y se automatizará el acceso al editor (acceso directo desde el listado de vistas).
+
+### ¡Importante!
+
+Actualmente, el editor está en desarrollo y está pensado para uso personal en un servidor local, por lo que no presenta ningún tipo de seguridad. **Implementar el editor en un servidor público o compartido deja abierta la posibilidad de subida de código arbitrario**.
+
+En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación de usuarios y mecanismos de seguridad para trabajo en servidores de desarrollo en línea (o en intranet).
 
 ### Consejos útiles
 

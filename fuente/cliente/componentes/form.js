@@ -26,7 +26,7 @@ var componenteFormulario=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<div class='formulario'>"); 
         this.crearComponente();
         return this;
     };

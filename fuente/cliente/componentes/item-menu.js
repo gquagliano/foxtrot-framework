@@ -14,13 +14,34 @@ var componenteItemMenu=function() {
     this.componente="item-menu";
     this.contenidoEditable=true;
 
+    this.enlace=null;
     this.submenuAbierto=false;
+
+    /**
+     * Propiedades de Botón.
+     */
+    this.propiedadesConcretas={
+        "Comportamiento":{
+            enlace:{
+                etiqueta:"Enlace",
+                adaptativa:false
+            },
+            nuevaVentana:{
+                etiqueta:"Abrir en nueva ventana",
+                tipo:"bool"
+            }
+        }
+    };
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+        
+        this.enlace=this.elemento.querySelector("a");
+        this.elementoEditable=this.enlace;
+        this.elementoEventos=this.enlace;
         this.contenedor=this.elemento;
 
         this.inicializarComponente();
@@ -33,8 +54,13 @@ var componenteItemMenu=function() {
     this.crear=function() {
         this.elemento=document.crear("<li>");
         this.contenedor=this.elemento;
-        this.elementoEditable=document.crear("<a href='#'>Item</a>");
-        this.elementoEditable.anexarA(this.elemento);
+
+        this.enlace=document.crear("<a href='#'>Item</a>");
+        this.enlace.anexarA(this.elemento);
+
+        this.elementoEditable=this.enlace;
+        this.elementoEventos=this.enlace;
+
         this.crearComponente();
         return this;
     };
@@ -114,10 +140,34 @@ var componenteItemMenu=function() {
 
                 alternar(submenu[0]);
             });
-            return this;
         }
 
         this.establecerEventosComponente();
+        return this;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        if(propiedad=="enlace") {
+            if(!valor) valor="#";
+            this.enlace.atributo("href",valor);
+            return this;
+        }
+
+        if(propiedad=="nuevaVentana") {
+            if(!valor) {
+                this.enlace.removerAtributo("target");
+            } else {
+                this.enlace.atributo("target","_blank");
+            }
+            return this;
+        }
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

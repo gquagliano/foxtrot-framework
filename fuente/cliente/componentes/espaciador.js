@@ -54,6 +54,31 @@ var componenteEspaciador=function() {
         this.crearComponente();
         return this;
     };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        if(propiedad=="tipo") {
+            this.removerClase("horizontal vertical");
+            if(valor) this.agregarClase(valor);
+            return this;
+        }
+
+        if(propiedad=="borde") {
+            if(!valor) {
+                this.enlace.removerClase("con-borde");
+            } else {
+                this.enlace.agregarClase("con-borde");
+            }
+            return this;
+        }
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
 };
 
 ui.registrarComponente("espaciador",componenteEspaciador,configComponente.clonar({

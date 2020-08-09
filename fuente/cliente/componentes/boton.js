@@ -51,6 +51,10 @@ var componenteBoton=function() {
             enlace:{
                 etiqueta:"Enlace",
                 adaptativa:false
+            },
+            nuevaVentana:{
+                etiqueta:"Abrir en nueva ventana",
+                tipo:"bool"
             }
         }
     };
@@ -88,6 +92,15 @@ var componenteBoton=function() {
         if(propiedad=="enlace") {
             if(!valor) valor="#";
             this.elemento.atributo("href",valor);
+            return this;
+        }
+
+        if(propiedad=="nuevaVentana") {
+            if(!valor) {
+                this.elemento.removerAtributo("target");
+            } else {
+                this.elemento.atributo("target","_blank");
+            }
             return this;
         }
 

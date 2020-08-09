@@ -61,6 +61,9 @@ var componenteCampo=function() {
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+
+        this.campo=this.elemento.querySelector("input");
+
         this.inicializarComponente();
         return this;
     };

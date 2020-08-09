@@ -36,6 +36,18 @@ var componenteImagen=function() {
             }
         }
     };
+
+    /**
+     * Inicializa la instancia tras ser creada o restaurada.
+     */
+    this.inicializar=function() {
+        if(this.inicializado) return this; 
+
+        this.img=this.elemento.querySelector("img");
+
+        this.inicializarComponente();
+        return this;
+    };
     
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).

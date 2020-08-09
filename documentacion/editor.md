@@ -59,6 +59,8 @@ En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo y se 
 
 - Pueden seleccionarse múltiples componetes manteniendo presionada la tecla Shift.
 
+- Cuando se seleccionen múltiples componentes, la barra de propiedades mostrará las propiedades combinadas de *todos* ellos, pero no mostrará ningún valor. Cualquier modificación en las propiedades, será aplicada por igual a todos los componentes seleccionados.
+
 ## Más información
 
 contacto@foxtrot.ar

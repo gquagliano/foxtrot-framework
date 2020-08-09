@@ -29,7 +29,7 @@ var editor=new function() {
     this.modoArchivoAbierto=null;
     this.clienteArchivoAbierto=null;
 
-    this.componenteSeleccionado=null;
+    this.componentesSeleccionados=[];
 
     ////Elementos del dom
     
@@ -106,7 +106,7 @@ var editor=new function() {
     }  
 
     function construirPropiedades() {
-        if(!self.componenteSeleccionado) {
+        if(!self.componentesSeleccionados.length) {
             barraPropiedades.agregarClase("foxtrot-barra-propiedades-vacia");
             cuerpoBarraPropiedades.html("Ningún componente seleccionado");
             return;
@@ -123,8 +123,7 @@ var editor=new function() {
                 fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
                 placeholder=prop.hasOwnProperty("placeholder")?prop.placeholder:null,
                 ayuda=prop.hasOwnProperty("ayuda")?prop.ayuda:null,
-                timeout=0,
-                componente=editor.componenteSeleccionado;
+                timeout=0;
 
             if(ayuda) {
                 document.crear("<img src='img/ayuda.png'>")
@@ -148,7 +147,11 @@ var editor=new function() {
                     if(v=="s") v=true;
                     else if(v=="n") v=false;
                     else v=null;
-                    if(fn) fn.call(editor,componente,tamanoActual,nombre,v);
+                    if(fn) {
+                        self.componentesSeleccionados.forEach(function(componente) {
+                            fn.call(editor,c,tamanoActual,nombre,v);
+                        });
+                    }
                 });
             } else if(tipo=="opciones") {
                 var campo=document.crear("<select class='custom-select'>");
@@ -169,7 +172,12 @@ var editor=new function() {
                 campo.valor(prop.valor);
 
                 campo.evento("change",function(ev) {
-                    if(fn) fn.call(editor,componente,tamanoActual,nombre,this.valor());
+                    if(fn)  {
+                        var v=this.valor();
+                        self.componentesSeleccionados.forEach(function(componente) {
+                            fn.call(editor,componente,tamanoActual,nombre,v);
+                        });
+                    }
                 });
             } else {
                 //Campo de texto como predeterminado
@@ -182,60 +190,107 @@ var editor=new function() {
                     var t=this;
                     clearTimeout(timeout);
                     timeout=setTimeout(function() {
-                        if(fn) fn.call(editor,componente,tamanoActual,nombre,t.valor());
+                        if(fn) {
+                            self.componentesSeleccionados.forEach(function(componente) {
+                                fn.call(editor,componente,tamanoActual,nombre,t.valor());
+                            });
+                        }
                     },200);
                 }).evento("blur",function(ev) {
-                    if(fn) fn.call(editor,componente,tamanoActual,nombre,this.valor());
+                    if(fn)  {
+                        var v=this.valor();
+                        self.componentesSeleccionados.forEach(function(componente) {
+                            fn.call(editor,componente,tamanoActual,nombre,v);
+                        });
+                    }
                 });
             }
 
             fila.anexarA(barra);
         };
 
-        var propiedades=editor.componenteSeleccionado.obtenerListadoPropiedades(tamanoActual);
-        
-        //Propiedades especiales
-        //Crear un grupo con el nombre del tipo de componente para que cada componente concreto pueda agregar más propiedades allí, este grupo siempre
-        //se mostrará primero.
-        var nombreTipoComponente=ui.obtenerConfigComponente(editor.componenteSeleccionado.componente).etiqueta;
-        if(!propiedades.hasOwnProperty(nombreTipoComponente)) propiedades[nombreTipoComponente]={};
-        propiedades[nombreTipoComponente].nombre={
-            etiqueta:"Nombre",
-            funcion:function(componentes,t,prop,valor) {
-                componentes.establecerNombre(valor);
-            },
-            //TODO Selección múltiple: No mostrar los valores
-            valor:editor.componenteSeleccionado.nombre
-        };
+        var propiedades,
+            nombreTipoComponente=null,
+            fn=function(grupo) {
+                var props=propiedades[grupo];
+                if(props.vacio()) return;
 
-        //Ordenar por propiedad del objeto propiedades
+                var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
+
+                document.crear("<label>").html(grupo).anexarA(barra);
+
+                barra.anexarA(cuerpoBarraPropiedades);
+
+                var orden=Object.keys(props).sort();
+                orden.forEach(function(nombre) {
+                    var prop=props[nombre];
+                    agregarPropiedad(barra,nombre,prop);
+                });
+            };
+
+        if(self.componentesSeleccionados.length==1) {
+            var componente=self.componentesSeleccionados[0];
+            propiedades=componente.obtenerListadoPropiedades(tamanoActual);
+        
+            //Propiedades especiales
+
+            //Crear un grupo con el nombre del tipo de componente para que cada componente concreto pueda agregar más propiedades allí, este grupo siempre
+            //se mostrará primero.
+            var nombreTipoComponente=ui.obtenerConfigComponente(componente.componente).etiqueta;
+            if(!propiedades.hasOwnProperty(nombreTipoComponente)) propiedades[nombreTipoComponente]={};
+            propiedades[nombreTipoComponente].nombre={
+                etiqueta:"Nombre",
+                funcion:function(componentes,t,prop,valor) {
+                    componentes.establecerNombre(valor);
+                },
+                valor:componente.nombre
+            };
+
+            //Agregar primer grupo
+            fn(nombreTipoComponente);
+        } else {
+            //Selección múltiple
+
+            //Buscar propiedades comunes a todos
+
+            var tipos={};
+            propiedades={};
+            self.componentesSeleccionados.forEach(function(componente) {
+                var tipo=ui.obtenerConfigComponente(componente.componente).etiqueta;
+                if(tipos.hasOwnProperty(tipo)) tipos[tipo]++; else tipos[tipo]=1;
+            
+                var propiedadesComponente=componente.obtenerListadoPropiedades(tamanoActual);
+                propiedadesComponente.forEach(function(grupo,props) {
+                    if(!propiedades.hasOwnProperty(grupo)) propiedades[grupo]={};
+
+                    //Remover valores
+                    props.forEach(function(nombre,prop) {
+                        prop.valor=null;
+                    });
+
+                    Object.assign(propiedades[grupo],props);
+                });
+            });
+
+            //Título
+            var titulo="";
+            tipos.forEach(function(tipo,cantidad) {
+                if(titulo!="") titulo+=", ";
+                titulo+=tipo;
+                if(cantidad>1) titulo+="("+cantidad+")";
+            });
+            document.crear("<div class='foxtrot-grupo-herramientas'>")
+                .anexar(document.crear("<label>").html(titulo))
+                .anexarA(cuerpoBarraPropiedades);
+        }
+
+        //Ordenar por nombre de propiedad (nombre de grupo)
         var claves=Object.keys(propiedades).sort();
 
-        var fn=function(grupo) {
-            var props=propiedades[grupo];
-            if(props.vacio()) return;
-
-            var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
-
-            document.crear("<label>").html(grupo).anexarA(barra);
-
-            barra.anexarA(cuerpoBarraPropiedades);
-
-            var orden=Object.keys(props).sort();
-            orden.forEach(function(nombre) {
-                var prop=props[nombre];
-                agregarPropiedad(barra,nombre,prop);
-            });
-        };
-
-        //Agregar primer grupo
-        fn(nombreTipoComponente);
-        //Agregar el resto en orden
+        //Agregar el resto de los grupos en orden
         claves.forEach(function(grupo) {
             if(grupo!=nombreTipoComponente) fn(grupo);            
         });
-
-        //TODO Selección múltiple: Solo mostrar propiedades comunes a todos los elementos seleccionados
     }
 
     ////Eventos
@@ -310,7 +365,7 @@ var editor=new function() {
             ev.preventDefault();
             ev.stopPropagation();
 
-            //TODO Selección múltiple
+            if(!ev.shiftKey) self.limpiarSeleccion();
 
             self.establecerSeleccion(this);
         })
@@ -320,11 +375,9 @@ var editor=new function() {
             ev.preventDefault();
             ev.stopPropagation();
 
-            //TODO Selección múltiple
-
-            self.establecerSeleccion(this);
-
             var arbol=[];
+
+            if(!ev.shiftKey) self.limpiarSeleccion();
 
             //Construir árbol de herencia
             var comp=ui.obtenerInstanciaComponente(this);
@@ -342,28 +395,37 @@ var editor=new function() {
             arbol.reverse();
 
             ui.cerrarMenu()
-                .abrirMenu([
+                .abrirMenu(
+                    [
+                        {
+                            etiqueta:"Eliminar",
+                            accion:function() {
+                                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function() {
+                                    self.eliminarComponentes(self.componentesSeleccionados);
+                                });
+                            },
+                            habilitado:function() {
+                                if(!self.componentesSeleccionados.length) return false;
+
+                                //Deshabilitar si la selección contiene el componente vista
+                                for(var i=0;i<self.componentesSeleccionados.length;i++)
+                                    if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return false;
+
+                                return true;
+                            },
+                            separador:true
+                        },
+                        {
+                            etiqueta:"Seleccionar",
+                            submenu:arbol
+                        }
+                    ],
                     {
-                        etiqueta:"Eliminar",
-                        accion:function() {
-                            ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
-                                self.eliminarComponente(self.componenteSeleccionado.obtenerId());
-                            });
-                        },
-                        habilitado:function() {
-                            return self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)?true:false;
-                        },
-                        separador:true
+                        x:ev.clientX,
+                        y:ev.clientY
                     },
-                    {
-                        etiqueta:"Seleccionar",
-                        submenu:arbol
-                    }
-                ],{
-                    x:ev.clientX,
-                    y:ev.clientY
-                },
-                "foxtrot-menu-editor");
+                    "foxtrot-menu-editor"
+                );
         })
         .evento("click",function() {
             self.limpiarSeleccion();
@@ -381,11 +443,15 @@ var editor=new function() {
             } else if(ev.which==46) {
                 //DEL
                 ev.preventDefault();
-                if(self.componenteSeleccionado&&!self.esCuerpo(self.componenteSeleccionado.elemento)) {
-                    ui.confirmar("¿Estás seguro de querer eliminar el componente?",function() {
-                        self.eliminarComponente(self.componenteSeleccionado.obtenerId());
-                    });
-                }
+
+                if(!self.componentesSeleccionados.length) return;
+
+                for(var i=0;i<self.componentesSeleccionados.length;i++)
+                    if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return;
+
+                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function() {
+                    self.eliminarComponentes(self.componentesSeleccionados);
+                });
             }
         }).evento("mouseup",function(ev) {
             removerZonas();
@@ -393,6 +459,13 @@ var editor=new function() {
     }    
 
     ////Gestión de componentes
+
+    this.eliminarComponentes=function(lista) {
+        lista.forEach(function(elem) {
+            self.eliminarComponente(elem.obtenerId());
+        });
+        return this;
+    };
 
     this.eliminarComponente=function(id) {
         var obj=ui.obtenerInstanciaComponente(id);
@@ -590,10 +663,6 @@ var editor=new function() {
 
     this.establecerSeleccion=function(obj) {
         var elem,comp;
-
-        //TODO Selección múltiple
-
-        this.limpiarSeleccion();
         
         if(util.esComponente(obj)) {
             comp=obj;
@@ -613,10 +682,10 @@ var editor=new function() {
             padre.obtenerElemento().agregarClase("hijo-seleccionado");
         }
 
-        this.componenteSeleccionado=comp;
+        this.componentesSeleccionados.push(comp);
         
         if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
-            var config=ui.obtenerComponentes()[this.componenteSeleccionado.componente].config;
+            var config=ui.obtenerComponentes()[comp.componente].config;
             document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='recursos/componentes/iconos/"+config.icono+"'></span>")
                 .atributo("title",config.etiqueta)
                 .anexarA(elem);
@@ -635,7 +704,7 @@ var editor=new function() {
     this.limpiarSeleccion=function() {
         ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
-        this.componenteSeleccionado=null;
+        this.componentesSeleccionados=[];
         construirPropiedades();
         return this;
     };

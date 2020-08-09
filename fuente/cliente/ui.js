@@ -257,7 +257,7 @@ var ui=new function() {
     };
 
     this.removerEstilos=function(selector,tamano) {
-        return this.establecerEstilos(selector,null,tamano);
+        return this.establecerEstilosSelector(selector,null,tamano);
     };
 
     ////Gestión de la aplicación
@@ -471,6 +471,7 @@ var ui=new function() {
     this.obtenerCss=function() {
         var css="";
         this.obtenerEstilos().forEach(function(regla) {
+            if(!regla.estilos.length) return;
             css+=regla.texto;
         });
         //Comprimir

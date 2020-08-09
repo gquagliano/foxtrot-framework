@@ -756,6 +756,107 @@ var ui=new function() {
         return expresion.evaluar(cadena);
     };
 
+    var duracionAnimacion=1000; //Depende de la animación CSS
+
+    /**
+     * Hace aparecer el elemento en forma animada utilizando animaciones CSS.
+     * @param {(Node|Element)} elem - Elemento.
+     * @param {function} [retorno] - Función de retorno.
+     */
+    this.animarAparecer=function(elem,retorno) {
+        this.detenerAnimacion(elem);
+
+        elem.removerClase("oculto")
+            .agregarClase("aparece");  
+
+        if(typeof retorno!=="undefined") {
+            elem._timeoutAnimMenu=setTimeout(function() {
+                retorno();
+            },duracionAnimacion);
+        }
+
+        return this;
+    };
+
+    /**
+     * Hace desaparecer y oculta el elemento en forma animada utilizando animaciones CSS.
+     * @param {(Node|Element)} elem - Elemento.
+     * @param {function} [retorno] - Función de retorno.
+     */
+    this.animarDesaparecer=function(elem,retorno) {
+        this.detenerAnimacion(elem);
+
+        elem.agregarClase("desaparece");
+
+        elem._timeoutAnimMenu=setTimeout(function() {
+            if(typeof retorno!=="undefined") retorno();
+
+            elem.removerClase("desaparece")
+                .agregarClase("oculto");
+        },duracionAnimacion);
+    };
+
+    /**
+     * Oculta el elemento mediante el mismo mecanismo que animarDesaparecer(), pero de forma inmediata.
+     * @param {(Node|Element)} elem - Elemento.
+     */
+    this.desaparecer=function(elem) {
+        elem.removerClase("aparece")
+            .agregarClase("oculto");
+        return this;
+    };
+
+    /**
+     * Detiene la animación en curso.
+     * @param {(Node|Element)} elem - Elemento.
+     */
+    this.detenerAnimacion=function(elem) {
+        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
+        elem.removerClase("aparece desaparece");
+        return this;
+    };
+
+    var temporizadorPrecarga,
+        precargaVisible=false,
+        elementoPrecarga=null;
+
+    /**
+     * Muestra una animación de precarga.
+     */
+    this.mostrarPrecarga=function() {
+        //Detener si se había solicitado ocultar la precarga hace menos de 200ms
+        clearTimeout(temporizadorPrecarga);
+
+        if(precargaVisible) return this;
+
+        if(!elementoPrecarga) {
+            elementoPrecarga=doc.crear("<div id='foxtrot-precarga' class='oculto'>")   
+                .anexarA(body);
+        }
+
+        this.animarAparecer(elementoPrecarga);
+        precargaVisible=true;
+
+        return this;
+    };
+
+    /**
+     * Oculta la animación de precarga.
+     */
+    this.ocultarPrecarga=function() {
+        if(!elementoPrecarga||!precargaVisible) return this;
+
+        clearTimeout(temporizadorPrecarga);
+        
+        //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
+        temporizadorPrecarga=setTimeout(function() {
+            self.animarDesaparecer(elementoPrecarga);
+            precargaVisible=false;
+        },200);
+
+        return this;
+    };
+
     this.construirDialogo=function(obj) {
 
     };
@@ -778,24 +879,19 @@ var ui=new function() {
     };
 
     var abrirElementoMenu=function(elem) {
-        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
-        elem.removerClase("foxtrot-menu-oculto desaparece")
-            .agregarClase("aparece");            
+        ui.animarAparecer(elem);
     };
     
     var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar) {
-        elem.removerClase("aparece")
-            .agregarClase("desaparece");
-    
-        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
-        elem._timeoutAnimMenu=setTimeout(function() {
-            if(eliminar) {
-                elem.remover();
-            } else {
-                elem.removerClase("desaparece")
-                    .agregarClase("foxtrot-menu-oculto");
-            }
-        },omitirAnimacion?0:1000);
+        var fn=function() {
+            if(eliminar) elem.remover();
+        };
+
+        if(omitirAnimacion) {
+            fn();
+        } else {
+            ui.animarDesaparecer(elem,fn);
+        }
     };
 
     /**
@@ -859,7 +955,7 @@ var ui=new function() {
                 a.html(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
-                    var ulSubmenu=document.crear("<ul class='foxtrot-submenu foxtrot-menu-oculto'>");
+                    var ulSubmenu=document.crear("<ul class='foxtrot-submenu oculto'>");
                     fn(ulSubmenu,items[i].submenu);
 
                     li.agregarClase("con-submenu");
@@ -902,7 +998,7 @@ var ui=new function() {
         };
 
         var menu={
-            elem:document.crear("<ul class='foxtrot-menu foxtrot-menu-oculto'>"),
+            elem:document.crear("<ul class='foxtrot-menu oculto'>"),
             items:items.clonar(),
             eliminar:false
         };
@@ -1059,8 +1155,6 @@ var ui=new function() {
 
         return this;
     };
-
-    //TODO Preloader
 
     ////Navegación
 

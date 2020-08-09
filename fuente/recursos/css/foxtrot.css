@@ -69,15 +69,25 @@ picture img {
     background-position: calc(100% - 5px) center;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+");
 }
-.foxtrot-menu-oculto {
-    display: none;
-}
 .foxtrot-menu li.foxtrot-deshabilitado>a {
     opacity: .3;
     cursor: not-allowed;
 }
 
 /* Diálogos */
+
+#foxtrot-precarga {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 99999999;
+    background-image: url(../img/cargando.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(255,255,255,.65);
+}
 
 /* Cordova */
 
@@ -109,6 +119,9 @@ picture img {
     justify-content: center;
 }
 
+.oculto {
+    display: none;
+}
 .aparece {
     animation: aparece .1s;
     animation-fill-mode: both;

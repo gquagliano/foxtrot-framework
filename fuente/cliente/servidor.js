@@ -39,10 +39,13 @@ var servidor=new function() {
             parametros:null,
             silencio:false,
             abortar:true,
-            foxtrot:null
+            foxtrot:null,
+            mostrarPrecarga:true
         },opciones);
 
         if(opciones.abortar) this.abortarTodo();
+
+        if(opciones.mostrarPrecarga) ui.mostrarPrecarga();
 
         var param={};
         if(opciones.foxtrot) param.__f=opciones.foxtrot;
@@ -56,6 +59,7 @@ var servidor=new function() {
             parametros:param,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
+                ui.ocultarPrecarga();
             }
         }));
     };

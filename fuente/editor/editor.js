@@ -151,7 +151,7 @@ var editor=new function() {
                     else v=null;
                     if(fn) {
                         self.componentesSeleccionados.forEach(function(componente) {
-                            fn.call(editor,c,tamanoActual,nombre,v);
+                            fn.call(editor,componente,tamanoActual,nombre,v);
                         });
                     }
                 });
@@ -328,7 +328,8 @@ var editor=new function() {
 
         if(datos.hasOwnProperty("insertarComponente")) {
             var obj=self.insertarComponente(destino,datos.insertarComponente,ubicacion);
-            self.establecerSeleccion(obj);
+            self.limpiarSeleccion()
+                .establecerSeleccion(obj);
             return;
         }
 

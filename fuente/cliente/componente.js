@@ -229,6 +229,12 @@ var componente=new function() {
                 adaptativa:false,
                 ayuda:"Propiedad del origen de datos. Admite rutas para acceder a propiedades anidadas, separadas por punto."
             }
+        },
+        "Comportamiento":{
+            autofoco:{
+                etiqueta:"Autofoco",
+                tipo:"bool"
+            }
         }
     };
 
@@ -832,6 +838,15 @@ var componente=new function() {
             return this;
         }
 
+        if(propiedad=="autofoco") {
+            if(valor) {
+                this.elemento.agregarClase("autofoco");
+            } else {
+                this.elemento.removerClase("autofoco");
+            }
+            return this;
+        }
+
         if(propiedad=="tamano") {
             estilos.fontSize=this.normalizarValorCss(valor);
             return this;
@@ -1221,6 +1236,14 @@ var componente=new function() {
      */
     this.obtenerConfigComponente=function() {
         return ui.obtenerComponentes()[this.componente].config;
+    };
+
+    /**
+     * Da foco al componente.
+     */
+    this.foco=function() {
+        this.elemento.focus();
+        return this;
     };
 
     ////Árbol

@@ -172,6 +172,14 @@ var componenteCampo=function() {
 
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
+    };    
+
+    /**
+     * Da foco al componente.
+     */
+    this.foco=function() {
+        this.campo.focus();
+        return this;
     };
 };
 

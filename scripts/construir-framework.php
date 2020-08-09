@@ -34,7 +34,7 @@ $directorios=[
 ];
 foreach($directorios as $dir)
     if(!file_exists(_desarrollo.$dir))
-        mkdir(_desarrollo.$dir);
+        mkdir(_desarrollo.$dir,0755);
 
 ////php, html, css y otros recursos
 

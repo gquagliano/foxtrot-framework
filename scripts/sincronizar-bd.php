@@ -14,17 +14,8 @@ include(__DIR__.'/configuracion.php');
 include(_desarrollo.'servidor/foxtrot.php');
 
 $opciones=getopt('a::m::');
-if(!$opciones['a']) {
-    fwrite(STDERR,'El parámetro -a es requerido.'.PHP_EOL.PHP_EOL);
-    exit;
-}
 
-$aplicacion=preg_replace('/[^a-z0-9 _\.-]/i','',$opciones['a']);
-define('_dirApl',_desarrollo.'aplicaciones/'.$aplicacion.'/');
-if(!$aplicacion||!is_dir(_dirApl)) {
-    fwrite(STDERR,'Aplicación inexistente.'.PHP_EOL.PHP_EOL);
-    exit;
-}
+validarParametroAplicacion($opciones);
 
 $filtrar=false;
 if(is_string($opciones['m'])) {

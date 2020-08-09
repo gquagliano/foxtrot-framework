@@ -24,8 +24,12 @@ Código fuente para almacenar una vista embebible.
 
 #### Compilación de archivos CSS
 
-Durante la compilación para producción o integración con Cordova, los archivos CSS enlazados con tags `<link ... combinar>` y los archivos CSS importados en páginas para Cordova se combinarán en uno solo.
+Durante la compilación para producción o integración con Cordova, los archivos CSS enlazados con etiquetas `<link ... combinar>` y los archivos CSS importados en páginas para Cordova se combinarán en uno solo.
 
 #### Reemplazo del tema de la aplicación
 
-El archivo CSS del tema se enlaza con un tag `<link ... tema>`, o en Cordova seguido del comentario `//tema` a fin de que el editor pueda reemplazar el mismo en las vistas preexistentes cuando se modifique el tema de la aplicación.
+El archivo CSS del tema se enlaza con un etiqueta `<link ... tema>`, o en Cordova seguido del comentario `//tema`, a fin de que el editor pueda reemplazar el mismo en las vistas preexistentes cuando se modifique el tema de la aplicación.
+
+#### Compilación de los controladores
+
+Todos los controladores se combinarán en el archivo `aplicacion.js`. Por ello, se incluyen con el etiqueta `<script ... controlador>`, o en Cordova seguido del comentario `//controlador`, a fin de que el script de compilación pueda removerlos en producción.

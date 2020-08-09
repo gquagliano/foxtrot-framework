@@ -175,7 +175,7 @@ var ui=new function() {
                     .atributo("rel","stylesheet")
                     .evento("load",function() {
                         listas++;
-                        if(esCordova&&listas==url.length) document.querySelector("#contenedor-cordova").agregarClase("listo");
+                        //if(esCordova&&listas==url.length) document.querySelector("#contenedor-cordova").agregarClase("listo");
                     })
                     .atributo("href",u)
             );
@@ -831,7 +831,7 @@ var ui=new function() {
 
     ////Inicialización y ejecución del cliente
 
-    this.cordova=function() {
+    this.establecerCordova=function() {
         esCordova=true;
         urlBase=localStorage.getItem("_urlBase");
         document.head.anexar(document.crear("base").atributo("href",urlBase));
@@ -878,6 +878,10 @@ var ui=new function() {
                         elem.focus();
                     }
                 }
+            }
+
+            if(esCordova) {
+                document.querySelector("#contenedor-cordova").agregarClase("listo");
             }
         }
     };

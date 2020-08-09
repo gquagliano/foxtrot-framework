@@ -19,14 +19,15 @@
         var urlBase=localStorage.getItem("_urlBase"),
             scripts=[
                 "cliente/foxtrot.js",
-                "aplicaciones/{editor_nombreAplicacion}/cliente/controladores/{editor_nombreVista}.js",
+                /*controlador*/"aplicaciones/{editor_nombreAplicacion}/cliente/controladores/{editor_nombreVista}.js",/*controlador*/
+                "aplicaciones/{editor_nombreAplicacion}/cliente/aplicacion.js",
                 "cordova.js"
             ],
             estilos=[
-                "recursos/css/foxtrot.css",
-                "recursos/css/{editor_tema}.css", //tema
-                "aplicacion/recursos/css/estilos.css",
-                "aplicacion/cliente/vistas/{editor_nombreVista}.css"
+                /*combinar*/"recursos/css/foxtrot.css",/*combinar*/
+                /*combinar tema*/"recursos/css/{editor_tema}.css",/*combinar tema*/
+                /*combinar*/"aplicaciones/{editor_nombreAplicacion}/recursos/css/estilos.css",/*combinar*/
+                "aplicaciones/{editor_nombreAplicacion}/cliente/vistas/{editor_nombreVista}.css"
             ],
             listos=0,
             agregarEstilos=function() {
@@ -44,6 +45,7 @@
             agregarScript=function() {
                 var elem=document.createElement("script");
                 elem.onload=scriptOnLoad;
+                elem.onerror=scriptOnLoad;
                 elem.src=urlBase+scripts[listos];
                 document.body.appendChild(elem);
             },

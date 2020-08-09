@@ -17,9 +17,9 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
     php construir-framework.php [-d]
 
-`-d` Depuración: Omite la compilación con Closure a fin de simplificar la depuración.
+`-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
-Nota: Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
+*Nota:* Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
 
 #### crear-apl
 
@@ -45,19 +45,29 @@ Este script eventualmente se integraría con el editor.
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
-    php construir-apl.php -a nombre_aplicacion
+    php construir-apl.php -a nombre_aplicacion [-d]
+
+`-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
 Este script eventualmente se integraría con el editor.
+
+*Nota:* Debe haberse construido el framework antes de construir la aplicación.
+
+*Nota:* Los archivos `/produccion/config.php` y `/produccion/.htaccess` no son reemplazados a fin de preservar la configuración. Es muy probable que se requieran modificaciones en estos archivos para completar la implementación.
 
 #### construir-embebible
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php -a nombre_aplicacion [-i nombre_vista_inicial]
+    php construir-embebible.php -a nombre_aplicacion [-i nombre_vista_inicial] [-d]
 
-Nota: Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante el segundo parámetro, a fin de poder alojar en una única aplicación ambas versiones.
+`-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
-Este script eventualmente se integraría con el editor. En el futuro, también se incluirá la función compilar la aplicación directamente desde el editor.
+`-i` Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante este parámetro, a fin de poder alojar en una única aplicación ambas versiones.
+
+Este script eventualmente se integraría con el editor. En el futuro, también se incluirá la función compilar Cordova directamente desde el editor.
+
+*Nota:* No hace falta construir la aplicación antes de construir la versión embebible.
 
 ### Requerimientos
 

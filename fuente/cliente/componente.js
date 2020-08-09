@@ -33,6 +33,7 @@ var componente=new function() {
     this.contenedor=null;
     this.contenidoEditable=false;
     this.elementoEditable=null;
+    this.elementoEventos=null;
     this.arrastrable=true;
     this.inicializado=false;
     this.nombreVista=null;
@@ -1017,9 +1018,10 @@ var componente=new function() {
      * Establece los eventos predeterminados.
      */
     this.establecerEventosComponente=function() {
-        if(!this.elemento) return this;
-
-        var t=this;
+        var t=this,
+            elemento=this.elementoEventos?this.elementoEventos:this.elemento;
+            
+        if(!elemento) return this;
 
         if(!ui.enModoEdicion()) {
             var asignaciones={
@@ -1034,7 +1036,7 @@ var componente=new function() {
                 var metodo=config.hasOwnProperty("metodo")?config.metodo:evento,
                     propiedad=config.hasOwnProperty("propiedad")?config.propiedad:evento;
 
-                t.elemento.evento(evento,function(ev) {
+                elemento.evento(evento,function(ev) {
                     t.procesarEvento(evento,propiedad,metodo,ev);
                 });
             });

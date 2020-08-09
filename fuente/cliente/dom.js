@@ -624,7 +624,7 @@
         //Almacenar para poder remover todo con removerEvento
         elem.inicializarMetadatos();
         var meta=elem.metadato("eventos");
-        if(!meta||!meta.hasOwnProperty(nombre)) meta[nombre]={};
+        if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
         meta[nombre][funcion._id]=[funcion,funcionInterna]; 
 
         elem.addEventListener(nombre,funcionInterna,captura);
@@ -734,31 +734,33 @@
 
         var meta=this.metadato("eventos");
 
-        if(util.esIndefinido(nombre)) {
-            //Remover todos los eventos registrados mediante evento()
-            var t=this;
-            meta.forEach(function(nombre,arr) {
-                arr.forEach(function(id,ev) {
+        if(meta) {
+            if(util.esIndefinido(nombre)) {
+                //Remover todos los eventos registrados mediante evento()
+                var t=this;
+                meta.forEach(function(nombre,arr) {
+                    arr.forEach(function(id,ev) {
+                        t.removeEventListener(nombre,ev[1]);
+                    });
+                });
+                return this;
+            }
+
+            if(!meta.hasOwnProperty(nombre)) return this;
+
+            if(util.esIndefinido(funcion)) {
+                //Remover todos los eventos nombre registrados mediante evento()
+                var t=this;
+                meta[nombre].forEach(function(id,ev) {
                     t.removeEventListener(nombre,ev[1]);
                 });
-            });
-            return this;
+                return this;
+            }
+
+            //Buscar la funcion asignada al listener (que difiere de la función del usuario ya que es un contenedor)
+            if(util.esIndefinido(funcion._id)) return this;
+            var fn=meta[nombre][funcion._id][1];
         }
-
-        if(!meta||!meta.hasOwnProperty(nombre)) return this;
-
-        if(util.esIndefinido(funcion)) {
-            //Remover todos los eventos nombre registrados mediante evento()
-            var t=this;
-            meta[nombre].forEach(function(id,ev) {
-                t.removeEventListener(nombre,ev[1]);
-            });
-            return this;
-        }
-
-        //Buscar la funcion asignada al listener (que difiere de la función del usuario ya que es un contenedor)
-        if(util.esIndefinido(funcion._id)) return this;
-        var fn=meta[nombre][funcion._id][1];
         
         this.removeEventListener(nombre,fn);
 
@@ -768,11 +770,20 @@
     ////// Métodos para NodeList
 
     /**
-     * Filtra los elementos y devuelve un nuevo listado.
+     * Filtra los elementos y devuelve un nuevo listado como array (¡no NodeList!).
+     * @param {Object} filtro - Filtro (ver documentación de es().)
+     * @param {boolean} negado - Negar el filtro.
+     * @returns {Node[]|Element[]}
      */
     NodeList.prototype.filtrar=function(filtro,negado) {
         if(util.esIndefinido(negado)) negado=false;
-
+        var resultado=[];
+        this.forEach(function(elem) {
+            var coincide=elem.es(filtro);
+            if(negado) coincide=!coincide;
+            if(coincide) resultado.push(elem);
+        });
+        return resultado;
     };
 
     /**

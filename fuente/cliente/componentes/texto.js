@@ -18,7 +18,7 @@ var componenteTexto=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='texto'><p>Hacé doble click para comenzar a escribir...</p></div>"); 
+        this.elemento=document.crear("<p class='texto'>Hacé doble click para comenzar a escribir...</div>");
         this.crearComponente();
         return this;
     };

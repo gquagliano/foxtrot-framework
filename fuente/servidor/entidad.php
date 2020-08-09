@@ -19,7 +19,19 @@ class entidad {
     public $id;
     public $e;
 
+    /**
+     * Fabrica y devuelve una instancia del modelo o repositorio de este tipo de entidades.
+     * @return \modelo
+     */
     public function fabricarModelo($bd=null) {
         return new $this->tipoModelo($bd);
+    }
+
+    /**
+     * Devuelve un objeto estándar con los valores de la instancia.
+     * @return object
+     */
+    public function obtenerObjeto() {
+        return (object)get_object_vars($this);
     }
 }

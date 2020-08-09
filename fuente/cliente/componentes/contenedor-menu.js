@@ -49,7 +49,7 @@ var componenteContenedorMenu=function() {
     /**
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
-    this.propiedadModificada=function(propiedad,valor,tamano) {
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(propiedad=="comportamiento") {
             if(valor=="click") {
                 this.elemento.agregarClase("menu-click");
@@ -58,7 +58,7 @@ var componenteContenedorMenu=function() {
             }
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano);
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

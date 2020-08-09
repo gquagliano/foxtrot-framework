@@ -51,7 +51,7 @@ var componenteContenedor=function() {
     /**
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
-    this.propiedadModificada=function(propiedad,valor,tamano) {
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(propiedad=="tipo") {
             this.elemento.removerClase(/(container|container-fluid)/);
             if(!valor||valor=="normal") {
@@ -61,7 +61,7 @@ var componenteContenedor=function() {
             }
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano);
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

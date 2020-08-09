@@ -352,6 +352,8 @@
         var t=this;
         clase=clase.split(" ");
         clase.forEach(function(v) {
+            v=v.trim();
+            if(!v) return;
             t.classList.add(v);
         });
         return this;
@@ -376,6 +378,8 @@
 
         clase=clase.split(" ");
         clase.forEach(function(v) {
+            v=v.trim();
+            if(!v) return;
             t.classList.remove(v);
         });
         return this;

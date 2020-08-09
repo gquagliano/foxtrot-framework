@@ -166,20 +166,6 @@ var componente=new function() {
                     //justificadoDerecha:"Justificado a la derecha"
                 }
             },
-            formato:{
-                etiqueta:"Formato",
-                tipo:"opciones",
-                opciones:{
-                    p:"Párrafo",
-                    h1:"Título 1",
-                    h2:"Título 2",
-                    h3:"Título 3",
-                    h4:"Título 4",
-                    h5:"Título 5",
-                    h6:"Título 6"
-                },
-                adaptativa:false
-            },
             //TODO Barra de formato
             peso:{
                 etiqueta:"Peso",
@@ -776,15 +762,6 @@ var componente=new function() {
             this.elemento.removerClase(new RegExp("align-items-"+claseTamano+"(start|end|center|baseline|stretch)"));
             if(valor) this.elemento.agregarClase("align-items-"+claseTamano+clases[valor]);            
 
-            return this;
-        }
-
-        if(propiedad=="formato") {
-            if(valor=="p") {
-                this.elemento.removerClase(/h[1-6]/);
-            } else {
-                this.elemento.agregarClase(valor);
-            }
             return this;
         }
 

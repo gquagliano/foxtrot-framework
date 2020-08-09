@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="cordova-plugin-foxtrot"
+        version="1.0.0">
+
+  <name>Foxtrot Cordova</name>
+
+  <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+
+  <js-module src="www/foxtrot.js" name="FoxtrotCordova">
+    <clobbers target="FoxtrotCordova" />
+  </js-module>
+
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="FoxtrotCordova">
+        <param name="android-package" value="ar.foxtrot.cordova.plugin.FoxtrotCordova"/>
+      </feature>
+    </config-file>
+
+    <source-file src="src/android/FoxtrotCordova.java" target-dir="src/ar/foxtrot/cordova/plugin"/>
+    <source-file src="src/android/PrinterManager.java" target-dir="src/ar/foxtrot/cordova/plugin"/>
+    <source-file src="src/android/UsbDeviceFilter.java" target-dir="src/ar/foxtrot/cordova/plugin"/>
+    <source-file src="src/android/PrinterJob.java" target-dir="src/ar/foxtrot/cordova/plugin"/>
+  </platform>
+
+</plugin>

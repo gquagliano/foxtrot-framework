@@ -1,0 +1,16 @@
+{
+  "name": "cordova-plugin-foxtrot",
+  "version": "1.0.0",
+  "description": "Foxtrot Cordova",
+  "cordova": {
+    "id": "cordova-plugin-foxtrot",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {},
+  "keywords": [],
+  "author": "Foxtrot Sistemas",
+  "license": "Apache-2",
+  "homepage": ""
+}

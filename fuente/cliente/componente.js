@@ -1144,6 +1144,9 @@ var componente=new function() {
             } else if(manejador.substring(0,6)=="abrir:") {
                 //Popup
                 ui.abrirVentana(manejador.substring(6));
+            } else if(manejador.substring(0,4)=="apl:") {
+                //Propiedad del controlador de aplicacion
+                ui.aplicacion()[manejador.substring(4)](this,evento);
             } else if(manejador.indexOf(":")>0) {
                 //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                 //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
@@ -1153,9 +1156,6 @@ var componente=new function() {
                 var nombre=manejador.substring(0,manejador.indexOf(":")),
                     valor=manejador.substring(manejador.indexOf(":")+1);
                 componentes[nombre].eventoExterno(valor,evento);
-            } else if(manejador.substring(0,4)=="apl:") {
-                //Propiedad del controlador de aplicacion
-                ui.aplicacion()[manejador.substring(4)](this,evento);
             } else {
                 //Propiedad del controlador
                 ctl[manejador](this,evento);

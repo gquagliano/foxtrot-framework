@@ -135,11 +135,12 @@ var componenteItemMenu=function() {
 
                 cerrar(submenu[0]);
             }).evento("mousedown",function(ev) {
+                ev.stopPropagation();
+                
                 var submenu=t.obtenerHijos();
                 if(!submenu.length||!abrirConClick()) return;
                 
                 ev.preventDefault();
-                ev.stopPropagation();
                 ignorarClick=true;
 
                 alternar(submenu[0]);

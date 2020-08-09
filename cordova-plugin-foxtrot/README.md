@@ -6,6 +6,13 @@ Plugin para Cordova que combina funcionalidades útiles para integración con ap
 
 Reemplazando `ruta-local` por la ruta al directorio en tu equipo.
 
+### Android
+
+Agregar las siguientes dependencias a `build.gradle`:
+
+    implementation 'com.android.support:appcompat-v7:25.1.0'
+    implementation "com.android.support:support-v4:27.+"
+
 ## Más información
 
 [README principal del proyecto](../README.md).

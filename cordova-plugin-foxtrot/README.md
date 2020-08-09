@@ -1,8 +1,6 @@
-**En desarrollo.**
+Plugin para Cordova que combina funcionalidades útiles para integración con aplicaciones Foxtrot sin dependencias de plugins de terceros.
 
-Plugin Cordova que combina funcionalidades útiles para integración con aplicaciones Foxtrot sin dependencias de plugins de terceros.
-
-#### Instalación
+## Instalación
 
     cordova plugin add ruta-local/cordova-plugin-foxtrot
 

@@ -106,15 +106,15 @@ var controlador=new function() {
     /**
      * Inicializa la instancia (método para sobreescribir).
      */
-    this.inicializar=function(propiedades) {
-        this.inicializarControlador(propiedades);
+    this.inicializar=function() {
+        this.inicializarControlador();
         return this;
     };
 
     /**
      * Inicializa la instancia.
      */
-    this.inicializarControlador=function(propiedades) {
+    this.inicializarControlador=function() {
         return this;
     };
 
@@ -124,6 +124,12 @@ var controlador=new function() {
     this.obtenerPropiedades=function() {
         return {
         };
+    };
+
+    /**
+     * Evento 'Listo' (método para sobreescribir).
+     */
+    this.listo=function() {
     };
 
 }();

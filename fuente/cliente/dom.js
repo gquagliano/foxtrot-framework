@@ -661,6 +661,24 @@
     };
 
     /**
+     * Ejecuta todos los manejadores asignados a un evento.
+     * @param {string} nombre - Nombre del evento.
+     */
+    EventTarget.prototype.ejecutarEvento=function(nombre) {
+        var t=this;
+
+        //nombre puede contener múltiples eventos separados por espacios
+        if(nombre.indexOf(" ")>0) {
+            nombre.split(" ").forEach(function(n) {
+                t.ejecutarEvento(n);
+            });
+            return this;
+        }
+
+        this.dispatchEvent(new Event(nombre));
+    };
+
+    /**
      * Establece una función que será invocada cuando el evento suceda en los hijos que coincidan con el filtro. Si estricto es true, sólo se invocará cuando el 
      * elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
      */

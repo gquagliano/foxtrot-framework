@@ -25,10 +25,15 @@ Desarrollado en Argentina, con su API en español.
 ## Estado
 
 ![](documentacion/img/tick.jpg) Editor de vistas completamente funcional.
+
 ![](documentacion/img/tick.jpg) Integración *vista-controlador JS-controlador PHP* completa.
+
 ![](documentacion/img/tick.jpg) Acceso a datos y ORM, completos.
+
 ![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, compltos.
+
 ![](documentacion/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
+
 ![](documentacion/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
 ## Pendientes

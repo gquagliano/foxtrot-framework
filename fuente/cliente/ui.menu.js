@@ -15,6 +15,32 @@
 
     var abrirElementoMenu=function(elem) {
         ui.animarAparecer(elem);
+                
+        //Reposicionar si se sale de pantalla
+
+        elem.removerClase(/desplegar-(derecha|arriba)/);
+
+        var margen=15,
+            posicionamiento=elem.estilo("position"),
+            pos=elem.posicionAbsoluta(),
+            ancho=elem.ancho(),
+            alto=elem.alto(),
+            anchoVentana=window.ancho(),
+            altoVentana=window.alto(),
+            excedeX=pos.x+ancho>anchoVentana-margen,
+            excedeY=pos.y+alto>altoVentana-margen;
+          
+        if(excedeX||excedeY) {
+            if(posicionamiento=="absolute"||posicionamiento=="relative") {
+                //En este caso utilizaremos clases CSS para que se pueda reposicionar de acuerdo a los estilos específicos del padre
+                if(excedeX) elem.agregarClase("desplegar-derecha");
+                if(excedeY) elem.agregarClase("desplegar-arriba");
+            } else {
+                //Por defecto, se comporta como fixed
+                if(excedeX) elem.estilos({ left:anchoVentana-ancho-margen });
+                if(excedeY) elem.estilos({ top:altoVentana-alto-margen });
+            } 
+        }
     };
     
     var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar) {
@@ -262,8 +288,6 @@
                     top:y
                 });
         }        
-        
-        //Reposicionar si se sale de pantalla
 
         abrirElementoMenu(elem);
 

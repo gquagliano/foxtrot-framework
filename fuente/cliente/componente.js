@@ -52,7 +52,7 @@ var componente=new function() {
             //nombre:{
             //    etiqueta
             //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool)
-            //    opciones (objeto {valor:{etiqueta,clase}} cuando tipo=opciones o tipo=multiple)
+            //    opciones (objeto {valor:etiqueta} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion
             //    adaptativa (predeterminado true)
@@ -1052,6 +1052,7 @@ var componente=new function() {
                     if(e.which==27) {
                         t.finalizarEdicion();
                         ui.obtenerDocumento().removerEvento("keydown",fn);
+                        e.stopPropagation();
                         e.preventDefault();
                     }
                 };

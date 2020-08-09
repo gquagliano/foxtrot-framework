@@ -122,12 +122,13 @@ picture img {
 }
 .foxtrot-dialogo .dialogo-contenido {
     max-width: 75vw;
+    min-height: 1.1rem;
     max-height: 60vh;
     overflow: auto;
     word-break: break-word;
 }
 .foxtrot-dialogo .dialogo-opciones {
-    margin-top: 20px;
+    margin-top: 34px;
     display: flex;
     justify-content: flex-end;
 }

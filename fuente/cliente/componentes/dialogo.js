@@ -13,11 +13,16 @@
 var componenteDialogo=function() {    
     this.componente="dialogo";
 
+    var dialogo=null;
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+
+        this.contenedor=this.elemento;
+
         this.inicializarComponente();
         return this;
     };
@@ -26,8 +31,36 @@ var componenteDialogo=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<div class='contenido-componente-dialogo'>"); 
         this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Abre el diálogo.
+     * @param {function} [retorno] - Función de retorno al cerrar el diálogo.
+     * @returns Componente
+     */
+    this.abrir=function(retorno) {
+        if(typeof retorno==="undefined") retorno =null;
+        
+        if(!dialogo) dialogo=ui.construirDialogo({
+            cuerpo:this.elemento,
+            mostrarCerrar:true,
+            retorno:function() {
+                if(retorno) retorno();
+            }
+        });
+
+        ui.abrirDialogo(dialogo);
+    };
+
+    /**
+     * Cierra el diálogo.
+     * @returns Componente
+     */
+    this.cerrar=function() {
+        ui.cerrarDialogo(dialogo);
         return this;
     };
 };

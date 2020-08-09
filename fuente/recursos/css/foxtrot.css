@@ -12,6 +12,12 @@
     position: relative;
 }
 
+.btn {
+    font-size: inherit;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
 picture {
     display: inline-block;
 }

@@ -398,8 +398,8 @@ var editor=new function() {
                         {
                             etiqueta:"Eliminar",
                             accion:function() {
-                                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function() {
-                                    self.eliminarComponentes(self.componentesSeleccionados);
+                                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
+                                    if(r) self.eliminarComponentes(self.componentesSeleccionados);
                                 });
                             },
                             habilitado:function() {
@@ -447,8 +447,8 @@ var editor=new function() {
                 for(var i=0;i<self.componentesSeleccionados.length;i++)
                     if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return;
 
-                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function() {
-                    self.eliminarComponentes(self.componentesSeleccionados);
+                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
+                    if(r) self.eliminarComponentes(self.componentesSeleccionados);
                 });
             }
         }).evento("mouseup",function(ev) {

@@ -68,7 +68,7 @@
     };
 
     var removerEventos=function() {
-        ui.obtenerDocumento().removerEvento("keydown",docKeyDn);
+        document.removerEvento("keydown",docKeyDn);
     };
 
     /**
@@ -95,7 +95,8 @@
             retorno:null,
             mostrarCerrar:false,
             eliminar:false,
-            padreAnterior:null
+            padreAnterior:null,
+            abierto:false
         },parametros);
 
         if(parametros.mostrarCerrar) {
@@ -125,14 +126,14 @@
                     .dato("indice",i)
                     .evento("click",function(ev) {
                         ev.preventDefault();
-                        ui.cerrarDialogo(dialogoAbierto,this.dato("indice"));
+                        ui.cerrarDialogo(dialogoAbierto,parseInt(this.dato("indice")));
                     })
                     .evento("keydown",function(ev) {
                         if(ev.which==13) {
                             //Enter
                             ev.preventDefault();
                             ev.stopPropagation();
-                            ui.cerrarDialogo(dialogoAbierto,this.dato("indice"));
+                            ui.cerrarDialogo(dialogoAbierto,parseInt(this.dato("indice")));
                         }
                     })
                     .anexarA(contenedor);
@@ -159,11 +160,13 @@
 
         ui.animarAparecer(dialogo.elem);
 
+        dialogo.abierto=true;
+
         var btn=dialogo.elem.querySelector(".predeterminado");
         if(btn) btn.focus();
 
         //Eventos
-        ui.obtenerDocumento().evento("keydown",docKeyDn);
+        document.evento("keydown",docKeyDn);
 
         return ui;
     };
@@ -182,7 +185,7 @@
 
         removerEventos();
 
-        if(dialogo.param.retorno) dialogo.param.retorno(opcion);
+        if(dialogo.abierto&&dialogo.param.retorno) dialogo.param.retorno(opcion);
 
         var fn=function(dialogo,eliminar) {
             return function() {
@@ -196,6 +199,8 @@
             ui.animarDesaparecer(dialogo.elem,fn);
         }
 
+        dialogo.abierto=false;
+
         return ui;
     };
 
@@ -208,6 +213,7 @@
         if(dialogo.padreAnterior) dialogo.padreAnterior.anexar(dialogo.elem.querySelectorAll(".dialogo-contenido>*"));
 
         dialogo.elem.remover();
+        dialogo.abierto=false;
 
         return ui;
     };
@@ -279,10 +285,10 @@
 
         ui.abrirDialogo(ui.construirDialogo({
             cuerpo:mensaje,
-            retorno:function(resultado) {
+            retorno:function(btn) {
                 var resultado=null;
-                if(resultado===0) resultado=true;
-                if(resultado===1) resultado=false;
+                if(btn===0) resultado=true;
+                if(btn===1) resultado=false;
                 //cancelado (ESC o botón 2) => null
                 if(funcion) funcion(resultado);
             },

@@ -505,6 +505,10 @@
             return this;
         }
 
+        if(typeof estilo==="string") {
+            return getComputedStyle(this)[estilo];
+        }
+
         //Objeto de estilos
         var t=this;
         estilo.forEach(function(clave,valor) {

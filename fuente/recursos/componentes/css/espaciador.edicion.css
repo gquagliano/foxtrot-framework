@@ -5,3 +5,8 @@
  * @version 1.0
  */
  
+.foxtrot-modo-edicion.foxtrot-bordes .espaciador {
+    outline: dotted 2px rgba(0, 0, 0, 0.2);
+    min-height: 6px;
+    min-width: 6px;
+}

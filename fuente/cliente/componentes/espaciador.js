@@ -19,14 +19,8 @@ var componenteEspaciador=function() {
                 etiqueta:"Tipo",
                 tipo:"opciones",
                 opciones:{
-                    horizontal:{
-                        etiqueta:"Horizontal",
-                        clase:"horizontal"
-                    },
-                    vertical:{
-                        etiqueta:"Vertical",
-                        clase:"vertical"
-                    }
+                    horizontal:"Horizontal",
+                    vertical:"Vertical"
                 }
             },
             borde:{
@@ -62,16 +56,16 @@ var componenteEspaciador=function() {
         if(typeof valor==="undefined") valor=null;
 
         if(propiedad=="tipo") {
-            this.removerClase("horizontal vertical");
-            if(valor) this.agregarClase(valor);
+            this.elemento.removerClase("horizontal vertical");
+            if(valor) this.elemento.agregarClase(valor);
             return this;
         }
 
         if(propiedad=="borde") {
             if(!valor) {
-                this.enlace.removerClase("con-borde");
+                this.elemento.removerClase("con-borde");
             } else {
-                this.enlace.agregarClase("con-borde");
+                this.elemento.agregarClase("con-borde");
             }
             return this;
         }

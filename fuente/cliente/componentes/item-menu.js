@@ -170,6 +170,16 @@ var componenteItemMenu=function() {
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
+
+    /**
+     * Modifica el texto de la etiqueta del menú.
+     * @param {string} valor - Valor a establecer (puede contener HTML.)
+     * @returns Componente
+     */
+    this.establecerEtiqueta=function(valor) {
+        this.enlace.html(valor);
+        return this;
+    };
 };
 
 ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({

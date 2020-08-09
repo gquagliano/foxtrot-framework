@@ -5,3 +5,18 @@
  * @version 1.0
  */
  
+.espaciador.horizontal {
+    height: 1px;
+    margin: 2em 0;
+    display: block;
+    clear: both;
+}
+.espaciador.vertical {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1px;
+    margin: 0 2em;
+}
+.espaciador.con-borde {
+    background-color: #ddd;
+}

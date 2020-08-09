@@ -18,7 +18,7 @@
     display: none;
     opacity: 0;
     margin: 0;
-    min-width: 0;
+    min-width: 80px;
     position: absolute;
 }
 .nav .seleccionado>.menu-contextual,

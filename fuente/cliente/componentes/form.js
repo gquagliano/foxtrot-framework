@@ -18,6 +18,9 @@ var componenteFormulario=function() {
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+
+        this.contenedor=this.elemento;
+
         this.inicializarComponente();
         return this;
     };

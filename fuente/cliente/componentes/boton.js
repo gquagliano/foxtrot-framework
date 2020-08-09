@@ -55,6 +55,11 @@ var componenteBoton=function() {
             nuevaVentana:{
                 etiqueta:"Abrir en nueva ventana",
                 tipo:"bool"
+            },
+            predeterminado:{
+                etiqueta:"Acción predeterminada",
+                tipo:"bool",
+                ayuda:"Si se activa esta propiedad, se invocará el evento Click de este botón cuando se ejecute la acción predeterminada del formulario (por ejemplo, al presionar Enter en un campo)."
             }
         }
     };
@@ -100,6 +105,15 @@ var componenteBoton=function() {
                 this.elemento.removerAtributo("target");
             } else {
                 this.elemento.atributo("target","_blank");
+            }
+            return this;
+        }
+
+        if(propiedad=="predeterminado") {
+            if(valor) {
+                this.elemento.agregarClase("predeterminado");
+            } else {
+                this.elemento.removerClase("predeterminado");
             }
             return this;
         }

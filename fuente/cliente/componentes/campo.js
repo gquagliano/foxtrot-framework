@@ -11,6 +11,8 @@
  * Componente concreto Campo.
  */
 var componenteCampo=function() {    
+    var t=this;
+    
     this.componente="campo";
     this.campo=null;
 
@@ -77,16 +79,30 @@ var componenteCampo=function() {
         this.elemento.anexar(this.campo);
         this.crearComponente();
         return this;
-    };    
+    };
 
     /**
-     * Inicializa la instancia en base a su ID y sus parámetros (método para sobreescribir).
+     * Establece los eventos.
      */
-    this.restaurar=function() {
-        this.restaurarComponente();
-                
-        this.campo=this.elemento.querySelector("input");
+    this.establecerEventos=function() {
+        if(!ui.enModoEdicion()) {
+            //Enviar formulario con Enter
+            this.campo.evento("keydown",function(ev) {
+                var esTextarea=t.propiedad(null,"tipo")=="multilinea";
 
+                if(ev.which==13&&!esTextarea) {
+                    ev.preventDefault();
+
+                    //Ejecutar evento Click en el botón predeterminado del formulario
+                    var formulario=t.campo.padre({clase:"formulario"}),
+                        boton=null;
+                    if(formulario) boton=formulario.querySelector(".predeterminado");
+                    if(boton) boton.ejecutarEvento("click");
+                }
+            });
+        }
+
+        this.establecerEventosComponente();
         return this;
     };
 

@@ -18,7 +18,7 @@
   <body>
     {editor_html}
     <script src="cliente/foxtrot.js"></script>
-    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js"></script>
+    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js" controlador></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
     ui.establecerJson('{editor_json}')

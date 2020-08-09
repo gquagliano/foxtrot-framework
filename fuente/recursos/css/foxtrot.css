@@ -112,7 +112,7 @@ picture img {
     background-color: #fff;
     box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15);
     transform: translate(-50%,-50%);
-    padding: 40px;
+    padding: 30px;
     text-align: left;
     border-radius: 2px;
 }
@@ -134,7 +134,7 @@ picture img {
     word-break: break-word;
 }
 .foxtrot-dialogo .dialogo-opciones {
-    margin-top: 34px;
+    margin-top: 21px;
     display: flex;
     justify-content: flex-end;
 }
@@ -171,6 +171,12 @@ picture img {
     display: block!important;
     animation: cordova-listo 1s;
     animation-fill-mode: forwards;
+}
+.cordova .foxtrot-dialogo .dialogo-contenido {
+    max-width: none;
+}
+.cordova .foxtrot-dialogo .dialogo-cuerpo {
+    width: 85vw;
 }
 
 /* Utilidades */

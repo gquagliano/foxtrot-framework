@@ -95,7 +95,7 @@ a:active {
     background-image: url(img/fondo.png);
     padding-top: 1px;
     outline: none !important;
-    overflow: auto !important;
+    overflow: visible !important;
 }
 .foxtrot-editor .form-control,.foxtrot-editor .custom-select {
     display: block;

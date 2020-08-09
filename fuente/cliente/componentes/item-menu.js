@@ -87,11 +87,21 @@ var componenteItemMenu=function() {
                 elem.padres({etiqueta:"li"}).forEach(function(padre) {
                     padre.agregarClase("submenu-abierto");
                 });
+
+                //Asignar evento para remover los estilos cuando se cierre
+                submenu.obtenerElemento()
+                    .removerEvento("menu-cerrado")
+                    .evento("menu-cerrado",function(ev) {
+                        cerrado(submenu);
+                    });
             },
             cerrar=function(submenu) {
                 var elem=submenu.obtenerElemento();
-
                 ui.cerrarMenu(elem);
+            },
+            cerrado=function(submenu) {
+                var elem=submenu.obtenerElemento();
+
                 t.submenuAbierto=false;
 
                 //Remover clase
@@ -105,6 +115,8 @@ var componenteItemMenu=function() {
                     abrir(submenu);
                 }
             };
+
+            var ignorarClick=false;
 
             this.elemento.evento("mouseenter",function(ev) {
                 var submenu=t.obtenerHijos();
@@ -128,8 +140,14 @@ var componenteItemMenu=function() {
                 
                 ev.preventDefault();
                 ev.stopPropagation();
+                ignorarClick=true;
 
                 alternar(submenu[0]);
+            }).evento("mouseup",function(ev) {
+                if(ignorarClick) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
             }).evento("touchstart",function(ev) {
                 //Este evento se procesa siempre, ya que en dispositivos táctiles siempre abre/cierra al toque
                 var submenu=t.obtenerHijos();
@@ -137,8 +155,15 @@ var componenteItemMenu=function() {
                 
                 ev.preventDefault();
                 ev.stopPropagation();
+                ignorarClick=true;
 
                 alternar(submenu[0]);
+            }).evento("click",function(ev) {
+                if(ignorarClick) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    ignorarClick=false;
+                }
             });
         }
 

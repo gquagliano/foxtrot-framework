@@ -27,6 +27,9 @@
         } else {
             ui.animarDesaparecer(elem,fn);
         }
+
+        //Evento DOM para que otros objetos de los cuales dependa el menú puedan detectar el cierre
+        elem.ejecutarEvento("menu-cerrado");
     };
 
     /**

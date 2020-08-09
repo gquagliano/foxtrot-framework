@@ -434,10 +434,14 @@ var editor=new function() {
 
             if(ev.which==27) {
                 //ESC
+
+                //Ignorar si está en modo de edición de texto (el componente procesará la tecla ESC)
+                if(ui.obtenerDocumento().querySelector("[contenteditable=true]")) return;
+
                 self.limpiarSeleccion();
                 
                 //Al deseleccionar todo, mostrar las propiedades de la vista
-                editor.establecerSeleccion(ui.obtenerInstanciaVistaPrincipal().obtenerElemento());
+                //editor.establecerSeleccion(ui.obtenerInstanciaVistaPrincipal().obtenerElemento());
             } else if(ev.which==46) {
                 //DEL
                 ev.preventDefault();

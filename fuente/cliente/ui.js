@@ -335,6 +335,7 @@ var ui=new function() {
             //Restaurar
             nombre=comp.componente;
             id=comp.id;
+            if(!id) id=vista+"-"+this.generarId();
         }
         
         var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn);

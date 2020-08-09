@@ -21,7 +21,9 @@
     min-width: 0;
     position: absolute;
 }
-.nav .seleccionado>.menu-contextual, .nav .menu-contextual.hijo-seleccionado {
+.nav .seleccionado>.menu-contextual,
+.nav .menu-contextual.hijo-seleccionado,
+.nav .menu-contextual.seleccionado {
     display: block;
     opacity: 1;
 }

@@ -102,6 +102,8 @@ $archivos=[
     _fuente.'cliente/controlador.js',
     _fuente.'cliente/enrutador.js',
     _fuente.'cliente/ui.js',
+    _fuente.'cliente/ui.animaciones.js',
+    _fuente.'cliente/ui.menu.js',
     _fuente.'cliente/ui.dialogos.js',
     _fuente.'cliente/expresion.js',
     _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control

@@ -9,6 +9,53 @@
  * Métodos anexados a la gestión de la interfaz.
  */
 (function() {
+    
+    //// Precarga
+
+    var temporizadorPrecarga,
+        precargaVisible=false,
+        elementoPrecarga=null;
+
+    /**
+     * Muestra una animación de precarga.
+     */
+    ui.mostrarPrecarga=function() {
+        //Detener si se había solicitado ocultar la precarga hace menos de 200ms
+        clearTimeout(temporizadorPrecarga);
+
+        if(precargaVisible) return ui;
+
+        if(!elementoPrecarga) {
+            //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
+            elementoPrecarga=document.crear("<div id='foxtrot-precarga' class='oculto'>")   
+                .anexarA(document.body);
+        }
+
+        ui.animarAparecer(elementoPrecarga);
+        precargaVisible=true;
+
+        return ui;
+    };
+
+    /**
+     * Oculta la animación de precarga.
+     */
+    ui.ocultarPrecarga=function() {
+        if(!elementoPrecarga||!precargaVisible) return ui;
+
+        clearTimeout(temporizadorPrecarga);
+        
+        //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
+        temporizadorPrecarga=setTimeout(function() {
+            ui.animarDesaparecer(elementoPrecarga);
+            precargaVisible=false;
+        },200);
+
+        return ui;
+    };
+
+    //// Diálogos
+
     var dialogoAbierto=null;
 
     var docKeyDn=function(ev) {
@@ -38,10 +85,9 @@
      * @returns {Object}
      */
     ui.construirDialogo=function(parametros) {
-        var doc=ui.obtenerDocumento();
-
-        var elem=doc.crear("<div class='foxtrot-dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
-            .anexarA(doc.body);
+        //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
+        var elem=document.crear("<div class='foxtrot-dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
+            .anexarA(document.body);
 
         parametros=Object.assign({
             cuerpo:null,
@@ -53,7 +99,7 @@
         },parametros);
 
         if(parametros.mostrarCerrar) {
-            var cerrar=doc.crear("<a href='#' class='dialogo-x'></a>");
+            var cerrar=document.crear("<a href='#' class='dialogo-x'></a>");
             elem.querySelector(".dialogo-cuerpo").anexar(cerrar);
             cerrar.evento("click",function(ev) {
                 ev.preventDefault();
@@ -74,7 +120,7 @@
             var contenedor=elem.querySelector(".dialogo-opciones");
 
             parametros.opciones.forEach(function(boton,i) {
-                var btn=doc.crear("<a href='#' class='btn'>")
+                var btn=document.crear("<a href='#' class='btn'>")
                     .html(boton.etiqueta)
                     .dato("indice",i)
                     .evento("click",function(ev) {

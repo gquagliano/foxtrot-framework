@@ -36,7 +36,7 @@ Desarrollado en Argentina, con su API en español.
 
 ![](documentacion/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
-## Pendientes
+#### Pendientes
 
 En líneas generales,
 

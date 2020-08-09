@@ -320,7 +320,7 @@ var ui=new function() {
 
     /**
      * Crea una instancia de un componente dado su nombre.
-     * @param {Object|string} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente previamente guardado (desde JSON).
+     * @param {(Object|string)} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente previamente guardado (desde JSON).
      * @param {string} vista - Nombre de la vista.
      */
     this.crearComponente=function(comp,vista) {
@@ -866,27 +866,6 @@ var ui=new function() {
         },200);
 
         return this;
-    };
-
-    this.construirDialogo=function(obj) {
-
-    };
-
-    this.abrirDialogo=function(dialogo) {
-
-    };
-
-    this.alerta=function(mensaje,funcion,etiquetaBoton) {
-        //TODO Integración con el plugin de Cordova de Foxtrot
-        //TODO Integración con el cliente de escritorio
-        alert(mensaje);
-        if(typeof funcion==="function") funcion();
-    };
-
-    this.confirmar=function(mensaje,funcion,etiquetaSi,etiquetaNo) {
-        //TODO Integración con el plugin de Cordova de Foxtrot
-        //TODO Integración con el cliente de escritorio
-        if(confirm(mensaje)&&typeof funcion==="function") funcion();
     };
 
     var abrirElementoMenu=function(elem) {

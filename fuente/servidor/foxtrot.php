@@ -17,6 +17,7 @@ class foxtrot {
     protected static $aplicacion=null;
     protected static $instanciaAplicacion=null;
     protected static $instanciaPublicaAplicacion=null;
+    protected static $instanciaAplicacionPublico=null;
     protected static $bd=null;
 
     public function __destruct() {
@@ -87,6 +88,10 @@ class foxtrot {
     protected static function cargarAplicacion() {
         self::definirConstantesAplicacion();
         configuracion::cargarConfigAplicacion();
+
+        //Modelo de datos (importar completo)
+        $archivos=glob(_modeloAplicacion.'*.php');
+        foreach($archivos as $archivo) include($archivo);
         
         //Si la aplicación no definió un enrutador en su configuración, utilizar el predeterminado
         if(!self::$enrutador&&!configuracion::$enrutador) {
@@ -97,17 +102,17 @@ class foxtrot {
             self::$enrutador=new $cls;
         }
 
-        if(file_exists(_servidorAplicacion.'aplicacion.php')) include(_servidorAplicacion.'aplicacion.php');
-        $cls='\\aplicaciones\\'._apl.'\\aplicacion';
-        self::$instanciaAplicacion=new $cls;
+        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
+            include(_servidorAplicacion.'aplicacion.php');
+            $cls='\\aplicaciones\\'._apl.'\\aplicacion';
+            self::$instanciaAplicacion=new $cls;
+        }
 
-        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) include(_servidorAplicacion.'aplicacion.pub.php');
-        $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
-        self::$instanciaAplicacion=new $cls;
-
-        //Modelo de datos (importar completo)
-        $archivos=glob(_modeloAplicacion.'*.php');
-        foreach($archivos as $archivo) include($archivo);
+        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) {
+            include(_servidorAplicacion.'aplicacion.pub.php');
+            $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
+            self::$instanciaAplicacionPublico=new $cls;
+        }
     }
 
     public static function inicializar($aplicacion=null) {
@@ -230,9 +235,9 @@ class foxtrot {
             include($ruta);
             $cls='\\aplicaciones\\'._apl.'\\publico\\'.$ctl;
             $obj=new $cls;            
-        } elseif(self::$instanciaAplicacion) {
+        } elseif(self::$instanciaAplicacionPublico) {
             //Si no se definió un controlador, notificaremos la solicitud a la clase pública de la aplicación
-            $obj=self::$instanciaAplicacion;
+            $obj=self::$instanciaAplicacionPublico;
         }       
 
         if($metodo) {

@@ -57,15 +57,9 @@ Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
 
 #### Aplicación de ejemplo
 
-En `/desarrollo/aplicaciones/ejemplo` se incluye una aplicación de ejemplo que presenta un login completo demostrando:
+Se incluye una aplicación de ejemplo demostrando las funciones principales del framework.
 
-- Vistas, componentes básicos, uso de las funciones de acceso a datos e intérprete de expresiones.
-- Eventos.
-- Llamados a métodos del servidor.
-- Llamados a métodos del controlador principal de la aplicación.
-- Respuestas y redireccionamientos desde el servidor.
-- Modelo de datos, uso del ORM.
-- Uso del gestor de sesión, desde el servidor y desde el cliente.
+[Más información](desarrollo/aplicaciones/ejemplo/README.md).
 
 ## Estructura del proyecto
 

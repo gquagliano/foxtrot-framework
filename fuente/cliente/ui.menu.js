@@ -11,7 +11,7 @@
 (function() {
     "use strict";
 
-    var menuAbierto=null;
+    var menuAbierto=[];
 
     var abrirElementoMenu=function(elem) {
         ui.animarAparecer(elem);
@@ -90,7 +90,7 @@
                 ev.stopPropagation();
                 item.accion();
             }
-            ui.cerrarMenu(menuAbierto);
+            ui.cerrarMenu();
         },
         toque=function(item,ev) {
             if(item.hasOwnProperty("elemSubmenu")) {
@@ -204,7 +204,7 @@
         var eventoValido=true;
         if(ev.which==27) {
             //ESC
-            ui.cerrarMenu(menuAbierto);
+            ui.cerrarMenu();
         } else if(ev.which==40) {
             //Abajo
             //TODO
@@ -224,11 +224,11 @@
     };
 
     var menuMouseUp=function(ev) {
-        ui.cerrarMenu(menuAbierto);
+        ui.cerrarMenu();
     };
 
     var menuBlur=function(ev) {
-        ui.cerrarMenu(menuAbierto);
+        ui.cerrarMenu();
     };
 
     var removerEventosMenu=function() {
@@ -238,6 +238,14 @@
 
         var marco=ui.obtenerMarco();
         if(marco) marco.contentWindow.removerEvento("blur",menuBlur);
+    };
+
+    /**
+     * Devuelve los menú actualmente abiertos.
+     * @returns {Object[]}
+     */
+    ui.obtenerMenuAbierto=function() {
+        return menuAbierto;
     };
 
     /**
@@ -267,7 +275,7 @@
             ui.actualizarMenu(obj);
         }
 
-        menuAbierto=obj;
+        menuAbierto.push(obj);
 
         //Posición
 
@@ -305,14 +313,20 @@
     };
 
     /**
-     * Cierra el menú especificado.
-     * @param {Object} menu - Menú a cerrar (objeto generado con ui.construirMenu o cualquier elemento del DOM compatible).
+     * Cierra el menú especificado, o todos los menús abiertos si se omite el primer parámetro.
+     * @param {Object} [menu] - Menú a cerrar (objeto generado con ui.construirMenu o cualquier elemento del DOM compatible).
      * @param {boolean} [omitirAnimacion=false] - Cierra el menú inmediatamente, sin animaciones.
      * @returns {ui}
      */
     ui.cerrarMenu=function(menu,omitirAnimacion) {
-        if(typeof menu==="undefined") menu=menuAbierto;
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
+
+        if(typeof menu==="undefined"||!menu) {
+            menuAbierto.forEach(function(m) {
+                ui.cerrarMenu(m,omitirAnimacion);
+            });
+            return ui;
+        }        
         
         if(!menu) return ui;
 
@@ -320,7 +334,8 @@
         cerrarElementoMenu(elem,omitirAnimacion,menu.eliminar);
 
         removerEventosMenu();
-        menuAbierto=null;
+        
+        menuAbierto.splice(menuAbierto.indexOf(menu),1);
 
         return ui;
     };

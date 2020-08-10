@@ -172,16 +172,28 @@
     };
 
     /**
+     * Devuelve el diálogo actualmente abierto.
+     * @returns {Object}
+     */
+    ui.obtenerDialogoAbierto=function() {
+        return dialogoAbierto;
+    };
+
+    /**
      * Cierra un diálogo construido con construirDialogo().
-     * @param {Object} dialogo - Diálogo.
+     * @param {Object} [dialogo] - Diálogo.
      * @param {number} [opcion=null] - Número de opción que cierra el diálogo, o NULL.
      * @param {boolean} [omitirAnimacion=false] - Si es true, ierra el diálogo inmediatamente.
      * @param {boolean} [eliminar] - Eliminar el diálogo luego de cerrar. Si se omite, se tomará de la configuración del diálogo.
+     * @returns {ui}
      */
     ui.cerrarDialogo=function(dialogo,opcion,omitirAnimacion,eliminar) {
+        if(typeof dialogo==="undefined") dialogo=dialogoAbierto;
         if(typeof opcion==="undefined") opcion=null;
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
         if(typeof eliminar==="undefined") eliminar=dialogo.param.eliminar;
+
+        if(!dialogo) return ui;
 
         removerEventos();
 
@@ -200,6 +212,7 @@
         }
 
         dialogo.abierto=false;
+        dialogoAbierto=null;
 
         return ui;
     };

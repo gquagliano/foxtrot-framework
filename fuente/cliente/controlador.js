@@ -132,6 +132,12 @@ var controlador=new function() {
     this.listo=function() {
     };
 
+    /**
+     * Evento 'Volver'. Este evento se produce cuando se presiona el botón Atrás del dispositivo (método para sobreescribir).
+     * @returns {boolean|undefined} Si el valor de retorno es falso, detendrá el procesamiento del evento.
+     */
+    this.volver=function() {
+    };
 }();
 
 window["controlador"]=controlador;

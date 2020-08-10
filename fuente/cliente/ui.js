@@ -42,7 +42,8 @@ var ui=new function() {
         nombreVistaPrincipal=null,
         enrutadores={},
         instanciaEnrutador=null,
-        instanciaAplicacion=null;
+        instanciaAplicacion=null,
+        urlModificada=false;
 
     ////Elementos del dom
 
@@ -820,6 +821,23 @@ var ui=new function() {
     };
 
     /**
+     * Vuelve a la URL anterior.
+     * @returns {ui}
+     */
+    this.volver=function() {
+        return this;
+    };
+
+    /**
+     * Cambia la URL sin navegar hacia la misma.
+     * @param {*} url 
+     * @returns {ui}
+     */
+    this.cambiarUrl=function(url) {
+        return this;
+    };
+
+    /**
      * Abre una ventana emergente con la vista o URL especificada.
      * @param {string} ruta - URL o nombre de vista de destino.
      */
@@ -827,6 +845,45 @@ var ui=new function() {
         var ancho=window.ancho()*.75,
             alto=window.alto();
         return window.open(this.procesarUrl(ruta),"_ventana","height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
+    };
+
+    ////Eventos
+
+    /**
+     * Establece los eventos globales de la interfaz.
+     * @returns {ui}
+     */
+    this.establecerEventos=function() {
+        if(esCordova) {
+            document.addEventListener("deviceready",function() {
+                document.addEventListener("backbutton",function() {
+                    //Cerrar todos los menú y diálogos
+
+                    if(self.obtenerMenuAbierto().length) {
+                        ui.cerrarMenus();
+                        return;
+                    }
+
+                    if(self.obtenerDialogoAbierto()) {
+                        ui.cerrarDialogo();
+                        return;
+                    }
+
+                    //Si la URL cambió, volver
+                    if(urlModificada) {
+                        self.volver();
+                        return;
+                    }
+
+                    //Pasar el evento al controlador
+                    var retorno=instanciaControladorPrincipal.volver();
+                    if(typeof retorno==="boolean"&&!retorno) return;
+
+                    //Por último, cerrar la aplicación
+                    navigator.app.exitApp();
+                },false);
+            },false);
+        }
     };
 
     ////Inicialización y ejecución del cliente
@@ -855,17 +912,6 @@ var ui=new function() {
         }
         
         if(!modoEdicion) {
-            //Por el momento, el controlador es el que tiene el mismo nombre que la vista
-            var obj=ui.crearControlador(nombreVistaPrincipal,true);
-            //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
-            //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
-            if(obj) {
-                obj.establecerVista(nombreVistaPrincipal);
-                instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
-                //Evento 'Listo'
-                instanciaControladorPrincipal.listo();
-            }
-
             if(!this.esMovil()) {
                 var elem=doc.querySelector(".autofoco");
                 if(elem) {
@@ -880,8 +926,21 @@ var ui=new function() {
                 }
             }
 
+            this.establecerEventos();
+
             if(esCordova) {
                 document.querySelector("#contenedor-cordova").agregarClase("listo");
+            }
+
+            //Por el momento, el controlador es el que tiene el mismo nombre que la vista
+            var obj=ui.crearControlador(nombreVistaPrincipal,true);
+            //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
+            //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
+            if(obj) {
+                obj.establecerVista(nombreVistaPrincipal);
+                instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
+                //Evento 'Listo'
+                instanciaControladorPrincipal.listo();
             }
         }
     };

@@ -14,6 +14,9 @@
     var menuAbierto=[];
 
     var abrirElementoMenu=function(elem) {
+        //Evento DOM para que otros objetos de los cuales dependa el menú puedan detectar el cierre
+        elem.ejecutarEvento("menu-abierto");
+
         ui.animarAparecer(elem);
                 
         //Reposicionar si se sale de pantalla

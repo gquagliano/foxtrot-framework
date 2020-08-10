@@ -73,12 +73,19 @@ var componenteItemMenu=function() {
             var t=this;
 
             var abrirConClick=function() {
-                //Determinar si debe abrirse al pasar el mouse o al hacer click (depende del <nav>)
+                //Determinar si debe abrirse al pasar el mouse o al hacer click (depende del contenedor de menú)
+                //TODO Revisar: Los componentes de menú quedaron muy acoplados, aunque quizás está bien tratándose de un mismo grupo de componentes que debe trabajar coordinado
                 var padre=t.elemento.padre({clase:"menu-click"});
                 return padre?true:false;
             },
+            esPrimerNivel=function() {
+                return t.obtenerPadre().componente=="contenedor-menu";
+            },
             abrir=function(submenu) {
                 var elem=submenu.obtenerElemento();
+
+                //Si es el primer nivel de una barra de navegación, cerrar los demás menús que puedan estar abiertos
+                if(esPrimerNivel()) ui.cerrarMenu();
 
                 ui.abrirMenu(elem);
                 t.submenuAbierto=true;

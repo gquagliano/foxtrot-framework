@@ -13,9 +13,9 @@ define('_inc',1);
 include(__DIR__.'/configuracion.php');
 include(_desarrollo.'servidor/foxtrot.php');
 
-$opciones=getopt('a::m::');
+$opciones=getopt('a::m::u::c::b::');
 
-validarParametroAplicacion($opciones);
+$aplicacion=validarParametroAplicacion($opciones);
 
 $filtrar=false;
 if(is_string($opciones['m'])) {
@@ -26,6 +26,10 @@ if(is_string($opciones['m'])) {
 
 foxtrot::inicializar($opciones['a']);
 
+if($opciones['u']) configuracion::$usuarioBd=$opciones['u'];
+if($opciones['c']) configuracion::$contrasenaBd=$opciones['c'];
+if($opciones['b']) configuracion::$nombreBd=$opciones['b'];
+
 $bd=foxtrot::obtenerInstanciaBd();
 
 $tablas=[];
@@ -34,13 +38,25 @@ $resultado=$bd->consulta('show tables from #__'.configuracion::$nombreBd);
 verificarError();
 while($fila=$resultado->aArray()) $tablas[]=array_values($fila)[0];
 
-registro('-- '.date('d/m/Y H:i:s'));
+registro('-- '.date('d/m/Y H:i:s').' --'.PHP_EOL
+    .'-- Aplicación: '.$opciones['a'].PHP_EOL
+    .'-- Base de datos: '.configuracion::$nombreBd);
+
+$clases=[];
 
 foreach(get_declared_classes() as $clase) {
-    if(preg_match('/aplicaciones\\\\'.$aplicacion.'\\\\modelo\\\\.+/',$clase)) {
+    if(preg_match('/^aplicaciones\\\\'.$aplicacion.'\\\\modelo\\\\.+/',$clase)) {
         $tipo=get_parent_class($clase);
-        if($tipo=='modelo'&&(!$filtrar||in_array($nombre,$filtrar))) procesar($clase);
+        if($tipo=='modelo'&&(!$filtrar||in_array($nombre,$filtrar))) {
+            $creada=procesar($clase);
+            if($creada) $clases[]=$clase;
+        }
     }
+}
+
+//Ejecutar instalar() en los modelos cuyas tablas recién se crearon
+foreach($clases as $clase) {
+    call_user_func([$clase,'instalar']);
 }
 
 function obtenerTipo($campo,$parametros) {
@@ -103,13 +119,16 @@ function compararCampo($parametros,$campoBd) {
 }
 
 function procesar($clase) {
-    global $bd,$tablas,$sql;
+    global $bd,$tablas;
+
+    $creada=false;
 
     $tabla=configuracion::$prefijoBd.substr($clase,strrpos($clase,'\\')+1);
     
     if(!in_array($tabla,$tablas)) {
         //Crear
         consulta('CREATE TABLE `'.$tabla.'` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`e` TINYINT(3) UNSIGNED NOT NULL DEFAULT \'0\',PRIMARY KEY (`id`),INDEX `e` (`e`))  COLLATE=\'utf8_general_ci\' ENGINE=InnoDB');
+        $creada=true;
     }
     
     //Buscar diferencias
@@ -156,6 +175,8 @@ function procesar($clase) {
             consulta($consulta);
         }
     } 
+
+    return $creada;
 }
 
 function consulta($sql) {

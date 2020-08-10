@@ -23,21 +23,23 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
 #### crear-apl
 
-Genera una nueva aplicación desde una plantilla.
+(Este script aún no está disponible) Genera una nueva aplicación desde una plantilla.
 
-    php crear-apl.php -n nombre_aplicacion
+    php crear-apl.php -n=nombre_aplicacion
 
 Este script eventualmente se integraría con el editor.
 
 #### sincronizar-bd
 
-Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
+Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación, excepto cuando se especifiquen los parámetros `-u`, `-c` y/o `-b`.
 
-    php sincronizar-bd.php -a=nombre_aplicacion [-m=nombre_modelo]
+    php sincronizar-bd.php -a=nombre_aplicacion [-m=nombre_modelo] [-u=usuario] [-c=contrasena] [-b=nombre_base_de_datos]
 
 Si no se especifica `-m`, se procesará el modelo de datos completo.
 
-Acumulará un registro de consultas SQL en el archivo `scripts/sincronizacion.sql`.
+Cuando *no* se use `-m`, el método `instalar()` de cada modelo, si existe, será invocado luego de que hayan sido creadas todas las tablas en la base de datos.
+
+Acumula un registro de consultas SQL en el archivo `scripts/sincronizar.sql` en caso de que sea necesario replicar los cambios en otro servidor.
 
 Este script eventualmente se integraría con el editor.
 

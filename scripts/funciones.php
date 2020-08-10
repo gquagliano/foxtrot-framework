@@ -115,6 +115,8 @@ function validarParametroAplicacion($opciones) {
         fwrite(STDERR,'Aplicación inexistente.'.PHP_EOL.PHP_EOL);
         exit;
     }
+
+    return $aplicacion;
 }
 
 $archivosCssCombinados=[];

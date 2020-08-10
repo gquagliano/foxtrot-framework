@@ -408,7 +408,7 @@ class modelo {
      * Establece los valores a guardar.
      */
     public function establecerValores($objeto) {
-        $this->consultaValores=$objeto;
+        $this->consultaValores=(object)$objeto;
         return $this;        
     }
 
@@ -883,6 +883,12 @@ class modelo {
         if(is_numeric($valor)||preg_match('/^[0-9]*\.[0-9]+$/',$valor)) return 'd';
         return 's';
         //TODO b
+    }
+
+    /**
+     * Instalación de la base de datos (método para sobreescribir).
+     */
+    public static function instalar() {
     }
 
     //TODO Métodos útiles para búsqueda fonética - Ver otras utilidades posibles

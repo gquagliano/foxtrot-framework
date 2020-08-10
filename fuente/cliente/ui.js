@@ -942,11 +942,11 @@ var ui=new function() {
                 
                 //Evento 'Listo'
 
-                //Controlador
-                instanciaControladorPrincipal.listo();
-
                 //Aplicacion
                 instanciaAplicacion.listo();
+
+                //Controlador
+                instanciaControladorPrincipal.listo();
 
                 //Componentes, pero solo aquellos que lo implementen
                 instanciasComponentes.forEach(function(comp) {

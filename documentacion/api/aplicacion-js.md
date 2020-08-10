@@ -6,3 +6,4 @@ En desarrollo.
 
 ## Controlador principal de la aplicación (cliente)
 
+## Controlador de la vista

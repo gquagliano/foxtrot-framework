@@ -26,11 +26,11 @@ Desarrollado en Argentina, con su API en español.
 
 ![](documentacion/img/tick.jpg) Editor de vistas completamente funcional.
 
-![](documentacion/img/tick.jpg) Integración *vista-controlador JS-controlador PHP* completa.
+![](documentacion/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
 
 ![](documentacion/img/tick.jpg) Acceso a datos y ORM, completos.
 
-![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, compltos.
+![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
 
 ![](documentacion/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
 
@@ -42,9 +42,9 @@ En líneas generales,
 
 - Implementar más componentes.
 - Edición de metadatos de las vistas.
-- Desarrollar la navegación de una sola página (ideal para aplicaciones móviles).
+- Desarrollar la navegación entre vistas dentro de una sola página (ideal para aplicaciones móviles).
 - Completar funcionalidad útil del editor, como copiar, cortar, pegar, deshacer, rehacer y la barra de formato de texto.
-- Completar la documentación, revisar y completar JSDOC y PHPDOC.
+- Completar la documentación; revisar y completar JSDOC y PHPDOC.
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
 
 ...¡Y listo!

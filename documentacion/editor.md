@@ -33,18 +33,19 @@ La siguiente etapa consistirá en:
 
 ### Acceso al editor
 
-`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?vista=[ruta]&modo=[embebible|independiente]&cliente=[web|cordova|escritorio]`
+`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=[aplicacion]&vista=[ruta]&modo=[embebible|independiente]&cliente=[web|cordova|escritorio]`
 
-Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?vista=aplicaciones/test/cliente/inicio
+Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?apl=ejemplo&vista=inicio
 
-`ruta`:
-Ruta sin extensión relativa a la raíz del sistema.
+`apl` Nombre de la aplicación.
 
-`modo:`
+`ruta` Ruta sin extensión relativa al directorio de vistas (`/desarrollo/aplicaciones/apl/cliente/vistas/`).
+
+`modo`:
 - `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, scripts ni estilos, a fin de que sea una vista para insertar dentro de otra en tiempo de ejecución.
 - `independiente` Almacenará la vista en un archivo HTML que podrá abrirse en forma independiente (Predeterminado).
 
-`cliente:`
+`cliente`:
 - `web` Almacenará la vista para funcionar en un servidor web (Predeterminado).
 - `cordova` Al guardar, generará un archivo HTML compatible con Cordova.
 - `escritorio` Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
@@ -53,7 +54,7 @@ En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo de ap
 
 ### ¡Importante!
 
-Actualmente, el editor está en desarrollo y está pensado para uso personal en un servidor local, por lo que no presenta ningún tipo de seguridad. **Implementar el editor en un servidor público o compartido deja abierta la posibilidad de subida de código arbitrario**.
+Actualmente, el editor está en desarrollo y está pensado para uso personal en un servidor local, por lo que no presenta ningún tipo de seguridad. **Implementar el editor en un servidor público o compartido deja abierta la posibilidad de cargar código arbitrario**.
 
 En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación de usuarios y mecanismos de seguridad para trabajo en servidores de desarrollo en línea (o en intranet).
 

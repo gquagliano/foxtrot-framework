@@ -15,15 +15,21 @@ foxtrot::inicializar();
 
 header('Content-Type: text/plain; charset=utf-8',true);
 
-$vista=__DIR__.'/../../'.$_POST['ruta'];
-$nombre=basename($vista);
-$ruta=dirname($vista).'/';
+$nombreApl=$_POST['aplicacion'];
+$rutaApl=__DIR__.'/../../../desarrollo/aplicaciones/'.$nombreApl.'/';
 
-$rutaJson=$vista.'.json';
-$rutaJs=$ruta.'../controladores/'.$nombre.'.js';
-$rutaCss=$vista.'.css';
-$rutaJsonApl=$ruta.'../../aplicacion.json';
-$rutaRec=$ruta.'../../recursos/';
+$nombre=$_POST['ruta'];
+$rutaVista=$rutaApl.'cliente/vistas/'.$nombre;
+
+$rutaJson=$rutaVista.'.json';
+$rutaCss=$rutaVista.'.css';
+$rutaJs=$rutaApl.'cliente/controladores/'.$nombre.'.js';
+$rutaJsonApl=$rutaApl.'aplicacion.json';
+$rutaRecursos=$rutaApl.'recursos/';
+$urlRecursos='aplicaciones/'.$nombreApl.'/recursos/';
+
+if(!is_dir($rutaVista)) mkdir($rutaVista,0755,true);
+if(!is_dir(dirname($rutaJs))) mkdir(dirname($rutaJs),0755,true);
 
 if(!file_exists($rutaJs)) {
     //Controlador un nuevo con el mismo nombre que la vista (en el futuro esto debería ser opcional ya que no es necesario que toda vista tenga un controlador de igual nombre)
@@ -56,9 +62,9 @@ if(!file_exists($rutaJson)) {
 
 //Agregar propiedades de la aplicación
 $aplicacion=json_decode(file_get_contents($rutaJsonApl));
-$obj->aplicacion=[
-    'css'=>'aplicaciones/test/recursos/css/estilos.css',
-    'tema'=>'recursos/css/tema-'.$aplicacion->tema.'.css'
+$obj->aplicacion=(object)[
+    'css'=>$urlRecursos.'css/estilos.css',
 ];
+if($aplicacion->tema) $obj->aplicacion->tema='recursos/css/tema-'.$aplicacion->tema.'.css';
 
 echo json_encode($obj);

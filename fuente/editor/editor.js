@@ -25,6 +25,7 @@ var editor=new function() {
         tamanoActual="g";
 
     this.listo=false;
+    this.aplicacionArchivoAbierto=null
     this.rutaArchivoAbierto=null;
     this.modoArchivoAbierto=null;
     this.clienteArchivoAbierto=null;
@@ -753,7 +754,8 @@ var editor=new function() {
      * Guarda la vista actual (actualmente en modo de pruebas, guarda a /salida/salida.html).
      */
     this.guardar=function(cbk) {
-        var ruta=this.rutaArchivoAbierto,
+        var apl=this.aplicacionArchivoAbierto,
+            ruta=this.rutaArchivoAbierto,
             modo=this.modoArchivoAbierto,
             cliente=this.clienteArchivoAbierto,
             previsualizar=false;
@@ -765,6 +767,7 @@ var editor=new function() {
             url:"operaciones/guardar.php",
             parametros:{
                 previsualizar:previsualizar?"1":"0",
+                aplicacion:apl,
                 ruta:ruta,
                 modo:modo,
                 cliente:cliente,
@@ -791,12 +794,14 @@ var editor=new function() {
     this.abrir=function(opciones) {
         //Valores predeterminados
         opciones=Object.assign({
+            aplicacion:null,
             ruta:null,
             moodo:"independiente",
             cliente:"web",
             cbk:null
         },opciones);
         
+        this.aplicacionArchivoAbierto=opciones.aplicacion;
         this.rutaArchivoAbierto=opciones.ruta;
         this.modoArchivoAbierto=opciones.modo;
         this.clienteArchivoAbierto=opciones.cliente;
@@ -806,6 +811,7 @@ var editor=new function() {
         new ajax({
             url:"operaciones/abrir.php",
             parametros:{
+                aplicacion:opciones.aplicacion,
                 ruta:opciones.ruta
             },
             listo:function(resp) {

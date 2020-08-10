@@ -55,6 +55,7 @@ foxtrot::inicializar();
     <script>
         window.editorListo=function() {
             editor.abrir({
+                aplicacion:"<?=$_GET['apl']?>",
                 ruta:"<?=$_GET['vista']?>",
                 modo:"<?=$_GET['modo']?$_GET['modo']:'independiente'?>",
                 cliente:"<?=$_GET['cliente']?$_GET['cliente']:'web'?>"

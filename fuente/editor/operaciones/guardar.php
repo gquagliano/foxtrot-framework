@@ -25,7 +25,8 @@ El guardado funcionará de la siguiente manera:
 */
 
 $previsualizar=$_POST['previsualizar']=='1'; //TODO
-$ruta=$_POST['ruta'];
+$nombreApl=$_POST['aplicacion'];
+$nombre=$_POST['ruta'];
 $modo=$_POST['modo'];
 $cliente=$_POST['cliente'];
 
@@ -34,13 +35,13 @@ if(!$cliente) $cliente='web';
 
 $esPhp=$cliente=='web';
 
-$ruta=__DIR__.'/../../'.$_POST['ruta'];
-$nombreVista=basename($ruta);
-preg_match('#/aplicaciones/(.+?)/#',$ruta,$cc);
-$nombreApl=$cc[1];
-$rutaHtml=$ruta.'.'.($esPhp?'php':'html');
-$rutaCss=$ruta.'.css';
-$rutaJson=$ruta.'.json';
+$rutaApl=__DIR__.'/../../../desarrollo/aplicaciones/'.$nombreApl.'/';
+$rutaVista=$rutaApl.'cliente/vistas/'.$nombre;
+
+$rutaHtml=$rutaVista.'.'.($esPhp?'php':'html');
+$rutaCss=$rutaVista.'.css';
+$rutaJson=$rutaVista.'.json';
+$rutaJsonApl=$rutaApl.'aplicacion.json';
 
 $css=$_POST['css'];
 $html=$_POST['html'];
@@ -55,13 +56,20 @@ if($modo=='embebible') {
     $plantilla=$cliente.'.html';
 }
 
-$aplicacion=json_decode(file_get_contents(_aplicaciones.$nombreApl.'/aplicacion.json'));
+$aplicacion=json_decode(file_get_contents($rutaJsonApl));
+
+//Agregar la vista al JSON de la aplicación
+$aplicacion->vistas->$nombre=[
+    'tipo'=>$modo,
+    'cliente'=>$cliente
+];
+file_put_contents($rutaJsonApl,json_encode($aplicacion));
 
 $codigo=file_get_contents(__DIR__.'/../plantillas/'.$plantilla);
 
 $codigo=str_replace_array([
     '{editor_nombreAplicacion}'=>$nombreApl,
-    '{editor_nombreVista}'=>$nombreVista,
+    '{editor_nombreVista}'=>$nombre,
     '{editor_json}'=>$jsonHtml,
     '{editor_html}'=>$html,
     '{editor_tema}'=>'tema-'.$aplicacion->tema,

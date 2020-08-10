@@ -67,7 +67,7 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 `-i` Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante este parámetro, a fin de poder alojar en una única aplicación ambas versiones.
 
-`-c` Si se especifica la ruta al directorio `www` de la aplicación Cordova, intentará copiar los archivos, prepara y ejecutar la aplicación.
+`-c` Si se especifica la ruta al directorio `www` de la aplicación Cordova, intentará copiar los archivos, preparar y ejecutar la aplicación.
 
 `-p` Junto con el parámetro `-c`, puede utilizarse `-p` para especificar la plataforma. Por defecto `android`.
 

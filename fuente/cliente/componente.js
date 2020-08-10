@@ -1316,6 +1316,11 @@ var componente=new function() {
         return this;
     };
     
+    /**
+     * Evento 'Listo' (método para sobreescribir).
+     */
+    this.listo=function() {
+    };
 };
 
 window["componente"]=componente;

@@ -57,6 +57,12 @@ var aplicacion=new function() {
         this.servidor=servidor.fabricar();
         return this;
     };
+    
+    /**
+     * Evento 'Listo' (método para sobreescribir).
+     */
+    this.listo=function() {
+    };
 }();
 
 window["aplicacion"]=aplicacion;

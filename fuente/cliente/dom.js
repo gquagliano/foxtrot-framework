@@ -841,7 +841,7 @@
     Object.prototype.forEach=function(fn) {
         var t=this;
         Object.keys(t).forEach(function(clave) {
-            fn.call(t,clave,t[clave]);
+            if(typeof fn==="function") fn.call(t,clave,t[clave]);
         });
         return this;
     };
@@ -881,6 +881,7 @@
     Object.prototype.copiarDe=function(obj,reemplazar) {
         if(util.esIndefinido(reemplazar)) reemplazar=true;
         var t=this;
+        if(typeof obj!=="object") return this;
         Object.keys(obj).forEach(function(clave) {
             if(reemplazar||!t.hasOwnProperty(clave)) t[clave]=obj[clave];
         });

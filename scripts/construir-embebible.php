@@ -12,7 +12,7 @@
 
 include(__DIR__.'/configuracion.php');
 
-$opciones=getopt('a::i::d');
+$opciones=getopt('a::i::dc::p::');
 
 define('_depuracion',array_key_exists('d',$opciones));
 validarParametroAplicacion($opciones);
@@ -28,7 +28,7 @@ if(!file_exists(_produccion._dirApl.'cliente/vistas/'.$inicio)) {
     exit;
 }
 
-exec('php construir-apl.php -a='.$opciones['a'].(_depuracion?' -d':''));
+exec('php construir-apl.php -a='.escapeshellarg($opciones['a']).(_depuracion?' -d':''));
 
 //Copiar todo excepto archivos PHP
 $tipos=['*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
@@ -49,3 +49,13 @@ file_put_contents(_embeber.'index-cordova.html',preg_replace([
     '_nombreApl="'.$opciones['a'].'"',
     '_vistaInicial="'.$inicio.'"'
 ],$html));
+
+if($opciones['c']) {
+    $dir=$opciones['c'];
+    copiar(_embeber,'*.*',$dir);
+    chdir($dir);
+    $pl=$opciones['p'];
+    if(!$pl) $pl='android';
+    exec('cordova prepare '.escapeshellarg($pl));
+    exec('cordova run '.escapeshellarg($pl));
+}

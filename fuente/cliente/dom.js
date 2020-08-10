@@ -29,8 +29,8 @@
      */
     Node.prototype.inicializarMetadatos=function() {
         var obj=this.metadatos(this);
-        if(!obj.hasOwnProperty("eventos")) obj.eventos={};
-        if(!obj.hasOwnProperty("valores")) obj.valores={};
+        if(!obj.hasOwnProperty("eventos")||!obj.eventos) obj.eventos={};
+        if(!obj.hasOwnProperty("valores")||!obj.valores) obj.valores={};
     };
 
     /**
@@ -679,7 +679,12 @@
             return this;
         }
 
-        this.dispatchEvent(new Event(nombre));
+        this.dispatchEvent(new CustomEvent(nombre,{
+            bubbles:true,
+            cancelable:true
+        }));
+
+        return this;
     };
 
     /**

@@ -979,6 +979,8 @@ var componente=new function() {
         var elem=this.elementoEditable?this.elementoEditable:this.elemento;
         elem.iniciarEdicion().focus();
         
+        this.elemento.agregarClase("editando-texto");
+        
         if(pausar) {
             //Deshabilitar arrastre en todo el árbol
             this.elemento.pausarArrastreArbol();
@@ -992,6 +994,8 @@ var componente=new function() {
     this.finalizarEdicion=function() {
         var elem=this.elementoEditable?this.elementoEditable:this.elemento;
         elem.finalizarEdicion();
+
+        this.elemento.removerClase("editando-texto");
 
         //Reestablecer eventos
         this.elemento.pausarArrastreArbol(false);

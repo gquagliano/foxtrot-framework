@@ -419,11 +419,12 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion [contenteditable=true],
 .foxtrot-modo-edicion [contenteditable=true] * {
     cursor: text;
+    outline: none!important;
 }
 .foxtrot-modo-edicion [contenteditable=true] .componente {
     cursor: pointer;
 }
-.foxtrot-modo-edicion .componente[contenteditable=true],
-.foxtrot-modo-edicion .componente.seleccionado[contenteditable=true] {
+.foxtrot-modo-edicion .editando-texto,
+.foxtrot-modo-edicion .seleccionado.editando-texto {
     outline: 1px solid rgb(213, 229, 126)!important;
 }

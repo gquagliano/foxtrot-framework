@@ -173,10 +173,11 @@ picture img {
     animation-fill-mode: forwards;
 }
 .cordova .foxtrot-dialogo .dialogo-contenido {
-    max-width: none;
+    max-width: 100%;
 }
 .cordova .foxtrot-dialogo .dialogo-cuerpo {
     width: 85vw;
+    max-width: 450px;
 }
 
 /* Utilidades */

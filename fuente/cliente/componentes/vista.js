@@ -13,7 +13,24 @@
 var componenteVista=function() {    
     this.componente="vista";
     this.arrastrable=false;
-    this.nombreControlador=null;    
+    this.nombreControlador=null;  
+
+    this.propiedadesConcretas={
+        "Metadatos":{
+            titulo:{
+                etiqueta:"Título"
+            },
+            descripcion:{
+                etiqueta:"Descripción"
+            },
+            palabrasClave:{
+                etiqueta:"Palabras clave"
+            },
+            imagen:{
+                etiqueta:"Imagen (OG)"
+            }
+        }
+    };  
 
     /**
      * Devuelve el nombre del controlador actual de la vista.
@@ -33,6 +50,41 @@ var componenteVista=function() {
     this.inicializar=function() {
         this.contenedor=this.elemento;
         return this.inicializarComponente();
+    };
+    
+    /**
+     * Actualiza el componente tras la modificación de una propiedad.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //TODO Estas propiedades deberían aceptar expresiones, las cuales se actualizarían al cargar la página o modificarse el origen de datos, puede quedar como algo configurable en cada propiedad (que el usario elija si debe o no aceptar expresiones para evitar procesar todo cada vez)
+
+        if(propiedad=="titulo") {
+            ui.obtenerDocumento().title=valor;
+            return this;
+        }
+        
+        if(propiedad=="descripcion"||propiedad=="palabrasClave") {
+            var nombres={
+                descripcion:"description",
+                palabrasClave:"keywords"
+            };
+            var doc=ui.obtenerDocumento(),
+                elem=doc.querySelector("meta[name='"+nombres[propiedad]+"']");
+            if(!elem) elem=doc.crear("<meta name='"+nombres[propiedad]+"'>").anexarA(doc.head);
+            elem.propiedad("content",valor);
+            return this;
+        }
+        
+        if(propiedad=="imagen") {
+            var doc=ui.obtenerDocumento(),
+                elem=doc.querySelector("meta[property='og:image']");
+            if(!elem) elem=doc.crear("<meta property='og:image'>").anexarA(doc.head);
+            elem.propiedad("content",valor);
+            return this;
+        }
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
     };
 };
 

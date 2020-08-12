@@ -52,7 +52,10 @@ file_put_contents(_embeber.'index-cordova.html',preg_replace([
 
 if($opciones['c']) {
     $dir=$opciones['c'];
+    if(substr($dir,-1)!='/'&&substr($dir,-1)!='\\') $dir.='/';
+
     copiar(_embeber,'*.*',$dir);
+    
     chdir($dir);
     $pl=$opciones['p'];
     if(!$pl) $pl='android';

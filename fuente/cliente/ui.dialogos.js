@@ -110,7 +110,7 @@
 
         var cuerpo=elem.querySelector(".dialogo-contenido");
         if(typeof parametros.cuerpo==="string") {
-            cuerpo.html(parametros.cuerpo);
+            cuerpo.establecerHtml(parametros.cuerpo);
         } else {
             //Almacenar la ubicación anterior del contenido para poder restaurarlo
             parametros.padreAnterior=parametros.cuerpo.parentNode;
@@ -122,7 +122,7 @@
 
             parametros.opciones.forEach(function(boton,i) {
                 var btn=document.crear("<a href='#' class='btn'>")
-                    .html(boton.etiqueta)
+                    .establecerHtml(boton.etiqueta)
                     .dato("indice",i)
                     .evento("click",function(ev) {
                         ev.preventDefault();

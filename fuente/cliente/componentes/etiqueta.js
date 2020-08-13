@@ -53,7 +53,7 @@ var componenteEtiqueta=function() {
             }
         }
 
-        this.elemento.html(resultado);
+        this.elemento.establecerHtml(resultado);
 
         this.actualizarComponente();
         return this;

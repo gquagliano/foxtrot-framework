@@ -123,7 +123,7 @@ var editable=new function() {
             }
         //} else if(!datos&&html!="") {
         //    //Extraer el texto
-        //    insertar=document.crear("<div>").html(html).texto();
+        //    insertar=document.crear("<div>").establecerHtml(html).texto();
         } else if(datos) {
             //TODO Intentar insertar como imagen
             //TODO Insertar link si es una url

@@ -210,7 +210,7 @@ var componenteItemMenu=function() {
      * @returns Componente
      */
     this.establecerEtiqueta=function(valor) {
-        this.enlace.html(valor);
+        this.enlace.establecerHtml(valor);
         return this;
     };
 };

@@ -556,8 +556,14 @@
     /**
      * Acceso a innerHTML.
      */
-    Node.prototype.html=function(html) {
-        if(util.esIndefinido(html)) return this.innerHTML;
+    Node.prototype.obtenerHtml=function() {
+        return this.innerHTML;
+    };
+
+    /**
+     * Acceso a innerHTML.
+     */
+    Node.prototype.establecerHtml=function(html) {
         this.innerHTML=html;
         return this;
     };

@@ -119,7 +119,7 @@
                 var li=document.crear("<li>"),
                     a=document.crear("<a href='#'>");
 
-                a.html(items[i].etiqueta);
+                a.establecerHtml(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
                     var ulSubmenu=document.crear("<ul class='foxtrot-submenu oculto'>");

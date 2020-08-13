@@ -41,6 +41,10 @@ class foxtrot {
         self::$enrutador=$obj;
     }
 
+    public static function obtenerEnrutador() {
+        return self::$enrutador;
+    }
+
     public static function establecerEnrutadorAplicacion($obj) {
         self::$enrutadorApl=$obj;
     }

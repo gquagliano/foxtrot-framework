@@ -31,6 +31,10 @@ class enrutador {
         return $this;
     }
 
+    public function obtenerUrlVista($vista) {
+        return foxtrot::obtenerUrl().$vista.'/';
+    }
+
     public function analizar() {
     }
 

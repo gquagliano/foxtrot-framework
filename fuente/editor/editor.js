@@ -833,15 +833,23 @@ var editor=new function() {
             var div=document.createElement("div")
                 .anexar(datos.html);
 
-            //Crear componentes
+            //Para que no se superpongan los nombres nuevos con los viejos (puede pasar si la vista es la misma o tiene el mismo nombre), vamos a reemplazar todos
+            //los IDs por IDs provisorios
+            var prefijo=util.cadenaAzar()+"-";
+            div.querySelectorAll(".componente").forEach(function(elem) {
+                elem.dato("fxid",prefijo+elem.dato("fxid"))
+                    .atributo("id",prefijo+elem.atributo("id"));
+            });
+
+            //Preparar componentes
             datos.componentes.forEach(function(obj) {
                 //Asignar nuevo ID
                 var idAnterior=obj.id;
                 obj.id=nombreVista+"-"+ui.generarId();
 
                 //Reemplazar en el HTML
-                div.querySelector("[data-fxid='"+idAnterior+"']")
-                    .dato("fxid",obj.id)
+                var elem=div.querySelector("[data-fxid='"+prefijo+idAnterior+"']");
+                elem.dato("fxid",obj.id)
                     .atributo("id","componente-"+obj.id);
 
                 nuevoSelector["#componente-"+idAnterior]="#componente-"+obj.id;
@@ -852,15 +860,12 @@ var editor=new function() {
                     while(componentes.hasOwnProperty(obj.nombre+(i>0?"-"+i:""))) i++;
                     if(i>0) obj.nombre+="-"+i;
                 }
-
-                var comp=ui.crearComponente(obj,nombreVista);
-                comp.restaurar();
             });
             
             //Agregar HTML
             elem.anexar(div.innerHTML);
 
-            //Instanciar componentes
+            //Crear componentes
             datos.componentes.forEach(function(obj) {
                 var comp=ui.crearComponente(obj,nombreVista);
                 comp.restaurar();

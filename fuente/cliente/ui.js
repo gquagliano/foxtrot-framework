@@ -477,7 +477,6 @@ var ui=new function() {
     this.obtenerCss=function() {
         var css="";
         this.obtenerEstilos().forEach(function(regla) {
-            if(!regla.estilos.length) return;
             css+=regla.texto;
         });
         //Comprimir
@@ -485,6 +484,8 @@ var ui=new function() {
             .replace(/([\):;\}\{])[\s]+/g,"$1")
             .replace(/[\s]+([\{\(#])/g,"$1")
             .replace(";}","}");
+        //Remover reglas vacías
+        css=css.replace(/[^\}].+?\{\}/g,"");
         return css;        
     };
 
@@ -935,7 +936,7 @@ var ui=new function() {
         }
 
         if(modoEdicion) {
-            body.agregarClase("foxtrot-modo-edicion");
+            //En modo de edición, pasar el control al editor
             editor.ejecutar();
         } else {
             if(!this.esMovil()) {

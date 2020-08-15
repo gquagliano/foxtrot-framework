@@ -455,9 +455,21 @@ var editor=new function() {
                 ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
                     if(r) self.eliminarComponentes(self.componentesSeleccionados);
                 });
+            } else if(ev.ctrlKey&&ev.which==67) {
+                //Ctrl+C
+                ev.preventDefault();
+
+                self.copiar();
+            } else if(ev.ctrlKey&&ev.which==88) {
+                //Ctrl+X
+                ev.preventDefault();
+
+                self.cortar()
             }
         }).evento("mouseup",function(ev) {
             removerZonas();
+        }).evento("paste",function(ev) {
+            self.pegar(ev);
         });
     }    
 
@@ -630,8 +642,9 @@ var editor=new function() {
     /**
      * Asigna los eventos y prepara todos los componentes existentes (putil luego de reemplazar todo el html de la vista).
      */
-    function prepararComponentesInsertados(vista) {
-        var componentes=ui.obtenerInstanciasComponentes(vista);
+    function prepararComponentesInsertados() {
+        var vista=self.vistaArchivoAbierto,
+            componentes=ui.obtenerInstanciasComponentes(vista);
         componentes.forEach(function(comp) {
             editor.prepararComponenteInsertado(comp);
         });
@@ -696,6 +709,11 @@ var editor=new function() {
 
         construirPropiedades();
 
+        //Activar portapapeles
+        document.querySelectorAll("#foxtrot-btn-pegar").propiedad("disabled",false);
+        if(this.componentesSeleccionados.length>1||!this.esCuerpo(this.componentesSeleccionados[0].obtenerElemento()))
+            document.querySelectorAll("#foxtrot-btn-copiar,#foxtrot-btn-cortar").propiedad("disabled",false);
+
         return this;
     };
 
@@ -708,8 +726,159 @@ var editor=new function() {
         ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
         this.componentesSeleccionados=[];
-        construirPropiedades();
+        construirPropiedades();        
+
+        //Desactivar portapapeles
+        document.querySelectorAll("#foxtrot-btn-copiar,#foxtrot-btn-cortar,#foxtrot-btn-pegar").propiedad("disabled",true);
+
         return this;
+    };
+
+    ////Portapapeles
+
+    /**
+     * Copia la selección al portapapeles.
+     * @returns {editor}
+     */
+    this.copiar=function() {
+        if(!this.componentesSeleccionados.length) return this;
+
+        var datos={
+            "editor-foxtrot-7":true,
+            componentes:[],
+            html:"",
+            css:[]
+        },
+        agregarComponente=function(comp) {
+            datos.componentes.push(ui.obtenerJsonComponente(comp));
+            
+            //Agregar estilos
+            ui.obtenerEstilos(comp.obtenerSelector()).forEach(function(estilo) {
+                if(estilo.hasOwnProperty("tamano")) {
+                    estilo.reglas.forEach(function(regla) {
+                        datos.css.push({
+                            tamano:estilo.tamano,
+                            texto:regla.estilos.cssText,
+                            selector:regla.selector
+                        });                        
+                    });
+                } else {
+                    datos.css.push({
+                        texto:estilo.estilos.cssText,
+                        selector:estilo.selector
+                    });
+                }
+            });
+            
+            comp.obtenerHijos().forEach(function(hijo) {
+                agregarComponente(hijo);
+            });            
+        };
+
+        this.componentesSeleccionados.forEach(function(comp) {
+            //El cuerpo no se copia
+            if(self.esCuerpo(comp)) return;
+
+            //Agregar componente y descendencia en forma recursiva
+            agregarComponente(comp);
+
+            //Clonar los elementos y remover clases del editor
+            var div=document.crear("<div>")
+                .anexar(comp.obtenerElemento().clonar());
+            self.limpiarElemento(div);
+            datos.html+=div.innerHTML;
+        });
+        
+        navigator.clipboard.writeText(JSON.stringify(datos));        
+
+        return this;
+    };
+
+    /**
+     * Copia la selección al portapapeles y elimina los componentes seleccionados.
+     * @returns {editor}
+     */
+    this.cortar=function() {
+        if(!this.componentesSeleccionados.length) return this;
+        this.copiar();
+        this.eliminarComponentes(this.componentesSeleccionados);
+        this.limpiarSeleccion();
+        return this;
+    };
+
+    /**
+     * Interpreta el contenido pegado e intenta insertar los componentes dentro de la selección actual.
+     * @param {Object} ev - Datos del evento 'paste'.
+     * @returns {editor}
+     */
+    this.pegar=function(ev) {
+        if(!this.componentesSeleccionados.length) return this;
+        ev.preventDefault();
+
+        var datos=(ev.clipboardData||window.clipboardData).getData("text");
+        
+        //Intentar convertir a objeto
+        try {
+            datos=JSON.parse(datos);
+        } catch {
+            return;
+        }
+        if(!datos.hasOwnProperty("editor-foxtrot-7")) return;
+
+        var fn=function(elem) {
+            var nuevoSelector={},
+                nombreVista=ui.obtenerNombreVistaPrincipal();
+
+            //Elemento provisorio
+            var div=document.createElement("div")
+                .anexar(datos.html);
+
+            //Crear componentes
+            datos.componentes.forEach(function(obj) {
+                //Asignar nuevo ID
+                var idAnterior=obj.id;
+                obj.id=nombreVista+"-"+ui.generarId();
+
+                //Reemplazar en el HTML
+                div.querySelector("[data-fxid='"+idAnterior+"']")
+                    .dato("fxid",obj.id)
+                    .atributo("id","componente-"+obj.id);
+
+                nuevoSelector["#componente-"+idAnterior]="#componente-"+obj.id;
+    
+                //Modificar nombres repetidos
+                if(obj.nombre) {
+                    var i=0;
+                    while(componentes.hasOwnProperty(obj.nombre+(i>0?"-"+i:""))) i++;
+                    if(i>0) obj.nombre+="-"+i;
+                }
+
+                var comp=ui.crearComponente(obj,nombreVista);
+                comp.restaurar();
+            });
+            
+            //Agregar HTML
+            elem.anexar(div.innerHTML);
+
+            //Instanciar componentes
+            datos.componentes.forEach(function(obj) {
+                var comp=ui.crearComponente(obj,nombreVista);
+                comp.restaurar();
+            });
+
+            //Agregar estilos
+            datos.css.forEach(function(estilo) {
+                var tamano=null;
+                if(estilo.hasOwnProperty("tamano")) tamano=estilo.tamano;
+                ui.establecerEstilosSelector(nuevoSelector[estilo.selector],estilo.texto,tamano);
+            });
+        };
+
+        this.componentesSeleccionados.forEach(function(comp) {
+            fn(comp.obtenerElemento());
+        });
+
+        prepararComponentesInsertados();
     };
 
     ////Gestión de la vista
@@ -889,11 +1058,11 @@ var editor=new function() {
     };
 
     /**
-     * Desactiva el editor (solo afecta el marco).
+     * Remueve del elemento y sus descendencias todos los elementos y atributos del editor.
+     * @param {*} elem 
      */
-    this.desactivar=function() {
-        var doc=ui.obtenerDocumento(),
-            elems=doc.querySelectorAll("*");
+    this.limpiarElemento=function(elem) {
+        var elems=elem.querySelectorAll("*");
 
         //Desactivar arrastrables
         elems.forEach(function(elem) {
@@ -902,14 +1071,30 @@ var editor=new function() {
         });
 
         //Remover clases y otras propiedades
-        this.limpiarSeleccion();
-        elems.removerClase("hijo-seleccionado")
-            .removerClase("editando-texto")
-            .propiedad("contentEditable",null);
-        doc.body.removerClase("foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles");
+        elems.removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable");
 
         //Remover auxiliares
-        doc.querySelectorAll(".foxtrot-etiqueta-componente").remover();
+        elem.querySelectorAll(".foxtrot-etiqueta-componente").remover();
+
+        //Remover atributos y propiedades vacias
+        elem.querySelectorAll("[class='']").removerAtributo("class");
+        elems.removerAtributo("contentEditable")
+            .removerAtributo("draggable");
+    };
+
+    /**
+     * Desactiva el editor (solo afecta el marco).
+     * @returns {editor}
+     */
+    this.desactivar=function() {
+        var doc=ui.obtenerDocumento();
+
+        this.limpiarSeleccion();
+        
+        this.limpiarElemento(doc);
+
+        //Remover clases y otras propiedades
+        doc.body.removerClase("foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles");
         
         //Remover hoja de estilos del editor
         for(var i=0;i<doc.styleSheets.length;i++) {
@@ -918,9 +1103,6 @@ var editor=new function() {
                 hoja.ownerNode.remover();
             }
         }
-
-        //Remover atributos y propiedades vacias
-        doc.querySelectorAll("[class='']").removerAtributo("class");
 
         return this;
     };
@@ -934,7 +1116,7 @@ var editor=new function() {
         doc.body.agregarClase("foxtrot-modo-edicion");
         doc.head.anexar("<link rel='stylesheet' href='editor/editor.css'>");
 
-        prepararComponentesInsertados(this.vistaArchivoAbierto);
+        prepararComponentesInsertados();
 
         establecerEventos();
 

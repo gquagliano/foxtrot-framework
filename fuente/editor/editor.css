@@ -125,6 +125,7 @@ a:active {
     font-size: inherit;
     line-height: inherit;
     border-radius: 2px;
+    position: relative;
 }
 .foxtrot-editor.foxtrot-barra-herramientas .btn img,
 .foxtrot-editor.foxtrot-barra-herramientas-flotante .btn img {
@@ -133,6 +134,19 @@ a:active {
 .foxtrot-editor.foxtrot-barra-herramientas .btn.activo img,
 .foxtrot-editor.foxtrot-barra-herramientas-flotante .btn.activo img {
     filter: saturate(3) brightness(1.8) contrast(.8);
+}
+.foxtrot-editor.foxtrot-barra-herramientas .btn.separador {
+    margin-right: 25px;
+}
+.foxtrot-editor.foxtrot-barra-herramientas .btn.separador::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    background: #ccc;
+    height: 12px;
+    position: absolute;
+    right: -15px;
+    top: 10px;
 }
 
 /* Menú contextual */
@@ -242,10 +256,15 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-barra-herramientas .btn.disabled,
 .foxtrot-barra-herramientas .btn:disabled,
-.foxtrot-contenidos-barra-herramientas .btn.disabled 
+.foxtrot-contenidos-barra-herramientas .btn.disabled, 
 .foxtrot-contenidos-barra-herramientas .btn:disabled {
-    opacity: .3;
     cursor: not-allowed;
+}
+.foxtrot-barra-herramientas .btn.disabled img,
+.foxtrot-barra-herramientas .btn:disabled img,
+.foxtrot-contenidos-barra-herramientas .btn.disabled img,
+.foxtrot-contenidos-barra-herramientas .btn:disabled img {
+    opacity: .3;
 }
 .foxtrot-barra-herramientas .btn:hover,.foxtrot-contenidos-barra-herramientas .btn:hover,
 .foxtrot-barra-herramientas .btn:focus,.foxtrot-contenidos-barra-herramientas .btn:focus,

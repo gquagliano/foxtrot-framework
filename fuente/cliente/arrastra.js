@@ -28,6 +28,7 @@
         }
 
         arrastrable.propiedad("draggable",false)
+            .removerAtributo("draggable")
             .removerClase("foxtrot-arrastrable-arrastrable")
             .metadato("arrastra",null)
             .removerEvento("dragstart drag dragend");
@@ -242,6 +243,7 @@
                 opciones._eventosPausados_dragstart=arrastrable.evento("dragstart");
 
                 arrastrable.propiedad("draggable",false)
+                    .removerAtributo("draggable")
                     .removerClase("foxtrot-arrastrable-arrastrable")
                     .removerEvento("dragstart");
             } else {

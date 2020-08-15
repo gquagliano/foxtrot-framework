@@ -50,22 +50,23 @@ foxtrot::inicializar();
         <div class="foxtrot-asa-arrastre"></div>
         <div class="foxtrot-contenidos-barra-herramientas">Ningún componente seleccionado</div>
     </div>    
-
-    <!-- Esto es provisorio, hasta que tengamos el gestor de archivos o al menos diálogos de abrir/guardar -->
-    <script>
-        window.editorListo=function() {
-            editor.abrir({
-                aplicacion:"<?=$_GET['apl']?>",
-                ruta:"<?=$_GET['vista']?>",
-                modo:"<?=$_GET['modo']?$_GET['modo']:'independiente'?>",
-                cliente:"<?=$_GET['cliente']?$_GET['cliente']:'web'?>"
-            });
-        };
-    </script>
+    
+    <iframe id="foxtrot-marco" src="about:blank"></iframe>
 
     <script src="../cliente/foxtrot.js"></script>    
     <script src="editor.js"></script>
-    
-    <iframe id="foxtrot-marco" src="marco.php"></iframe>
+    <script>
+    "use strict";
+    editor.activar();
+    window.evento("load",function() {
+        //Esto es provisorio, hasta que tengamos el gestor de archivos o al menos diálogos de abrir/guardar
+        editor.abrir({
+                aplicacion:"<?=$_GET['apl']?>",
+                vista:"<?=$_GET['vista']?>",
+                modo:"<?=$_GET['modo']?>",
+                cliente:"<?=$_GET['cliente']?>"
+            });
+    });
+    </script>
   </body>
 </html>

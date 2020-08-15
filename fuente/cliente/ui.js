@@ -50,7 +50,7 @@ var ui=new function() {
     var doc=document,
         body=doc.body,
         cuerpo=doc.querySelector("#foxtrot-cuerpo"),
-        estilos=doc.querySelector("#foxtrot-estilos"),
+        estilos=null,
         marco=null;
 
     ////Acceso a variables generales
@@ -93,7 +93,7 @@ var ui=new function() {
         var raiz=false;
         if(util.esIndefinido(origen)) {
             raiz=true;
-            origen=estilos.sheet.cssRules;
+            origen=estilos.cssRules;
         }
 
         var reglas=[];
@@ -193,7 +193,7 @@ var ui=new function() {
         if(util.esIndefinido(tamano)||!tamano) tamano="g";
 
         var tamanoPx=tamanos[tamano],
-            hoja=estilos.sheet,
+            hoja=estilos,
             reglas=hoja.cssRules,
             indicesMedia=[],
             indicePrimerMedia=0;
@@ -468,7 +468,7 @@ var ui=new function() {
      * Devuelve el HTML de la vista.
      */
     this.obtenerHtml=function() {
-        return editor.limpiarHtml(cuerpo.outerHTML);
+        return "<!doctype html>"+doc.documentElement.outerHTML;
     };
 
     /**
@@ -528,8 +528,9 @@ var ui=new function() {
 
         var nombreVista=json.nombre,
             fn=function(componente) {
-                return ui.crearComponente(componente,nombreVista)
-                    .restaurar();
+                var obj=ui.crearComponente(componente,nombreVista);
+                obj.restaurar();
+                return obj;
             };
 
         //Preparar los componentes
@@ -537,12 +538,7 @@ var ui=new function() {
             var obj=fn(componente);
 
             //Almacenar en cache de instancias
-            if(componente.componente=="vista") {
-                instanciasVistas[nombreVista]=obj;
-
-                //Asumir el primer componente vista (debería ser el único) como vista principal
-                if(!nombreVistaPrincipal) nombreVistaPrincipal=nombreVista;
-            }
+            if(componente.componente=="vista") instanciasVistas[nombreVista]=obj;
         });
 
         return this;  
@@ -668,9 +664,9 @@ var ui=new function() {
 
     ////Gestión de la UI
 
-    this.establecerModoEdicion=function(valor) {
-        modoEdicion=valor;
-        body.alternarClase("foxtrot-modo-edicion");
+    this.establecerModoEdicion=function() {
+        modoEdicion=true;
+        marco=document.querySelector("#foxtrot-marco");
         return this;
     };
 
@@ -895,23 +891,53 @@ var ui=new function() {
         return this;
     };
 
-    this.ejecutar=function(nuevoDoc) {
-        if(!util.esIndefinido(nuevoDoc)) {
-            //Si se activa para un documento diferente, reemplazar las referencias al dom
-            doc=nuevoDoc;
-            body=doc.body;
-            cuerpo=doc.querySelector("#foxtrot-cuerpo");
-            estilos=doc.querySelector("#foxtrot-estilos");
-            marco=document.querySelector("#foxtrot-marco");
-        }        
+    /**
+     * Inicializa el sistema.
+     */
+    this.inicializar=function(nombreVista) {
+        nombreVistaPrincipal=nombreVista;
 
+        //Si estamos en el marco del editor, utilizar los objetos de la ventana principal
+        if(window.parent.ui!=ui&&window.parent.ui.enModoEdicion()) {
+            ui=window.parent.ui;
+            ui.inicializar(nombreVista);
+            //editor=window.parent.editor;
+            ui.preparar(document);
+        }
+        return ui;
+    };
+
+    /**
+     * Prepara las referencias al documento.
+     */
+    this.preparar=function(nuevoDoc) {
+        doc=nuevoDoc;
+        body=doc.body;
+        cuerpo=doc.querySelector("#foxtrot-cuerpo");
+
+        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
+        for(var i=0;i<doc.styleSheets.length;i++) {
+            var hoja=doc.styleSheets[i];
+            if(new RegExp("cliente/vistas/"+nombreVistaPrincipal+".css").test(hoja.href)) {
+                estilos=hoja;
+                break;
+            }
+        }
+
+        return this;
+    };
+
+    this.ejecutar=function() {
         //Preparar la vista
         if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
             //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
             instanciasVistas[nombreVistaPrincipal].establecerElemento(cuerpo);
         }
-        
-        if(!modoEdicion) {
+
+        if(modoEdicion) {
+            body.agregarClase("foxtrot-modo-edicion");
+            editor.ejecutar();
+        } else {
             if(!this.esMovil()) {
                 var elem=doc.querySelector(".autofoco");
                 if(elem) {

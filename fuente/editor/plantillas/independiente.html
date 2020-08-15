@@ -10,18 +10,16 @@
     <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css" combinar>
     <link rel="stylesheet" href="aplicacion/cliente/vistas/{editor_nombreVista}.css">
     <meta name="generator" content="Foxtrot 7">
-    <link rel="icon" href="{editor_urlFavicon}">
-    <title>{editor_titulo}</title>
-    {editor_metadatos}
-    <style id="foxtrot-estilos"></style>
   </head>
   <body>
-    {editor_html}
+    <div id="foxtrot-cuerpo"></div>
     <script src="cliente/foxtrot.js"></script>
-    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js" controlador></script>
+    <script src="aplicacion/cliente/vistas/{editor_nombreVista}.js" controlador></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
-    ui.establecerJson('{editor_json}')
+    var jsonFoxtrot='{}';
+    ui.inicializar("{editor_nombreVista}")
+        .establecerJson(jsonFoxtrot)
         .ejecutar();
     </script>
   </body>

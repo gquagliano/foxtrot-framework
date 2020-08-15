@@ -498,7 +498,8 @@ var componente=new function() {
     this.restaurarComponente=function() {
         if(!this.elemento) {
             //El elemento puede haber sido asignado en restaurar() o durante la creación de la instancia
-            this.elemento=ui.obtenerCuerpo().querySelector("[data-fxid='"+this.id+"']");
+            var body=ui.obtenerDocumento().body;
+            this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
         }
         if(this.elemento) {
             this.inicializado=false;

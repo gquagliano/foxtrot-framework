@@ -53,6 +53,19 @@ var componenteVista=function() {
     };
     
     /**
+     * Inicializa la instancia en base a su ID y sus parámetros.
+     */
+    this.restaurar=function() {
+        //Si el elemento no se encuentra por id, asignar como elemento el cuerpo de la página (caso vista nueva)
+        var body=ui.obtenerDocumento().body;
+        this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
+        if(!this.elemento) this.elemento=body.querySelector("#foxtrot-cuerpo");
+
+        this.restaurarComponente();
+        return this;
+    };
+    
+    /**
      * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {

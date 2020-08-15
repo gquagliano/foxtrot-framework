@@ -26,6 +26,10 @@ Código fuente para almacenar una vista embebible.
 
 Durante la compilación para producción o integración con Cordova, los archivos CSS enlazados con etiquetas `<link ... combinar>` y los archivos CSS importados en páginas para Cordova se combinarán en uno solo.
 
+#### Reemplazo del JSON de la vista
+
+La variable `jsonFoxtrot` será reemplazada al guardar.
+
 #### Reemplazo del tema de la aplicación
 
 El archivo CSS del tema se enlaza con un etiqueta `<link ... tema>`, o en Cordova seguido del comentario `//tema`, a fin de que el editor pueda reemplazar el mismo en las vistas preexistentes cuando se modifique el tema de la aplicación.

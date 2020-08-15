@@ -33,13 +33,19 @@ La siguiente etapa consistirá en:
 
 ### Acceso al editor
 
-`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=[aplicacion]&vista=[ruta]&modo=[embebible|independiente]&cliente=[web|cordova|escritorio]`
+***Importante:*** Es necesario deshabilitar todas las extensiones del navegador que puedan alterar el cuerpo de la página, como bloqueadores de publicidad y *trackers*.
+
+`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=[aplicacion]&vista=[nombre]
 
 Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?apl=ejemplo&vista=inicio
 
 `apl` Nombre de la aplicación.
 
-`ruta` Ruta sin extensión relativa al directorio de vistas (`/desarrollo/aplicaciones/apl/cliente/vistas/`).
+`vista` Ruta sin extensión relativa al directorio de vistas (`/desarrollo/aplicaciones/apl/cliente/vistas/`).
+
+#### Crear una nueva vista
+
+Al crear una vista, dos parámetros adicionales deben agregarse a la URL del editor:
 
 `modo`:
 - `embebible` Almacenará solo el cuerpo de la vista, sin los tags `<html>`, `<head>`, `<body>`, scripts ni estilos, a fin de que sea una vista para insertar dentro de otra en tiempo de ejecución.
@@ -49,6 +55,8 @@ Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?apl=e
 - `web` Almacenará la vista para funcionar en un servidor web (Predeterminado).
 - `cordova` Al guardar, generará un archivo HTML compatible con Cordova.
 - `escritorio` Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
+
+Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?apl=ejemplo&vista=inicio&modo=independiente&cliente=cordova
 
 En el futuro, `/desarrollo/editor/` se reemplazará por el gestor completo de aplicaciones y se automatizará el acceso al editor (acceso directo desde el listado de vistas).
 

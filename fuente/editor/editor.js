@@ -80,7 +80,7 @@ var editor=new function() {
             if(!grupos.hasOwnProperty(grupo)) continue;
 
             var barraGrupo=document.crear("<div class='foxtrot-grupo-herramientas'>");
-            if(grupo!=0) document.crear("<label>").html(grupo).anexarA(barraGrupo);
+            if(grupo!=0) document.crear("<label>").establecerHtml(grupo).anexarA(barraGrupo);
             barraGrupo.anexarA(cuerpoBarraComponentes);
 
             for(var i=0;i<grupos[grupo].length;i++) {
@@ -109,18 +109,18 @@ var editor=new function() {
     function construirPropiedades() {
         if(!self.componentesSeleccionados.length) {
             barraPropiedades.agregarClase("foxtrot-barra-propiedades-vacia");
-            cuerpoBarraPropiedades.html("Ningún componente seleccionado");
+            cuerpoBarraPropiedades.establecerHtml("Ningún componente seleccionado");
             return;
         }
 
         var seleccionMultiple=self.componentesSeleccionados.length>1;
         
         barraPropiedades.removerClase("foxtrot-barra-propiedades-vacia");
-        cuerpoBarraPropiedades.html("");
+        cuerpoBarraPropiedades.establecerHtml("");
 
         var agregarPropiedad=function(barra,nombre,prop) {
             var fila=document.crear("<div class='foxtrot-propiedad'>"),
-                label=document.crear("<label>").html(prop.etiqueta).anexarA(fila);
+                label=document.crear("<label>").establecerHtml(prop.etiqueta).anexarA(fila);
 
             var tipo=prop.hasOwnProperty("tipo")?prop.tipo:"texto",
                 fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
@@ -221,7 +221,7 @@ var editor=new function() {
 
                 var barra=document.crear("<div class='foxtrot-grupo-herramientas'>");
 
-                document.crear("<label>").html(grupo).anexarA(barra);
+                document.crear("<label>").establecerHtml(grupo).anexarA(barra);
 
                 barra.anexarA(cuerpoBarraPropiedades);
 
@@ -278,7 +278,7 @@ var editor=new function() {
                 if(cantidad>1) titulo+="("+cantidad+")";
             });
             document.crear("<div class='foxtrot-grupo-herramientas'>")
-                .anexar(document.crear("<label>").html(titulo))
+                .anexar(document.crear("<label>").establecerHtml(titulo))
                 .anexarA(cuerpoBarraPropiedades);
         }
 
@@ -738,8 +738,8 @@ var editor=new function() {
      * Remueve todas las clases y propiedades del modo de edición del código html dado.
      */
     this.limpiarHtml=function(html) {
-        var temp=document.crear("<div>");
-        temp.html(html);
+        /*var temp=document.crear("<div>");
+        temp.establecerHtml(html);
         temp.querySelectorAll("*")  
             .removerClase("seleccionado")
             .removerClase("hijo-seleccionado")
@@ -747,7 +747,9 @@ var editor=new function() {
             .propiedad("contentEditable",null)
             .propiedad("draggable",null);
         temp.querySelectorAll(".foxtrot-etiqueta-componente").remover();
-        return temp.innerHTML;
+        return temp.innerHTML;*/
+
+        //TODO Como ahora recibimos el código completo, incluyendo <html>, etc., este método ya no sirve, se debe limpiar de otra manera
     };
 
     /**
@@ -755,7 +757,7 @@ var editor=new function() {
      */
     this.guardar=function(cbk) {
         var apl=this.aplicacionArchivoAbierto,
-            ruta=this.rutaArchivoAbierto,
+            vista=this.vistaArchivoAbierto,
             modo=this.modoArchivoAbierto,
             cliente=this.clienteArchivoAbierto,
             previsualizar=false;
@@ -768,10 +770,10 @@ var editor=new function() {
             parametros:{
                 previsualizar:previsualizar?"1":"0",
                 aplicacion:apl,
-                ruta:ruta,
+                vista:vista,
                 modo:modo,
                 cliente:cliente,
-                html:ui.obtenerHtml(),
+                html:this.limpiarHtml(ui.obtenerHtml()),
                 css:ui.obtenerCss(),
                 json:ui.obtenerJson()
             },
@@ -795,14 +797,14 @@ var editor=new function() {
         //Valores predeterminados
         opciones=Object.assign({
             aplicacion:null,
-            ruta:null,
+            vista:null,
             moodo:"independiente",
             cliente:"web",
             cbk:null
         },opciones);
         
         this.aplicacionArchivoAbierto=opciones.aplicacion;
-        this.rutaArchivoAbierto=opciones.ruta;
+        this.vistaArchivoAbierto=opciones.vista;
         this.modoArchivoAbierto=opciones.modo;
         this.clienteArchivoAbierto=opciones.cliente;
         
@@ -812,7 +814,9 @@ var editor=new function() {
             url:"operaciones/abrir.php",
             parametros:{
                 aplicacion:opciones.aplicacion,
-                ruta:opciones.ruta
+                vista:opciones.vista,
+                modo:opciones.modo,
+                cliente:opciones.cliente
             },
             listo:function(resp) {
                 if(!resp) {
@@ -821,32 +825,8 @@ var editor=new function() {
                     if(opciones.cbk) {
                         opciones.cbk.call(self,resp);
                     } else {
-                        if(typeof resp.json==="string") resp.json=JSON.parse(resp.json);
-
                         ui.limpiar();
-
-                        var nombre=resp.json.nombre;
-
-                        //Si la vista está en blanco, se debe crear al menos el componente principal
-                        if(!resp.json.componentes.length) resp.json.componentes.push({
-                            componente:"vista"
-                        });
-
-                        ui.reemplazarHtml(resp.html);
-                        ui.establecerEstilos(resp.css);
-                        ui.establecerJson(resp.json);
-                        
-                        //ui.cargarJs("../"+opciones.ruta+".js",function() {
-                        //});
-
-                        ui.cargarCss(resp.aplicacion.css)
-                            .cargarCss(resp.aplicacion.tema);
-
-                        ui.ejecutar();
-
-                        prepararComponentesInsertados(nombre);
-
-                        document.body.removerClase("trabajando");                        
+                        ui.obtenerMarco().atributo("src",resp.url);                     
                     }
                 }
             }
@@ -899,17 +879,32 @@ var editor=new function() {
         return this;
     };
 
+    /**
+     * Activa el editor y construye su interfaz (fuera del marco).
+     */
     this.activar=function() {
-        ui.establecerModoEdicion(true);
-        this.alternarBordes();
+        ui.establecerModoEdicion();
 
         contruirBarrasHerramientas();
         prepararArrastrarYSoltar();
+
+        return this;
+    };
+
+    /**
+     * Ejecuta el editor una vez que la UI haya cargado la página a editar.
+     */
+    this.ejecutar=function() {
+        ui.obtenerDocumento().head.anexar("<link rel='stylesheet' href='editor/editor.css'>");
+        prepararComponentesInsertados(this.vistaArchivoAbierto);
         establecerEventos();
 
-        this.listo=true;
-        if(typeof window.editorListo==="function") window.editorListo();
+        this.alternarBordes();
 
+        this.listo=true;
+
+        document.body.removerClase("trabajando");   
+        
         return this;
     };
 }();

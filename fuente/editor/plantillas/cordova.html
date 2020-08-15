@@ -7,11 +7,10 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta name="generator" content="Foxtrot 7">
-    <style id="foxtrot-estilos"></style>
   </head>
   <body class="cordova">
-    <div id="contenedor-cordova" style="display:none;opacity:0">
-    {editor_html}
+    <div id="contenedor-cordova" style="display:none;opacity:0">        
+        <div id="foxtrot-cuerpo"></div>
     </div>
     <script>
     (function() {
@@ -50,8 +49,10 @@
                 document.body.appendChild(elem);
             },
             scriptsListos=function() {
-                ui.establecerCordova()
-                    .establecerJson('{editor_json}')
+                var jsonFoxtrot='{}';
+                ui.inicializar("{editor_nombreVista}")
+                    .establecerCordova()
+                    .establecerJson(jsonFoxtrot)
                     .ejecutar();
             };
         agregarEstilos();

@@ -62,7 +62,7 @@ function prepararVariables() {
 function crearVista() {
     global $nombreApl,$nombreVista,$plantilla,$aplicacion,$rutaHtml,$rutaCss,$rutaJsonApl,$modo,$cliente,$rutaVista;
 
-    if(!is_dir($rutaVista)) mkdir($rutaVista,0755,true);
+    if(!is_dir(dirname($rutaVista))) mkdir(dirname($rutaVista),0755,true);
     
     //Crear CSS
     file_put_contents($rutaCss,''); 

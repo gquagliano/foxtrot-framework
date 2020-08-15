@@ -813,7 +813,6 @@ var editor=new function() {
      */
     this.pegar=function(ev) {
         if(!this.componentesSeleccionados.length) return this;
-        ev.preventDefault();
 
         var datos=(ev.clipboardData||window.clipboardData).getData("text");
         
@@ -821,9 +820,11 @@ var editor=new function() {
         try {
             datos=JSON.parse(datos);
         } catch {
-            return;
+            return this;
         }
         if(!datos.hasOwnProperty("editor-foxtrot-7")) return;
+        
+        ev.preventDefault();
 
         var fn=function(elem) {
             var nuevoSelector={},

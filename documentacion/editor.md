@@ -20,15 +20,12 @@ El editor también permite configurar visualmente estructuras de control (bucles
 El el futuro, debe también ofrecer la posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
 
 El editor se acerca a su versión final. En líneas generales, falta (entre otros detalles y TODOs):
-- Cortar, copiar, pegar, deshacer, rehacer.
-- Al arrastrar sobre un componente, deben aparecer las áreas a su alrededor para poder soltar arriba/a la izquierda o abajo/a la derecha del mismo.
-- Selección múltiple.
 - Barra de formatos (negrita, cursiva, etc.) al editar textos.
 - Determinar si un elemento puede ser hijo o no de otro al arrastrar y soltar (actualmente cualquier componente puede soltarse dentro de cualquier componente).
 
 La siguiente etapa consistirá en:
-- Definición de propiedades comunes a todos los componentes.
-- Desarrollo de componentes concretos (ya están planteados los componentes básicos).
+- Definición de nuevas propiedades comunes a todos los componentes.
+- Completar el desarrollo de componentes concretos (ya están planteados los componentes básicos).
 - Integración con un gestor de aplicaciones vistas, controladores, base de datos y configuración; finalización de los métodos de guardado/apertura (previsualización posiblemente se remueva, abrir y guardar, si se realiza el gestor externo, también).
 
 ### Acceso al editor
@@ -70,13 +67,15 @@ En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación
 
 ### Consejos útiles
 
-- Al arrastrar un componente sobre otro, tanto si se trata de uno nuevo o se está moviendo uno existente, esperando 3 segundos aparecerán áreas alrededor del componente para poder soltarlo antes/arriba o después/debajo del componente de destino.
+- Al arrastrar un componente sobre otro, tanto si se trata de uno nuevo o se está moviendo uno existente, esperando 1 segundo aparecerán áreas alrededor del componente para poder soltarlo antes/arriba o después/debajo del componente de destino.
 
 - Para seleccionar un componente sobre el cual no se puede hacer click, haciendo click secundario sobre uno de sus hijos se desplegará un menú contextual con opciones para seleccionar cualquier componente en su ascendencia.
 
 - Pueden seleccionarse múltiples componetes manteniendo presionada la tecla Shift.
 
 - Cuando se seleccionen múltiples componentes, la barra de propiedades mostrará las propiedades combinadas de *todos* ellos, pero no mostrará ningún valor. Cualquier modificación en las propiedades, será aplicada por igual a todos los componentes seleccionados.
+
+- Para copiar o cortar los componentes seleccionados pueden utilizarse los comandos de la barra de herramientas o presionar Ctrl+C / Ctrl+V. Asimismo, para pegar los componentes copiados, luego de seleccionar el destino o el cuerpo de la vista, se debe hacer click en el comando correspondiente o presionar Ctrl+V. *Es posible copiar entre distintas ventanas*.
 
 ## Más información
 

@@ -41,9 +41,9 @@ Desarrollado en Argentina, con su API en español.
 En líneas generales,
 
 - Implementar más componentes.
-- Edición de metadatos de las vistas.
+- ~~Edición de metadatos de las vistas~~.
 - Desarrollar la navegación entre vistas dentro de una sola página (ideal para aplicaciones móviles).
-- Completar funcionalidad útil del editor, como copiar, cortar, pegar, deshacer, rehacer y la barra de formato de texto.
+- Completar funcionalidad útil del editor, como ~~copiar, cortar, pegar,~~ deshacer, rehacer y la barra de formato de texto.
 - Completar la documentación; revisar y completar JSDOC y PHPDOC.
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
 

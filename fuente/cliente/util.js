@@ -90,6 +90,14 @@ var util={
             }
         }
         return objeto;
+    },
+
+    /**
+     * Genera y devuelve una cadena de caracteres al azar.
+     * @returns {string}
+     */
+    cadenaAzar:function() {
+        return Math.random().toString(36).replace(/[^a-z]+/g,"");
     }
 };
 

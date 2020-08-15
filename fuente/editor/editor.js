@@ -20,7 +20,7 @@ var editor=new function() {
     var self=this,
         iconosComponentes={},
         eventosPausados=false,
-        bordesVisibles=false,
+        bordesVisibles=true,
         invisiblesVisibles=true,
         tamanoActual="g";
 
@@ -735,24 +735,6 @@ var editor=new function() {
     ////Cargar/guardar
 
     /**
-     * Remueve todas las clases y propiedades del modo de edición del código html dado.
-     */
-    this.limpiarHtml=function(html) {
-        /*var temp=document.crear("<div>");
-        temp.establecerHtml(html);
-        temp.querySelectorAll("*")  
-            .removerClase("seleccionado")
-            .removerClase("hijo-seleccionado")
-            .removerClase(/^foxtrot-arrastrable-.+/)
-            .propiedad("contentEditable",null)
-            .propiedad("draggable",null);
-        temp.querySelectorAll(".foxtrot-etiqueta-componente").remover();
-        return temp.innerHTML;*/
-
-        //TODO Como ahora recibimos el código completo, incluyendo <html>, etc., este método ya no sirve, se debe limpiar de otra manera
-    };
-
-    /**
      * Guarda la vista actual (actualmente en modo de pruebas, guarda a /salida/salida.html).
      */
     this.guardar=function(cbk) {
@@ -765,6 +747,9 @@ var editor=new function() {
         
         document.body.agregarClase("trabajando");
 
+        //Desactivar el editor para que al obtener el HTML no tenga los elementos y las propiedades de la estructura del editor
+        this.desactivar();
+
         new ajax({
             url:"operaciones/guardar.php",
             parametros:{
@@ -773,7 +758,7 @@ var editor=new function() {
                 vista:vista,
                 modo:modo,
                 cliente:cliente,
-                html:this.limpiarHtml(ui.obtenerHtml()),
+                html:ui.obtenerHtml(),
                 css:ui.obtenerCss(),
                 json:ui.obtenerJson()
             },
@@ -783,7 +768,9 @@ var editor=new function() {
                 } else {
                     if(cbk) cbk.call(self,resp);
                 }
-                document.body.removerClase("trabajando");
+
+                //Volver a activar el editor
+                self.activar();
             }
         });
 
@@ -845,11 +832,13 @@ var editor=new function() {
 
     ////Gestión del editor
 
-    this.alternarBordes=function() {
+    this.alternarBordes=function(valor) {
+        if(typeof valor==="undefined") valor=null;
+
         bordesVisibles=!bordesVisibles;
         var b=ui.obtenerDocumento().body,
             btn=document.querySelector("#foxtrot-btn-alternar-bordes");
-        if(bordesVisibles) {
+        if(valor===true||bordesVisibles) {
             b.agregarClase("foxtrot-bordes");
             btn.agregarClase("activo");
         } else {
@@ -859,16 +848,18 @@ var editor=new function() {
         return this;
     };
 
-    this.alternarInvisibles=function() {
+    this.alternarInvisibles=function(valor) {
+        if(typeof valor==="undefined") valor=null;
+
         invisiblesVisibles=!invisiblesVisibles;
         var b=ui.obtenerDocumento().body,
             btn=document.querySelector("#foxtrot-btn-alternar-invisibles");
-        if(invisiblesVisibles) {
-            b.agregarClase("foxtrot-mostrar-invisibles");
-            btn.removerClase("activo");
-        } else {
+        if(valor===true||!invisiblesVisibles) {
             b.removerClase("foxtrot-mostrar-invisibles");
             btn.agregarClase("activo");
+        } else {
+            b.agregarClase("foxtrot-mostrar-invisibles");
+            btn.removerClase("activo");
         }
         return this;
     };
@@ -883,6 +874,12 @@ var editor=new function() {
      * Activa el editor y construye su interfaz (fuera del marco).
      */
     this.activar=function() {
+        if(ui.enModoEdicion()) {
+            this.ejecutar();
+            //Cuando se está reactivando (segunda vez que se llama a activar()), no es necesario volver a construir toda la interfaz
+            return this;
+        }
+
         ui.establecerModoEdicion();
 
         contruirBarrasHerramientas();
@@ -892,14 +889,57 @@ var editor=new function() {
     };
 
     /**
+     * Desactiva el editor (solo afecta el marco).
+     */
+    this.desactivar=function() {
+        var doc=ui.obtenerDocumento(),
+            elems=doc.querySelectorAll("*");
+
+        //Desactivar arrastrables
+        elems.forEach(function(elem) {
+            elem.removerArrastre()
+                .removerDestino();
+        });
+
+        //Remover clases y otras propiedades
+        this.limpiarSeleccion();
+        elems.removerClase("hijo-seleccionado")
+            .removerClase("editando-texto")
+            .propiedad("contentEditable",null);
+        doc.body.removerClase("foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles");
+
+        //Remover auxiliares
+        doc.querySelectorAll(".foxtrot-etiqueta-componente").remover();
+        
+        //Remover hoja de estilos del editor
+        for(var i=0;i<doc.styleSheets.length;i++) {
+            var hoja=doc.styleSheets[i];
+            if(/\/editor\/editor\.css$/.test(hoja.href)) {
+                hoja.ownerNode.remover();
+            }
+        }
+
+        //Remover atributos y propiedades vacias
+        doc.querySelectorAll("[class='']").removerAtributo("class");
+
+        return this;
+    };
+
+    /**
      * Ejecuta el editor una vez que la UI haya cargado la página a editar.
      */
     this.ejecutar=function() {
-        ui.obtenerDocumento().head.anexar("<link rel='stylesheet' href='editor/editor.css'>");
+        var doc=ui.obtenerDocumento();
+        
+        doc.body.agregarClase("foxtrot-modo-edicion");
+        doc.head.anexar("<link rel='stylesheet' href='editor/editor.css'>");
+
         prepararComponentesInsertados(this.vistaArchivoAbierto);
+
         establecerEventos();
 
-        this.alternarBordes();
+        if(bordesVisibles) doc.body.agregarClase("foxtrot-bordes");
+        if(invisiblesVisibles) doc.body.removerClase("foxtrot-mostrar-invisibles");
 
         this.listo=true;
 

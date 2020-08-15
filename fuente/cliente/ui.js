@@ -491,6 +491,7 @@ var ui=new function() {
 
     /**
      * Genera y devuelve un JSON con las relaciones entre el DOM y los componentes.
+     * @reteurns {string}
      */
     this.obtenerJson=function() {
         var resultado={
@@ -500,15 +501,25 @@ var ui=new function() {
         };
 
         instanciasComponentes.forEach(function(obj) {
-            resultado.componentes.push({
-                id:obj.id,
-                nombre:obj.nombre,
-                componente:obj.componente,
-                propiedades:obj.obtenerPropiedades()
-            });
+            resultado.componentes.push(ui.obtenerJsonComponente(obj));
         });
 
         return JSON.stringify(resultado);
+    };
+
+    /**
+     * Genera y devuelve el objeto correspondiente a un componente en particular para ser almacenado en el JSON.
+     * @param {*} obj - Instancia o cualquier valor que identifique al componente compatible con obtenerInstanciaComponente().
+     * @returns {Object}
+     */
+    this.obtenerJsonComponente=function(obj) {
+        var comp=this.obtenerInstanciaComponente(obj);
+        return {
+            id:comp.id,
+            nombre:comp.nombre,
+            componente:comp.componente,
+            propiedades:comp.obtenerPropiedades()
+        };
     };
 
     /**

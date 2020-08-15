@@ -52,6 +52,8 @@
         };
 
         if(omitirAnimacion) {
+            ui.detenerAnimacion(elem);
+            elem.agregarClase("oculto");
             fn();
         } else {
             ui.animarDesaparecer(elem,fn);
@@ -325,13 +327,12 @@
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
 
         if(typeof menu==="undefined"||!menu) {
-            menuAbierto.forEach(function(m) {
+            //Se debe crear una copia de menuAbierto para trabajar ya que ui.cerrarMenu() lo alterará
+            menuAbierto.clonar().forEach(function(m) {
                 ui.cerrarMenu(m,omitirAnimacion);
             });
             return ui;
-        }        
-        
-        if(!menu) return ui;
+        }
 
         var elem=util.esElemento(menu)?menu:menu.elem; //Si no es un elemento del DOM, se asume un objeto menú
         cerrarElementoMenu(elem,omitirAnimacion,menu.eliminar);

@@ -85,20 +85,20 @@ var componenteItemMenu=function() {
                 var elem=submenu.obtenerElemento();
 
                 //Si es el primer nivel de una barra de navegación, cerrar los demás menús que puedan estar abiertos
-                if(esPrimerNivel()) ui.cerrarMenu();
+                if(esPrimerNivel()) ui.cerrarMenu(null,true);
 
                 ui.abrirMenu(elem);
                 t.submenuAbierto=true;
 
                 //Agregar una clase a la ascendencia
-                elem.padres({etiqueta:"li"}).forEach(function(padre) {
-                    padre.agregarClase("submenu-abierto");
-                });
+                var padre=elem.padre({etiqueta:"li"});
+                if(padre) padre.agregarClase("submenu-abierto");
 
                 //Asignar evento para remover los estilos cuando se cierre
                 submenu.obtenerElemento()
                     .removerEvento("menu-cerrado")
                     .evento("menu-cerrado",function(ev) {
+                        ev.stopPropagation();
                         cerrado(submenu);
                     });
             },

@@ -26,7 +26,7 @@
             .agregarClase("aparece");  
 
         if(typeof retorno!=="undefined") {
-            elem._timeoutAnimMenu=setTimeout(function() {
+            elem._temporizadorAnimacion=setTimeout(function() {
                 retorno();
             },duracionAnimacion);
         }
@@ -45,7 +45,7 @@
 
         elem.agregarClase("desaparece");
 
-        elem._timeoutAnimMenu=setTimeout(function() {
+        elem._temporizadorAnimacion=setTimeout(function() {
             if(typeof retorno!=="undefined") retorno();
 
             elem.removerClase("desaparece")
@@ -70,7 +70,7 @@
      * @returns {ui}
      */
     ui.detenerAnimacion=function(elem) {
-        if(elem.hasOwnProperty("_timeoutAnimMenu")) clearTimeout(elem._timeoutAnimMenu);
+        if(elem.hasOwnProperty("_temporizadorAnimacion")) clearTimeout(elem._temporizadorAnimacion);
         elem.removerClase("aparece desaparece");
         return ui;
     };

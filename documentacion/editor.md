@@ -30,17 +30,17 @@ La siguiente etapa consistirá en:
 
 ### Acceso al editor
 
-****Importante:**** Es necesario deshabilitar todas las extensiones del navegador que puedan alterar el cuerpo de la página, como bloqueadores de publicidad y *trackers*.
+**Importante:** Es necesario deshabilitar todas las extensiones del navegador que puedan alterar el cuerpo de la página, como bloqueadores de publicidad y *trackers*.
 
-***Nota:*** El editor solo está probado en la última versión de Opera.
-
-`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=[aplicacion]&vista=[nombre]
+`http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=[aplicacion]&vista=[nombre]`
 
 Ejemplo: http://localhost/experimental-foxtrot-framework/desarrollo/editor?apl=ejemplo&vista=inicio
 
 `apl` Nombre de la aplicación.
 
 `vista` Ruta sin extensión relativa al directorio de vistas (`/desarrollo/aplicaciones/apl/cliente/vistas/`).
+
+*Nota:* El editor solo está probado en la última versión de Opera.
 
 #### Crear una nueva vista
 

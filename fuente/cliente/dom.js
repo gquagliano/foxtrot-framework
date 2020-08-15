@@ -592,7 +592,8 @@
      * Elimina el elemento.
      */
     Node.prototype.remover=function() {
-        this.remove();
+        this.parentNode.removeChild(this);
+        return this;
     };
 
     /**

@@ -14,7 +14,7 @@
   <body>
     <div id="foxtrot-cuerpo"></div>
     <script src="cliente/foxtrot.js"></script>
-    <script src="aplicacion/cliente/vistas/{editor_nombreVista}.js" controlador></script>
+    <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js" controlador></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
     var jsonFoxtrot='{}';

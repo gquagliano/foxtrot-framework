@@ -17,6 +17,29 @@ var servidor=new function() {
     this.funcionesError=[];
     this.ajax=[];
     this.url="";
+    this.predeterminados={};
+
+    /**
+     * Establece las opciones predeterminadas.
+     * @param {*} opciones - Opciones. Ver documentación de invocarMetodo().
+     * @returns {servidor}
+     */
+    this.establecerPredeterminados=function(opciones) {
+        this.predeterminados=Object.assign({
+            metodo:null,
+            controlador:null,
+            modelo:null, //Por el momento, no se usa
+            clase:null, //Por el momento, no se usa
+            retorno:null,
+            error:null,
+            listo:null,
+            parametros:null,
+            abortar:true,
+            foxtrot:null,
+            precarga:true
+        },opciones);
+        return this;
+    };
 
     this.establecerUrl=function(url) {
         this.url=url;
@@ -42,28 +65,19 @@ var servidor=new function() {
      * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno).
      * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
      * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
-     * @param {Object} [opciones.mostrarPrecarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
+     * @param {Object} [opciones.precarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
      * @returns {servidor}
      */
     this.invocarMetodo=function(opciones) {
         //Valores predeterminados
-        opciones=Object.assign({
-            metodo:null,
-            controlador:ui.controlador().obtenerNombre(), //Por defecto, el controlador principal
-            modelo:null, //Por el momento, no se usa
-            clase:null, //Por el momento, no se usa
-            retorno:null,
-            error:null,
-            listo:null,
-            parametros:null,
-            abortar:true,
-            foxtrot:null,
-            mostrarPrecarga:true
-        },opciones);
+        opciones=Object.assign(this.predeterminados,opciones);
+
+        //Por defecto, el controlador principal
+        if(!opciones.controlador) opciones.controlador=ui.controlador().obtenerNombre();
 
         if(opciones.abortar) this.abortarTodo();
 
-        if(opciones.mostrarPrecarga) ui.mostrarPrecarga(opciones.mostrarPrecarga);
+        if(opciones.precarga) ui.mostrarPrecarga(opciones.precarga);
 
         var param={};
         if(opciones.foxtrot) param.__f=opciones.foxtrot;
@@ -77,7 +91,7 @@ var servidor=new function() {
             parametros:param,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
-                ui.ocultarPrecarga(opciones.mostrarPrecarga);
+                ui.ocultarPrecarga(opciones.precarga);
             }
         }));
 
@@ -160,6 +174,8 @@ var servidor=new function() {
             }
         });
     };
+
+    this.establecerPredeterminados({});
 }();
 
 window["servidor"]=servidor;

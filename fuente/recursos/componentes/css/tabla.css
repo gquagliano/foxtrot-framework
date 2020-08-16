@@ -5,3 +5,9 @@
  * @version 1.0
  */
  
+.ocultar-contenidos tr {
+    display: none !important;
+}
+.ocultar-contenidos tr.autogenerado {
+    display: table-row !important;
+}

@@ -29,10 +29,30 @@ var componenteFilaTabla=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        //No podemos usar document.crear() porque falla al tratarde de un tag que debe estar dentro de <table>
-        this.elemento=document.createElement("tr"); 
+        //Nota: Debe usarse el nombre del tag y no <tr>
+        this.elemento=document.crear("tr"); 
         this.crearComponente();
         return this;
+    };
+
+    /**
+     * Genera y devuelve la fila <tr> con sus celdas.
+     * @param {Object} obj - Objeto a representar (datos de la fila).
+     * @param {number} indice - Indice del origen de datos (índice del elemento).
+     * @returns {Node}
+     */
+    this.generarTr=function(obj,indice) {
+        var elem=document.crear("tr"),
+            hijosTd=this.elemento.querySelectorAll("td.componente");
+            
+        hijosTd.forEach(function(hijoTd) {
+            var componente=ui.obtenerInstanciaComponente(hijoTd),
+                elemTd=componente.generarTd(obj,indice);
+            
+            elem.anexar(elemTd);
+        });    
+
+        return elem;
     };
 };
 

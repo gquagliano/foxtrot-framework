@@ -14,6 +14,40 @@ var componenteColumnaTabla=function() {
     this.componente="tabla-columna";
 
     /**
+     * Propiedades de Columna de tabla.
+     */
+    this.propiedadesConcretas={
+        "Columna de tabla":{
+            encabezado:{
+                etiqueta:"Encabezado",
+                adaptativa:false
+            },
+            encabezadoActivo:{
+                etiqueta:"Encabezado activo",
+                tipo:"bool",
+                adaptativa:false
+            },
+            encabezadoOrden:{
+                etiqueta:"Ordenamiento",
+                ayuda:"Muestra el ícono de ordanamiento en el encabezado.",
+                tipo:"opciones",
+                opciones:{
+                    no:"Sin ícono",
+                    ascendente:"Ascendente",
+                    descendente:"Descendente"
+                },
+                adaptativa:false
+            }
+        },
+        "Eventos":{
+            clickEncabezado:{
+                etiqueta:"Click en encabezado",
+                adaptativa:false
+            }
+        }
+    };
+
+    /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
@@ -29,10 +63,37 @@ var componenteColumnaTabla=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        //No podemos usar document.crear() porque falla al tratarde de un tag que debe estar dentro de <table>
-        this.elemento=document.createElement("td"); 
+        //Nota: Debe usarse el nombre del tag y no <td>
+        this.elemento=document.crear("td"); 
         this.crearComponente();
         return this;
+    };
+
+    /**
+     * Genera y devuelve la celda <th> para el encabezado de la tabla.
+     * @returns {Node}
+     */
+    this.generarTh=function() {
+        var texto=this.propiedad(null,"encabezado"),
+            elem=document.crear("th");            
+
+        elem.establecerHtml(texto);
+
+        return elem;
+    };
+
+    /**
+     * Genera y devuelve la celda <td> para el cuerpo de la tabla.
+     * @param {Object} obj - Objeto a representar (datos de la fila).
+     * @param {number} indice - Indice del origen de datos (índice del elemento).
+     * @returns {Node}
+     */
+    this.generarTd=function(obj,indice) {
+        var elem=document.crear("td");  
+        
+        elem.establecerHtml("");
+
+        return elem;
     };
 };
 

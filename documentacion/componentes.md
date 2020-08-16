@@ -39,6 +39,12 @@ Doble click abrirá la ventana de edición de código.
 
 #### ![](img/iconos/columna.png) Columna de tabla
 
+Una columna de tabla de datos (`<td>`). Debe insertarse dentro del componente Fila de tabla, y puede contener cualquier otro componente.
+
+Cada fila, junto con sus columnas (o celdas), se duplicará por cada uno de los elementos del origen de datos de la tabla. Las expresiones tendrán predefinidas las propiedades del elemento que se esté representando.
+
+Cada celda define también el encabezado de la columna, el cual será generado automáticamente cuando se utilice un origen de datos.
+
 #### ![](img/iconos/condicional.png) Condicional (estructura de control)
 
 #### ![](img/iconos/contenedor.png) Contenedor
@@ -64,6 +70,10 @@ Este componente permite insertar valores del origen de datos. Presenta dos posib
 #### ![](img/iconos/fila.png) Fila 
 
 #### ![](img/iconos/fila.png) Fila de tabla
+
+Representación lógica de una fila (`<tr>`) de una tabla de datos (componente Tabla). Recibe como hijos componentes Columna de tabla.
+
+*Nota:* Los encabezados se definen en las columnas. No es necesario agregar una fila para los encabezados cuando se vaya a utilizar un origen de datos.
 
 #### ![](img/iconos/form.png) Formulario
 
@@ -102,6 +112,10 @@ Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder vis
 #### ![](img/iconos/pestanas.png) Pestañas (contenedor de pestañas)
 
 #### ![](img/iconos/tabla.png) Tabla
+
+Una tabla de datos. Recibe como hijos componentes Fila de tabla. Cuando se asigne un origen de datos, cada una de las filas se duplicará por cada elemento del mismo.
+
+*Nota:* Los encabezados se definen en las columnas.
 
 #### ![](img/iconos/texto.png) Texto
 

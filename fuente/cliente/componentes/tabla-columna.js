@@ -18,6 +18,9 @@ var componenteColumnaTabla=function() {
      */
     this.inicializar=function() {
         if(this.inicializado) return this; 
+
+        this.contenedor=this.elemento;
+
         this.inicializarComponente();
         return this;
     };
@@ -26,7 +29,8 @@ var componenteColumnaTabla=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        //No podemos usar document.crear() porque falla al tratarde de un tag que debe estar dentro de <table>
+        this.elemento=document.createElement("td"); 
         this.crearComponente();
         return this;
     };

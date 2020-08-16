@@ -17,7 +17,10 @@ var componenteTabla=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.inicializado) return this;
+
+        this.contenedor=this.elemento.querySelector("table");
+
         this.inicializarComponente();
         return this;
     };
@@ -26,7 +29,7 @@ var componenteTabla=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-stripped table-hover'></table></div></div>"); 
         this.crearComponente();
         return this;
     };
@@ -36,5 +39,6 @@ ui.registrarComponente("tabla",componenteTabla,configComponente.clonar({
     descripcion:"Tabla",
     etiqueta:"Tabla",
     grupo:"Tablas de datos",
-    icono:"tabla.png"
+    icono:"tabla.png",
+    aceptaHijos:["tabla-fila"]
 }));

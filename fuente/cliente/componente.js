@@ -285,15 +285,17 @@ var componente=new function() {
 
     /**
      * Genera y asigna un selector automático para el elemento.
-     * @returns {Componente}
+     * @param {boolean} [asignar=true] - Determina si debe asignarse el nuevo selector o no.
+     * @returns {string}
      */
-    this.generarSelector=function() {
-        //Formato: .vista-tipo-número o .vista-tipo-nombre
-        var clase="."+this.nombreVista.replace(/[^a-z0-9-]/,"-")+"-"+this.componente+"-";
-        if(this.nombre) clase+=this.nombre;
-        else clase+=ui.generarId();
-        this.establecerSelector(clase);
-        return this;
+    this.generarSelector=function(asignar) {
+        if(typeof asignar==="undefined") asignar=true;
+
+        var clase=ui.generarSelector(this.componente,this.nombre);
+        
+        if(asignar) this.establecerSelector(clase);
+
+        return clase;
     };
 
     /**

@@ -354,6 +354,41 @@ var ui=new function() {
         return id;
     };
 
+    /**
+     * Genera y devuelve un selector CSS único.
+     * @param {string} [tipo] - Tipo de componente.
+     * @param {string} [nombre] - Nombre del componente.
+     * @returns {string} 
+     */
+    this.generarSelector=function(tipo,nombre) {
+        if(typeof tipo==="undefined") tipo=null;
+        if(typeof nombre==="undefined") nombre=null;
+
+        //Formato: .vista-tipo-número o .vista-tipo-nombre
+
+        var clase="."+nombreVistaPrincipal.replace(/[^a-z0-9-]/,"-")+"-";
+
+        if(tipo) clase+=tipo+"-";
+
+        if(nombre) {
+            clase+=nombre;
+
+            //Verificar que no exista
+            var i=0;
+            while(doc.querySelector(clase+(i?"-"+i:""))) i++;
+            if(i) clase+="-"+i;
+        } else {
+            var i=++id;
+
+            //Verificar que no exista
+            while(doc.querySelector(clase+i)) i++;
+            
+            clase+=i;
+        }
+
+        return clase;
+    };
+
     this.registrarComponente=function(nombre,funcion,configuracion) {
         configuracion.nombre=nombre;
         componentesRegistrados[nombre]={

@@ -96,6 +96,14 @@ class modelo {
     }
 
     /**
+     * Devuelve el nombre de las entidades.
+     * @return string
+     */
+    public function singular() {
+        return substr($this->tipoEntidad,strrpos($this->tipoEntidad,'\\')+1);
+    }
+
+    /**
      * Crea y devuelve una instancia del modelo especificado.
      */
     public static function fabricarModelo($modelo,$bd=null) {       
@@ -121,7 +129,7 @@ class modelo {
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
 
-            if(preg_match_all('/@(tipo|modelo|relacion|columna|indice|predeterminado)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all('/@([a-z]+)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
 
                 foreach($coincidencias[1] as $i=>$etiqueta) {

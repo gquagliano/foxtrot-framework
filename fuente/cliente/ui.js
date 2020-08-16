@@ -563,16 +563,24 @@ var ui=new function() {
     this.obtenerCss=function() {
         var css="";
         this.obtenerEstilos().forEach(function(regla) {
-            css+=regla.texto;
+            //Omitir reglas vacías
+            var totalEstilos=0;
+
+            if(regla.hasOwnProperty("reglas")) {
+                regla.reglas.forEach(function(subRegla) {
+                    totalEstilos+=subRegla.estilos.length;
+                });
+            } else {
+                totalEstilos=regla.estilos.length;
+            }
+
+            if(totalEstilos) css+=regla.texto;
         });
         //Comprimir
         css=css.replace(["\r","\n"],"")
             .replace(/([\):;\}\{])[\s]+/g,"$1")
             .replace(/[\s]+([\{\(#])/g,"$1")
             .replace(";}","}");
-        //Remover reglas vacías
-        var regexp=/(^|\})[a-z0-9_\.#\[\]\^:\(\)$~-\S\r\n]+\{\}/ig;
-        while(regexp.test(css)) css=css.replace(regexp,"$1");
         return css;        
     };
 

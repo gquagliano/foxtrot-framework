@@ -7,15 +7,24 @@
 
 /**
  * Gestor de acceso a los datos públicos de la sesión en el servidor.
+ * @typedef {sesion}
  */
 var sesion=new function() {
-    this.obtenerUsuario=function(funcion) {
-        servidor.invocarMetodo({
-            foxtrot:"sesion",
-            retorno:function(resultado) {
-                funcion(resultado);
-            }
-        });
+    /**
+     * Obtiene los datos públicos de usuario desde la sesión del servidor.
+     * @param {function} funcion - Retorno. Recibirá como parámetro el valor público establecido en el servidor.
+     * @param {Object} opciones - Parámetros de la solicitud. Ver documentación de servidor.invocarMetodo().
+     * @returns {sesion}
+     */
+    this.obtenerUsuario=function(funcion,opciones) {
+        if(typeof opciones==="undefined") opciones={};
+
+        opciones.foxtrot="sesion";
+        opciones.retorno=function(resultado) {
+            funcion(resultado);
+        };
+
+        servidor.invocarMetodo(opciones);
         return this;
     };
 }();

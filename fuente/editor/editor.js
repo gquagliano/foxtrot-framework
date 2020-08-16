@@ -476,7 +476,8 @@ var editor=new function() {
     ////Gestión de componentes
 
     this.eliminarComponentes=function(lista) {
-        lista.forEach(function(elem) {
+        //Se debe trabajar con una copia, ya que eliminarComponente() modificará el listado
+        lista.clonar().forEach(function(elem) {
             self.eliminarComponente(elem.obtenerId());
         });
         return this;

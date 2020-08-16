@@ -38,6 +38,7 @@ var componente=new function() {
     this.inicializado=false;
     this.nombreVista=null;
     this.datos=null;
+    this.oculto=false;
 
     /**
      * Almacen de valores de parámetros.
@@ -247,6 +248,8 @@ var componente=new function() {
 
     /**
      * Asigna el nombre de la vista a la cual pertenece el componente.
+     * @param {string} nombre - Nombre de la vista.
+     * @reeturns {Componente}
      */
     this.establecerNombreVista=function(nombre) {
         this.nombreVista=nombre;
@@ -435,6 +438,66 @@ var componente=new function() {
     };
 
     /**
+     * Genera y devuelve un nuevo componente con las mismas propiedades y una copia del elemento del DOM.
+     * @param {Componente} padre - Padre del nuevo componente. Puede ser null si se especificará elemento.
+     * @param {boolean} [oculto=false] - Determina si el componente debe ser visible o permanecer anónimo aunque tenga un nombre asignado (a nivel API, no interfaz).
+     * @param {(Node|Element)} [elemento] - Elemento del DOM. Si se especifica, en lugar de duplicar el actual, se intentará recuperar el mismo.
+     * @returns {Componente}
+     */
+    this.clonar=function(padre,oculto,elemento) {
+        if(typeof oculto==="undefined") oculto=false;
+        if(typeof elemento==="undefined") elemento=null;
+
+        var nuevoId=ui.generarId();
+
+        if(!elemento) {
+            //Duplicar el elemento del DOM
+            var elemento=this.elemento.clonar();
+            padre.obtenerContenedor().anexar(elemento);            
+
+            //Al clonar el elemento del DOM, los elementos de la descendencia también fueron clonados, por lo tanto debemos duplicar las instancias y asignar los elementos clonados
+            var fn=function(comp) {
+                comp.obtenerHijos().forEach(function(hijo) {
+                    //Buscar el elemento entre los elementos duplicados
+                    var elem=elemento.querySelector("[data-fxid='"+hijo.obtenerId()+"']");
+                    hijo.clonar(null,oculto,elem);
+                    //Avanzar recursivamente
+                    fn(hijo);
+                });
+            };
+            fn(this);
+        }
+
+        //Renombrar el elemento (se asume que está duplicado y debe asignarse a la nueva instancia)
+        elemento.dato("fxid",nuevoId)
+            .removerAtributo("id");
+
+        var nombre=this.obtenerNombre();
+
+        if(nombre&&!oculto) {
+            //Si es visible, vamos a buscar un nombre que esté libre para que no sobreescriba la referencia nuestra en componentes
+            var i=1;
+            while(componentes.hasOwnProperty(nombre+"-"+i)) i++;
+            nombre+="-"+i;
+        }
+            
+        var propiedades={
+            id:nuevoId,
+            oculto:oculto,
+            nombre:nombre,
+            selector:this.obtenerSelector(),
+            componente:this.obtenerTipo(),
+            propiedades:this.obtenerPropiedades()
+        };
+
+        var comp=ui.crearComponente(propiedades);
+
+        comp.restaurar();
+
+        return comp;
+    };
+
+    /**
      * Inicializa la instancia (método para sobreescribir).
      */    
     this.inicializar=function() {
@@ -559,8 +622,13 @@ var componente=new function() {
 
     /**
      * Establece el nombre de la instancia (método para sobreescribir).
+     * @param {string} nombre - Nuevo nombre.
+     * @param {boolean} [oculto=false] - Si es true, permanecerá oculto, es decir que no se publicará en componentes.
+     * @returns {Componente}
      */
-    this.establecerNombre=function(nombre) {
+    this.establecerNombre=function(nombre,oculto) {
+        if(typeof oculto==="undefined") oculto=false;
+        this.oculto=oculto;
         this.establecerNombreComponente(nombre);
         return this;
     };
@@ -572,12 +640,12 @@ var componente=new function() {
         if(typeof nombre==="undefined") nombre=null;
 
         //Eliminar de componentes si cambia el nombre
-        if(this.nombre!=nombre) delete componentes[this.nombre];
+        if((this.nombre!=nombre||this.oculto)&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
 
         this.nombre=nombre;
 
         //Registrar en window.componentes para acceso rápido
-        if(nombre) componentes[nombre]=this;
+        if(nombre&&!this.oculto) componentes[nombre]=this;
 
         return this;
     };

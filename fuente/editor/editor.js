@@ -757,22 +757,25 @@ var editor=new function() {
             datos.componentes.push(ui.obtenerJsonComponente(comp));
             
             //Agregar estilos
-            ui.obtenerEstilos(comp.obtenerSelector()).forEach(function(estilo) {
-                if(estilo.hasOwnProperty("tamano")) {
-                    estilo.reglas.forEach(function(regla) {
+            var sel=comp.obtenerSelector();
+            if(sel) {
+                ui.obtenerEstilos(sel).forEach(function(estilo) {
+                    if(estilo.hasOwnProperty("tamano")) {
+                        estilo.reglas.forEach(function(regla) {
+                            datos.css.push({
+                                tamano:estilo.tamano,
+                                texto:regla.estilos.cssText,
+                                selector:regla.selector
+                            });                        
+                        });
+                    } else {
                         datos.css.push({
-                            tamano:estilo.tamano,
-                            texto:regla.estilos.cssText,
-                            selector:regla.selector
-                        });                        
-                    });
-                } else {
-                    datos.css.push({
-                        texto:estilo.estilos.cssText,
-                        selector:estilo.selector
-                    });
-                }
-            });
+                            texto:estilo.estilos.cssText,
+                            selector:estilo.selector
+                        });
+                    }
+                });
+            }
             
             comp.obtenerHijos().forEach(function(hijo) {
                 agregarComponente(hijo);
@@ -787,10 +790,9 @@ var editor=new function() {
             agregarComponente(comp);
 
             //Clonar los elementos y remover clases del editor
-            var div=document.crear("<div>")
-                .anexar(comp.obtenerElemento().clonar());
-            self.limpiarElemento(div);
-            datos.html+=div.innerHTML;
+            var clon=comp.obtenerElemento().clonar();
+            self.limpiarElemento(clon);
+            datos.html+=clon.outerHTML;
         });
         
         navigator.clipboard.writeText(JSON.stringify(datos));        
@@ -836,16 +838,16 @@ var editor=new function() {
                 nombreVista=ui.obtenerNombreVistaPrincipal();    
             nombreVista=nombreVista.replace(/[^a-z0-9]/g,"-");
 
-            //Elemento provisorio
-            var div=document.createElement("div")
-                .anexar(datos.html);
+            var tempElem=document.createElement("template");
+            tempElem.innerHTML=datos.html;
 
             //Para que no se superpongan los nombres nuevos con los viejos (puede pasar si la vista es la misma o tiene el mismo nombre), vamos a reemplazar todos
-            //los IDs por IDs provisorios
+            //los IDs por valores provisorios
             var prefijo=util.cadenaAzar()+"-";
-            div.querySelectorAll(".componente").forEach(function(elem) {
-                elem.dato("fxid",prefijo+elem.dato("fxid"))
-                    .atributo("id",prefijo+elem.atributo("id"));
+            tempElem.content.querySelectorAll(".componente").forEach(function(elem) {
+                elem.dato("fxid",prefijo+elem.dato("fxid"));
+                //El ID del elemento directamente se descarta
+                elem.removerAtributo("id");
             });
 
             //Preparar componentes
@@ -855,11 +857,15 @@ var editor=new function() {
                 obj.id=nombreVista+"-"+ui.generarId();
 
                 //Reemplazar en el HTML
-                var elem=div.querySelector("[data-fxid='"+prefijo+idAnterior+"']");
-                elem.dato("fxid",obj.id)
-                    .atributo("id","componente-"+obj.id);
+                var elem=tempElem.content.querySelector("[data-fxid='"+prefijo+idAnterior+"']");
+                elem.dato("fxid",obj.id);
 
-                nuevoSelector["#componente-"+idAnterior]="#componente-"+obj.id;
+                //Generar un nuevo selector
+                var nuevo=ui.generarSelector(obj.componente,obj.nombre);
+                if(obj.selector&&obj.selector.substring(0,1)==".") tempElem.content.querySelector(obj.selector).removerClase(obj.selector.substring(1)); //Si el selector era un ID, ya lo hemos removido
+                nuevoSelector[obj.selector]=nuevo;
+                obj.selector=nuevo;
+                elem.agregarClase(nuevo.substring(1));
     
                 //Modificar nombres repetidos
                 if(obj.nombre) {
@@ -870,7 +876,7 @@ var editor=new function() {
             });
             
             //Agregar HTML
-            elem.anexar(div.innerHTML);
+            elem.anexar(tempElem.content);
 
             //Crear componentes
             datos.componentes.forEach(function(obj) {
@@ -1067,27 +1073,35 @@ var editor=new function() {
 
     /**
      * Remueve del elemento y sus descendencias todos los elementos y atributos del editor.
-     * @param {*} elem 
+     * @param {*} elem - Elemento a limpiar.
+     * @returns {editor}
      */
     this.limpiarElemento=function(elem) {
-        var elems=elem.querySelectorAll("*");
-
-        //Desactivar arrastrables
-        elems.forEach(function(elem) {
+        var fn=function(elem) {
+            //Desactivar arrastrables
             elem.removerArrastre()
-                .removerDestino();
-        });
+                .removerDestino()
+            //Remover clases y otras propiedades
+                .removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
+            //Remover atributos y propiedades innecesarias
+                .removerAtributo("contentEditable")
+                .removerAtributo("draggable");
 
-        //Remover clases y otras propiedades
-        elems.removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable");
+            //Remover atributos y propiedades vacias
+            var c=elem.atributo("class");
+            if(!c||c.trim()=="") elem.removerAtributo("class");            
+        };
 
         //Remover auxiliares
         elem.querySelectorAll(".foxtrot-etiqueta-componente").remover();
 
-        //Remover atributos y propiedades vacias
-        elem.querySelectorAll("[class='']").removerAtributo("class");
-        elems.removerAtributo("contentEditable")
-            .removerAtributo("draggable");
+        //Ejecutar el resto de la limpieza sobre el elemento en sí y sobre su descendencia
+        if(elem!=ui.obtenerDocumento()&&elem!=document) fn(elem);
+        elem.querySelectorAll("*").forEach(function(elem) {
+            fn(elem);
+        });
+
+        return this;
     };
 
     /**

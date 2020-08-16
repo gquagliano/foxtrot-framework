@@ -70,7 +70,7 @@ var servidor=new function() {
      */
     this.invocarMetodo=function(opciones) {
         //Valores predeterminados
-        opciones=Object.assign(this.predeterminados,opciones);
+        opciones=Object.assign(this.predeterminados.clonar(),opciones);
 
         //Por defecto, el controlador principal
         if(!opciones.controlador) opciones.controlador=ui.controlador().obtenerNombre();

@@ -754,6 +754,15 @@
         return establecerEvento(this,nombre,fn,funcion,true);
     };
 
+    /**
+     * Remueve todos los manejadores de eventos asignados.
+     * @returns {EventTarget}
+     */
+    EventTarget.prototype.removerEventos=function() {
+        this.removerEvento();
+        return this;
+    };
+
     EventTarget.prototype.removerEvento=function(nombre,funcion) {
         //funcion puede ser un array para remover múltiples listeners a la vez
         if(util.esArray(funcion)) {
@@ -765,7 +774,7 @@
         }
 
         //nombre puede contener múltiples eventos separados por espacios
-        if(nombre.indexOf(" ")>0) {
+        if(typeof nombre==="string"&&nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
                 t.removerEvento(n,funcion);

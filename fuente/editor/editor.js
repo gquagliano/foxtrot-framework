@@ -374,9 +374,8 @@ var editor=new function() {
             ev.preventDefault();
             ev.stopPropagation();
 
-            var arbol=[];
-
-            if(!ev.shiftKey) self.limpiarSeleccion();
+            var arbol=[],
+                seleccionMultiple=ev.shiftKey;
 
             //Construir árbol de herencia
             var comp=ui.obtenerInstanciaComponente(this);
@@ -385,6 +384,7 @@ var editor=new function() {
                     etiqueta:comp.obtenerConfigComponente().etiqueta,
                     accion:function(comp) {
                         return function() {
+                            if(!seleccionMultiple) self.limpiarSeleccion();
                             self.establecerSeleccion(comp);
                         };
                     }(comp)

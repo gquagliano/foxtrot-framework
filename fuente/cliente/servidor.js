@@ -7,6 +7,11 @@
 
 /**
  * Gestor de comunicación cliente->servidor.
+ * @typedef {servidor}
+ */
+
+/**
+ * Gestor de comunicación cliente->servidor.
  */
 var servidor=new function() {
     this.funcionesError=[];
@@ -26,18 +31,31 @@ var servidor=new function() {
         return this;
     };
 
+    /**
+     * Invoca un método en un controlador de servidor.
+     * @param {Object} [opciones] - Parámetros de la solicitud.
+     * @param {Object} [opciones.metodo] - Nombre del método.
+     * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
+     * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
+     * @param {Object} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
+     * @param {Object} [opciones.error] - Función de error.
+     * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno).
+     * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
+     * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
+     * @param {Object} [opciones.mostrarPrecarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
+     * @returns {servidor}
+     */
     this.invocarMetodo=function(opciones) {
         //Valores predeterminados
         opciones=Object.assign({
             metodo:null,
             controlador:ui.controlador().obtenerNombre(), //Por defecto, el controlador principal
-            modelo:null,
-            clase:null,
+            modelo:null, //Por el momento, no se usa
+            clase:null, //Por el momento, no se usa
             retorno:null,
             error:null,
             listo:null,
             parametros:null,
-            silencio:false,
             abortar:true,
             foxtrot:null,
             mostrarPrecarga:true
@@ -45,7 +63,7 @@ var servidor=new function() {
 
         if(opciones.abortar) this.abortarTodo();
 
-        if(opciones.mostrarPrecarga) ui.mostrarPrecarga();
+        if(opciones.mostrarPrecarga) ui.mostrarPrecarga(opciones.mostrarPrecarga);
 
         var param={};
         if(opciones.foxtrot) param.__f=opciones.foxtrot;
@@ -59,9 +77,11 @@ var servidor=new function() {
             parametros:param,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
-                ui.ocultarPrecarga();
+                ui.ocultarPrecarga(opciones.mostrarPrecarga);
             }
         }));
+
+        return this;
     };
 
     this.evaluarRespuesta=function(resp,opciones) {

@@ -132,13 +132,13 @@ var componenteTabla=function() {
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad(null,"vacia"),
-            cantidadColumnas=this.contenedor.querySelectorAll("thead th").length,
+            cantidadColumnas=this.elemento.querySelectorAll("thead th").length,
             tr=document.crear("tr");
 
         tr.agregarClase("autogenerado fila-sin-datos")
             .establecerHtml("<td colspan='"+cantidadColumnas+"'>"+texto+"</td>");
 
-        this.contenedor.querySelector("tbody").anexar(tr);
+        this.contenedor.anexar(tr);
 
         return this;
     };

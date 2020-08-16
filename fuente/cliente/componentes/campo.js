@@ -197,6 +197,23 @@ var componenteCampo=function() {
         this.campo.focus();
         return this;
     };
+
+    /**
+     * Actualiza el componente.
+     * @returns {Componente}
+     */
+    this.actualizar=function() {
+        if(!this.datos) return this;
+
+        var propiedad=this.propiedad(null,"propiedad");
+        if(!propiedad) return this;
+
+        //Cuando se asigne un origen de datos y esté establecida la propiedad `propiedad`, asignamos el valor desde los datos
+        var valor=this.datos[propiedad];
+        if(typeof valor!=="undefined") this.valor(valor);
+
+        return this;
+    };
 };
 
 ui.registrarComponente("campo",componenteCampo,configComponente.clonar({

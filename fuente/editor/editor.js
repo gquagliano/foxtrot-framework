@@ -607,23 +607,26 @@ var editor=new function() {
 
     this.prepararComponenteInsertado=function(obj) {        
         var elem=obj.obtenerElemento(),
+            cont=obj.obtenerContenedor(),
             nombre=obj.componente,
             id=obj.obtenerId(),
             arrastrable=obj.esArrastrable();
 
         //Creamos el destino en todos los elementos (no solo los contenedores) para poder mostrar las zonas de
         //soltado alrededor del componente (componenteSoltado validará si puede recibir hijos.)
-        elem.crearDestino({
-            drop:componenteSoltado,
-            dragenter:function(ev) {
-                //Detener la propagación permitirá destinos anidados
-                ev.stopPropagation();
-                ev.preventDefault();
-                mostrarZonas(ev);
-            },
-            dragover:stopPropagation,
-            dragleave:stopPropagation
-        });
+        if(cont) {
+            cont.crearDestino({
+                drop:componenteSoltado,
+                dragenter:function(ev) {
+                    //Detener la propagación permitirá destinos anidados
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    mostrarZonas(ev);
+                },
+                dragover:stopPropagation,
+                dragleave:stopPropagation
+            });
+        }
         
         if(arrastrable) {
             elem.arrastrable({

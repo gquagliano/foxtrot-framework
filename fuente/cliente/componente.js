@@ -330,12 +330,22 @@ var componente=new function() {
     };
 
     /**
-     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
+     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva (método para sobreescribir).
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
      * @returns Componente
      */
     this.establecerDatos=function(obj,actualizar) {
+        return this.establecerDatosComponente(obj,actualizar);
+    };
+
+    /**
+     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
+     * @param {Object} obj - Objeto a asignar.
+     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
+     * @returns Componente
+     */
+    this.establecerDatosComponente=function(obj,actualizar) {
         if(typeof actualizar==="undefined") actualizar=true;
 
         this.datos=obj;

@@ -358,119 +358,120 @@ var editor=new function() {
     }    
 
     function establecerEventos() {
-        ui.obtenerDocumento().eventoFiltrado("click",{
-            clase:"componente"
-        },function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
+        ui.obtenerDocumento()
+            .removerEventos() //Limpiar eventos
+            .eventoFiltrado("click",{
+                clase:"componente"
+            },function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
 
-            if(!ev.shiftKey) self.limpiarSeleccion();
+                if(!ev.shiftKey) self.limpiarSeleccion();
 
-            self.establecerSeleccion(this);
-        })
-        .eventoFiltrado("contextmenu",{
-            clase:"componente"
-        },function(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
+                self.establecerSeleccion(this);
+            })
+            .eventoFiltrado("contextmenu",{
+                clase:"componente"
+            },function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
 
-            var arbol=[],
-                seleccionMultiple=ev.shiftKey;
+                var arbol=[],
+                    seleccionMultiple=ev.shiftKey;
 
-            //Construir árbol de herencia
-            var comp=ui.obtenerInstanciaComponente(this);
-            do {
-                arbol.push({
-                    etiqueta:comp.obtenerConfigComponente().etiqueta,
-                    accion:function(comp) {
-                        return function() {
-                            if(!seleccionMultiple) self.limpiarSeleccion();
-                            self.establecerSeleccion(comp);
-                        };
-                    }(comp)
-                });
-                comp=comp.obtenerPadre();
-            } while(comp!=null);
-            arbol.reverse();
+                //Construir árbol de herencia
+                var comp=ui.obtenerInstanciaComponente(this);
+                do {
+                    arbol.push({
+                        etiqueta:comp.obtenerConfigComponente().etiqueta,
+                        accion:function(comp) {
+                            return function() {
+                                if(!seleccionMultiple) self.limpiarSeleccion();
+                                self.establecerSeleccion(comp);
+                            };
+                        }(comp)
+                    });
+                    comp=comp.obtenerPadre();
+                } while(comp!=null);
+                arbol.reverse();
 
-            ui.cerrarMenu()
-                .abrirMenu(
-                    [
+                ui.cerrarMenu()
+                    .abrirMenu(
+                        [
+                            {
+                                etiqueta:"Eliminar",
+                                accion:function() {
+                                    ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
+                                        if(r) self.eliminarComponentes(self.componentesSeleccionados);
+                                    });
+                                },
+                                habilitado:function() {
+                                    if(!self.componentesSeleccionados.length) return false;
+
+                                    //Deshabilitar si la selección contiene el componente vista
+                                    for(var i=0;i<self.componentesSeleccionados.length;i++)
+                                        if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return false;
+
+                                    return true;
+                                },
+                                separador:true
+                            },
+                            {
+                                etiqueta:"Seleccionar",
+                                submenu:arbol
+                            }
+                        ],
                         {
-                            etiqueta:"Eliminar",
-                            accion:function() {
-                                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
-                                    if(r) self.eliminarComponentes(self.componentesSeleccionados);
-                                });
-                            },
-                            habilitado:function() {
-                                if(!self.componentesSeleccionados.length) return false;
-
-                                //Deshabilitar si la selección contiene el componente vista
-                                for(var i=0;i<self.componentesSeleccionados.length;i++)
-                                    if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return false;
-
-                                return true;
-                            },
-                            separador:true
+                            x:ev.clientX,
+                            y:ev.clientY
                         },
-                        {
-                            etiqueta:"Seleccionar",
-                            submenu:arbol
-                        }
-                    ],
-                    {
-                        x:ev.clientX,
-                        y:ev.clientY
-                    },
-                    "foxtrot-menu-editor"
-                );
-        })
-        .evento("click",function() {
-            self.limpiarSeleccion();
-        });
-
-        ui.obtenerDocumento().evento("keydown",function(ev) {
-            if(eventosPausados) return;
-
-            if(ev.which==27) {
-                //ESC
-
-                //Ignorar si está en modo de edición de texto (el componente procesará la tecla ESC)
-                if(ui.obtenerDocumento().querySelector("[contenteditable=true]")) return;
-
+                        "foxtrot-menu-editor"
+                    );
+            })
+            .evento("click",function() {
                 self.limpiarSeleccion();
-                
-                //Al deseleccionar todo, mostrar las propiedades de la vista
-                //editor.establecerSeleccion(ui.obtenerInstanciaVistaPrincipal().obtenerElemento());
-            } else if(ev.which==46) {
-                //DEL
-                ev.preventDefault();
+            })
+            .evento("keydown",function(ev) {
+                if(eventosPausados) return;
 
-                if(!self.componentesSeleccionados.length) return;
+                if(ev.which==27) {
+                    //ESC
 
-                for(var i=0;i<self.componentesSeleccionados.length;i++)
-                    if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return;
+                    //Ignorar si está en modo de edición de texto (el componente procesará la tecla ESC)
+                    if(ui.obtenerDocumento().querySelector("[contenteditable=true]")) return;
 
-                ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
-                    if(r) self.eliminarComponentes(self.componentesSeleccionados);
-                });
-            } else if(ev.ctrlKey&&ev.which==67) {
-                //Ctrl+C
-                ev.preventDefault();
+                    self.limpiarSeleccion();
+                    
+                    //Al deseleccionar todo, mostrar las propiedades de la vista
+                    //editor.establecerSeleccion(ui.obtenerInstanciaVistaPrincipal().obtenerElemento());
+                } else if(ev.which==46) {
+                    //DEL
+                    ev.preventDefault();
 
-                self.copiar();
-            } else if(ev.ctrlKey&&ev.which==88) {
-                //Ctrl+X
-                ev.preventDefault();
+                    if(!self.componentesSeleccionados.length) return;
 
-                self.cortar();
-            }
-        }).evento("mouseup",function(ev) {
-            removerZonas();
-        }).evento("paste",function(ev) {
-            self.pegar(ev);
-        });
+                    for(var i=0;i<self.componentesSeleccionados.length;i++)
+                        if(self.esCuerpo(self.componentesSeleccionados[i].elemento)) return;
+
+                    ui.confirmar("¿Estás seguro de querer eliminar "+(self.componentesSeleccionados.length==1?"el componente":"los componentes")+"?",function(r) {
+                        if(r) self.eliminarComponentes(self.componentesSeleccionados);
+                    });
+                } else if(ev.ctrlKey&&ev.which==67) {
+                    //Ctrl+C
+                    ev.preventDefault();
+
+                    self.copiar();
+                } else if(ev.ctrlKey&&ev.which==88) {
+                    //Ctrl+X
+                    ev.preventDefault();
+
+                    self.cortar();
+                }
+            }).evento("mouseup",function(ev) {
+                removerZonas();
+            }).evento("paste",function(ev) {
+                self.pegar(ev);
+            });
     }    
 
     ////Gestión de componentes
@@ -879,7 +880,7 @@ var editor=new function() {
             elem.anexar(tempElem.content);
 
             //Crear componentes
-            datos.componentes.forEach(function(obj) {
+            datos.componentes.forEach(function(obj) {debugger
                 var comp=ui.crearComponente(obj,nombreVista);
                 comp.restaurar();
             });

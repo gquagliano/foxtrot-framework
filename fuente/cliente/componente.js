@@ -271,6 +271,22 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve si el componente está oculto o no.
+     */
+    this.esOculto=function() {
+        return this.oculto;
+    };
+
+    /**
+     * Establece que el componente está oculto.
+     * @returns {Componente}
+     */
+    this.ocultar=function() {
+        this.oculto=true;
+        return this;
+    };
+
+    /**
      * Devuelve el nombre del tipo de componente.
      * @returns {string}
      */
@@ -1067,8 +1083,8 @@ var componente=new function() {
 
     /**
      * Devuelve o establece el valor del componente (método para sobreescribir).
-     * @param {*} valor - Valor a establecer
-     * @returns {*}
+     * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
+     * @returns {(*|Componente)}
      */
     this.valor=function(valor) {
     };
@@ -1386,7 +1402,7 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {            
             var nombre=hijo.obtenerNombre();
-            if(nombre) {
+            if(nombre&&!hijo.esOculto()) {
                 var valor=hijo.valor();
                 if(typeof valor!=="undefined") valores[nombre]=valor; //Un componente puede devolver nulo; se entiende que es un componente sin valor (como un contenedor) cuando devuelve indefinido
             }
@@ -1407,7 +1423,7 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {   
             var nombre=hijo.obtenerNombre();
-            if(nombre&&valores.hasOwnProperty(nombre)) {
+            if(nombre&&valores.hasOwnProperty(nombre)&&!hijo.esOculto()) {
                 hijo.valor(valores[nombre]);
             }
             

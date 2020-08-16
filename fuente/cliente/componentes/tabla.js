@@ -93,9 +93,12 @@ var componenteTabla=function() {
      */
     this.actualizar=function() {
         //Limpiar filas autogeneradas
-        this.elemento.querySelectorAll("autogenerado").remover();
+        this.elemento.querySelectorAll(".autogenerado").remover();
 
         if(!this.datos) return this;
+
+        //Vamos a ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
+        this.ocultarDescendencia();
 
         this.generarEncabezados();
 
@@ -105,6 +108,21 @@ var componenteTabla=function() {
             this.generarFilas();
         }
 
+        return this;
+    };
+
+    /**
+     * Establece toda la descendencia como oculta.
+     * @param {Componente} [comp] - Uso interno.
+     * @returns {Componente}
+     */
+    this.ocultarDescendencia=function(comp) {
+        if(typeof comp==="undefined") comp=this;
+        var t=this;
+        comp.obtenerHijos().forEach(function(hijo) {
+            hijo.ocultar();
+            t.ocultarDescendencia(hijo);
+        });
         return this;
     };
 
@@ -126,19 +144,40 @@ var componenteTabla=function() {
     };
 
     /**
+     * Devuelve los componentes fila que no sean autogenerados.
+     * @returns {Componente[]}
+     */
+    this.buscarFilas=function() {
+        var hijos=this.obtenerHijos(),
+            filas=[];
+
+        for(var i=0;i<hijos.length;i++) {
+            if(!hijos[i].autogenerado) filas.push(hijos[i]);
+        }
+        
+        return filas;
+    };
+
+    /**
      * Genera el encabezado de la tabla
      * @returns {Componente}
      */
     this.generarEncabezados=function() {
-        var thead=document.crear("thead"),
-            columnasTd=this.contenedor.querySelector("tr.componente").querySelectorAll("td.componente");
+        var filas=this.buscarFilas(),
+            fila=null;
+        
+        //Solo se considera la primer fila que no sea autogenerada en los encabezados
+        if(filas.length) fila=filas[0];
+        if(!fila) return this;
 
+        var columnas=fila.obtenerHijos(); 
+        if(!columnas.length) return this;
+        
+        var thead=document.crear("thead");
         thead.agregarClase("autogenerado");
         
-        columnasTd.forEach(function(columnaTd) {
-            var componente=ui.obtenerInstanciaComponente(columnaTd);
-            if(!componente) return;
-            thead.anexar(componente.generarTh());
+        columnas.forEach(function(columna) {
+            thead.anexar(columna.generarTh());
         });
 
         this.contenedor.anexar(thead);
@@ -151,22 +190,59 @@ var componenteTabla=function() {
      * @returns {Componente}
      */
     this.generarFilas=function() {
-        var filas=this.contenedor.querySelectorAll("tr.componente"),
-            tbody=this.contenedor.querySelector("tbody");
+        var t=this,
+            filas=this.buscarFilas();
 
         this.datos.forEach(function(obj,indice) {
             //Puede existir más de una fila como plantilla
             filas.forEach(function(fila) {
-                var componente=ui.obtenerInstanciaComponente(fila),
-                    elem=componente.generarTr(obj,indice);
-                
-                elem.agregarClase("autogenerado");
-
-                tbody.anexar(elem);
+                fila.generarFila(t,obj,indice);
             });
         });
 
         return this;
+    };
+
+    /**
+     * Devuelve o establece el valor del componente.
+     * @param {*} [valor] - Valor a establecer
+     * @returns {*}
+     */
+    this.valor=function(valor) {
+        if(typeof valor==="undefined") {
+            //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
+            return this.obtenerDatosActualizados();            
+        } else {
+            //Cuando se asigne un valor, establecer como origen de datos
+            this.establecerDatos(valor);
+        }
+    };
+
+    /**
+     * Obtiene una copia del origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
+     * @returns {(Object[])}
+     */
+    this.obtenerDatosActualizados=function() {
+        var resultado=this.datos?this.datos.clonar():[];
+
+        var fn=function(comp,indice) {
+            comp.obtenerHijos().forEach(function(hijo) {
+                var propiedad=hijo.propiedad(null,"propiedad"),
+                    valor=hijo.valor();
+                if(propiedad&&typeof valor!=="undefined") resultado[indice][propiedad]=valor;
+                fn(hijo,indice);
+            });
+        };
+
+        this.obtenerHijos().forEach(function(hijo) {
+            if(!hijo.autogenerado) return;
+            if(resultado.length<=hijo.indice) resultado[hijo.indice]={};
+            
+            //Dentro de cada fila, buscar recursivamente todos los componentes relacionados con una propiedad
+            fn(hijo,hijo.indice);
+        });
+
+        return resultado;
     };
 };
 

@@ -13,6 +13,9 @@
 var componenteFilaTabla=function() {    
     this.componente="tabla-fila";
 
+    this.autogenerado=false;
+    this.indice=null;
+
     /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
@@ -36,23 +39,21 @@ var componenteFilaTabla=function() {
     };
 
     /**
-     * Genera y devuelve la fila <tr> con sus celdas.
+     * Genera y devuelve la fila con sus celdas.
+     * @param {Componente} padre - Componente padre (tabla).
      * @param {Object} obj - Objeto a representar (datos de la fila).
      * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {Node}
+     * @returns {Componente}
      */
-    this.generarTr=function(obj,indice) {
-        var elem=document.crear("tr"),
-            hijosTd=this.elemento.querySelectorAll("td.componente");
-            
-        hijosTd.forEach(function(hijoTd) {
-            var componente=ui.obtenerInstanciaComponente(hijoTd),
-                elemTd=componente.generarTd(obj,indice);
-            
-            elem.anexar(elemTd);
-        });    
+    this.generarFila=function(padre,obj,indice) {
+        var nuevo=this.clonar(padre,true);
 
-        return elem;
+        nuevo.establecerDatos(obj);
+        nuevo.indice=indice;
+        nuevo.autogenerado=true;
+        nuevo.obtenerElemento().agregarClase("autogenerado");
+
+        return nuevo;
     };
 };
 

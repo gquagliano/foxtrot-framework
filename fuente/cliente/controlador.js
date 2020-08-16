@@ -19,6 +19,7 @@ var controlador=new function() {
     this.nombre=null;
     this.servidor=null;
     this.nombreVista=null;
+    this.controladorServidor=null;
 
     ////Acceso a propiedades    
 
@@ -72,8 +73,8 @@ var controlador=new function() {
         if(nombre) controladores[nombre]=this;
 
         //Inicializar comunicación con el servidor
-        //(Se realiza aquí ya que el nombre de los controladores de cliente y servidor siempre coinciden)
-        this.servidor=servidor.fabricar(nombre);
+        //Si el controlador concreto no define controladorServidor, buscar un controlador de servidor del mismo nombre que el de cliente
+        this.servidor=servidor.fabricar(this.controladorServidor?this.controladorServidor:nombre);
 
         return this;
     };

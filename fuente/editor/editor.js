@@ -880,7 +880,7 @@ var editor=new function() {
             elem.anexar(tempElem.content);
 
             //Crear componentes
-            datos.componentes.forEach(function(obj) {debugger
+            datos.componentes.forEach(function(obj) {
                 var comp=ui.crearComponente(obj,nombreVista);
                 comp.restaurar();
             });

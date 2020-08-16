@@ -528,7 +528,7 @@ var componente=new function() {
         if(this.inicializado) return this;
 
         //Las clases css que se mantengan al salir del modo de edición deben ser breves
-        this.elemento.agregarClase("componente");
+        this.elemento.agregarClase("componente "+this.componente);
 
         if(this.contenedor) {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de

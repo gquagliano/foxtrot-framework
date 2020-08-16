@@ -30,7 +30,7 @@ var componenteEtiqueta=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<label class='etiqueta'/>");
+        this.elemento=document.crear("<span class='etiqueta'/>");
         this.crearComponente();
         return this;
     };

@@ -44,7 +44,7 @@ var componenteTexto=function() {
     this.inicializar=function() {
         if(this.inicializado) return this;         
         
-        this.elementoEditable=this.elemento.querySelector("p,h1,h2,h3,h4,h5,h6,label,span");
+        this.elementoEditable=this.elemento;
 
         this.inicializarComponente();
         return this;
@@ -54,7 +54,7 @@ var componenteTexto=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div class='texto'><p>Hacé doble click para comenzar a escribir...</p></div>");
+        this.elemento=document.crear("<p class='texto'>Hacé doble click para comenzar a escribir...</p>");
         
         this.crearComponente();
         return this;
@@ -65,16 +65,31 @@ var componenteTexto=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(propiedad=="formato") {
+            var seleccionado=this.elemento.es({clase:"seleccionado"});
+
             //Cambiar tipo de etiqueta
             if(!valor) valor="p";
             if(valor=="etiqueta") valor="label";
             if(valor=="enLinea") valor="span";
-            var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
-            elem.innerHTML=this.elementoEditable.innerHTML;
-            this.elementoEditable.outerHTML=elem.outerHTML;
             
+            //Crear nuevo elemento con el contenido del actual
+            var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
+            elem.innerHTML=this.elemento.innerHTML;
+
+            //Reemplazar
+            this.elemento.insertarDespues(elem)
+                .remover();
+
+            //Actualizar referencia
+            this.elemento=elem;            
             this.inicializado=false;
             this.inicializar();
+
+            //Restaurar selección
+            if(seleccionado) {
+                editor.limpiarSeleccion()
+                    .establecerSeleccion(this.elemento);
+            }
 
             return this;
         }

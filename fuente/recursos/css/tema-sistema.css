@@ -74,6 +74,41 @@ label {
     box-shadow: none !important;
 }
 
+/*Tablas*/
+
+.formulario-tabla {
+    padding: 0;
+    overflow: hidden;
+}
+.formulario-tabla .table-responsive {
+    height: 100%;
+    overflow: auto;
+}
+.formulario-tabla .componente.tabla {
+    height: 100%;
+}
+.formulario-tabla .table-responsive th {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #fff;
+}
+.formulario-tabla .table {
+    border-collapse: separate;
+}
+.table td, .table th {
+    border-top: none;
+}
+.table th {
+    font-weight: 600;
+}
+.formulario-tabla .btn {
+    padding: 0;
+    margin-right: 14px;
+    height: auto;
+    margin: 0;
+}
+
 /*Colores*/
 
 a {
@@ -82,7 +117,10 @@ a {
 }
 a:hover,
 a:focus,
-a:active {
+a:active,
+.btn:hover,
+.btn:focus,
+.btn:active {
     color: #337ab7;
 }
 .form-control:focus,

@@ -8,6 +8,7 @@
 .ocultar-contenidos tr {
     display: none !important;
 }
-.ocultar-contenidos tr.autogenerado {
+.ocultar-contenidos tr.autogenerado,
+.ocultar-contenidos .autogenerado tr {
     display: table-row !important;
 }

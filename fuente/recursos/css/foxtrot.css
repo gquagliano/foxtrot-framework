@@ -95,6 +95,33 @@ picture img {
     background-repeat: no-repeat;
     background-color: rgba(255,255,255,.75);
 }
+#foxtrot-barra-precarga {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+#foxtrot-barra-precarga::after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    background: #2196F3;
+    animation: barra-precarga;
+    animation-duration: 2.5s;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    width: 50%;
+}
+@keyframes barra-precarga {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
 
 .foxtrot-dialogo {
     position: fixed;

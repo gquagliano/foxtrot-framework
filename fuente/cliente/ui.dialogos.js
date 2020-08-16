@@ -13,43 +13,102 @@
     //// Precarga
 
     var temporizadorPrecarga,
+        temporizadorBarra,
+        precargas=0,
+        precargasBarra=0,
         precargaVisible=false,
-        elementoPrecarga=null;
+        barraVisible=false,
+        elementoPrecarga=null,
+        elementoBarra=null;
 
     /**
      * Muestra una animación de precarga.
+     * @param {string} [tipo] - Tipo de precarga. "barra" mostrará una barra de progreso superior que no bloquee la vista; cualquier otro valor mostrará la precarga normal a pantalla completa.
+     * @returns {ui}
      */
-    ui.mostrarPrecarga=function() {
-        //Detener si se había solicitado ocultar la precarga hace menos de 200ms
-        clearTimeout(temporizadorPrecarga);
+    ui.mostrarPrecarga=function(tipo) {
+        if(typeof tipo!=="string"||tipo!="barra") tipo="normal";
 
-        if(precargaVisible) return ui;
+        if(tipo=="normal") {
+            precargas++;
 
-        if(!elementoPrecarga) {
-            //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
-            elementoPrecarga=document.crear("<div id='foxtrot-precarga' class='oculto'>")   
-                .anexarA(document.body);
+            //Detener si se había solicitado ocultar la precarga hace menos de 200ms
+            clearTimeout(temporizadorPrecarga);
+        
+            if(precargaVisible) return ui;
+
+            if(!elementoPrecarga) {
+                //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
+                elementoPrecarga=document.crear("<div id='foxtrot-precarga' class='oculto'>")   
+                    .anexarA(document.body);
+            }
+
+            ui.animarAparecer(elementoPrecarga);
+
+            precargaVisible=true;
+        } else if(tipo=="barra") {
+            precargasBarra++;
+
+            //Detener si se había solicitado ocultar la precarga hace menos de 200ms
+            clearTimeout(temporizadorBarra);
+        
+            if(barraVisible) return ui;
+
+            if(!elementoBarra) {
+                //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
+                elementoBarra=document.crear("<div id='foxtrot-barra-precarga' class='oculto'>")   
+                    .anexarA(document.body);
+            }
+
+            ui.animarAparecer(elementoBarra);
+
+            barraVisible=true;
         }
-
-        ui.animarAparecer(elementoPrecarga);
-        precargaVisible=true;
 
         return ui;
     };
 
     /**
      * Oculta la animación de precarga.
+     * @param {string} [tipo] - Tipo de precarga. "barra" mostrará una barra de progreso superior que no bloquee la vista; cualquier otro valor mostrará la precarga normal a pantalla completa.
+     * @returns {ui}
      */
-    ui.ocultarPrecarga=function() {
-        if(!elementoPrecarga||!precargaVisible) return ui;
+    ui.ocultarPrecarga=function(tipo) {
+        if(typeof tipo!=="string"||tipo!="barra") tipo="normal";
 
-        clearTimeout(temporizadorPrecarga);
-        
-        //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
-        temporizadorPrecarga=setTimeout(function() {
-            ui.animarDesaparecer(elementoPrecarga);
-            precargaVisible=false;
-        },200);
+        if(tipo=="normal") {
+            if(!elementoPrecarga||!precargaVisible) return ui;
+
+            clearTimeout(temporizadorPrecarga);
+
+            precargas--;
+
+            //Ignorar hasta que se hayan cancelado todas las solicitudes de mostrarPrecarga().
+            if(precargas>0) return;
+            precargas=0;
+            
+            //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
+            temporizadorPrecarga=setTimeout(function() {
+                ui.animarDesaparecer(elementoPrecarga);
+                precargaVisible=false;
+            },200);
+        } else if(tipo=="barra") {
+            if(!elementoBarra||!barraVisible) return ui;
+
+            clearTimeout(temporizadorBarra);
+
+            precargasBarra--;
+
+            //Ignorar hasta que se hayan cancelado todas las solicitudes de mostrarPrecarga().
+            if(precargasBarra>0) return;
+            precargasBarra=0;
+            
+            //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
+            temporizadorBarra=setTimeout(function() {
+                ui.animarDesaparecer(elementoBarra);
+                barraVisible=false;
+            },200);
+        }
 
         return ui;
     };

@@ -29,7 +29,8 @@ var componenteTexto=function() {
                     h3:"Título 3",
                     h4:"Título 4",
                     h5:"Título 5",
-                    h6:"Título 6"
+                    h6:"Título 6",
+                    etiqueta:"Etiqueta de campo"
                 },
                 adaptativa:false
             }
@@ -42,7 +43,7 @@ var componenteTexto=function() {
     this.inicializar=function() {
         if(this.inicializado) return this;         
         
-        this.elementoEditable=this.elemento.querySelector("p,h1,h2,h3,h4,h5,h6");
+        this.elementoEditable=this.elemento.querySelector("p,h1,h2,h3,h4,h5,h6,label");
 
         this.inicializarComponente();
         return this;
@@ -65,6 +66,7 @@ var componenteTexto=function() {
         if(propiedad=="formato") {
             //Cambiar tipo de etiqueta
             if(!valor) valor="p";
+            if(valor=="etiqueta") valor="label";
             var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
             elem.innerHTML=this.elementoEditable.innerHTML;
             this.elementoEditable.outerHTML=elem.outerHTML;

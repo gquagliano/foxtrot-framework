@@ -409,7 +409,8 @@ var ui=new function() {
     /**
      * Crea una instancia de un componente dado su nombre.
      * @param {(Object|string)} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente previamente guardado (desde JSON).
-     * @param {string} vista - Nombre de la vista.
+     * @param {string} [vista] - Nombre de la vista.
+     * @returns {Componente}
      */
     this.crearComponente=function(comp,vista) {
         if(typeof vista==="undefined") vista=nombreVistaPrincipal;
@@ -434,7 +435,7 @@ var ui=new function() {
 
         if(typeof comp==="object") {
             //Restaurar
-            obj.establecerNombre(comp.nombre)
+            obj.establecerNombre(comp.nombre,comp.oculto)
                 .establecerPropiedades(comp.propiedades)
                 .establecerSelector(comp.selector,false);
         }

@@ -162,7 +162,12 @@
             return this;
         }
 
-        this.parentNode.insertAfter(elemento,this);
+        if(this.nextSibling) {
+            this.parentNode.insertBefore(elemento,this.nextSibling);
+        } else {
+            this.parentNode.appendChild(elemento);
+        }
+        
         return this;
     };
 

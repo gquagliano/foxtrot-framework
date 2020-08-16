@@ -208,6 +208,14 @@ var componente=new function() {
                 etiqueta:"Menú contextual",
                 adaptativa:false,
                 ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú."
+            },
+            intro:{
+                etiqueta:"Intro",
+                adaptativa:false
+            },
+            modificacion:{
+                etiqueta:"Modificacion",
+                adaptativa:false
             }
         },
         "Datos":{
@@ -1142,11 +1150,16 @@ var componente=new function() {
         if(!elemento) return this;
 
         if(!ui.enModoEdicion()) {
+            //Eventos estándar
             var asignaciones={
                 click:{},
                 contextmenu:{
                     metodo:"menuContextual",
                     propiedad:"menuContextual"
+                },
+                change:{
+                    metodo:"change",
+                    propiedad:"modificacion"
                 }
             };
 
@@ -1159,7 +1172,10 @@ var componente=new function() {
                 });
             });
 
-            
+            //Intro
+            elemento.evento("keydown",function(ev) {
+                if(ev.which==13) t.procesarEvento("intro","intro","intro",ev);
+            });            
         } else if(this.contenidoEditable) {
             this.elemento.evento("dblclick",function(ev) {
                 ev.stopPropagation();
@@ -1211,7 +1227,7 @@ var componente=new function() {
         evento.noPrevenirPredeterminado=function() {
             prevenir=false;
         };
-
+        
         //Método interno del componente
         if(typeof this[metodo]==="function") {
             var ret=this[metodo](evento);
@@ -1329,6 +1345,38 @@ var componente=new function() {
 
         //Siempre se detiene, aunque no haya sido procesado
         return true;
+    };
+
+    /**
+     * Evento intro (método para sobreescribir).
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.intro=function(evento) {
+        return this.introComponente(evento);
+    };
+
+    /**
+     * Evento intro.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.introComponente=function(evento) {
+        return false;
+    };
+
+    /**
+     * Evento Modificacion (método para sobreescribir).
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.modificacion=function(evento) {
+        return this.modificacionComponente(evento);
+    };
+
+    /**
+     * Evento keydown.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.modificacionComponente=function(evento) {
+        return false;
     };
 
     ////Utilidades

@@ -333,18 +333,18 @@ var ui=new function() {
      */
     this.crearComponente=function(comp,vista) {
         if(typeof vista==="undefined") vista=nombreVistaPrincipal;
-        vista=vista.replace(/[^a-z0-9]/g,"-");
+        var v=vista.replace(/[^a-z0-9]/g,"-");
 
         var nombre,id;
         if(typeof comp==="string") {
             //Nuevo
             nombre=comp;
-            id=vista+"-"+this.generarId();
+            id=v+"-"+this.generarId();
         } else {
             //Restaurar
             nombre=comp.componente;
             id=comp.id;
-            if(!id) id=vista+"-"+this.generarId();
+            if(!id) id=v+"-"+this.generarId();
         }
         
         var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn);

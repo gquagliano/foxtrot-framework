@@ -464,7 +464,7 @@ var editor=new function() {
                 //Ctrl+X
                 ev.preventDefault();
 
-                self.cortar()
+                self.cortar();
             }
         }).evento("mouseup",function(ev) {
             removerZonas();
@@ -1013,13 +1013,11 @@ var editor=new function() {
 
     ////Gestión del editor
 
-    this.alternarBordes=function(valor) {
-        if(typeof valor==="undefined") valor=null;
-
+    this.alternarBordes=function() {
         bordesVisibles=!bordesVisibles;
         var b=ui.obtenerDocumento().body,
             btn=document.querySelector("#foxtrot-btn-alternar-bordes");
-        if(valor===true||bordesVisibles) {
+        if(bordesVisibles) {
             b.agregarClase("foxtrot-bordes");
             btn.agregarClase("activo");
         } else {
@@ -1029,13 +1027,11 @@ var editor=new function() {
         return this;
     };
 
-    this.alternarInvisibles=function(valor) {
-        if(typeof valor==="undefined") valor=null;
-
+    this.alternarInvisibles=function() {
         invisiblesVisibles=!invisiblesVisibles;
         var b=ui.obtenerDocumento().body,
             btn=document.querySelector("#foxtrot-btn-alternar-invisibles");
-        if(valor===true||!invisiblesVisibles) {
+        if(!invisiblesVisibles) {
             b.removerClase("foxtrot-mostrar-invisibles");
             btn.agregarClase("activo");
         } else {
@@ -1133,7 +1129,7 @@ var editor=new function() {
         establecerEventos();
 
         if(bordesVisibles) doc.body.agregarClase("foxtrot-bordes");
-        if(invisiblesVisibles) doc.body.removerClase("foxtrot-mostrar-invisibles");
+        if(invisiblesVisibles) doc.body.agregarClase("foxtrot-mostrar-invisibles");
 
         this.listo=true;
 

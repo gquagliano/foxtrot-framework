@@ -70,6 +70,8 @@ Etiquetas:
 
 `@predeterminado` Valor predeterminado. Si se omite, será `NULL`, o `0` para los campos booleanos.
 
+Existen otras otras etiquetas opcionales que son utilizadas por los asistentes (ver [Scripts de compilación](../scripts.md).)
+
 El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus métodos.
 
     $usuarios=new usuarios;

@@ -75,6 +75,34 @@ Este script eventualmente se integraría con el editor. En el futuro, también s
 
 *Nota:* No hace falta construir la aplicación antes de construir la versión embebible.
 
+#### asistente
+
+*Este script es un prototipo de funcionalidad que formará parte del editor/gestor de aplicaciones*.
+
+Asistente de creación de vistas y controladores.
+
+##### Asistente de creación de ABMC
+
+    php asistente.php -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-r=ruta] [-o] [-a|c]
+
+El asistente creará vistas, controladores JS, un controlador PHP y una nueva clase para el modelo de datos que permita consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
+
+`-r` Ruta bajo la cual se crearán las vistas. Por ejemplo, `-r=abm` generará `/abm/usuarios` y `/abm/usuario`.
+
+`-o` Incluir este parámetro para omitir la modificación de la clase del modelo de datos.
+
+`-a` Si se incluye este parámetro, solo se generará el formulario de alta, con la funcionalidad de guardar y modificar registros existentes.
+
+`-c` Si se incluye este parámetro, solo se generará la vista de consulta, con la funcionalidad de buscar y eliminar.
+
+Las siguientes etiquetas adicionales pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
+
+`@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
+
+`@requerido` Campo requerido (etiqueta sin valor.)
+
+`@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10.) Por defecto, será `10`.
+
 ### Requerimientos
 
 - Java (JRE), disponible en PATH

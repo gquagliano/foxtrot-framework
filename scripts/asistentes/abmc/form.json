@@ -1,0 +1,70 @@
+{
+    "version": 1,
+    "componentes": [
+        {
+            "id": "abm-{nombre}-2",
+            "nombre": null,
+            "componente": "vista",
+            "propiedades": {}
+        },
+        {
+            "id": "abm-{nombre}-3",
+            "nombre": null,
+            "componente": "contenedor",
+            "propiedades": {
+                "tipo": "fluido"
+            }
+        },
+        {
+            "id": "abm-{nombre}-4",
+            "nombre": null,
+            "componente": "texto",
+            "propiedades": {
+                "formato": "h1"
+            }
+        },
+        {
+            "id": "abm-{nombre}-5",
+            "nombre": null,
+            "componente": "form",
+            "propiedades": {}
+        },
+        {
+            "id": "abm-{nombre}-6",
+            "nombre": null,
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "primary",
+                "margen": {
+                    "g": "0 10 0 0"
+                },
+                "click": "guardar"
+            }
+        },
+        {
+            "id": "abm-{nombre}-7",
+            "nombre": null,
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "secondary",
+                "margen": {
+                    "g": "0 10 0 0"
+                },
+                "click": "nuevo"
+            }
+        },
+        {
+            "id": "abm-{nombre}-8",
+            "nombre": null,
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "secondary",
+                "click": "ir:abm/{modelo}"
+            }
+        }
+    ],
+    "nombre": "{ruta}"
+}

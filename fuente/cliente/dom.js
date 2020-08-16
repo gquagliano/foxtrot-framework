@@ -317,6 +317,8 @@
     Node.prototype.padre=function(filtro) {
         var elem=this.parentNode,
             coincidencia=false;
+        
+        if(!elem) return null;
 
         while(1) {
             if(elem.es(filtro)) {

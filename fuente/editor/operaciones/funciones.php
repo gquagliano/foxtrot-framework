@@ -117,5 +117,5 @@ function crearControlador() {
 
 function reemplazarVarJson($codigo,$json) {
     $json=str_replace('\'','\\\'',$json);
-    return preg_replace('/var jsonFoxtrot=\'(.+?)\';/s','var jsonFoxtrot=\''.$json.'\';',$codigo);
+    return preg_replace('/var jsonFoxtrot\s*?=\s*?\'(.+?)\'\s*?;/s','var jsonFoxtrot=\''.$json.'\';',$codigo);
 }

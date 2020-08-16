@@ -930,16 +930,6 @@ var ui=new function() {
         doc=nuevoDoc;
         body=doc.body;
         cuerpo=doc.querySelector("#foxtrot-cuerpo");
-
-        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
-        for(var i=0;i<doc.styleSheets.length;i++) {
-            var hoja=doc.styleSheets[i];
-            if(new RegExp("cliente/vistas/"+nombreVistaPrincipal+".css").test(hoja.href)) {
-                estilos=hoja;
-                break;
-            }
-        }
-
         return this;
     };
 
@@ -948,6 +938,15 @@ var ui=new function() {
         if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
             //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
             instanciasVistas[nombreVistaPrincipal].establecerElemento(cuerpo);
+        }
+
+        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
+        for(var i=0;i<doc.styleSheets.length;i++) {
+            var hoja=doc.styleSheets[i];
+            if(new RegExp("cliente/vistas/"+nombreVistaPrincipal+".css").test(hoja.href)) {
+                estilos=hoja;
+                break;
+            }
         }
 
         if(modoEdicion) {

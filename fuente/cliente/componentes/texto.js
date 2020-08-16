@@ -24,6 +24,7 @@ var componenteTexto=function() {
                 tipo:"opciones",
                 opciones:{
                     p:"Párrafo",
+                    enLinea:"En línea",
                     h1:"Título 1",
                     h2:"Título 2",
                     h3:"Título 3",
@@ -43,7 +44,7 @@ var componenteTexto=function() {
     this.inicializar=function() {
         if(this.inicializado) return this;         
         
-        this.elementoEditable=this.elemento.querySelector("p,h1,h2,h3,h4,h5,h6,label");
+        this.elementoEditable=this.elemento.querySelector("p,h1,h2,h3,h4,h5,h6,label,span");
 
         this.inicializarComponente();
         return this;
@@ -67,6 +68,7 @@ var componenteTexto=function() {
             //Cambiar tipo de etiqueta
             if(!valor) valor="p";
             if(valor=="etiqueta") valor="label";
+            if(valor=="enLinea") valor="span";
             var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
             elem.innerHTML=this.elementoEditable.innerHTML;
             this.elementoEditable.outerHTML=elem.outerHTML;

@@ -38,7 +38,7 @@ var componenteTabla=function() {
     this.inicializar=function() {
         if(this.inicializado) return this;
 
-        this.contenedor=this.elemento.querySelector("table");
+        this.contenedor=this.elemento.querySelector("tbody");
 
         this.inicializarComponente();
         return this;
@@ -48,7 +48,7 @@ var componenteTabla=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-stripped table-hover'></table></div></div>"); 
+        this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-striped table-hover' cellspacing='0'><tbody/></table></div></div>"); 
         this.crearComponente();
         return this;
     };    
@@ -173,14 +173,17 @@ var componenteTabla=function() {
         var columnas=fila.obtenerHijos(); 
         if(!columnas.length) return this;
         
-        var thead=document.crear("thead");
-        thead.agregarClase("autogenerado");
+        var thead=document.crear("thead"),
+            tr=document.crear("tr");
+        thead.agregarClase("autogenerado")
+            .anexar(tr);
         
         columnas.forEach(function(columna) {
-            thead.anexar(columna.generarTh());
+            tr.anexar(columna.generarTh());
         });
 
-        this.contenedor.anexar(thead);
+        //this.contenedor es el tbody
+        this.elemento.querySelector("table").anexar(thead);
 
         return this;
     };

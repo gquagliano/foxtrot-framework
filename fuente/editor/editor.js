@@ -594,7 +594,7 @@ var editor=new function() {
             zona2.crearDestino(params);
             zona3.crearDestino(params);
             zona4.crearDestino(params);
-        },1500);
+        },700);
     },
     /**
      * Remueve las zonas de soltado alrededor del componente.
@@ -825,10 +825,12 @@ var editor=new function() {
         if(!datos.hasOwnProperty("editor-foxtrot-7")) return;
         
         ev.preventDefault();
+        ev.stopPropagation();
 
         var fn=function(elem) {
             var nuevoSelector={},
-                nombreVista=ui.obtenerNombreVistaPrincipal();
+                nombreVista=ui.obtenerNombreVistaPrincipal();    
+            nombreVista=nombreVista.replace(/[^a-z0-9]/g,"-");
 
             //Elemento provisorio
             var div=document.createElement("div")

@@ -253,11 +253,14 @@ var ui=new function() {
                 break;
             }
         };
+       
+        if(!css) css="";
         hoja.insertRule(
                 selector+"{"+css+"}",
                 //Insertar las reglas globales antes del primer mediaquery
                 tamano=="xs"||tamano=="g"?indicePrimerMedia:reglas.length
             );
+
         return this;
     };
 
@@ -330,6 +333,7 @@ var ui=new function() {
      */
     this.crearComponente=function(comp,vista) {
         if(typeof vista==="undefined") vista=nombreVistaPrincipal;
+        vista=vista.replace(/[^a-z0-9]/g,"-");
 
         var nombre,id;
         if(typeof comp==="string") {
@@ -484,8 +488,8 @@ var ui=new function() {
             .replace(/([\):;\}\{])[\s]+/g,"$1")
             .replace(/[\s]+([\{\(#])/g,"$1")
             .replace(";}","}");
-        //Remover reglas vacías
-        css=css.replace(/[^\}].+?\{\}/g,"");
+        //TODO Remover reglas vacías
+        //css=css.replace(/[^\}].+?\{\}/g,"");
         return css;        
     };
 

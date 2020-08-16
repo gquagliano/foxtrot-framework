@@ -14,8 +14,8 @@ var componenteColumna=function() {
     this.componente="columna";
 
     this.propiedadesConcretas={
-        "Tamaño":{
-            tamano:{
+        "Columna":{
+            columna:{
                 etiqueta:"Tamaño",
                 tipo:"numero",
                 ayuda:"Tamaño en proporción de la grilla de 12 columnas de Bootstrap. Pueden utilizarse las propiedades de Flexbox para establecer dimensiones personalizadas."
@@ -54,7 +54,7 @@ var componenteColumna=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         var e=this.elemento;
 
-        if(propiedad=="tamano") {
+        if(propiedad=="columna") {
             //Debemos remover todos los col-* y volver a generarlos en el orden correcto, no podemos simplemente desactivar y activar las clases de a una
             e.removerClase(/col-.+/);
             var tamanos=this.propiedadObj(propiedad);

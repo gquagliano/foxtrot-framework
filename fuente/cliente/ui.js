@@ -184,13 +184,39 @@ var ui=new function() {
         return this;
     };
 
-    this.establecerEstilos=function(css) {
-        estilos.innerText=css;
+    /**
+     * Procesa un objeto de estilos y establece los estilos contenidos en el mismo para el selector dado.
+     * @param {string} selector - Selector.
+     * @param {Object[]} obj - Estilos (objeto compatible con la salida de obtenerEstilos()).
+     * @returns {ui}
+     */
+    this.procesarObjetoEstilos=function(selector,obj) {
+        var t=this;
+
+        obj.forEach(function(estilo) {
+            if(estilo.hasOwnProperty("tamano")) {
+                estilo.reglas.forEach(function(regla) {
+                    t.establecerEstilosSelector(selector,regla.estilos.cssText,estilo.tamano);
+                });
+            } else {
+                t.establecerEstilosSelector(selector,estilo.estilos.cssText);
+            }
+        });
+
         return this;
     };
 
+    /**
+     * Establece los estilos para un selector.
+     * @param {string} selector - Selector.
+     * @param {(string|Object[])} css - Estilos. Puede ser código CSS o un objeto compatible con la salida de obtenerEstilos().
+     * @param {(string|null)} [tamano] - Tamaño de pantalla. Si se omite, o si es null, se establecerán los estilos generales (sin media query).
+     * @returns {ui}
+     */
     this.establecerEstilosSelector=function(selector,css,tamano) {
         if(util.esIndefinido(tamano)||!tamano) tamano="g";
+
+        if(util.esArray(css)) return this.procesarObjetoEstilos(selector,css);
 
         var tamanoPx=tamanos[tamano],
             hoja=estilos,
@@ -264,8 +290,27 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * Elimina los estilos para el selector especificado.
+     * @param {string} selector - Selector.
+     * @param {string} [tamano] - Tamaño. Si se omite, se eliminarán todos los estilos para todos los tamaños.
+     * @returns {ui}
+     */
     this.removerEstilos=function(selector,tamano) {
         return this.establecerEstilosSelector(selector,null,tamano);
+    };
+
+    /**
+     * Renombra los estilos para un selector dado (todos los tamaños).
+     * @param {string} selector - Selector actual.
+     * @param {string} selectorNuevo - Selector nuevo.
+     * @returns {ui}
+     */
+    this.renombrarEstilos=function(selector,selectorNuevo) {
+        var estilos=this.obtenerEstilos(selector);
+        this.establecerEstilosSelector(selectorNuevo,estilos);
+        this.removerEstilos(selector);
+        return this;
     };
 
     ////Gestión de la aplicación
@@ -355,7 +400,8 @@ var ui=new function() {
         if(typeof comp==="object") {
             //Restaurar
             obj.establecerNombre(comp.nombre)
-                .establecerPropiedades(comp.propiedades);
+                .establecerPropiedades(comp.propiedades)
+                .establecerSelector(comp.selector,false);
         }
         
         var i=instanciasComponentes.push(obj);
@@ -488,8 +534,9 @@ var ui=new function() {
             .replace(/([\):;\}\{])[\s]+/g,"$1")
             .replace(/[\s]+([\{\(#])/g,"$1")
             .replace(";}","}");
-        //TODO Remover reglas vacías
-        //css=css.replace(/[^\}].+?\{\}/g,"");
+        //Remover reglas vacías
+        var regexp=/(^|\})[a-z0-9_\.#\[\]\^:\(\)$~-\S\r\n]+\{\}/ig;
+        while(regexp.test(css)) css=css.replace(regexp,"$1");
         return css;        
     };
 
@@ -519,9 +566,10 @@ var ui=new function() {
     this.obtenerJsonComponente=function(obj) {
         var comp=this.obtenerInstanciaComponente(obj);
         return {
-            id:comp.id,
-            nombre:comp.nombre,
-            componente:comp.componente,
+            id:comp.obtenerId(),
+            nombre:comp.obtenerNombre(),
+            selector:comp.obtenerSelector(),
+            componente:comp.obtenerTipo(),
             propiedades:comp.obtenerPropiedades()
         };
     };

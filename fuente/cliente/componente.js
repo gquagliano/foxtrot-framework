@@ -277,18 +277,58 @@ var componente=new function() {
 
     /**
      * Devuelve el selector para el elemento.
+     * @returns {string}
      */
     this.obtenerSelector=function() {
         return this.selector;
     };
 
     /**
-     * Establece el selector para el elemento, actualizando los estilos preexistentes.
+     * Genera y asigna un selector automático para el elemento.
+     * @returns {Componente}
      */
-    this.establecerSelector=function(nuevo) {
-        //TODO Actualizar estilos
+    this.generarSelector=function() {
+        //Formato: .vista-tipo-número o .vista-tipo-nombre
+        var clase="."+this.nombreVista.replace(/[^a-z0-9-]/,"-")+"-"+this.componente+"-";
+        if(this.nombre) clase+=this.nombre;
+        else clase+=ui.generarId();
+        this.establecerSelector(clase);
+        return this;
+    };
 
-        this.selector="#"+nuevo;
+    /**
+     * Establece el selector para el elemento, actualizando los estilos preexistentes.
+     * @param {(string|null)} nuevo - Nuevo selector. Puede ser un ID (#id), clase (.clase) o NULL para remover.
+     * @param {boolean} [actualizar=true] - Determina si se deben actualizar el elemento y los estilos.
+     * @returns {Componente}
+     */
+    this.establecerSelector=function(nuevo,actualizar) {
+        if(typeof actualizar==="undefined") actualizar=true;
+
+        if(this.selector&&actualizar) {
+            //Remover clase anterior (si es ID, se mantiene, aunque se eliminarán sus estilos)
+            if(this.selector.substring(0,1)==".") this.elemento.removerClase(this.selector.substring(1));
+
+            //Mover estilos
+            if(nuevo) {
+                ui.renombrarEstilos(this.selector,nuevo);
+            } else {
+                ui.removerEstilos(this.selector);
+            }
+        }
+
+        this.selector=nuevo;
+
+        if(nuevo&&actualizar) {
+            //El selector puede ser un ID o una clase
+            var pc=nuevo.substring(0,1);
+            if(pc==".") {
+                this.elemento.agregarClase(nuevo.substring(1));
+            } else if(pc=="#") {
+                this.elemento.atributo("id",nuevo.substring(1));
+            }
+        }
+
         return this;
     };
 
@@ -393,25 +433,6 @@ var componente=new function() {
     };
 
     /**
-     * Establece el ID del elemento del DOM y actualiza el selector y los estilos si es necesario.
-     */
-    this.establecerIdElemento=function() {
-        if(!this.elemento) return this;
-
-        var id=this.elemento.atributo("id");
-        if(!id) {
-            if(this.nombre) {
-                id=this.nombre;
-            } else {
-                id="componente-"+this.id;
-            }
-            this.elemento.atributo("id",id);
-        }
-        
-        this.establecerSelector(id);
-    };
-
-    /**
      * Inicializa la instancia (método para sobreescribir).
      */    
     this.inicializar=function() {
@@ -434,8 +455,7 @@ var componente=new function() {
             //if(!this.hijos.length) this.contenedor.agregarClase("vacio");
         }        
 
-        this.establecerId()
-            .establecerIdElemento();
+        this.establecerId();
 
         if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
         
@@ -557,9 +577,6 @@ var componente=new function() {
         //Registrar en window.componentes para acceso rápido
         if(nombre) componentes[nombre]=this;
 
-        //Actualizar ID
-        this.establecerIdElemento();
-
         return this;
     };
 
@@ -588,6 +605,10 @@ var componente=new function() {
      * Devuelve los estilos del componente.
      */
     this.obtenerEstilos=function(tamano) {
+        //Generar un selector si aún no tenemos uno
+        //Esto evita que todos los componentes tengan un selector, aún cuando no sea necesario
+        if(!this.selector) this.generarSelector();
+
         var estilos=ui.obtenerEstilos(this.selector,tamano);
 
         if(!estilos.length) {

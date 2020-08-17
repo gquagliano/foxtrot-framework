@@ -11,6 +11,12 @@
 
 ## Scripts de compilación
 
+### ¡Importante!
+
+Estos scripts son provisorios y están pensados para uso personal por línea de comandos, por lo que no presentan ningún tipo de seguridad. **Permitir el acceso por HTTP o implementarlos en un servidor o equipo público o compartido deja abierta la posibilidad de acceso al sistema de archivos o cargar código arbitrario**.
+
+En el futuro, la funcionalidad de estos scripts se integrará con el gestor de aplicaciones.
+
 #### construir-framework
 
 Construye y compila todos los archivos JS y CSS del framework y del editor, generando el entorno de desarrollo (`/desarrollo/`) desde los archivos fuente (`/fuente/`). Debe ejecutarse tras realizarse modificaciones al framework.
@@ -27,8 +33,6 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
     php crear-apl.php -n=nombre_aplicacion
 
-Este script eventualmente se integraría con el editor.
-
 #### sincronizar-bd
 
 Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación, excepto cuando se especifiquen los parámetros `-u`, `-c` y/o `-b`.
@@ -41,8 +45,6 @@ Cuando *no* se use `-m`, el método `instalar()` de cada modelo, si existe, ser�
 
 Acumula un registro de consultas SQL en el archivo `scripts/sincronizar.sql` en caso de que sea necesario replicar los cambios en otro servidor.
 
-Este script eventualmente se integraría con el editor.
-
 #### construir-apl
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
@@ -50,8 +52,6 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
     php construir-apl.php -a=nombre_aplicacion [-d]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
-
-Este script eventualmente se integraría con el editor.
 
 *Nota:* Debe haberse construido el framework antes de construir la aplicación.
 
@@ -71,13 +71,9 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 `-p` Junto con el parámetro `-c`, puede utilizarse `-p` para especificar la plataforma. Por defecto `android`.
 
-Este script eventualmente se integraría con el editor. En el futuro, también se incluirá la función compilar Cordova directamente desde el editor.
-
-*Nota:* No hace falta construir la aplicación antes de construir la versión embebible.
+*Nota:* No hace falta construir la aplicación antes de construir la versión embebible. Sí debe haberse construido el framework.
 
 #### asistente
-
-*Este script es un prototipo de funcionalidad que formará parte del editor/gestor de aplicaciones*.
 
 Asistente de creación de vistas y controladores.
 

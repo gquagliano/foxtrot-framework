@@ -4,7 +4,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 
 ## Qué es Foxtrot Framework
 
-Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (frontend) en JavaScript y servidor (backend) _headless_ en PHP.
+Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP.
 
 Persigue los objetivos de:
 - Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones.
@@ -15,7 +15,9 @@ Desarrollado en Argentina, con su API en español.
 
 **[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8).**
 
-**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar).** Usuario: admin, contraseña: test.
+**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar).**
+Usuario: admin
+contraseña: test
 
 ## ¿Por qué?
 
@@ -23,6 +25,13 @@ Desarrollado en Argentina, con su API en español.
 - Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
 - Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre, gratuita, que no te obligue a almacenar tu código en su _nube_ y que persiga el mismo nivel de integración que Foxtrot.
 - Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
+- Porque buscamos un sistema súper-rápido.
+
+La complejidad de Foxtrot está en el diseño de las vistas; durante la ejecución, es tan liviano, que es prácticamente como no usar ningún framework, pero manteniendo disponible la funcionalidad de Foxtrot si el código del usuario lo requiere. Desacoplando la lógica de las vistas del DOM, buscamos también:
+
+- Que el desarrollador tenga que preocuparse casi-nada por la estructura de la vista, como en otras plataformas.
+- Que gracias a esta abstracción podamos, en el futuro, buscar mejores formas de representar los componentes, o portar el framework a otras plataformas, sin volver obsoleto tu código.
+- El acceso a los elementos de la vista sea más simple y directo, a través de los componentes.
 
 ## Estado
 
@@ -48,8 +57,6 @@ En líneas generales,
 - Completar funcionalidad útil del editor, como ~~copiar, cortar, pegar,~~ deshacer, rehacer y la barra de formato de texto.
 - Completar la documentación; revisar y completar JSDOC y PHPDOC.
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
-
-...¡Y listo!
 
 Luego seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
 
@@ -81,7 +88,7 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 ![](documentacion/img/editor.jpg)
 
-Editor de vistas WYSIWYG. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
+Editor de vistas *WYSIWYG* *Drag&drop*. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
 El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc.), variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
 

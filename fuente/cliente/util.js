@@ -98,6 +98,18 @@ var util={
      */
     cadenaAzar:function() {
         return Math.random().toString(36).replace(/[^a-z]+/g,"");
+    },
+
+    /**
+     * Trim con expresión regular.
+     * @param {string} cadena - Cadena.
+     * @param {string} caracteres - Caracteres (debe se compatible con expresiones regulares, escapando los caracteres necesarios).
+     * @returns {string}
+     */
+    trim:function(cadena,caracteres) {
+        var exp=new RegExp("(^"+caracteres+"|"+caracteres+"$)","g");
+        while(exp.test(cadena)) cadena=cadena.replace(exp,"");
+        return cadena;
     }
 };
 

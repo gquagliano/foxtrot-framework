@@ -34,19 +34,3 @@
     width: auto;
     min-width: 80px;
 }
-.nav li .foxtrot-menu.desplegar-derecha {
-    left: auto;
-    right: 0;
-}
-.nav li .foxtrot-menu.desplegar-arriba {
-    top: auto;
-    bottom: 100%;
-}
-.nav li .foxtrot-menu .foxtrot-menu.desplegar-derecha {
-    left: auto;
-    right: 100%;
-}
-.nav li .foxtrot-menu .foxtrot-menu.desplegar-arriba {
-    top: auto;
-    bottom: -10px;
-}

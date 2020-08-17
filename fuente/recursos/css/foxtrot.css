@@ -81,6 +81,31 @@ body.escritorio .foxtrot-menu a:hover,
     cursor: not-allowed;
 }
 
+.foxtrot-menu.desplegar-izquierda,
+.foxtrot-menu.siempre-desplegar-izquierda {
+    left: auto  !important;
+    right: 0;
+}
+.foxtrot-menu.desplegar-arriba,
+.foxtrot-menu.siempre-desplegar-arriba {
+    top: auto  !important;
+    bottom: 100%;
+}
+.foxtrot-menu .foxtrot-menu.desplegar-izquierda,
+.foxtrot-menu .foxtrot-menu.siempre-desplegar-izquierda,
+.foxtrot-submenu.desplegar-izquierda,
+.foxtrot-submenu.siempre-desplegar-izquierda {
+    left: auto  !important;
+    right: 100%;
+}
+.foxtrot-menu .foxtrot-menu.desplegar-arriba,
+.foxtrot-menu .foxtrot-menu.siempre-desplegar-arriba,
+.foxtrot-submenu.desplegar-arriba,
+.foxtrot-submenu.siempre-desplegar-arriba {
+    top: auto  !important;
+    bottom: -10px;
+}
+
 /* Diálogos */
 
 #foxtrot-precarga {

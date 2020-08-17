@@ -21,22 +21,22 @@
                 
         //Reposicionar si se sale de pantalla
 
-        elem.removerClase(/desplegar-(derecha|arriba)/);
+        elem.removerClase(/^desplegar-(izquierda|arriba)/);
 
         var margen=15,
             posicionamiento=elem.estilo("position"),
             pos=elem.posicionAbsoluta(),
             ancho=elem.ancho(),
             alto=elem.alto(),
-            anchoVentana=window.ancho(),
-            altoVentana=window.alto(),
+            anchoVentana=elem.ownerDocument.defaultView.ancho(), //Puede estar dentro de un marco (no usar window)
+            altoVentana=elem.ownerDocument.defaultView.alto(),   //Puede estar dentro de un marco (no usar window)
             excedeX=pos.x+ancho>anchoVentana-margen,
             excedeY=pos.y+alto>altoVentana-margen;
-          
+        
         if(excedeX||excedeY) {
             if(posicionamiento=="absolute"||posicionamiento=="relative") {
                 //En este caso utilizaremos clases CSS para que se pueda reposicionar de acuerdo a los estilos específicos del padre
-                if(excedeX) elem.agregarClase("desplegar-derecha");
+                if(excedeX) elem.agregarClase("desplegar-izquierda");
                 if(excedeY) elem.agregarClase("desplegar-arriba");
             } else {
                 //Por defecto, se comporta como fixed

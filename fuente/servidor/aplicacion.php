@@ -12,4 +12,15 @@ defined('_inc') or exit;
  * Clase base de las aplicaciones.
  */
 class aplicacion extends controlador {
+    protected $cliente;
+    
+    function __construct() {
+        //Inicializar comunicación con el cliente
+        $this->cliente=new cliente();
+        $this->cliente->establecerAplicacion();
+    }
+
+    public function obtenerCliente() {
+        return $this->cliente;
+    }
 }

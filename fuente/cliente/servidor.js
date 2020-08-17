@@ -28,6 +28,7 @@ var servidor=new function() {
         this.predeterminados=Object.assign({
             metodo:null,
             controlador:null,
+            controladorOrigen:null,
             modelo:null, //Por el momento, no se usa
             clase:null, //Por el momento, no se usa
             retorno:null,
@@ -60,6 +61,7 @@ var servidor=new function() {
      * @param {Object} [opciones.metodo] - Nombre del método.
      * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
      * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
+     * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
      * @param {Object} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
      * @param {Object} [opciones.error] - Función de error.
      * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno).
@@ -108,6 +110,7 @@ var servidor=new function() {
 
         //resp.r    Devolver valor directo al callback
         //resp.m    Invocar el método en el controlador resp.c, con los parámetros resp.p
+        //resp.a    Invocar el método en el controlador de la aplicación, con los parámetros resp.p
         //resp.e    Evaluar código arbitrario (TODO ¿es seguro? ¿tiene sentido?)
         //resp.n    Navegar a resp.n
 
@@ -115,8 +118,21 @@ var servidor=new function() {
             if(opciones.retorno) opciones.retorno(resp.r); //TODO usar call()
         } else if(resp.hasOwnProperty("m")) {
             var params=resp.hasOwnProperty("p")?resp.p:[];
-            var ctl=ui.obtenerInstanciaControlador(resp.c);
+
+            var nombreCtl=resp.c;
+            if(!nombreCtl) nombreCtl=opciones.controladorOrigen; //Si no se especifica el controlador, devolver al que originó la solicitud
+            if(!nombreCtl) nombreCtl=opciones.controlador; //O al controlador del mismo nombre
+            var ctl=ui.obtenerInstanciaControlador(nombreCtl); 
+
+            if(ctl&&ctl.hasOwnProperty(resp.m)) ctl[resp.m].apply(ctl,params);
+            
+            procesado=true;
+        } else if(resp.hasOwnProperty("a")) {
+            var params=resp.hasOwnProperty("p")?resp.p:[],
+                ctl=ui.obtenerAplicacion();
+
             if(ctl.hasOwnProperty(resp.m)) ctl[resp.m].apply(ctl,params);
+            
             procesado=true;
         } else if(resp.hasOwnProperty("e")) {
             cuerpo=resp.m;
@@ -134,13 +150,16 @@ var servidor=new function() {
 
     /**
      * Genera una instancia de una clase que redirigirá todas las llamadas a métodos al controlador de servidor especificado.
-     * @param {string} controlador - Nombre del controlador.
+     * @param {string} [controlador=null] - Nombre del controlador, o null.
+     * @param {string} [controladorOrigen] - Nombre del controlador que está fabricando la instancia.
      */
-    this.fabricar=function(ctl) {
+    this.fabricar=function(controlador,controladorOrigen) {
         if(typeof controlador==="undefined") controlador=null;
+        if(typeof controladorOrigen==="undefined") controladorOrigen=null;
 
         return new Proxy(new function() {
-            this.controlador=ctl;
+            this.controlador=controlador;
+            this.controladorOrigen=controladorOrigen;
         }(),{
             get(target,nombre) {
                 if(target.hasOwnProperty(nombre)) return target[nombre];
@@ -150,6 +169,7 @@ var servidor=new function() {
                     var args=arguments.aArray(),
                         opc={
                             controlador:target.controlador,
+                            controladorOrigen:target.controladorOrigen,
                             metodo:nombre
                         };
         

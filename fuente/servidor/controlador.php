@@ -21,7 +21,7 @@ class controlador {
         $this->nombre=$nombre;
 
         //Inicializar comunicación con el cliente
-        $this->cliente=new cliente($this->nombre);
+        $this->cliente=new cliente();
     }
 
     public function obtenerNombre() {

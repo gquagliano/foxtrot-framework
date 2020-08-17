@@ -74,7 +74,8 @@ var controlador=new function() {
 
         //Inicializar comunicación con el servidor
         //Si el controlador concreto no define controladorServidor, buscar un controlador de servidor del mismo nombre que el de cliente
-        this.servidor=servidor.fabricar(this.controladorServidor?this.controladorServidor:nombre);
+        if(!this.controladorServidor) this.controladorServidor=nombre;
+        this.servidor=servidor.fabricar(this.controladorServidor,nombre);
 
         return this;
     };

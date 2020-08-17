@@ -13,9 +13,19 @@ defined('_inc') or exit;
  */
 class cliente {
     protected $controlador;
+    protected $esAplicacion=false;
 
-    function __construct($controlador) {
+    function __construct($controlador=null) {
         $this->controlador=$controlador;
+    }
+
+    /**
+     * Establece que la instancia del cliente es para comunicación, por defecto, con el controlador de aplicación.
+     * @returns cliente
+     */
+    public function establecerAplicacion() {
+        $this->esAplicacion=true;
+        return $this;
     }
 
     /**
@@ -37,6 +47,19 @@ class cliente {
         \foxtrot::detener();
     }
 
+    /**
+     * Invoca un método en el controlador JS de la aplicación.
+     * @param string $metodo Nombre del método.
+     * @param mixed $args=null Argumentos.
+     */
+    public static function invocarAplicacion($metodo,$args=null) {
+        echo json_encode([
+            'a'=>$metodo,
+            'p'=>$args
+        ]);
+        \foxtrot::detener();
+    }
+
     public static function irA($ruta) {
         echo json_encode([
             'n'=>$ruta
@@ -44,7 +67,16 @@ class cliente {
         \foxtrot::detener();
     }
 
+    /**
+     * Redirige los llamados a métodos hacia el cliente.
+     * @param string nombre - Nombre del método.
+     * @param array $args - Argumentos.
+     */
     public function __call($nombre,$args) {
-        cliente::invocar($this->controlador,$nombre,$args);
+        if($this->esAplicacion) {
+            cliente::invocarAplicacion($nombre,$args);
+        } else {
+            cliente::invocar($this->controlador,$nombre,$args);
+        }
     }
 }

@@ -169,7 +169,7 @@ var editor=new function() {
                     campo.anexar(
                         document.crear("<option>")
                             .valor(clave)
-                            .texto(etiqueta)
+                            .establecerTexto(etiqueta)
                     );
                 });
 
@@ -227,6 +227,14 @@ var editor=new function() {
                 barra.anexarA(cuerpoBarraPropiedades);
 
                 var orden=Object.keys(props).sort();
+
+                //Caso especial: Primero el nombre
+                var i=orden.indexOf("nombre");
+                if(i>=0) {
+                    orden.splice(i,1);
+                    orden=["nombre"].concat(orden);
+                }
+
                 orden.forEach(function(nombre) {
                     var prop=props[nombre];
                     agregarPropiedad(barra,nombre,prop);

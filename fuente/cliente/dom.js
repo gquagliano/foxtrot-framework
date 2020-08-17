@@ -577,11 +577,19 @@
 
     /**
      * Acceso a innerText.
+     * @returns {(Node|Element)}
      */
-    Node.prototype.texto=function(texto) {
-        if(util.esIndefinido(texto)) return this.innerText;
+    Node.prototype.establecerTexto=function(texto) {
         this.innerText=texto;
         return this;        
+    };
+
+    /**
+     * Acceso a innerText.
+     * @returns {string}
+     */
+    Node.prototype.obtenerTexto=function() {
+        return this.innerText;
     };
 
     /**

@@ -235,6 +235,11 @@ var componente=new function() {
             autofoco:{
                 etiqueta:"Autofoco",
                 tipo:"bool"
+            },
+            deshabilitado:{
+                etiqueta:"Deshabilitado",
+                tipo:"bool",
+                adaptativa:false
             }
         }
     };
@@ -1037,6 +1042,17 @@ var componente=new function() {
             return this;
         }
 
+        if(propiedad=="deshabilitado") {
+            if(valor) {
+                this.elemento.agregarClase("deshabilitado")
+                    .propiedad("disabled",true);
+            } else {
+                this.elemento.removerClase("deshabilitado")
+                    .removerAtributo("disabled");
+            }
+            return this;
+        }
+
         return this;
     };
 
@@ -1305,6 +1321,14 @@ var componente=new function() {
     };
 
     this.procesarEvento=function(nombre,propiedad,metodo,evento) {
+        //Si está deshabilitado, suprimir el evento
+        var deshabilitado=this.propiedad(null,"deshabilitado");
+        if(deshabilitado) {
+            evento.preventDefault();
+            evento.stopPropagation();
+            return this;
+        }
+
         //Almacenar algunos metadatos en el objeto del evento
         evento.nombre=nombre;
         evento.componente=this;
@@ -1487,6 +1511,51 @@ var componente=new function() {
      */
     this.foco=function() {
         (this.campo||this.elemento).focus();
+        return this;
+    };
+
+    /**
+     * Devuelve si el componente se encuentra habilitado.
+     * @returns {boolean}
+     */
+    this.habilitado=function() {
+        var deshabilitado=this.propiedad(null,"deshabilitado");
+        return !deshabilitado;
+    };
+
+    /**
+     * Habilita el componente (acceso directo a establecer la propiedad deshabilitado=false).
+     * @returns {Componente}
+     */
+    this.habilitar=function() {
+        this.propiedad(null,"deshabilitado",false);
+        return this;
+    };
+
+    /**
+     * Deshabilita el componente (acceso directo a establecer la propiedad deshabilitado=true).
+     * @returns {Componente}
+     */
+    this.deshabilitar=function() {
+        this.propiedad(null,"deshabilitado",true);
+        return this;
+    };
+
+    /**
+     * Oculta el componente (acceso directo a establecer la propiedad visibilidad=oculto).
+     * @returns {Componente}
+     */
+    this.ocultar=function() {
+        this.propiedad(null,"visibilidad","oculto");
+        return this;
+    };
+
+    /**
+     * Muestra el componente (acceso directo a establecer la propiedad visibilidad=visible).
+     * @returns {Componente}
+     */
+    this.mostrar=function() {
+        this.propiedad(null,"visibilidad","visible");
         return this;
     };
 

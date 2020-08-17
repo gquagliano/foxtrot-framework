@@ -26,6 +26,23 @@ picture img {
     width: 100%;
 }
 
+.deshabilitado,
+[disabled] {
+    opacity: .3;
+}
+.deshabilitado,
+.deshabilitado *,
+[disabled] {
+    cursor: not-allowed !important;
+}
+.deshabilitado .form-control,
+.form-control[disabled],
+.deshabilitado .custom-select,
+.custom-select[disabled] {
+    opacity: 1;
+    background-color: #e8ebf1;
+}
+
 /* Menú y menú contextual */
 
 .foxtrot-menu, .foxtrot-submenu {
@@ -76,9 +93,12 @@ body.escritorio .foxtrot-menu a:hover,
     background-position: calc(100% - 5px) center;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+");
 }
-.foxtrot-menu li.foxtrot-deshabilitado>a {
-    opacity: .3;
-    cursor: not-allowed;
+li.foxtrot-menu-separador::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background-color: #e8ebf1;
+    margin: 11px 0;
 }
 
 .foxtrot-menu.desplegar-izquierda,
@@ -104,6 +124,13 @@ body.escritorio .foxtrot-menu a:hover,
 .foxtrot-submenu.siempre-desplegar-arriba {
     top: auto  !important;
     bottom: -10px;
+}
+
+.item-menu.deshabilitado {
+    opacity: 1 !important;
+}
+.item-menu.deshabilitado>a {
+    opacity: .3;
 }
 
 /* Diálogos */

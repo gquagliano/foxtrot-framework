@@ -197,8 +197,8 @@
                 if(items[i].hasOwnProperty("habilitado")) {
                     var v=items[i].habilitado;
                     if(typeof v==="function") v=v();
-                    if(v) items[i].elem.removerClase("foxtrot-deshabilitado");
-                    else items[i].elem.agregarClase("foxtrot-deshabilitado");
+                    if(v) items[i].elem.removerClase("deshabilitado");
+                    else items[i].elem.agregarClase("deshabilitado");
                 }
                 
                 if(items[i].hasOwnProperty("submenu")) fn(items[i].submenu);

@@ -28,7 +28,13 @@ var componenteItemMenu=function() {
             },
             nuevaVentana:{
                 etiqueta:"Abrir en nueva ventana",
-                tipo:"bool"
+                tipo:"bool",
+                adaptativa:false
+            },
+            separador:{
+                etiqueta:"Separador",
+                tipo:"bool",
+                adaptativa:false
             }
         }
     };
@@ -212,6 +218,15 @@ var componenteItemMenu=function() {
                 this.enlace.removerAtributo("target");
             } else {
                 this.enlace.atributo("target","_blank");
+            }
+            return this;
+        }
+
+        if(propiedad=="separador") {
+            if(valor) {
+                this.elemento.agregarClase("foxtrot-menu-separador");
+            } else {
+                this.elemento.removerClase("foxtrot-menu-separador");
             }
             return this;
         }

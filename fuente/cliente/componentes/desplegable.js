@@ -84,6 +84,16 @@ var componenteDesplegable=function() {
             }
         }
 
+        if(propiedad=="deshabilitado") {
+            //Aplicar al campo (por defecto se aplica al elemento)
+            if(valor) {
+                this.campo.propiedad("disabled",true);
+            } else {
+                this.campo.removerAtributo("disabled");
+            }
+            return this;
+        }
+
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };

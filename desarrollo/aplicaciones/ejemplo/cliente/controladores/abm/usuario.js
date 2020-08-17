@@ -7,6 +7,12 @@ ui.registrarControlador("abm/usuario",function() {
     this.controladorServidor="usuarios";
 
     this.id=null;
+
+    this.niveles={
+        1:"Administrador",
+        2:"Operador",
+        3:"Usuario externo"
+    };
     
     this.listo=function() {
         ui.aplicacion().verificarUsuario(function() {

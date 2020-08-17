@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\test\modelo;
+namespace aplicaciones\ejemplo\modelo;
 
 defined('_inc') or exit;
 
@@ -30,13 +30,21 @@ class usuarios extends \modelo {
         return $usuario;
     }
 
-    public function listarUsuarios($filtro=null,$cantidad=50,$pagina=1) {
+    public function listarUsuarios($filtro=null,$cantidadPorPag=50,$pagina=1) {
+        if(!$pagina) $pagina=1;
+
         $this->reiniciar()
-            ->paginacion($cantidad,$pagina);
+            ->paginacion($cantidadPorPag,$pagina);
 
         if($filtro) $this->donde('nombre like @f or usuario like @f',['f'=>'%'.str_replace('*','%',$filtro).'%']);
 
-        return $this->obtenerListado();
+        $cantidad=$this->estimarCantidad();
+
+        return (object)[
+            'cantidad'=>$cantidad,
+            'paginas'=>ceil($cantidad/$cantidadPorPag),
+            'filas'=>$this->obtenerListado()
+        ];
     }
 
     public function eliminarUsuario($id) {

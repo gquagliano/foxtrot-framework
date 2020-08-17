@@ -6,9 +6,9 @@
  * @version 1.0
  */
 
-namespace aplicaciones\test\publico;
+namespace aplicaciones\ejemplo\publico;
 
-use \aplicaciones\test\modelo\usuarios as modeloUsuarios;
+use \aplicaciones\ejemplo\modelo\usuarios as modeloUsuarios;
 
 defined('_inc') or exit;
 
@@ -21,14 +21,14 @@ class usuarios extends \controlador {
 
         $usuarios=new modeloUsuarios;
         
-        $filas=$usuarios->listarUsuarios($filtro->texto);
+        $listado=$usuarios->listarUsuarios($filtro->texto);
 
         //Remover datos privados
-        foreach($filas as $fila) {
+        foreach($listado->filas as $fila) {
             unset($fila->contrasena);
         }
 
-        return $filas;
+        return $listado;
     }
 
     public function eliminar($id) {

@@ -6,10 +6,10 @@
  * @version 1.0
  */
 
-namespace aplicaciones\test\publico;
+namespace aplicaciones\ejemplo\publico;
 
-use \aplicaciones\test\modelo\usuario;
-use \aplicaciones\test\modelo\usuarios;
+use \aplicaciones\ejemplo\modelo\usuario;
+use \aplicaciones\ejemplo\modelo\usuarios;
 
 defined('_inc') or exit;
 

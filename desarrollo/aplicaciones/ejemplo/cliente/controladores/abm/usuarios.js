@@ -5,6 +5,12 @@ ui.registrarControlador("abm/usuarios",function() {
     var t=this;
 
     this.controladorServidor="usuarios";
+
+    this.niveles={
+        1:"Administrador",
+        2:"Operador",
+        3:"Usuario externo"
+    };
     
     this.listo=function() {
         ui.aplicacion().verificarUsuario(function() {
@@ -14,11 +20,14 @@ ui.registrarControlador("abm/usuarios",function() {
 
     this.cargarDatos=function() {
         var filtro={
-            texto:componentes.filtro.valor()
+            texto:componentes.filtro.valor(),
+            pagina:componentes.pagina.valor()
         };
 
-        this.servidor.obtenerListado(function(listado) {
-            componentes.tabla.establecerDatos(listado);
+        this.servidor.obtenerListado(function(resp) {
+            componentes.cantidad.establecerHtml(resp.cantidad);
+            componentes.tabla.establecerDatos(resp.filas);
+            ui.aplicacion().crearDesplegablePaginas(componentes.pagina,resp.paginas);
         },filtro);
     };
 

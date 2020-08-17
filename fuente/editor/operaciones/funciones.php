@@ -119,3 +119,9 @@ function reemplazarVarJson($codigo,$json) {
     $json=str_replace('\'','\\\'',$json);
     return preg_replace('/var jsonFoxtrot\s*?=\s*?\'(.+?)\'\s*?;/s','var jsonFoxtrot=\''.$json.'\';',$codigo);
 }
+
+function reemplazarTagBase($codigo) {
+    global $esPhp;
+    if(!$esPhp) return $codigo;
+    return preg_replace('/<base .*?href=("|\').+?(\1).*?>/s','<base href="<?=\foxtrot::obtenerUrl()?>">',$codigo);
+}

@@ -1114,9 +1114,9 @@ var ui=new function() {
                 //Controlador
                 instanciaControladorPrincipal.listo();
 
-                //Componentes, pero solo aquellos que lo implementen
+                //Componentes
                 instanciasComponentes.forEach(function(comp) {
-                    if(comp.hasOwnProperty("listo")) comp.listo();
+                    comp.listo();
                 });                
             }
 

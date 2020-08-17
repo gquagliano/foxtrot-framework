@@ -27,6 +27,9 @@ class enrutadorPredetermiando extends enrutador {
             return $this;
         }
 
+        $p=strpos($this->url,'?');
+        if($p!==false) $this->url=substr($this->url,0,$p);
+
         //Sin parámetros, intentar cargar archivos de la aplicación
         if(!$this->params->__c&&!$this->params->__m) {
             if($this->url=='') {

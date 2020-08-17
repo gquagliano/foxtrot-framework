@@ -910,7 +910,15 @@ var ui=new function() {
             resultado=url;
         } else {
             //Obtener URL de la vista dado su nombre
-            resultado=instanciaEnrutador.obtenerUrlVista(url);
+            var nombre=url,
+                parametros="",
+                p=url.indexOf("?");
+            if(p>=0) {
+                nombre=url.substring(0,p);
+                parametros=url.substring(p);
+            }
+            nombre=util.trim(nombre,"\\/");
+            resultado=instanciaEnrutador.obtenerUrlVista(nombre)+parametros;
         }
         return resultado;
     };
@@ -997,6 +1005,26 @@ var ui=new function() {
         urlBase=localStorage.getItem("_urlBase");
         document.head.anexar(document.crear("base").atributo("href",urlBase));
         return this;
+    };
+
+    /**
+     * Devuelve los parámetros de la URL.
+     * @returns {Object}
+     */
+    this.obtenerParametros=function() {
+        var url=window.location.href,
+            p=url.indexOf("?");
+        if(p<0) return {};
+        var resultado={};
+        url.substring(p+1).split("&").forEach(function(parte) {
+            var p=parte.indexOf("=");
+            if(p<0) {
+                resultado[decodeURIComponent(parte)]=true;
+            } else {
+                resultado[decodeURIComponent(parte.substring(0,p))]=decodeURIComponent(parte.substring(p+1));
+            }
+        });
+        return resultado;
     };
 
     /**

@@ -144,11 +144,7 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 ## Colaboraciones
 
-Foxtrot (como compañía detrás de este repositorio) es un microemprendimiento y los recursos disponibles para este ambicioso proyecto son limitados. Nuestro objetivo es que el framework pertenezca a la comunidad y que todos los desarrolladores, independientes o empresas, puedan sacar provecho de esta herramienta; es decir, no seremos los _dueños_ del framework. Esto responde a un deseo más profundo de levantar la calidad general del software y que la competencia sea por realizar el mejor trabajo de ingeniería y por dar el mejor servicio al cliente.
-
-Por lo tanto, toda colaboración es bienvenida y muy apreciada. Si este proyecto te parece una buena propuesta, sentite libre de colaborar. Solo pedimos código limpio y simple, respetando los estilos del código preexistente en cuanto a formato y nomenclatura (detallaremos estos requisitos próximamente).
-
-Podés ponerte en contacto con nosotros en contacto@foxtrot.ar para conversar y aclarar todas las dudas acerca del proyecto.
+Toda colaboración es bienvenida. Podés ponerte en contacto con nosotros en contacto@foxtrot.ar para conversar y aclarar todas las dudas acerca del proyecto.
 
 ## Más información
 

@@ -97,6 +97,16 @@ var componenteTexto=function() {
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
+
+    /**
+     * Reemplaza el contenido del componente.
+     * @param {string} html - Contenido.
+     * @returns {Componente}
+     */
+    this.establecerHtml=function(html) {
+        this.elemento.establecerHtml(html);
+        return this;
+    };
 };
 
 ui.registrarComponente("texto",componenteTexto,configComponente.clonar({

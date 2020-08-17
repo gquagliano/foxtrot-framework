@@ -58,6 +58,16 @@ var componenteEtiqueta=function() {
         this.actualizarComponente();
         return this;
     };
+
+    /**
+     * Reemplaza el contenido del componente.
+     * @param {string} html - Contenido.
+     * @returns {Componente}
+     */
+    this.establecerHtml=function(html) {
+        this.elemento.establecerHtml(html);
+        return this;
+    };
 };
 
 ui.registrarComponente("etiqueta",componenteEtiqueta,configComponente.clonar({

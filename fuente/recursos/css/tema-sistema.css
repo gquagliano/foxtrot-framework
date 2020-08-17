@@ -93,6 +93,11 @@ label {
     z-index: 999;
     background: #fff;
 }
+.formulario-tabla .btn {
+    padding: 0;
+    margin-right: 14px;
+    height: auto;
+}
 .formulario-tabla .table {
     border-collapse: separate;
 }
@@ -102,10 +107,9 @@ label {
 .table th {
     font-weight: 600;
 }
-.formulario-tabla .btn {
-    padding: 0;
-    margin-right: 14px;
-    height: auto;
+.table td, .table th {
+    padding: .5rem .7rem;
+    vertical-align: middle;
 }
 
 /*Colores*/

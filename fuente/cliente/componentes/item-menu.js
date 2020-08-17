@@ -84,8 +84,8 @@ var componenteItemMenu=function() {
             abrir=function(submenu) {
                 var elem=submenu.obtenerElemento();
 
-                //Si es el primer nivel de una barra de navegación, cerrar los demás menús que puedan estar abiertos
-                if(esPrimerNivel()) ui.cerrarMenu(null,true);
+                //Se deben cerrar todos los menús abiertos que no sean ascendencia de este
+                cerrarOtrosMenus(submenu);
 
                 ui.abrirMenu(elem);
                 t.submenuAbierto=true;
@@ -101,6 +101,22 @@ var componenteItemMenu=function() {
                         ev.stopPropagation();
                         cerrado(submenu);
                     });
+            },
+            cerrarOtrosMenus=function(menu) {
+                //Buscar ascendencia
+                var padres=[],
+                    padre=menu.obtenerPadre();
+                while(1) {
+                    if(!padre||padre.compontente=="contenedor-menu") break;
+                    if(padre.obtenerTipo()=="menu") padres.push(padre.obtenerElemento());
+                    padre=padre.obtenerPadre();
+                }
+                
+                //Cerrar todo lo que no sea ascendencia
+                ui.obtenerMenuAbierto().clonar().forEach(function(elem) {
+                    if(padres.indexOf(elem)>=0) return;
+                    ui.cerrarMenu(elem,true);
+                });
             },
             cerrar=function(submenu) {
                 var elem=submenu.obtenerElemento();

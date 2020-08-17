@@ -69,6 +69,7 @@ var expresion=function(expr) {
 
     var estimarTipo=function(valor) {
         if(typeof valor==="function") return tS.funcion;
+        if(typeof valor==="object") return tS.variable;
         return tS.valor;
     },
     operadorPredeterminado=function(expresion,indice,operacion) {
@@ -579,7 +580,7 @@ var expresion=function(expr) {
                         if(typeof v==="function") {
                             v=v.apply(this,parametrosFuncion(parte));
                         } else if(typeof v==="object") {
-                            v=v[valor(parte[0])];
+                            v=v[valor(parte)];
                         } else {
                             //throw "Error: `"+anterior.cadena+"` no es función u objeto.";
                         }

@@ -1,6 +1,6 @@
 # Aplicación de ejemplo
 
-Se incluye una aplicación de ejemplo demostrando:
+Se incluye una aplicación de ejemplo, la cual por el momento consiste en un login y un ABM de usuarios, demostrando:
 
 - Vistas, diseñadas con el editor.
 - Componentes básicos. Uso de las funciones de acceso a datos y del intérprete de expresiones.

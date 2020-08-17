@@ -2,15 +2,29 @@
  * Controlador de la vista inicio.
  */
 ui.registrarControlador("inicio",function() {
+    var t=this;
+    
     this.ingresar=function() {
-        var campos=ui.obtenerValores();
+        var datos=ui.obtenerValores();
 
-        this.servidor.ingresar(function(respuesta) {
+        if(!datos.u.trim()||!datos.c.trim()) {
+            t.error();
+            return;
+        }
+
+        this.servidor.iniciarSesion(function(respuesta) {
             if(!respuesta) {
-                alert("Datos inválidos.");
+                t.error();
             } else {
-                ui.irA("principal");
+                ui.mostrarPrecarga()
+                    .irA(respuesta);
             }
-        },campos.usuario,campos.contrasena);
+        },datos);
+    };
+
+    this.error=function() {
+        ui.alerta("Datos de acceso inválidos.",function() {
+            componentes.u.foco();
+        });
     };
 });

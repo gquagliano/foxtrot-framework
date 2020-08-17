@@ -13,7 +13,6 @@ defined('_inc') or exit;
 class aplicacion extends \aplicacion {
     public function cerrarSesion() {
         \sesion::cerrarSesion();
-        \cliente::irA('inicio');
     }
 }
 

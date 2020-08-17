@@ -17,30 +17,51 @@ class usuario extends \entidad {
     protected $tipoModelo=usuarios::class;
 
     //id y e (campo de baja lógica) son automáticos, no requieren propiedad ni comentario
+    
+    /**
+     * @etiqueta Nombre
+     * @tamano 3
+     * @requerido
+     * @tipo cadena(100)
+     */
+    public $nombre;
+    
+    /** 
+     * @etiqueta Nivel de acceso
+     * @tamano 3
+     * @requerido
+     * @tipo entero
+     */
+    public $nivel;
 
     /**
+     * @etiqueta Nombre de usuario
+     * @tamano 3
+     * @requerido
      * @tipo cadena(50)
-     * @indice
+     * @indice unico
      */
     public $usuario;
 
-    /** @tipo cadena(255) */
+    /**
+     * @etiqueta Contraseña
+     * @tamano 3
+     * @tipo cadena(255)
+     */
     public $contrasena;
-
-    public $propiedadQueNoEsCampo;
-
-    //Ejemplo de campo relacional idtest (almacena el objeto foráneo en test):
-
-    /**
-     * @tipo relacional
-     * @modelo tests
-     * @relacion 1:0
-     * @columna idtest
+    
+    /** 
+     * @etiqueta E-mail
+     * @tamano 6
+     * @requerido
+     * @tipo cadena(255)
      */
-    //public $test;
-
-    /**
-     * @tipo entero
+    public $email;    
+    
+    /** 
+     * @etiqueta Teléfono
+     * @tamano 6
+     * @tipo cadena(50)
      */
-    //public $idtest;
+    public $telefono;
 }

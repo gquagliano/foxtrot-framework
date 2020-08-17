@@ -11,4 +11,5 @@ namespace aplicaciones\ejemplo;
 defined('_inc') or exit;
 
 class aplicacion extends \aplicacion {
+    
 }

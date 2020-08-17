@@ -956,7 +956,7 @@ var ui=new function() {
     this.abrirVentana=function(ruta) {
         var ancho=window.ancho()*.75,
             alto=window.alto();
-        return window.open(this.procesarUrl(ruta),"_ventana","height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
+        return window.open(this.procesarUrl(ruta),util.cadenaAzar(),"height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
     };
 
     ////Eventos

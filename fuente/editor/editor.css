@@ -26,6 +26,11 @@ body.foxtrot-editor {
     color: #2d2e2f;
 }
 
+body.foxtrot-modo-edicion #foxtrot-barra-precarga,
+body.foxtrot-modo-edicion #foxtrot-precarga {
+    display: none !important;
+}
+
 /*Colores*/
 
 a {

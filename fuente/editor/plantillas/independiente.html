@@ -13,6 +13,7 @@
   </head>
   <body>
     <div id="foxtrot-cuerpo"></div>
+    <div id="foxtrot-barra-precarga" class="aparece"></div>
     <script src="cliente/foxtrot.js"></script>
     <script src="aplicacion/cliente/controladores/{editor_nombreVista}.js" controlador></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>

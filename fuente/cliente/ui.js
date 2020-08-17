@@ -1031,6 +1031,11 @@ var ui=new function() {
      * Inicializa el sistema.
      */
     this.inicializar=function(nombreVista) {
+        //Mostrar barra de precarga, excepto en Cordova
+        if(!modoEdicion&&!esCordova) {
+            this.mostrarPrecarga("barra");
+        }
+        
         nombreVistaPrincipal=nombreVista;
 
         //Si estamos en el marco del editor, utilizar los objetos de la ventana principal
@@ -1054,11 +1059,6 @@ var ui=new function() {
     };
 
     this.ejecutar=function() {
-        //Mostrar barra de precarga, excepto en Cordova
-        if(!modoEdicion&&!esCordova) {
-            this.mostrarPrecarga("barra");
-        }
-
         //Preparar la vista
         if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
             //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores

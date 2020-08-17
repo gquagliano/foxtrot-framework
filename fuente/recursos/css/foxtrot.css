@@ -107,19 +107,34 @@ picture img {
     position: absolute;
     height: 2px;
     background: #2196F3;
-    animation: barra-precarga;
-    animation-duration: 2.5s;
-    animation-fill-mode: both;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    width: 50%;
+    animation-duration: 20s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    width: 0%;
+    left: 0;
+}
+#foxtrot-barra-precarga.aparece::after {
+    animation-name: barra-precarga;
 }
 @keyframes barra-precarga {
     0% {
-        left: -100%;
+        width: 0%;
+    }
+    3% {
+        width: 5%;
+    }
+    8% {
+        width: 50%;
+    }
+    50% {
+        width: 75%;
+    }
+    80% {
+        width: 90%;
     }
     100% {
-        left: 100%;
+        width: 95%;
     }
 }
 
@@ -174,7 +189,7 @@ picture img {
 }
 
 .foxtrot-dialogo.aparece .dialogo-cuerpo {
-    animation: animacion-dialogo .3s;
+    animation: animacion-dialogo .2s;
     animation-fill-mode: both;
     animation-timing-function: ease-out;
 }

@@ -103,6 +103,8 @@ class foxtrot {
         if(!file_exists(_raizAplicacion)) self::error();
 
         configuracion::cargarConfigAplicacion();
+        
+        include(_servidorAplicacion.'aplicacion.php');
 
         //Modelo de datos (importar completo)
         $archivos=glob(_modeloAplicacion.'*.php');
@@ -118,7 +120,6 @@ class foxtrot {
         }
 
         if(file_exists(_servidorAplicacion.'aplicacion.php')) {
-            include(_servidorAplicacion.'aplicacion.php');
             $cls='\\aplicaciones\\'._apl.'\\aplicacion';
             self::$instanciaAplicacion=new $cls;
         }

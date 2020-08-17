@@ -570,7 +570,7 @@ var componente=new function() {
 
         if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
 
-        this.procesarPropiedades();
+        if(!ui.enModoEdicion()) this.procesarPropiedades();
         
         return this;
     };

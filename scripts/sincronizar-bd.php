@@ -46,8 +46,7 @@ $clases=[];
 
 foreach(get_declared_classes() as $clase) {
     if(preg_match('/^aplicaciones\\\\'.$aplicacion.'\\\\modelo\\\\.+/',$clase)) {
-        $tipo=get_parent_class($clase);
-        if($tipo=='modelo'&&(!$filtrar||in_array($nombre,$filtrar))) {
+        if(is_subclass_of($clase,'\\modelo')&&(!$filtrar||in_array($nombre,$filtrar))) {
             $creada=procesar($clase);
             if($creada) $clases[]=$clase;
         }

@@ -18,16 +18,20 @@ var componenteVista=function() {
     this.propiedadesConcretas={
         "Metadatos":{
             titulo:{
-                etiqueta:"Título"
+                etiqueta:"Título",
+                adaptativa:false
             },
             descripcion:{
-                etiqueta:"Descripción"
+                etiqueta:"Descripción",
+                adaptativa:false
             },
             palabrasClave:{
-                etiqueta:"Palabras clave"
+                etiqueta:"Palabras clave",
+                adaptativa:false
             },
             imagen:{
-                etiqueta:"Imagen (OG)"
+                etiqueta:"Imagen (OG)",
+                adaptativa:false
             }
         }
     };  

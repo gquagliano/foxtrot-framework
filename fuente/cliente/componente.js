@@ -59,6 +59,7 @@ var componente=new function() {
             //    adaptativa (predeterminado true)
             //    clase
             //    ayuda
+            //    evento Indica si es un evento (predeterminado false)
             //}
             color:{
                 etiqueta:"Color de texto",
@@ -202,20 +203,24 @@ var componente=new function() {
         "Eventos":{
             click:{
                 etiqueta:"Click",
-                adaptativa:false
+                adaptativa:false,
+                evento:true
             },
             menuContextual:{
                 etiqueta:"Menú contextual",
                 adaptativa:false,
-                ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú."
+                ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú.",
+                evento:true
             },
             intro:{
                 etiqueta:"Intro",
-                adaptativa:false
+                adaptativa:false,
+                evento:true
             },
             modificacion:{
                 etiqueta:"Modificacion",
-                adaptativa:false
+                adaptativa:false,
+                evento:true
             }
         },
         "Datos":{
@@ -436,6 +441,23 @@ var componente=new function() {
         return this.datos;
     };
 
+    /**
+     * Busca una propiedad por su nombre y devuelve sus parámetros.
+     * @param {strong} nombre - Nombre de la propiedad.
+     * @returns {(Object|null)}
+     */
+    this.obtenerParametrosPropiedad=function(nombre) {
+        for(var gr in this.propiedadesComunes) {
+            if(!this.propiedadesComunes.hasOwnProperty(gr)) continue;
+            if(this.propiedadesComunes[gr].hasOwnProperty(nombre)) return this.propiedadesComunes[gr][nombre];
+        }
+        for(var gr in this.propiedadesConcretas) {
+            if(!this.propiedadesConcretas.hasOwnProperty(gr)) continue;
+            if(this.propiedadesConcretas[gr].hasOwnProperty(nombre)) return this.propiedadesConcretas[gr][nombre];
+        }
+        return null;
+    };
+
     ////Gestión de la instancia
 
     /**
@@ -547,7 +569,37 @@ var componente=new function() {
         this.establecerId();
 
         if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
+
+        this.procesarPropiedades();
         
+        return this;
+    };
+
+    /**
+     * Verifica y procesa las propiedades al inicializarse la instancia.
+     * @returns {Componente}
+     */
+    this.procesarPropiedades=function() {
+        //Vamos a verificar si hay propiedades cuyos valores contengan expresiones y, en esos casos, reasignarlas para que las expresiones sean procesadas.
+        if(!this.valoresPropiedades) return this;
+
+        var t=this;
+
+        this.valoresPropiedades.forEach(function(clave,valor) {
+            //Únicamente para valores no adaptativos
+            if(typeof valor!=="string"||!valor.trim()||!/[\{\}]+/.test(valor)) return;
+
+            //Los eventos tampoco deben procesarse
+            var prop=t.obtenerParametrosPropiedad(clave);
+            if(!prop||prop.evento) return;
+
+            //Evaluar expresiones con las propiedades del origen de datos definidas como variables
+            var resultado=ui.evaluarExpresion(valor,t.datos);
+
+            //Aplicar el nuevo valor
+            t.propiedadModificada(clave,resultado,null,valor);
+        });
+
         return this;
     };
 
@@ -1202,14 +1254,20 @@ var componente=new function() {
     /**
      * Procesa una cadena que representa el manejador de un evento, almacenada en las propiedades del componente.
      * @param {string} nombre - Nombre de la propiedad a leer.
+     * @param {Object} evento - Objeto del evento.
+     * @returns {*}
      */
-    this.procesarCadenaEvento=function(nombre) {
+    this.procesarCadenaEvento=function(nombre,evento) {
         var valor=this.propiedad(null,nombre);
         if(!valor) return null;
         if(typeof valor!=="string") return valor;
+
+        var vars=Object.assign({
+            evento:evento
+        },this.datos);
         
         //Evaluar expresiones, si las contiene
-        return ui.evaluarExpresion(valor);
+        return ui.evaluarExpresion(valor,vars);
     };
 
     this.procesarEvento=function(nombre,propiedad,metodo,evento) {
@@ -1236,13 +1294,14 @@ var componente=new function() {
         }
 
         //Manejador definido por el usuario
-        var manejador=this.procesarCadenaEvento(propiedad);
-        if(!manejador) return;
+        var manejador=this.procesarCadenaEvento(propiedad,evento);
 
         var procesado=true;
 
         if(typeof manejador==="function") {
             manejador(this,evento);
+        } else if(typeof manejador==="boolean"&&manejador) {
+            //Si la expresión devolvió true, se asume procesado el evento
         } else if(typeof manejador==="string") {
             var vista=ui.obtenerInstanciaVista(this.nombreVista),
                 ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador());

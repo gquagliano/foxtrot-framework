@@ -854,11 +854,11 @@ var ui=new function() {
      */
     this.evaluarExpresion=function(cadena,variables,funciones) {
         //Agregar al intérprete el controlador y otros objetos y funciones útiles
-        
         var vars={
             ui:ui,
             util:util,
             aplicacion:instanciaAplicacion,
+            controlador:instanciaControladorPrincipal,
             componentes:componentes
         };
         if(instanciasControladores) instanciasControladores.forEach(function(nombre,obj) {

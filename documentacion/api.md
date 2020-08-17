@@ -83,6 +83,10 @@ Se implementará de forma que tenga acceso en forma predefinida a las propiedade
 
 El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
+##### Expresiones en propiedades de componentes
+
+Es posible incluir expresiones en los valores de las propiedades de los componentes, pero *solo en aquellas que no son adaptativas*, como manejadores de eventos, clase CSS, valores de campos, etc. Las expresiones en propiedades adaptativas, como, por ejemplo, el color de texto, no serán interpretadas.
+
 #### Valores predefinidos
 
 En las propiedades de componentes que admiten expresiones, como así también al utilizar el método `ui.evaluarExpresion()`, los siguientes objetos estarán disponibles:
@@ -90,9 +94,10 @@ En las propiedades de componentes que admiten expresiones, como así también al
 - `ui`
 - `util`
 - `aplicacion` Instancia del controlador de la aplicación
+- `controlador` Instancia del controlador principal
 - `componentes`
 
-Cada componente [puede definir otras variables o fuciones específicas](componentes.md).
+Las instancias de otros controladores también estarán disponibles por nombre. Cada componente [puede definir otras variables o fuciones específicas](componentes.md), además de las propiedades del origen de datos.
 
 ### Compilación
 

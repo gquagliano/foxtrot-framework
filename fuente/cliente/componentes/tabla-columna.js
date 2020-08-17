@@ -42,7 +42,8 @@ var componenteColumnaTabla=function() {
         "Eventos":{
             clickEncabezado:{
                 etiqueta:"Click en encabezado",
-                adaptativa:false
+                adaptativa:false,
+                evento:true
             }
         }
     };

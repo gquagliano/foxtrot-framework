@@ -26,13 +26,13 @@ Contraseña: test
 - Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
 - Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre, gratuita, que no te obligue a almacenar tu código en su _nube_ y que persiga el mismo nivel de integración que Foxtrot.
 - Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
-- Porque buscamos un sistema súper-rápido.
+- Porque buscamos un sistema súper-rápido: La complejidad de Foxtrot está en el diseño de las vistas durante la ejecución, es tan liviano, que es prácticamente como no usar un framework, pero manteniendo disponible la funcionalidad de Foxtrot si el código del usuario lo requiere.
 
-La complejidad de Foxtrot está en el diseño de las vistas; durante la ejecución, es tan liviano, que es prácticamente como no usar ningún framework, pero manteniendo disponible la funcionalidad de Foxtrot si el código del usuario lo requiere. Desacoplando la lógica de las vistas del DOM, buscamos también:
+Desacoplando la lógica de las vistas del DOM, buscamos también:
 
-- Que el desarrollador tenga que preocuparse casi-nada por la estructura de la vista, como en otras plataformas.
+- Que el desarrollador tenga que preocuparse *casi-nada* (normalmente, solo estilos) por la estructura de la vista, como en otras plataformas.
 - Que gracias a esta abstracción podamos, en el futuro, buscar mejores formas de representar los componentes, o portar el framework a otras plataformas, sin volver obsoleto tu código.
-- El acceso a los elementos de la vista sea más simple y directo, a través de los componentes.
+- Que el acceso a los elementos de la vista sea más simple y directo, a través de los componentes.
 
 ## Estado
 

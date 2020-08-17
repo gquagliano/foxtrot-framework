@@ -28,7 +28,7 @@
             <div class="formulario componente contenedor abm-usuarios-form-38 formulario-tabla mt-4 form" data-fxid="abm-usuarios-37">
                 <div data-fxid="abm-usuarios-39" class="componente ocultar-contenidos abm-usuarios-tabla-tabla tabla">
                     <div class="table-responsive">
-                        <table class="table table-stripped table-hover contenedor" cellspacing="0">
+                        <table class="table table-striped table-hover contenedor" cellspacing="0">
                             <tbody class="contenedor">
                                 <tr data-fxid="abm-usuarios-40" class="componente contenedor abm-usuarios-tabla-fila-41 tabla-fila">
                                     <td data-fxid="abm-usuarios-42" class="componente contenedor abm-usuarios-tabla-columna-43 tabla-columna"><span class="etiqueta componente abm-usuarios-etiqueta-45" data-fxid="abm-usuarios-44"></span></td>

@@ -1156,3 +1156,8 @@ var controladores={};
 window["ui"]=ui;
 window["componentes"]=componentes;
 window["controladores"]=controladores;
+
+//Evitar que los links <a href="#"> naveguen antes de que se hayan asignado los manejadores de eventos
+document.body.eventoFiltrado("click",{atributos:{href:"#"}},function(ev) {
+    ev.preventDefault();
+});

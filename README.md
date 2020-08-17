@@ -17,7 +17,7 @@ Desarrollado en Argentina, con su API en español.
 
 **[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
 
-Usuario: admin
+Usuario: admin  
 Contraseña: test
 
 ## ¿Por qué?

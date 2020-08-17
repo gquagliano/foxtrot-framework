@@ -27,7 +27,7 @@ var servidor=new function() {
     this.establecerPredeterminados=function(opciones) {
         this.predeterminados=Object.assign({
             metodo:null,
-            controlador:null,
+            controlador:undefined,
             controladorOrigen:null,
             modelo:null, //Por el momento, no se usa
             clase:null, //Por el momento, no se usa
@@ -75,7 +75,7 @@ var servidor=new function() {
         opciones=Object.assign(this.predeterminados.clonar(),opciones);
 
         //Por defecto, el controlador principal
-        if(!opciones.controlador) opciones.controlador=ui.controlador().obtenerNombre();
+        if(typeof opciones.controlador==="undefined") opciones.controlador=ui.controlador().obtenerNombre();
 
         if(opciones.abortar) this.abortarTodo();
 

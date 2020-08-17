@@ -26,6 +26,9 @@ if($modo=='embebible') {
     $url='operaciones/marco.php?apl='.$nombreApl.'&vista='.$nombreVista;
 } else {
     $url=foxtrot::obtenerEnrutador()->obtenerUrlVista($nombreVista);
+    //Forzar aplicación
+    $url.=strpos($url,'?')===false?'?':'&';
+    $url.='__apl='.$nombreApl;
 }
 
 echo json_encode([

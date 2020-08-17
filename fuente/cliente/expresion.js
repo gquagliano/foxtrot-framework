@@ -67,24 +67,31 @@ var expresion=function(expr) {
         };
     };
 
-    var operadorPredeterminado=function(expresion,indice,operacion) {
+    var estimarTipo=function(valor) {
+        if(typeof valor==="function") return tS.funcion;
+        return tS.valor;
+    },
+    operadorPredeterminado=function(expresion,indice,operacion) {
         var item=expresion[indice];
         if(indice<1||indice>expresion.length-2) throw "Error de síntaxis: `"+item+"` inesperado.";
         var a=valor(expresion[indice-1]),
-            b=valor(expresion[indice+1]);
-        expresion.splice(indice-1,3,new simbolo(tS.valor,operacion.call(this,a,b),item));
+            b=valor(expresion[indice+1]),
+            r=operacion.call(this,a,b);
+        expresion.splice(indice-1,3,new simbolo(estimarTipo(r),r,item));
     },
     operadorUnarioLRtlPredeterminado=function(expresion,indice,operacion) {
         var item=expresion[indice];
         if(indice<1) throw "Error de síntaxis: `"+item+"` inesperado.";
-        var a=valor(expresion[indice-1]);
-        expresion.splice(indice-1,2,new simbolo(tS.valor,operacion.call(this,a),item));
+        var a=valor(expresion[indice-1]),
+            r=operacion.call(this,a);
+        expresion.splice(indice-1,2,new simbolo(estimarTipo(r),r,item));
     },
     operadorUnarioLtrPredeterminado=function(expresion,indice,operacion) {
         var item=expresion[indice];
         if(indice>expresion.length-2) throw "Error de síntaxis: `"+item+"` inesperado.";
-        var a=valor(expresion[indice+1]);
-        expresion.splice(indice-1,2,new simbolo(tS.valor,operacion.call(this,a),item));
+        var a=valor(expresion[indice+1]),
+            r=operacion.call(this,a);
+        expresion.splice(indice-1,2,new simbolo(estimarTipo(r),r,item));
     };
 
     //Palabras reservadas, constantes, símbolos y operadores
@@ -574,7 +581,7 @@ var expresion=function(expr) {
                         } else if(typeof v==="object") {
                             v=v[valor(parte[0])];
                         } else {
-                            throw "Error: `"+anterior.cadena+"` no es función u objeto.";
+                            //throw "Error: `"+anterior.cadena+"` no es función u objeto.";
                         }
 
                         lista.splice(i-1,2,new simbolo(tS.valor,v));

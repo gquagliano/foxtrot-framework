@@ -16,7 +16,7 @@ html {
 body.foxtrot-modo-edicion.foxtrot-bordes {
     box-shadow: 0 0 0 22px rgb(251, 251, 251);
     margin-top: 22px !important;
-    margin-bottom: 77px !important;
+    margin-bottom: 22px !important;
 }
 body.foxtrot-editor {
     background-color: #fdfdfd;    
@@ -81,7 +81,7 @@ a:active {
     width: 100%;
     top: 56px;
     bottom: 0;
-    height: 100%;
+    height: calc(100vh - 56px);
     border: none;
     box-shadow: 0 0 9px rgba(0,0,0,.08), 0 0 50px rgba(0,0,0,.05);
 }
@@ -91,7 +91,7 @@ a:active {
 }
 .foxtrot-modo-edicion #foxtrot-cuerpo {
     background-color: #fff;
-    min-height: calc(100vh - 78px);
+    min-height: calc(100vh - 44px);
     z-index: 1;
     top: 0;
     background-image: url(img/fondo.png);

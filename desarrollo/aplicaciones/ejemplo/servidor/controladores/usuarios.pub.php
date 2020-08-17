@@ -6,9 +6,9 @@
  * @version 1.0
  */
 
-namespace aplicaciones\ejemplo\publico;
+namespace aplicaciones\test\publico;
 
-use \aplicaciones\ejemplo\modelo\usuarios as modeloUsuarios;
+use \aplicaciones\test\modelo\usuarios as modeloUsuarios;
 
 defined('_inc') or exit;
 
@@ -17,6 +17,8 @@ defined('_inc') or exit;
  */
 class usuarios extends \controlador {
     public function obtenerListado($filtro) {
+        \foxtrot::obtenerAplicacion()->verificarLogin();
+
         $usuarios=new modeloUsuarios;
         
         $filas=$usuarios->listarUsuarios($filtro->texto);
@@ -30,10 +32,14 @@ class usuarios extends \controlador {
     }
 
     public function eliminar($id) {
+        \foxtrot::obtenerAplicacion()->verificarLogin();
+
         (new modeloUsuarios)->eliminarUsuario($id);
     }
 
     public function guardar($datos,$id) {
+        \foxtrot::obtenerAplicacion()->verificarLogin();
+        
         //Validar campos obligatorios
         $obligatorios=['nombre','nivel','usuario'];
         if(!$id) $obligatorios[]='contrasena';
@@ -51,6 +57,37 @@ class usuarios extends \controlador {
     }
 
     public function obtenerItem($id) {
+        \foxtrot::obtenerAplicacion()->verificarLogin();
+        
         return (new modeloUsuarios)->obtenerUsuario($id);
     }
+
+    /*
+    Pruebas al ORM
+
+    Paginación
+    $usuarios=(new usuarios)->paginacion(1,1);
+
+    Contar filas
+    var_dump($usuarios->estimarCantidad());
+
+    Consulta con parámetros
+    var_dump($usuarios->establecerAlias('u')->donde('u.usuario=@test',['test'=>'geq'])->obtenerListado());
+
+    Inserción con tabla relacionada
+    $usuario=new usuario;
+    $usuario->usuario='abcdef';
+    $usuario->test=new test;
+    $usuario->test->test='adios123';
+    $usuarios->establecerValores($usuario)->guardar();
+
+    Actualización con tabla relacionada
+    $usuario=$usuarios->establecerAlias('u')->donde('u.id=@id',['id'=>3])->obtenerUno();
+    $usuario->contrasena='x999';
+    $usuario->test->test='pepe9999';
+    $usuarios->establecerValores($usuario)->guardar();
+
+    Eliminar
+    $usuarios->donde(['id'=>2])->eliminar();
+    */
 }

@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\ejemplo\modelo;
+namespace aplicaciones\test\modelo;
 
 defined('_inc') or exit;
 

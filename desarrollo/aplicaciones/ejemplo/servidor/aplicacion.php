@@ -6,10 +6,15 @@
  * @version 1.0
  */
 
-namespace aplicaciones\ejemplo;
+namespace aplicaciones\test;
 
 defined('_inc') or exit;
 
 class aplicacion extends \aplicacion {
-    
+    public function verificarLogin() {
+        if(!\sesion::verificarUsuario()) {
+            //Podemos simplemente detener la ejecución sin devolver ningún mensaje; si es un acceso legítimo, el cliente ya habrá redirigido al usuario al ingreso.
+            \foxtrot::detener();
+        }
+    }
 }

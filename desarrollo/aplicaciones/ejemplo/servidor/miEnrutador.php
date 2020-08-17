@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\ejemplo\enrutadores;
+namespace aplicaciones\test\enrutadores;
 
 defined('_inc') or exit;
 

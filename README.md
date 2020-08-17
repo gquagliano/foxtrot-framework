@@ -15,6 +15,8 @@ Desarrollado en Argentina, con su API en español.
 
 **[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8).**
 
+**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar).**
+
 ## ¿Por qué?
 
 - Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.

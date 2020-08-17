@@ -49,6 +49,14 @@ class foxtrot {
         self::$enrutadorApl=$obj;
     }
 
+    /**
+     * Devuelve la instancia de la clase de aplicación.
+     * @return \aplicacion
+     */
+    public static function obtenerAplicacion() {
+        return self::$instanciaAplicacion;
+    }
+
     protected static function definirConstantes() {
         //TODO Las rutas, a excepción de _raiz, deberían consultarse con métodos, en lugar de usar constantes
         define('_raiz',realpath(__DIR__.'/..').'/');

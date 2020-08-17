@@ -157,14 +157,14 @@ var componenteItemMenu=function() {
                     ev.stopPropagation();
                 }
             }).evento("touchstart",function(ev) {
-                //Este evento se procesa siempre, ya que en dispositivos táctiles siempre abre/cierra al toque
+                ev.stopPropagation();
+
                 var submenu=t.obtenerHijos();
                 if(!submenu.length) return;
                 
                 ev.preventDefault();
-                ev.stopPropagation();
-                ignorarClick=true;
 
+                ignorarClick=true;
                 alternar(submenu[0]);
             }).evento("click",function(ev) {
                 if(ignorarClick) {

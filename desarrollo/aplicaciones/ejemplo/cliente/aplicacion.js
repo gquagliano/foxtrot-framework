@@ -19,4 +19,16 @@ ui.registrarAplicacion(function() {
             ui.irA("inicio");
         });
     };
+
+    this.crearDesplegablePaginas=function(comp,pags) {
+        var pagina=comp.valor()
+            opciones={};
+
+        for(var i=1;i<=pags;i++) opciones[i]=i;
+
+        comp.establecerOpciones(opciones)
+            .valor(pagina?pagina:1); //Reestablecer valor luego de haber reemplazado las opciones
+
+        return this;
+    };
 });

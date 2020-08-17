@@ -11,6 +11,7 @@
   <title>Iniciar sesión</title></head>
   <body>
     <div id="foxtrot-cuerpo" class="componente vista contenedor inicio-vista-15 d-flex flex-column justify-content-center" data-fxid="inicio-2"><div class="container componente contenedor inicio-contenedor-4" data-fxid="inicio-3"><div class="formulario componente contenedor formulario-ingreso form inicio-form-6 d-flex justify-content-center" data-fxid="inicio-5"><picture data-fxid="inicio-7" class="componente imagen inicio-imagen-8"><img src="aplicaciones/test/recursos/img/foxtrot-transp.png"></picture><div class="componente contenedor text-center inicio-contenedor-10" data-fxid="inicio-9"><div data-fxid="inicio-11" class="componente autofoco campo inicio-campo-u"><input class="form-control" type="text" value="" placeholder="Usuario"></div><div data-fxid="inicio-12" class="componente campo inicio-campo-c"><input class="form-control" type="password" placeholder="Contraseña"></div><a href="#" data-fxid="inicio-13" class="componente btn btn-primary predeterminado boton inicio-boton-14">Ingresar</a></div></div></div></div>
+    <div id="foxtrot-barra-precarga" class="aparece"></div>
     <script src="cliente/foxtrot.js"></script>
     <script src="aplicacion/cliente/controladores/inicio.js" controlador=""></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>

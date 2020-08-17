@@ -21,7 +21,7 @@ class usuarios extends \controlador {
 
         $usuarios=new modeloUsuarios;
         
-        $listado=$usuarios->listarUsuarios($filtro->texto);
+        $listado=$usuarios->listarUsuarios($filtro->texto,$filtro->pagina);
 
         //Remover datos privados
         foreach($listado->filas as $fila) {

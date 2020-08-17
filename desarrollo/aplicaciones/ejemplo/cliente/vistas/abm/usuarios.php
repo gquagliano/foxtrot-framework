@@ -42,6 +42,7 @@
             </div>
         <div class="row contenedor componente fila mb-4 align-items-center abm-usuarios-fila-7" data-fxid="abm-usuarios-6"><div class="contenedor componente columna col-6 abm-usuarios-columna-10" data-fxid="abm-usuarios-9"><span class="etiqueta componente mr-2 abm-usuarios-etiqueta-cantidad" data-fxid="abm-usuarios-13"></span><span class="componente texto abm-usuarios-texto-15" data-fxid="abm-usuarios-14">elementos.</span></div><div class="contenedor componente columna col-6 abm-usuarios-columna-17" data-fxid="abm-usuarios-16"><div data-fxid="abm-usuarios-18" class="componente desplegable float-right abm-usuarios-desplegable-pagina"><select class="custom-select"></select></div><span class="componente texto float-right mt-1 mr-2 abm-usuarios-texto-20" data-fxid="abm-usuarios-19">Página:</span></div></div></div>
     </div>
+    <div id="foxtrot-barra-precarga" class="aparece"></div>
     <script src="cliente/foxtrot.js"></script>
     <script src="aplicacion/cliente/controladores/abm/usuarios.js" controlador=""></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>

@@ -7,6 +7,7 @@
 
 /**
  * Editor de vistas.
+ * @typedef {editor}
  */
 var editor=new function() {
     "use strict";
@@ -368,7 +369,7 @@ var editor=new function() {
 
                 if(!ev.shiftKey) self.limpiarSeleccion();
 
-                self.establecerSeleccion(this);
+                self.alternarSeleccion(this);
             })
             .eventoFiltrado("contextmenu",{
                 clase:"componente"
@@ -387,7 +388,7 @@ var editor=new function() {
                         accion:function(comp) {
                             return function() {
                                 if(!seleccionMultiple) self.limpiarSeleccion();
-                                self.establecerSeleccion(comp);
+                                self.alternarSeleccion(comp);
                             };
                         }(comp)
                     });
@@ -682,6 +683,29 @@ var editor=new function() {
         return obj;
     };
 
+    /**
+     * Selecciona el componente, o lo deselecciona si ya se encuentra seleccionado.
+     * @param {(Componente|Node|Element)} obj - Objeto a seleccionar.
+     * @returns {editor}
+     */
+    this.alternarSeleccion=function(obj) {
+        var elem=obj;        
+        if(util.esComponente(obj)) elem=obj.obtenerElemento();
+        
+        if(elem.es({clase:"seleccionado"})) {
+            this.removerSeleccion(obj);
+        } else {
+            this.establecerSeleccion(obj);
+        }
+
+        return this;
+    };
+    
+    /**
+     * Selecciona el componente.
+     * @param {(Componente|Node|Element)} obj - Objeto a seleccionar.
+     * @returns {editor}
+     */
     this.establecerSeleccion=function(obj) {
         var elem,comp;
         
@@ -705,7 +729,7 @@ var editor=new function() {
 
         this.componentesSeleccionados.push(comp);
         
-        if(!this.esCuerpo(elem)&&ui.obtenerCuerpo().querySelector(".seleccionado>.foxtrot-etiqueta-componente")===null) {
+        if(!this.esCuerpo(elem)&&!elem.hijos({clase:"foxtrot-etiqueta-componente"}).length) {
             var config=ui.obtenerComponentes()[comp.componente].config;
             document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='recursos/componentes/iconos/"+config.icono+"'></span>")
                 .atributo("title",config.etiqueta)
@@ -727,6 +751,58 @@ var editor=new function() {
         return obj==c||(ui.esComponente(obj)&&obj.obtenerElemento()==c);
     };
 
+    /**
+     * Deselecciona el componente.
+     * @param {(Componente|Node|Element)} obj - Objeto a seleccionar.
+     * @returns {editor}
+     */
+    this.removerSeleccion=function(obj) {
+        var elem,comp;
+        
+        if(util.esComponente(obj)) {
+            comp=obj;
+            elem=comp.obtenerElemento();
+        } else {
+            comp=ui.obtenerInstanciaComponente(obj);
+            elem=obj;
+        }
+
+        //Remover estilos
+        elem.removerClase("seleccionado");
+
+        //Reconstruir clase .hijo-seleccionado
+        var cuerpo=ui.obtenerCuerpo();
+        cuerpo.querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
+        cuerpo.querySelectorAll(".seleccionado").forEach(function(sel) {
+            var padre=ui.obtenerInstanciaComponente(sel);
+            if(!padre) return;
+            while(1) {
+                padre=padre.obtenerPadre();
+                if(!padre) break;
+                padre.obtenerElemento().agregarClase("hijo-seleccionado");
+            }
+        });
+
+        //Remover de componentesSeleccionados
+        for(var i=0;i<this.componentesSeleccionados.length;i++) {
+            if(this.componentesSeleccionados[i]==comp) {
+                delete this.componentesSeleccionados[i];
+                break;
+            }
+        }
+
+        construirPropiedades();
+
+        //Desactivar portapapeles si no quedan elementos seleccionados
+        if(this.componentesSeleccionados.length==0) document.querySelectorAll("#foxtrot-btn-copiar,#foxtrot-btn-cortar,#foxtrot-btn-pegar").propiedad("disabled",true);
+
+        return this;
+    };
+
+    /**
+     * Deselecciona todo.
+     * @returns {editor}
+     */
     this.limpiarSeleccion=function() {
         ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");

@@ -39,6 +39,7 @@ var componente=new function() {
     this.nombreVista=null;
     this.datos=null;
     this.oculto=false;
+    this.campo=null;
 
     /**
      * Almacen de valores de parámetros.
@@ -569,10 +570,24 @@ var componente=new function() {
         this.establecerId();
 
         if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
-
-        if(!ui.enModoEdicion()) this.procesarPropiedades();
         
         return this;
+    };
+
+    /**
+     * Evento Listo (método para sobreescribir).
+     * @returns {Componente}
+     */
+    this.listo=function() {
+        return this.listoComponente();
+    };
+
+    /**
+     * Evento Listo.
+     * @returns {Componente}
+     */
+    this.listoComponente=function() {
+        this.procesarPropiedades();
     };
 
     /**
@@ -740,6 +755,17 @@ var componente=new function() {
      * Actualiza el componente y sus hijos en forma recursiva.
      */
     this.actualizarComponente=function() {
+        //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedad` y el componente presente un campo,
+        //intentar asignar el valor desde el origen de datos (otros usos de la propiedad deben implementarse en actualizar() en el 
+        //componente concreto)        
+        if(this.datos&&this.campo) {
+            var propiedad=this.propiedad(null,"propiedad");
+            if(!propiedad) return this;
+
+            var valor=this.datos[propiedad];
+            if(typeof valor!=="undefined") this.valor(valor);
+        }
+
         this.obtenerHijos().forEach(function(hijo) {
             hijo.actualizar();
         });
@@ -1147,6 +1173,14 @@ var componente=new function() {
      * @returns {(*|Componente)}
      */
     this.valor=function(valor) {
+        if(this.campo) {
+            if(typeof valor==="undefined") {
+                return this.campo.valor();
+            } else {
+                this.campo.valor(valor);
+            }
+        }
+        return this;
     };
 
     ////Editor de texto WYSIWYG
@@ -1452,7 +1486,7 @@ var componente=new function() {
      * Da foco al componente.
      */
     this.foco=function() {
-        this.elemento.focus();
+        (this.campo||this.elemento).focus();
         return this;
     };
 
@@ -1539,12 +1573,6 @@ var componente=new function() {
         });
 
         return this;
-    };
-    
-    /**
-     * Evento 'Listo' (método para sobreescribir).
-     */
-    this.listo=function() {
     };
 };
 

@@ -43,7 +43,7 @@ body.cordova {
     padding: 30px;
 }
 .formulario>.row {
-    margin-bottom: 13px;
+    margin-bottom: 1rem;
 }
 .formulario>:last-child {
     margin-bottom: 0;
@@ -58,14 +58,20 @@ label {
     font-weight: inherit;
 }
 .form-control,.custom-select {
-    height: calc(1.1em + .75rem + 2px);
+    height: calc(1.1rem + .75rem + 2px);
     padding: .375rem .5rem;
     color: inherit;
+}
+.custom-select {
+    padding: 0 2.1rem 0 .5rem;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1kb3duIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=");
+    background-size: 1.1em;
+    background-position-x: calc(100% - .4em);
 }
 .btn {
     text-transform: uppercase;
     font-weight: 600;
-    height: calc(1.1em + .75rem + 2px);
+    height: calc(1.1rem + .75rem + 2px);
     padding: .2rem .75rem;
 }
 .form-control:focus,
@@ -95,7 +101,7 @@ label {
 }
 .formulario-tabla .btn {
     padding: 0;
-    margin-right: 14px;
+    margin-right: 1rem;
     height: auto;
 }
 .formulario-tabla .table {

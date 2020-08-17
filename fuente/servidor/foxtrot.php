@@ -99,6 +99,9 @@ class foxtrot {
 
     protected static function cargarAplicacion() {
         self::definirConstantesAplicacion();
+
+        if(!file_exists(_raizAplicacion)) self::error();
+
         configuracion::cargarConfigAplicacion();
 
         //Modelo de datos (importar completo)
@@ -142,7 +145,13 @@ class foxtrot {
         if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
         if(!$aplicacion) {
-            self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+            //Es posible saltearse el enrutador de aplicación con el parámetro __apl
+            if($_REQUEST['__apl']) {
+                $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
+                self::$aplicacion=$aplicacion;
+            } else {
+                self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+            }
             if(!self::$aplicacion) self::error();
         } else {
             self::$aplicacion=$aplicacion;

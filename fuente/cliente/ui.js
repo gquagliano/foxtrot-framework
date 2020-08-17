@@ -1079,6 +1079,8 @@ var ui=new function() {
             editor.ejecutar();
         } else {
             if(!this.esMovil()) {
+                body.agregarClase("escritorio");
+
                 var elem=doc.querySelector(".autofoco");
                 if(elem) {
                     var comp=this.obtenerInstanciaComponente(elem);
@@ -1090,11 +1092,14 @@ var ui=new function() {
                         elem.focus();
                     }
                 }
+            } else {
+                body.agregarClase("movil");
             }
 
             this.establecerEventos();
 
             if(esCordova) {
+                body.agregarClase("cordova");
                 document.querySelector("#contenedor-cordova").agregarClase("listo");
             }
 

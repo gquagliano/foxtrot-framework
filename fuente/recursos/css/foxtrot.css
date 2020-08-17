@@ -63,7 +63,7 @@ picture img {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.foxtrot-menu a:hover,
+body.escritorio .foxtrot-menu a:hover,
 .foxtrot-menu a:focus,
 .foxtrot-menu a:active,
 .foxtrot-menu .submenu-abierto>a {

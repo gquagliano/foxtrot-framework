@@ -14,18 +14,11 @@ var componenteCampo=function() {
     var t=this;
     
     this.componente="campo";
-    this.campo=null;
 
     /**
      * Propiedades de Campo.
      */
     this.propiedadesConcretas={
-        "Estilo":{
-            relleno:{
-                etiqueta:"Texto de relleno",
-                adaptativa:false
-            }
-        },
         "Campo":{
             tipo:{
                 etiqueta:"Tipo",
@@ -39,21 +32,29 @@ var componenteCampo=function() {
                 adaptativa:false
             },
             valor:{
-                etiqueta:"Valor inicial"
+                etiqueta:"Valor inicial",
+                adaptativa:false
+            },
+            relleno:{
+                etiqueta:"Texto de relleno",
+                adaptativa:false
             }
         },
         "Formato":{
             longitud:{
                 etiqueta:"Longitud máxima",
-                tipo:"numero"
+                tipo:"numero",
+                adaptativa:false
             },
             paso:{
                 etiqueta:"Paso (campo numérico)",
-                tipo:"numero"
+                tipo:"numero",
+                adaptativa:false
             },
             ocultarControl:{
-                etiqueta:"Ocultar control +/-",
-                tipo:"bool"
+                etiqueta:"Ocultar control ±",
+                tipo:"bool",
+                adaptativa:false
             }
         }
     };
@@ -65,6 +66,7 @@ var componenteCampo=function() {
         if(this.inicializado) return this; 
 
         this.campo=this.elemento.querySelector("input");
+        this.elementoEventos=this.campo;
 
         this.inicializarComponente();
         return this;
@@ -104,20 +106,6 @@ var componenteCampo=function() {
 
         this.establecerEventosComponente();
         return this;
-    };
-
-    /**
-     * Devuelve o establece el valor del componente (método para sobreescribir).
-     * @param {*} valor - Valor a establecer
-     * @returns {*}
-     */
-    this.valor=function(valor) {
-        if(typeof valor==="undefined") {
-            return this.campo.valor();
-        } else {
-            this.campo.valor(valor);
-            return this;
-        }
     };
 
     /**
@@ -187,31 +175,6 @@ var componenteCampo=function() {
         }
 
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
-        return this;
-    };    
-
-    /**
-     * Da foco al componente.
-     */
-    this.foco=function() {
-        this.campo.focus();
-        return this;
-    };
-
-    /**
-     * Actualiza el componente.
-     * @returns {Componente}
-     */
-    this.actualizar=function() {
-        if(!this.datos) return this;
-
-        var propiedad=this.propiedad(null,"propiedad");
-        if(!propiedad) return this;
-
-        //Cuando se asigne un origen de datos y esté establecida la propiedad `propiedad`, asignamos el valor desde los datos
-        var valor=this.datos[propiedad];
-        if(typeof valor!=="undefined") this.valor(valor);
-
         return this;
     };
 };

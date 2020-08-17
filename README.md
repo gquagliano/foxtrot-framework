@@ -13,9 +13,9 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español.
 
-**[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8).**
+**[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8)**
 
-**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar).**
+**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
 Usuario: admin
 contraseña: test
 

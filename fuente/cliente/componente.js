@@ -1186,7 +1186,7 @@ var componente=new function() {
     /**
      * Devuelve o establece el valor del componente (método para sobreescribir).
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
-     * @returns {(*|Componente)}
+     * @returns {(*|undefined)}
      */
     this.valor=function(valor) {
         if(this.campo) {
@@ -1196,7 +1196,6 @@ var componente=new function() {
                 this.campo.valor(valor);
             }
         }
-        return this;
     };
 
     ////Editor de texto WYSIWYG

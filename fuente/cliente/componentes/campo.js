@@ -65,7 +65,7 @@ var componenteCampo=function() {
     this.inicializar=function() {
         if(this.inicializado) return this; 
 
-        this.campo=this.elemento.querySelector("input");
+        this.campo=this.elemento.querySelector("input,textarea");
         this.elementoEventos=this.campo;
 
         this.inicializarComponente();
@@ -84,24 +84,23 @@ var componenteCampo=function() {
     };
 
     /**
-     * Establece los eventos.
+     * Evento Intro.
+     * @returns {Componente}
      */
-    this.establecerEventos=function() {
+    this.intro=function(ev) {
         if(!ui.enModoEdicion()) {
             //Enviar formulario con Enter
-            this.campo.evento("keydown",function(ev) {
-                var esTextarea=t.propiedad(null,"tipo")=="multilinea";
-
-                if(ev.which==13&&!esTextarea) {
+            var esTextarea=t.propiedad(null,"tipo")=="multilinea",
+                manejador=t.propiedad(null,"intro");
+            if(!manejador) { //Si hay un evento definido por el usuario, dejar que sea procesado
+                if(!esTextarea) { //Campo multilínea no reacciona al enter
+                    this.enviarFormulario();
                     ev.preventDefault();
-
-                    //Ejecutar evento Click en el botón predeterminado del formulario
-                    var formulario=t.campo.padre({clase:"formulario"}),
-                        boton=null;
-                    if(formulario) boton=formulario.querySelector(".predeterminado");
-                    if(boton) boton.ejecutarEvento("click");
                 }
-            });
+                //Detener evento, aunque sea multilínea
+                ev.stopPropagation();
+                return true;
+            }
         }
 
         this.establecerEventosComponente();

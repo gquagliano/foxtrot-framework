@@ -36,16 +36,16 @@ body.cordova {
 
 /*Campos y botones*/
 
-.formulario {
+.cuerpo-formulario {
     margin-bottom: 20px;
     background-color: #fff;
     border-radius: 2px;
     padding: 30px;
 }
-.formulario>.row {
+.cuerpo-formulario>.row {
     margin-bottom: 1rem;
 }
-.formulario>:last-child {
+.cuerpo-formulario>:last-child {
     margin-bottom: 0;
 }
 label {

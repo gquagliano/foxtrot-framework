@@ -17,8 +17,8 @@ Una vez clonado el repositorio, o descargado y extraído, dentro del directiorio
 
 1. Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído.
 
-    cd ruta/scripts
-    php construir-framework.php -d
+	cd ruta/scripts
+	php construir-framework.php -d
 
 Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correctamente configurado).
 
@@ -28,7 +28,7 @@ Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correc
 
 4. Instalar la base de datos de la aplicación de ejemplo:
 
-    php sincronizar-bd.php -a=ejemplo
+	php sincronizar-bd.php -a=ejemplo
 
 Listo. Ya puede ejecutarse la aplicación en el navegador web simplemente ingresando a `http://localhost/experimental-foxtrot-framework/desarrollo/` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
@@ -38,7 +38,7 @@ Ver [Editor](editor.md) para información sobre el acceso al editor de vistas.
 
 1. Para construir la aplicación, puede utilizarse el script `construir-apl` (ver [Scripts de compilación](scripts.md)):
 
-    php construir-apl.php -a=ejemplo
+	php construir-apl.php -a=ejemplo
 
 Listo. Puede publicarse el contenido del directorio `produccion` directamente en el servidor web.
 
@@ -46,7 +46,7 @@ Listo. Puede publicarse el contenido del directorio `produccion` directamente en
 
 1. Para construir la aplicación para Cordova, puede utilizarse el script `construir-embebible` (ver [Scripts de compilación](scripts.md)):
 
-    php construir-embebible.php -a=ejemplo -i=cordova.html -d
+	php construir-embebible.php -a=ejemplo -i=cordova.html -d
 
 *Nota:* El valor de `-i` debe ser el nombre de una vista creada para Cordova.
 

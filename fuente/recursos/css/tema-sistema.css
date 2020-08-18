@@ -36,7 +36,8 @@ body.cordova {
 
 /*Campos y botones*/
 
-.cuerpo-formulario {
+.cuerpo-formulario,
+.formulario-tabla {
     margin-bottom: 20px;
     background-color: #fff;
     border-radius: 2px;

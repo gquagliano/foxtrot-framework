@@ -292,7 +292,7 @@ var componente=new function() {
     /**
      * Devuelve si el componente está oculto o no.
      */
-    this.esOculto=function() {
+    this.esComponenteOculto=function() {
         return this.oculto;
     };
 
@@ -300,7 +300,7 @@ var componente=new function() {
      * Establece que el componente está oculto.
      * @returns {Componente}
      */
-    this.ocultar=function() {
+    this.establecerComponenteOculto=function() {
         this.oculto=true;
         return this;
     };

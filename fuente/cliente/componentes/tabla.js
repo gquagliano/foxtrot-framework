@@ -120,7 +120,7 @@ var componenteTabla=function() {
         if(typeof comp==="undefined") comp=this;
         var t=this;
         comp.obtenerHijos().forEach(function(hijo) {
-            hijo.ocultar();
+            hijo.establecerComponenteOculto();
             t.ocultarDescendencia(hijo);
         });
         return this;

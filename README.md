@@ -20,6 +20,10 @@ Desarrollado en Argentina, con su API en español.
 Usuario: admin  
 Contraseña: test
 
+## Primeros pasos
+
+Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
+
 ## ¿Por qué?
 
 - Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
@@ -59,11 +63,7 @@ En líneas generales,
 - Completar la documentación; revisar y completar JSDOC y PHPDOC.
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
 
-Luego seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
-
-## Primeros pasos
-
-Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
+Seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
 
 #### Aplicación de ejemplo
 

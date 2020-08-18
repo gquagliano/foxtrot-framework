@@ -30,7 +30,7 @@ class usuarios extends \modelo {
         return $usuario;
     }
 
-    public function listarUsuarios($filtro=null,$cantidadPorPag=50,$pagina=1) {
+    public function listarUsuarios($filtro=null,$pagina=1,$cantidadPorPag=50) {
         if(!$pagina) $pagina=1;
 
         $this->reiniciar()

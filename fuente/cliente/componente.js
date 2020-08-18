@@ -1498,6 +1498,19 @@ var componente=new function() {
     ////Utilidades
 
     /**
+     * Intenta enviar el formulario (componente Formulario) al que pertenece el componente.
+     * @returns {Componente}
+     */
+    this.enviarFormulario=function() {
+        //Ejecutar evento Click en el botón predeterminado del formulario
+        var formulario=this.campo.padre({clase:"formulario"}),
+            boton=null;
+        if(formulario) boton=formulario.querySelector(".predeterminado");
+        if(boton) boton.ejecutarEvento("click");
+        return this;
+    };
+
+    /**
      * Devuelve la configuración del tipo de componente.
      * @returns {Object}
      */

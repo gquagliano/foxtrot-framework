@@ -595,8 +595,25 @@ var ui=new function() {
             nombre:nombreVistaPrincipal
         };
 
+        var fn=function(obj) {
+            for(var propiedad in obj) {
+                if(!obj.hasOwnProperty(propiedad)) continue;
+                var elem=obj[propiedad];
+                if(elem===null||util.esObjetoVacio(elem)||elem==="") {
+                    delete obj[propiedad];
+                } else if(typeof elem==="object") {
+                    fn(elem);
+                }
+            }
+        };
+
         instanciasComponentes.forEach(function(obj) {
-            resultado.componentes.push(ui.obtenerJsonComponente(obj));
+            var componente=ui.obtenerJsonComponente(obj);
+            
+            //Eliminar propiedades vacías
+            fn(componente);
+
+            resultado.componentes.push(componente);
         });
 
         return JSON.stringify(resultado);

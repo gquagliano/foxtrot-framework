@@ -53,6 +53,7 @@ var componenteEtiqueta=function() {
             }
         }
 
+        if(typeof resultado!=="string") resultado=""; //Evitar 'undefined' u otros valores
         this.elemento.establecerHtml(resultado);
 
         this.actualizarComponente();

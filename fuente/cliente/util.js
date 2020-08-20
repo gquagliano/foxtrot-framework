@@ -110,6 +110,16 @@ var util={
         var exp=new RegExp("(^"+caracteres+"|"+caracteres+"$)","g");
         while(exp.test(cadena)) cadena=cadena.replace(exp,"");
         return cadena;
+    },
+
+    /**
+     * Determina si el valor dado es un objeto vacío.
+     * @param {*} obj - Valor a evaluar.
+     * @returns {boolean}
+     */
+    esObjetoVacio:function(obj) {
+        var s=JSON.stringify(obj);
+        return s=='{}'||s=='[]';
     }
 };
 

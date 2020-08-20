@@ -206,3 +206,25 @@ function eliminarDir($ruta) {
         unlink($ruta);
     }
 }
+
+function obtenerArgumentos() {
+    global $argv;
+
+    //El problema con getopt() es que los parámetros que no estén especificados se mezclan con los que sí lo están
+    //Por ejemplo getopt('a:') producirá una salida incorrecta para `-a=parametro -b=parametro`, tomando todas las letras `a` de `-b` como instancias de `-a`
+    //A continuación extraemos sólo los parámetros que están precedidos por `-`
+
+    $parametros=[];
+    array_shift($argv);
+    foreach($argv as $arg) {
+        if(substr($arg,0,1)!='-') continue;
+        $arg=substr($arg,1);
+        $igual=strpos($arg,'=');
+        if($igual>0) {
+            $parametros[substr($arg,0,$igual)]=substr($arg,$igual+1);
+        } else {
+            $parametros[$arg]=true;
+        }
+    }    
+    return $parametros;
+}

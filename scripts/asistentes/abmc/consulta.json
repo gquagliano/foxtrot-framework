@@ -1,0 +1,312 @@
+{
+    "version": 1,
+    "componentes": [
+        {
+            "id": "{idVista}2",
+            "nombre": null,
+            "componente": "vista",
+            "propiedades": {
+                "titulo": "{titulo}"
+            }
+        },
+        {
+            "id": "{idVista}4",
+            "nombre": null,
+            "selector": ".{idVista}contenedor-33",
+            "componente": "contenedor",
+            "propiedades": {
+                "tipo": "fluido",
+                "alto": {
+                    "g": "100vh"
+                },
+                "estructura": {
+                    "g": "flexVertical"
+                }
+            }
+        },
+        {
+            "id": "{idVista}34",
+            "nombre": null,
+            "selector": null,
+            "componente": "texto",
+            "propiedades": {
+                "formato": "h1"
+            }
+        },
+        {
+            "id": "{idVista}35",
+            "nombre": null,
+            "selector": ".{idVista}boton-36",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "primary",
+                "click": "ir:{nombreSingular}"
+            }
+        },
+        {
+            "id": "{idVista}37",
+            "nombre": null,
+            "selector": ".{idVista}form-38",
+            "componente": "form",
+            "propiedades": {
+                "clase": "formulario-tabla mt-4 mb-4",
+                "flex": {
+                    "g": "1"
+                }
+            }
+        },
+        {
+            "id": "{idVista}39",
+            "nombre": "tabla",
+            "selector": ".{idVista}tabla-tabla",
+            "componente": "tabla",
+            "propiedades": {
+                "ocultarContenidos": true,
+                "vacia": "Sin datos."
+            }
+        },
+        {
+            "id": "{idVista}40",
+            "nombre": null,
+            "selector": ".{idVista}tabla-fila-41",
+            "componente": "tabla-fila"
+        },
+        {
+            "id": "{idVista}42",
+            "nombre": null,
+            "selector": ".{idVista}tabla-columna-43",
+            "componente": "tabla-columna",
+            "propiedades": {
+                "encabezado": "Código",
+                "encabezadoActivo": true,
+                "columna":"id"
+            }
+        },
+        {
+            "id": "{idVista}44",
+            "nombre": null,
+            "selector": ".{idVista}etiqueta-45",
+            "componente": "etiqueta",
+            "propiedades": {
+                "propiedad": "id"
+            }
+        },
+/*campo
+        {
+            "id": "{idVista}46-{n}",
+            "nombre": null,
+            "selector": ".{idVista}tabla-columna-47",
+            "componente": "tabla-columna",
+            "propiedades": {
+                "encabezado": "{encabezado}",
+                "encabezadoActivo": true,
+                "columna":"{columna}"
+            }
+        },
+        {
+            "id": "{idVista}48-{n}",
+            "nombre": null,
+            "selector": ".{idVista}etiqueta-49",
+            "componente": "etiqueta",
+            "propiedades": {
+                "propiedad": "{columna}"
+            }
+        },
+*/
+        {
+            "id": "{idVista}50",
+            "nombre": null,
+            "selector": ".{idVista}tabla-columna-51",
+            "componente": "tabla-columna",
+            "propiedades": {
+                "encabezado": "Opciones"
+            }
+        },
+        {
+            "id": "{idVista}52",
+            "nombre": null,
+            "selector": ".{idVista}boton-54",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "click": "ir:{nombreSingular}/?id={id}"
+            }
+        },
+        {
+            "id": "{idVista}53",
+            "nombre": null,
+            "selector": ".{idVista}boton-55",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "click": "eliminar"
+            }
+        },
+        {
+            "id": "{idVista}56",
+            "nombre": null,
+            "selector": null,
+            "componente": "fila"
+        },
+        {
+            "id": "{idVista}57",
+            "nombre": null,
+            "selector": ".{idVista}columna-58",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "12",
+                    "lg": "6",
+                    "xl": "8"
+                }
+            }
+        },
+        {
+            "id": "{idVista}3",
+            "nombre": "",
+            "selector": ".{idVista}columna-4",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "12",
+                    "lg": "6",
+                    "xl": "4"
+                }
+            }
+        },
+        {
+            "id": "{idVista}5",
+            "nombre": null,
+            "selector": ".{idVista}fila-2",
+            "componente": "fila",
+            "propiedades": {
+                "clase": "mt-3 mt-lg-0"
+            }
+        },
+        {
+            "id": "{idVista}8",
+            "nombre": null,
+            "selector": ".{idVista}columna-15",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "9"
+                }
+            }
+        },
+        {
+            "id": "{idVista}10",
+            "nombre": "filtro",
+            "selector": ".{idVista}campo-filtro",
+            "componente": "campo",
+            "propiedades": {
+                "relleno": "Filtrar...",
+                "intro": "cargarDatos"
+            }
+        },
+        {
+            "id": "{idVista}11",
+            "nombre": null,
+            "selector": ".{idVista}columna-14",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "3"
+                }
+            }
+        },
+        {
+            "id": "{idVista}12",
+            "nombre": null,
+            "selector": ".{idVista}boton-13",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "click": "cargarDatos",
+                "estructura": {
+                    "g": "bloque"
+                },
+                "estilo": "secondary"
+            }
+        },
+        {
+            "id": "{idVista}9",
+            "nombre": null,
+            "selector": ".{idVista}fila-21",
+            "componente": "fila",
+            "propiedades": {
+                "clase": "mb-4",
+                "justificacionItems": {
+                    "g": "centro"
+                }
+            }
+        },
+        {
+            "id": "{idVista}13",
+            "nombre": null,
+            "selector": ".{idVista}columna-17",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "6"
+                }
+            }
+        },
+        {
+            "id": "{idVista}14",
+            "nombre": null,
+            "selector": ".{idVista}columna-16",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "6"
+                }
+            }
+        },
+        {
+            "id": "{idVista}17",
+            "nombre": null,
+            "selector": null,
+            "componente": "texto",
+            "propiedades": {
+                "formato": "enLinea"
+            }
+        },
+        {
+            "id": "{idVista}18",
+            "nombre": "cantidad",
+            "selector": ".{idVista}etiqueta-cantidad",
+            "componente": "etiqueta",
+            "propiedades": {
+                "clase": "mr-2"
+            }
+        },
+        {
+            "id": "{idVista}19",
+            "nombre": "pagina",
+            "selector": ".{idVista}desplegable-20",
+            "componente": "desplegable",
+            "propiedades": {
+                "flotar": {
+                    "g": "derecha"
+                },
+                "modificacion": "cargarDatos"
+            }
+        },
+        {
+            "id": "{idVista}6",
+            "nombre": null,
+            "selector": ".{idVista}texto-7",
+            "componente": "texto",
+            "propiedades": {
+                "formato": "enLinea",
+                "flotar": {
+                    "g": "derecha"
+                },
+                "clase": "mt-1 mr-2"
+            }
+        }
+    ],
+    "nombre": "{nombreVista}"
+}

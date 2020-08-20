@@ -75,29 +75,33 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 #### asistente
 
-Asistente de creación de vistas y controladores.
+Asistentes de creación de vistas y controladores.
 
 ##### Asistente de creación de ABMC
 
-    php asistente.php -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-r=ruta] [-o] [-a|c]
+    php asistente.php -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c]
 
-El asistente creará vistas, controladores JS, un controlador PHP y una nueva clase para el modelo de datos que permita consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
+El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 
 `-r` Ruta bajo la cual se crearán las vistas. Por ejemplo, `-r=abm` generará `/abm/usuarios` y `/abm/usuario`.
 
 `-o` Incluir este parámetro para omitir la modificación de la clase del modelo de datos.
 
-`-a` Si se incluye este parámetro, solo se generará el formulario de alta, con la funcionalidad de guardar y modificar registros existentes.
+`-f` Si se incluye este parámetro, *solo* se generará el formulario de alta, con la funcionalidad de guardar y modificar registros existentes. *Nota:* Si el controlador de servidor ya existe, no se agregarán los métodos de acceso a datos.
 
-`-c` Si se incluye este parámetro, solo se generará la vista de consulta, con la funcionalidad de buscar y eliminar.
+`-c` Si se incluye este parámetro, *solo* se generará la vista de consulta, con la funcionalidad de buscar y eliminar. *Nota:* Si el controlador de servidor ya existe, no se agregarán los métodos de acceso a datos.
 
-Las siguientes etiquetas adicionales pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
+`-t` Título (por defecto, el nombre del modelo.)
+
+Las siguientes etiquetas adicionales compatibles con este asistente pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
 
 `@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
 
 `@requerido` Campo requerido (etiqueta sin valor.)
 
 `@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10.) Por defecto, será `10`.
+
+Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión.)
 
 ### Requerimientos
 

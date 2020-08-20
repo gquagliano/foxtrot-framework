@@ -15,7 +15,7 @@ include(_desarrollo.'servidor/foxtrot.php');
 
 define('_editor',__DIR__.'/../fuente/editor/');
 
-$opciones=getopt('a:s:m:r:oac');
+$opciones=obtenerArgumentos();
 
 $aplicacion=validarParametroAplicacion($opciones);
 
@@ -46,5 +46,10 @@ class asistente {
     }
 
     public function ejecutar() {
+    }
+
+    protected function error($mensaje) {
+        fwrite(STDERR,$mensaje.PHP_EOL.PHP_EOL);
+        exit;
     }
 }

@@ -2,69 +2,152 @@
     "version": 1,
     "componentes": [
         {
-            "id": "abm-{nombre}-2",
+            "id": "{idVista}2",
             "nombre": null,
             "componente": "vista",
-            "propiedades": {}
-        },
-        {
-            "id": "abm-{nombre}-3",
-            "nombre": null,
-            "componente": "contenedor",
             "propiedades": {
-                "tipo": "fluido"
+                "titulo": "{titulo}"
             }
         },
         {
-            "id": "abm-{nombre}-4",
+            "id": "{idVista}3",
             "nombre": null,
+            "selector": ".{idVista}contenedor-4",
+            "componente": "contenedor",
+            "propiedades": {
+                "tipo": "fluido",
+                "clase": "pb-4"
+            }
+        },
+        {
+            "id": "{idVista}7",
+            "nombre": null,
+            "selector": ".{idVista}form-8",
+            "componente": "form",
+            "propiedades": {}
+        },
+
+/*campo
+        {
+            "id": "{idVista}9-{n}",
+            "nombre": null,
+            "selector": ".{idVista}fila-10",
+            "componente": "fila",
+            "propiedades": {}
+        },
+        {
+            "id": "{idVista}11-{n}",
+            "nombre": "",
+            "selector": ".{idVista}columna-12",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "12",
+                    "md": "2"
+                }
+            }
+        },
+        {
+            "id": "{idVista}15-{n}",
+            "nombre": null,
+            "selector": ".{idVista}columna-16",
+            "componente": "columna",
+            "propiedades": {
+                "columna": {
+                    "g": "12",
+                    "md": "3",
+                    "lg": "3"
+                }
+            }
+        },
+        {
+            "id": "{idVista}17-{n}",
+            "nombre": "{campo}",
+            "selector": ".{idVista}campo-{campo}",
+            "componente": "campo",
+            "propiedades": {
+                "autofoco": {
+                    "g": {autofocoBool}
+                }
+            }
+        },
+        {
+            "id": "{idVista}5-{n}",
+            "nombre": null,
+            "selector": null,
+            "componente": "texto",
+            "propiedades": {
+                "formato": "etiqueta"
+            }
+        },
+*/
+
+        {
+            "id": "{idVista}63",
+            "nombre": null,
+            "selector": ".{idVista}boton-64",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "primary",
+                "click": "guardar",
+                "clase": "mr-2",
+                "predeterminado": {
+                    "g": true
+                }
+            }
+        },
+        {
+            "id": "{idVista}65",
+            "nombre": null,
+            "selector": ".{idVista}boton-66",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "secondary",
+                "click": "nuevo",
+                "clase": "mr-2"
+            }
+        },
+        {
+            "id": "{idVista}67",
+            "nombre": null,
+            "selector": ".{idVista}boton-68",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "secondary",
+                "click": "volver"
+            }
+        },
+        {
+            "id": "{idVista}4",
+            "nombre": "titulo",
+            "selector": null,
             "componente": "texto",
             "propiedades": {
                 "formato": "h1"
             }
         },
         {
-            "id": "abm-{nombre}-5",
+            "id": "{idVista}16",
             "nombre": null,
-            "componente": "form",
-            "propiedades": {}
-        },
-        {
-            "id": "abm-{nombre}-6",
-            "nombre": null,
-            "componente": "boton",
+            "selector": ".{idVista}contenedor-17",
+            "componente": "contenedor",
             "propiedades": {
-                "tipo": "boton",
-                "estilo": "primary",
-                "margen": {
-                    "g": "0 10 0 0"
-                },
-                "click": "guardar"
+                "tipo": "bloque"
             }
         },
         {
-            "id": "abm-{nombre}-7",
+            "id": "{idVista}22",
             "nombre": null,
-            "componente": "boton",
+            "selector": ".{idVista}contenedor-23",
+            "componente": "contenedor",
             "propiedades": {
-                "tipo": "boton",
-                "estilo": "secondary",
-                "margen": {
-                    "g": "0 10 0 0"
-                },
-                "click": "nuevo"
-            }
-        },
-        {
-            "id": "abm-{nombre}-8",
-            "nombre": null,
-            "componente": "boton",
-            "propiedades": {
-                "tipo": "boton",
-                "estilo": "secondary",
-                "click": "ir:abm/{modelo}"
+                "tipo": "bloque",
+                "clase": "cuerpo-formulario"
             }
         }
     ],
-    "nombre": "{ruta}"
+    "nombre": "{nombreVista}"
 }

@@ -37,6 +37,11 @@ var componenteColumnaTabla=function() {
                     descendente:"Descendente"
                 },
                 adaptativa:false
+            },
+            columna:{
+                etiqueta:"Columna",
+                ayuda:"Permite almacenar el nombre o cualquier dato que permita identificar a la columna (no tiene efectos en forma automática).",
+                adaptativa:false
             }
         },
         "Eventos":{

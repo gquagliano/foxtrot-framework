@@ -13,6 +13,8 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español.
 
+**[Mirá el nuevo video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
+
 **[Mirá el nuevo video de demostración de los asistentes](https://youtu.be/BuxehZ6bPkY)**
 
 **[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8)**

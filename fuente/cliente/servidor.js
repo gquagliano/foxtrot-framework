@@ -93,6 +93,8 @@ var servidor=new function() {
             parametros:param,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
+            },
+            siempre:function() {
                 ui.ocultarPrecarga(opciones.precarga);
             }
         }));

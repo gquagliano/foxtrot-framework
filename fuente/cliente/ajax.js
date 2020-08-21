@@ -19,6 +19,7 @@ var ajax=function(param) {
         parametros:null,
         listo:null,
         error:null,
+        siempre:null,
         //Por defecto, siempre vamos a validar y procesar las respuestas como JSON, ya que es el lenguaje que hablará el framework
         json:true
     };
@@ -32,6 +33,7 @@ var ajax=function(param) {
 
     this.abortar=function() {
         xhr.abort();
+        if(param.siempre) param.siempre.call(self);
         return this;
     };
 
@@ -45,6 +47,7 @@ var ajax=function(param) {
         } else {
             if(param.error) param.error.call(self,ev);
         }
+        if(param.siempre) param.siempre.call(self,resp,ev);
     };
 
     var url=param.url,

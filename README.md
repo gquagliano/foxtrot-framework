@@ -13,12 +13,16 @@ Persigue los objetivos de:
 
 Desarrollado en Argentina, con su API en español.
 
+**[Mirá el nuevo video de demostración de los asistentes](https://youtu.be/BuxehZ6bPkY)**
+
 **[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8)**
 
 **[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
 
 Usuario: admin  
 Contraseña: test
+
+*La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
 
 ## Primeros pasos
 
@@ -64,6 +68,8 @@ En líneas generales,
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
 
 Seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
+
+*¡Próximamente, los scripts a los que actualmente se accede por línea de comandos estarán integrados en una interfaz web!*
 
 #### Aplicación de ejemplo
 

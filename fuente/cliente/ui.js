@@ -711,6 +711,11 @@ var ui=new function() {
         return instanciasVistas[nombre];
     };
 
+    this.establecerNombreVistaPrincipal=function(nombre) {
+        nombreVistaPrincipal=nombre;
+        return this;
+    };
+
     this.obtenerNombreVistaPrincipal=function() {
         return nombreVistaPrincipal;
     };
@@ -1047,22 +1052,30 @@ var ui=new function() {
     /**
      * Inicializa el sistema.
      */
-    this.inicializar=function(nombreVista) {
-        //Mostrar barra de precarga, excepto en Cordova
-        if(!modoEdicion&&!esCordova) {
-            this.mostrarPrecarga("barra");
-        }
-        
-        nombreVistaPrincipal=nombreVista;
+    this.inicializar=function(nombreVista,opciones) {
+        opciones=Object.assign({
+            cordova:false
+        },opciones);
 
         //Si estamos en el marco del editor, utilizar los objetos de la ventana principal
         if(window.parent.ui!=ui&&window.parent.ui.enModoEdicion()) {
             ui=window.parent.ui;
-            ui.inicializar(nombreVista);
             //editor=window.parent.editor;
             ui.preparar(document);
+            ui.inicializar(nombreVista,opciones);
+            return ui;
         }
-        return ui;
+
+        if(opciones.cordova) this.establecerCordova();
+
+        //Mostrar barra de precarga, excepto en Cordova
+        if(!modoEdicion&&!esCordova) {
+            this.mostrarPrecarga("barra");
+        }
+
+        this.establecerNombreVistaPrincipal(nombreVista);
+
+        return this;
     };
 
     /**
@@ -1115,10 +1128,7 @@ var ui=new function() {
 
             this.establecerEventos();
 
-            if(esCordova) {
-                body.agregarClase("cordova");
-                document.querySelector("#contenedor-cordova").agregarClase("listo");
-            }
+            if(esCordova) body.agregarClase("cordova");
 
             //Por el momento, el controlador es el que tiene el mismo nombre que la vista
             var obj=ui.crearControlador(nombreVistaPrincipal,true);
@@ -1145,6 +1155,10 @@ var ui=new function() {
             if(!esCordova) {
                 this.ocultarPrecarga("barra");
             }
+        }
+
+        if(esCordova) {
+            doc.querySelector("#contenedor-cordova").agregarClase("listo");
         }
     };
 }();

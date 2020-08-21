@@ -28,6 +28,8 @@
      */
     ui.mostrarPrecarga=function(tipo) {
         if(typeof tipo!=="string"||tipo!="barra") tipo="normal";
+        
+        var doc=ui.obtenerDocumento();
 
         if(tipo=="normal") {
             precargas++;
@@ -39,12 +41,12 @@
 
             if(!elementoPrecarga) {
                 //Buscar elemento (es posible que ya exista)
-                elementoPrecarga=document.querySelector("#foxtrot-precarga");
+                elementoPrecarga=doc.querySelector("#foxtrot-precarga");
             }
             if(!elementoPrecarga) {
-                //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
-                elementoPrecarga=document.crear("<div id='foxtrot-precarga' class='oculto'>")   
-                    .anexarA(document.body);
+                //Construir
+                elementoPrecarga=doc.crear("<div id='foxtrot-precarga' class='oculto'>")   
+                    .anexarA(doc.body);
             }
 
             ui.animarAparecer(elementoPrecarga);
@@ -60,12 +62,12 @@
 
             if(!elementoBarra) {
                 //Buscar elemento (es posible que ya exista)
-                elementoBarra=document.querySelector("#foxtrot-barra-precarga");
+                elementoBarra=doc.querySelector("#foxtrot-barra-precarga");
             }
             if(!elementoBarra) {
-                //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
-                elementoBarra=document.crear("<div id='foxtrot-barra-precarga' class='oculto'>")   
-                    .anexarA(document.body);
+                //Construir
+                elementoBarra=doc.crear("<div id='foxtrot-barra-precarga' class='oculto'>")   
+                    .anexarA(doc.body);
             }
 
             ui.animarAparecer(elementoBarra);

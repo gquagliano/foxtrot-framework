@@ -22,13 +22,13 @@ if(!$opciones['i']) {
     exit;
 }
 
+exec('php construir-apl.php -a='.escapeshellarg($opciones['a']).(_depuracion?' -d':''));
+
 $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$opciones['i']).'.html';
 if(!file_exists(_produccion._dirApl.'cliente/vistas/'.$inicio)) {
     fwrite(STDERR,'Vista inexistente.'.PHP_EOL.PHP_EOL);
     exit;
 }
-
-exec('php construir-apl.php -a='.escapeshellarg($opciones['a']).(_depuracion?' -d':''));
 
 //Copiar todo excepto archivos PHP
 $tipos=['*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];

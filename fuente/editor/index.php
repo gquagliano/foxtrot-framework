@@ -60,7 +60,9 @@ foxtrot::inicializar();
     <script src="editor.js"></script>
     <script>
     "use strict";
-    editor.activar();
+    editor.activar({
+        urlBase:"<?=\foxtrot::obtenerUrl()?>"
+    });
     window.evento("load",function() {
         //Esto es provisorio, hasta que tengamos el gestor de archivos o al menos diálogos de abrir/guardar
         editor.abrir({

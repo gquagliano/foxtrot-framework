@@ -2,7 +2,6 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
@@ -34,6 +33,7 @@
                     var elem=document.createElement("link");
                     elem.rel="stylesheet";
                     elem.href=urlBase+url;
+                    elem.dataset.autogenerado=true;
                     document.head.appendChild(elem);
                 });
             },
@@ -46,12 +46,12 @@
                 elem.onload=scriptOnLoad;
                 elem.onerror=scriptOnLoad;
                 elem.src=urlBase+scripts[listos];
+                elem.dataset.autogenerado=true;
                 document.body.appendChild(elem);
             },
             scriptsListos=function() {
                 var jsonFoxtrot='{}';
-                ui.inicializar("{editor_nombreVista}")
-                    .establecerCordova()
+                ui.inicializar("{editor_nombreVista}",{cordova:true})                    
                     .establecerJson(jsonFoxtrot)
                     .ejecutar();
             };

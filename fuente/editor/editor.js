@@ -30,6 +30,7 @@ var editor=new function() {
     this.rutaArchivoAbierto=null;
     this.modoArchivoAbierto=null;
     this.clienteArchivoAbierto=null;
+    this.urlBase=null;
 
     this.componentesSeleccionados=[];
 
@@ -89,7 +90,7 @@ var editor=new function() {
                 if(!comp.config.icono) continue;
 
                 var icono=document.crear("<img>")
-                    .atributo("src","../recursos/componentes/iconos/"+comp.config.icono)
+                    .atributo("src",editor.urlBase+"recursos/componentes/iconos/"+comp.config.icono)
                     .atributo("title",comp.config.descripcion);
                 iconosComponentes[comp.config.nombre]=icono;
 
@@ -130,7 +131,7 @@ var editor=new function() {
                 timeout=0;
 
             if(ayuda) {
-                document.crear("<img src='img/ayuda.png'>")
+                document.crear("<img src='"+editor.urlBase+"editor/img/ayuda.png'>")
                     .atributo("title",ayuda)
                     .anexarA(label);
             }
@@ -739,7 +740,7 @@ var editor=new function() {
         
         if(!this.esCuerpo(elem)&&!elem.hijos({clase:"foxtrot-etiqueta-componente"}).length) {
             var config=ui.obtenerComponentes()[comp.componente].config;
-            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='recursos/componentes/iconos/"+config.icono+"'></span>")
+            document.crear("<span contenteditable='false' class='foxtrot-etiqueta-componente'><img src='"+this.urlBase+"recursos/componentes/iconos/"+config.icono+"'></span>")
                 .atributo("title",config.etiqueta)
                 .anexarA(elem);
         }
@@ -1023,7 +1024,7 @@ var editor=new function() {
         this.desactivar();
 
         new ajax({
-            url:"operaciones/guardar.php",
+            url:this.urlBase+"editor/operaciones/guardar.php",
             parametros:{
                 previsualizar:previsualizar?"1":"0",
                 aplicacion:apl,
@@ -1070,7 +1071,7 @@ var editor=new function() {
         document.body.agregarClase("trabajando");
 
         new ajax({
-            url:"operaciones/abrir.php",
+            url:this.urlBase+"editor/operaciones/abrir.php",
             parametros:{
                 aplicacion:opciones.aplicacion,
                 vista:opciones.vista,
@@ -1141,11 +1142,20 @@ var editor=new function() {
     /**
      * Activa el editor y construye su interfaz (fuera del marco).
      */
-    this.activar=function() {
+    this.activar=function(opciones) {
         if(ui.enModoEdicion()) {
             this.ejecutar();
             //Cuando se está reactivando (segunda vez que se llama a activar()), no es necesario volver a construir toda la interfaz
             return this;
+        }
+        
+        if(typeof opciones!=="undefined") {
+            //Valores predeterminados
+            opciones=Object.assign({
+                urlBase:""
+            },opciones);
+            
+            this.urlBase=opciones.urlBase;
         }
 
         ui.establecerModoEdicion();
@@ -1220,8 +1230,11 @@ var editor=new function() {
     this.ejecutar=function() {
         var doc=ui.obtenerDocumento();
         
+        //Establecer _urlBase para poder ejecutar las vistas Cordova dentro del marco
+        localStorage.setItem("_urlBase",this.urlBase);
+        
         doc.body.agregarClase("foxtrot-modo-edicion");
-        doc.head.anexar("<link rel='stylesheet' href='editor/editor.css'>");
+        doc.head.anexar("<link rel='stylesheet' href='"+this.urlBase+"editor/editor.css'>");
 
         prepararComponentesInsertados();
 

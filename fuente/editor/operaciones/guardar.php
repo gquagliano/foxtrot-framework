@@ -23,6 +23,8 @@ $html=reemplazarVarJson($html,$json);
 //TODO Por el momento, solo vamos a restaurar el tag <base>, pero debería diseñarse un mecanismo para que esto no esté fijo aquí
 $html=reemplazarTagBase($html);
 
+$html=limpiarHtml($html);
+
 file_put_contents($rutaCss,$css);
 file_put_contents($rutaHtml,$html);
 

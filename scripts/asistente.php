@@ -28,7 +28,8 @@ if(!$opciones['s']) {
 
 $asistentes=[
     'abmc'=>'abmc',
-    'crear-modelo'=>'crearModelo'
+    'crear-modelo'=>'crearModelo',
+    'crear-apl'=>'crearApl'
 ];
 
 $nombre=$opciones['s'];

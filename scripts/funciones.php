@@ -16,7 +16,7 @@ function copiar($ruta,$filtro,$destino,$rec=true) {
     }
 
     if(!$filtro) $filtro='{,.}*';
-
+    
     if(!file_exists($destino)) mkdir($destino,0755,true);
 
     $arr=glob($ruta.$filtro,GLOB_BRACE);
@@ -126,7 +126,7 @@ function procesarVista($ruta) {
 
     $html=file_get_contents($ruta);
 
-    $cordova=preg_match('/ui\.establecerCordova\(\)/',$html)==1;
+    $cordova=preg_match('/\{.*?cordova.*?:.*?true.*?\}/i',$html)==1;
 
     //Combinar archivos CSS
     if(preg_match_all('#(/\*combinar( tema)?\*/"|[ \t]*?<link .+?href=")(.+?)(",/\*combinar( tema)?\*/|".*? combinar.*>).*?[\r\n]*#m',$html,$coincidencias)) {

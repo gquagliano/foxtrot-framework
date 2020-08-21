@@ -128,3 +128,10 @@ function reemplazarTagBase($codigo) {
     if(!$esPhp) return $codigo;
     return preg_replace('/<base .*?href=("|\').+?(\1).*?>/s','<base href="<?=\foxtrot::obtenerUrl()?>">',$codigo);
 }
+
+function limpiarHtml($html) {
+    //Remover tags generados temporalmente por el editor y que no son removidos en el cliente durante la operación de guardado
+    $html=preg_replace('/<script.+?data-autogenerado.*?><\/script>/m','',$html);
+    $html=preg_replace('/<link.+?data-autogenerado.*?>/m','',$html);
+    return $html;
+}

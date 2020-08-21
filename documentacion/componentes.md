@@ -7,7 +7,7 @@
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
+- [Scripts de compilación y asistentes](scripts.md)
 
 ## Componentes
 
@@ -21,7 +21,7 @@
 
 #### ![](img/iconos/boton.png) Botón (botón o enlace)
 
-Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
+Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto).
 
 #### ![](img/iconos/bucle.png) Bucle (estructura de control)
 
@@ -63,7 +63,7 @@ Genera un menú de navegación, el cual puede utilizarse como barra de navegaci�
 
 #### ![](img/iconos/etiqueta.png) Etiqueta (estructura de control)
 
-Este componente permite insertar valores del origen de datos. Presenta dos posibles comportamientos: Puede especificarse una propiedad (o una ruta con formato `foo.bar`) en la propiedad Propiedad, o bien una expresión en la propiedad Contenido. Todas las propiedades del origen de datos estarán disponibles en las expresiones, además de los valores estándar ([más información sobre las expresiones](api.md).)
+Este componente permite insertar valores del origen de datos. Presenta dos posibles comportamientos: Puede especificarse una propiedad (o una ruta con formato `foo.bar`) en la propiedad Propiedad, o bien una expresión en la propiedad Contenido. Todas las propiedades del origen de datos estarán disponibles en las expresiones, además de los valores estándar ([más información sobre las expresiones](api.md)).
 
 #### ![](img/iconos/fecha.png) Fecha (campo de selección de fecha)
 
@@ -95,7 +95,7 @@ Permite agregar un ítem de menú. Puede utilizarse dentro del componente Menú 
 
 Dentro del editor, los menús no responderán al paso del cursor sobre ellos (*hover*), sino que debe hacerse un click para desplegar y poder editar sus contenidos. Al deseleccionar el ítem de menú, el submenú se cerrará automáticamente.
 
-Cabe aclarar que el doble click iniciará la edición de texto, al igual que en otros componentes. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
+Cabe aclarar que el doble click iniciará la edición de texto, al igual que en otros componentes. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto).
 
 #### ![](img/iconos/menu.png) Menú desplegable o contextual
 
@@ -119,7 +119,7 @@ Una tabla de datos. Recibe como hijos componentes Fila de tabla. Cuando se asign
 
 #### ![](img/iconos/texto.png) Texto
 
-Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto.)
+Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto).
 
 #### Vista
 

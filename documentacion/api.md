@@ -7,7 +7,7 @@
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
+- [Scripts de compilación y asistentes](scripts.md)
 
 ## Documentación
 
@@ -113,7 +113,7 @@ El editor realizará este proceso automáticemente.
 
 Nota: En algunos casos, cuando hablamos de _archivo HTML_, puede que su extensión sea en realidad `.php` si se va a implementar en servidor web. De esa forma pueden aprovecharse características del servidor, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código HTML (ejemplo, `<base>`).
 
-Ver: [Scripts de compilación](scripts.md).
+Ver: [Scripts de compilación y asistentes](scripts.md).
 
 **Cordova:**
 
@@ -172,7 +172,7 @@ Si bien en PHP, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue lo
 
 **Automatización**
 
-- Asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
+- Asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos).
 
 - (Idea) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos.
 

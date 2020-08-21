@@ -87,7 +87,7 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 `/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
 
-`/scripts/` Scripts de compilación.
+`/scripts/` Scripts de compilación y asistentes.
 
 ## Qué estamos desarrollando
 

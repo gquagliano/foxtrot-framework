@@ -7,9 +7,9 @@
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
+- [Scripts de compilación y asistentes](scripts.md)
 
-## Scripts de compilación
+## Scripts de compilación y asistentes
 
 ### ¡Importante!
 
@@ -27,12 +27,6 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
 *Nota:* Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
 
-#### crear-apl
-
-(Este script aún no está disponible) Genera una nueva aplicación desde una plantilla.
-
-    php crear-apl.php -n=nombre_aplicacion
-
 #### sincronizar-bd
 
 Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación, excepto cuando se especifiquen los parámetros `-u`, `-c` y/o `-b`.
@@ -49,9 +43,11 @@ Acumula un registro de consultas SQL en el archivo `scripts/sincronizar.sql` en 
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
-    php construir-apl.php -a=nombre_aplicacion [-d]
+    php construir-apl.php -a=nombre_aplicacion [-d] [-l]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
+
+`-l` Omitir la limpieza de los directorios `/produccion/` y `/embeber/` antes de comenzar.
 
 *Nota:* Debe haberse construido el framework antes de construir la aplicación.
 
@@ -61,15 +57,19 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php -a=nombre_aplicacion [-i=nombre_vista_inicial] [-d] [-c="ruta a www" [-p=android]]
+    php construir-embebible.php -a=nombre_aplicacion [-i=nombre_vista_inicial] [-d] [-c="ruta a www" [-p=android] [-f]] [-l]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
-`-i` Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante este parámetro, a fin de poder alojar en una única aplicación ambas versiones.
+`-i` Mientras en la implementación en servidor web la vista inicial siempre es `inicio.html`, para la versión embebible puede especificarse una vista inicial distinta mediante este parámetro, a fin de poder alojar en una única aplicación ambas versiones. Especificar ruta, sin extensión.
 
 `-c` Si se especifica la ruta al directorio `www` de la aplicación Cordova, intentará copiar los archivos, preparar y ejecutar la aplicación.
 
 `-p` Junto con el parámetro `-c`, puede utilizarse `-p` para especificar la plataforma. Por defecto `android`.
+
+`-l` Omitir la limpieza de los directorios `/produccion/` y `/embeber/` antes de comenzar.
+
+`-f` Omitir la modificación al archivo `config.xml`.
 
 *Nota:* No hace falta construir la aplicación antes de construir la versión embebible. Sí debe haberse construido el framework.
 
@@ -77,13 +77,23 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Asistentes de creación de vistas y controladores.
 
+##### Plantilla de aplicación en blanco
+
+    php asistente.php -s=crear-apl -a=nombre -d=dominio
+
+El asistente creará una aplicación en blanco y configurará Foxtrot para que la misma se ejecute en el dominio especificado. Los archivos serán creados en `/desarrollo/aplicaciones/nombre/`.
+
+Es posible que sea necesario editar el archivo `config.php` de la aplicación para establecer una base de datos diferente u otros ajustes; el asistente creará un archivo de configuración en blanco.
+
+Ver [Primeros pasos](primeros-pasos.md) para más información.
+
 ##### Plantilla de modelo de datos
 
     php asistente.php -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad
 
 El asistente creará las clases del repositorio y de la entidad, vacías, para completar.
 
-*Nota:* Luego de agregar las propiedades a la clase de la entidad, se puede crear la tabla correspondiente en la base de datos mediante el script `sincronizar-bd` (ver más arriba.)
+*Nota:* Luego de agregar las propiedades a la clase de la entidad, se puede crear la tabla correspondiente en la base de datos mediante el script `sincronizar-bd` (ver más arriba).
 
 [Más información sobre la estrcutrura de las clases del ORM](api/orm.md).
 
@@ -101,17 +111,17 @@ El asistente creará vistas, controladores JS y un controlador PHP, y agregará 
 
 `-c` Si se incluye este parámetro, *solo* se generará la vista de consulta, con la funcionalidad de buscar y eliminar. *Nota:* Si el controlador de servidor ya existe, no se agregarán los métodos de acceso a datos.
 
-`-t` Título (por defecto, el nombre del modelo.)
+`-t` Título (por defecto, el nombre del modelo).
 
 Las siguientes etiquetas adicionales compatibles con este asistente pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
 
 `@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
 
-`@requerido` Campo requerido (etiqueta sin valor.)
+`@requerido` Campo requerido (etiqueta sin valor).
 
-`@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10.) Por defecto, será `10`.
+`@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10). Por defecto, será `10`.
 
-Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión.)
+Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión).
 
 ### Requerimientos
 

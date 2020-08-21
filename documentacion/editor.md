@@ -7,7 +7,7 @@
 - [Editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
+- [Scripts de compilación y asistentes](scripts.md)
 
 ## Editor
 
@@ -15,9 +15,9 @@
 
 Editor de vistas *WYSIWYG Drag&Drop*: Nuestro editor de vistas viejo trabajaba íntegramente con objetos y cada vista era dibujada en tiempo de ejecución. En esta versión, buscamos un editor que "compile" la vista, almacenándola en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework. Debe, además, permitir editar en la versión real de la vista, con todos sus estilos y cualquier otra maquetación que se añada externamente.
 
-El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc.), variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
+El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc)., variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
 
-El el futuro, debe también ofrecer la posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
+El el futuro, debe también ofrecer la posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos).
 
 El editor se acerca a su versión final. En líneas generales, falta (entre otros detalles y TODOs):
 - Barra de formatos (negrita, cursiva, etc.) al editar textos.

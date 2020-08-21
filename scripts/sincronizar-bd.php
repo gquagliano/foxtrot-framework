@@ -46,6 +46,7 @@ $clases=[];
 
 foreach(get_declared_classes() as $clase) {
     if(preg_match('/^aplicaciones\\\\'.$aplicacion.'\\\\modelo\\\\.+/',$clase)) {
+        $nombre=basename($clase);
         if(is_subclass_of($clase,'\\modelo')&&(!$filtrar||in_array($nombre,$filtrar))) {
             $creada=procesar($clase);
             if($creada) $clases[]=$clase;
@@ -150,7 +151,7 @@ function procesar($clase) {
 
             if(!compararCampo($parametros,$campos[$campo])) {
                 //Modificar columna (solo tipo, no es posible cambio de nombre)
-                consulta('ALTER TABLE '.$tabla.' CHANGE COLUMN `'.$campo.'` `'.$campo.'` '.$tipo);
+                consulta('ALTER TABLE `'.$tabla.'` CHANGE COLUMN `'.$campo.'` `'.$campo.'` '.$tipo);
             }
 
             //Índice
@@ -159,17 +160,17 @@ function procesar($clase) {
                     if($campoBd->Key) {
                         //Cambio de índice, remover el existente
                         //Asumimos que el índice tiene igual nombre que la columna. De esa forma cualquier otro índice que agregue el usuario manualmente en la base de datos no se vería afectado.
-                        consulta('ALTER TABLE '.$tabla.' DROP INDEX `'.$campo.'`');
+                        consulta('ALTER TABLE `'.$tabla.'` DROP INDEX `'.$campo.'`');
                     }
                     //Agregar
-                    consulta('ALTER TABLE '.$tabla.' ADD '.($parametros->indice==='unico'?'UNIQUE ':'').'INDEX `'.$campo.'` (`'.$campo.'`)');
+                    consulta('ALTER TABLE `'.$tabla.'` ADD '.($parametros->indice==='unico'?'UNIQUE ':'').'INDEX `'.$campo.'` (`'.$campo.'`)');
                 }
             } else {
                 //TODO Eliminar índice si se remueve @indice
             }
         } else {
             //Agregar columna
-            $consulta='ALTER TABLE '.$tabla.' ADD COLUMN `'.$campo.'` '.$tipo;
+            $consulta='ALTER TABLE `'.$tabla.'` ADD COLUMN `'.$campo.'` '.$tipo;
             if($parametros->indice) $consulta.=',ADD '.($parametros->indice==='unico'?'UNIQUE ':'').'INDEX `'.$campo.'` (`'.$campo.'`)';
             consulta($consulta);
         }

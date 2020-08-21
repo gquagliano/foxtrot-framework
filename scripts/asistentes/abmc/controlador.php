@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
- * 
- * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @author 
  * @version 1.0
  */
 
@@ -15,14 +13,23 @@ defined('_inc') or exit;
 /**
  * Métodos públicos del controlador de vista. Autogenerado por el asistente de Foxtrot.
  */
-class usuarios extends \controlador {
+class {controlador} extends \controlador {
     public function obtenerListado($filtro) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         \foxtrot::obtenerAplicacion()->verificarLogin();
 
-        $usuarios=new {aliasModelo};
+        $modelo=new {aliasModelo};
         
-        $listado=$usuarios->listarUsuarios($filtro->texto,$filtro->pagina);
+        $donde=null;
+        $parametros=null;
+        if($filtro) {
+            $donde='`id`=@filtro or `nombre` like @filtroParcial';
+            $parametros=[
+                'filtro'=>$filtro->texto,
+                'filtroParcial'=>'%'.$filtro->texto.'%'
+            ];
+        }
+        $listado=$modelo->listarItems($donde,$parametros,$filtro->pagina);
 
         return $listado;
     }
@@ -31,7 +38,7 @@ class usuarios extends \controlador {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         \foxtrot::obtenerAplicacion()->verificarLogin();
 
-        (new {aliasModelo})->eliminarUsuario($id);
+        (new {aliasModelo})->eliminarItem($id);
     }
 
     public function guardar($datos,$id) {
@@ -40,13 +47,11 @@ class usuarios extends \controlador {
         
         //Validar campos obligatorios
         $obligatorios=[{requeridos}];
-        foreach($obligatorios as $obligatorio) if(!trim($datos->$obligatorio)) $this->cliente->error(1);
-
-        if($datos->contrasena!=$datos->contrasena2) $this->cliente->error(2);        
+        foreach($obligatorios as $obligatorio) if(!trim($datos->$obligatorio)) $this->cliente->error(1);    
 
         $datos->id=$id;
 
-        $nuevoId=(new {aliasModelo})->crearOModificarUsuario($datos);
+        $nuevoId=(new {aliasModelo})->crearOModificarItem($datos);
 
         return [
             'id'=>$nuevoId?$nuevoId:$id
@@ -57,6 +62,6 @@ class usuarios extends \controlador {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         \foxtrot::obtenerAplicacion()->verificarLogin();
         
-        return (new {aliasModelo})->obtenerUsuario($id);
+        return (new {aliasModelo})->obtenerItem($id);
     }
 }

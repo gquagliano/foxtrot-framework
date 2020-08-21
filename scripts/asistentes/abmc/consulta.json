@@ -202,7 +202,7 @@
             "componente": "campo",
             "propiedades": {
                 "relleno": "Filtrar...",
-                "intro": "cargarDatos"
+                "intro": "filtrar"
             }
         },
         {
@@ -223,7 +223,7 @@
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "click": "cargarDatos",
+                "click": "filtrar",
                 "estructura": {
                     "g": "bloque"
                 },

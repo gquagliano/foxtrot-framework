@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
- * 
- * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @author 
  * @version 1.0
  */
 
@@ -36,7 +34,7 @@ class modeloBase extends \modelo {
      * @param int $pagina (opcional) Número de página.
      * @return object
      */
-    public function listarItems($filtro=null,$parametros=[],$cantidadPorPag=50,$pagina=1) {
+    public function listarItems($filtro=null,$parametros=[],$pagina=1,$cantidadPorPag=50) {
         if(!$pagina) $pagina=1;
 
         $this->reiniciar()

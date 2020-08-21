@@ -26,16 +26,22 @@ if(!$opciones['s']) {
     exit;
 }
 
-$nombre=preg_replace('/[^a-z-]/','',$opciones['s']);
-$archivo=__DIR__.'/asistentes/'.$nombre.'.php';
+$asistentes=[
+    'abmc'=>'abmc',
+    'crear-modelo'=>'crearModelo'
+];
 
-if(!file_exists($archivo)) {
+$nombre=$opciones['s'];
+if(!array_key_exists($nombre,$asistentes)) {
     fwrite(STDERR,'El parámetro -s es inválido.'.PHP_EOL.PHP_EOL);
     exit;
 }
 
+$archivo=__DIR__.'/asistentes/'.$nombre.'.php';
+$clase=$asistentes[$nombre];
+
 include($archivo);
-(new $nombre($opciones['a']))
+(new $clase($opciones['a']))
     ->ejecutar();
 
 class asistente {

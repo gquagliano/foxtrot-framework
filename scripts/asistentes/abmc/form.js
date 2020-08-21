@@ -1,7 +1,11 @@
 /**
  * Controlador de la vista {nombreVista}. Autogenerado por el asistente de Foxtrot.
+ * @author 
+ * @version 1.0
  */
 ui.registrarControlador("{nombreVista}",function() {
+    "use strict";
+    
     var t=this;
 
     this.controladorServidor="{controlador}";

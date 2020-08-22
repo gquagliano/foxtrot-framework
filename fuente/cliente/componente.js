@@ -1372,6 +1372,9 @@ var componente=new function() {
             } else if(manejador.substring(0,3)=="ir:") {
                 //Navegación
                 ui.irA(manejador.substring(3));
+            } else if(manejador.substring(0,5)=="no-ir:") {
+                //Reemplazar URL sin navegar
+                ui.cambiarUrl(manejador.substring(5));
             } else if(manejador.substring(0,6)=="abrir:") {
                 //Popup
                 ui.abrirVentana(manejador.substring(6));

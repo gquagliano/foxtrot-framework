@@ -43,11 +43,13 @@ Acumula un registro de consultas SQL en el archivo `scripts/sincronizar.sql` en 
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
-    php construir-apl.php -a=nombre_aplicacion [-d] [-l]
+    php construir-apl.php -a=nombre_aplicacion [-d] [-l] [-j]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
 `-l` Omitir la limpieza de los directorios `/produccion/` y `/embeber/` antes de comenzar.
+
+`-j` Omitir la compilación de las vistas embebibles. Normalmente (si no se incluye este parámetro), el código HTML y CSS de las vistas embebibles será incorporado dentro del código JS.
 
 *Nota:* Debe haberse construido el framework antes de construir la aplicación.
 
@@ -57,7 +59,7 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php -a=nombre_aplicacion [-i=nombre_vista_inicial] [-d] [-c="ruta a www" [-p=android] [-f]] [-l]
+    php construir-embebible.php -a=nombre_aplicacion [-i=nombre_vista_inicial] [-j] [-d] [-c="ruta a www" [-p=android] [-f]] [-l]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
@@ -69,7 +71,9 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 `-l` Omitir la limpieza de los directorios `/produccion/` y `/embeber/` antes de comenzar.
 
-`-f` Omitir la modificación al archivo `config.xml`.
+`-f` Omitir la validación y modificación al archivo `config.xml`.
+
+`-j` Omitir la compilación de las vistas embebibles. Normalmente (si no se incluye este parámetro), el código HTML y CSS de las vistas embebibles será incorporado dentro del código JS.
 
 *Nota:* No hace falta construir la aplicación antes de construir la versión embebible. Sí debe haberse construido el framework.
 

@@ -89,6 +89,12 @@ Permite insertar una imagen cuyo origen es adaptativo, es decir, la URL de la im
 
 #### ![](img/iconos/importar.png) Importar (estructura de control)
 
+Permite importar una vista embebible dentro otra vista. Casos de uso son separar una vista en partes más pequeñas, reutilizar partes de la vista, o construir una aplicación de una sola página, ideal para aplicaciones *offline* o sólo JS (como Cordova).
+
+Es posible configurar el componente para que importe automáticamente la vista correspondiente a la URL actual activando la propiedad Escuchar navegación.
+
+Este componente recibe eventos externos con el nombre de la vista a cargar. Es decir, un manejador de evento `nombre:vista`, donde `nombre` es el nombre del componente Importar, desencadenará la carga de la vista `vista` (Ver [Cliente JS](api/cliente-js.md) para información sobre estos).
+
 #### ![](img/iconos/item-menu.png) Item de menú
 
 Permite agregar un ítem de menú. Puede utilizarse dentro del componente Menú o dentro del componente Contenedor de menú. Cada Item puede contener, a su vez, componentes Menú para generar submenús.

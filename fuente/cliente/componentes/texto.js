@@ -82,13 +82,19 @@ var componenteTexto=function() {
 
             //Actualizar referencia
             this.elemento=elem;            
-            this.inicializado=false;
+            this.fueInicializado=false;
             this.inicializar();
 
             //Restaurar selección
             if(seleccionado) {
                 editor.limpiarSeleccion()
                     .establecerSeleccion(this.elemento);
+            }
+
+            if(ui.enModoEdicion()) {
+                //En el editor, debemos notificar que el elemento fue reemplazado, ya que todos los eventos estaban aplicados sobre el elemento viejo (a diferencia
+                //de otros componentes que cuentan con un contenedor)
+                editor.prepararComponenteInsertado(this);
             }
 
             return this;

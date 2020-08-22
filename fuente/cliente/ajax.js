@@ -20,12 +20,14 @@ var ajax=function(param) {
         listo:null,
         error:null,
         siempre:null,
+        tiempo:5000,
         //Por defecto, siempre vamos a validar y procesar las respuestas como JSON, ya que es el lenguaje que hablará el framework
         json:true
     };
     param=Object.assign(predeterminados,param);
-
     var xhr=new XMLHttpRequest();
+
+    xhr.timeout=param.tiempo;
 
     this.obtenerXhr=function() {
         return xhr;
@@ -47,7 +49,12 @@ var ajax=function(param) {
         } else {
             if(param.error) param.error.call(self,ev);
         }
-        if(param.siempre) param.siempre.call(self,resp,ev);
+        if(param.siempre) param.siempre.call(self,ev);
+    };
+
+    xhr.ontimeout=function(ev) {
+        if(param.error) param.error.call(self,ev);
+        if(param.siempre) param.siempre.call(self,ev);
     };
 
     var url=param.url,
@@ -57,7 +64,7 @@ var ajax=function(param) {
     if(cuerpo instanceof FormData) {
         //FormData se envia tal cual
         contentType="multipart/form-data";
-    } else if(typeof cuerpo=="object") {
+    } else if(typeof cuerpo=="object"&&cuerpo!==null) {
         //Construir query string (si parametros es una cadena, enviar tal cual)
         var arr=[];
         Object.keys(cuerpo).forEach(function(clave) {

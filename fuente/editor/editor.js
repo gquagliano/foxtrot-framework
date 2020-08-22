@@ -1023,6 +1023,9 @@ var editor=new function() {
         //Desactivar el editor para que al obtener el HTML no tenga los elementos y las propiedades de la estructura del editor
         this.desactivar();
 
+        //Cuando la vista es embebible, solo necesitamos el HTML del cuerpo de la vista (obtenerHtml(false))
+        var html=ui.obtenerHtml(modo!="embebible");
+
         new ajax({
             url:this.urlBase+"editor/operaciones/guardar.php",
             parametros:{
@@ -1031,7 +1034,7 @@ var editor=new function() {
                 vista:vista,
                 modo:modo,
                 cliente:cliente,
-                html:ui.obtenerHtml(),
+                html:html,
                 css:ui.obtenerCss(),
                 json:ui.obtenerJson()
             },
@@ -1100,6 +1103,15 @@ var editor=new function() {
         //    window.open(resp.url,"previsualizacion");
         //});
 
+        return this;
+    };
+
+    /**
+     * Cambia el tipo de vista que se está editando.
+     * @param {string} modo 
+     */
+    this.establecerModo=function(modo) {
+        this.modoArchivoAbierto=modo;
         return this;
     };
 

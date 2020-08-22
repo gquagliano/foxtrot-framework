@@ -16,18 +16,18 @@ header('Content-Type: text/plain; charset=utf-8',true);
 
 function prepararVariables() {
     global $nombreApl,$nombreVista,$esPhp,$plantilla,$aplicacion,
-        $rutaApl,$rutaHtml,$rutaCss,$rutaJsonApl,$rutaVista,
+        $rutaApl,$rutaHtml,$rutaCss,$rutaJson,$rutaJsonApl,$rutaVista,
         $modo,$cliente,$rutaRecursos,$urlRecursos,$rutaJs,$urlCss;
 
-    $nombreApl=$_POST['aplicacion'];
-    $nombreVista=$_POST['vista'];
+    $nombreApl=$_REQUEST['aplicacion'];
+    $nombreVista=$_REQUEST['vista'];
 
     foxtrot::inicializar($nombreApl);
 
-    $modo=$_POST['modo'];
+    $modo=$_REQUEST['modo'];
     if(!$modo) $modo='independiente';
 
-    $cliente=$_POST['cliente'];
+    $cliente=$_REQUEST['cliente'];
     if(!$cliente) $cliente='web';
 
     $rutaApl=__DIR__.'/../../../desarrollo/aplicaciones/'.$nombreApl.'/';
@@ -46,6 +46,7 @@ function prepararVariables() {
     $rutaVista=$rutaApl.'cliente/vistas/'.$nombreVista;
     $rutaHtml=$rutaVista.'.'.($esPhp?'php':'html');
     $rutaCss=$rutaVista.'.css';
+    $rutaJson=$rutaVista.'.json';
     $rutaRecursos=$rutaApl.'recursos/';
     $urlRecursos='aplicaciones/'.$nombreApl.'/recursos/';
     $urlCss='aplicacion/cliente/vistas/'.$nombreVista.'.css';
@@ -60,7 +61,7 @@ function prepararVariables() {
 }
 
 function crearVista() {
-    global $nombreApl,$nombreVista,$plantilla,$aplicacion,$rutaHtml,$rutaCss,$rutaJsonApl,$modo,$cliente,$rutaVista;
+    global $nombreApl,$nombreVista,$plantilla,$aplicacion,$rutaHtml,$rutaCss,$rutaJson,$rutaJsonApl,$modo,$cliente,$rutaVista;
 
     if(!is_dir(dirname($rutaVista))) mkdir(dirname($rutaVista),0755,true);
     
@@ -75,6 +76,8 @@ function crearVista() {
         ],
         'nombre'=>$nombreVista
     ]);
+    //Solo si la vista es embebible, el JSON se guarda por separado
+    if($modo=='embebible') file_put_contents($rutaJson,$json);
 
     //Crear HTML
     $codigo=file_get_contents(__DIR__.'/../plantillas/'.$plantilla);

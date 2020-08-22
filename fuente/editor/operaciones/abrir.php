@@ -23,7 +23,7 @@ if(!file_exists($rutaHtml)) {
 }
 
 if($modo=='embebible') {
-    $url='operaciones/marco.php?apl='.$nombreApl.'&vista='.$nombreVista;
+    $url='operaciones/marco.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
 } else {
     $url=foxtrot::obtenerEnrutador()->obtenerUrlVista($nombreVista);
     //Forzar aplicación

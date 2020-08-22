@@ -10,9 +10,9 @@
 
 include(__DIR__.'/funciones.php');
 
-prepararVariables();
+header('Content-Type: text/html; charset=utf-8',true);
 
-foxtrot::inicializar($nombreApl);
+prepararVariables();
 
 $json=file_get_contents($rutaJson);
 
@@ -25,7 +25,7 @@ $html=file_get_contents($rutaHtml);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="recursos/css/foxtrot.css">
-    <link rel="stylesheet" href="recursos/css/<?=$aplicacion->tema?>.css">
+    <link rel="stylesheet" href="recursos/css/tema-<?=$aplicacion->tema?>.css">
     <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css">
     <link rel="stylesheet" href="<?=$urlCss?>">
     <title>Marco del editor de vistas</title>
@@ -34,10 +34,11 @@ $html=file_get_contents($rutaHtml);
     <div id="foxtrot-cuerpo"><?=$html?></div>
     <script src="cliente/foxtrot.js"></script>
     <script>
-    var jsonFoxtrot='<?=json_encode($json)?>';
+    var jsonFoxtrot='<?=str_replace('\'','\\\'',$json)?>';
     ui.inicializar("<?=$nombreVista?>")
         .establecerJson(jsonFoxtrot)
         .ejecutar();
+    editor.establecerModo("embebible");
     </script>
   </body>
 </html>

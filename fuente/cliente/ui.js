@@ -559,9 +559,15 @@ var ui=new function() {
 
     /**
      * Devuelve el HTML de la vista.
+     * @param {boolean} [paginaCompleta=true] - Determina si debe devolver el HTML de la página completa o, por el contrario, solo del cuerpo.
+     * @returns {string}
      */
-    this.obtenerHtml=function() {
-        return "<!doctype html>"+doc.documentElement.outerHTML;
+    this.obtenerHtml=function(paginaCompleta) {
+        if(typeof paginaCompleta==="undefined") paginaCompleta=true;
+        
+        if(paginaCompleta) return "<!doctype html>"+doc.documentElement.outerHTML;
+
+        return cuerpo.innerHTML;
     };
 
     /**
@@ -1210,9 +1216,10 @@ var ui=new function() {
         //Si estamos en el marco del editor, utilizar los objetos de la ventana principal
         if(window.parent.ui!=ui&&window.parent.ui.enModoEdicion()) {
             ui=window.parent.ui;
-            //editor=window.parent.editor;
             ui.preparar(document);
             ui.inicializar(nombreVista,opciones);
+            //Agregar referencia al editor dentro del marco
+            window.editor=window.parent.editor;
             return ui;
         }
 

@@ -128,17 +128,38 @@ var controlador=new function() {
         };
     };
 
+    ////Eventos
+    
+    /**
+     * Evento 'Inicializado' (método para sobreescribir).
+     */
+    this.inicializado=function() {
+    };
+    
     /**
      * Evento 'Listo' (método para sobreescribir).
      */
     this.listo=function() {
     };
-
+    
     /**
-     * Evento 'Volver'. Este evento se produce cuando se presiona el botón Atrás del dispositivo (método para sobreescribir).
-     * @returns {boolean|undefined} Si el valor de retorno es falso, detendrá el procesamiento del evento.
+     * Evento 'Navegación' (método para sobreescribir).
+     * @param {string} nombreVista - Nombre de la vista de destino.
+     */
+    this.navegacion=function(nombreVista) {
+    };
+    
+    /**
+     * Evento 'Volver' (método para sobreescribir).
+     * @returns {boolean}
      */
     this.volver=function() {
+    };
+
+    /**
+     * Evento 'Error Servidor' (método para sobreescribir).
+     */
+    this.errorServidor=function() {
     };
 }();
 

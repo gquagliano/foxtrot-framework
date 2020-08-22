@@ -42,7 +42,7 @@ var componenteTexto=function() {
      * Inicializa la instancia.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this;         
+        if(this.fueInicializado) return this;         
         
         this.elementoEditable=this.elemento;
 

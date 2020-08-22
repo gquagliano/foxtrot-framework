@@ -31,7 +31,7 @@ var componenteContenedorMenu=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
         this.inicializarComponente();
         return this;

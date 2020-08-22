@@ -43,7 +43,7 @@ var componenteItemMenu=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
         
         this.enlace=this.elemento.querySelector("a");
         this.elementoEditable=this.enlace;

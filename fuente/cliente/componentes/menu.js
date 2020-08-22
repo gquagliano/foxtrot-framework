@@ -17,7 +17,7 @@ var componenteMenu=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
 
         //Agregar una clase al padre si se está utilizando como submenú

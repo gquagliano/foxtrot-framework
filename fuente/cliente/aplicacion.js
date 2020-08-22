@@ -57,11 +57,39 @@ var aplicacion=new function() {
         this.servidor=servidor.fabricar();
         return this;
     };
+
+    ////Eventos
+    
+    /**
+     * Evento 'Inicializado' (método para sobreescribir).
+     */
+    this.inicializado=function() {
+    };
     
     /**
      * Evento 'Listo' (método para sobreescribir).
      */
     this.listo=function() {
+    };
+    
+    /**
+     * Evento 'Navegación' (método para sobreescribir).
+     * @param {string} nombreVista - Nombre de la vista de destino.
+     */
+    this.navegacion=function(nombreVista) {
+    };
+    
+    /**
+     * Evento 'Volver' (método para sobreescribir).
+     * @returns {boolean}
+     */
+    this.volver=function() {
+    };
+
+    /**
+     * Evento 'Error Servidor' (método para sobreescribir).
+     */
+    this.errorServidor=function() {
     };
 }();
 

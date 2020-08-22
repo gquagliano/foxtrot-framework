@@ -63,7 +63,7 @@ var componenteCampo=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
 
         this.campo=this.elemento.querySelector("input,textarea");
         this.elementoEventos=this.campo;

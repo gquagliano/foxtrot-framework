@@ -35,7 +35,7 @@ var componente=new function() {
     this.elementoEditable=null;
     this.elementoEventos=null;
     this.arrastrable=true;
-    this.inicializado=false;
+    this.fueInicializado=false;
     this.nombreVista=null;
     this.datos=null;
     this.oculto=false;
@@ -553,7 +553,7 @@ var componente=new function() {
      * Inicializa la instancia (método para sobreescribir).
      */    
     this.inicializar=function() {
-        this.inicializarComponente();
+        return this.inicializarComponente();
     };
 
     /**
@@ -561,10 +561,12 @@ var componente=new function() {
      * @param {boolean} [omitirEventos=false] - Si es true, se omitirá la asignación de los eventos predefinidos.
      */ 
     this.inicializarComponente=function(omitirEventos) {
-        if(this.inicializado) return this;
+        if(this.fueInicializado) return this;
 
-        //Las clases css que se mantengan al salir del modo de edición deben ser breves
-        this.elemento.agregarClase("componente "+this.componente);
+        if(this.elemento) {
+            //Las clases css que se mantengan al salir del modo de edición deben ser breves
+            this.elemento.agregarClase("componente "+this.componente);
+        }
 
         if(this.contenedor) {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
@@ -669,7 +671,7 @@ var componente=new function() {
     this.establecerElemento=function(elem) {
         this.elemento=elem;
 
-        this.inicializado=false;
+        this.fueInicializado=false;
         this.inicializar();
 
         return this;
@@ -693,7 +695,7 @@ var componente=new function() {
             this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
         }
         if(this.elemento) {
-            this.inicializado=false;
+            this.fueInicializado=false;
             this.inicializar(); 
         }        
         return this;
@@ -1295,7 +1297,7 @@ var componente=new function() {
             });
         }
 
-        this.inicializado=true;
+        this.fueInicializado=true;
 
         return this;
     };
@@ -1372,9 +1374,9 @@ var componente=new function() {
             } else if(manejador.substring(0,3)=="ir:") {
                 //Navegación
                 ui.irA(manejador.substring(3));
-            } else if(manejador.substring(0,5)=="no-ir:") {
+            } else if(manejador.substring(0,6)=="no-ir:") {
                 //Reemplazar URL sin navegar
-                ui.cambiarUrl(manejador.substring(5));
+                ui.noIrA(manejador.substring(6));
             } else if(manejador.substring(0,6)=="abrir:") {
                 //Popup
                 ui.abrirVentana(manejador.substring(6));
@@ -1496,6 +1498,34 @@ var componente=new function() {
      */
     this.modificacionComponente=function(evento) {
         return false;
+    };
+
+    ////Eventos de la instancia
+    
+    /**
+     * Evento 'Inicializado' (método para sobreescribir).
+     */
+    this.inicializado=function() {
+    };
+    
+    /**
+     * Evento 'Listo' (método para sobreescribir).
+     */
+    this.listo=function() {
+    };    
+    
+    /**
+     * Evento 'Navegación' (método para sobreescribir).
+     * @param {string} nombreVista - Nombre de la vista de destino.
+     */
+    this.navegacion=function(nombreVista) {
+    };
+    
+    /**
+     * Evento 'Volver' (método para sobreescribir).
+     * @returns {boolean}
+     */
+    this.volver=function() {
     };
 
     ////Utilidades

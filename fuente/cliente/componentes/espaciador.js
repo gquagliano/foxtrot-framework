@@ -35,7 +35,7 @@ var componenteEspaciador=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
         this.inicializarComponente();
         return this;
     };

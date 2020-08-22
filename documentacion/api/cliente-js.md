@@ -8,6 +8,8 @@ En desarrollo.
 
 ### Eventos
 
+#### Manejadores de eventos
+
 Los manejadores de eventos pueden establecerse directamente desde el editor o desde el código del controlador mediante `componentes.componente.propiedad()`.
 
 Cuando se establece como cadena, los siguientes valores son posibles:
@@ -29,3 +31,15 @@ Se suprimirá la difusión del evento (*bubbling*) y la acción predeterminada c
 Esto no quita que sea posible establecer eventos adicionales en los elementos del DOM mediante `componentes.componente.obtenerElemento()` y `evento()`, aunque no es lo ideal.
 
 Ver [Estructura de los componentes](../componentes-estructura.md) para más información sobre cómo el componente gestiona internamente los eventos.
+
+#### Métodos de eventos predefinidos
+
+Existen diferentes métodos que son invocados en los controladores y los componentes ante determinados eventos. Estos son:
+
+**Controladores y controlador de aplicación**: `listo`, `inicializado`, `navegacion(nombreVista)`, `volver`*, `errorServidor`.
+
+**Componentes**: `listo`, `navegacion(nombreVista)`, `volver`*.
+
+* Si el método devuelve `true`, se detendrá el evento.
+
+[Más información sobre el ciclo de vida de la aplicación y el significado de los eventos](aplicacion.md).

@@ -24,9 +24,17 @@ En líneas generales, sin entrar en detalles de los procesos internos del framew
 
 5. Se procesa el JSON de la aplicación.
 
-6. Se cargan el controlador de la aplicación, el controlador de la vista y los componentes. `inicializar()` es invocado en cada uno de ellos, si existe, al crearse la instancia. Nótese que la carga aún no está completa en este punto.
+6. Se cargan el controlador de la aplicación, el controlador de la vista y los componentes. `inicializar()` e `inicializado()` son invocados en cada uno de ellos, si existen, al crearse la instancia. Nótese que la carga aún no está completa en este punto.
 
-6. Se inicia la ejecución de `ui`. La vista es HTML+CSS puros, por lo que ya fue dibujada por el navegador. Esta acción preparará las instancias JS de los componentes, el controlador y el controlador de aplicación.
+La diferencia entre `inicializar` e `inicializado` es que `inicializar` es un método interno, que se puede sobreescribir pero al hacerlo se debe:
+- Invocar `this.inicializarControlador()` o `this.inicializarAplicacion()`, según corresponda, y
+- Devolver `this` siempre.
+Mientras que `inicializar` es solo un evento, no necesita invocar un método del padre y puede no tener valor de retorno. La función es la misma, pero es más simple de escribir.
 
-7. Se ejecuta el método `listo()` en el controlador de la aplicación, en el controlador de la vista y en los componentes, en ese orden, cuando exista.
+7. Se inicia la ejecución de `ui`. La vista es HTML+CSS puros, por lo que ya fue dibujada por el navegador. Esta acción preparará las instancias JS de los componentes, el controlador y el controlador de aplicación.
 
+8. Se ejecuta el método `listo()` en el controlador de la vista, en el controlador de la aplicación y en los componentes, en ese orden, cuando existan.
+
+9. Al modificarse la URL, el método `navegación(nombreVista)` es ejecutado en el controlador de la vista, en el controlador de la aplicación y en los componentes, en ese orden, cuando existan. Al presionarse el botón atrás del dispositivo, se invocarán los métodos `volver()`.
+
+10. En caso de error en la comunicación cliente-servidor, se invocará `errorServidor()` el controlador de la vista y en el controlador de la aplicación.

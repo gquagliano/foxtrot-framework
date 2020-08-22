@@ -42,7 +42,11 @@ Ver [Scripts y asistentes](scripts.md) para más información sobre los parámet
 
 	php sincronizar-bd.php -a=ejemplo
 
-Listo. Ya puede ejecutarse la aplicación en el navegador web simplemente ingresando a `http://localhost/experimental-foxtrot-framework/desarrollo/` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
+Listo.
+
+### Probar la aplicación
+
+Puede ejecutarse la aplicación en el navegador web simplemente ingresando a `http://localhost/experimental-foxtrot-framework/desarrollo/` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
 ### Crear o modificar una vista
 
@@ -83,6 +87,10 @@ Listo. el contenido del directorio `embeber` debe copiarse tal cual al directori
 También es posible construir y ejecutar la aplicación en un dispositivo conectado al equipo directamente desde Foxtrot:
 
 	php construir-embebible.php -a=ejemplo -i=cordova.html -d -c="ruta/a/www" -p=android
+
+### Probar una vista para Cordova
+
+Puede ejecutar una vista diseñada para Cordova en el navegador web, debe configurarse `/desarrollo/index-cordova.html` para que apunte a la misma y luego acceder a: `http://localhost/experimental-foxtrot-framework/desarrollo/index-cordova.html` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
 ## Más información
 

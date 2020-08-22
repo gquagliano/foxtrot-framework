@@ -90,7 +90,7 @@ También es posible construir y ejecutar la aplicación en un dispositivo conect
 
 ### Probar una vista para Cordova
 
-Puede ejecutar una vista diseñada para Cordova en el navegador web, debe configurarse `/desarrollo/index-cordova.html` para que apunte a la misma y luego acceder a: `http://localhost/experimental-foxtrot-framework/desarrollo/index-cordova.html` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
+Para ejecutar una vista diseñada para Cordova en el navegador web, debe configurarse `/desarrollo/index-cordova.html` para que apunte a la misma y luego acceder a: `http://localhost/experimental-foxtrot-framework/desarrollo/index-cordova.html` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
 ## Más información
 

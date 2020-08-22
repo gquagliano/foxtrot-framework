@@ -7,11 +7,6 @@
 
 /* Estilos comunes de Foxtrot */
 
-* {
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-}
-
 #foxtrot-cuerpo {
     min-height: 100vh;
     position: relative;
@@ -262,6 +257,10 @@ li.foxtrot-menu-separador::after {
 
 /* Cordova */
 
+.cordova * {
+    backface-visibility: hidden;
+    perspective: 100px;
+}
 @keyframes cordova-listo {
     from { opacity: 0 }
     to { opacity: 1 }

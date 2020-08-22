@@ -64,7 +64,8 @@ var servidor=new function() {
      * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
      * @param {Object} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
      * @param {Object} [opciones.error] - Función de error.
-     * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno).
+     * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno, excepto en caso de error).
+     * @param {Object} [opciones.siempre] - Función a invocar tras la solicitud (siempre será invocada, incluso en caso de error).
      * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
      * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
      * @param {Object} [opciones.precarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
@@ -96,7 +97,9 @@ var servidor=new function() {
             },
             siempre:function() {
                 ui.ocultarPrecarga(opciones.precarga);
-            }
+                if(opciones.siempre) opciones.siempre();
+            },
+            error:opciones.error
         }));
 
         return this;
@@ -172,7 +175,10 @@ var servidor=new function() {
                         opc={
                             controlador:target.controlador,
                             controladorOrigen:target.controladorOrigen,
-                            metodo:nombre
+                            metodo:nombre,
+                            error:function() {
+                                ui.evento("errorServidor");
+                            }
                         };
         
                     //Los métodos admiten múltiples formas:

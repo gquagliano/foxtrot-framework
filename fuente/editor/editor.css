@@ -395,10 +395,10 @@ body.trabajando #foxtrot-cargando {
 
 .componente {
     position: relative;
+    transition: outline .1s;
 }
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor {
     outline: dashed 1px rgba(0, 0, 0, 0.2);
-    transition: outline .1s;
     min-height: 1em;
 }
 .foxtrot-modo-edicion .componente,

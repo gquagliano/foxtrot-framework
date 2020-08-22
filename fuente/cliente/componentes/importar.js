@@ -14,8 +14,17 @@ var componenteImportar=function() {
     this.componente="importar";
 
     this.propiedadesConcretas={
-        "Configuración":{
-            
+        "Importar":{
+            vista:{
+                etiqueta:"Vista",
+                adaptativa:false
+            },
+            escucharNavegacion:{
+                etiqueta:"Escuchar navegación",
+                ayuda:"Determina si debe cambiar la vista cuando cambie la URL.",
+                tipo:"bool",
+                adaptativa:false
+            }
         }
     };
 
@@ -23,18 +32,35 @@ var componenteImportar=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.inicializado) return this; 
+        if(this.fueInicializado) return this; 
         this.inicializarComponente();
         return this;
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("<div>"); 
         this.crearComponente();
         return this;
+    };
+
+    /**
+     * Recepción de eventos externos.
+     * @param {*} valor 
+     * @param {Object} evento 
+     */
+    this.eventoExterno=function(valor,evento) {
+        ui.alerta(valor);
+    };
+
+    /**
+     * Evento 'navegación'.
+     * @param {string} nombreNuevaVista 
+     */
+    this.navegacion=function(nombreNuevaVista) {
+        ui.alerta(nombreNuevaVista);
     };
 };
 
@@ -42,5 +68,6 @@ ui.registrarComponente("importar",componenteImportar,configComponente.clonar({
     descripcion:"Importar vista o archivo HTML",
     etiqueta:"Importar",
     grupo:"Control",
-    icono:"importar.png"
+    icono:"importar.png",
+    aceptaHijos:false
 }));

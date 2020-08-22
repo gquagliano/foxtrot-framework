@@ -1,0 +1,14 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+ 
+.importar {
+}
+.importar>.vista {
+    min-height: 100%;
+    position: relative;
+    overflow: auto;
+}

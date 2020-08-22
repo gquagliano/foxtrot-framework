@@ -75,7 +75,7 @@ En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación
 
 - Cuando se seleccionen múltiples componentes, la barra de propiedades mostrará las propiedades combinadas de *todos* ellos, pero no mostrará ningún valor. Cualquier modificación en las propiedades, será aplicada por igual a todos los componentes seleccionados.
 
-- Para copiar o cortar los componentes seleccionados pueden utilizarse los comandos de la barra de herramientas o presionar Ctrl+C / Ctrl+V. Asimismo, para pegar los componentes copiados, luego de seleccionar el destino o el cuerpo de la vista, se debe hacer click en el comando correspondiente o presionar Ctrl+V. *Es posible copiar entre distintas ventanas*.
+- Para **copiar o cortar** los componentes seleccionados puede presionarse Ctrl+C / Ctrl+X. Asimismo, para **pegar** los componentes copiados, luego de seleccionar el destino o el cuerpo de la vista, se debe presionar Ctrl+V. **Es posible copiar y pegar entre distintas ventanas**.
 
 ## Más información
 

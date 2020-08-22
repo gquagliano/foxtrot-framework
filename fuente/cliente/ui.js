@@ -43,11 +43,12 @@ var ui=new function() {
         enrutadores={},
         instanciaEnrutador=null,
         instanciaAplicacion=null,
-        urlModificada=false;
+        urlModificada=0;
 
     ////Elementos del dom
 
-    var doc=document,
+    var win=window,
+        doc=document,
         body=doc.body,
         cuerpo=doc.querySelector("#foxtrot-cuerpo"),
         estilos=null,
@@ -322,7 +323,9 @@ var ui=new function() {
     this.registrarAplicacion=function(funcion) {
         //En este caso no puede haber más de una clase, por lo que no tiene sentido llevar un almacén de funciones, instanciamos directamente
         instanciaAplicacion=aplicacion.fabricarAplicacion(funcion);
-        instanciaAplicacion.inicializar();
+        instanciaAplicacion.inicializar()
+            //Evento
+            .inicializado();
         return this;
     };
 
@@ -444,6 +447,10 @@ var ui=new function() {
 
         //Índice
         instanciasComponentesId[id]=i-1;
+
+        //Evento
+        obj.inicializar()
+            .inicializado();
 
         return obj;
     };
@@ -676,7 +683,7 @@ var ui=new function() {
         if(typeof principal==="undefined") principal=false;
 
         var obj=this.obtenerInstanciaControlador(nombre,principal);        
-        if(obj) obj.inicializar();
+        
         return obj;
     };
 
@@ -713,6 +720,10 @@ var ui=new function() {
 
     this.establecerNombreVistaPrincipal=function(nombre) {
         nombreVistaPrincipal=nombre;
+
+        //Almacenar en el historial para poder ser utilizado en la navegación
+        history.replaceState({vista:nombre},doc.title);
+
         return this;
     };
 
@@ -787,7 +798,9 @@ var ui=new function() {
         instanciasControladores[nombre]=obj;
         if(principal) instanciaControladorPrincipal=obj;
         
-        obj.inicializar();
+        obj.inicializar()
+            //Evento
+            .inicializado();
         
         return obj;
     };
@@ -927,10 +940,11 @@ var ui=new function() {
     };
 
     this.procesarUrl=function(url) {
-        var resultado;
-        if(/^https?:\/\//i.test(url)) {
-            resultado=url;
-        } else {
+        var resultado={
+            url:url,
+            vista:null
+        };
+        if(!/^https?:\/\//i.test(url)) {
             //Obtener URL de la vista dado su nombre
             var nombre=url,
                 parametros="",
@@ -940,7 +954,8 @@ var ui=new function() {
                 parametros=url.substring(p);
             }
             nombre=util.trim(nombre,"\\/");
-            resultado=instanciaEnrutador.obtenerUrlVista(nombre)+parametros;
+            resultado.url=instanciaEnrutador.obtenerUrlVista(nombre)+parametros;
+            resultado.vista=nombre;
         }
         return resultado;
     };
@@ -948,26 +963,64 @@ var ui=new function() {
     /**
      * Navega a la vista o URL especificada.
      * @param {string} ruta - URL o nombre de vista de destino.
+     * @returns {ui}
      */
     this.irA=function(ruta) {
-        window.location.href=this.procesarUrl(ruta);
+        var destino=this.procesarUrl(ruta);
+
+        //Evento
+        //Pasar a los controladores y componentes
+        //Si un método devolvió true, detener
+        if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes("navegacion",true,[destino.vista])) return;
+
+        window.location.href=destino.url;
         return this;
     };
 
     /**
-     * Vuelve a la URL anterior.
+     * Cambia la URL hacia la vista o URL especificada, sin navegar hacia ella.
+     * @param {string} ruta - URL o nombre de vista de destino.
+     * @returns {ui}
+     */
+    this.noIrA=function(ruta) {
+        var destino=this.procesarUrl(ruta);
+        this.cambiarUrl(destino.url,{vista:destino.vista});
+        return this;
+    };
+
+    /**
+     * Vuelve a la URL anterior. Este método no invoca el evento 'volver'.
      * @returns {ui}
      */
     this.volver=function() {
+        history.go(-1);
+
+        urlModificada--;
+        if(urlModificada<0) urlModificada=0;
+
         return this;
     };
 
     /**
      * Cambia la URL sin navegar hacia la misma.
-     * @param {*} url 
+     * @param {string} url - URL de destino.
+     * @param {Object} [estado=null] - Estado.
      * @returns {ui}
      */
-    this.cambiarUrl=function(url) {
+    this.cambiarUrl=function(url,estado) {
+        if(typeof estado==="undefined") estado=null;
+
+        win.history.pushState(estado,null,url);
+
+        urlModificada++;
+
+        //Evento
+        //Pasar a los controladores y componentes
+        //Si un método devolvió true, detener
+        if(ui.evento("navegacion",[estado.vista])||ui.eventoComponentes("navegacion",true,[estado.vista])) return;
+
+        //El cambio de URL no tiene otro efecto
+
         return this;
     };
 
@@ -978,10 +1031,27 @@ var ui=new function() {
     this.abrirVentana=function(ruta) {
         var ancho=window.ancho()*.75,
             alto=window.alto();
-        return window.open(this.procesarUrl(ruta),util.cadenaAzar(),"height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
+        return window.open(this.procesarUrl(ruta).url,util.cadenaAzar(),"height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
     };
 
     ////Eventos
+
+    /**
+     * Procesa el evento 'popstate'.
+     * @param {PopStateEvent} evento 
+     */
+    var procesarOnPopState=function(evento) {
+        //Por el momento, solo soportamos la navegación entre vistas mediante popState.
+        //TODO Debería ser posible determinar la vista a partir de la URL inicial, lo cual, por el momento, sucede exclusivamente del lado del servidor
+        if(evento.state&&evento.state.hasOwnProperty("vista")) {
+            //Evento
+            //Pasar a los controladores y componentes
+            //Si un método devolvió true, detener
+            if(ui.evento("navegacion",[evento.state.vista])||ui.eventoComponentes("navegacion",true,[evento.state.vista])) return;
+
+            //El cambio de URL no tiene otro efecto
+        }
+    };
 
     /**
      * Establece los eventos globales de la interfaz.
@@ -1003,21 +1073,91 @@ var ui=new function() {
                         return;
                     }
 
+                    //Pasar el evento a los controladores y componentes
+                    //Si un método devolvió true, detener
+                    if(ui.evento("volver")||ui.eventoComponentes("volver",true)) return;
+
                     //Si la URL cambió, volver
-                    if(urlModificada) {
+                    if(urlModificada>0) {
                         self.volver();
                         return;
                     }
 
-                    //Pasar el evento al controlador
-                    var retorno=instanciaControladorPrincipal.volver();
-                    if(typeof retorno==="boolean"&&!retorno) return;
-
                     //Por último, cerrar la aplicación
-                    navigator.app.exitApp();
+                    ui.salir();
                 },false);
             },false);
         }
+
+        win.addEventListener("popstate",procesarOnPopState);
+    };
+
+    /**
+     * Invoca el método correspondiente al evento en todos los controladores.
+     * @param {string} nombre - Nombre del evento.
+     * @param {*[]} [params] - Parámetros a pasar al método.
+     * @returns {boolean}
+     */
+    this.evento=function(nombre,params) {
+        //Controladores de vistas
+        for(var control in instanciasControladores) {
+            if(!instanciasControladores.hasOwnProperty(control)) continue;
+
+            var obj=instanciasControladores[control],
+                metodo=obj[nombre],
+                retorno;
+            if(params) {
+                retorno=metodo.apply(obj,params);
+            } else {
+                retorno=metodo();
+            }
+
+            //El método puede devolver true para detener el evento
+            if(typeof retorno==="boolean"&&retorno) return true;
+        }
+
+        var metodo=instanciaAplicacion[nombre],
+            retorno;
+        if(params) {
+            retorno=metodo.apply(instanciaAplicacion,params);
+        } else {
+            retorno=metodo();
+        }
+        //El método puede devolver true para detener el evento
+        if(typeof retorno==="boolean"&&retorno) return true;
+
+        return false;
+    };
+
+    /**
+     * Invoca el método correspondiente al evento en todos los componentes.
+     * @param {string} nombre - Nombre del evento.
+     * @param {boolean} [soloImplementados=false] - Si es true, solo invocará aquellos métodos implementados en el componente concreto (no invocará métodos heredados).
+     * @param {*[]} [params] - Parámetros a pasar al método.
+     * @returns {boolean}
+     */
+    this.eventoComponentes=function(nombre,soloImplementados,params) {
+        if(typeof soloImplementados==="undefined") soloImplementados=false;
+
+        for(var comp in instanciasComponentes) {
+            if(!instanciasComponentes.hasOwnProperty(comp)) continue;
+
+            if(soloImplementados&&!instanciasComponentes[comp].hasOwnProperty(nombre)) continue;
+
+            var obj=instanciasComponentes[comp],
+                metodo=obj[nombre],
+                retorno;
+            if(params) {
+                retorno=metodo.apply(obj,params);
+            } else {
+                retorno=metodo();
+            }
+
+            //El método puede devolver true para detener el evento
+            if(typeof retorno==="boolean"&&retorno) return true;
+        }
+        
+        return false;
     };
 
     ////Inicialización y ejecución del cliente
@@ -1026,6 +1166,16 @@ var ui=new function() {
         esCordova=true;
         urlBase=localStorage.getItem("_urlBase");
         document.head.anexar(document.crear("base").atributo("href",urlBase));
+        return this;
+    };
+
+    /**
+     * Si es Cordova o cliente de escritorio, cierra la aplicación.
+     * @returns {ui}
+     */
+    this.salir=function() {
+        if(esCordova) navigator.app.exitApp();
+        //TODO Escritorio
         return this;
     };
 
@@ -1082,6 +1232,7 @@ var ui=new function() {
      * Prepara las referencias al documento.
      */
     this.preparar=function(nuevoDoc) {
+        win=nuevoDoc.defaultView;
         doc=nuevoDoc;
         body=doc.body;
         cuerpo=doc.querySelector("#foxtrot-cuerpo");
@@ -1138,18 +1289,9 @@ var ui=new function() {
                 obj.establecerVista(nombreVistaPrincipal);
                 instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
                 
-                //Evento 'Listo'
-
-                //Aplicacion
-                instanciaAplicacion.listo();
-
-                //Controlador
-                instanciaControladorPrincipal.listo();
-
-                //Componentes
-                instanciasComponentes.forEach(function(comp) {
-                    comp.listo();
-                });                
+                //Evento
+                ui.evento("listo");
+                ui.eventoComponentes("listo",true);
             }
 
             if(!esCordova) {

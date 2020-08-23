@@ -145,20 +145,24 @@ class foxtrot {
         //Establecer url por defecto
         if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
-        if(!$aplicacion) {
-            //Es posible saltearse el enrutador de aplicación con el parámetro __apl
-            if($_REQUEST['__apl']) {
-                $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
-                self::$aplicacion=$aplicacion;
+        //foxtrot::inicializar(false) saltea la carga de una aplicación
+        //foxtrot::inicializar() carga la aplicación utilizando el enrutador
+        if($aplicacion!==false) {
+            if(!$aplicacion) {
+                //Es posible saltearse el enrutador de aplicación con el parámetro __apl
+                if($_REQUEST['__apl']) {
+                    $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
+                    self::$aplicacion=$aplicacion;
+                } else {
+                    self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+                }
+                if(!self::$aplicacion) self::error();
             } else {
-                self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+                self::$aplicacion=$aplicacion;
             }
-            if(!self::$aplicacion) self::error();
-        } else {
-            self::$aplicacion=$aplicacion;
-        }
 
-        self::cargarAplicacion();
+            self::cargarAplicacion();
+        }
     }
 
     public static function error() {

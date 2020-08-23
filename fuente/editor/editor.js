@@ -108,7 +108,7 @@ var editor=new function() {
         configurarBarrasHerramientas();
     }  
 
-    function construirPropiedades() {
+    this.construirPropiedades=function() {
         if(!self.componentesSeleccionados.length) {
             barraPropiedades.agregarClase("foxtrot-barra-propiedades-vacia");
             cuerpoBarraPropiedades.establecerHtml("Ningún componente seleccionado");
@@ -183,6 +183,29 @@ var editor=new function() {
                             fn.call(editor,componente,tamanoActual,nombre,v);
                         });
                     }
+                });
+            } else if(tipo=="archivo") {
+                //TODO Por el momento, simplemente mostramos un campo de archivo, eventualmente debe ser un gestor de archivos incluyendo subida y recorte de imagenes
+
+                var campo=document.crear("<input type='file' class='form-control'>");
+                fila.anexar(campo);
+
+                campo.evento("change",function(ev) {
+                    self.componentesSeleccionados.forEach(function(componente) {
+                        if(fn) fn.call(editor,componente,tamanoActual,nombre,campo.files);
+                    });
+                });
+            } else if(tipo=="comando") {
+                //Botón (no es realmene una propiedad)
+
+                var campo=document.crear("<a href='#' class='btn'>");
+                campo.establecerHtml(prop.hasOwnProperty("boton")?prop.boton:prop.etiqueta);
+                fila.anexar(campo);
+
+                campo.evento("click",function(ev) {
+                    self.componentesSeleccionados.forEach(function(componente) {
+                        if(fn) fn.call(editor,componente,tamanoActual,nombre);
+                    });
                 });
             } else {
                 //Campo de texto como predeterminado
@@ -299,7 +322,9 @@ var editor=new function() {
         claves.forEach(function(grupo) {
             if(grupo!=nombreTipoComponente) fn(grupo);            
         });
-    }
+
+        return this;
+    };
 
     ////Eventos
 
@@ -745,7 +770,7 @@ var editor=new function() {
                 .anexarA(elem);
         }
 
-        construirPropiedades();
+        this.construirPropiedades();
 
         //Activar portapapeles
         document.querySelectorAll("#foxtrot-btn-pegar").propiedad("disabled",false);
@@ -800,7 +825,7 @@ var editor=new function() {
             }
         }
 
-        construirPropiedades();
+        this.construirPropiedades();
 
         //Desactivar portapapeles si no quedan elementos seleccionados
         if(this.componentesSeleccionados.length==0) document.querySelectorAll("#foxtrot-btn-copiar,#foxtrot-btn-cortar,#foxtrot-btn-pegar").propiedad("disabled",true);
@@ -816,7 +841,7 @@ var editor=new function() {
         ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
         this.componentesSeleccionados=[];
-        construirPropiedades();        
+        this.construirPropiedades();        
 
         //Desactivar portapapeles
         document.querySelectorAll("#foxtrot-btn-copiar,#foxtrot-btn-cortar,#foxtrot-btn-pegar").propiedad("disabled",true);
@@ -1001,7 +1026,7 @@ var editor=new function() {
         }[t];
         ui.obtenerMarco().estilo("maxWidth",ancho);
         tamanoActual=t;
-        construirPropiedades();
+        this.construirPropiedades();
     };
 
     ////Cargar/guardar

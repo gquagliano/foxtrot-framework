@@ -12,7 +12,7 @@
 
 include(__DIR__.'/configuracion.php');
 
-$opciones=getopt('a::i::dc::p::');
+$opciones=getopt('a::i::dc::p::lj');
 
 define('_depuracion',array_key_exists('d',$opciones));
 validarParametroAplicacion($opciones);
@@ -22,7 +22,7 @@ if(!$opciones['i']) {
     exit;
 }
 
-exec('php construir-apl.php -a='.escapeshellarg($opciones['a']).(_depuracion?' -d':''));
+exec('php construir-apl.php -a='.escapeshellarg($opciones['a']).(_depuracion?' -d':'').($opciones['l']?' -l':'').($opciones['j']?' -j':''));
 
 $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$opciones['i']).'.html';
 if(!file_exists(_produccion._dirApl.'cliente/vistas/'.$inicio)) {
@@ -53,6 +53,12 @@ file_put_contents(_embeber.'index-cordova.html',preg_replace([
 if($opciones['c']) {
     $dir=$opciones['c'];
     if(substr($dir,-1)!='/'&&substr($dir,-1)!='\\') $dir.='/';
+
+    //Limpiar directorio
+    if(!$opciones['l']) {
+        $archivos=buscarArchivos($dir,'*.*');
+        foreach($archivos as $archivo) unlink($archivo);
+    }
 
     copiar(_embeber,'*.*',$dir);
     

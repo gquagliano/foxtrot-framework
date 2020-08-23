@@ -12,7 +12,7 @@
 
 include(__DIR__.'/configuracion.php');
 
-$opciones=getopt('a::d');
+$opciones=getopt('a::dlj');
 
 define('_depuracion',array_key_exists('d',$opciones));
 validarParametroAplicacion($opciones);
@@ -50,7 +50,6 @@ $archivos=[
 ];
 foreach($archivos as $archivo) copy(_desarrollo.$archivo,_produccion.$archivo);
 
-
 //Crear directorio temp vacío (no copiar los archivos que contenga temp en desarrollo)
 if(!is_dir(_produccion.'temp/')) mkdir(_produccion.'temp/',0755);
 if(!is_dir(_produccion.'temp/temp-privado/')) mkdir(_produccion.'temp/temp-privado/',0755);
@@ -59,8 +58,10 @@ copy(_desarrollo.'temp/temp-privado/.htaccess',_produccion.'temp/temp-privado/.h
 ////Compilar aplicación
 
 //Limpiar/crear directorios
-$archivos=buscarArchivos(_produccion._dirApl,'*.*');
-foreach($archivos as $archivo) unlink($archivo);
+if(!$opciones['l']) {
+    $archivos=buscarArchivos(_produccion._dirApl,'*.*');
+    foreach($archivos as $archivo) unlink($archivo);
+}
 if(!is_dir(_produccion._dirApl.'cliente/vistas/')) mkdir(_produccion._dirApl.'cliente/vistas/',0755,true); //Creará el árbol completo hasta vistas/
 
 //Copiar archivos PHP tal cual
@@ -96,7 +97,31 @@ $archivos=[
     _desarrollo._dirApl.'cliente/aplicacion.js'
 ];
 $archivos=array_merge($archivos,buscarArchivos(_desarrollo._dirApl.'cliente/controladores/','*.js'));
+
+$temp=tempnam(__DIR__,'js');
+if(!$opciones['j']) {
+    //Agregar código de las vistas embebibles dentro del JS
+    $js='';
+    $json=json_decode(file_get_contents(_desarrollo._dirApl.'aplicacion.json'));
+    foreach($json->vistas as $nombre=>$vista) {
+        if($vista->tipo=='embebible') {
+            $ruta=_desarrollo._dirApl.'cliente/vistas/'.$nombre.'.';
+            
+            $rutaHtml=$ruta.(file_exists($ruta.'php')?'php':'html');
+            $html=str_replace('"','\\"',file_get_contents($rutaHtml));
+
+            $json=str_replace('"','\\"',file_get_contents($ruta.'json'));
+
+            $js.='_vistasEmbebibles["'.$nombre.'"]={html:"'.$html.'",json:"'.$json.'"};'.PHP_EOL.PHP_EOL;
+        }
+    }
+    file_put_contents($temp,$js);
+    $archivos[]=$temp;
+}
+
 compilarJs($archivos,_produccion._dirApl.'cliente/aplicacion.js',_depuracion);
+
+unlink($temp);
 
 //Copiar las vistas tal cual
 copiar(_desarrollo._dirApl.'cliente/vistas/','*.{json,css,html,php}',_produccion._dirApl.'cliente/vistas/');

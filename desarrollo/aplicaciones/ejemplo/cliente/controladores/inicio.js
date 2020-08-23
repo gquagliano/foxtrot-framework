@@ -4,6 +4,9 @@
 ui.registrarControlador("inicio",function() {
     var t=this;
     
+    /**
+     * Envía el formulario.
+     */
     this.ingresar=function() {
         var datos=ui.obtenerValores();
 
@@ -22,6 +25,9 @@ ui.registrarControlador("inicio",function() {
         },datos);
     };
 
+    /**
+     * Muestra el mensaje de error de ingreso.
+     */
     this.error=function() {
         ui.alerta("Datos de acceso inválidos.",function() {
             componentes.u.foco();

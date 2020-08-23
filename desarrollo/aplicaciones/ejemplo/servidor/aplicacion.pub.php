@@ -11,6 +11,9 @@ namespace aplicaciones\ejemplo\publico;
 defined('_inc') or exit;
 
 class aplicacion extends \aplicacion {
+    /**
+     * Cierra la sesión.
+     */
     public function cerrarSesion() {
         \sesion::cerrarSesion();
     }

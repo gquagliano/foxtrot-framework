@@ -17,6 +17,10 @@ defined('_inc') or exit;
  * Métodos públicos del controlador de vista.
  */
 class inicio extends \controlador {
+    /**
+     * Valida los datos de usuario y valida la sesión.
+     * @param object $campos Objeto con los valores del formulario.
+     */
     public function iniciarSesion($campos) {
         $usuarios=new usuarios;
 

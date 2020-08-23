@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
- * 
- * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @author 
  * @version 1.0
  */
 
@@ -16,12 +14,26 @@ defined('_inc') or exit;
  * Métodos públicos del controlador de vista.
  */
 class usuarios extends \controlador {
+    /**
+     * Devuelve el listasdo de usuarios.
+     * @param object $filtro Objeto con los parámetros del filtro (texto y pagina).
+     * @return object
+     */
     public function obtenerListado($filtro) {
         \foxtrot::obtenerAplicacion()->verificarLogin();
 
-        $usuarios=new modeloUsuarios;
+        $modelo=new modeloUsuarios;
         
-        $listado=$usuarios->listarUsuarios($filtro->texto,$filtro->pagina);
+        $donde=null;
+        $parametros=null;
+        if($filtro) {
+            $donde='`id`=@filtro or `nombre` like @filtroParcial';
+            $parametros=[
+                'filtro'=>$filtro->texto,
+                'filtroParcial'=>'%'.$filtro->texto.'%'
+            ];
+        }
+        $listado=$modelo->listarItems($donde,$parametros,$filtro->pagina);
 
         //Remover datos privados
         foreach($listado->filas as $fila) {
@@ -31,36 +43,62 @@ class usuarios extends \controlador {
         return $listado;
     }
 
+    /**
+     * Elimina un usuario.
+     * @param int $id ID del usuario.
+     */
     public function eliminar($id) {
         \foxtrot::obtenerAplicacion()->verificarLogin();
 
-        (new modeloUsuarios)->eliminarUsuario($id);
+        (new modeloUsuarios)->eliminarItem($id);
     }
 
+    /**
+     * Guarda un usuario.
+     * @param object $datos Objeto con los datos del usuario.
+     * @param int $id ID del usuario, si se trata de actualización de un registro existente.
+     */
     public function guardar($datos,$id) {
         \foxtrot::obtenerAplicacion()->verificarLogin();
         
         //Validar campos obligatorios
-        $obligatorios=['nombre','nivel','usuario'];
+        $obligatorios=['nombre','nivel','usuario','email'];
         if(!$id) $obligatorios[]='contrasena';
-        foreach($obligatorios as $obligatorio) if(!trim($datos->$obligatorio)) $this->cliente->error(1);
+        foreach($obligatorios as $obligatorio) if(!trim($datos->$obligatorio)) $this->cliente->error(1);   
 
-        if($datos->contrasena!=$datos->contrasena2) $this->cliente->error(2);        
+        if($datos->contrasena!=$datos->contrasena2) $this->cliente->error(2);
+
+        if($datos->contrasena) {
+            //Si se ingresó una contraseña, encriptar
+            $datos->contrasena=modeloUsuarios::obtenerContrasena($datos->contrasena);
+        } else {
+            //En caso contrario, remover propiedad para que no se reemplace por una contraseña en blanco
+            unset($datos->contrasena);
+        }
 
         $datos->id=$id;
 
-        $nuevoId=(new modeloUsuarios)->crearOModificarUsuario($datos);
+        $nuevoId=(new modeloUsuarios)->crearOModificarItem($datos);
 
         return [
             'id'=>$nuevoId?$nuevoId:$id
         ];
     }
 
+    /**
+     * Devuelve un usuario dado su ID.
+     * @param int $id ID.
+     */
     public function obtenerItem($id) {
         \foxtrot::obtenerAplicacion()->verificarLogin();
         
-        return (new modeloUsuarios)->obtenerUsuario($id);
-    }
+        $usuario=(new modeloUsuarios)->obtenerItem($id);
+        
+        //Remover datos privados
+        $usuario->contrasena=null;
+
+        return $usuario;
+    }   
 
     /*
     Pruebas al ORM

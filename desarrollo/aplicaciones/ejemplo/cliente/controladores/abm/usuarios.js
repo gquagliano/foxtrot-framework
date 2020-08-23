@@ -1,23 +1,27 @@
 /**
  * Controlador de la vista abm/usuarios.
+ * @author 
+ * @version 1.0
  */
 ui.registrarControlador("abm/usuarios",function() {
+    "use strict";
+    
     var t=this;
 
     this.controladorServidor="usuarios";
-
-    this.niveles={
-        1:"Administrador",
-        2:"Operador",
-        3:"Usuario externo"
-    };
     
+    /**
+     * Evento Listo.
+     */
     this.listo=function() {
         ui.aplicacion().verificarUsuario(function() {
             t.cargarDatos();
         });
     };
 
+    /**
+     * Carga el listado.
+     */
     this.cargarDatos=function() {
         var filtro={
             texto:componentes.filtro.valor(),
@@ -31,6 +35,18 @@ ui.registrarControlador("abm/usuarios",function() {
         },filtro);
     };
 
+    /**
+     * Click en Filtrar.
+     */
+    this.filtrar=function() {
+        componentes.pagina.valor(1);
+        this.cargarDatos();
+    };
+
+    /**
+     * Click en eliminar.
+     * @param {componente} componente - Botón clickeado.
+     */
     this.eliminar=function(componente) {
         var id=componente.obtenerDatos().id;
 
@@ -39,10 +55,5 @@ ui.registrarControlador("abm/usuarios",function() {
                 t.cargarDatos();
             },id);
         });
-    };
-
-    this.modificar=function(id) {
-        alert(id);
-        return true;
     };
 });

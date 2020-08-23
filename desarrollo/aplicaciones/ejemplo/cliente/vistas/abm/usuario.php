@@ -8,90 +8,94 @@
     <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css" combinar="">
     <link rel="stylesheet" href="aplicacion/cliente/vistas/abm/usuario.css">
     <meta name="generator" content="Foxtrot 7">
-  <title>Usuarios</title></head>
-  <body>
-    <div id="foxtrot-cuerpo" class="componente vista contenedor" data-fxid="abm-usuario-2"><div class="componente contenedor container-fluid abm-usuario-contenedor-4" data-fxid="abm-usuario-3">
-        
-        <h1 class="componente texto" data-fxid="abm-usuario-4">...&nbsp;</h1><div class="formulario componente contenedor form abm-usuario-form-8" data-fxid="abm-usuario-7">
+    <title>Usuarios</title>
+</head>
+<body>
+    <div id="foxtrot-cuerpo" class="componente vista contenedor" data-fxid="abm-usuario-2">
+        <div class="componente contenedor container-fluid abm-usuario-contenedor-4 pb-4" data-fxid="abm-usuario-3">
+            <h1 class="componente texto" data-fxid="abm-usuario-4">...&nbsp;</h1>
+            <div class="formulario componente contenedor form abm-usuario-form-8" data-fxid="abm-usuario-7">
+                <div class="componente contenedor abm-usuario-contenedor-23 cuerpo-formulario" data-fxid="abm-usuario-22">
 
-            <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9">
-                <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-11">
-                    
-                <label class="componente texto" data-fxid="abm-usuario-5">Nombre: *</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-3 col-lg-3" data-fxid="abm-usuario-15">
-                    <div data-fxid="abm-usuario-17" class="componente autofoco campo abm-usuario-campo-nombre">
-                        <input class="form-control" type="text">
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-1">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-1">
+                            <label class="componente texto" data-fxid="abm-usuario-5-1">Nombre: *</label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-3" data-fxid="abm-usuario-15-1">
+                            <div data-fxid="abm-usuario-17-1" class="componente autofoco campo abm-usuario-campo-nombre">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-2">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-2">
+                            <label class="componente texto" data-fxid="abm-usuario-5-2">Nivel de acceso: *</label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-3" data-fxid="abm-usuario-15-2">
+                            
+                        <div data-fxid="abm-usuario-8" class="componente desplegable abm-usuario-desplegable-nivel"><select class="custom-select"></select></div></div>
+                    </div>
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-3">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-3">
+                            <label class="componente texto" data-fxid="abm-usuario-5-3">Nombre de usuario: *</label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-3" data-fxid="abm-usuario-15-3">
+                            <div data-fxid="abm-usuario-17-3" class="componente campo abm-usuario-campo-usuario">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-4">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-4">
+                            <label class="componente texto" data-fxid="abm-usuario-5-4">Contraseña: </label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-3" data-fxid="abm-usuario-15-4">
+                            <div data-fxid="abm-usuario-17-4" class="componente campo abm-usuario-campo-contrasena">
+                                <input class="form-control" type="password">
+                            </div>
+                        </div>
+                    <div class="contenedor componente columna abm-usuario-columna-10 mt-3 mt-md-0 text-md-right col-12 col-md-3 col-xl-2" data-fxid="abm-usuario-9">
+                            <label class="componente texto abm-usuario-texto-12" data-fxid="abm-usuario-11">Confirmar contraseña:</label></div><div class="contenedor componente columna col-12 col-md-3 abm-usuario-columna-14" data-fxid="abm-usuario-13">
+                            <div data-fxid="abm-usuario-15" class="componente campo abm-usuario-campo-contrasena-1">
+                                <input class="form-control" type="password">
+                            </div>
+                        </div></div>
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-5">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-5">
+                            <label class="componente texto" data-fxid="abm-usuario-5-5">E-mail: *</label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-6" data-fxid="abm-usuario-15-5">
+                            <div data-fxid="abm-usuario-17-5" class="componente campo abm-usuario-campo-email">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row contenedor componente fila abm-usuario-fila-10" data-fxid="abm-usuario-9-6">
+                        <div class="contenedor componente columna abm-usuario-columna-12 col-12 col-md-2" data-fxid="abm-usuario-11-6">
+                            <label class="componente texto" data-fxid="abm-usuario-5-6">Teléfono: </label></div>
+                        <div class="contenedor componente columna abm-usuario-columna-16 col-12 col-md-6" data-fxid="abm-usuario-15-6">
+                            <div data-fxid="abm-usuario-17-6" class="componente campo abm-usuario-campo-telefono">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
-            </div>
-            <div class="row contenedor componente fila abm-usuario-fila-19" data-fxid="abm-usuario-18">
-                <div class="contenedor componente columna abm-usuario-columna-21 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-20">
-                    
-                <label class="componente texto abm-usuario-texto-7" data-fxid="abm-usuario-6">Nivel de acceso: *</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-25 col-12 col-md-3 col-lg-3" data-fxid="abm-usuario-24">
-                    
-                <div data-fxid="abm-usuario-34" class="componente desplegable abm-usuario-desplegable-nivel"><select class="custom-select"></select></div></div>
-            </div>
-            <div class="row contenedor componente fila abm-usuario-fila-28" data-fxid="abm-usuario-27">
-                <div class="contenedor componente columna abm-usuario-columna-30 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-29">
-                    
-                <label class="componente texto abm-usuario-texto-9" data-fxid="abm-usuario-8">Nombre de usuario: *</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-34 col-12 col-md-3 col-lg-3" data-fxid="abm-usuario-33">
-                    <div data-fxid="abm-usuario-35" class="componente campo abm-usuario-campo-usuario">
-                        <input class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
-            <div class="row contenedor componente fila abm-usuario-fila-37" data-fxid="abm-usuario-36">
-                <div class="contenedor componente columna abm-usuario-columna-39 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-38">
-                    
-                <label class="componente texto abm-usuario-texto-11" data-fxid="abm-usuario-10">Contraseña:</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-43 col-12 col-md-3 col-lg-3" data-fxid="abm-usuario-42">
-                    <div data-fxid="abm-usuario-44" class="componente campo abm-usuario-campo-contrasena">
-                        <input class="form-control" type="password">
-                    </div>
-                </div>
-            <div class="contenedor componente columna abm-usuario-columna-20 mt-3 mt-md-0 col-12 col-md-2 col-lg-2 text-md-right" data-fxid="abm-usuario-19">
-                    
-                <label class="componente texto abm-usuario-texto-22" data-fxid="abm-usuario-21">Confirmar contraseña:</label></div><div class="contenedor componente columna abm-usuario-columna-24 col-12 col-md-3 col-lg-3" data-fxid="abm-usuario-23">
-                    <div data-fxid="abm-usuario-25" class="componente campo abm-usuario-campo-contrasena-1">
-                        <input class="form-control" type="password" placeholder="">
-                    </div>
-                </div></div>
-            <div class="row contenedor componente fila abm-usuario-fila-46" data-fxid="abm-usuario-45">
-                <div class="contenedor componente columna abm-usuario-columna-48 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-47">
-                    
-                <label class="componente texto abm-usuario-texto-13" data-fxid="abm-usuario-12">E-mail:</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-52 col-12 col-md-8 col-lg-6" data-fxid="abm-usuario-51">
-                    <div data-fxid="abm-usuario-53" class="componente campo abm-usuario-campo-email">
-                        <input class="form-control" type="text">
-                    </div>
-                </div>
-            </div>
-            <div class="row contenedor componente fila abm-usuario-fila-55" data-fxid="abm-usuario-54">
-                <div class="contenedor componente columna abm-usuario-columna-57 col-12 col-md-4 col-lg-2" data-fxid="abm-usuario-56">
-                    
-                <label class="componente texto abm-usuario-texto-15" data-fxid="abm-usuario-14">Teléfono:</label></div>
-                <div class="contenedor componente columna abm-usuario-columna-61 col-12 col-md-8 col-lg-6" data-fxid="abm-usuario-60">
-                    <div data-fxid="abm-usuario-62" class="componente campo abm-usuario-campo-telefono">
-                        <input class="form-control" type="text">
-                    </div>
-                </div>
+                <div class="componente contenedor abm-usuario-contenedor-17" data-fxid="abm-usuario-16"><a href="#" data-fxid="abm-usuario-63" class="componente btn btn-primary boton abm-usuario-boton-64 mr-2 predeterminado">Guardar</a><a href="#" data-fxid="abm-usuario-65" class="componente btn btn-secondary boton abm-usuario-boton-66 mr-2">Nuevo</a><a href="#" data-fxid="abm-usuario-67" class="componente btn btn-secondary boton abm-usuario-boton-68">Volver</a></div>
             </div>
         </div>
-        
-        
-        
-    <div class="componente contenedor abm-usuario-contenedor-14 pb-4" data-fxid="abm-usuario-13"><a href="#" data-fxid="abm-usuario-63" class="componente btn btn-primary boton abm-usuario-boton-64 mr-2">Guardar</a><a href="#" data-fxid="abm-usuario-65" class="componente btn btn-secondary boton abm-usuario-boton-66 mr-2">Nuevo</a><a href="#" data-fxid="abm-usuario-67" class="componente btn btn-secondary boton abm-usuario-boton-68">Volver</a></div></div></div>
+    </div>
     <div id="foxtrot-barra-precarga" class="aparece"></div>
     <script src="cliente/foxtrot.js"></script>
     <script src="aplicacion/cliente/controladores/abm/usuario.js" controlador=""></script>
     <script src="aplicacion/cliente/aplicacion.js"></script>
     <script>
-    var jsonFoxtrot='{"version":1,"componentes":[{"id":"abm-usuario-2","nombre":null,"componente":"vista","propiedades":{"titulo":"Usuarios"}},{"id":"abm-usuario-3","nombre":null,"selector":".abm-usuario-contenedor-4","componente":"contenedor","propiedades":{"tipo":"fluido"}},{"id":"abm-usuario-7","nombre":null,"selector":".abm-usuario-form-8","componente":"form","propiedades":{}},{"id":"abm-usuario-9","nombre":null,"selector":".abm-usuario-fila-10","componente":"fila","propiedades":{}},{"id":"abm-usuario-11","nombre":"","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-15","nombre":null,"selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17","nombre":"nombre","selector":".abm-usuario-campo-nombre","componente":"campo","propiedades":{"autofoco":{"g":true}}},{"id":"abm-usuario-18","nombre":null,"selector":".abm-usuario-fila-19","componente":"fila","propiedades":{}},{"id":"abm-usuario-20","nombre":"","selector":".abm-usuario-columna-21","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-24","nombre":null,"selector":".abm-usuario-columna-25","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-27","nombre":null,"selector":".abm-usuario-fila-28","componente":"fila","propiedades":{}},{"id":"abm-usuario-29","nombre":"","selector":".abm-usuario-columna-30","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-33","nombre":null,"selector":".abm-usuario-columna-34","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-35","nombre":"usuario","selector":".abm-usuario-campo-usuario","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-36","nombre":null,"selector":".abm-usuario-fila-37","componente":"fila","propiedades":{}},{"id":"abm-usuario-38","nombre":"","selector":".abm-usuario-columna-39","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-42","nombre":null,"selector":".abm-usuario-columna-43","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-44","nombre":"contrasena","selector":".abm-usuario-campo-contrasena","componente":"campo","propiedades":{"autofoco":{"g":false},"tipo":""}},{"id":"abm-usuario-45","nombre":null,"selector":".abm-usuario-fila-46","componente":"fila","propiedades":{}},{"id":"abm-usuario-47","nombre":"","selector":".abm-usuario-columna-48","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-51","nombre":"","selector":".abm-usuario-columna-52","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"8","lg":"6"}}},{"id":"abm-usuario-53","nombre":"email","selector":".abm-usuario-campo-email","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-54","nombre":null,"selector":".abm-usuario-fila-55","componente":"fila","propiedades":{}},{"id":"abm-usuario-56","nombre":"","selector":".abm-usuario-columna-57","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"4","lg":"2"}}},{"id":"abm-usuario-60","nombre":"","selector":".abm-usuario-columna-61","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"8","lg":"6"}}},{"id":"abm-usuario-62","nombre":"telefono","selector":".abm-usuario-campo-telefono","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-63","nombre":null,"selector":".abm-usuario-boton-64","componente":"boton","propiedades":{"tipo":"boton","estilo":"primary","margen":{"g":""},"click":"guardar","clase":"mr-2"}},{"id":"abm-usuario-65","nombre":null,"selector":".abm-usuario-boton-66","componente":"boton","propiedades":{"tipo":"boton","estilo":"secondary","margen":{"g":""},"click":"nuevo","clase":"mr-2"}},{"id":"abm-usuario-67","nombre":null,"selector":".abm-usuario-boton-68","componente":"boton","propiedades":{"tipo":"boton","estilo":"secondary","click":"volver","intro":""}},{"id":"abm-usuario-4","nombre":"titulo","selector":null,"componente":"texto","propiedades":{"formato":"h1"}},{"id":"abm-usuario-5","nombre":null,"selector":null,"componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-6","nombre":null,"selector":".abm-usuario-texto-7","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-8","nombre":null,"selector":".abm-usuario-texto-9","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-10","nombre":null,"selector":".abm-usuario-texto-11","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-12","nombre":null,"selector":".abm-usuario-texto-13","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-14","nombre":null,"selector":".abm-usuario-texto-15","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-19","nombre":"","selector":".abm-usuario-columna-20","componente":"columna","propiedades":{"tamano":{"g":""},"columna":{"g":"12","md":"2","lg":"2"},"clase":"mt-3 mt-md-0","alineacion":{"md":"derecha"}}},{"id":"abm-usuario-21","nombre":null,"selector":".abm-usuario-texto-22","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-23","nombre":null,"selector":".abm-usuario-columna-24","componente":"columna","propiedades":{"tamano":{"g":"10"},"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-25","nombre":"contrasena2","selector":".abm-usuario-campo-contrasena-1","componente":"campo","propiedades":{"autofoco":{"g":false},"tipo":"","relleno":""}},{"id":"abm-usuario-34","nombre":"nivel","selector":".abm-usuario-desplegable-nivel","componente":"desplegable","propiedades":{"opciones":"{controlador.niveles}","propiedadClave":""}},{"id":"abm-usuario-13","nombre":null,"selector":".abm-usuario-contenedor-14","componente":"contenedor","propiedades":{"tipo":"bloque","clase":"pb-4"}}],"nombre":"abm/usuario"}';
-    ui.inicializar("abm/usuario")
-        .establecerJson(jsonFoxtrot)
-        .ejecutar();
-    </script><div id="foxtrot-barra-precarga" class="aparece"></div>
-  
+        var jsonFoxtrot='{"version":1,"componentes":[{"id":"abm-usuario-2","componente":"vista","propiedades":{"titulo":"Usuarios"}},{"id":"abm-usuario-3","selector":".abm-usuario-contenedor-4","componente":"contenedor","propiedades":{"tipo":"fluido","clase":"pb-4"}},{"id":"abm-usuario-7","selector":".abm-usuario-form-8","componente":"form"},{"id":"abm-usuario-9-1","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-1","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-1","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17-1","nombre":"nombre","selector":".abm-usuario-campo-nombre","componente":"campo","propiedades":{"autofoco":{"g":true}}},{"id":"abm-usuario-5-1","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-9-2","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-2","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-2","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-5-2","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-9-3","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-3","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-3","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17-3","nombre":"usuario","selector":".abm-usuario-campo-usuario","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-5-3","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-9-4","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-4","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-4","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17-4","nombre":"contrasena","selector":".abm-usuario-campo-contrasena","componente":"campo","propiedades":{"autofoco":{"g":false},"tipo":"contrasena"}},{"id":"abm-usuario-5-4","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-9-5","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-5","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-5","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17-5","nombre":"email","selector":".abm-usuario-campo-email","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-5-5","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-9-6","selector":".abm-usuario-fila-10","componente":"fila"},{"id":"abm-usuario-11-6","selector":".abm-usuario-columna-12","componente":"columna","propiedades":{"columna":{"g":"12","md":"2"}}},{"id":"abm-usuario-15-6","selector":".abm-usuario-columna-16","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-17-6","nombre":"telefono","selector":".abm-usuario-campo-telefono","componente":"campo","propiedades":{"autofoco":{"g":false}}},{"id":"abm-usuario-5-6","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-63","selector":".abm-usuario-boton-64","componente":"boton","propiedades":{"tipo":"boton","estilo":"primary","click":"guardar","clase":"mr-2","predeterminado":{"g":true}}},{"id":"abm-usuario-65","selector":".abm-usuario-boton-66","componente":"boton","propiedades":{"tipo":"boton","estilo":"secondary","click":"nuevo","clase":"mr-2"}},{"id":"abm-usuario-67","selector":".abm-usuario-boton-68","componente":"boton","propiedades":{"tipo":"boton","estilo":"secondary","click":"volver"}},{"id":"abm-usuario-4","nombre":"titulo","componente":"texto","propiedades":{"formato":"h1"}},{"id":"abm-usuario-16","selector":".abm-usuario-contenedor-17","componente":"contenedor","propiedades":{"tipo":"bloque"}},{"id":"abm-usuario-22","selector":".abm-usuario-contenedor-23","componente":"contenedor","propiedades":{"tipo":"bloque","clase":"cuerpo-formulario"}},{"id":"abm-usuario-8","nombre":"nivel","selector":".abm-usuario-desplegable-nivel","componente":"desplegable","propiedades":{"opciones":"{aplicacion.nivelesUsuario}"}},{"id":"abm-usuario-9","selector":".abm-usuario-columna-10","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","xl":"2"},"clase":"mt-3 mt-md-0","alineacion":{"md":"derecha"}}},{"id":"abm-usuario-11","selector":".abm-usuario-texto-12","componente":"texto","propiedades":{"formato":"etiqueta"}},{"id":"abm-usuario-13","selector":".abm-usuario-columna-14","componente":"columna","propiedades":{"columna":{"g":"12","md":"3","lg":"3"}}},{"id":"abm-usuario-15","nombre":"contrasena2","selector":".abm-usuario-campo-contrasena-1","componente":"campo","propiedades":{"autofoco":{"g":false},"tipo":"contrasena"}}],"nombre":"abm/usuario"}';
+        ui.inicializar("abm/usuario")
+            .establecerJson(jsonFoxtrot)
+            .ejecutar();
+    </script>
+
 </body></html>

@@ -11,6 +11,9 @@ namespace aplicaciones\ejemplo;
 defined('_inc') or exit;
 
 class aplicacion extends \aplicacion {
+    /**
+     * Valida la sesión (método para los controladores).
+     */
     public function verificarLogin() {
         if(!\sesion::verificarUsuario()) {
             //Podemos simplemente detener la ejecución sin devolver ningún mensaje; si es un acceso legítimo, el cliente ya habrá redirigido al usuario al ingreso.

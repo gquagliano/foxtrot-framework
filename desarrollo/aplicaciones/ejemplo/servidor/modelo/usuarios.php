@@ -8,18 +8,28 @@
 
 namespace aplicaciones\ejemplo\modelo;
 
+include_once(_servidorAplicacion.'modeloBase.php');
+
+use aplicaciones\ejemplo\modeloBase;
+
 defined('_inc') or exit;
 
 /**
  * Entidad del modelo de datos.
  */
-class usuarios extends \modelo {
+class usuarios extends modeloBase {
+    //Niveles de acceso
     const nivelAdministrador=1;
     const nivelOperador=2;
     const nivelExterno=3;
 
     protected $tipoEntidad=usuario::class;
 
+    /**
+     * Devuelve un usuario dado su nombre de usuario.
+     * @param string $nombre Nombre de usuario a buscar.
+     * @return \aplicaciones\ejemplo\modelo\usuario
+     */
     public function buscarUsuario($nombre) {
         $usuario=$this
             ->reiniciar()
@@ -30,6 +40,13 @@ class usuarios extends \modelo {
         return $usuario;
     }
 
+    /**
+     * Devuelve el listado de usuarios junto con información para la paginación del listado.
+     * @param string $filtro Filtro (texto).
+     * @param int $pagina Número de página a obtener.
+     * @param int $cantidadPorPag Cantidad de registros por página.
+     * @return object
+     */
     public function listarUsuarios($filtro=null,$pagina=1,$cantidadPorPag=50) {
         if(!$pagina) $pagina=1;
 
@@ -47,6 +64,11 @@ class usuarios extends \modelo {
         ];
     }
 
+    /**
+     * Elimina un usuario.
+     * @param int $id ID.
+     * @return \aplicaciones\ejemplo\modelo\usuarios
+     */
     public function eliminarUsuario($id) {
         return $this->reiniciar()
             ->donde([
@@ -55,6 +77,11 @@ class usuarios extends \modelo {
             ->eliminar();
     }
 
+    /**
+     * Devuelve un usuario dado su ID.
+     * @param int $id ID.
+     * @return \aplicaciones\ejemplo\modelo\usuario
+     */
     public function obtenerUsuario($id) {
         $usuario=$this
             ->reiniciar()
@@ -67,7 +94,12 @@ class usuarios extends \modelo {
 
         return $usuario;
     }
-
+    
+    /**
+     * Guarda un usuario, creándolo o modificando un registro existente en base a la propiedad `id`. Devuelve el ID del usuario creado o actualizado.
+     * @param object|\aplicaciones\ejemplo\modelo\usuario $campos Campos del usuario.
+     * @return int
+     */
     public function crearOModificarUsuario($campos) {
         if($campos->contrasena) {
             $campos->contrasena=self::obtenerContrasena($campos->contrasena);
@@ -83,14 +115,28 @@ class usuarios extends \modelo {
         return $this->ultimoId;
     }
 
+    /**
+     * Valida una contraseña.
+     * @param \aplicaciones\ejemplo\modelo\usuario $usuario Usuario.
+     * @param string $contrasena Contraseña a validad.
+     * @return bool
+     */
     public static function validarContrasena($usuario,$contrasena) {
         return password_verify($contrasena,$usuario->contrasena);
     }
 
+    /**
+     * Devuelve una contraseña encriptada.
+     * @param string $contrasena Contraseña.
+     * @return string
+     */
     public static function obtenerContrasena($contrasena) {
         return password_hash($contrasena,PASSWORD_DEFAULT);
     }
 
+    /**
+     * Genera los datos de ejemplo.
+     */
     public static function instalar() {
         (new usuarios)
             ->establecerValores([

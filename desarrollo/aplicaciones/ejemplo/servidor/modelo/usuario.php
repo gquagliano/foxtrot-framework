@@ -41,8 +41,7 @@ class usuario extends \entidad {
      * @tipo cadena(50)
      * @indice
      */
-    public $usuario;
-    //El índice no es único ya que ante baja lógica debe poder reutilizarse el nombre de usuario
+    public $usuario; //El índice no es único ya que ante baja lógica debe poder reutilizarse el nombre de usuario
 
     /**
      * @etiqueta Contraseña

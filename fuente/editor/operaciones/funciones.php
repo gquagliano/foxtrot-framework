@@ -36,11 +36,11 @@ function prepararVariables() {
     $aplicacion=json_decode(file_get_contents($rutaJsonApl));
 
     //Si la viista existe, modo y cliente deben tomarse del JSON
-    if($aplicacion->$nombreVista) {
-        $modo=$aplicacion->$nombreVista->modo;
-        $cliente=$aplicacion->$nombreVista->cliente;
+    if($aplicacion->vistas->$nombreVista) {
+        $modo=$aplicacion->vistas->$nombreVista->tipo;
+        $cliente=$aplicacion->vistas->$nombreVista->cliente;
     }
-
+    
     $esPhp=$cliente=='web';
 
     $rutaVista=$rutaApl.'cliente/vistas/'.$nombreVista;

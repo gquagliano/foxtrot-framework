@@ -19,10 +19,6 @@ $json=$_POST['json'];
 if($modo=='embebible') {
     //Si la vista es embebible, se guardan el JSON y el HTML por separado
     file_put_contents($rutaJson,$json);
-
-    //Remover id="foxtrot-cuerpo"
-    $html=str_replace(' id="foxtrot-cuerpo"','',$html);
-
     file_put_contents($rutaHtml,$html);
 } else {
     //Solo debemos reemplazar la variable jsonFoxtrot, que en $html tiene el valor al momento de cargarse en el editor

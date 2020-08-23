@@ -31,7 +31,7 @@ $html=file_get_contents($rutaHtml);
     <title>Marco del editor de vistas</title>
   </head>
   <body>
-    <div id="foxtrot-cuerpo"><?=$html?></div>
+    <?=$html?>
     <script src="cliente/foxtrot.js"></script>
     <script>
     var jsonFoxtrot='<?=str_replace('\'','\\\'',$json)?>';

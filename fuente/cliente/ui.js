@@ -1333,7 +1333,11 @@ var ui=new function() {
         //Por el momento, el controlador es el que tiene el mismo nombre que la vista
         var obj=ui.crearControlador(nombre,principal);
 
-        if(typeof html==="string"&&typeof destino!=="undefined") destino.establecerHtml(html);
+        if(typeof html==="string"&&typeof destino!=="undefined") {
+            //Remover #foxtrot-cuerpo del HTML, ya que solo debería tener ese ID la vista principal
+            html=html.replace(/ id="foxtrot-cuerpo"/,"");
+            destino.establecerHtml(html);
+        }
         
         if(typeof json==="undefined") json=jsonVistaPrincipal;
         this.procesarJson(json,obj);

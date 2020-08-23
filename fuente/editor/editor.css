@@ -401,6 +401,10 @@ body.trabajando #foxtrot-cargando {
     outline: dashed 1px rgba(0, 0, 0, 0.2);
     min-height: 1em;
 }
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-none {
+    display: block!important;
+    opacity: .25;
+}
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {
     cursor: pointer;

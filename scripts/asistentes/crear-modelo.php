@@ -13,6 +13,9 @@ defined('_inc') or exit;
 class crearModelo extends asistente {
     public function ejecutar() {
         $opciones=obtenerArgumentos();
+      
+        $aplicacion=validarParametroAplicacion($opciones);        
+        foxtrot::inicializar($aplicacion);
 
         if(!$opciones['m']) $this->error('El argumento `-m` es requerido.');
         if(!$opciones['e']) $this->error('El argumento `-e` es requerido.');

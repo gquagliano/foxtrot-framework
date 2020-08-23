@@ -52,6 +52,11 @@ var ajax=function(param) {
         if(param.siempre) param.siempre.call(self,ev);
     };
 
+    xhr.onerror=function(ev) {
+        if(param.error) param.error.call(self,ev);
+        if(param.siempre) param.siempre.call(self,ev);
+    };
+
     xhr.ontimeout=function(ev) {
         if(param.error) param.error.call(self,ev);
         if(param.siempre) param.siempre.call(self,ev);

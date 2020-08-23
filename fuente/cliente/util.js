@@ -120,6 +120,19 @@ var util={
     esObjetoVacio:function(obj) {
         var s=JSON.stringify(obj);
         return s=='{}'||s=='[]';
+    },
+
+    /**
+     * Convierte un archivo a una cadena (Data URL).
+     * @param {File} archivo - Archivo.
+     * @param {function} retorno - Función de retorno.
+     */
+    archivoADataUrl:function(archivo,retorno) {        
+        var lector=new FileReader();
+        lector.onload=function(evento) {
+            retorno(evento.target.result);
+        };
+        lector.readAsDataURL(archivo);
     }
 };
 

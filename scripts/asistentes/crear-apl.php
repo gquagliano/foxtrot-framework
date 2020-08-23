@@ -39,6 +39,7 @@ class crearApl extends asistente {
         copy($dir.'config.php',$ruta.'config.php');
         copy($dir.'aplicacion.json',$ruta.'aplicacion.json');
         copy($dir.'aplicacion.js',$ruta.'cliente/aplicacion.js');
+        copy($dir.'recursos/css/estilos.css',$ruta.'recursos/css/estilos.css');
 
         $reemplazar=[
             '{nombre}'=>$nombre

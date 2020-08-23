@@ -147,12 +147,18 @@ var componente=new function() {
             },
             anchoMaximo:{
                 etiqueta:"Ancho máximo"
+            }, 
+            anchoMinimo:{
+                etiqueta:"Ancho mínimo"
             },            
             alto:{
                 etiqueta:"Alto"
             },
             altoMaximo:{
                 etiqueta:"Alto máximo"
+            },
+            altoMinimo:{
+                etiqueta:"Alto mínimo"
             }
         },
         "Texto":{
@@ -894,6 +900,11 @@ var componente=new function() {
             return this;
         }
         
+        if(propiedad=="anchoMinimo") {
+            estilos.minWidth=this.normalizarValorCss(valor);
+            return this;
+        }
+        
         if(propiedad=="alto") {
             estilos.height=this.normalizarValorCss(valor);
             return this;
@@ -901,6 +912,11 @@ var componente=new function() {
         
         if(propiedad=="altoMaximo") {
             estilos.maxHeight=this.normalizarValorCss(valor);
+            return this;
+        }
+        
+        if(propiedad=="altoMinimo") {
+            estilos.minHeight=this.normalizarValorCss(valor);
             return this;
         }
 

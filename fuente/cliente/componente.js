@@ -53,7 +53,7 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool)
+            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool|archivo)
             //    opciones (objeto {valor:etiqueta} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion
@@ -61,6 +61,7 @@ var componente=new function() {
             //    clase
             //    ayuda
             //    evento Indica si es un evento (predeterminado false)
+            //    boton (texto del botón en caso de tipo=comando)
             //}
             color:{
                 etiqueta:"Color de texto",
@@ -1164,9 +1165,8 @@ var componente=new function() {
                 t[v].forEach(function(grupo,propiedades) {
                     propiedades.forEach(function(nombre,propiedad) {
                         if(!propiedadesCombinadas.hasOwnProperty(grupo)) propiedadesCombinadas[grupo]={};
-                                            
-                        propiedad.funcion=function(componentes,tamano,prop,valor) {
-                            //TODO Selección múltiple
+
+                        if(!propiedad.hasOwnProperty("funcion")||!propiedad.funcion) propiedad.funcion=function(componentes,tamano,prop,valor) {
                             componentes.propiedad.call(componentes,tamano,prop,valor);
                         };
                         

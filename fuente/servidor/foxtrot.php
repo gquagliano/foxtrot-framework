@@ -195,6 +195,8 @@ class foxtrot {
 
             if($foxtrot=='sesion') {
                 sesion::responderSolicitud();
+            } elseif($foxtrot=='obtenerVista') {
+                self::devolverVista($params[0]);
             }
         }
 
@@ -299,6 +301,34 @@ class foxtrot {
             );
         }
         return self::$bd;
+    }
+
+    ////Gestión de vistas
+
+    public static function devolverVista($nombre) {
+        $nombre=preg_replace('#[^a-z0-9_/_]+#','',$nombre);
+        $ruta=_vistasAplicacion.$nombre;
+
+        $esPhp=file_exists($ruta.'.php');
+
+        if(!file_exists($ruta.'.'.($esPhp?'php':'html'))) {
+            self::detener();
+        }
+
+        //Solo vamos a devolver código HTML
+        //TODO Evaluar las implicaciones de seguridad para ejecutar vistas PHP
+        $html=file_get_contents($ruta.'.'.($esPhp?'php':'html'));
+
+        $json=file_get_contents($ruta.'.json');
+
+        $enrutador=self::obtenerEnrutador();
+
+        cliente::responder([
+            'html'=>$html,
+            'json'=>$json,
+            'urlJs'=>$enrutador->obtenerUrlControlador($nombre),
+            'urlCss'=>$enrutador->obtenerUrlEstilosVista($nombre)
+        ]);
     }
 }
 

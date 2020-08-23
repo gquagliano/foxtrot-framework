@@ -20,6 +20,10 @@ var controlador=new function() {
     this.servidor=null;
     this.nombreVista=null;
     this.controladorServidor=null;
+    /** Componentes por nombre. */
+    this.componentes={};
+    /** Listado de todos los componentes. */
+    this.instanciasComponentes=[];
 
     ////Acceso a propiedades    
 
@@ -51,6 +55,47 @@ var controlador=new function() {
     this.establecerVista=function(nombre) {
         this.nombreVista=nombre;
     };
+
+    /**
+     * Devuelve el listado de componentes.
+     * @returns {componente[]}
+     */
+    this.obtenerComponentes=function() {
+        return this.instanciasComponentes;
+    };
+
+    /**
+     * Agrega la instancia del componente al repositorio.
+     * @param {componente} componente - Componente.
+     * @param {string} [nombre] - Si se especifica el nombre, será agregado a componentes en lugar de instanciasComponentes.
+     * @returns {controlador}
+     */
+    this.agregarComponente=function(componente,nombre) {
+        if(typeof nombre!=="undefined") {
+            this.componentes[nombre]=componente;
+        } else {
+            this.instanciasComponentes.push(componente);
+        }
+        return this;
+    };
+    
+    /**
+     * Elimina las referencias a la instancia del componente.
+     * @param {componente} componente - Componente.
+     * @returns {controlador}
+     */
+    this.removerComponente=function(componente) {
+        for(var i=0;i<this.instanciasComponentes.length;i++) {
+            if(this.instanciasComponentes[i]==componente) {
+                delete this.instanciasComponentes[i];
+                break;
+            }
+        }
+        if(this.componentes.hasOwnProperty(componente.nombre)) delete this.componentes[componente.obtenerNombre()];
+        return this;
+    };
+
+    
 
     ////Gestión de la instancia
 

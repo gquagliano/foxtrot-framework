@@ -43,7 +43,8 @@ var ui=new function() {
         enrutadores={},
         instanciaEnrutador=null,
         instanciaAplicacion=null,
-        urlModificada=0;
+        urlModificada=0,
+        jsonVistaPrincipal=null;
 
     ////Elementos del dom
 
@@ -440,13 +441,20 @@ var ui=new function() {
             //Restaurar
             obj.establecerNombre(comp.nombre,comp.oculto)
                 .establecerPropiedades(comp.propiedades)
-                .establecerSelector(comp.selector,false);
+                .establecerSelector(comp.selector,false)
+                .restaurar();
+        } else {
+            obj.crear();
         }
         
         var i=instanciasComponentes.push(obj);
 
         //Índice
         instanciasComponentesId[id]=i-1;
+
+        //Agregar al controlador
+        var controlador=this.obtenerInstanciaControladorVista(vista);
+        if(controlador) controlador.agregarComponente(obj); //el controlador puede no existir, por ejemplo en el editor
 
         //Evento
         obj.inicializar()
@@ -526,14 +534,8 @@ var ui=new function() {
     this.obtenerValores=function(nombreVista) {
         if(typeof nombreVista==="undefined") nombreVista=null;
 
-        var valores={};
-
         //La forma más fácil es solicitárselo a los componentes vista  
-        instanciasVistas.forEach(function(vista) {
-            if(nombreVista&&vista!=nombreVista) return;
-            var obj=self.obtenerInstanciaVista(vista).obtenerValores();
-            valores=Object.assign({},valores,obj);
-        });
+        var valores=this.obtenerInstanciaVistaPrincipal().obtenerValores();
 
         return valores;
     };
@@ -567,7 +569,7 @@ var ui=new function() {
         
         if(paginaCompleta) return "<!doctype html>"+doc.documentElement.outerHTML;
 
-        return cuerpo.innerHTML;
+        return cuerpo.outerHTML;
     };
 
     /**
@@ -659,15 +661,26 @@ var ui=new function() {
     };
 
     /**
-     * Establece e inicializa la vista y sus componentes dado su json.
+     * Almacena el JSON para la vista principal.
+     * @param {Object|string} valor - Objeto o JSON codificado.
+     * @returnos {ui}
      */
-    this.establecerJson=function(json) {
-        if(typeof json==="string") json=JSON.parse(json);
+    this.establecerJson=function(valor) {
+        if(typeof valor==="string") valor=JSON.parse(valor);
+        jsonVistaPrincipal=valor;
+        return this;  
+    };
 
+    /**
+     * Inicializa la vista y sus componentes dado su json.
+     * @param {Object} json - Objeto (JSON de la vista decodificado).
+     * @param {controlador} [controlador] - Instancia del controlador de la vista.
+     * @returns {ui}
+     */
+    this.procesarJson=function(json,controlador) {
         var nombreVista=json.nombre,
             fn=function(componente) {
                 var obj=ui.crearComponente(componente,nombreVista);
-                obj.restaurar();
                 return obj;
             };
 
@@ -753,6 +766,52 @@ var ui=new function() {
     this.actualizar=function() {
         instanciasVistas[nombreVistaPrincipal].actualizar();
     };
+    
+    /**
+     * Recupera el código HTML y JSON de una vista embebible y envía un objeto {json,html} a la función especificada.
+     * @param {string} nombre - Nombre de la vista.
+     * @param {function} retorno - Función de retoro.
+     * @param {boolean|string} [precarga="barra"] - Mostrar precarga. TRUE para la precarga normal, "barra" para utilizar la barra de progreso o FALSE para deshabilitar.
+     * @returns {ui}
+     */
+    this.obtenerVistaEmbebible=function(nombre,retorno,precarga) {
+        if(typeof precarga==="undefined") precarga="barra";
+
+        //Durante la compilación, las vistas embebibles pueden almacenarse en el objeto _vistasEmbebibles
+        if(_vistasEmbebibles.hasOwnProperty(nombre)) {
+            retorno({
+                json:JSON.parse(_vistasEmbebibles[nombre].json),
+                html:_vistasEmbebibles[nombre].html
+            });
+            return this;
+        }
+
+        //Si la vista no fue incorporada, intentaremos recuperarla desde el servidor o archivo
+        servidor.invocarMetodo({
+            foxtrot:"obtenerVista",
+            parametros:[nombre],
+            retorno:function(res) {
+                //Cargar el CSS (TODO varificar si ya existe)
+                ui.agregarHojaEstilos(res.urlCss);
+
+                _vistasEmbebibles[nombre]=res;
+
+                //Cargar el JS si el controlador no existe
+                if(!controladores.hasOwnProperty(nombre)) {
+                    ui.cargarJs(res.urlJs,function() {
+                        retorno({
+                            json:JSON.parse(res.json),
+                            html:res.html
+                        });
+                    });
+                } else {
+                    retorno(res);
+                }
+            },
+            precarga:precarga
+        });
+        return this;
+    };
 
     ////Controladores
 
@@ -809,6 +868,17 @@ var ui=new function() {
             .inicializado();
         
         return obj;
+    };
+
+    /**
+     * Devuelve la instancia del controlador para la vista dada. No creará el controlador si no existe.
+     * @param {string} nombre - Nombre de la vista.
+     * @returns {controlador|null}
+     */
+    this.obtenerInstanciaControladorVista=function(nombre) {
+        //TODO Por el momento, asumimos que el controlador siempre se llama igual que la vista, pero ya queda preparado para que no deba ser así por siempre
+        if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
+        return null;
     };
 
     ////Gestión de la UI
@@ -977,7 +1047,7 @@ var ui=new function() {
         //Evento
         //Pasar a los controladores y componentes
         //Si un método devolvió true, detener
-        if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes("navegacion",true,[destino.vista])) return;
+        if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes(null,"navegacion",true,[destino.vista])) return;
 
         window.location.href=destino.url;
         return this;
@@ -1023,7 +1093,7 @@ var ui=new function() {
         //Evento
         //Pasar a los controladores y componentes
         //Si un método devolvió true, detener
-        if(ui.evento("navegacion",[estado.vista])||ui.eventoComponentes("navegacion",true,[estado.vista])) return;
+        if(ui.evento("navegacion",[estado.vista])||ui.eventoComponentes(null,"navegacion",true,[estado.vista])) return;
 
         //El cambio de URL no tiene otro efecto
 
@@ -1053,7 +1123,7 @@ var ui=new function() {
             //Evento
             //Pasar a los controladores y componentes
             //Si un método devolvió true, detener
-            if(ui.evento("navegacion",[evento.state.vista])||ui.eventoComponentes("navegacion",true,[evento.state.vista])) return;
+            if(ui.evento("navegacion",[evento.state.vista])||ui.eventoComponentes(null,"navegacion",true,[evento.state.vista])) return;
 
             //El cambio de URL no tiene otro efecto
         }
@@ -1081,7 +1151,7 @@ var ui=new function() {
 
                     //Pasar el evento a los controladores y componentes
                     //Si un método devolvió true, detener
-                    if(ui.evento("volver")||ui.eventoComponentes("volver",true)) return;
+                    if(ui.evento("volver")||ui.eventoComponentes(null,"volver",true)) return;
 
                     //Si la URL cambió, volver
                     if(urlModificada>0) {
@@ -1115,7 +1185,7 @@ var ui=new function() {
             if(params) {
                 retorno=metodo.apply(obj,params);
             } else {
-                retorno=metodo();
+                retorno=metodo.call(obj);
             }
 
             //El método puede devolver true para detener el evento
@@ -1127,7 +1197,7 @@ var ui=new function() {
         if(params) {
             retorno=metodo.apply(instanciaAplicacion,params);
         } else {
-            retorno=metodo();
+            retorno=metodo.call(obj);
         }
         //El método puede devolver true para detener el evento
         if(typeof retorno==="boolean"&&retorno) return true;
@@ -1137,26 +1207,29 @@ var ui=new function() {
 
     /**
      * Invoca el método correspondiente al evento en todos los componentes.
+     * @param {Object} origen - Repositorio de componentes. Especificar NULL para ejecutar en todos los componentes del sistema.
      * @param {string} nombre - Nombre del evento.
      * @param {boolean} [soloImplementados=false] - Si es true, solo invocará aquellos métodos implementados en el componente concreto (no invocará métodos heredados).
      * @param {*[]} [params] - Parámetros a pasar al método.
      * @returns {boolean}
      */
-    this.eventoComponentes=function(nombre,soloImplementados,params) {
+    this.eventoComponentes=function(origen,nombre,soloImplementados,params) {
         if(typeof soloImplementados==="undefined") soloImplementados=false;
 
-        for(var comp in instanciasComponentes) {
-            if(!instanciasComponentes.hasOwnProperty(comp)) continue;
+        var listado=origen?origen:instanciasComponentes;
 
-            if(soloImplementados&&!instanciasComponentes[comp].hasOwnProperty(nombre)) continue;
+        for(var comp in listado) {
+            if(!listado.hasOwnProperty(comp)) continue;
 
-            var obj=instanciasComponentes[comp],
+            if(soloImplementados&&!listado[comp].hasOwnProperty(nombre)) continue;
+
+            var obj=listado[comp],
                 metodo=obj[nombre],
                 retorno;
             if(params) {
                 retorno=metodo.apply(obj,params);
             } else {
-                retorno=metodo();
+                retorno=metodo.call(obj);
             }
 
             //El método puede devolver true para detener el evento
@@ -1246,6 +1319,52 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * Inicializa la vista y ejecuta su controlador.
+     * @param {string} nombre - Nombre de la vista.
+     * @param {boolean} principal - Determina si se trata de la vista principal.
+     * @param {Object} [json] - Objeto JSON decodificado de la vista.
+     * @param {string} [html] - Código HTML, en caso de tratarse de una vista secundaria.
+     * @param {Node|Element} [destino] - Elemento de destino, en caso de tratarse de una vista secundaria.
+     * @param {function} [retorno] - Función de retorno.
+     * @returns {ui}
+     */
+    this.ejecutarVista=function(nombre,principal,json,html,destino,retorno) {
+        //Por el momento, el controlador es el que tiene el mismo nombre que la vista
+        var obj=ui.crearControlador(nombre,principal);
+
+        if(typeof html==="string"&&typeof destino!=="undefined") destino.establecerHtml(html);
+        
+        if(typeof json==="undefined") json=jsonVistaPrincipal;
+        this.procesarJson(json,obj);
+        
+        //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
+        //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
+        if(obj) {
+            obj.establecerVista(nombre);
+            instanciasVistas[nombre].establecerControlador(nombre);
+            
+            //Evento
+            if(principal) {
+                //Al cargar la vista principal el evento Listo es invocado en todo el sistema
+                this.evento("listo");
+                this.eventoComponentes(null,"listo",true);
+            } else {
+                //Al cargar una vista secundaria, solo en la misma
+                obj.listo();
+                this.eventoComponentes(obj.obtenerComponentes(),"listo",true);
+            }
+        }
+
+        if(typeof retorno==="function") retorno();
+
+        return this;
+    };
+
+    /**
+     * Inicia la ejecución del sistema.
+     * @returns {ui}
+     */
     this.ejecutar=function() {
         //Preparar la vista
         if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
@@ -1263,7 +1382,8 @@ var ui=new function() {
         }
 
         if(modoEdicion) {
-            //En modo de edición, pasar el control al editor
+            //En modo de edición, procesar el JSON y pasar el control al editor
+            this.procesarJson(jsonVistaPrincipal);
             editor.ejecutar();
         } else {
             if(!this.esMovil()) {
@@ -1288,18 +1408,7 @@ var ui=new function() {
 
             if(esCordova) body.agregarClase("cordova");
 
-            //Por el momento, el controlador es el que tiene el mismo nombre que la vista
-            var obj=ui.crearControlador(nombreVistaPrincipal,true);
-            //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
-            //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
-            if(obj) {
-                obj.establecerVista(nombreVistaPrincipal);
-                instanciasVistas[nombreVistaPrincipal].establecerControlador(nombreVistaPrincipal);
-                
-                //Evento
-                ui.evento("listo");
-                ui.eventoComponentes("listo",true);
-            }
+            this.ejecutarVista(nombreVistaPrincipal,true);
 
             if(!esCordova) {
                 this.ocultarPrecarga("barra");
@@ -1309,6 +1418,8 @@ var ui=new function() {
         if(esCordova) {
             doc.querySelector("#contenedor-cordova").agregarClase("listo");
         }
+
+        return this;
     };
 }();
 
@@ -1332,6 +1443,7 @@ var configComponente={
 
 var componentes={};
 var controladores={};
+var _vistasEmbebibles={};
 
 window["ui"]=ui;
 window["componentes"]=componentes;

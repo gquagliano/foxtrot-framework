@@ -967,7 +967,6 @@ var editor=new function() {
             //Crear componentes
             datos.componentes.forEach(function(obj) {
                 var comp=ui.crearComponente(obj,nombreVista);
-                comp.restaurar();
             });
 
             //Agregar estilos

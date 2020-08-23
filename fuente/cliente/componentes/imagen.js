@@ -15,6 +15,25 @@ var componenteImagen=function() {
 
     this.img=null;
 
+    //Ícono del componente como se encuentra en recursos/componentes/img en base64
+    var icono="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAN5JREFUeNpi/P//PwMtAeOoBURbEJ9b4wGkZgOxDIVmPgbitIWTW3aAOExIErOoYDgIyELNAgMWNAkGoM2MlJgODIn/MLPQfUATMGoBQcBCZkQKQ5N0LDBRfKXIB0DDLND4nEBqMxAHAvEUioIIaJgrkDoCpDugfJD6xUBsCVWSABRLIMsCoEYFILUCiJmBuBzIbwDSvUAcjKZ0ClBOmyQLgBo4gNQaIBZCEq4H4gIsyrmBeBVQDzfRkQyMuB9AymTIJVNQKSgLLUsoBY+x+SANWYLS4nq0yhw8FgAEGABnFE5SPUVGtgAAAABJRU5ErkJggg==";
+    
+    /**
+     * Archivo seleccionado en la propiedad 'importar'.
+     * @param {componente} componente - Componente.
+     * @param {string} tamano - Tamaño de pantalla.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @param {FileList} archivos - Objeto del evento (solo en tipo=archivo).
+     */
+    var archivoSeleccionado=function(componente,tamano,propiedad,archivos) {
+        if(archivos.length==0) return;
+        util.archivoADataUrl(archivos[0],function(valor) {
+            componente.propiedad(tamano,"origen",valor);
+            //Forzar al editor que recargue las propiedades para reflejar el nuevo valor de 'origen'.
+            if(ui.enModoEdicion()) editor.construirPropiedades();
+        });
+    };
+
     this.propiedadesConcretas={
         "Imagen":{
             //nombre:{
@@ -26,13 +45,18 @@ var componenteImagen=function() {
             //    ayuda
             //    adaptativa (predeterminado true)
             //}
-            src:{
+            origen:{
                 etiqueta:"Origen",
                 ayuda:"URL absoluta o relativa al directorio de imagenes de la aplicación."
             },
             alt:{
                 etiqueta:"Texto alternativo",
                 adaptativa:false
+            },
+            importar:{
+                etiqueta:"Embeber archivo",
+                tipo:"archivo",
+                funcion:archivoSeleccionado
             }
         }
     };
@@ -54,7 +78,7 @@ var componenteImagen=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<picture/>");
-        this.img=document.crear("<img src='recursos/componentes/iconos/imagen.png'>").anexarA(this.elemento);
+        this.img=document.crear("<img src='"+icono+"'>").anexarA(this.elemento);
         this.crearComponente();
         return this;
     };
@@ -63,11 +87,11 @@ var componenteImagen=function() {
      * Actualiza el componente.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
-        if(propiedad=="src") {
+        if(propiedad=="origen") {
             //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
             
             if(tamano=="g") {
-                this.img.atributo("src",valor.trim()!=""?valor:"recursos/componentes/iconos/imagen.png");
+                this.img.atributo("src",valor.trim()!=""?valor:icono);
             } else {
                 //Construir <source>s
 
@@ -75,7 +99,7 @@ var componenteImagen=function() {
 
                 var elem=this.elemento,
                     img=this.img,
-                    origenes=this.propiedadObj("src"),
+                    origenes=this.propiedadObj("origen"),
                     anchosPantalla=ui.obtenerTamanos();
                 if(origenes) {
                     ui.obtenerArrayTamanos().reverse().forEach(function(tam) {

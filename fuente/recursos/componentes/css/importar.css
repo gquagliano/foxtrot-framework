@@ -7,12 +7,9 @@
  
 .importar {
     position: relative;
+    overflow: auto;
 }
 .importar>.contenedor-vista-importada {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+    position: relative;
     min-height: 100%;
-    overflow: auto;
 }

@@ -127,22 +127,27 @@ var componenteImportar=function() {
 
         this.nombreVista=nombre;
 
+        var fn=function() {
+            ui.obtenerVistaEmbebible(nombre,function(obj) {
+                t.elementoVista=doc.crear("<div class='contenedor-vista-importada oculto'>");
+                t.elementoVista.anexarA(t.elemento);
+
+                ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVista,function() {
+                    t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
+                    ui.animarAparecer(t.elementoVista);
+                });
+            },precarga);
+        };
+
         if(t.elementoVista) {
             var elem=t.elementoVista;
             ui.animarDesaparecer(elem,function() {
                 elem.remover();
+                fn();
             });
+        } else {
+            fn();
         }
-
-        ui.obtenerVistaEmbebible(nombre,function(obj) {
-            t.elementoVista=doc.crear("<div class='contenedor-vista-importada oculto'>");
-            t.elementoVista.anexarA(t.elemento);
-
-            ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVista,function() {
-                t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
-                ui.animarAparecer(t.elementoVista);
-            });
-        },precarga);
 
         return this;
     };

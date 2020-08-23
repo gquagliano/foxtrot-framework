@@ -17,10 +17,6 @@ define('_editor',__DIR__.'/../fuente/editor/');
 
 $opciones=obtenerArgumentos();
 
-$aplicacion=validarParametroAplicacion($opciones);
-
-foxtrot::inicializar($opciones['a']);
-
 if(!$opciones['s']) {
     fwrite(STDERR,'El parámetro -s es requerido.'.PHP_EOL.PHP_EOL);
     exit;

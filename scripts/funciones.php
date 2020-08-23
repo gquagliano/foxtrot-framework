@@ -101,7 +101,7 @@ function compilarJs($archivos,$destino,$omitirClosure=false) {
     }
 }
 
-function validarParametroAplicacion($opciones) {
+function validarParametroAplicacion($opciones,$existente=true) {
     if(!$opciones['a']) {
         fwrite(STDERR,'El parámetro -a es requerido.'.PHP_EOL.PHP_EOL);
         exit;
@@ -111,7 +111,9 @@ function validarParametroAplicacion($opciones) {
 
     define('_dirApl','aplicaciones/'.$aplicacion.'/');
 
-    if(!$aplicacion||!is_dir(_desarrollo._dirApl)) {
+    if(!$aplicacion||!is_dir(_desarrollo._dirApl)) $aplicacion=false;
+
+    if(!$aplicacion&&$existente) {
         fwrite(STDERR,'Aplicación inexistente.'.PHP_EOL.PHP_EOL);
         exit;
     }

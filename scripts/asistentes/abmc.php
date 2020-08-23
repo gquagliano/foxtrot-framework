@@ -54,6 +54,9 @@ class abmc extends asistente {
     public function ejecutar() {
         $opciones=obtenerArgumentos();
 
+        $aplicacion=validarParametroAplicacion($opciones);        
+        foxtrot::inicializar($aplicacion);
+
         $this->validarOpciones($opciones);
 
         $this->plural=$this->nombreModelo;

@@ -35,6 +35,18 @@ class enrutador {
         return foxtrot::obtenerUrl().$vista.'/';
     }
 
+    public function obtenerUrlRecursosAplicacion() {
+        return foxtrot::obtenerUrl().'aplicacion/recursos/';
+    }
+
+    public function obtenerUrlEstilosVista($nombre) {
+        return foxtrot::obtenerUrl().'aplicacion/cliente/vistas/'.$nombre.'.css';
+    }
+
+    public function obtenerUrlControlador($nombre) {
+        return foxtrot::obtenerUrl().'aplicacion/cliente/controladores/'.$nombre.'.js';
+    }
+
     public function analizar() {
     }
 

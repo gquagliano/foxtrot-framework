@@ -12,7 +12,7 @@
 
 include(__DIR__.'/configuracion.php');
 
-$opciones=getopt('a::i::dc::p::lj');
+$opciones=getopt('a::i::dc::p::ljf');
 
 define('_depuracion',array_key_exists('d',$opciones));
 validarParametroAplicacion($opciones);
@@ -53,6 +53,14 @@ file_put_contents(_embeber.'index-cordova.html',preg_replace([
 if($opciones['c']) {
     $dir=$opciones['c'];
     if(substr($dir,-1)!='/'&&substr($dir,-1)!='\\') $dir.='/';
+
+    //config.xml
+    if(!$opciones['f']) {
+        $ruta=$dir.'../config.xml';
+        $xml=file_get_contents($ruta);
+        $xml=preg_replace('/(<content .*?)src=".+?"(.*?>)/s','\1src="index-cordova.html"\2',$xml);
+        file_put_contents($ruta,$xml);
+    }
 
     //Limpiar directorio
     if(!$opciones['l']) {

@@ -370,7 +370,7 @@ var expresion=function(expr) {
             i++;
 
             if(!comillas) {
-                p=p.toLowerCase().trim();
+                p=p.trim();
 
                 if(p=="") {
                     //Remover vacíos

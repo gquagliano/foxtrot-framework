@@ -21,6 +21,8 @@ class enrutadorPredetermiando extends enrutador {
             return $this;
         }
 
+        $this->parametros=json_decode($this->params->__p);
+        
         //Acceso a funciones internas de Foxtrot
         if($this->params->__f) {
             $this->foxtrot=$this->params->__f;
@@ -44,7 +46,6 @@ class enrutadorPredetermiando extends enrutador {
 
         $this->controlador=$this->params->__c; //Si no se determinó __c, por defecto foxtrot buscará el método público de la aplicación
         $this->metodo=$this->params->__m;
-        $this->parametros=json_decode($this->params->__p);
 
         if(!$this->controlador&&!$this->metodo&&!$this->vista&&!$this->pagina&&!$this->recurso) $this->error=true;
 

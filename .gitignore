@@ -5,9 +5,7 @@
 .vscode
 produccion/*
 desarrollo/*
-!desarrollo/aplicaciones
+!desarrollo/aplicaciones/ejemplo
 !desarrollo/.htaccess
 !desarrollo/config-ejemplo.php
 scripts/sincronizar.sql
-# Aplicación de pruebas (se incluye otra aplicación de ejemplo que recibe actualizaciones cuando la funcionalidad está estable)
-desarrollo/aplicaciones/test

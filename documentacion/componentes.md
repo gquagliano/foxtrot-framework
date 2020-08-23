@@ -95,6 +95,8 @@ Es posible configurar el componente para que importe automáticamente la vista c
 
 Este componente recibe eventos externos con el nombre de la vista a cargar. Es decir, un manejador de evento `nombre:vista`, donde `nombre` es el nombre del componente Importar, desencadenará la carga de la vista `vista` (Ver [Cliente JS](api/cliente-js.md) para información sobre estos).
 
+*Cada vez que se cambie la vista, se creará una nueva instancia del controlador*.
+
 #### ![](img/iconos/item-menu.png) Item de menú
 
 Permite agregar un ítem de menú. Puede utilizarse dentro del componente Menú o dentro del componente Contenedor de menú. Cada Item puede contener, a su vez, componentes Menú para generar submenús.

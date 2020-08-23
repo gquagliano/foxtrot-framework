@@ -10,8 +10,11 @@
 /**
  * Componente concreto Importar.
  */
-var componenteImportar=function() {    
+var componenteImportar=function() { 
     this.componente="importar";
+    this.elementoVista=null;
+    this.nombreVista=null;
+    this.instanciaControlador=null;
 
     this.propiedadesConcretas={
         "Importar":{
@@ -24,8 +27,35 @@ var componenteImportar=function() {
                 ayuda:"Determina si debe cambiar la vista cuando cambie la URL.",
                 tipo:"bool",
                 adaptativa:false
+            },
+            precarga:{
+                etiqueta:"Mostrar precarga",
+                adaptativa:false,
+                tipo:"opciones",
+                opciones:{
+                    no:"No",
+                    si:"Si",
+                    barra:"Barra de progreso"
+                }
             }
         }
+    };
+
+    /**
+     * Devuelve la instancia del controlador de la vista que contiene.
+     * @returns {controlador|null}
+     */
+    this.controlador=function() {
+        return this.instanciaControlador;
+    };
+
+    /**
+     * Devuelve la instancia de la vista que contiene.
+     * @returns {componente|null}
+     */
+    this.vista=function() {
+        if(this.nombreVista) return ui.obtenerInstanciaVista(this.nombreVista);
+        return null;
     };
 
     /**
@@ -47,12 +77,20 @@ var componenteImportar=function() {
     };
 
     /**
+     * Evento Listo.
+     */
+    this.listo=function() {
+        var vistaInicial=this.propiedad(null,"vista");
+        if(vistaInicial) this.cargarVista(vistaInicial);
+    };
+
+    /**
      * Recepción de eventos externos.
      * @param {*} valor 
      * @param {Object} evento 
      */
     this.eventoExterno=function(valor,evento) {
-        ui.alerta(valor);
+        this.cargarVista(valor);
     };
 
     /**
@@ -60,7 +98,71 @@ var componenteImportar=function() {
      * @param {string} nombreNuevaVista 
      */
     this.navegacion=function(nombreNuevaVista) {
-        ui.alerta(nombreNuevaVista);
+        if(!this.propiedad(null,"escucharNavegacion")) return;
+
+        //Si hemos vuelto a la vista principal, cargar el valor predeterminado
+        if(nombreNuevaVista==ui.obtenerNombreVistaPrincipal()) nombreNuevaVista=this.propiedad(null,"vista");
+        if(!nombreNuevaVista) return;
+        
+        this.cargarVista(nombreNuevaVista);
+    };
+
+    /**
+     * Inicia la carga de una vista.
+     * @param {string} nombre 
+     * @returns {Componente}
+     */
+    this.cargarVista=function(nombre) {
+        var t=this, 
+            doc=ui.obtenerDocumento(),
+            precarga=this.propiedad(null,"precarga");
+
+        this.nombreVista=nombre;
+
+        if(t.elementoVista) {
+            var elem=t.elementoVista;
+            ui.animarDesaparecer(elem,function() {
+                elem.remover();
+            });
+        }
+
+        ui.obtenerVistaEmbebible(nombre,function(obj) {
+            t.elementoVista=doc.crear("<div class='contenedor-vista-importada oculto'>");
+            t.elementoVista.anexarA(t.elemento);
+
+            ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVista,function() {
+                t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
+                ui.animarAparecer(t.elementoVista);
+            });
+        },precarga);
+
+        return this;
+    };
+
+    /**
+     * Devuelve o establece los valores de la vista que contiene.
+     * @param {Object} [valor] - Valores a establecer.
+     * @reeturns {*}
+     */
+    this.valor=function(valor) {
+        var vista=this.vista();
+        
+        if(typeof valor==="undefined") {
+            if(vista) return vista.obtenerValores();
+            return {};
+        } else {
+            if(vista) vista.establecerValores(valor);
+            return this;
+        }
+    };
+
+    /**
+     * Devuelve los valores de la vista que contiene.
+     * @returns {Object}
+     */
+    this.obtenerValores=function() {
+        return;
+        //No queremos que continúe la búsqueda en forma recursiva entre los componentes importados
     };
 };
 

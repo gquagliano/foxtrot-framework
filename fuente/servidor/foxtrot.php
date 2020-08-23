@@ -255,14 +255,18 @@ class foxtrot {
         }
 
         if($ctl) {
-            if(preg_match('/[^a-z0-9_-]/i',$ctl)) self::error();
+            //Los controladores que presenten /, se buscan en el subdirectorio
+            //Esto debería ser seguro ya que no se admiten caracteres que puedan hacer que salga del directorio controladores
+
+            if(preg_match('/[^a-z0-9_\/-]/i',$ctl)) self::error();
 
             $ruta=_controladoresServidorAplicacion.$ctl.'.pub.php';
             if(!file_exists($ruta)) self::error();
 
             include($ruta);
+            $ctl=str_replace('/','\\',$ctl);
             $cls='\\aplicaciones\\'._apl.'\\publico\\'.$ctl;
-            $obj=new $cls;            
+            $obj=new $cls;       
         } elseif(self::$instanciaAplicacionPublico) {
             //Si no se definió un controlador, notificaremos la solicitud a la clase pública de la aplicación
             $obj=self::$instanciaAplicacionPublico;

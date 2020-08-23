@@ -59,6 +59,14 @@ var componenteImportar=function() {
     };
 
     /**
+     * Devuelve el nombre de la vista que contiene.
+     * @returns {string}
+     */
+    this.obtenerNombreVista=function() {
+        return this.nombreVista;
+    };
+
+    /**
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {

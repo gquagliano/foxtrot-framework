@@ -11,7 +11,10 @@ ui.registrarControlador("{nombreVista}",function() {
     this.controladorServidor="{controlador}";
 
     this.id=null;
-    
+        
+    /**
+     * Evento Listo.
+     */
     this.listo=function() {
         //TODO Implementar verificarUsuario()
         ui.aplicacion().verificarUsuario(function() {
@@ -19,6 +22,9 @@ ui.registrarControlador("{nombreVista}",function() {
         });
     };
 
+    /**
+     * Carga el formulario.
+     */
     this.cargarDatos=function() {
         var parametros=ui.obtenerParametros(),
             titulo="Crear {singular}";
@@ -32,6 +38,9 @@ ui.registrarControlador("{nombreVista}",function() {
         componentes.titulo.obtenerElemento().establecerHtml(titulo);
     };
 
+    /**
+     * Guarda el formulario.
+     */
     this.guardar=function() {
         var t=this;
         this.servidor.guardar(function(obj) {
@@ -41,18 +50,28 @@ ui.registrarControlador("{nombreVista}",function() {
         },ui.obtenerValores(),this.id);
     };
 
+    /**
+     * Click en Nuevo.
+     */
     this.nuevo=function() {
         ui.confirmar("¿Estás seguro de querer continuar?",function(r) {
             if(r) ui.irA("{nombreSingular}");
         });
     };
 
+    /**
+     * Click en Volver.
+     */
     this.volver=function() {
         ui.confirmar("¿Estás seguro de querer continuar?",function(r) {
             if(r) ui.irA("{nombrePlural}");
         });
     };
 
+    /**
+     * Muestra un mensaje de error.
+     * @param {number} numero - Número de error.
+     */
     this.error=function(numero) {
         var mensaje={
             1:"Completá todos los campos marcados con *."

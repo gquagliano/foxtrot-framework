@@ -1,9 +1,3 @@
-<?php
-/**
- * @author 
- * @version 1.0
- */
-?>
 <!doctype html>
 <html lang="es">
 <head>

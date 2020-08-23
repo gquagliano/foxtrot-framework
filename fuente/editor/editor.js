@@ -641,7 +641,7 @@ var editor=new function() {
         ui.obtenerDocumento().querySelectorAll(".foxtrot-zona").remover();
     };
 
-    this.prepararComponenteInsertado=function(obj) {        
+    this.prepararComponenteInsertado=function(obj) {      
         var elem=obj.obtenerElemento(),
             cont=obj.obtenerContenedor(),
             nombre=obj.componente,
@@ -1213,7 +1213,7 @@ var editor=new function() {
             elem.removerArrastre()
                 .removerDestino()
             //Remover clases y otras propiedades
-                .removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
+                .removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");

@@ -98,12 +98,13 @@ $archivos=[
 ];
 $archivos=array_merge($archivos,buscarArchivos(_desarrollo._dirApl.'cliente/controladores/','*.js'));
 
+$jsonApl=json_decode(file_get_contents(_desarrollo._dirApl.'aplicacion.json'));
+
 $temp=tempnam(__DIR__,'js');
 if(!$opciones['j']) {
     //Agregar código de las vistas embebibles dentro del JS
     $js='';
-    $json=json_decode(file_get_contents(_desarrollo._dirApl.'aplicacion.json'));
-    foreach($json->vistas as $nombre=>$vista) {
+    foreach($jsonApl->vistas as $nombre=>$vista) {
         if($vista->tipo=='embebible') {
             $ruta=_desarrollo._dirApl.'cliente/vistas/'.$nombre.'.';
             
@@ -129,3 +130,14 @@ copiar(_desarrollo._dirApl.'cliente/vistas/','*.{json,css,html,php}',_produccion
 //Procesar las vistas
 $archivos=buscarArchivos(_produccion._dirApl.'cliente/vistas/','*.{php,html}');
 foreach($archivos as $archivo) procesarVista($archivo);
+
+if(!$opciones['j']) {
+    //Combinar archivos CSS de las vistas embebibles
+    $rutaDestino=_produccion._dirApl.'recursos/css/aplicacion.css';
+    foreach($jsonApl->vistas as $nombre=>$vista) {
+        if($vista->tipo=='embebible') {
+            $ruta=_desarrollo._dirApl.'cliente/vistas/'.$nombre.'.css';
+            file_put_contents($rutaDestino,file_get_contents($ruta),FILE_APPEND);
+        }
+    }
+}

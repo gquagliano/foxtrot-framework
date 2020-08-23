@@ -8,6 +8,7 @@
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
 - [Scripts de compilación y asistentes](scripts.md)
+- [Pendientes](pendientes.md)
 
 ## Estructura general del proyecto
 

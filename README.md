@@ -19,6 +19,8 @@ Desarrollado en Argentina, con su API en español.
 
 **[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8)**
 
+*¡Próximamente, los scripts a los que actualmente se accede por línea de comandos estarán integrados en una interfaz web!*
+
 **[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
 
 Usuario: admin  
@@ -54,24 +56,15 @@ Desacoplando la lógica de las vistas del DOM, buscamos también:
 
 ![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
 
+![](documentacion/img/tick.jpg) Integración de múltiples vistas en una sola página.
+
 ![](documentacion/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
 
 ![](documentacion/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
 #### Pendientes
 
-En líneas generales,
-
-- Implementar más componentes.
-- ~~Edición de metadatos de las vistas~~.
-- Desarrollar la navegación entre vistas dentro de una sola página (ideal para aplicaciones móviles).
-- Completar funcionalidad útil del editor, como ~~copiar, cortar, pegar,~~ deshacer, rehacer y la barra de formato de texto.
-- Completar la documentación; revisar y completar JSDOC y PHPDOC.
-- Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
-
-Seguirá profundizar el desarrollo del editor, crear el gestor de aplicaciones completo con los asistentes, y las ideas planteadas como funcionalidad futura.
-
-*¡Próximamente, los scripts a los que actualmente se accede por línea de comandos estarán integrados en una interfaz web!*
+Ver [Pendientes](documentacion/pendientes.md).
 
 #### Aplicación de ejemplo
 

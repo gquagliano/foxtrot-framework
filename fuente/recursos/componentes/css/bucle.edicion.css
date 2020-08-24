@@ -1,0 +1,18 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+.foxtrot-bordes .bucle>.componente-bucle-plantilla {
+    min-height: 1em;
+    outline: dashed 1px rgba(255,0,0,0.2);
+}
+.foxtrot-mostrar-invisibles .bucle {
+    display: block !important;
+    flex: 99;
+}
+.foxtrot-mostrar-invisibles .bucle>.componente-bucle-plantilla {
+    display: block !important;
+}

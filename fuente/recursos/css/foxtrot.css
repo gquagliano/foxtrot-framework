@@ -12,6 +12,10 @@
     position: relative;
 }
 
+.contenedor {
+    position: relative;
+}
+
 .btn {
     font-size: inherit;
     font-weight: 500;

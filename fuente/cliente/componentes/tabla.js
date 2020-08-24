@@ -112,21 +112,6 @@ var componenteTabla=function() {
     };
 
     /**
-     * Establece toda la descendencia como oculta.
-     * @param {Componente} [comp] - Uso interno.
-     * @returns {Componente}
-     */
-    this.ocultarDescendencia=function(comp) {
-        if(typeof comp==="undefined") comp=this;
-        var t=this;
-        comp.obtenerHijos().forEach(function(hijo) {
-            hijo.establecerComponenteOculto();
-            t.ocultarDescendencia(hijo);
-        });
-        return this;
-    };
-
-    /**
      * Genera la fila con el mensaje de tabla sin datos.
      * @returns {Componente}
      */
@@ -246,6 +231,15 @@ var componenteTabla=function() {
         });
 
         return resultado;
+    };
+
+    /**
+     * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
+     * @returns {Object}
+     */
+    this.obtenerValores=function() {
+        return;
+        //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
     };
 };
 

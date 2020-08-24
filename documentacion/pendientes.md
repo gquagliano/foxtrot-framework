@@ -19,6 +19,7 @@ En líneas generales,
 - Completar la documentación; revisar y completar JSDOC y PHPDOC; mover la documentación a Wiki.
 - Revisar TODOs en el código.
 - Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
+- Se deben normalizar los nombres de clases, algunos tienen prefijo `foxtrot-`, otros no.
 
 Luego seguirá:
 

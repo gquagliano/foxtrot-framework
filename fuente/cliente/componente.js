@@ -511,8 +511,10 @@ var componente=new function() {
 
         if(!elemento) {
             //Duplicar el elemento del DOM
-            var elemento=this.elemento.clonar();
-            padre.obtenerContenedor().anexar(elemento);            
+            var elemento=this.elemento.clonar(),
+                elemPadre=padre;
+            if(padre.esComponente()) elemPadre=padre.obtenerContenedor();
+            elemPadre.anexar(elemento);
 
             //Al clonar el elemento del DOM, los elementos de la descendencia también fueron clonados, por lo tanto debemos duplicar las instancias y asignar los elementos clonados
             var fn=function(comp) {
@@ -1670,6 +1672,21 @@ var componente=new function() {
         fn(this.contenedor||this.elemento);       
 
         return hijos;
+    };
+
+    /**
+     * Establece toda la descendencia como oculta.
+     * @param {Componente} [comp] - Uso interno.
+     * @returns {Componente}
+     */
+    this.ocultarDescendencia=function(comp) {
+        if(typeof comp==="undefined") comp=this;
+        var t=this;
+        comp.obtenerHijos().forEach(function(hijo) {
+            hijo.establecerComponenteOculto();
+            t.ocultarDescendencia(hijo);
+        });
+        return this;
     };
 
     /**

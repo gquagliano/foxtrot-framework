@@ -973,7 +973,11 @@ var editor=new function() {
 
                 //Generar un nuevo selector
                 var nuevo=ui.generarSelector(obj.componente,obj.nombre);
-                if(obj.selector&&obj.selector.substring(0,1)==".") tempElem.content.querySelector(obj.selector).removerClase(obj.selector.substring(1)); //Si el selector era un ID, ya lo hemos removido
+                if(obj.selector&&obj.selector.substring(0,1)==".") {
+                    //Remover clase (si el selector era un ID, ya lo hemos removido)
+                    var e=tempElem.content.querySelector(obj.selector);
+                    if(e) e.removerClase(obj.selector.substring(1)); 
+                }
                 nuevoSelector[obj.selector]=nuevo;
                 obj.selector=nuevo;
                 elem.agregarClase(nuevo.substring(1));

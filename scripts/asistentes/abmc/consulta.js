@@ -64,7 +64,7 @@ ui.registrarControlador("{nombreVista}",function() {
      * @param {number} pags - Número de páginas.
      */
     var crearDesplegablePaginas=function(comp,pags) {
-        var pagina=comp.valor()
+        var pagina=comp.valor(),
             opciones={};
 
         for(var i=1;i<=pags;i++) opciones[i]=i;

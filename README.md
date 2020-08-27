@@ -2,51 +2,30 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7 (https://github.
 
 **Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión (*MVP*)!**
 
-## Qué es Foxtrot Framework
+### Qué es Foxtrot Framework
 
-Foxtrot es un framework RAD de PWA con editor visual de vistas, cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP.
+![](documentacion/img/editor.jpg)
 
-Persigue los objetivos de:
-- Estandarizar y automatizar la mayor parte del flujo de desarrollo de aplicaciones.
-- Permitir la realización con una única herramientas de aplicaciones que en otros frameworks pueden demandar la inclusión de una docena de librerías.
-- Ser extremadamente liviano y rápido, especialmente en dispositivos.
+Foxtrot es un framework de desarrollo rápido de aplicaciones web y mobile, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP.
 
-Desarrollado en Argentina, con su API en español.
+**[Accedé al Wiki para leer más sobre el proyecto, sus objetivos y su documentación](wiki)**
 
-**[Mirá el nuevo video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
+**[Guía de inicio rápido](documentacion/primeros-pasos.md)**
 
-**[Mirá el nuevo video de demostración de los asistentes](https://youtu.be/BuxehZ6bPkY)**
+**[Mirá el video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
 
-**[Mirá el video de demostración](https://youtu.be/J7Ru9Mfumr8)**
+**[Mirá el video de demostración de los asistentes](https://youtu.be/BuxehZ6bPkY)**
 
-*¡Próximamente, los scripts a los que actualmente se accede por línea de comandos estarán integrados en una interfaz web!*
+**[Mirá el video de demostración general](https://youtu.be/J7Ru9Mfumr8)**
 
 **[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
 
 Usuario: admin  
 Contraseña: test
 
-*La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
+*Nota: La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
 
-## Primeros pasos
-
-Ver: [Guía de inicio rápido](documentacion/primeros-pasos.md).
-
-## ¿Por qué?
-
-- Porque creemos que juntar una docena de frameworks y componentes para desarrollar una aplicación es una locura y estamos detrás del _framework-ultra-liviano-multi-plataforma-todo-en-uno_ definitivo.
-- Porque creemos que podemos desarrollar una herramienta mejor que las existentes (o, al menos, que las más populares) pensando en las necesidades reales del desarrollador.
-- Porque no existe (o no encontramos) una herramienta como nuestro editor que sea de código abierto, libre, gratuita, que no te obligue a almacenar tu código en su _nube_ y que persiga el mismo nivel de integración que Foxtrot.
-- Porque buscamos un editor de vistas que no sea un mero diseñador de maquetas, sino que incorpore herramientas de acceso a datos, vinculación automática con los controladores y estructuras de control (bucles, condicionales).
-- Porque buscamos un sistema súper-rápido: La complejidad de Foxtrot está en el diseño de las vistas. Durante la ejecución, es tan liviano, que es prácticamente como no usar un framework, pero manteniendo disponible la funcionalidad de Foxtrot si el código del usuario lo requiere.
-
-Desacoplando la lógica de las vistas del DOM, buscamos también:
-
-- Que el desarrollador tenga que preocuparse *casi-nada* (normalmente, solo estilos) por la estructura de la vista, como en otras plataformas.
-- Que gracias a esta abstracción podamos, en el futuro, buscar mejores formas de representar los componentes, o portar el framework a otras plataformas, sin volver obsoleto tu código.
-- Que el acceso a los elementos de la vista sea más simple y directo, a través de los componentes.
-
-## Estado
+### Estado
 
 ![](documentacion/img/tick.jpg) Editor de vistas completamente funcional.
 
@@ -72,7 +51,7 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 [Más información](desarrollo/aplicaciones/ejemplo/README.md).
 
-## Estructura del proyecto
+### Estructura del proyecto
 
 `/fuente/` Código fuente del framework.
 
@@ -84,11 +63,9 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 `/scripts/` Scripts de compilación y asistentes.
 
-## Qué estamos desarrollando
+### Qué estamos desarrollando
 
 ### Editor
-
-![](documentacion/img/editor.jpg)
 
 Editor de vistas *WYSIWYG* *Drag&drop*. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
@@ -144,11 +121,11 @@ El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesa
 
 [Documentación](documentacion/api/indice.md).
 
-## Colaboraciones
+### Colaboraciones
 
 Toda colaboración es bienvenida. Podés ponerte en contacto con nosotros en contacto@foxtrot.ar para conversar y aclarar todas las dudas acerca del proyecto.
 
-## Más información
+### Más información
 
 contacto@foxtrot.ar
 

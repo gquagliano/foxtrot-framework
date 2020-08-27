@@ -37,6 +37,12 @@ var componenteImportar=function() {
                     si:"Si",
                     barra:"Barra de progreso"
                 }
+            },
+            demora:{
+                etiqueta:"Demora",
+                adaptativa:false,
+                tipo:"numero",
+                ayuda:"Permite establecer un tiempo de demora entre la navegación y la carga de la vista (segundos)."
             }
         }
     };
@@ -107,12 +113,18 @@ var componenteImportar=function() {
      */
     this.navegacion=function(nombreNuevaVista) {
         if(!this.propiedad(null,"escucharNavegacion")) return;
-
-        //Si hemos vuelto a la vista principal, cargar el valor predeterminado
-        if(nombreNuevaVista==ui.obtenerNombreVistaPrincipal()) nombreNuevaVista=this.propiedad(null,"vista");
-        if(!nombreNuevaVista) return;
         
-        this.cargarVista(nombreNuevaVista);
+        var demora=this.propiedad(null,"demora");
+        if(!demora) demora=0;
+
+        var t=this;
+
+        setTimeout(function() {
+            //Si hemos vuelto a la vista principal, cargar el valor predeterminado
+            if(nombreNuevaVista==ui.obtenerNombreVistaPrincipal()) nombreNuevaVista=t.propiedad(null,"vista");
+            if(!nombreNuevaVista) return;        
+            t.cargarVista(nombreNuevaVista);
+        },demora*1000);
     };
 
     /**

@@ -24,6 +24,7 @@
 
 picture {
     display: inline-block;
+    overflow: hidden;
 }
 picture img {
     display: block;

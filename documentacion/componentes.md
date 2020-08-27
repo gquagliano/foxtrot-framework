@@ -86,7 +86,7 @@ Este componente es solo una representación lógica de un formulario, sin otra f
 
 #### ![](img/iconos/imagen.png) Imagen
 
-Permite insertar una imagen cuyo origen es adaptativo, es decir, la URL de la imagen puede variar según el tamaño de pantalla.
+Permite insertar una imagen cuyo origen es adaptativo, es decir, la URL de la imagen puede variar según el tamaño de pantalla. Admite expresiones en la propiedad Origen.
 
 #### ![](img/iconos/importar.png) Importar (estructura de control)
 

@@ -121,6 +121,24 @@ var componenteImagen=function() {
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizar=function() {
+        if(this.datos) {
+            //Actualizar el origen para todos los tamaños
+            var origen=this.propiedadObj("origen"),
+                t=this;
+            if(origen) origen.forEach(function(tamano,valor) {
+                    var resultado=ui.evaluarExpresion(valor,t.datos);
+                    t.propiedadModificada("origen",resultado,tamano);
+                });
+        }
+
+        this.actualizarComponente();
+        return this;
+    };
 };
 
 ui.registrarComponente("imagen",componenteImagen,configComponente.clonar({

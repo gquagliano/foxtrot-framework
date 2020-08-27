@@ -403,7 +403,7 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-none {
     display: block!important;
-    opacity: .25;
+    outline: dashed 1px rgba(250, 226, 90, 0.2);
 }
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {

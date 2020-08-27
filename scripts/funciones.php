@@ -217,7 +217,6 @@ function obtenerArgumentos() {
     //A continuación extraemos sólo los parámetros que están precedidos por `-`
 
     $parametros=[];
-    array_shift($argv);
     foreach($argv as $arg) {
         if(substr($arg,0,1)!='-') continue;
         $arg=substr($arg,1);

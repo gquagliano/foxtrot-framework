@@ -11,7 +11,37 @@
 (function() {
     "use strict";
 
-    var duracionAnimacion=1000; //Depende de la animación CSS
+    /** @var {number} duracionAnimacion - Duración máxima de la animación, acorde al CSS. */
+    var duracionAnimacion=1000;
+
+    /**
+     * Establece el evento animationend y un temporizador en caso de que el navegador no tenga soporte para el mismo.
+     * @param {(Node|Element)} elem 
+     * @param {function} funcion 
+     */
+    function establecerEvento(elem,funcion) {
+        elem._eventoCompleto=false;
+        elem._temporizadorAnimacion=setTimeout(function() {
+            if(elem._eventoCompleto) return;
+            elem._eventoCompleto=true;
+            funcion();
+        },duracionAnimacion);
+        elem.evento("animationend",function() {
+            if(elem._eventoCompleto) return;
+            elem._eventoCompleto=true;
+            funcion();
+        });
+    };
+
+    /**
+     * Remueve el evento animationend y el temporizador.
+     * @param {(Node|Element)} elem 
+     */
+    function removerEvento(elem) {
+        elem._eventoCompleto=false;
+        if(elem.hasOwnProperty("_temporizadorAnimacion")) clearTimeout(elem._temporizadorAnimacion);
+        elem.removerEvento("animationend");
+    };
 
     /**
      * Hace aparecer el elemento en forma animada utilizando animaciones CSS.
@@ -25,11 +55,7 @@
         elem.removerClase("oculto")
             .agregarClase("aparece");  
 
-        if(typeof retorno!=="undefined") {
-            elem._temporizadorAnimacion=setTimeout(function() {
-                retorno();
-            },duracionAnimacion);
-        }
+        if(typeof retorno!=="undefined") establecerEvento(elem,retorno);
 
         return ui;
     };
@@ -45,12 +71,12 @@
 
         elem.agregarClase("desaparece");
 
-        elem._temporizadorAnimacion=setTimeout(function() {
+        establecerEvento(elem,function() {
             if(typeof retorno!=="undefined") retorno();
 
             elem.removerClase("desaparece")
                 .agregarClase("oculto");
-        },duracionAnimacion);
+        });
     };
 
     /**
@@ -70,7 +96,7 @@
      * @returns {ui}
      */
     ui.detenerAnimacion=function(elem) {
-        if(elem.hasOwnProperty("_temporizadorAnimacion")) clearTimeout(elem._temporizadorAnimacion);
+        removerEvento(elem);
         elem.removerClase("aparece desaparece");
         return ui;
     };

@@ -8,7 +8,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7.
 
 Foxtrot es un framework de desarrollo rápido de aplicaciones web y mobile, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP.
 
-**[Accedé al Wiki para leer más sobre el proyecto, sus objetivos y su documentación](../../wiki)**
+**[Accedé al Wiki para leer más sobre el proyecto, sus objetivos y su documentación](../../wiki/Inicio)**
 
 **[Guía de inicio rápido](documentacion/primeros-pasos.md)**
 

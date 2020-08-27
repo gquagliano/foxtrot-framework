@@ -12,42 +12,15 @@ defined('_inc') or exit;
  * Enrutador de solicitudes predeterminado.
  */
 class enrutadorPredetermiando extends enrutador {
+    /**
+     * Analiza la URL provista, estableciendo las propiedades del entutador.
+     * @return \enrutador
+     */
     public function analizar() {
-        //No hace falta validar estos parámetros, ya que foxtrot lo hará a continuación
+        //Analisis básico
+        parent::analizar();
 
-        //Página de error
-        if(preg_match('#^error/#i',$this->url)) {
-            $this->pagina='error';
-            return $this;
-        }
-
-        $this->parametros=json_decode($this->params->__p);
-        
-        //Acceso a funciones internas de Foxtrot
-        if($this->params->__f) {
-            $this->foxtrot=$this->params->__f;
-            return $this;
-        }
-
-        $p=strpos($this->url,'?');
-        if($p!==false) $this->url=substr($this->url,0,$p);
-
-        //Sin parámetros, intentar cargar archivos de la aplicación
-        if(!$this->params->__c&&!$this->params->__m) {
-            if($this->url=='') {
-                $this->vista='inicio';
-            } elseif(preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias)) {
-                $this->recurso=$coincidencias[1];
-            } elseif(preg_match('#^([A-Za-z0-9_/-]+)#',$this->url)) {
-                $this->vista=trim($this->url,'/');
-            }
-            if($this->vista||$this->recurso) return $this;
-        }
-
-        $this->controlador=$this->params->__c; //Si no se determinó __c, por defecto foxtrot buscará el método público de la aplicación
-        $this->metodo=$this->params->__m;
-
-        if(!$this->controlador&&!$this->metodo&&!$this->vista&&!$this->pagina&&!$this->recurso) $this->error=true;
+        if(!$this->solicitudValida()) $this->error=true;
 
         return $this;
     }

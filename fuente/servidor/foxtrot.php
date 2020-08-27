@@ -95,6 +95,7 @@ class foxtrot {
 
         include(_servidor.'enrutadores/enrutadorPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
+        include(_servidor.'enrutadores/enrutadorUnaPagina.php');
     }
 
     protected static function cargarAplicacion() {
@@ -114,8 +115,14 @@ class foxtrot {
         if(!self::$enrutador&&!configuracion::$enrutador) {
             self::$enrutador=new enrutadorPredetermiando;
         } elseif(configuracion::$enrutador) {
-            include(_servidorAplicacion.configuracion::$enrutador.'.php');            
-            $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
+            $ruta=_servidorAplicacion.configuracion::$enrutador.'.php';
+            if(file_exists($ruta)) {
+                include(_servidorAplicacion.configuracion::$enrutador.'.php');            
+                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
+            } else {
+                //Enrutador del sistema
+                $cls='\\'.configuracion::$enrutador;
+            }
             self::$enrutador=new $cls;
         }
 
@@ -185,9 +192,15 @@ class foxtrot {
         $params=self::$enrutador->obtenerParametros();
         $recurso=self::$enrutador->obtenerRecurso();
         $foxtrot=self::$enrutador->obtenerFoxtrot();
+        $redir=self::$enrutador->obtenerRedireccionamiento();
 
         $html=null;
         $res=null;
+
+        if($redir) {
+            header('Location: '.self::obtenerUrl().$redir->ruta,true,$redir->codigo?$redir->codigo:302);
+            exit;
+        }
 
         if($foxtrot) {
             //Acceso HTTP a funciones internas de Foxtrot
@@ -201,6 +214,8 @@ class foxtrot {
                 sesion::responderSolicitud();
             } elseif($foxtrot=='obtenerVista') {
                 self::devolverVista($params[0]);
+            } else {
+                self::error();
             }
         }
 
@@ -210,9 +225,14 @@ class foxtrot {
             header('Content-Type: text/html; charset=utf-8',true);
 
             //TODO Validación configurable de páginas disponibles públicamente.
-            if(!in_array($pagina,['error'])) self::error();
+            $rutas=[
+                'error'=>'error.php',
+                'index-cordova'=>'index-cordova.html'
+            ];
+            if(!array_key_exists($pagina,$rutas)) self::error();
 
-            include(_raiz.$pagina.'.php');
+            include($rutas[$pagina]);
+
             exit;
         }
 

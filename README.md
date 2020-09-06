@@ -1,14 +1,14 @@
 Trabajo en curso y experimentos para el desarrollo de Foxtrot 7. 
 
-**Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión (*MVP*)!**
+**Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión *MVP*!**
 
 ### Qué es Foxtrot Framework
 
 ![](documentacion/img/editor.jpg)
 
-Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP.
+Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* más fácil de aprender y usar.
 
-**[Accedé al Wiki para leer más sobre el proyecto, sus objetivos y su documentación](../../wiki/Inicio)**
+**¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](../../wiki/Inicio)** (en redacción).
 
 **[Guía de inicio rápido](documentacion/primeros-pasos.md)**
 

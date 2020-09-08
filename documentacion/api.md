@@ -118,7 +118,7 @@ Ver: [Scripts de compilación y asistentes](scripts.md).
 
 **Cordova:**
 
-Luego de ejecutar `php scripts/construir-embebible.php apl` (donde `apl` es el nombre de la aplicación), los archivos de `/embebible/` deben copiarse al directorio `www` de la aplicación Cordova.
+Luego de ejecutar `php scripts/construir-embebible apl` (donde `apl` es el nombre de la aplicación), los archivos de `/embebible/` deben copiarse al directorio `www` de la aplicación Cordova.
 
 Debe configurarse el `config.xml` para apuntar al archivo `index-cordova.html`. La aplicación puede probarse localmente accediendo al mismo archivo.
 

@@ -22,7 +22,7 @@ En el futuro, la funcionalidad de estos scripts se integrará con el gestor de a
 
 Construye y compila todos los archivos JS y CSS del framework y del editor, generando el entorno de desarrollo (`/desarrollo/`) desde los archivos fuente (`/fuente/`). Debe ejecutarse tras realizarse modificaciones al framework.
 
-    php construir-framework.php [-d]
+    php construir-framework [-d]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
@@ -32,7 +32,7 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
 Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación, excepto cuando se especifiquen los parámetros `-u`, `-c` y/o `-b`.
 
-    php sincronizar-bd.php -a=nombre_aplicacion [-m=nombre_modelo] [-u=usuario] [-c=contrasena] [-b=nombre_base_de_datos]
+    php sincronizar-bd -a=nombre_aplicacion [-m=nombre_modelo] [-u=usuario] [-c=contrasena] [-b=nombre_base_de_datos]
 
 Si no se especifica `-m`, se procesará el modelo de datos completo.
 
@@ -44,7 +44,7 @@ Acumula un registro de consultas SQL en el archivo `scripts/sincronizar.sql` en 
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
-    php construir-apl.php -a=nombre_aplicacion [-d] [-l] [-j]
+    php construir-apl -a=nombre_aplicacion [-d] [-l] [-j]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
@@ -60,7 +60,7 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-    php construir-embebible.php -a=nombre_aplicacion [-i=nombre_vista_inicial] [-j] [-d] [-c="ruta a www" [-p=android] [-f]] [-l]
+    php construir-embebible -a=nombre_aplicacion [-i=nombre_vista_inicial] [-j] [-d] [-c="ruta a www" [-p=android] [-f]] [-l]
 
 `-d` Depuración: Omite la compilación con Closure a fin de facilitar la depuración.
 
@@ -84,7 +84,7 @@ Asistentes de creación de vistas y controladores.
 
 ##### Plantilla de aplicación en blanco
 
-    php asistente.php -s=crear-apl -a=nombre -d=dominio
+    php asistente -s=crear-apl -a=nombre -d=dominio
 
 El asistente creará una aplicación en blanco y configurará Foxtrot para que la misma se ejecute en el dominio especificado. Los archivos serán creados en `/desarrollo/aplicaciones/nombre/`.
 
@@ -94,7 +94,7 @@ Ver [Primeros pasos](primeros-pasos.md) para más información.
 
 ##### Plantilla de modelo de datos
 
-    php asistente.php -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad
+    php asistente -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad
 
 El asistente creará las clases del repositorio y de la entidad, vacías, para completar.
 
@@ -104,7 +104,7 @@ El asistente creará las clases del repositorio y de la entidad, vacías, para c
 
 ##### Asistente de creación de ABMC
 
-    php asistente.php -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c]
+    php asistente -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c]
 
 El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 

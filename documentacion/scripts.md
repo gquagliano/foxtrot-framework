@@ -106,7 +106,7 @@ El asistente creará las clases del repositorio y de la entidad, vacías, para c
 
 ##### Asistente de creación de ABMC
 
-    php asistente -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c]
+    php asistente -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-s=singular]
 
 El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 
@@ -120,6 +120,10 @@ El asistente creará vistas, controladores JS y un controlador PHP, y agregará 
 
 `-t` Título (por defecto, el nombre del modelo).
 
+`-p` Nombre plural (por defecto, el nombre del modelo).
+
+`-n` Nombre singular (por defecto, el nombre de la entidad).
+
 Las siguientes etiquetas adicionales compatibles con este asistente pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
 
 `@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
@@ -129,6 +133,8 @@ Las siguientes etiquetas adicionales compatibles con este asistente pueden utili
 `@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10). Por defecto, será `10`.
 
 Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión).
+
+*Nota:* Es posible que sea necesario realizar algunos ajustes al código generado. Por ejemplo, los nombres de campos de la base de datos seleccionados o filtrados en el controlador PHP pueden ser incorrectos.
 
 ### Requerimientos
 

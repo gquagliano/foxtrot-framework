@@ -23,6 +23,7 @@ class abmc extends asistente {
     var $rutaPhp;
     var $rutaModelo;
     var $json;
+    var $plural;
     var $singular;
     var $titulo;
     var $claseModelo;
@@ -40,6 +41,9 @@ class abmc extends asistente {
 
         $this->nombreModelo=$opc['m'];
         $this->titulo=$opc['t']?$opc['t']:ucfirst($this->nombreModelo);
+
+        if($opc['p']) $this->plural=$opc['p'];
+        if($opc['n']) $this->singular=$opc['n'];
         
         $this->claseModelo='\\aplicaciones\\'.$this->aplicacion.'\\modelo\\'.$this->nombreModelo;
 
@@ -59,7 +63,7 @@ class abmc extends asistente {
 
         $this->validarOpciones($opciones);
 
-        $this->plural=$this->nombreModelo;
+        if(!$this->plural) $this->plural=$this->nombreModelo;
         $this->nombreControlador=$this->nombreModelo; //Por defecto, mismo nombre
         
         $this->rutaVistas=_vistasAplicacion.$this->ruta;
@@ -70,7 +74,7 @@ class abmc extends asistente {
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);
 
-        $this->singular=$this->modelo->singular();
+        if(!$this->singular) $this->singular=$this->modelo->singular();
         define('_plantillas',__DIR__.'/abmc/');
 
         $this->json=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));

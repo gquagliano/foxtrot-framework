@@ -18,7 +18,7 @@ $dominios=[
 foxtrot::establecerEnrutadorAplicacion(new enrutadorAplicacionPredeterminado($dominios));
 
 configuracion::establecer([
-    'url'=>'http://localhost/experimental-foxtrot-framework/desarrollo/',
+    'url'=>(foxtrot::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].'/',
     //El parámetro rutaBase permite configurar el sistema en un subdirectorio (omitir si se instala en el raíz del servidor web)
     'rutaBase'=>'/experimental-foxtrot-framework/desarrollo/'
 ]);

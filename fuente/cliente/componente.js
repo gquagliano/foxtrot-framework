@@ -1122,8 +1122,34 @@ var componente=new function() {
 
     /**
      * Establece o devuelve el valor de una propiedad.
+     * @param {string} tamano - Tamaño de pantalla (xl, lg, md, sm, xs). Especificar xs, g o NULL trabajará con el valor global.
+     * @param {string} nombre - Nombre de la propiedad.
+     * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
      */
-    this.propiedad=function(tamano,nombre,valor) { //TODO 'Sobrecarga' sin parámetro tamano para propiedades globales
+    /**
+     * Establece o devuelve el valor de una propiedad en forma global.
+     * @param {string} nombre - Nombre de la propiedad.
+     * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
+     */
+    this.propiedad=function(a,b,c) {
+        var tamano=null,nombre,valor;
+        if(typeof c!=="undefined") {
+            //Tres argumentos
+            tamano=a;
+            nombre=b;
+            valor=c;
+        } else {
+            //Dos argumentos
+            if(a===null||a=="g"||a=="xl"||a=="lg"||a=="md"||a=="sm"||a=="xs") {
+                //Pero el primero es el tamaño
+                tamano=a;
+                nombre=b;
+            } else {
+                nombre=a;
+                valor=b;
+            }
+        }
+                
         if(nombre=="nombre") return;
 
         //xs y g son sinónmos, ya que en ambos casos los estilos son globales

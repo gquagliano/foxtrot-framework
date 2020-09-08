@@ -66,6 +66,9 @@ class enrutador {
         $p=strpos($this->url,'?');
         if($p!==false) $this->url=substr($this->url,0,$p);
 
+        //Remover barra inicial
+        if(substr($this->url,0,1)=='/') $this->url=substr($this->url,1);
+
         //Página de error
         if(preg_match('#^error/#i',$this->url)) {
             $this->pagina='error';

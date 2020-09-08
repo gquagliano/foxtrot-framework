@@ -137,7 +137,7 @@ class usuarios extends modeloBase {
     /**
      * Genera los datos de ejemplo.
      */
-    public static function instalar() {
+    public function instalar() {
         (new usuarios)
             ->establecerValores([
                 'usuario'=>'admin',

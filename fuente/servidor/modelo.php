@@ -126,7 +126,15 @@ class modelo {
         //Posibles valores de las etiquetas en los comentarios de las propiedades:
         //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|booleano|relacional)
         //@relacion (1:1|1:0|1:n)
-        //@indice ([sin valor, índice normal]|unico)
+        //@indice
+        //@indice unico
+        //@modelo *
+        //@relacion *
+        //@columa *
+        //@predeterminado *
+        //@requerido
+        //@tamano
+        //@etiqueta *
 
         $this->campos=(object)[
             'id'=>(object)[],
@@ -137,7 +145,7 @@ class modelo {
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
 
-            if(preg_match_all('/@([a-z]+)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columa|predeterminado|requerido|tamano|etiqueta)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
 
                 foreach($coincidencias[1] as $i=>$etiqueta) {

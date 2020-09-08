@@ -70,10 +70,15 @@ function obtenerTipo($campo,$parametros) {
     if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)) {
         return 'VARCHAR('.$coincidencias[1].') NULL DEFAULT '.$predeterminado;
     }
+
+    if(preg_match('/opcional/',$tipo,$coincidencias)) {
+        return 'TINYINT(1) NOT NULL DEFAULT '.($predeterminado=='1'||$predeterminado=='true'?'1':'0');
+    }
     
     if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
-        return 'INT'.
-            ($coincidencias[2]?'('.$coincidencias[2].')':'').
+        $long=$coincidencias[2]?$coincidencias[2]:3;
+        $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',8=>'BIGINT'];
+        return $tipos[$long].
             (trim($coincidencias[3])=='sin signo'?' UNSIGNED':'').
             ' NULL DEFAULT '.$predeterminado;
     }
@@ -84,10 +89,6 @@ function obtenerTipo($campo,$parametros) {
         return 'DECIMAL('.$coincidencias[1].')'.
             (trim($coincidencias[2])=='sin signo'?' UNSIGNED':'').
             ' NULL DEFAULT '.$predeterminado;
-    }
-
-    if(preg_match('/opcional/',$tipo,$coincidencias)) {
-        return 'TINYINT(1) NOT NULL DEFAULT \''.($predeterminado=='1'||$predeterminado=='true'?'1':'0').'\'';
     }
 
     fwrite(STDERR,'El campo `'.$campo.'` tiene un tipo inválido.'.PHP_EOL.PHP_EOL);
@@ -104,11 +105,12 @@ function compararCampo($parametros,$campoBd) {
     
     if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)&&!preg_match('/varchar\('.$coincidencias[1].'\)/i',$campoBd->Type)) return false;
     
-    if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)&&(
-        !preg_match('/int/i',$campoBd->Type)||
-        ($coincidencias[2]&&!preg_match('/\('.$coincidencias[2].'\)/',$campoBd->Type))||
-        (trim($coincidencias[3])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))
-    )) return false;
+    if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
+        $long=$coincidencias[2]?$coincidencias[2]:3;
+        $tipos=[1=>'tinyint',2=>'smallint',3=>'mediumint',4=>'int',8=>'bigint'];
+        if(!preg_match('/'.$tipos[$long].'/i',$campoBd->Type)||
+            (trim($coincidencias[3])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
+    }
 
     if(preg_match('/decimal\(([0-9]+)\)( sin signo)?/',$tipo,$coincidencias)&&(
         !preg_match('/decimal\('.$coincidencias[2].'\)/i',$campoBd->Type)||
@@ -129,7 +131,7 @@ function procesar($clase) {
     
     if(!in_array($tabla,$tablas)) {
         //Crear
-        consulta('CREATE TABLE `'.$tabla.'` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`e` TINYINT(3) UNSIGNED NOT NULL DEFAULT \'0\',PRIMARY KEY (`id`),INDEX `e` (`e`))  COLLATE=\'utf8_general_ci\' ENGINE=InnoDB');
+        consulta('CREATE TABLE `'.$tabla.'` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`e` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\',PRIMARY KEY (`id`),INDEX `e` (`e`))  COLLATE=\'utf8_general_ci\' ENGINE=InnoDB');
         $creada=true;
     }
     

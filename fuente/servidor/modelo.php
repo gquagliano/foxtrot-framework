@@ -59,7 +59,7 @@ class modelo {
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
         
         $nombre=get_called_class();
-        $this->nombre=substr($nombre,strrpos($nombre,'\\')+1);
+        if(!$this->nombre) $this->nombre=substr($nombre,strrpos($nombre,'\\')+1);
 
         $this->cargarEstructura();
     }
@@ -93,6 +93,14 @@ class modelo {
         }
 
         return $obj;
+    }
+
+    /**
+     * Devuelve el nombre de la tabla.
+     * @return string
+     */
+    public function obtenerNombreTabla() {
+        return $this->nombre;
     }
 
     /**
@@ -896,7 +904,7 @@ class modelo {
     /**
      * Instalación de la base de datos (método para sobreescribir).
      */
-    public static function instalar() {
+    public function instalar() {
     }
 
     //TODO Métodos útiles para búsqueda fonética - Ver otras utilidades posibles

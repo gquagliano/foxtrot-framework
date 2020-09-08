@@ -1347,6 +1347,9 @@ var ui=new function() {
         if(obj) {
             obj.establecerVista(nombre);
             instanciasVistas[nombre].establecerControlador(nombre);
+
+            //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
+            if(principal) instanciasVistas[nombre].establecerElemento(cuerpo);
             
             //Evento
             if(principal) {
@@ -1370,12 +1373,6 @@ var ui=new function() {
      * @returns {ui}
      */
     this.ejecutar=function() {
-        //Preparar la vista
-        if(nombreVistaPrincipal&&instanciasVistas.hasOwnProperty(nombreVistaPrincipal)) {
-            //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
-            instanciasVistas[nombreVistaPrincipal].establecerElemento(cuerpo);
-        }
-
         //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
         for(var i=0;i<doc.styleSheets.length;i++) {
             var hoja=doc.styleSheets[i];
@@ -1390,9 +1387,24 @@ var ui=new function() {
             this.procesarJson(jsonVistaPrincipal);
             editor.ejecutar();
         } else {
-            if(!this.esMovil()) {
+            var esMovil=this.esMovil();
+            if(esMovil) {
+                body.agregarClase("movil");
+            } else {                
                 body.agregarClase("escritorio");
+            }
 
+            if(esCordova) body.agregarClase("cordova");
+
+            this.establecerEventos();
+
+            this.ejecutarVista(nombreVistaPrincipal,true);
+
+            if(!esCordova) {
+                this.ocultarPrecarga("barra");
+            }            
+
+            if(!esMovil) {
                 var elem=doc.querySelector(".autofoco");
                 if(elem) {
                     var comp=this.obtenerInstanciaComponente(elem);
@@ -1404,18 +1416,6 @@ var ui=new function() {
                         elem.focus();
                     }
                 }
-            } else {
-                body.agregarClase("movil");
-            }
-
-            this.establecerEventos();
-
-            if(esCordova) body.agregarClase("cordova");
-
-            this.ejecutarVista(nombreVistaPrincipal,true);
-
-            if(!esCordova) {
-                this.ocultarPrecarga("barra");
             }
         }
 

@@ -19,7 +19,7 @@ Se incluye una aplicación de ejemplo, la cual por el momento consiste en un log
 
 3. Configurar el dominio de la aplicación en la configuración global (`/desarrollo/config.php`). Completar la configuración general del framework si aún no fue hecho (ver documentación en el código).
 
-4. Construir la base de datos mediante el script `sincronizar-bd.php -a=ejemplo`.
+4. Construir la base de datos mediante el script `php sincronizar-bd -a=ejemplo`.
 
 Ver [Scripts de compilación y asistentes](../../../documentacion/scripts.md) para más detalles sobre el uso de los mismos.
 

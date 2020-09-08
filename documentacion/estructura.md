@@ -51,6 +51,7 @@ Cada aplicación cuenta con los siguientes archivos:
 - Las clases princales de la aplicación (ambas, la privada como la pública) deben llamarse `aplicacion` y extender `\aplicacion`.
 - Las clases de los controladores (ambas versiones de cada uno, la privada y la pública) deben llamarse igual que el archivo que las contienen y extender `\controlador`.
 - Los controladores tendrán igual nombre de arhivo que el controlador que definen: `.js` para cliente, `.php` para servidor y `.pub.php` para métodos públicos de servidor.
+- Cuando los nombres contengan guiones, el nombre real de la clase será el valor sin guiones con la primer letra de cada palabra en mayúsculas, por ejemplo, el controlador de la vista `consulta-productos` será `consultaProductos`.
 
 **Además:**
 

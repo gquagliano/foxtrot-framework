@@ -284,7 +284,7 @@ class foxtrot {
             if(!file_exists($ruta)) self::error();
 
             include($ruta);
-            $ctl=str_replace('/','\\',$ctl);
+            $ctl=self::prepararNombreClase($ctl);
             $cls='\\aplicaciones\\'._apl.'\\publico\\'.$ctl;
             $obj=new $cls;       
         } elseif(self::$instanciaAplicacionPublico) {
@@ -311,6 +311,28 @@ class foxtrot {
 
     public static function detener() {
         exit;
+    }
+
+    ////Seguridad y métodos útiles
+
+    /**
+     * Valida y corrije un nombre de clase. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
+     * @var string $nombre Nombre a procesar.
+     * @return string
+     */
+    public static function prepararNombreClase($nombre) {
+        $nombre=strtolower($nombre);
+
+        if(strpos($nombre,'-')>0) {
+            $partes=explode('-',$nombre);
+            $nombre='';
+            foreach($partes as $parte) $nombre.=ucfirst($parte);
+        }
+
+        $nombre=str_replace('/','\\',$nombre);
+        $nombre=preg_replace('/[^a-z0-9_]/i','',$nombre);
+        
+        return $nombre;
     }
 
     ////Base de datos

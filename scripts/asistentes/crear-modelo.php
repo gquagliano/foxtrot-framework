@@ -29,10 +29,14 @@ class crearModelo extends asistente {
         if(file_exists($rutaModelo)) $this->error('La clase del modelo ya existe.');
         if(file_exists($rutaEntidad)) $this->error('La clase de la entidad ya existe.');
 
+        $tabla='';
+        if($opciones['t']) $tabla='protected $nombre=\''.$opciones['t'].'\';'.PHP_EOL;
+
         $vars=[
             '{nombreApl}'=>$this->aplicacion,
             '{modelo}'=>$modelo,
-            '{entidad}'=>$entidad
+            '{entidad}'=>$entidad,
+            '{tabla}'=>$tabla
         ];
 
         file_put_contents(

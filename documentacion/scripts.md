@@ -94,7 +94,9 @@ Ver [Primeros pasos](primeros-pasos.md) para más información.
 
 ##### Plantilla de modelo de datos
 
-    php asistente -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad
+    php asistente -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad [-t=nombre_tabla]
+
+`-t` Si se especifica, establecerá un nombre de tabla distinto al nombre del modelo (opcional).
 
 El asistente creará las clases del repositorio y de la entidad, vacías, para completar.
 

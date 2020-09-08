@@ -13,10 +13,10 @@ defined('_inc') or exit;
  */
 class {modelo} extends \modelo {
     protected $tipoEntidad={entidad}::class;
-
+    {tabla}
     /**
      * Inicializa la tabla luego de la primer sincronización.
      */
-    public static function instalar() {
+    public function instalar() {
     }
 }

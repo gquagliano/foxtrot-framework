@@ -58,7 +58,7 @@ La propiedad `tipoModelo` guarda la relación con el modelo al que pertenece la 
 
 Etiquetas:
 
-`@tipo` Define el tipo de dato: `texto`, `cadena(longitud)`, `entero`, `entero sin signo`, `entero(longitud)`, `entero(longitud) sin signo`, `decimal(entero.decimales)`, `decimal(entero.decimales) sin signo`, `opcional` (booleano) o `relacional` (en el futuro, se agregarán otros tipos, como *fulltext* o campos geoespaciales). Puede omitirse la longitud en `entero`.
+`@tipo` Define el tipo de dato: `texto`, `cadena(longitud)`, `entero`, `entero sin signo`, `entero(longitud)`, `entero(longitud) sin signo`, `decimal(entero.decimales)`, `decimal(entero.decimales) sin signo`, `logico` (booleano) o `relacional` (en el futuro, se agregarán otros tipos, como *fulltext* o campos geoespaciales). Puede omitirse la longitud en `entero`.
 
 *Nota:* En los enteros, `(longitud)` es la longitud **en bytes**, de 1 (`TINYINT`) a 8 (`BIGINT`). Por defecto, es 4 bytes (`INT`).
 

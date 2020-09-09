@@ -71,7 +71,7 @@ function obtenerTipo($campo,$parametros) {
         return 'VARCHAR('.$coincidencias[1].') NULL DEFAULT '.$predeterminado;
     }
 
-    if(preg_match('/opcional/',$tipo,$coincidencias)) {
+    if(preg_match('/logico/',$tipo,$coincidencias)) {
         return 'TINYINT(1) NOT NULL DEFAULT '.($predeterminado=='1'||$predeterminado=='true'?'1':'0');
     }
     
@@ -117,7 +117,7 @@ function compararCampo($parametros,$campoBd) {
         (trim($coincidencias[2])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))
     )) return false;
 
-    if(preg_match('/opcional/',$tipo,$coincidencias)&&!preg_match('/tinyint/i',$campoBd->Type)) return false;
+    if(preg_match('/logico/',$tipo,$coincidencias)&&!preg_match('/tinyint/i',$campoBd->Type)) return false;
 
     return true;
 }

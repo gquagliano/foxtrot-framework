@@ -528,6 +528,20 @@ class modelo {
     }
 
     /**
+     * Devuelve un registro dado su ID.
+     * @param object $id ID.
+     * @return \entidad
+     */
+    public function obtenerItem($id) {
+        return $this
+            ->reiniciar()
+            ->donde([
+                'id'=>$id
+            ])
+            ->obtenerUno();
+    }
+
+    /**
      * Ejecuta la consulta y devuelve un array de elementos.
      */
     public function obtenerListado() {

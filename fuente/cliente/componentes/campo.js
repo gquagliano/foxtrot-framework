@@ -103,8 +103,7 @@ var componenteCampo=function() {
             }
         }
 
-        this.establecerEventosComponente();
-        return this;
+        return this.introComponente(evento);
     };
 
     /**

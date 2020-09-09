@@ -16,3 +16,8 @@
     /* Debe ser block/flex, no table-row, a fin de que se pueda seleccionar cuando no tiene celdas */
     display: flex !important;
 }
+.foxtrot-modo-edicion.foxtrot-bordes tbody,
+.foxtrot-modo-edicion.foxtrot-bordes thead,
+.foxtrot-modo-edicion.foxtrot-bordes tfoot {
+    display: block;
+}

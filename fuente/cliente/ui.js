@@ -1270,12 +1270,23 @@ var ui=new function() {
         url.substring(p+1).split("&").forEach(function(parte) {
             var p=parte.indexOf("=");
             if(p<0) {
-                resultado[decodeURIComponent(parte)]=true;
+                resultado[decodeURIComponent(parte).toLowerCase()]=true;
             } else {
-                resultado[decodeURIComponent(parte.substring(0,p))]=decodeURIComponent(parte.substring(p+1));
+                resultado[decodeURIComponent(parte.substring(0,p)).toLowerCase()]=decodeURIComponent(parte.substring(p+1));
             }
         });
         return resultado;
+    };
+
+    /**
+     * Devuelve el valor de un parámetro de la URL, o null si no existe.
+     * @param {string} nombre 
+     * @returns {(string|null)}
+     */
+    this.obtenerParametro=function(nombre) {
+        var params=this.obtenerParametros();
+        if(!params.hasOwnProperty(nombre.toLowerCase())) return null;
+        return params[nombre];
     };
 
     /**

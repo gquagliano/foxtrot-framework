@@ -69,11 +69,15 @@ var servidor=new function() {
      * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
      * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
      * @param {Object} [opciones.precarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
-     * @returns {servidor}
+     * @returns {ajax}
      */
     this.invocarMetodo=function(opciones) {
         //Valores predeterminados
         opciones=Object.assign(this.predeterminados.clonar(),opciones);
+
+        //Valores próxima consulta
+        if(this.opcionesTemporales) opciones=Object.assign(opciones,this.opcionesTemporales);
+        this.opcionesTemporales=null;
 
         //Por defecto, el controlador principal
         if(typeof opciones.controlador==="undefined") opciones.controlador=ui.controlador().obtenerNombre();
@@ -89,7 +93,7 @@ var servidor=new function() {
         var args=JSON.stringify(opciones.parametros);
         if(args!==null) param.__p=args;
 
-        this.ajax.push(new ajax({
+        var obj=new ajax({
             url:this.url,
             parametros:param,
             listo:function(resp) {
@@ -100,8 +104,20 @@ var servidor=new function() {
                 if(opciones.siempre) opciones.siempre();
             },
             error:opciones.error
-        }));
+        });
 
+        this.ajax.push(obj);
+
+        return obj;
+    };
+
+    /**
+     * Establece opciones a ser utilizadas únicamente en la consulta inmediatamente siguiente.
+     * @param {Object} opciones 
+     * @returns {servidor}
+     */
+    this.establecerOpcionesProximaConsulta=function(opciones) {
+        this.opcionesTemporales=opciones;
         return this;
     };
 
@@ -164,7 +180,17 @@ var servidor=new function() {
 
         return new Proxy(new function() {
             this.controlador=controlador;
-            this.controladorOrigen=controladorOrigen;
+            this.controladorOrigen=controladorOrigen;            
+
+            /**
+             * Establece opciones a ser utilizadas únicamente en la consulta inmediatamente siguiente.
+             * @param {Object} opciones 
+             * @returns {*}
+             */
+            this.establecerOpcionesProximaConsulta=function(opciones) {
+                servidor.establecerOpcionesProximaConsulta(opciones);
+                return this;
+            };
         }(),{
             get(target,nombre) {
                 if(target.hasOwnProperty(nombre)) return target[nombre];
@@ -187,7 +213,7 @@ var servidor=new function() {
                     
                     //servidor.foo(opciones)
                     if(args.length==1&&util.esObjeto(args[0])) {
-                        opc=Obj.assign(opc,args[0]);
+                        opc=Object.assign(opc,args[0]);
                     } else {
                         //servidor.foo(retorno)
                         if(typeof args[0]=="function") opc.retorno=args.shift();
@@ -197,7 +223,7 @@ var servidor=new function() {
                         if(args.length>0) opc.parametros=args;
                     }
         
-                    servidor.invocarMetodo(opc);
+                    return servidor.invocarMetodo(opc);
                 }
             }
         });

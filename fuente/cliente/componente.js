@@ -1374,7 +1374,24 @@ var componente=new function() {
         return ui.evaluarExpresion(valor,vars);
     };
 
-    this.procesarEvento=function(nombre,propiedad,metodo,evento) {
+    /**
+     * Procesa un evento.
+     * @param {string} nombre - Nombre del evento.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @param {string} metodo - Método interno del componente.
+     * @param {Event} evento - Objeto nativo del evento.
+     * @param {*} [parametros] - Parámetros a pasar a la función.
+     * @param {function} [retorno] - Función de retorno.
+     * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
+     * @returns {(ajax|undefined)}
+     */
+    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso) {
+        if(typeof parametros==="undefined") parametros=null;
+        if(typeof retorno==="undefined") retorno=null;
+        if(typeof silencioso==="undefined") silencioso=false;
+
+        if(!evento) evento=document.createEvent("Event");
+
         //Si está deshabilitado, suprimir el evento
         var deshabilitado=this.propiedad(null,"deshabilitado");
         if(deshabilitado) {
@@ -1399,10 +1416,17 @@ var componente=new function() {
         };
         
         //Método interno del componente
-        if(typeof this[metodo]==="function") {
+        if(metodo&&typeof this[metodo]==="function") {
             var ret=this[metodo](evento);
             //Los métodos que devuelvan true, detendrán el procesamiento del manejador
             if(ret===true) return this;
+        }       
+                
+        //Agregar los parámetros al evento
+        if(parametros) {
+            parametros.forEach(function(nombre,valor) {
+                evento[nombre]=valor;
+            });
         }
 
         //Manejador definido por el usuario
@@ -1410,8 +1434,11 @@ var componente=new function() {
 
         var procesado=true;
 
+        var ajax;
+
         if(typeof manejador==="function") {
-            manejador(this,evento);
+            var resultado=manejador(this,evento);            
+            if(retorno) retorno(resultado);
         } else if(typeof manejador==="boolean"&&manejador) {
             //Si la expresión devolvió true, se asume procesado el evento
         } else if(typeof manejador==="string") {
@@ -1420,10 +1447,20 @@ var componente=new function() {
 
             if(manejador.substring(0,9)=="servidor:") {
                 //Método del controlador de servidor
-                ctl.servidor[manejador.substring(9)]();
+
+                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });
+
+                ajax=ctl.servidor[manejador.substring(9)](function(respuesta) {
+                        if(retorno) retorno(respuesta);
+                    },parametros);
             } else if(manejador.substring(0,13)=="servidor-apl:") {
                 //Método del controlador de servidor de la aplicación
-                ui.aplicacion().servidor[manejador.substring(13)]();
+
+                if(silencioso) ui.aplicacion().servidor.establecerOpcionesProximaConsulta({ precarga:false });
+
+                ajax=ui.aplicacion().servidor[manejador.substring(13)](function(respuesta) {
+                        if(retorno) retorno(respuesta);
+                    },parametros);
             } else if(manejador.substring(0,3)=="ir:") {
                 //Navegación
                 ui.irA(manejador.substring(3));
@@ -1444,10 +1481,13 @@ var componente=new function() {
                 //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
                 var nombre=manejador.substring(0,manejador.indexOf(":")),
                     valor=manejador.substring(manejador.indexOf(":")+1);
-                componentes[nombre].eventoExterno(valor,evento);
+                var resultado=componentes[nombre].eventoExterno(valor,evento);
+
+                if(retorno) retorno(resultado);
             } else {
                 //Propiedad del controlador
-                ctl[manejador](this,evento);
+                var resultado=ctl[manejador](this,evento);
+                if(retorno) retorno(resultado);
             }
             //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
             //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
@@ -1460,12 +1500,15 @@ var componente=new function() {
             if(prevenir) evento.preventDefault();
             if(detener) evento.stopPropagation();
         }
+
+        return ajax;
     };
 
     /**
      * Recepción de eventos externos (método para sobreescribir).
      * @param {*} valor 
      * @param {Object} evento 
+     * @returns {*}
      */
     this.eventoExterno=function(valor,evento) {
     };

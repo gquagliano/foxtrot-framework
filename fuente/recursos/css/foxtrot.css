@@ -12,7 +12,8 @@
     position: relative;
 }
 
-.contenedor {
+.contenedor,
+.componente {
     position: relative;
 }
 

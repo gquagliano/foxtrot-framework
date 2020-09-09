@@ -63,7 +63,7 @@ foreach($clases as $clase) {
 
 function obtenerTipo($campo,$parametros) {
     $tipo=$parametros->tipo;
-    $predeterminado=$parametros->predeterminado?'\''.$parametros->predeterminado.'\'':'NULL';
+    $predeterminado=isset($parametros->predeterminado)?'\''.$parametros->predeterminado.'\'':'NULL';
 
     if($tipo=='texto') return 'text';
     

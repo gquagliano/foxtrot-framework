@@ -153,7 +153,7 @@ class modelo {
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=trim($etiqueta);
                     $valor=trim($coincidencias[2][$i]);
-                    if(!$valor) $valor=true;
+                    if($valor=='') $valor=true;
 
                     $this->campos->$propiedad->$etiqueta=$valor;
                 }
@@ -709,11 +709,8 @@ class modelo {
                 );
 
                 //Avanzar recursivamente
-                if($continuar) {
-                    //Cuando el modelo esté relacionado a sí mismo, solo evaluar una vez
-                    if($campo->modelo==$this->nombreModelo) $continuar=false;
-                    $obj->prepararRelaciones($alias,$continuar);
-                }
+                //Cuando el modelo esté relacionado a sí mismo, solo evaluar una vez
+                if($continuar&&$campo->modelo!=$this->nombreModelo) $obj->prepararRelaciones($alias,$continuar);
             }
         }
 

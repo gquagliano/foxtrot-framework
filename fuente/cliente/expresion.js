@@ -695,6 +695,13 @@ expresion.esExpresion=function(obj) {
     return typeof obj==="string"&&obj.trim().length>1&&obj.trim().substr(0,1)=="{"&&obj.trim().substr(-1)=="}";
 };
 
+/**
+ * Determina si una cadena probablemente contiene expresiones o no.
+ */
+expresion.contieneExpresion=function(obj) {
+    return typeof obj==="string"&&obj.trim().length>2&&/\{.+?\}/.test(obj);
+};
+
 expresion.variablesGlobales={};
 expresion.funcionesGlobales={};
 

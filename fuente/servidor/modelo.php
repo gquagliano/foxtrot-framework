@@ -130,7 +130,7 @@ class modelo {
         //@indice unico
         //@modelo *
         //@relacion *
-        //@columa *
+        //@columna *
         //@predeterminado *
         //@requerido
         //@tamano
@@ -145,7 +145,7 @@ class modelo {
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
 
-            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columa|predeterminado|requerido|tamano|etiqueta)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
 
                 foreach($coincidencias[1] as $i=>$etiqueta) {

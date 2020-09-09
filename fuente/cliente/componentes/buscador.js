@@ -38,13 +38,18 @@ var componenteBuscador=function() {
                 etiqueta:"Texto de relleno",
                 adaptativa:false
             },
-            valor:{
+            propiedadValor:{
                 etiqueta:"Propiedad valor",
                 adaptativa:false
             },
-            etiqueta:{
+            propiedadEtiqueta:{
                 etiqueta:"Propiedad a mostrar",
                 adaptativa:false
+            },
+            valor:{
+                etiqueta:"Valor inicial",
+                adaptativa:false,
+                ayuda:"Valor del item a seleccionar por defecto, realizando la búsqueda correspondiente al cargar la vista. Puede contener expresiones."
             }
         },
         "Eventos":{
@@ -134,7 +139,7 @@ var componenteBuscador=function() {
 
                 t.resultados=resultado;
 
-                if(t.seleccionarPrimerElemento) {
+                if(t.seleccionarPrimerElemento||valor) { //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
                     if(resultado.length) t.establecerValor(0);
                     return;
                 }
@@ -183,7 +188,7 @@ var componenteBuscador=function() {
         var valor=this.propiedad(propiedad);
 
         //Predeterminados
-        if(!valor) valor={valor:"id",etiqueta:"titulo"}[propiedad];
+        if(!valor) valor={propiedadValor:"id",propiedadEtiqueta:"titulo"}[propiedad];
 
         //Expresión
         if(expresion.contieneExpresion(valor)) return ui.evaluarExpresion(valor,obj);
@@ -218,7 +223,7 @@ var componenteBuscador=function() {
             };
 
         this.resultados.forEach(function(item,indice) {
-            var etiqueta=obtenerValorItem("etiqueta",item);
+            var etiqueta=obtenerValorItem("propiedadEtiqueta",item);
 
             t.elementoResultados.anexar(
                 document.crear("<a href='#'>")
@@ -237,8 +242,8 @@ var componenteBuscador=function() {
     this.establecerValor=function(indice) {
         this.item=this.resultados[indice];
 
-        this.valorActual=obtenerValorItem("valor",this.item);
-        this.etiquetaActual=obtenerValorItem("etiqueta",this.item);
+        this.valorActual=obtenerValorItem("propiedadValor",this.item);
+        this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
 
         this.campo.valor(this.etiquetaActual);
 
@@ -294,9 +299,21 @@ var componenteBuscador=function() {
                 this.campo.removerAtributo("disabled");
             }
             return this;
-        }
+        }        
+        
+        if(propiedad=="valor") return this; //No se asigna al campo realmente
 
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+
+    /**
+     * Evento Listo.
+     * @returns {componente}
+     */
+    this.listo=function() {
+        var valor=ui.evaluarExpresion(this.propiedad("valor"));
+        if(valor) this.valor(valor);
         return this;
     };
 

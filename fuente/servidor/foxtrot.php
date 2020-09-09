@@ -110,6 +110,11 @@ class foxtrot {
         //Modelo de datos (importar completo)
         $archivos=glob(_modeloAplicacion.'*.php');
         foreach($archivos as $archivo) include($archivo);
+
+        //Controladores privados (importar completo)
+        $archivos=glob(_controladoresServidorAplicacion.'*.php');
+        foreach($archivos as $archivo)
+            if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
         
         //Si la aplicación no definió un enrutador en su configuración, utilizar el predeterminado
         if(!self::$enrutador&&!configuracion::$enrutador) {

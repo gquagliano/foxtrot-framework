@@ -35,7 +35,7 @@ var servidor=new function() {
             error:null,
             listo:null,
             parametros:null,
-            abortar:true,
+            abortar:false,
             foxtrot:null,
             precarga:true
         },opciones);

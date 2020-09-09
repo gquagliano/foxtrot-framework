@@ -27,6 +27,7 @@ class modelo {
     protected $bd;
     protected $resultado;
 
+    protected $nombreModelo;
     protected $nombre;
     protected $tipoEntidad;
     protected $campos;
@@ -59,7 +60,8 @@ class modelo {
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
         
         $nombre=get_called_class();
-        if(!$this->nombre) $this->nombre=substr($nombre,strrpos($nombre,'\\')+1);
+        $this->nombreModelo=substr($nombre,strrpos($nombre,'\\')+1);
+        if(!$this->nombre) $this->nombre=$this->nombreModelo;
 
         $this->cargarEstructura();
     }
@@ -668,7 +670,7 @@ class modelo {
     /**
      * Genera las relaciones automáticas a partir de los campos relacionales.
      */
-    public function prepararRelaciones(&$alias) {
+    public function prepararRelaciones(&$alias,$continuar=true) {
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional') {
                 $obj=modelo::fabricarModelo($campo->modelo,$this->bd);
@@ -693,7 +695,11 @@ class modelo {
                 );
 
                 //Avanzar recursivamente
-                $obj->prepararRelaciones($alias);
+                if($continuar) {
+                    //Cuando el modelo esté relacionado a sí mismo, solo evaluar una vez
+                    if($campo->modelo==$this->nombreModelo) $continuar=false;
+                    $obj->prepararRelaciones($alias,$continuar);
+                }
             }
         }
 

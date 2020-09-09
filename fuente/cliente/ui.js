@@ -970,7 +970,8 @@ var ui=new function() {
             util:util,
             aplicacion:instanciaAplicacion,
             controlador:instanciaControladorPrincipal,
-            componentes:componentes
+            componentes:componentes,
+            parametros:this.obtenerParametros() //TODO Cache
         };
         if(instanciasControladores) instanciasControladores.forEach(function(nombre,obj) {
                 vars[nombre]=obj;

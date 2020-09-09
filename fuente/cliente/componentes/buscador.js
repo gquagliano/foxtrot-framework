@@ -131,7 +131,8 @@ var componenteBuscador=function() {
             obj={campo:this.nombre};
 
         if(texto) obj.buscar=texto;
-        else obj.valor=valor;
+        else if(valor) obj.valor=valor;
+        else return this;
         
         this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(resultado) {
                 t.buscando=false;
@@ -160,7 +161,7 @@ var componenteBuscador=function() {
         this.cerrarResultados();
         this.buscando=false;
 
-        if(typeof this.ajax!=="undefined") this.ajax.abortar();
+        if(typeof this.ajax!=="undefined"&&this.ajax!==null) this.ajax.abortar();
 
         ui.ocultarPrecarga("barra");
 

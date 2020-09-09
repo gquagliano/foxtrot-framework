@@ -1,0 +1,44 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+ 
+.buscador input {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAACD0lEQVRIidWUMWsTcRjGf+9dbKM2dusXsC4ucdC4qKnoGJGKayJuhRDQxWpaJNWYGgQrXLKoWDwHwYKoEVwctKFLo0PAQaR+Ah1qlyQmudchFy2a9K62ID5w8Ofl/zy/9zmOg/9d0msYn8iMYDZTIsSAfe74E8hLU9rWvDX75a8BidT0WRx9gBDq41lTkfOPrOxTPwDjj3DVJwghQZ+pOGMabAxpsDFkIMcRngN7RHUhkZwa31SD+ERmRMzmCkII0Uu2lbvVy5BIpicRuQl8a37fMfr4buarvwZmM9XdvF84gF3M5UUpAcMDg82UV4OfABFOATiid7xMauocgGrH4wsA7AWotwffe5kCwda7DolR/wBFvS531ajt6vl5bwwQPgPsNloHPU3q3hFW/AOQEoAjesHLJOhF9/TCN8CUtgWsoZxOJNOT/QznkukrQAxYNaVd9F5mneKp6TOiugAYopTU1Llaa6ACEDRaEXfzWOe2XrULueubAgAkklPjCPPAcB/PKuhtkGtuxIxdyGb6AczfB9VK+eP+AyfuBwJOXSBE52kKfBDhnilO/GFh9lU4cqwbOhaORKW6vPjGVwO/WvfLcJMkb1vZy54N/KpaKS+FDx2tI3LSHR0JH47urC4vvt4WgF/IlgB+IMYGXt+yi7k8qr/evzq17nHLDbqqVspL4UhUQN7ahRsz25X77/UDZGq+RAQtTIsAAAAASUVORK5CYII=");
+    background-repeat: no-repeat;
+    background-position: center right .5rem;
+    background-size: 18px;
+}
+.buscador .resultados-busqueda {
+    position: absolute;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    z-index: 999999;
+    border: 1px solid #e8ebf1;
+    width: auto;
+    border-radius: 2px;
+    padding: 5px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15);
+    left: 0;
+    right: 0;
+    top: 100%;
+}
+.buscador .resultados-busqueda>* {
+    display: block;
+    padding: 5px 10px;
+    color: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color .2s,color .2s;
+}
+.buscador .resultados-busqueda .sin-datos {
+    color: #c0c0c0;
+    text-align: center;
+}
+.buscador .resultados-busqueda>.activo {
+    background-color: #e8ebf1;
+}

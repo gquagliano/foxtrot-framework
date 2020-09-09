@@ -28,6 +28,16 @@ Doble click iniciará la edición de texto. Presioná ESC para finalizar la edic
 
 #### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
+Al modificar el valor del campo, invocará el evento **Buscar**, el cual puede ser del lado del servidor o del cliente.
+
+En el caso de métodos de servidor, recibirán un objeto con las propiedades `buscar` y `componente` (nombre del mismo) como primer argumento. En el caso de métodos de cliente, recibirán los parámetros normales de un evento (instancia del componente, objeto del evento), donde el segundo parámetro tendrá la propiedad adicional `buscar`.
+
+El método debe devolver un listado (array) de objetos.
+
+El campo mostrará las etiquetas de acuerdo a la propiedad **Propiedad a mostrar** (puede ser el nombre de una propiedad o una expresión) y devolverá como valor la propiedad establecida en **Propiedad valor** del item seleccionado. Por defecto, la propiedad a mostrar es `titulo` y la propiedad valor `id`. Al establecer el valor del campo, debe especificarse la propiedad valor.
+
+Cuando sea necesario obtener un item específico (por ejemplo, cuando se establece el valor del campo), la invocación será la misma pero incluyendo la propiedad `valor` (en lugar de `buscar`) y se establecerá como valor del campo el primer elemento del resultado.
+
 #### ![](img/iconos/campo.png) Campo (texto, texto multilínea, numérico, contraseña)
 
 #### ![](img/iconos/checkbox.png) Checkbox (campo de opción única o múltiple)

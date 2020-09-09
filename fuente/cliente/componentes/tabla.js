@@ -116,12 +116,13 @@ var componenteTabla=function() {
      * @returns {Componente}
      */
     this.mostrarMensajeSinDatos=function() {
-        var texto=this.propiedad(null,"vacia"),
-            cantidadColumnas=this.elemento.querySelectorAll("thead th").length,
-            tr=document.crear("tr");
+        var texto=this.propiedad(null,"vacia");
+        if(!texto) return this;
 
-        tr.agregarClase("autogenerado fila-sin-datos")
-            .establecerHtml("<td colspan='"+cantidadColumnas+"'>"+texto+"</td>");
+        var cantidadColumnas=this.elemento.querySelectorAll("thead th").length,
+            tr=document.crear("tr")
+                .agregarClase("autogenerado fila-sin-datos")
+                .establecerHtml("<td colspan='"+cantidadColumnas+"'>"+texto+"</td>");
 
         this.contenedor.anexar(tr);
 
@@ -240,6 +241,36 @@ var componenteTabla=function() {
     this.obtenerValores=function() {
         return;
         //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
+    };
+
+    /**
+     * Agrega una nueva fila.
+     * @param {*} obj - Elemento a insertar.
+     * @returns {componente}
+     */
+    this.agregarFila=function(obj) {
+        if(!util.esArray(this.datos)) this.datos=[];
+
+        //Preservar estado actual
+        this.datos=this.obtenerDatosActualizados();
+        
+        this.datos.push(obj);
+        this.actualizar();
+        return this;
+    };
+
+    /**
+     * Remueve una fila dado su índice.
+     * @param {number} indice - Número de fila (basado en 0).
+     * @returns {componente}
+     */
+    this.removerFila=function(indice) {
+        //Preservar estado actual
+        this.datos=this.obtenerDatosActualizados();
+
+        this.datos.splice(indice,1);
+        this.actualizar();
+        return this;
     };
 };
 

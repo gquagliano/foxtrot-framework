@@ -94,10 +94,11 @@ var componenteBucle=function() {
      * @returns {Componente}
      */
     this.mostrarMensajeSinDatos=function() {
-        var texto=this.propiedad(null,"mensajeVacio")
-            div=document.crear("tr");
+        var texto=this.propiedad(null,"mensajeVacio");
+        if(!texto) return this;
 
-        div.agregarClase("autogenerado item-sin-datos")
+        var div=document.crear("div")
+            .agregarClase("autogenerado item-sin-datos")
             .establecerHtml(texto);
 
         this.contenedor.anexar(div);
@@ -172,8 +173,8 @@ var componenteBucle=function() {
             });
         };
 
-        this.obtenerHijos().forEach(function(hijo) {
-            if(!hijo.autogenerado) return;
+        this.itemsAutogenerados.forEach(function(hijo) {
+            //if(!hijo.autogenerado) return;
             if(resultado.length<=hijo.indice) resultado[hijo.indice]={};
             
             //Dentro de cada item, buscar recursivamente todos los componentes relacionados con una propiedad
@@ -190,6 +191,36 @@ var componenteBucle=function() {
     this.obtenerValores=function() {
         return;
         //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
+    };
+
+    /**
+     * Agrega un nuevo elemento.
+     * @param {*} obj - Elemento a insertar.
+     * @returns {componente}
+     */
+    this.agregarElemento=function(obj) {
+        if(!util.esArray(this.datos)) this.datos=[];
+
+        //Preservar estado actual
+        this.datos=this.obtenerDatosActualizados();
+
+        this.datos.push(obj);
+        this.actualizar();
+        return this;
+    };
+
+    /**
+     * Remueve un elemento dado su índice.
+     * @param {number} indice - Número de fila (basado en 0).
+     * @returns {componente}
+     */
+    this.removerElemento=function(indice) {
+        //Preservar estado actual
+        this.datos=this.obtenerDatosActualizados();
+
+        this.datos.splice(indice,1);
+        this.actualizar();
+        return this;
     };
 };
 

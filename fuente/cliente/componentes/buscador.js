@@ -14,6 +14,7 @@ var componenteBuscador=function() {
     this.componente="buscador";
 
     this.elementoResultados=null;
+    this.indiceSeleccionado=-1;
 
     this.seleccionarPrimerElemento=false;
     this.buscando=false;
@@ -94,11 +95,31 @@ var componenteBuscador=function() {
             if(ev.which==27&&t.buscando) { //ESC
                 ev.preventDefault();
                 t.abortarBusqueda();
+            } if(t.resultados.length) {
+                if(ev.which==38) { //Arriba
+                    t.indiceSeleccionado--;
+                    if(t.indiceSeleccionado<0) t.indiceSeleccionado=t.resultados.length-1;
+                    ev.preventDefault();
+                } else if(ev.which==40) { //Abajo
+                    t.indiceSeleccionado++;
+                    if(t.indiceSeleccionado>=t.resultados.length) t.indiceSeleccionado=0;
+                    ev.preventDefault();
+                }
+                var e=t.elementoResultados.querySelector(".activo");
+                if(e) e.removerClase("activo");
+                e=t.elementoResultados.querySelector("a:nth-child("+(t.indiceSeleccionado+1)+")"); //nth-child es base 1
+                if(e) e.agregarClase("activo");
             }
         });
 
         this.campo.evento("paste input",function(ev) {
-            t.buscar(t.campo.valor());
+            var valor=t.campo.valor();
+            if(valor=="") {
+                //Al borrar todo el texto, reestablecer
+                t.establecerValor(null);
+            } else {
+                t.buscar(valor);
+            }
         });
 
         this.elemento.evento("focusout",function(ev) {
@@ -121,11 +142,9 @@ var componenteBuscador=function() {
     this.buscar=function(texto,valor) {
         this.abortarBusqueda();
 
-        if(!this.buscando) {
-            this.buscando=true;
-            ui.mostrarPrecarga("barra");
-        }
+        this.buscando=true;
         this.seleccionarPrimerElemento=false;
+        ui.mostrarPrecarga("barra");
 
         var t=this,
             obj={campo:this.nombre};
@@ -176,6 +195,7 @@ var componenteBuscador=function() {
         if(this.elementoResultados) this.elementoResultados.remover();
         this.elementoResultados=null;
         this.resultados=[];
+        this.indiceSeleccionado=-1;
         return this;
     };
 
@@ -233,22 +253,42 @@ var componenteBuscador=function() {
                     .evento("mousedown",clickItem)
             );
         });
+
+        //Abrir hacia arriba si no entra en la pantalla
+        var pos=this.elementoResultados.posicionAbsoluta(),
+            alto=this.elementoResultados.alto(),
+            altoVentana=window.alto(),
+            c="desplegar-arriba";
+        if(pos.y+alto+15>altoVentana) {
+            this.elemento.agregarClase(c);
+        } else {
+            this.elemento.removerClase(c);
+        }
     };
 
     /**
      * Establece el valor entre los resultados de la búsqueda.
-     * @param {number} indice - Índice del elemento a seleccionar.
+     * @param {number|null} indice - Índice del elemento a seleccionar, o null para reestablecer el valor.
      * @returns {Componente}
      */
     this.establecerValor=function(indice) {
-        this.item=this.resultados[indice];
+        if(indice===null) {
+            this.item=null;
+            this.valorActual=null;
+            this.etiquetaActual="";
+        } else {
+            this.item=this.resultados[indice];
 
-        this.valorActual=obtenerValorItem("propiedadValor",this.item);
-        this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
+            this.valorActual=obtenerValorItem("propiedadValor",this.item);
+            this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
+        }
 
         this.campo.valor(this.etiquetaActual);
 
         this.cerrarResultados();
+
+        //Evento
+        this.procesarEvento("modificacion","modificacion");
 
         return this;
     };
@@ -259,26 +299,36 @@ var componenteBuscador=function() {
      */
     this.intro=function(ev) {
         if(!ui.enModoEdicion()) {
+            var detener=false;
+
             if(this.buscando) {
                 //Si está buscando, seleccionar el primer elemento en cuanto se complete la búsqueda
                 this.seleccionarPrimerElemento=true;
+                detener=true;
             } else if(this.resultados.length) {
-                //Si está mostrando los resultados de búsqueda, seleccionar el primer elemento
-                //TODO Navegación por teclado
-                this.establecerValor(0);
-            } else {
-                //Enviar formulario con Enter
-                var manejador=this.propiedad("intro");
-                //Si hay un evento definido por el usuario, dejar que sea procesado
-                if(!manejador) {
-                    //Detener evento, aunque sea multilínea
-                    ev.stopPropagation();
-                    return true;
-                }
+                //Si está mostrando los resultados de búsqueda, seleccionar el elemento activo
+                var indice=this.indiceSeleccionado<0?0:this.indiceSeleccionado; //si no se presionó arriba/abajo, indiceSeleccionado=-1, seleccionar el primer elemento
+                this.establecerValor(indice);                
+                detener=true;
+            }
+            
+            if(detener) {
+                ev.stopPropagation();
+                return true;
             }
         }
 
         return this.introComponente(evento);
+    };
+
+    /**
+     * Evento Modificacion.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.modificacion=function(ev) {
+        //Detener evento
+        ev.stopPropagation();
+        return true;
     };
 
     /**
@@ -326,6 +376,8 @@ var componenteBuscador=function() {
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
             return this.valorActual;
+        } else if(!valor) {
+            this.establecerValor(null);
         } else {
             this.buscar(null,valor);
         }

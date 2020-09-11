@@ -1306,6 +1306,8 @@ var componente=new function() {
         if(!elemento) return this;
 
         if(!ui.enModoEdicion()) {
+            elemento.removerEventos();
+
             //Eventos estándar
             var asignaciones={
                 click:{},

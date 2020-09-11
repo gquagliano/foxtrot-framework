@@ -91,24 +91,16 @@ var componenteBuscador=function() {
     this.establecerEventos=function() {
         var t=this;
 
+        this.campo.removerEventos();
+
         this.campo.evento("keydown",function(ev) {
             if(ev.which==27&&t.buscando) { //ESC
                 ev.preventDefault();
                 t.abortarBusqueda();
-            } if(t.resultados.length) {
-                if(ev.which==38) { //Arriba
-                    t.indiceSeleccionado--;
-                    if(t.indiceSeleccionado<0) t.indiceSeleccionado=t.resultados.length-1;
-                    ev.preventDefault();
-                } else if(ev.which==40) { //Abajo
-                    t.indiceSeleccionado++;
-                    if(t.indiceSeleccionado>=t.resultados.length) t.indiceSeleccionado=0;
-                    ev.preventDefault();
-                }
-                var e=t.elementoResultados.querySelector(".activo");
-                if(e) e.removerClase("activo");
-                e=t.elementoResultados.querySelector("a:nth-child("+(t.indiceSeleccionado+1)+")"); //nth-child es base 1
-                if(e) e.agregarClase("activo");
+            } else if(ev.which==13) { //Intro
+                t.procesarIntro(ev);
+            } else if(t.resultados.length&&(ev.which==38||ev.which==40)) { //Arriba/Abajo
+                t.moverSeleccion(ev);
             }
         });
 
@@ -129,7 +121,7 @@ var componenteBuscador=function() {
             t.campo.valor(t.etiquetaActual);
         });
 
-        this.establecerEventosComponente();
+        //this.establecerEventosComponente();
         return this;
     };
 
@@ -294,31 +286,57 @@ var componenteBuscador=function() {
     };
 
     /**
-     * Evento Intro.
+     * Mueve la selección arriba/abajo.
+     * @param {Event} ev 
+     */
+    this.moverSeleccion=function(ev) {
+        ev.preventDefault();
+
+        if(ev.which==38) { //Arriba
+            this.indiceSeleccionado--;
+            if(this.indiceSeleccionado<0) this.indiceSeleccionado=this.resultados.length-1;
+        } else if(ev.which==40) { //Abajo
+            this.indiceSeleccionado++;
+            if(this.indiceSeleccionado>=this.resultados.length) this.indiceSeleccionado=0;
+        }     
+        
+        var e=this.elementoResultados.querySelector(".activo");
+        if(e) e.removerClase("activo");
+        e=this.elementoResultados.querySelector("a:nth-child("+(this.indiceSeleccionado+1)+")"); //nth-child es base 1
+        if(e) e.agregarClase("activo");
+    };
+
+    /**
+     * Procesa la tecla Intro (distinto al evento Intro).
      * @returns {Componente}
      */
-    this.intro=function(ev) {
+    this.procesarIntro=function(ev) {
         if(!ui.enModoEdicion()) {
-            var detener=false;
-
             if(this.buscando) {
                 //Si está buscando, seleccionar el primer elemento en cuanto se complete la búsqueda
                 this.seleccionarPrimerElemento=true;
-                detener=true;
-            } else if(this.resultados.length) {
-                //Si está mostrando los resultados de búsqueda, seleccionar el elemento activo
-                var indice=this.indiceSeleccionado<0?0:this.indiceSeleccionado; //si no se presionó arriba/abajo, indiceSeleccionado=-1, seleccionar el primer elemento
-                this.establecerValor(indice);                
-                detener=true;
+                ev.stopPropagation();
+                return;
             }
             
-            if(detener) {
-                ev.stopPropagation();
-                return true;
+            if(this.resultados.length) {
+                //Si está mostrando los resultados de búsqueda, seleccionar el elemento activo
+                var indice=this.indiceSeleccionado<0?0:this.indiceSeleccionado; //si no se presionó arriba/abajo, indiceSeleccionado=-1, seleccionar el primer elemento
+                this.establecerValor(indice);     
+                ev.stopPropagation();           
+                return;
             }
-        }
 
-        return this.introComponente(evento);
+            //Si no hay un evento definido por el usuario, enviar el formulario
+            var manejador=this.propiedad(null,"intro");
+            if(!manejador) {
+                this.enviarFormulario();
+                return;
+            }
+
+            //Caso contrario, desencadenar el evento intro estándar
+            this.procesarEvento("intro","intro","intro",ev);
+        }
     };
 
     /**

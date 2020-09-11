@@ -1314,7 +1314,7 @@ var componente=new function() {
                     propiedad:"menuContextual"
                 },
                 change:{
-                    metodo:"change",
+                    metodo:"modificacion",
                     propiedad:"modificacion"
                 }
             };
@@ -1378,14 +1378,16 @@ var componente=new function() {
      * Procesa un evento.
      * @param {string} nombre - Nombre del evento.
      * @param {string} propiedad - Nombre de la propiedad.
-     * @param {string} metodo - Método interno del componente.
-     * @param {Event} evento - Objeto nativo del evento.
+     * @param {string} [metodo] - Método interno del componente.
+     * @param {Event} [evento] - Objeto nativo del evento.
      * @param {*} [parametros] - Parámetros a pasar a la función.
      * @param {function} [retorno] - Función de retorno.
      * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
      * @returns {(ajax|undefined)}
      */
     this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso) {
+        if(typeof metodo==="undefined") metodo=null;
+        if(typeof evento==="undefined") evento=null;
         if(typeof parametros==="undefined") parametros=null;
         if(typeof retorno==="undefined") retorno=null;
         if(typeof silencioso==="undefined") silencioso=false;

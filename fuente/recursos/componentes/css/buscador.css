@@ -26,6 +26,10 @@
     right: 0;
     top: 100%;
 }
+.buscador.desplegar-arriba .resultados-busqueda {
+    top: auto;
+    bottom: 100%;
+}
 .buscador .resultados-busqueda>* {
     display: block;
     padding: 5px 10px;

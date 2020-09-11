@@ -26,6 +26,17 @@ Doble click iniciará la edición de texto. Presioná ESC para finalizar la edic
 
 #### ![](img/iconos/bucle.png) Bucle (estructura de control)
 
+Repetirá el contenido del componente por cada elemento del origen de datos.
+
+Cada elemento autogenerado, al igual que toda su descendencia, tendrá asignado como origen de datos el elemento correspondiente de los datos del bucle. Este objeto contará con el método `obtenerIndice()` que devolverá el índice del elemento. Esto es especialmente útil para procesar eventos en componentes, por ejemplo:
+
+    //Dentro del bucle se ha insertado un botón "Eliminar" con el evento Click = clickEliminar
+    this.clickEliminar=function(comp) {
+        var datos=comp.obtenerDatos(),
+            indice=datos.obtenerIndice();
+        componentes.bucle.removerFila(indice);
+    };
+
 #### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
 Al modificar el valor del campo, invocará el evento **Buscar**, el cual puede ser del lado del servidor o del cliente.
@@ -133,6 +144,15 @@ Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder vis
 #### ![](img/iconos/tabla.png) Tabla
 
 Una tabla de datos. Recibe como hijos componentes Fila de tabla. Cuando se asigne un origen de datos, cada una de las filas se duplicará por cada elemento del mismo.
+
+Cada fila, al igual que toda su descendencia, tendrá asignado como origen de datos el elemento correspondiente de los datos de la tabla. Este objeto contará con el método `obtenerIndice()` que devolverá el índice del elemento. Esto es especialmente útil para procesar eventos en componentes dentro de la fila, por ejemplo:
+
+    //Dentro de la fila se ha insertado un botón "Eliminar" con el evento Click = clickEliminar
+    this.clickEliminar=function(comp) {
+        var datos=comp.obtenerDatos(),
+            indice=datos.obtenerIndice();
+        componentes.tabla.removerFila(indice);
+    };
 
 *Nota:* Los encabezados se definen en las columnas.
 

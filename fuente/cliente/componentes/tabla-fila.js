@@ -48,6 +48,13 @@ var componenteFilaTabla=function() {
     this.generarFila=function(padre,obj,indice) {
         var nuevo=this.clonar(padre,true);
 
+        //Agregar método al oriden de datos
+        obj.obtenerIndice=(function(i) {
+            return function() {
+                return i;
+            };
+        })(indice);
+
         nuevo.establecerDatos(obj);
         nuevo.indice=indice;
         nuevo.autogenerado=true;

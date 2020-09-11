@@ -118,6 +118,13 @@ var componenteBucle=function() {
 
         this.itemsAutogenerados.push(nuevo);
 
+        //Agregar método al oriden de datos
+        obj.obtenerIndice=(function(i) {
+            return function() {
+                return i;
+            };
+        })(indice);
+
         nuevo.establecerDatos(obj);
         nuevo.indice=indice;
         nuevo.autogenerado=true;

@@ -397,6 +397,11 @@ body.trabajando #foxtrot-cargando {
     position: relative;
     transition: outline .1s;
 }
+.foxtrot-modo-edicion .componente input,
+.foxtrot-modo-edicion .componente select {
+    /*Previniendo el foco evitamos problemas relacionados con algunos tipos de campo, por ejemplo que en WebKit cuando tiene foco un campo de contraseña no funciona el drag&drop*/
+    pointer-events: none;
+}
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor {
     outline: dashed 1px rgba(0, 0, 0, 0.2);
     min-height: 1em;

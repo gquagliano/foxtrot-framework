@@ -43,6 +43,10 @@ body.cordova {
     border-radius: 2px;
     padding: 30px;
 }
+.cuerpo-formulario,
+.formulario-tabla {
+    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
 .cuerpo-formulario>.row {
     margin-bottom: 1rem;
 }

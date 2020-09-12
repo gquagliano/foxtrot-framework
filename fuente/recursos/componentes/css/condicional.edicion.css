@@ -1,0 +1,11 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+ 
+.foxtrot-modo-edicion.foxtrot-bordes .contenedor.condicional {
+    outline: dashed 1px rgba(255,0,0,0.2);
+    display: block !important;
+}

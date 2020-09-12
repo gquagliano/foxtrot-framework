@@ -264,6 +264,7 @@ li.foxtrot-menu-separador::after {
 /* Cordova */
 
 .cordova * {
+    user-select: none;
     backface-visibility: hidden;
     perspective: 100px;
 }

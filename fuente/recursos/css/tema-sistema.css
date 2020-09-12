@@ -62,25 +62,57 @@ label {
     text-overflow: ellipsis;
     font-weight: inherit;
 }
+label.custom-control-label {
+    margin: 0;
+    overflow: visible;
+}
 .form-control,
 .custom-select,
-.custom-file,.custom-file-label,.custom-file-input {
+.custom-file-label {
     height: calc(1.1rem + .75rem + 2px);
     padding: .375rem .5rem;
     color: inherit;
     line-height: 1.1;
     margin: 0;
 }
+.custom-file,.custom-file-input {
+    height: calc(1.1rem + .75rem + 2px);  
+}
 .custom-file-label::after {
     height: calc(1.1rem + .75rem + 2px);
     line-height: 1.1;
     content: "Seleccionar...";
+}
+.custom-switch {
+    padding-left: 2.45rem;
+}
+.custom-switch * {
+    cursor: pointer;
+}
+.custom-switch .custom-control-label::before {
+    left: -2.45rem;
+    width: 2rem;
+    height: 1.3rem;
+    border-radius: 3rem;
+    top: .1rem;
+    border-color: #bcc4cc;
+}
+.custom-switch .custom-control-label::after {
+    top: calc(3px);
+    left: calc(-2.45rem + 2px);
+    width: calc(1.3rem - 4px);
+    height: calc(1.3rem - 4px);
+    background-color: #5e6c7b;
+    border-radius: 100%;
 }
 .custom-select {
     padding: 0 2.1rem 0 .5rem;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1kb3duIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=");
     background-size: 1.1em;
     background-position-x: calc(100% - .4em);
+}
+.btn,.btn * {
+    cursor: pointer;
 }
 .btn {
     text-transform: uppercase;
@@ -91,7 +123,8 @@ label {
 .form-control:focus,
 .custom-select:focus,
 .btn:focus,
-.custom-file-input:focus~.custom-file-label {
+.custom-file-input:focus~.custom-file-label,
+.custom-control-input:focus~.custom-control-label::before {
     box-shadow: none !important;
 }
 
@@ -174,6 +207,10 @@ body.escritorio .btn-secondary:hover,
     color: #3b3e40;
     background-color: #e8e8e8;
     border-color: #e8e8e8;
+}
+.custom-control-input:checked~.custom-control-label::before {
+    border-color: #337ab7;
+    background-color: #337ab7;
 }
 
 /*

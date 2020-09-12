@@ -31,9 +31,13 @@ Listo.
 
 1- Podés utilizar el asistente para crear una nueva aplicación.
 
-    php asistente -s=crear-apl -a=nombre -d=dominio
+    php asistente crear-apl -a=nombre -d="dominio"
 
 Ver [Scripts y asistentes](scripts.md) para más información sobre los parámetros.
+
+### Vista de inicio
+
+La vista de inicio será `/inicio/`. Ver instrucciones para el acceso al editor a continuación.
 
 ### Configurar la aplicación de ejemplo
 

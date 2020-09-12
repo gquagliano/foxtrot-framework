@@ -226,7 +226,7 @@ var componente=new function() {
                 evento:true
             },
             modificacion:{
-                etiqueta:"Modificacion",
+                etiqueta:"Modificación",
                 adaptativa:false,
                 evento:true
             }
@@ -1432,6 +1432,13 @@ var componente=new function() {
                 evento[nombre]=valor;
             });
         }
+        
+        //Al servidor, a menos que el componente haya especificado otros parámetros, se enviará un objeto con información del evento
+        var parametrosServidor=parametros;
+        if(!parametrosServidor) parametrosServidor={};
+        parametrosServidor.componente=this.nombre;
+        parametrosServidor.evento=nombre;
+        parametrosServidor.vista=this.nombreVista;
 
         //Manejador definido por el usuario
         var manejador=this.procesarCadenaEvento(propiedad,evento);
@@ -1452,11 +1459,11 @@ var componente=new function() {
             if(manejador.substring(0,9)=="servidor:") {
                 //Método del controlador de servidor
 
-                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });
+                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
 
                 ajax=ctl.servidor[manejador.substring(9)](function(respuesta) {
                         if(retorno) retorno(respuesta);
-                    },parametros);
+                    },parametrosServidor);
             } else if(manejador.substring(0,13)=="servidor-apl:") {
                 //Método del controlador de servidor de la aplicación
 
@@ -1464,7 +1471,7 @@ var componente=new function() {
 
                 ajax=ui.aplicacion().servidor[manejador.substring(13)](function(respuesta) {
                         if(retorno) retorno(respuesta);
-                    },parametros);
+                    },parametrosServidor);
             } else if(manejador.substring(0,3)=="ir:") {
                 //Navegación
                 ui.irA(manejador.substring(3));
@@ -1476,7 +1483,8 @@ var componente=new function() {
                 ui.abrirVentana(manejador.substring(6));
             } else if(manejador.substring(0,4)=="apl:") {
                 //Propiedad del controlador de aplicacion
-                ui.aplicacion()[manejador.substring(4)](this,evento);
+                var obj=ui.aplicacion();
+                obj[manejador.substring(4)].call(obj,this,evento);
             } else if(manejador.indexOf(":")>0) {
                 //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                 //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
@@ -1484,13 +1492,14 @@ var componente=new function() {
                 
                 //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
                 var nombre=manejador.substring(0,manejador.indexOf(":")),
-                    valor=manejador.substring(manejador.indexOf(":")+1);
-                var resultado=componentes[nombre].eventoExterno(valor,evento);
+                    valor=manejador.substring(manejador.indexOf(":")+1),
+                    obj=componentes[nombre];
+                var resultado=obj.eventoExterno.call(obj,valor,evento);
 
                 if(retorno) retorno(resultado);
             } else {
                 //Propiedad del controlador
-                var resultado=ctl[manejador](this,evento);
+                var resultado=ctl[manejador].call(ctl,this,evento);
                 if(retorno) retorno(resultado);
             }
             //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones

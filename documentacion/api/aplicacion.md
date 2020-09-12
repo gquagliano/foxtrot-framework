@@ -38,3 +38,7 @@ Mientras que `inicializar` es solo un evento, no necesita invocar un método del
 9. Al modificarse la URL, el método `navegación(nombreVista)` es ejecutado en el controlador de la vista, en el controlador de la aplicación y en los componentes, en ese orden, cuando existan. Al presionarse el botón atrás del dispositivo, se invocarán los métodos `volver()`.
 
 10. En caso de error en la comunicación cliente-servidor, se invocará `errorServidor()` el controlador de la vista y en el controlador de la aplicación.
+
+*Eventos (cliente):*
+
+Ver [Controladores de cliente (JS)](cliente-js.md).

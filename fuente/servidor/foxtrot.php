@@ -62,6 +62,9 @@ class foxtrot {
         define('_raiz',realpath(__DIR__.'/..').'/');
         define('_servidor',_raiz.'servidor/');
         define('_aplicaciones',_raiz.'aplicaciones/');
+        define('_componentes',_servidor.'componentes/');
+        define('_temporales',_raiz.'temp/');
+        define('_temporalesPrivados',_temporales.'temp-privado/');
     }
 
     protected static function definirConstantesAplicacion() {
@@ -88,6 +91,7 @@ class foxtrot {
         include(_servidor.'enrutadorAplicacion.php');
         include(_servidor.'entidad.php');
         include(_servidor.'modelo.php');
+        include(_servidor.'componente.php');
 
         //TODO Hacer configurable. En teoría, debería poderse implementar cualquier motor de base de datos o repositorio (archivo, API) implementando clases compatibles con bd
         include(_servidor.'mysql.php');
@@ -198,6 +202,7 @@ class foxtrot {
         $recurso=self::$enrutador->obtenerRecurso();
         $foxtrot=self::$enrutador->obtenerFoxtrot();
         $redir=self::$enrutador->obtenerRedireccionamiento();
+        $componente=self::$enrutador->obtenerComponente();
 
         $html=null;
         $res=null;
@@ -295,9 +300,22 @@ class foxtrot {
         } elseif(self::$instanciaAplicacionPublico) {
             //Si no se definió un controlador, notificaremos la solicitud a la clase pública de la aplicación
             $obj=self::$instanciaAplicacionPublico;
-        }       
+        }
+
+        if($componente) {
+            if(preg_match('/[^a-z0-9_-]/i',$componente)) self::error();
+
+            $ruta=_componentes.$componente.'.pub.php';
+            if(!file_exists($ruta)) self::error();
+
+            include($ruta);
+            $cls='\\componentes\\publico\\'.$componente;
+            $obj=new $cls;
+        }  
 
         if($metodo) {
+            if(preg_match('/[^a-z0-9_]/i',$metodo)) self::error();
+
             if(!$obj||!method_exists($obj,$metodo)) self::error();
             $res=call_user_func_array([$obj,$metodo],$params);
 

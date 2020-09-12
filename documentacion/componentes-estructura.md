@@ -18,7 +18,9 @@ Cada componente se define en una función JS que se registra en el framework med
 
 ### PHP
 
-Los componentes pueden ser preprocesados en el servidor. Esto significa que el backend interpretará y reemplazará el código del componente cada vez que se cargue la vista. Para ello, el componente debe definir una clase PHP y el framework se encargará de invocar sus métodos y reemplazar el código HTML. Lógicamente, este mecanismo estará disponible únicamente en aplicaciones implementadas del lado del servidor.
+Actualmente, cada componente puede implementar una clase cuyos métodos serán accesibles por HTTP. La clase puede tener cualquier nombre (aunque debería ser igual que el componente), en el espacio `\componentes\publico`, extendiendo `\componente` y en un archivo denominado `clase.pub.php` (donde `clase` es el nombre de la clase).
+
+En el futuro, cada componente también podrá contar con una clase privada que implemente métodos para que pueda ser preprocesado en el servidor. Esto significa que el backend interpretará y reemplazará el código del componente cada vez que se cargue la vista.
 
 ## Más información
 

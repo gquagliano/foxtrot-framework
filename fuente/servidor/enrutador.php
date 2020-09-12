@@ -24,6 +24,7 @@ class enrutador {
     protected $foxtrot=null;
     protected $redireccionar=null;
     protected $codigoRedireccion=null;
+    protected $componente=null;
 
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
@@ -81,11 +82,16 @@ class enrutador {
             return $this;
         }
 
+        //Acceso a componentes
+        $this->componente=$this->params->__o;
+
         //Acceso a controladores
         $this->controlador=$this->params->__c;
+
+        //Método de controlador/commponente
         $this->metodo=$this->params->__m;
 
-        if(!$this->params->__c&&!$this->params->__m) {
+        if(!$this->params->__c&&!$this->params->__o&&!$this->params->__m) {
             if($this->url=='') {
                 $this->vista='inicio';
             } elseif(preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias)) {
@@ -145,5 +151,9 @@ class enrutador {
             'ruta'=>$this->redireccionar,
             'codigo'=>$this->codigoRedireccion
         ];
+    }
+
+    public function obtenerComponente() {
+        return $this->componente;
     }
 }

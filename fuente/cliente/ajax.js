@@ -20,14 +20,15 @@ var ajax=function(param) {
         listo:null,
         error:null,
         siempre:null,
-        tiempo:5000,
+        progreso:null, //Recibirá el progreso de 0 a 1 como argumento
+        tiempo:60000,
         //Por defecto, siempre vamos a validar y procesar las respuestas como JSON, ya que es el lenguaje que hablará el framework
         json:true
     };
     param=Object.assign(predeterminados,param);
     var xhr=new XMLHttpRequest();
 
-    xhr.timeout=param.tiempo;
+    if(param.tiempo!==null) xhr.timeout=param.tiempo;
 
     this.obtenerXhr=function() {
         return xhr;
@@ -50,6 +51,19 @@ var ajax=function(param) {
             if(param.error) param.error.call(self,ev);
         }
         if(param.siempre) param.siempre.call(self,ev);
+    };
+
+    xhr.upload.onprogress=function(ev) {
+        if(!ev.lengthComputable) return;
+        if(param.progreso) param.progreso.call(self,ev.loaded/ev.total);
+    };
+
+    xhr.upload.onloadstart=function() {
+        if(param.progreso) param.progreso.call(self,0);
+    };
+
+    xhr.upload.onloadend=function() {
+        if(param.progreso) param.progreso.call(self,1);
     };
 
     xhr.onerror=function(ev) {

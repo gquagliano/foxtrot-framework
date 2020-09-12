@@ -82,7 +82,7 @@ var ajax=function(param) {
 
     if(cuerpo instanceof FormData) {
         //FormData se envia tal cual
-        contentType="multipart/form-data";
+        contentType=null;
     } else if(typeof cuerpo=="object"&&cuerpo!==null) {
         //Construir query string (si parametros es una cadena, enviar tal cual)
         var arr=[];

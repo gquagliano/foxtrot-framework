@@ -36,5 +36,6 @@ ui.registrarComponente("condicional",componenteCondicional,configComponente.clon
     descripcion:"Condicional",
     etiqueta:"Condicional",
     grupo:"Control",
-    icono:"condicional.png"
+    icono:"condicional.png",
+    ocultar:true
 }));

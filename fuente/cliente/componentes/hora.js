@@ -36,5 +36,6 @@ ui.registrarComponente("hora",componenteHora,configComponente.clonar({
     descripcion:"Campo de horario",
     etiqueta:"Hora",
     grupo:"Formulario",
-    icono:"hora.png"
+    icono:"hora.png",
+    ocultar:true
 }));

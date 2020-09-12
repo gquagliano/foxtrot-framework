@@ -36,5 +36,6 @@ ui.registrarComponente("navegacion",componenteNavegacion,configComponente.clonar
     descripcion:"Navegación o paginado",
     etiqueta:"Navegación",
     grupo:"Estructura",
-    icono:"navegacion.png"
+    icono:"navegacion.png",
+    ocultar:true
 }));

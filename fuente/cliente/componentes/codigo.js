@@ -36,5 +36,6 @@ ui.registrarComponente("codigo",componenteCodigo,configComponente.clonar({
     descripcion:"Código",
     etiqueta:"Código",
     grupo:"Control",
-    icono:"codigo.png"
+    icono:"codigo.png",
+    ocultar:true
 }));

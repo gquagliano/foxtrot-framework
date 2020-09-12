@@ -36,5 +36,6 @@ ui.registrarComponente("pestana",componentePestana,configComponente.clonar({
     descripcion:"Pestaña",
     etiqueta:"Pestaña",
     grupo:"Estructura",
-    icono:"pestana.png"
+    icono:"pestana.png",
+    ocultar:true
 }));

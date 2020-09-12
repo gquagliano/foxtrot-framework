@@ -36,5 +36,6 @@ ui.registrarComponente("deslizable",componenteDeslizable,configComponente.clonar
     descripcion:"Deslizable o carrusel",
     etiqueta:"Deslizable",
     grupo:"Estructura",
-    icono:"deslizable.png"
+    icono:"deslizable.png",
+    ocultar:true
 }));

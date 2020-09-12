@@ -101,6 +101,7 @@ var editor=new function() {
                                             //(al arrastrar, toma los estilos que pueda tener al momento de iniciar la operación de arraastre)
                         )
                         .metadato("componente",comp.config.nombre)
+                        .propiedad("disabled",comp.config.hasOwnProperty("ocultar"))
                     );
             }
         }

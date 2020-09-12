@@ -36,5 +36,6 @@ ui.registrarComponente("fecha",componenteFecha,configComponente.clonar({
     descripcion:"Campo de fecha o calendario",
     etiqueta:"Fecha",
     grupo:"Formulario",
-    icono:"fecha.png"
+    icono:"fecha.png",
+    ocultar:true
 }));

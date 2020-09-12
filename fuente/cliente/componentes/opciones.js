@@ -36,5 +36,6 @@ ui.registrarComponente("opciones",componenteGrupoOpciones,configComponente.clona
     descripcion:"Grupo de opciones",
     etiqueta:"Grupo",
     grupo:"Formulario",
-    icono:"opciones.png"
+    icono:"opciones.png",
+    ocultar:true
 }));

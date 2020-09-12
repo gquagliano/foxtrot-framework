@@ -36,5 +36,6 @@ ui.registrarComponente("alternar",componenteAlternar,configComponente.clonar({
     descripcion:"Campo de alternar",
     etiqueta:"Alternar",
     grupo:"Formulario",
-    icono:"alternar.png"
+    icono:"alternar.png",
+    ocultar:true
 }));

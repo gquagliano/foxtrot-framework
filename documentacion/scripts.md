@@ -84,7 +84,7 @@ Asistentes de creación de vistas y controladores.
 
 ##### Plantilla de aplicación en blanco
 
-    php asistente -s=crear-apl -a=nombre -d=dominio
+    php asistente crear-apl -a=nombre -d="dominio"
 
 El asistente creará una aplicación en blanco y configurará Foxtrot para que la misma se ejecute en el dominio especificado. Los archivos serán creados en `/desarrollo/aplicaciones/nombre/`.
 
@@ -94,7 +94,7 @@ Ver [Primeros pasos](primeros-pasos.md) para más información.
 
 ##### Plantilla de modelo de datos
 
-    php asistente -a=nombre_aplicacion -s=crear_modelo -m=nombre_modelo -e=nombre_entidad [-t=nombre_tabla]
+    php asistente crear-modelo -a=nombre_aplicacion -m=nombre_modelo -e=nombre_entidad [-t=nombre_tabla]
 
 `-t` Si se especifica, establecerá un nombre de tabla distinto al nombre del modelo (opcional).
 
@@ -106,7 +106,7 @@ El asistente creará las clases del repositorio y de la entidad, vacías, para c
 
 ##### Asistente de creación de ABMC
 
-    php asistente -a=nombre_aplicacion -s=abmc -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-s=singular]
+    php asistente abmc -a=nombre_aplicacion -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-s=singular]
 
 El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 

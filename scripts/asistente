@@ -18,25 +18,27 @@ define('_editor',__DIR__.'/../fuente/editor/');
 
 $opciones=obtenerArgumentos();
 
-if(!$opciones['s']) {
-    fwrite(STDERR,'El parámetro -s es requerido.'.PHP_EOL.PHP_EOL);
-    exit;
-}
-
 $asistentes=[
     'abmc'=>'abmc',
     'crear-modelo'=>'crearModelo',
     'crear-apl'=>'crearApl'
 ];
 
-$nombre=$opciones['s'];
-if(!array_key_exists($nombre,$asistentes)) {
-    fwrite(STDERR,'El parámetro -s es inválido.'.PHP_EOL.PHP_EOL);
+$asistente=null;
+foreach($asistentes as $nombre=>$clase) {
+    if($opciones[$nombre]) {
+        $asistente=$nombre;
+        break;
+    }
+}
+
+if(!$asistente) {
+    fwrite(STDERR,'Debe especificarse un asistente válido.'.PHP_EOL.PHP_EOL);
     exit;
 }
 
-$archivo=__DIR__.'/asistentes/'.$nombre.'.php';
-$clase=$asistentes[$nombre];
+$archivo=__DIR__.'/asistentes/'.$asistente.'.php';
+$clase=$asistentes[$asistente];
 
 include($archivo);
 (new $clase($opciones['a']))

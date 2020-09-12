@@ -216,13 +216,18 @@ function obtenerArgumentos() {
     //Por ejemplo getopt('a:') producirá una salida incorrecta para `-a=parametro -b=parametro`, tomando todas las letras `a` de `-b` como instancias de `-a`
     //A continuación extraemos sólo los parámetros que están precedidos por `-`
 
+    array_shift($argv); //el primer elemento es el nombre del script
+
     $parametros=[];
     foreach($argv as $arg) {
-        if(substr($arg,0,1)!='-') continue;
-        $arg=substr($arg,1);
-        $igual=strpos($arg,'=');
-        if($igual>0) {
-            $parametros[substr($arg,0,$igual)]=substr($arg,$igual+1);
+        if(substr($arg,0,1)=='-') {
+            $arg=substr($arg,1);
+            $igual=strpos($arg,'=');
+            if($igual>0) {
+                $parametros[substr($arg,0,$igual)]=substr($arg,$igual+1);
+            } else {
+                $parametros[$arg]=true;
+            }
         } else {
             $parametros[$arg]=true;
         }

@@ -97,7 +97,39 @@
      * Devuelve o establece el valor del campo.
      */
     Node.prototype.valor=function(valor) {
-        //TODO checkbox (booleano)
+        var tipo=this.type;
+        
+        if(tipo=="checkbox") {
+            if(util.esIndefinido(valor)) return this.checked;
+            this.checked=valor;
+            return this;
+        }
+        
+        if(tipo=="radio") {
+            var opciones=document.querySelectorAll("[name='"+this.name+"']");
+            if(util.esIndefinido(valor)) {
+                //Buscar el valor del botón marcado entre los elementos del mismo nombre
+                valor=null;
+                if(opciones) {
+                    for(var i=0;i<opciones.length;i++) {
+                        if(opciones[i].checked) {
+                            valor=opciones[i].value;
+                            break;
+                        }
+                    }
+                }
+                return valor;
+            } else {
+                //Marcar el botón correspondiente entre los elementos del mismo nombre
+                if(opciones) {
+                    for(var i=0;i<opciones.length;i++) {
+                        opciones[i].checked=opciones[i].name==valor;
+                    }
+                }
+                return this;
+            }
+        }
+
         if(util.esIndefinido(valor)) return this.value?this.value:"";
         this.value=valor;
         return this;

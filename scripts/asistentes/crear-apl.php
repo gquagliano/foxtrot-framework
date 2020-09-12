@@ -62,6 +62,8 @@ class crearApl extends asistente {
         }
         if($config) {
             $config=preg_replace('/\$dominios.*?=.*?\[(.*?)(\s*)\];/s','$dominios=[\1,'.PHP_EOL."\t".'\''.$dominio.'\'=>\''.$nombre.'\''.PHP_EOL.'];',$config);
+            //Corregir si no había ningún dominio configurado y nos ha quedado $dominios=[,...
+            $config=preg_replace('/\$dominios.*?=.*?\[\s*,/','$dominios=[',$config);
             file_put_contents($ruta,$config);
         }
     }

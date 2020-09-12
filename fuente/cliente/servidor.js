@@ -64,6 +64,7 @@ var servidor=new function() {
      * @param {Object} [opciones.metodo] - Nombre del método.
      * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
      * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
+     * @param {Object} [opciones.componente] - Nombre del componente.
      * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
      * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
      * @param {function} [opciones.error] - Función de error.
@@ -96,6 +97,7 @@ var servidor=new function() {
         if(opciones.foxtrot) campos.__f=opciones.foxtrot;
         if(opciones.metodo) campos.__m=opciones.metodo;
         if(opciones.controlador) campos.__c=opciones.controlador;
+        if(opciones.componente) campos.__o=opciones.componente;
 
         var param;
         if(opciones.formulario) {

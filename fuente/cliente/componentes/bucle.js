@@ -19,7 +19,7 @@ var componenteBucle=function() {
      * Propiedades de Bucle.
      */
     this.propiedadesConcretas={
-        "Buble":{
+        "Bucle":{
             mensajeVacio:{
                 etiqueta:"Mensaje de bloque vacío",
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",

@@ -62,10 +62,19 @@ label {
     text-overflow: ellipsis;
     font-weight: inherit;
 }
-.form-control,.custom-select {
+.form-control,
+.custom-select,
+.custom-file,.custom-file-label,.custom-file-input {
     height: calc(1.1rem + .75rem + 2px);
     padding: .375rem .5rem;
     color: inherit;
+    line-height: 1.1;
+    margin: 0;
+}
+.custom-file-label::after {
+    height: calc(1.1rem + .75rem + 2px);
+    line-height: 1.1;
+    content: "Seleccionar...";
 }
 .custom-select {
     padding: 0 2.1rem 0 .5rem;
@@ -81,7 +90,8 @@ label {
 }
 .form-control:focus,
 .custom-select:focus,
-.btn:focus {
+.btn:focus,
+.custom-file-input:focus~.custom-file-label {
     box-shadow: none !important;
 }
 

@@ -20,6 +20,18 @@
 
 #### ![](img/iconos/archivo.png) Archivo (campo de carga de archivo)
 
+Permite realizar la carga de un archivo o múltiples archivos. El componente subirá los archivos automáticamente a un directorio seguro del servidor y su valor, tanto del lado del cliente (`componente.valor()`) como al enviar los datos al servidor, será un array de objetos, cada uno con las siguientes propiedades:
+
+`nombre` Nombre original del archivo.
+
+`archivo` Nombre del archivo almacenado en el directorio de temporales `_temporalesPrivados`.
+
+La propiedad *Multimedia* (`multimedia`) permite configurar el campo para que intente obtener audio, fotos o videos desde el dispositivo del cliente. Normalmente esto sólo funcionará en dispositivos móviles, permitiéndo seleccionar un archivo con normalidad cuando no sea soportado.
+
+El evento *Modificación* (`modificacion`) será invocado cuando el usuario seleccione o deseleccione un archivo. Luego, el evento *Listo* (`listo`) será invocado cuando la subida haya finalizado.
+
+El campo mostrará una barra de progreso durante la subida del archivo y, además, puede utilizarse el método `subiendo()` para consultar si la carga está en curso o no. El método `obtenerBase64()` puede utilizarse para generar una vista previa de los archivos seleccionados.
+
 #### ![](img/iconos/boton.png) Botón (botón o enlace)
 
 Doble click iniciará la edición de texto. Presioná ESC para finalizar la edición (mientras el componente presente borde verde, estará activada la edición de texto).

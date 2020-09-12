@@ -1360,16 +1360,19 @@ var componente=new function() {
     /**
      * Procesa una cadena que representa el manejador de un evento, almacenada en las propiedades del componente.
      * @param {string} nombre - Nombre de la propiedad a leer.
-     * @param {Object} evento - Objeto del evento.
+     * @param {Object} [evento] - Objeto del evento.
      * @returns {*}
      */
     this.procesarCadenaEvento=function(nombre,evento) {
+        if(typeof evento==="undefined") evento=null;
+
         var valor=this.propiedad(null,nombre);
         if(!valor) return null;
         if(typeof valor!=="string") return valor;
 
         var vars=Object.assign({
-            evento:evento
+            evento:evento,
+            valor:this.valor()
         },this.datos);
         
         //Evaluar expresiones, si las contiene
@@ -1385,7 +1388,7 @@ var componente=new function() {
      * @param {*} [parametros] - Parámetros a pasar a la función.
      * @param {function} [retorno] - Función de retorno.
      * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
-     * @returns {(ajax|undefined)}
+     * @returns {(ajax|*|undefined)}
      */
     this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso) {
         if(typeof metodo==="undefined") metodo=null;
@@ -1418,12 +1421,12 @@ var componente=new function() {
         evento.noPrevenirPredeterminado=function() {
             prevenir=false;
         };
-        
+
         //Método interno del componente
         if(metodo&&typeof this[metodo]==="function") {
             var ret=this[metodo](evento);
             //Los métodos que devuelvan true, detendrán el procesamiento del manejador
-            if(ret===true) return this;
+            if(ret===true) return;
         }       
                 
         //Agregar los parámetros al evento
@@ -1445,13 +1448,17 @@ var componente=new function() {
 
         var procesado=true;
 
-        var ajax;
+        var ajax,resultadoLocal;
 
         if(typeof manejador==="function") {
-            var resultado=manejador(this,evento);            
-            if(retorno) retorno(resultado);
+            resultadoLocal=manejador(this,evento);
+
+            if(retorno) retorno(resultadoLocal);
         } else if(typeof manejador==="boolean"&&manejador) {
             //Si la expresión devolvió true, se asume procesado el evento
+            resultadoLocal=manejador;
+
+            if(retorno) retorno(resultadoLocal);
         } else if(typeof manejador==="string") {
             var vista=ui.obtenerInstanciaVista(this.nombreVista),
                 ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador());
@@ -1484,7 +1491,9 @@ var componente=new function() {
             } else if(manejador.substring(0,4)=="apl:") {
                 //Propiedad del controlador de aplicacion
                 var obj=ui.aplicacion();
-                obj[manejador.substring(4)].call(obj,this,evento);
+                resultadoLocal=obj[manejador.substring(4)].call(obj,this,evento);
+
+                if(retorno) retorno(resultadoLocal);
             } else if(manejador.indexOf(":")>0) {
                 //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                 //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
@@ -1494,13 +1503,14 @@ var componente=new function() {
                 var nombre=manejador.substring(0,manejador.indexOf(":")),
                     valor=manejador.substring(manejador.indexOf(":")+1),
                     obj=componentes[nombre];
-                var resultado=obj.eventoExterno.call(obj,valor,evento);
+                resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
 
-                if(retorno) retorno(resultado);
+                if(retorno) retorno(resultadoLocal);
             } else {
                 //Propiedad del controlador
-                var resultado=ctl[manejador].call(ctl,this,evento);
-                if(retorno) retorno(resultado);
+                var resultadoLocal=ctl[manejador].call(ctl,this,evento);
+
+                if(retorno) retorno(resultadoLocal);
             }
             //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
             //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
@@ -1514,7 +1524,7 @@ var componente=new function() {
             if(detener) evento.stopPropagation();
         }
 
-        return ajax;
+        return typeof ajax!=="undefined"?ajax:resultadoLocal;
     };
 
     /**

@@ -98,6 +98,7 @@ En las propiedades de componentes que admiten expresiones, como así también al
 - `controlador` Instancia del controlador principal
 - `componentes`
 - `parametros` Parámetros de la URL (GET)
+- `valor` Valor del componente (solo en expresiones asignadas a eventos)
 
 Las instancias de otros controladores también estarán disponibles por nombre. Cada componente [puede definir otras variables o fuciones específicas](componentes.md), además de las propiedades del origen de datos.
 

@@ -16,6 +16,8 @@
 
 #### ![](img/iconos/alternar.png) Alternar (campo Si-No)
 
+Un campo que alterna entre verdadero y falso, devolviendo un valor lógico.
+
 #### ![](img/iconos/arbol.png) Árbol
 
 #### ![](img/iconos/archivo.png) Archivo (campo de carga de archivo)
@@ -49,6 +51,8 @@ Cada elemento autogenerado, al igual que toda su descendencia, tendrá asignado 
         componentes.bucle.removerFila(indice);
     };
 
+El valor que se establezca al componente, ya sea mediante `establecerValores()` en la ascendencia o en la vista, o mediante `valor()`, se utilizará como origen de datos.
+
 #### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
 Al modificar el valor del campo, invocará el evento **Buscar**, el cual puede ser del lado del servidor o del cliente.
@@ -80,6 +84,14 @@ Cada fila, junto con sus columnas (o celdas), se duplicará por cada uno de los 
 Cada celda define también el encabezado de la columna, el cual será generado automáticamente cuando se utilice un origen de datos.
 
 #### ![](img/iconos/condicional.png) Condicional (estructura de control)
+
+Oculta o muestra el contenido del componente de acuerdo a la propiedad *Condición* (`condicion`).
+
+Es posible utilizar como condición cualquier [manejador de evento](api/cliente-js.md), o una expresión la cual será evaluada cuando cambie el orgen de datos, se invoque `actualizar()` o se establezca el valor del componente. En las expresiones, `valor` contendrá el valor asignado.
+
+El valor que se establezca al componente, ya sea mediante `establecerValores()` en la ascendencia o en la vista, o mediante `valor()`, se utilizará como origen de datos.
+
+Cabe aclarar que el efecto es solo visual. Al obtener los valores de la vista o del formulario, no afectará la visibilidad de los campos que contenga.
 
 #### ![](img/iconos/contenedor.png) Contenedor
 

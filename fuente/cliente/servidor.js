@@ -35,9 +35,12 @@ var servidor=new function() {
             error:null,
             listo:null,
             parametros:null,
+            progreso:null,
             abortar:false,
             foxtrot:null,
-            precarga:true
+            precarga:true,
+            formulario:false,
+            tiempo:null
         },opciones);
         return this;
     };
@@ -62,13 +65,16 @@ var servidor=new function() {
      * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
      * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
      * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
-     * @param {Object} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
-     * @param {Object} [opciones.error] - Función de error.
-     * @param {Object} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno, excepto en caso de error).
-     * @param {Object} [opciones.siempre] - Función a invocar tras la solicitud (siempre será invocada, incluso en caso de error).
+     * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
+     * @param {function} [opciones.error] - Función de error.
+     * @param {function} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno, excepto en caso de error).
+     * @param {function} [opciones.siempre] - Función a invocar tras la solicitud (siempre será invocada, incluso en caso de error).
      * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
      * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
      * @param {Object} [opciones.precarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
+     * @param {boolean} [opciones.formulario=false] - Envía la solicitud como datos de formulario (FormData).
+     * @param {function} [opciones.progreso] - Función de notificación de progreso. Recibirá el progreso de 0 a 1 como argumento.
+     * @param {number} [opciones.tiempo] - Tiempo límite (si se omite, será el valor por defecto de ajax).
      * @returns {ajax}
      */
     this.invocarMetodo=function(opciones) {
@@ -86,16 +92,44 @@ var servidor=new function() {
 
         if(opciones.precarga) ui.mostrarPrecarga(opciones.precarga);
 
-        var param={};
-        if(opciones.foxtrot) param.__f=opciones.foxtrot;
-        if(opciones.metodo) param.__m=opciones.metodo;
-        if(opciones.controlador) param.__c=opciones.controlador;
-        var args=JSON.stringify(opciones.parametros);
-        if(args!==null) param.__p=args;
+        var campos={};
+        if(opciones.foxtrot) campos.__f=opciones.foxtrot;
+        if(opciones.metodo) campos.__m=opciones.metodo;
+        if(opciones.controlador) campos.__c=opciones.controlador;
+
+        var param;
+        if(opciones.formulario) {
+            param=new FormData;
+            
+            campos.forEach(function(campo,valor)  {
+                param.append(campo,valor);
+            });
+            
+            if(util.esObjeto(opciones.parametros)) {
+                //Extraer los archivos
+                opciones.parametros.forEach(function(campo,valor) {
+                    if(valor instanceof File) {
+                        param.append(campo,valor);
+                        delete opciones[campo];
+                    }
+                });
+            }
+            
+            //Otros valores enviar por __p
+            if(opciones.parametros) {
+                var json=JSON.stringify(opciones.parametros);
+                if(json!==null) param.append("__p",json);
+            }
+        } else {
+            param=campos;
+            var args=JSON.stringify(opciones.parametros);
+            if(args!==null) param.__p=args;
+        }
 
         var obj=new ajax({
             url:this.url,
             parametros:param,
+            progreso:opciones.progreso,
             listo:function(resp) {
                 servidor.evaluarRespuesta(resp,opciones);
             },
@@ -103,7 +137,8 @@ var servidor=new function() {
                 ui.ocultarPrecarga(opciones.precarga);
                 if(opciones.siempre) opciones.siempre();
             },
-            error:opciones.error
+            error:opciones.error,
+            tiempo:opciones.tiempo
         });
 
         this.ajax.push(obj);

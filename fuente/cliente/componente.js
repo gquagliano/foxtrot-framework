@@ -1642,6 +1642,14 @@ var componente=new function() {
     };
     
     /**
+     * Evento 'Insertado'. El evento Insertado es invocado cuando el component es insertado en el DOM, ya sea tras ser creado o al
+     * ser movido, únicamente en modo de edición.
+     * @abstract
+     */
+    this.insertado=function() {
+    };
+    
+    /**
      * Evento 'Listo' (método para sobreescribir).
      */
     this.listo=function() {

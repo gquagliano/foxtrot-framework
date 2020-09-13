@@ -27,6 +27,18 @@ Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correc
 
 Listo.
 
+### Acceder a la documentación
+
+(En desarrollo)
+
+#### PHPDOC
+
+https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/phpdoc/
+
+#### JSDOC
+
+https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/jsdoc/
+
 ### Crear una aplicación en blanco
 
 1- Podés utilizar el asistente para crear una nueva aplicación.

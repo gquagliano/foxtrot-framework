@@ -98,7 +98,7 @@ label.custom-control-label {
     border-color: #bcc4cc;
 }
 .custom-switch .custom-control-label::after {
-    top: calc(3px);
+    top: calc(.1rem + 2px);
     left: calc(-2.45rem + 2px);
     width: calc(1.3rem - 4px);
     height: calc(1.3rem - 4px);

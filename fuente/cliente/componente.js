@@ -1501,7 +1501,7 @@ var componente=new function() {
                 ui.noIrA(manejador);
             } else if(comando=="abrir") {
                 //Popup
-                ui.abrirVentana(manejador.substring(6));
+                ui.abrirVentana(manejador);
             } else if(comando=="apl") {
                 //Propiedad del controlador de aplicacion
                 var obj=ui.aplicacion();

@@ -905,7 +905,8 @@ var editor=new function() {
             css:[]
         },
         agregarComponente=function(comp) {
-            datos.componentes.push(ui.obtenerJsonComponente(comp));
+            var obj=ui.obtenerJsonComponente(comp);
+            if(obj) datos.componentes.push(obj);
             
             //Agregar estilos
             var sel=comp.obtenerSelector();

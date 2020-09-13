@@ -499,8 +499,11 @@ var ui=new function() {
      */
     this.obtenerInstanciaComponente=function(param) {
         var id=identificarComponente(param);    
-        if(!id) return null;    
-        return instanciasComponentes[instanciasComponentesId[id]];
+        if(!id) return null;
+        if(!instanciasComponentesId.hasOwnProperty(id)) return null;
+        var comp=instanciasComponentesId[id];
+        if(!instanciasComponentes.hasOwnProperty(comp)) return null;
+        return instanciasComponentes[comp];
     };
 
     /**
@@ -640,6 +643,7 @@ var ui=new function() {
      */
     this.obtenerJsonComponente=function(obj) {
         var comp=this.obtenerInstanciaComponente(obj);
+        if(!comp) return null;
         return {
             id:comp.obtenerId(),
             nombre:comp.obtenerNombre(),
@@ -685,6 +689,8 @@ var ui=new function() {
 
         //Preparar los componentes
         json.componentes.forEach(function(componente) {
+            if(!componente) return;
+            
             var obj=fn(componente);
 
             //Almacenar en cache de instancias

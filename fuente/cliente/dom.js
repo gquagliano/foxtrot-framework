@@ -985,7 +985,7 @@
      * @param {*} argumentos 
      */
     var aplicar=function(lista,metodo,argumentos) {
-        var args=Array.from(argumentos);
+        var args=typeof argumentos==="undefined"?[]:Array.from(argumentos);
         lista.forEach(function(elem) {
             elem[metodo].apply(elem,args);
         });
@@ -1140,7 +1140,7 @@
      * @memberof external:NodeList
      */
     NodeList.prototype.remover=function() {
-        aplicar(this,"remover");
+        aplicar(this,"remover",arguments);
         return this;
     };
 

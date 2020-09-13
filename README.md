@@ -4,13 +4,13 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7.
 
 ### Qué es Foxtrot Framework
 
-![](documentacion/img/editor.jpg)
+![](docs/img/editor.jpg)
 
 Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* **más fácil** de aprender y de usar.
 
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](../../wiki/Inicio)** (en redacción).
 
-**[Guía de inicio rápido](documentacion/primeros-pasos.md)**
+**[Guía de inicio rápido](docs/primeros-pasos.md)**
 
 **[Mirá el video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
 
@@ -27,23 +27,23 @@ Contraseña: test
 
 ### Estado
 
-![](documentacion/img/tick.jpg) Editor de vistas completamente funcional.
+![](docs/img/tick.jpg) Editor de vistas completamente funcional.
 
-![](documentacion/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
+![](docs/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
 
-![](documentacion/img/tick.jpg) Acceso a datos y ORM, completos.
+![](docs/img/tick.jpg) Acceso a datos y ORM, completos.
 
-![](documentacion/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
+![](docs/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
 
-![](documentacion/img/tick.jpg) Integración de múltiples vistas en una sola página.
+![](docs/img/tick.jpg) Integración de múltiples vistas en una sola página.
 
-![](documentacion/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
+![](docs/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
 
-![](documentacion/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
+![](docs/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
 #### Pendientes
 
-Ver [Pendientes](documentacion/pendientes.md).
+Ver [Pendientes](docs/pendientes.md).
 
 ### Aplicación de ejemplo
 
@@ -57,11 +57,11 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/phpdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/phpdoc/
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/jsdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/jsdoc/
 
 ### Estructura del proyecto
 
@@ -85,17 +85,17 @@ El editor también permite configurar visualmente estructuras de control (bucles
 
 En el futuro, no solo será un editor, sino que se desarrollará un gestor interactivo de vistas, controladores, configuración, modelo de datos y demás recursos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
 
-[Más información sobre el editor](documentacion/editor.md).
+[Más información sobre el editor](docs/editor.md).
 
-[Listado de componentes](documentacion/componentes.md).
+[Listado de componentes](docs/componentes.md).
 
-[Estructura y guía de desarrollo de componentes](documentacion/componentes-estructura.md).
+[Estructura y guía de desarrollo de componentes](docs/componentes-estructura.md).
 
 ### Estructura de las aplicaciones
 
 El framework es multi-aplicación, simplificando el desarrollo y mantenimiento de múltiples proyectos en un servidor, tanto en desarrollo como en producción (una única instalación puede servir múltiples aplicaciones).
 
-[Más información sobre las aplicaciones y su estructura](documentacion/estructura.md).
+[Más información sobre las aplicaciones y su estructura](docs/estructura.md).
 
 ### API
 
@@ -121,7 +121,7 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 
 Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en muchos casos, el uso de código SQL, aumentando así la seguridad y mejorando el diseño de los objetos de la aplicación. Se define íntegramente mediante objetos, contribuyendo con el control de errores y el autocompletado al escribir código. El ORM permite crear y mantener actualizada la estructura de la base de datos a partir del código PHP del modelo de datos. Además, como todo en Foxtrot, sus métodos están en español.
 
-[Documentación del ORM](documentacion/api/orm.md).
+[Documentación del ORM](docs/api/orm.md).
 
 **Intérprete lógico-matemático (JS)**
 
@@ -129,9 +129,9 @@ Desarrollamos un intérprete para permitir la inserción de variables, llamados 
 
 El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
-[Más información sobre el API](documentacion/api.md).
+[Más información sobre el API](docs/api.md).
 
-[Documentación](documentacion/api/indice.md).
+[Documentación](docs/api/indice.md).
 
 ### Colaboraciones
 

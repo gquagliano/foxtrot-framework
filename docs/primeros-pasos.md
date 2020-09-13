@@ -35,11 +35,11 @@ Listo.
 
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/phpdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/phpdoc/
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/jsdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/jsdoc/
 
 ### Crear una aplicación en blanco
 

@@ -166,6 +166,17 @@ label.custom-control-label {
     vertical-align: middle;
 }
 
+/*Pestañas*/
+
+.pestanas>.encabezados .btn {
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    height: calc(1.1rem + 1.3rem + 3px);
+    margin-bottom: 1rem;
+    transition: color .2s,border .2s;
+}
+
 /*Colores*/
 
 a {
@@ -211,6 +222,9 @@ body.escritorio .btn-secondary:hover,
 .custom-control-input:checked~.custom-control-label::before {
     border-color: #337ab7;
     background-color: #337ab7;
+}
+.pestanas>.encabezados .btn.activa {
+    border-color: #337ab7;
 }
 
 /*

@@ -57,11 +57,11 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/
+[https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/](https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/)
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
+[https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/](https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/)
 
 ### Estructura del proyecto
 
@@ -139,9 +139,9 @@ Toda colaboración es bienvenida. Podés ponerte en contacto con nosotros en con
 
 ### Más información
 
-contacto@foxtrot.ar
+[contacto@foxtrot.ar](mailto:contacto@foxtrot.ar)
 
-www.foxtrot.ar
+[www.foxtrot.ar](https://foxtrot.ar)
 
 Licencia: Apache 2.0
 

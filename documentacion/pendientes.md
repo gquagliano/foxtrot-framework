@@ -29,12 +29,8 @@ Luego seguirá:
 
 ### Errores conocidos
 
-- No es posible arrastrar campos de contraseña (parece ser un error de WebKit).
+- ~~No es posible arrastrar campos de contraseña (parece ser un problema de WebKit).~~
 
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

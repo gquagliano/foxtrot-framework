@@ -81,7 +81,3 @@ En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

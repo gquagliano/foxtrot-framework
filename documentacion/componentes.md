@@ -204,8 +204,7 @@ Este componente es la representación lógica del cuerpo de la vista y no puede 
 
 contacto@foxtrot.ar
 
-www.foxtrot.ar
-
-Licencia: Apache 2.0
-
-Íconos (en su mayoría) por Icons8 - https://icons8.com/icons/material-outlined
+Íconos por:
+Icons8 - https://icons8.com/icons/material-outlined
+Heroicons - https://heroicons.com/
+Foxtrot (algunos son originales)

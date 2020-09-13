@@ -182,7 +182,3 @@ Si bien en PHP, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue lo
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

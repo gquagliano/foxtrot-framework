@@ -64,7 +64,3 @@ Nota: Todas las rutas y URLs deben finalizar con `/`.
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

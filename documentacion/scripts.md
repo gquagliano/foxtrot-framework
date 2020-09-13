@@ -14,9 +14,9 @@
 
 ### ¡Importante!
 
-Estos scripts son provisorios y están pensados para uso personal por línea de comandos, por lo que no presentan ningún tipo de seguridad. **Permitir el acceso por HTTP o implementarlos en un servidor o equipo público o compartido deja abierta la posibilidad de acceso irrestricto al sistema de archivos o de cargar código arbitrario**.
+Estos scripts son *provisorios* y están pensados para uso personal por línea de comandos, por lo que no presentan ningún tipo de seguridad. **Permitir el acceso por HTTP o implementarlos en un servidor o equipo público o compartido deja abierta la posibilidad de acceso irrestricto al sistema de archivos o de cargar código arbitrario**.
 
-En el futuro, la funcionalidad de estos scripts se integrará con el gestor de aplicaciones.
+En el futuro, la funcionalidad de estos scripts se integrará con el gestor de aplicaciones y todo será *100% interactivo*.
 
 #### construir-framework
 
@@ -144,7 +144,3 @@ Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

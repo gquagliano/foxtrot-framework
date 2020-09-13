@@ -23,7 +23,9 @@ Una vez clonado el repositorio, o descargado y extraído, dentro del directiorio
 
 Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correctamente configurado).
 
-2- Debe crearse el archivo `desarrollo/config.php` utilizando `desarrollo/config-ejemplo.php` como plantilla (ver instrucciones en el código) y configurarse `desarrollo/.htaccess`.
+2- Debe crearse el archivo `desarrollo/config.php` utilizando `desarrollo/config-ejemplo.php` como plantilla y editándolo, como mínimo, para establecer la URL y la ruta donde fue instalado  (ver instrucciones en el código).
+
+3- Debe configurarse `desarrollo/.htaccess`. Normalmente solo será necesario cambiar la ruta en `RewriteBase`.
 
 Listo.
 
@@ -31,25 +33,25 @@ Listo.
 
 (En desarrollo)
 
-#### PHPDOC
+#### PHP
 
 https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/phpdoc/
 
-#### JSDOC
+#### JS
 
 https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/jsdoc/
 
 ### Crear una aplicación en blanco
 
-1- Podés utilizar el asistente para crear una nueva aplicación.
+1- Puede utilizarse el asistente para crear una nueva aplicación.
 
     php asistente crear-apl -a=nombre -d="dominio"
 
 Ver [Scripts y asistentes](scripts.md) para más información sobre los parámetros.
 
-### Vista de inicio
+Es necesario especificar el dominio ya que Foxtrot permite alojar múltiples aplicaciones en una única instalación.
 
-La vista de inicio será `/inicio/`. Ver instrucciones para el acceso al editor a continuación.
+*Nota:* En `config-ejemplo.php`, `localhost` ya está en uso para la aplicación de ejemplo.
 
 ### Configurar la aplicación de ejemplo
 
@@ -60,6 +62,10 @@ La vista de inicio será `/inicio/`. Ver instrucciones para el acceso al editor 
 	php sincronizar-bd -a=ejemplo
 
 Listo.
+
+### Vista de inicio
+
+La vista de inicio será `inicio`. Ver instrucciones para el acceso al editor a continuación.
 
 ### Probar la aplicación
 
@@ -73,7 +79,7 @@ Al abrir una vista inexistente, el editor la creará automáticamente.
 
 Ver [Editor](editor.md) para información sobre el acceso al editor de vistas.
 
-### Compilación a producción
+### Compilación para producción
 
 1- Para construir la aplicación, puede utilizarse el script `construir-apl` (ver [Scripts de compilación y asistentes](scripts.md)):
 
@@ -112,7 +118,3 @@ Para ejecutar una vista diseñada para Cordova en el navegador web, debe configu
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

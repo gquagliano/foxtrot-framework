@@ -6,7 +6,7 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7.
 
 ![](documentacion/img/editor.jpg)
 
-Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* más fácil de aprender y usar.
+Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* **más fácil** de aprender y de usar.
 
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](../../wiki/Inicio)** (en redacción).
 
@@ -45,7 +45,7 @@ Contraseña: test
 
 Ver [Pendientes](documentacion/pendientes.md).
 
-#### Aplicación de ejemplo
+### Aplicación de ejemplo
 
 Se incluye una aplicación de ejemplo demostrando las funciones principales del framework.
 
@@ -55,11 +55,11 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 (En desarrollo)
 
-#### PHPDOC
+#### PHP
 
 https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/phpdoc/
 
-#### JSDOC
+#### JS
 
 https://gquagliano.github.io/experimental-foxtrot-framework/documentacion/jsdoc/
 
@@ -145,4 +145,8 @@ www.foxtrot.ar
 
 Licencia: Apache 2.0
 
-Íconos (en su mayoría; algunos son originales) por Icons8 - https://icons8.com/icons/material-outlined
+Íconos por:
+Icons8 - https://icons8.com/icons/material-outlined
+Heroicons - https://heroicons.com/
+Foxtrot (algunos son originales)
+

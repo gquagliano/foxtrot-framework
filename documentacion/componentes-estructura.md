@@ -25,7 +25,3 @@ En el futuro, cada componente también podrá contar con una clase privada que i
 ## Más información
 
 contacto@foxtrot.ar
-
-www.foxtrot.ar
-
-Licencia: Apache 2.0

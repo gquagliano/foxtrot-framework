@@ -398,8 +398,9 @@
                 coincidencia=true;
                 break;
             }
-            if(!elem||elem==document.body) break;
+            if(elem==document.body) break;
             elem=elem.parentNode;
+            if(!elem) break;
         }
 
         //Devolver nulo si se estaba filtrando y no hubo coincidencias
@@ -734,6 +735,8 @@
      * @param {*} captura 
      */
     function establecerEvento(elem,nombre,funcionInterna,funcion,captura) {
+        if(typeof captura==="undefined") captura=false;
+
         //Si nombre es el único parámetro, devolvemos todas las funciones asignadas
         if(util.esIndefinido(funcion)) {
             elem.inicializarMetadatos();
@@ -827,14 +830,15 @@
      * elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
      * @memberof external:EventTarget
      */
-    EventTarget.prototype.eventoFiltrado=function(nombre,filtro,funcion,estricto) {
+    EventTarget.prototype.eventoFiltrado=function(nombre,filtro,funcion,estricto,captura) {
         if(util.esIndefinido(estricto)) estricto=false;
+        if(util.esIndefinido(captura)) captura=true;
 
         //funcion puede ser un array para asignar múltiples listeners a la vez
         if(util.esArray(funcion)) {
             var t=this;
             funcion.forEach(function(fn) {
-                t.eventoFiltrado(nombre,filtro,fn);
+                t.eventoFiltrado(nombre,filtro,fn,estricto,captura);
             });
             return this;
         }  
@@ -843,7 +847,7 @@
         if(nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
-                t.eventoFiltrado(n,filtro,funcion,estricto);
+                t.eventoFiltrado(n,filtro,funcion,estricto,captura);
             });
             return this;
         }
@@ -873,7 +877,7 @@
                 funcion.call(elemento,ev);
             };
             
-        return establecerEvento(this,nombre,fn,funcion,true);
+        return establecerEvento(this,nombre,fn,funcion,captura);
     };
 
     /**

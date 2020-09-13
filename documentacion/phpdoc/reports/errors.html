@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title> &raquo; Compilation errors</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">                            <li><a href="../namespaces/componentes.html">\componentes</a></li>                        </ul>
+                    </li>                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">251</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">15</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">    <section class="row-fluid">
+        <div class="span2 sidebar">
+
+            <ul class="side-nav nav nav-list">
+                <li class="nav-header">Navigation</li>                        <li><a href="#configuracion.php"><i class="icon-file"></i>configuracion.php</a></li>                        <li><a href="#enrutadores\enrutadorAplicacionPredeterminado.php"><i class="icon-file"></i>enrutadores\enrutadorAplicacionPredeterminado.php</a></li>                        <li><a href="#aplicacion.php"><i class="icon-file"></i>aplicacion.php</a></li>                        <li><a href="#controlador.php"><i class="icon-file"></i>controlador.php</a></li>                        <li><a href="#foxtrot.php"><i class="icon-file"></i>foxtrot.php</a></li>                        <li><a href="#enrutador.php"><i class="icon-file"></i>enrutador.php</a></li>                        <li><a href="#componentes\archivo.pub.php"><i class="icon-file"></i>componentes\archivo.pub.php</a></li>                        <li><a href="#funciones.php"><i class="icon-file"></i>funciones.php</a></li>                        <li><a href="#enrutadores\enrutadorUnaPagina.php"><i class="icon-file"></i>enrutadores\enrutadorUnaPagina.php</a></li>                        <li><a href="#sesion.php"><i class="icon-file"></i>sesion.php</a></li>                        <li><a href="#enrutadorAplicacion.php"><i class="icon-file"></i>enrutadorAplicacion.php</a></li>                        <li><a href="#mysql-resultado.php"><i class="icon-file"></i>mysql-resultado.php</a></li>                        <li><a href="#entidad.php"><i class="icon-file"></i>entidad.php</a></li>                        <li><a href="#modelo.php"><i class="icon-file"></i>modelo.php</a></li>                        <li><a href="#cliente.php"><i class="icon-file"></i>cliente.php</a></li>                        <li><a href="#mysql.php"><i class="icon-file"></i>mysql.php</a></li>            </ul>
+        </div>
+
+        <div class="span10 offset2">
+            <ul class="breadcrumb">
+                <li><a href="../"><i class="icon-remove-sign"></i></a><span class="divider">\</span></li>
+                <li>Compilation Errors</li>
+            </ul>                <div class="package-contents">                        <a name="configuracion.php" id="configuracion.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>configuracion.php
+                            <small style="float: right;padding-right: 10px;">16</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>28</td>
+                                        <td>No summary for method cargar()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>No summary for method cargarConfigAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>Argument $obj is missing from the Docblock of establecer</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>No summary for method establecer()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $url</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $rutaEror</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for property $enrutador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for property $rutaBase</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>19</td>
+                                        <td>No summary for property $zonaHoraria</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>20</td>
+                                        <td>No summary for property $zonaHorariaMinutos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>21</td>
+                                        <td>No summary for property $servidorBd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>22</td>
+                                        <td>No summary for property $puertoBd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>23</td>
+                                        <td>No summary for property $usuarioBd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>No summary for property $contrasenaBd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>25</td>
+                                        <td>No summary for property $nombreBd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>26</td>
+                                        <td>No summary for property $prefijoBd</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="enrutadores\enrutadorAplicacionPredeterminado.php" id="enrutadores\enrutadorAplicacionPredeterminado.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>enrutadores\enrutadorAplicacionPredeterminado.php
+                            <small style="float: right;padding-right: 10px;">4</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>Argument $dominios is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>21</td>
+                                        <td>No summary for method determinarAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $dominios</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="aplicacion.php" id="aplicacion.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>aplicacion.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="controlador.php" id="controlador.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>controlador.php
+                            <small style="float: right;padding-right: 10px;">7</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>27</td>
+                                        <td>No summary for method obtenerNombre()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>31</td>
+                                        <td>No summary for method obtenerCliente()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>35</td>
+                                        <td>Argument $html is missing from the Docblock of html</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>35</td>
+                                        <td>No summary for method html()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $nombre</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $cliente</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="foxtrot.php" id="foxtrot.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>foxtrot.php
+                            <small style="float: right;padding-right: 10px;">29</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>23</td>
+                                        <td>No summary for method __destruct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>27</td>
+                                        <td>No summary for method destructor()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>30</td>
+                                        <td>No summary for method obtenerUrl()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>No summary for method esHttps()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>40</td>
+                                        <td>Argument $obj is missing from the Docblock of establecerEnrutador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>40</td>
+                                        <td>No summary for method establecerEnrutador()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>44</td>
+                                        <td>No summary for method obtenerEnrutador()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>48</td>
+                                        <td>Argument $obj is missing from the Docblock of establecerEnrutadorAplicacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>48</td>
+                                        <td>No summary for method establecerEnrutadorAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>60</td>
+                                        <td>No summary for method definirConstantes()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>70</td>
+                                        <td>No summary for method definirConstantesAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>83</td>
+                                        <td>No summary for method incluirArchivos()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>105</td>
+                                        <td>No summary for method cargarAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>150</td>
+                                        <td>Argument $aplicacion is missing from the Docblock of inicializar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>150</td>
+                                        <td>No summary for method inicializar()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>184</td>
+                                        <td>No summary for method error()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>188</td>
+                                        <td>No summary for method ejecutar()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>335</td>
+                                        <td>No summary for method detener()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>346</td>
+                                        <td>Argument $nombre is missing from the Docblock of prepararNombreClase</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>363</td>
+                                        <td>No summary for method obtenerInstanciaBd()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>381</td>
+                                        <td>Argument $nombre is missing from the Docblock of devolverVista</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>381</td>
+                                        <td>No summary for method devolverVista()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $enrutador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $enrutadorApl</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for property $aplicacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for property $instanciaAplicacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>19</td>
+                                        <td>No summary for property $instanciaPublicaAplicacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>20</td>
+                                        <td>No summary for property $instanciaAplicacionPublico</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>21</td>
+                                        <td>No summary for property $bd</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="enrutador.php" id="enrutador.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>enrutador.php
+                            <small style="float: right;padding-right: 10px;">33</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>29</td>
+                                        <td>Argument $uri is missing from the Docblock of establecerSolicitud</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>29</td>
+                                        <td>Argument $params is missing from the Docblock of establecerSolicitud</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>29</td>
+                                        <td>No summary for method establecerSolicitud()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>Argument $vista is missing from the Docblock of obtenerUrlVista</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>No summary for method obtenerUrlVista()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>No summary for method obtenerUrlRecursosAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>45</td>
+                                        <td>Argument $nombre is missing from the Docblock of obtenerUrlEstilosVista</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>45</td>
+                                        <td>No summary for method obtenerUrlEstilosVista()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>49</td>
+                                        <td>Argument $nombre is missing from the Docblock of obtenerUrlControlador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>49</td>
+                                        <td>No summary for method obtenerUrlControlador()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>116</td>
+                                        <td>No summary for method obtenerError()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>120</td>
+                                        <td>No summary for method obtenerControlador()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>124</td>
+                                        <td>No summary for method obtenerMetodo()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>128</td>
+                                        <td>No summary for method obtenerParametros()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>132</td>
+                                        <td>No summary for method obtenerVista()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>136</td>
+                                        <td>No summary for method obtenerPagina()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>140</td>
+                                        <td>No summary for method obtenerRecurso()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>144</td>
+                                        <td>No summary for method obtenerFoxtrot()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>148</td>
+                                        <td>No summary for method obtenerRedireccionamiento()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>156</td>
+                                        <td>No summary for method obtenerComponente()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $uri</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $params</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for property $pagina</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for property $vista</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>19</td>
+                                        <td>No summary for property $error</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>20</td>
+                                        <td>No summary for property $controlador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>21</td>
+                                        <td>No summary for property $metodo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>22</td>
+                                        <td>No summary for property $parametros</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>23</td>
+                                        <td>No summary for property $recurso</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>No summary for property $foxtrot</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>25</td>
+                                        <td>No summary for property $redireccionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>26</td>
+                                        <td>No summary for property $codigoRedireccion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>27</td>
+                                        <td>No summary for property $componente</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                </div>                <div class="package-contents">                        <a name="componentes\archivo.pub.php" id="componentes\archivo.pub.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>componentes\archivo.pub.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for method recibirArchivos()</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="funciones.php" id="funciones.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>funciones.php
+                            <small style="float: right;padding-right: 10px;">6</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>14</td>
+                                        <td>Argument $uri is missing from the Docblock of redir</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>23</td>
+                                        <td>Argument $cadena is missing from the Docblock of h</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>30</td>
+                                        <td>Argument $cadena is missing from the Docblock of uh</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>Argument $ruta is missing from the Docblock of mime</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>89</td>
+                                        <td>Argument $arr is missing from the Docblock of str_replace_array</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>89</td>
+                                        <td>Argument $cadena is missing from the Docblock of str_replace_array</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="enrutadores\enrutadorUnaPagina.php" id="enrutadores\enrutadorUnaPagina.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>enrutadores\enrutadorUnaPagina.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>Argument $nombre is missing from the Docblock of establecerVistaInicio</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="sesion.php" id="sesion.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>sesion.php
+                            <small style="float: right;padding-right: 10px;">12</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>11</td>
+                                        <td>No summary for class \sesion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for method inicializar()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>Argument $usuario is missing from the Docblock of establecerUsuario</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>Argument $datosPublicos is missing from the Docblock of establecerUsuario</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>24</td>
+                                        <td>No summary for method establecerUsuario()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>31</td>
+                                        <td>No summary for method cerrarSesion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>No summary for method obtenerUsuario()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>No summary for method obtenerDatosPublicos()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>45</td>
+                                        <td>No summary for method verificarUsuario()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>51</td>
+                                        <td>No summary for method responderSolicitud()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>13</td>
+                                        <td>No summary for property $usuario</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>14</td>
+                                        <td>No summary for property $datosPublicos</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                </div>                <div class="package-contents">                        <a name="enrutadorAplicacion.php" id="enrutadorAplicacion.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>enrutadorAplicacion.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for method determinarAplicacion()</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="mysql-resultado.php" id="mysql-resultado.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>mysql-resultado.php
+                            <small style="float: right;padding-right: 10px;">9</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>21</td>
+                                        <td>No summary for method __destruct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>29</td>
+                                        <td>Argument $r is missing from the Docblock of establecer</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>Argument $r is missing from the Docblock of establecerStmt</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>89</td>
+                                        <td>Argument $nombre is missing from the Docblock of campo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>96</td>
+                                        <td>Argument $numero is missing from the Docblock of irA</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $r</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $stmt</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for property $columnas</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>19</td>
+                                        <td>No summary for property $filas</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="entidad.php" id="entidad.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>entidad.php
+                            <small style="float: right;padding-right: 10px;">4</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>26</td>
+                                        <td>Argument $bd is missing from the Docblock of fabricarModelo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>17</td>
+                                        <td>No summary for property $tipoModelo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>19</td>
+                                        <td>No summary for property $id</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>20</td>
+                                        <td>No summary for property $e</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="modelo.php" id="modelo.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>modelo.php
+                            <small style="float: right;padding-right: 10px;">84</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>59</td>
+                                        <td>Argument $bd is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>59</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $fila is missing from the Docblock of fabricarEntidad</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>119</td>
+                                        <td>Argument $modelo is missing from the Docblock of fabricarModelo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>119</td>
+                                        <td>Argument $bd is missing from the Docblock of fabricarModelo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>216</td>
+                                        <td>Argument $campos is missing from the Docblock of seleccionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>224</td>
+                                        <td>Argument $alias is missing from the Docblock of establecerAlias</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $campo is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $tipo is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $modelo is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $alias is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $condicion is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>232</td>
+                                        <td>Argument $parametros is missing from the Docblock of relacionar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>250</td>
+                                        <td>Argument $campo is missing from the Docblock of relacionarUnoAUno</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>250</td>
+                                        <td>Argument $modelo is missing from the Docblock of relacionarUnoAUno</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>250</td>
+                                        <td>Argument $alias is missing from the Docblock of relacionarUnoAUno</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>250</td>
+                                        <td>Argument $condicion is missing from the Docblock of relacionarUnoAUno</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>250</td>
+                                        <td>Argument $parametros is missing from the Docblock of relacionarUnoAUno</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>257</td>
+                                        <td>Argument $campo is missing from the Docblock of relacionarUnoAUnoNulo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>257</td>
+                                        <td>Argument $modelo is missing from the Docblock of relacionarUnoAUnoNulo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>257</td>
+                                        <td>Argument $alias is missing from the Docblock of relacionarUnoAUnoNulo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>257</td>
+                                        <td>Argument $condicion is missing from the Docblock of relacionarUnoAUnoNulo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>257</td>
+                                        <td>Argument $parametros is missing from the Docblock of relacionarUnoAUnoNulo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>264</td>
+                                        <td>Argument $campo is missing from the Docblock of relacionarUnoAMuchos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>264</td>
+                                        <td>Argument $modelo is missing from the Docblock of relacionarUnoAMuchos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>264</td>
+                                        <td>Argument $alias is missing from the Docblock of relacionarUnoAMuchos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>264</td>
+                                        <td>Argument $condicion is missing from the Docblock of relacionarUnoAMuchos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>264</td>
+                                        <td>Argument $parametros is missing from the Docblock of relacionarUnoAMuchos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>295</td>
+                                        <td>Argument $obj is missing from the Docblock of procesarRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>295</td>
+                                        <td>Argument $campos is missing from the Docblock of procesarRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>313</td>
+                                        <td>Argument $condicion is missing from the Docblock of donde</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>313</td>
+                                        <td>Argument $parametros is missing from the Docblock of donde</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>321</td>
+                                        <td>Argument $campos is missing from the Docblock of agrupadoPor</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>339</td>
+                                        <td>Argument $condicion is missing from the Docblock of teniendo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>339</td>
+                                        <td>Argument $parametros is missing from the Docblock of teniendo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>347</td>
+                                        <td>Argument $condicion is missing from the Docblock of generarCondicion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>347</td>
+                                        <td>Argument $parametros is missing from the Docblock of generarCondicion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>406</td>
+                                        <td>Argument $limite is missing from the Docblock of limite</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>406</td>
+                                        <td>Argument $cantidad is missing from the Docblock of limite</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>415</td>
+                                        <td>Argument $cantidad is missing from the Docblock of paginacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>415</td>
+                                        <td>Argument $pagina is missing from the Docblock of paginacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>425</td>
+                                        <td>Argument $campo is missing from the Docblock of ordenadoPor</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>425</td>
+                                        <td>Argument $orden is missing from the Docblock of ordenadoPor</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>436</td>
+                                        <td>Argument $objeto is missing from the Docblock of establecerValores</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>451</td>
+                                        <td>Argument $operacion is missing from the Docblock of prepararConsulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>469</td>
+                                        <td>Argument $operacion is missing from the Docblock of ejecutarConsulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>596</td>
+                                        <td>Argument $e is missing from the Docblock of eliminar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>663</td>
+                                        <td>Argument $modo is missing from the Docblock of bloquear</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>663</td>
+                                        <td>Argument $modelos is missing from the Docblock of bloquear</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>680</td>
+                                        <td>No summary for method obtenerError()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>687</td>
+                                        <td>Argument $alias is missing from the Docblock of prepararRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>687</td>
+                                        <td>Argument $continuar is missing from the Docblock of prepararRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>723</td>
+                                        <td>Argument $campos is missing from the Docblock of construirCamposYRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>723</td>
+                                        <td>Argument $relaciones is missing from the Docblock of construirCamposYRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>750</td>
+                                        <td>Argument $operacion is missing from the Docblock of construirConsulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>884</td>
+                                        <td>Argument $parametros is missing from the Docblock of construirCamposInsercionActualizacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>884</td>
+                                        <td>Argument $tipos is missing from the Docblock of construirCamposInsercionActualizacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>884</td>
+                                        <td>Argument $alias is missing from the Docblock of construirCamposInsercionActualizacion</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>922</td>
+                                        <td>Argument $valor is missing from the Docblock of determinarTipo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>27</td>
+                                        <td>No summary for property $bd</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>28</td>
+                                        <td>No summary for property $resultado</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>30</td>
+                                        <td>No summary for property $nombreModelo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>31</td>
+                                        <td>No summary for property $nombre</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>No summary for property $tipoEntidad</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>33</td>
+                                        <td>No summary for property $campos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>35</td>
+                                        <td>No summary for property $consultaColumnas</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>36</td>
+                                        <td>No summary for property $consultaCondiciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>No summary for property $consultaAgrupar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>No summary for property $consultaTeniendo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>39</td>
+                                        <td>No summary for property $consultaRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>40</td>
+                                        <td>No summary for property $consultaLimite</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>No summary for property $consultaCantidad</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>42</td>
+                                        <td>No summary for property $consultaOrden</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>43</td>
+                                        <td>No summary for property $consultaValores</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>45</td>
+                                        <td>No summary for property $sql</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>46</td>
+                                        <td>No summary for property $parametros</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>47</td>
+                                        <td>No summary for property $tipos</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>48</td>
+                                        <td>No summary for property $alias</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>50</td>
+                                        <td>No summary for property $consultaProcesarRelaciones</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>51</td>
+                                        <td>No summary for property $consultaProcesarRelaciones1n</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>52</td>
+                                        <td>No summary for property $consultaSeleccionarEliminados</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>54</td>
+                                        <td>No summary for property $consultaPreparada</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>55</td>
+                                        <td>No summary for property $reutilizarConsultaPreparada</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>57</td>
+                                        <td>No summary for property $ultimoId</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="cliente.php" id="cliente.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>cliente.php
+                            <small style="float: right;padding-right: 10px;">13</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>Argument $controlador is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Argument $data is missing from the Docblock of responder</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>Argument $controlador is missing from the Docblock of invocar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>Argument $metodo is missing from the Docblock of invocar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>Argument $args is missing from the Docblock of invocar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>41</td>
+                                        <td>No summary for method invocar()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>55</td>
+                                        <td>Name of argument $args does not match with the DocBlock&#039;s name $args=null in invocarAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>notice</td>
+                                        <td>55</td>
+                                        <td>Parameter $args=null could not be found in invocarAplicacion()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>63</td>
+                                        <td>Argument $ruta is missing from the Docblock of irA</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>63</td>
+                                        <td>No summary for method irA()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $controlador</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $esAplicacion</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>                <div class="package-contents">                        <a name="mysql.php" id="mysql.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>mysql.php
+                            <small style="float: right;padding-right: 10px;">30</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $conectar is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $servidor is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $usuario is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $contrasena is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $nombre is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $prefijo is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Argument $puerto is missing from the Docblock of __construct</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>No summary for method __construct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>No summary for method __destruct()</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $servidor is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $usuario is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $contrasena is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $nombre is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $prefijo is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Argument $puerto is missing from the Docblock of establecerCredenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>125</td>
+                                        <td>Argument $q is missing from the Docblock of reemplazarPrefijo</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>185</td>
+                                        <td>Argument $q is missing from the Docblock of consulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>185</td>
+                                        <td>Argument $parametros is missing from the Docblock of consulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>185</td>
+                                        <td>Argument $tipos is missing from the Docblock of consulta</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>213</td>
+                                        <td>Argument $q is missing from the Docblock of preparar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>213</td>
+                                        <td>Argument $parametros is missing from the Docblock of preparar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>213</td>
+                                        <td>Argument $tipos is missing from the Docblock of preparar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>255</td>
+                                        <td>Argument $parametros is missing from the Docblock of asignar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>255</td>
+                                        <td>Argument $tipos is missing from the Docblock of asignar</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>15</td>
+                                        <td>No summary for property $e</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>16</td>
+                                        <td>No summary for property $stmt</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>18</td>
+                                        <td>No summary for property $credenciales</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>28</td>
+                                        <td>No summary for property $filas</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>29</td>
+                                        <td>No summary for property $error</td>
+                                    </tr>                                    <tr>
+                                        <td>error</td>
+                                        <td>30</td>
+                                        <td>No summary for property $descripcionError</td>
+                                    </tr>                            </tbody>
+                            </table>
+                        </div>                </div>        </div>
+    </section>
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">                            <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>                                        <li><a href="../namespaces/componentes.html">\componentes</a></li>                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">                            <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">                            <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    onSeptember 13th, 2020 at 14:21.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

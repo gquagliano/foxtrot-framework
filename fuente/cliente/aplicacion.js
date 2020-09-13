@@ -13,7 +13,7 @@
  */
 
 /**
- * Objeto base para las aplicaciones.
+ * @class Objeto base para las aplicaciones.
  */
 var aplicacion=new function() {
     this.servidor=null;

@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Agenda.
+ * @class Componente concreto Agenda.
  */
 var componenteAgenda=function() {    
     this.componente="agenda";

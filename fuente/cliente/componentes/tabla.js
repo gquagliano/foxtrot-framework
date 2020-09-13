@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Tabla de datos.
+ * @class Componente concreto Tabla de datos.
  */
 var componenteTabla=function() {    
     this.componente="tabla";

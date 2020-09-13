@@ -13,7 +13,7 @@
  */
 
 /**
- * Objeto base de los enrutadores.
+ * @class Objeto base de los enrutadores.
  */
 var enrutador=new function() {
     //Los enrutadores de cliente permiten traducir URL a nombres de vistas (para implementaciones sin servidor) y traducir nombres de vistas y rutas a recursos a URL

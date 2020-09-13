@@ -6,8 +6,8 @@
  */
 
 /**
- * Gestor de acceso a los datos públicos de la sesión en el servidor.
- * @typedef {sesion}
+ * @class Gestor de acceso a los datos públicos de la sesión en el servidor.
+ * @typedef Sesion
  */
 var sesion=new function() {
     /**

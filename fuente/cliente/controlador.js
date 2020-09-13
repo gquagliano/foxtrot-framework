@@ -13,7 +13,7 @@
  */
 
 /**
- * Objeto base para los controladores.
+ * @class Objeto base para los controladores.
  */
 var controlador=new function() {
     this.nombre=null;

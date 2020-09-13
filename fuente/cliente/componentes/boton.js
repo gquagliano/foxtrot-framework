@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Botón.
+ * @class Componente concreto Botón.
  */
 var componenteBoton=function() {    
     this.componente="boton"; 

@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Navegación.
+ * @class Componente concreto Navegación.
  */
 var componenteNavegacion=function() {    
     this.componente="navegacion";

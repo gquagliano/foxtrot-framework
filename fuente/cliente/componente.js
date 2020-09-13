@@ -13,7 +13,7 @@
  */
 
 /**
- * Objeto base de los componentes.
+ * @class Objeto base de los componentes.
  */
 var componente=new function() {
     //Los métodos para sobreescribir en el componente concreto tienen una versión nnnComponente que permiten invocar

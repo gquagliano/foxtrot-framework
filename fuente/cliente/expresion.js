@@ -15,7 +15,7 @@
 //- Mejorar el análisis sintáctico
 
 /**
- * Intérprete de expresiones.
+ * @class Intérprete de expresiones.
  */
 var expresion=function(expr) {
     this.cadena=null;

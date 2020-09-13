@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Formulario.
+ * @class Componente concreto Formulario.
  */
 var componenteFormulario=function() {    
     this.componente="form";

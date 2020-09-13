@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Enrutador concreto predeterminado.
+ * @class Enrutador concreto predeterminado.
  */
 var enrutadorPredeterminado=function() {    
     /**

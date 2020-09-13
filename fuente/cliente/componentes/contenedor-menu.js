@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Contenedor de menú.
+ * @class Componente concreto Contenedor de menú.
  */
 var componenteContenedorMenu=function() {    
     this.componente="contenedor-menu";

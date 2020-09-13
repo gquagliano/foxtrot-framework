@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Utilidades varias.
+ * @class Utilidades varias.
  */
 var util={
     /**

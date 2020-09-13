@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Checkbox.
+ * @class Componente concreto Checkbox.
  */
 var componenteCheckbox=function() {    
     this.componente="checkbox";

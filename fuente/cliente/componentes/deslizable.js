@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Deslizable o carrusel.
+ * @class Componente concreto Deslizable o carrusel.
  */
 var componenteDeslizable=function() {    
     this.componente="deslizable";

@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Campo de carga de archivo.
+ * @class Componente concreto Campo de carga de archivo.
  */
 var componenteArchivo=function() {    
     this.componente="archivo";

@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Código.
+ * @class Componente concreto Código.
  */
 var componenteCodigo=function() {    
     this.componente="codigo";

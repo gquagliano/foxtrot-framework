@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Columna.
+ * @class Componente concreto Columna.
  */
 var componenteColumna=function() {
     this.componente="columna";

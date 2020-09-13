@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Campo de alternar.
+ * @class Componente concreto Campo de alternar.
  */
 var componenteAlternar=function() {    
     this.componente="alternar";

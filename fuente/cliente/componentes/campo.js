@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Campo.
+ * @class Componente concreto Campo.
  */
 var componenteCampo=function() {    
     var t=this;

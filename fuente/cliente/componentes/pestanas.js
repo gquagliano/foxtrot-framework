@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Bloque de pestañas.
+ * @class Componente concreto Bloque de pestañas.
  */
 var componentePestanas=function() {    
     this.componente="pestanas";

@@ -6,7 +6,7 @@
  */
 
  /**
- * Utilidades para consultas AJAX
+ * @class Utilidades para consultas AJAX
  */
 var ajax=function(param) {
     "use strict";

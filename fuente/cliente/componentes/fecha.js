@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Campo de fecha o calendario.
+ * @class Componente concreto Campo de fecha o calendario.
  */
 var componenteFecha=function() {    
     this.componente="fecha";

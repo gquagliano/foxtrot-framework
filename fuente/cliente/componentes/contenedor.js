@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Contenedor.
+ * @class Componente concreto Contenedor.
  */
 var componenteContenedor=function() {
     this.componente="contenedor";

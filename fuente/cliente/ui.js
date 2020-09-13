@@ -5,15 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
+"use strict";
 
 /**
- * Objeto de gestión de la interfaz.
- * @typedef ui
+ * @typedef UI
  */
 
 /**
- * Métodos de gestión de la interfaz.
+ * @class Gestión de la interfaz.
  */
 var ui=new function() {
     "use strict";
@@ -1457,7 +1456,9 @@ var configComponente={
     grupo:null
 };
 
+/** @var {Componente[]} componentes - Instancias de componentes con nombre. */
 var componentes={};
+/** @var {Controlador[]} controladores - Instancias de controladores cargados. */
 var controladores={};
 var _vistasEmbebibles={};
 

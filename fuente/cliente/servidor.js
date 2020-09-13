@@ -7,11 +7,11 @@
 
 /**
  * Gestor de comunicación cliente->servidor.
- * @typedef {servidor}
+ * @typedef Servidor
  */
 
 /**
- * Gestor de comunicación cliente->servidor.
+ * @class Gestor de comunicación cliente->servidor.
  */
 var servidor=new function() {
     this.funcionesError=[];

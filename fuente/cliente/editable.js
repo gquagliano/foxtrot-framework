@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Gestión de elementos editables (contenteditable).
+ * @class Gestión de elementos editables (contenteditable).
  */
 var editable=new function() {
     this.observador=null;

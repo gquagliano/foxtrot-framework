@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Grupo de opciones.
+ * @class Componente concreto Grupo de opciones.
  */
 var componenteGrupoOpciones=function() {    
     this.componente="opciones";

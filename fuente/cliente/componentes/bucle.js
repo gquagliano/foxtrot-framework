@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Bucle.
+ * @class Componente concreto Bucle.
  */
 var componenteBucle=function() {    
     this.componente="bucle";

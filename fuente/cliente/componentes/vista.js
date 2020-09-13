@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Vista.
+ * @class Componente concreto Vista.
  */
 var componenteVista=function() {    
     this.componente="vista";

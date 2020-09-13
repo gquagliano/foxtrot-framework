@@ -8,7 +8,7 @@
  "use strict";
 
 /**
- * Componente concreto Importar.
+ * @class Componente concreto Importar.
  */
 var componenteImportar=function() { 
     this.componente="importar";

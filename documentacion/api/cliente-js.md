@@ -21,6 +21,7 @@ Cuando se establece como cadena, los siguientes valores son posibles:
 - `enviar:...` Invocará el método en el controlador de servidor, con los valores de todos los componentes de la vista como primer parámetro.
 - `apl:...` Invocará el método en el controlador de la aplicación.
 - `servidor-apl:...` Invocará el método en el controlador de la aplicación del lado del servidor.
+- `enviar-apl:...` Invocará el método en el controlador de la aplicación del lado del servidor, con los valores de todos los componentes de la vista como primer parámetro.
 - `nombrecomponente:...` Pasará el valor especificado al componente de nombre `nombrecomponente`. Cada tipo de componente determina qué hacer con ese valor (ver [Componentes](../componentes.md) para más información). Esto se denomina **Evento externo**.
 - *Expresiones*: Si la expresión resuelve a una función, será ejecutada.
 - *Nombre de método*: Intentará invocar el método en el controlador de la vista principal.
@@ -35,7 +36,7 @@ Cuando el evento sea procesado del lado del cliente, `this` siempre será el con
 
 *Nota para desarrolladores de componentes:* Esto último también es válido para los eventos externos: `eventoExterno()` recibirá los mismos dos argumentos y `this` será la instancia del componente.
 
-Cuando el destino del evento sea del lado del servidor, el método recibirá un único argumento con las propiedades `componente` (nombre del mismo), `evento` (nombre del evento) y `vista` (nombre de la misma). Excepto cuando se utilice `enviar:`, el cual enviará dos argumentos: Un objeto con los valores de los campos y el objeto del evento.
+Cuando el destino del evento sea del lado del servidor, el método recibirá un único argumento con las propiedades `componente` (nombre del mismo), `evento` (nombre del evento) y `vista` (nombre de la misma). Excepto cuando se utilicen `enviar:` o `enviar-apl:`, los cuales enviarán dos argumentos: Un objeto con los valores de los campos y el objeto del evento.
 
 Algunos componentes concretos pueden definir propiedades o parámetros adicionales en sus eventos.
 

@@ -1460,56 +1460,62 @@ var componente=new function() {
 
             if(retorno) retorno(resultadoLocal);
         } else if(typeof manejador==="string") {
-            var vista=ui.obtenerInstanciaVista(this.nombreVista),
-                ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador());
+            var comando=null,
+                p=manejador.indexOf(":");
+            if(p>0) {
+                comando=manejador.substring(0,p);
+                manejador=manejador.substring(p+1);
+            }
 
-            if(manejador.substring(0,9)=="servidor:") {
+            var vista=ui.obtenerInstanciaVista(this.nombreVista),
+                ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador()),
+                apl=ui.aplicacion();
+
+            if(comando=="servidor"||comando=="enviar"||comando=="servidor-apl"||comando=="enviar-apl") {
                 //Método del controlador de servidor
 
-                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
+                //servidor y enviar => Controlador de vista
+                var obj=ctl;
+                //servidor-apl y enviar-apl => Controlador de aplicacion
+                if(comando=="servidor-apl"||comando=="enviar-apl") obj=apl;
 
-                ajax=ctl.servidor[manejador.substring(9)](function(respuesta) {
-                        if(retorno) retorno(respuesta);
-                    },parametrosServidor);
-            } else if(manejador.substring(0,7)=="enviar:") {
-                //Método del controlador de servidor con los valores de los campos
+                if(silencioso) obj.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
 
-                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
+                var args=[parametrosServidor];
+                //enviar y enviar-apl => El primer parámetro serán los valores de los componentes
+                if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores());
 
-                ajax=ctl.servidor[manejador.substring(7)](function(respuesta) {
-                        if(retorno) retorno(respuesta);
-                    },ui.obtenerValores(),parametrosServidor);
-            } else if(manejador.substring(0,13)=="servidor-apl:") {
-                //Método del controlador de servidor de la aplicación
+                //Retorno
+                args.unshift(function(respuesta) {
+                    if(retorno) retorno(respuesta);
+                });
 
-                if(silencioso) ui.aplicacion().servidor.establecerOpcionesProximaConsulta({ precarga:false });
-
-                ajax=ui.aplicacion().servidor[manejador.substring(13)](function(respuesta) {
-                        if(retorno) retorno(respuesta);
-                    },parametrosServidor);
-            } else if(manejador.substring(0,3)=="ir:") {
+                //Invocar el método
+                var metodo=obj.servidor[manejador];
+                ajax=metodo.apply(obj.servidor,args);
+            } else if(comando=="ir") {
                 //Navegación
-                ui.irA(manejador.substring(3));
-            } else if(manejador.substring(0,6)=="no-ir:") {
+                ui.irA(manejador);
+            } else if(comando=="no-ir") {
                 //Reemplazar URL sin navegar
-                ui.noIrA(manejador.substring(6));
-            } else if(manejador.substring(0,6)=="abrir:") {
+                ui.noIrA(manejador);
+            } else if(comando=="abrir") {
                 //Popup
                 ui.abrirVentana(manejador.substring(6));
-            } else if(manejador.substring(0,4)=="apl:") {
+            } else if(comando=="apl") {
                 //Propiedad del controlador de aplicacion
                 var obj=ui.aplicacion();
-                resultadoLocal=obj[manejador.substring(4)].call(obj,this,evento);
+                resultadoLocal=obj[manejador].call(obj,this,evento);
 
                 if(retorno) retorno(resultadoLocal);
-            } else if(manejador.indexOf(":")>0) {
+            } else if(comando) {
                 //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                 //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
                 //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
                 
                 //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
-                var nombre=manejador.substring(0,manejador.indexOf(":")),
-                    valor=manejador.substring(manejador.indexOf(":")+1),
+                var nombre=comando,
+                    valor=manejador,
                     obj=componentes[nombre];
                 resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
 

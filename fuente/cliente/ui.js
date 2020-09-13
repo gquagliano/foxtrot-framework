@@ -1366,7 +1366,6 @@ var ui=new function() {
             if(principal) {
                 //Al cargar la vista principal el evento Listo es invocado en todo el sistema
                 this.evento("listo");
-                this.eventoComponentes(null,"listo",true);
             } else {
                 //Al cargar una vista secundaria, solo en la misma
                 obj.listo();
@@ -1430,6 +1429,9 @@ var ui=new function() {
             }
         }
 
+        //El evento Listo en los componentes se ejecuta incluso en modo edición
+        this.eventoComponentes(null,"listo",true);
+
         if(esCordova) {
             doc.querySelector("#contenedor-cordova").agregarClase("listo");
         }
@@ -1450,9 +1452,15 @@ var configComponente={
      * aceptaHijos:
      * - true               Cualquiera
      * - false              Ninguno
-     * - [ nombre, ... ]    Nombre de componentes de los cualqes puede ser hijo, o que acepta como hijos
+     * - [ nombre, ... ]    Nombre de componentes que acepta como hijos
      */
     aceptaHijos: true,
+    /**
+     * padre:
+     * - true               Cualquiera
+     * - [ nombre, ... ]    Nombre de componentes que dentro de los cuales se puede insertar
+     */
+    padre: true,
     grupo:null
 };
 

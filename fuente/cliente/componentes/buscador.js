@@ -381,6 +381,8 @@ var componenteBuscador=function() {
      * @returns {componente}
      */
     this.listo=function() {
+        if(ui.enModoEdicion()) return;
+        
         var valor=ui.evaluarExpresion(this.propiedad("valor"));
         if(valor) this.valor(valor);
         return this;

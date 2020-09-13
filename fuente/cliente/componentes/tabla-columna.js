@@ -107,5 +107,6 @@ ui.registrarComponente("tabla-columna",componenteColumnaTabla,configComponente.c
     descripcion:"Columna de tabla",
     etiqueta:"Columna",
     grupo:"Tablas de datos",
-    icono:"columna.png"
+    icono:"columna.png",
+    padre:["tabla-fila"]
 }));

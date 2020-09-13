@@ -94,6 +94,8 @@ var componenteImportar=function() {
      * Evento Listo.
      */
     this.listo=function() {
+        if(ui.enModoEdicion()) return;
+        
         var vistaInicial=this.propiedad(null,"vista");
         if(vistaInicial) this.cargarVista(vistaInicial);
     };

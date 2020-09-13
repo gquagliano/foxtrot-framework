@@ -69,5 +69,6 @@ ui.registrarComponente("tabla-fila",componenteFilaTabla,configComponente.clonar(
     etiqueta:"Fila",
     grupo:"Tablas de datos",
     icono:"fila.png",
+    padre:["tabla"],
     aceptaHijos:["tabla-columna"]
 }));

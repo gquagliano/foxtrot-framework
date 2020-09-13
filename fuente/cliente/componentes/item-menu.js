@@ -251,5 +251,6 @@ ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({
     etiqueta:"Item",
     grupo:"Menú",
     icono:"item-menu.png",
+    padre:["menu"],
     aceptaHijos:["menu"]
 }));

@@ -14,7 +14,7 @@ var ajax=function(param) {
     var self=this;
 
     var predeterminados={
-        url:null,
+        url:"",
         metodo:"post",
         parametros:null,
         listo:null,

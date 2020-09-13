@@ -224,6 +224,9 @@ class foxtrot {
                 sesion::responderSolicitud();
             } elseif($foxtrot=='obtenerVista') {
                 self::devolverVista($params[0]);
+            } elseif($foxtrot=='noop') {
+                echo 'ok';
+                self::detener();
             } else {
                 self::error();
             }

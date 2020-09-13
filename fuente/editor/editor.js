@@ -376,22 +376,24 @@ var editor=new function() {
      * Inserta (crea o mueve) el componente soltado.
      * @param {Object} e - Evento.
      */
-    function componenteSoltado(e) {
-        e.preventDefault();
-        //Detener la propagación permitirá destinos anidados
-        e.stopPropagation();
+    function componenteSoltado(ev) {
+        ev.preventDefault();
+        ev.stopPropagation(); //Detener la propagación permitirá destinos anidados
 
-        var destino=this,
-            ubicacion="dentro";
+        var destino,
+            ubicacion="dentro";       
 
-        if(e.target.es({clase:"foxtrot-zona"})) {
+        if(ev.target.es({clase:"foxtrot-zona"})) {
             ubicacion=this.es({clase:"foxtrot-zona-anterior"})?"antes":"despues";
             destino=this.metadato("destino");
-        } else if(!destino.es({clase:"contenedor"})) {
-            return;
+        } else {
+            //Buscar el contenedor (el destino era el elemento principal del componente)
+            var componente=ui.obtenerInstanciaComponente(this),
+                destino=componente.contenedor;        
+            if(!destino||!destino.es({clase:"contenedor"})) return;
         }
 
-        var datos=e.dataTransfer.getData("text/plain");
+        var datos=ev.dataTransfer.getData("text/plain");
         try {
             datos=JSON.parse(datos);
         } catch {
@@ -437,8 +439,8 @@ var editor=new function() {
                 clase:"componente"
             },function(ev) {
                 ev.preventDefault();
-                ev.stopPropagation();
-
+                //ev.stopPropagation();
+                
                 if(!ev.shiftKey) self.limpiarSeleccion();
 
                 self.alternarSeleccion(this);
@@ -502,7 +504,7 @@ var editor=new function() {
                     );
             })
             .evento("click",function() {
-                self.limpiarSeleccion();
+                //self.limpiarSeleccion();
             })
             .evento("keydown",function(ev) {
                 if(eventosPausados) return;
@@ -689,7 +691,7 @@ var editor=new function() {
         //Creamos el destino en todos los elementos (no solo los contenedores) para poder mostrar las zonas de
         //soltado alrededor del componente (componenteSoltado validará si puede recibir hijos.)
         if(cont) {
-            cont.crearDestino({
+            elem.crearDestino({
                 drop:componenteSoltado,
                 dragenter:function(ev) {
                     //Detener la propagación permitirá destinos anidados
@@ -748,7 +750,7 @@ var editor=new function() {
             destino.insertarDespues(elem);            
         }
         
-        obj.inicializar();
+        obj.insertado();
 
         this.prepararComponenteInsertado(obj);
 

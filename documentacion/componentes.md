@@ -95,6 +95,8 @@ Cabe aclarar que el efecto es solo visual. Al obtener los valores de la vista o 
 
 #### ![](img/iconos/contenedor.png) Contenedor
 
+Permite insertar un bloque, el cual puede ser un contenedor (`container` o `container-fluid`) o bien mantenerse como un mero `<div>`.
+
 #### ![](img/iconos/contenedor-menu.png) Contenedor de menú: Barra de navegación o menú lateral (deslizable)
 
 Genera un menú de navegación, el cual puede utilizarse como barra de navegación (fija o flotante) o como menú lateral (deslizable). Admite como hijos componentes Item de menú (*no componentes Menú*).
@@ -163,7 +165,17 @@ Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder vis
 
 #### ![](img/iconos/pestana.png) Pestaña
 
+Permite añadir una pestaña al componente Pestañas.
+
+El texto del botón del encabezado se establece en la propiedad *Encabezado* (`encabezado`). Las pestañas pueden activarse desde el código mediante `activar()`, o bien con `activarPestana(pestana)` o `activarPestana(indice)` del componente Pestañas.
+
 #### ![](img/iconos/pestanas.png) Pestañas (contenedor de pestañas)
+
+Permite crear un bloque de pestañas o *tabs*. Dentro del bloque, deben insertarse componentes Pestaña únicamente.
+
+El evento *Pestaña activada* (`pestanaActivada`) será invocado cuando la pestaña activa cambie por cualquier motivo (por igual ya sea por interacción del usuario o por código), incluyendo la propiedad `pestana` en el objeto del evento (segundo parámetro) con la instancia del componente Pestaña que acaba de ser activado.
+
+Cabe mencionar que la pestaña activa en el editor será la pestaña inicial en durante la ejecución de la vista.
 
 #### ![](img/iconos/tabla.png) Tabla
 

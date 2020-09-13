@@ -1471,6 +1471,14 @@ var componente=new function() {
                 ajax=ctl.servidor[manejador.substring(9)](function(respuesta) {
                         if(retorno) retorno(respuesta);
                     },parametrosServidor);
+            } else if(manejador.substring(0,7)=="enviar:") {
+                //Método del controlador de servidor con los valores de los campos
+
+                if(silencioso) ctl.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
+
+                ajax=ctl.servidor[manejador.substring(7)](function(respuesta) {
+                        if(retorno) retorno(respuesta);
+                    },ui.obtenerValores(),parametrosServidor);
             } else if(manejador.substring(0,13)=="servidor-apl:") {
                 //Método del controlador de servidor de la aplicación
 

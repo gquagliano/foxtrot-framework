@@ -129,6 +129,7 @@ var editor=new function() {
                 fn=prop.hasOwnProperty("funcion")?prop.funcion:null,
                 placeholder=prop.hasOwnProperty("placeholder")?prop.placeholder:null,
                 ayuda=prop.hasOwnProperty("ayuda")?prop.ayuda:null,
+                evento=prop.hasOwnProperty("evento")?prop.evento:null,
                 timeout=0;
 
             if(ayuda) {
@@ -210,29 +211,65 @@ var editor=new function() {
                 });
             } else {
                 //Campo de texto como predeterminado
+
+                var campo,
+                    campoComandos=null,
+                    valor=prop.valor;                
+
+                var fn2=function() {
+                    if(!fn) return;
+
+                    var nuevoValor="";
+                    if(campoComandos) nuevoValor=campoComandos.valor();
+                    nuevoValor+=campo.valor();
+
+                    self.componentesSeleccionados.forEach(function(componente) {
+                        fn.call(editor,componente,tamanoActual,nombre,nuevoValor);
+                    });
+                };
+
+                if(evento) {
+                    //Para los eventos mostraremos un desplegable con los comandos además del campo de texto
+                    campoComandos=document.crear("<select class='custom-select mr-2'>\
+                        <option></option>\
+                        <option>servidor:</option>\
+                        <option>enviar:</option>\
+                        <option>servidor-apl:</option>\
+                        <option>enviar-apl:</option>\
+                        <option>ir:</option>\
+                        <option>no-ir:</option>\
+                        <option>abrir:</option>\
+                        <option>apl:</option>\
+                        </select>");
+                    fila.anexar(campoComandos);
+                    
+                    campoComandos.evento("change",function(ev) {
+                        fn2();
+                    });
+                    
+                    if(!seleccionMultiple&&prop.valor) {
+                        var comando="",
+                            p=prop.valor.indexOf(":");                        
+                        if(p>0) {
+                            comando=prop.valor.substring(0,p+1);
+                            valor=prop.valor.substring(p+1);
+                        }                        
+                        campoComandos.valor(comando);
+                    }
+                }
                 
                 var campo=document.crear("<input type='text' class='form-control'>");
-                if(!seleccionMultiple) campo.valor(prop.valor);
+                if(!seleccionMultiple) campo.valor(valor);
                 if(placeholder) campo.atributo("placeholder",placeholder);
                 fila.anexar(campo);
 
                 campo.evento("input",function(ev) {
-                    var t=this;
                     clearTimeout(timeout);
                     timeout=setTimeout(function() {
-                        if(fn) {
-                            self.componentesSeleccionados.forEach(function(componente) {
-                                fn.call(editor,componente,tamanoActual,nombre,t.valor());
-                            });
-                        }
+                        fn2();
                     },200);
                 }).evento("blur",function(ev) {
-                    if(fn)  {
-                        var v=this.valor();
-                        self.componentesSeleccionados.forEach(function(componente) {
-                            fn.call(editor,componente,tamanoActual,nombre,v);
-                        });
-                    }
+                    fn2();
                 });
             }
 

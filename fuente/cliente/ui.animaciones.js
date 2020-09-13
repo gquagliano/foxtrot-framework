@@ -11,7 +11,10 @@
 (function() {
     "use strict";
 
-    /** @var {number} duracionAnimacion - Duración máxima de la animación, acorde al CSS. */
+    /**
+     * @ignore
+     * @var {number} duracionAnimacion - Duración máxima de la animación, acorde al CSS.
+     */
     var duracionAnimacion=1000;
 
     /**

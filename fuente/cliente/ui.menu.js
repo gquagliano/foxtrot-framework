@@ -64,20 +64,11 @@
     };
 
     /**
-     * @callback callbackAccion
-     */
-
-    /**
-     * @callback callbackHabilitado
-     * @returns {boolean}
-     */
-
-    /**
      * Construye un menú.
      * @param {Object[]} items - Items del menú.
      * @param {string} items[].etiqueta - Etiqueta.
-     * @param {callbackAccion} [items[].accion] - Función a ejecutar al seleccionarse la opción.
-     * @param {(callbackHabilitado|boolean)} [items[].habilitado=true] - Estado del item o función a ejecutar para determinar si el item se encuentra habilitado.
+     * @param {function} [items[].accion] - Función a ejecutar al seleccionarse la opción.
+     * @param {(function|boolean)} [items[].habilitado=true] - Estado del item o función a ejecutar para determinar si el item se encuentra habilitado.
      * @param {boolean} [items[].separador=false] - Determina si el item es seguido de un separador.
      * @param {Object[]} [items[].submenu] - Items del submenú (admiten las mismas propiedades que items).
      * @param {string} [clase] - Clase CSS.

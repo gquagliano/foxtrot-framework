@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: ui.animaciones.js</title>
+    <title>JSDoc: External: HTMLDocument</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,124 +17,189 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: ui.animaciones.js</h1>
+    <h1 class="page-title">External: HTMLDocument</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
- * 
- * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
- * @version 1.0
- */
+        <h2>HTMLDocument</h2>
+        
+    
+</header>
 
-/**
- * Métodos anexados a la gestión de la interfaz.
- */
-(function() {
-    "use strict";
+<article>
+    <div class="container-overview">
+    
+        
 
-    /**
-     * @ignore
-     * @var {number} duracionAnimacion - Duración máxima de la animación, acorde al CSS.
-     */
-    var duracionAnimacion=1000;
+        
 
-    /**
-     * Establece el evento animationend y un temporizador en caso de que el navegador no tenga soporte para el mismo.
-     * @param {(Node|Element)} elem 
-     * @param {function} funcion 
-     */
-    function establecerEvento(elem,funcion) {
-        elem._eventoCompleto=false;
-        elem._temporizadorAnimacion=setTimeout(function() {
-            if(elem._eventoCompleto) return;
-            elem._eventoCompleto=true;
-            funcion();
-        },duracionAnimacion);
-        elem.evento("animationend",function() {
-            if(elem._eventoCompleto) return;
-            elem._eventoCompleto=true;
-            funcion();
-        });
-    };
 
-    /**
-     * Remueve el evento animationend y el temporizador.
-     * @param {(Node|Element)} elem 
-     */
-    function removerEvento(elem) {
-        elem._eventoCompleto=false;
-        if(elem.hasOwnProperty("_temporizadorAnimacion")) clearTimeout(elem._temporizadorAnimacion);
-        elem.removerEvento("animationend");
-    };
+<dl class="details">
 
-    /**
-     * Hace aparecer el elemento en forma animada utilizando animaciones CSS.
-     * @param {(Node|Element)} elem - Elemento.
-     * @param {function} [retorno] - Función de retorno.
-     * @returns {ui}
-     */
-    ui.animarAparecer=function(elem,retorno) {
-        ui.detenerAnimacion(elem);
+    
 
-        elem.removerClase("oculto")
-            .agregarClase("aparece");  
+    
 
-        if(typeof retorno!=="undefined") establecerEvento(elem,retorno);
+    
 
-        return ui;
-    };
+    
 
-    /**
-     * Hace desaparecer y oculta el elemento en forma animada utilizando animaciones CSS.
-     * @param {(Node|Element)} elem - Elemento.
-     * @param {function} [retorno] - Función de retorno.
-     * @returns {ui}
-     */
-    ui.animarDesaparecer=function(elem,retorno) {
-        ui.detenerAnimacion(elem);
+    
 
-        elem.agregarClase("desaparece");
+    
 
-        establecerEvento(elem,function() {
-            if(typeof retorno!=="undefined") retorno();
+    
 
-            elem.removerClase("desaparece")
-                .agregarClase("oculto");
-        });
-    };
+    
 
-    /**
-     * Oculta el elemento mediante el mismo mecanismo que animarDesaparecer(), pero de forma inmediata.
-     * @param {(Node|Element)} elem - Elemento.
-     * @returns {ui}
-     */
-    ui.desaparecer=function(elem) {
-        elem.removerClase("aparece")
-            .agregarClase("oculto");
-        return ui;
-    };
+    
 
-    /**
-     * Detiene la animación en curso.
-     * @param {(Node|Element)} elem - Elemento.
-     * @returns {ui}
-     */
-    ui.detenerAnimacion=function(elem) {
-        removerEvento(elem);
-        elem.removerClase("aparece desaparece");
-        return ui;
-    };
-})();
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="crear"><span class="type-signature">(static) </span>HTMLDocument#crear<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1336">line 1336</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

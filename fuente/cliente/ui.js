@@ -1171,7 +1171,7 @@ var ui=new function() {
     /**
      * Invoca el método correspondiente al evento en todos los controladores.
      * @param {string} nombre - Nombre del evento.
-     * @param {*[]} [params] - Parámetros a pasar al método.
+     * @param {*} [params] - Parámetros a pasar al método.
      * @returns {boolean}
      */
     this.evento=function(nombre,params) {
@@ -1210,7 +1210,7 @@ var ui=new function() {
      * @param {Object} origen - Repositorio de componentes. Especificar NULL para ejecutar en todos los componentes del sistema.
      * @param {string} nombre - Nombre del evento.
      * @param {boolean} [soloImplementados=false] - Si es true, solo invocará aquellos métodos implementados en el componente concreto (no invocará métodos heredados).
-     * @param {*[]} [params] - Parámetros a pasar al método.
+     * @param {*} [params] - Parámetros a pasar al método.
      * @returns {boolean}
      */
     this.eventoComponentes=function(origen,nombre,soloImplementados,params) {

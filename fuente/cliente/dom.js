@@ -5,7 +5,31 @@
  * @version 1.0
  */
 
- /**
+/**
+ * @external Node
+ */
+
+/**
+ * @external EventTarget
+ */
+
+/**
+ * @external NodeList
+ */
+
+/**
+ * @external Object
+ */
+
+/**
+ * @external HTMLDocument
+ */
+
+/**
+ * @external Window
+ */
+
+/**
  * Extiende los prototipos del DOM.
  */
 (function() {
@@ -18,6 +42,8 @@
 
     /**
      * Devuelve el ID del elemento, inicializandolo si es necesario.
+     * @memberof external:Node
+     * @returns {number}
      */
     Node.prototype.obtenerId=function() {
         if(util.esIndefinido(this._id)) this._id=id++;
@@ -26,6 +52,7 @@
 
     /**
      * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     * @memberof external:Node
      */
     Node.prototype.inicializarMetadatos=function() {
         var obj=this.metadatos(this);
@@ -35,6 +62,7 @@
 
     /**
      * Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
+     * @memberof external:Node
      */
     Node.prototype.metadato=function(clave,valor) {
         var id=this.obtenerId();
@@ -54,6 +82,7 @@
 
     /**
      * Devuelve todos los metadatos del elemento.
+     * @memberof external:Node
      */
     Node.prototype.metadatos=function() {
         return this.metadato();
@@ -61,6 +90,7 @@
 
     /**
      * Establece o devuelve datos (dataset) del elemento.
+     * @memberof external:Node
      */
     Node.prototype.dato=function(clave,valor) {
         if(!this.dataset) return null; //Algunos nodos pueden no tener dataset (por ejemplo Text)
@@ -71,6 +101,7 @@
 
     /**
      * Devuelve todos los datos (dataset) del elemento.
+     * @memberof external:Node
      */
     Node.prototype.datos=function() {
         return Object.assign({},this.dataset);
@@ -78,6 +109,7 @@
 
     /**
      * Acceso directo a querySelectorAll(sel).
+     * @memberof external:Node
      */
     Node.prototype.buscar=function(sel) {
         return this.querySelectorAll(sel);
@@ -85,6 +117,7 @@
 
     /**
      * Devuelve los hijos directos del elemento.
+     * @memberof external:Node
      * @param {Object} [filtro] - Filtra los elementos resultantes.
      */
     Node.prototype.hijos=function(filtro) {
@@ -95,6 +128,7 @@
 
     /**
      * Devuelve o establece el valor del campo.
+     * @memberof external:Node
      */
     Node.prototype.valor=function(valor) {
         var tipo=this.type;
@@ -137,6 +171,7 @@
 
     /**
      * Agrega los elementos especificados a los elementos de esta instancia.
+     * @memberof external:Node
      */
     Node.prototype.anexar=function(elemento) {
         if(typeof elemento==="string") {
@@ -158,6 +193,7 @@
 
     /**
      * Agrega los elementos especificados a antes de los elementos de esta instancia.
+     * @memberof external:Node
      */
     Node.prototype.insertarAntes=function(elemento) {
         if(typeof elemento==="string") {
@@ -179,6 +215,7 @@
 
     /**
      * Agrega los elementos especificados después de los elementos de esta instancia.
+     * @memberof external:Node
      */
     Node.prototype.insertarDespues=function(elemento) {
         if(typeof elemento==="string") {
@@ -205,6 +242,7 @@
 
     /**
      * Agrega este elemento a los elementos especificados.
+     * @memberof external:Node
      */
     Node.prototype.anexarA=function(elemento) {
         //TODO Si elemento es un NodeList, ¿clonar?
@@ -225,6 +263,7 @@
      * metadatos        Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
      * tipo             Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
      * Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos se evalúan como OR. Se evalúan como string (no es sensible al tipo).
+     * @memberof external:Node
      */
     Node.prototype.es=function(filtro) {
         if(typeof filtro==="undefined") return true; //Un filtro indefinido coincide con todo
@@ -336,6 +375,7 @@
 
     /**
      * Determina si el nodo es un campo de formulario.
+     * @memberof external:Node
      */
     Node.prototype.esCampo=function() {
         return this.es({
@@ -345,6 +385,7 @@
 
     /**
      * Busca en la ascendencia el elemento que coincida con el filtro, o devuelve el padre directo si filtro no está definido.
+     * @memberof external:Node
      */
     Node.prototype.padre=function(filtro) {
         var elem=this.parentNode,
@@ -369,6 +410,7 @@
 
     /**
      * Busca en la ascendencia todos los elementos que coincidan con el filtro.
+     * @memberof external:Node
      */
     Node.prototype.padres=function(filtro) {
         var resultado=[],
@@ -386,6 +428,7 @@
 
     /**
      * Agrega una clase css a los elementos. Soporta múltiples clases separadas por espacios.
+     * @memberof external:Node
      */
     Node.prototype.agregarClase=function(clase) {
         var t=this;
@@ -400,6 +443,7 @@
 
     /**
      * Remueve una clase css de los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     * @memberof external:Node
      */
     Node.prototype.removerClase=function(clase) {
         var t=this;
@@ -426,6 +470,7 @@
 
     /**
      * Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     * @memberof external:Node
      */
     Node.prototype.alternarClase=function(clase) {
         var t=this;
@@ -450,6 +495,7 @@
 
     /**
      * Establece o devuelve el valor de un atributo.
+     * @memberof external:Node
      */
     Node.prototype.atributo=function(nombre,valor) {
         var atrib;
@@ -468,6 +514,7 @@
 
     /**
      * Remueve un atributo.
+     * @memberof external:Node
      */
     Node.prototype.removerAtributo=function(nombre) {
         if(!this.attributes.getNamedItem(nombre)) return this;
@@ -477,6 +524,7 @@
 
     /**
      * Devuelve o asigna una propiedad.
+     * @memberof external:Node
      */
     Node.prototype.propiedad=function(nombre,valor) {
         if(util.esIndefinido(valor)) return this[nombre];
@@ -491,6 +539,7 @@
 
     /**
      * Devuelve un objeto {x,y} con la posición relativa del elemento.
+     * @memberof external:Node
      */
     Node.prototype.posicion=function() {
         //TODO
@@ -502,6 +551,7 @@
 
     /**
      * Devuelve un objeto {x,y} con la posición del elemento según está establecido en sus estilos.
+     * @memberof external:Node
      */
     Node.prototype.posicionEstilos=function() {
         var estilos=this.estilos();
@@ -515,6 +565,7 @@
     
     /**
      * Devuelve un objeto {x,y} con la posición absoluta del elemento.
+     * @memberof external:Node
      */
     Node.prototype.posicionAbsoluta=function() {
         var pos=this.getBoundingClientRect();
@@ -526,6 +577,7 @@
 
     /**
      * Prepara un valor arbitrario para que pueda ser asignado como valor de un estilo css.
+     * @private
      */
     function normalizarValorCss(valor) {
         if(typeof valor==="number"||!isNaN(valor)) valor=valor+"px";
@@ -534,6 +586,7 @@
 
     /**
      * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
+     * @memberof external:Node
      */
     Node.prototype.estilos=function(estilo,valor) {
         if(util.esIndefinido(estilo)) return getComputedStyle(this);
@@ -559,6 +612,7 @@
 
     /**
      * Alias de estilos(estilo,valor).
+     * @memberof external:Node
      */
     Node.prototype.estilo=function(estilo,valor) {
         return this.estilos(estilo,valor);
@@ -567,6 +621,7 @@
     /**
      * Devuelve el ancho del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el ancho de la página. Si el elemento
      * es window, devolverá el ancho de la ventana (viewport).
+     * @memberof external:Node
      */
     Node.prototype.ancho=function() {
         if(this===document) return document.body.offsetWidth;
@@ -577,6 +632,7 @@
     /**
      * Devuelve el alto del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el alto de la página. Si el elemento
      * es window, devolverá el alto de la ventana (viewport).
+     * @memberof external:Node
      */
     Node.prototype.alto=function() {
         if(this===document) return document.body.offsetHeight;
@@ -586,6 +642,7 @@
 
     /**
      * Devuelve a sí mismo. El único propósito es que pueda llamarse obtener(x) en un elemento tal como si fuera NodeList, ahorrando verificar el tipo primero.
+     * @memberof external:Node
      */
     Node.prototype.obtener=function(i) {
         if(i==0) return this;
@@ -594,6 +651,7 @@
 
     /**
      * Acceso a innerHTML.
+     * @memberof external:Node
      */
     Node.prototype.obtenerHtml=function() {
         return this.innerHTML;
@@ -601,6 +659,7 @@
 
     /**
      * Acceso a innerHTML.
+     * @memberof external:Node
      */
     Node.prototype.establecerHtml=function(html) {
         this.innerHTML=html;
@@ -609,6 +668,7 @@
 
     /**
      * Acceso a innerText.
+     * @memberof external:Node
      * @returns {(Node|Element)}
      */
     Node.prototype.establecerTexto=function(texto) {
@@ -618,6 +678,7 @@
 
     /**
      * Acceso a innerText.
+     * @memberof external:Node
      * @returns {string}
      */
     Node.prototype.obtenerTexto=function() {
@@ -626,6 +687,7 @@
 
     /**
      * Clona el elemento.
+     * @memberof external:Node
      */
     Node.prototype.clonar=function(conEventosDatos) {
         var clon=this.cloneNode(true);
@@ -637,6 +699,7 @@
 
     /**
      * Elimina el elemento.
+     * @memberof external:Node
      */
     Node.prototype.remover=function() {
         this.parentNode.removeChild(this);
@@ -645,6 +708,7 @@
 
     /**
      * Desacopla el elemento del DOM (sin eliminarlo).
+     * @memberof external:Node
      */
     Node.prototype.desacoplar=function() {
         var elem=this.parentNode.removeChild(this);
@@ -655,11 +719,20 @@
 
     /**
      * Devuelve todos los eventos con las funciones asignadas.
+     * @memberof external:EventTarget
      */
     EventTarget.prototype.eventos=function() {
         
     };
 
+    /**
+     * @private
+     * @param {*} elem 
+     * @param {*} nombre 
+     * @param {*} funcionInterna 
+     * @param {*} funcion 
+     * @param {*} captura 
+     */
     function establecerEvento(elem,nombre,funcionInterna,funcion,captura) {
         //Si nombre es el único parámetro, devolvemos todas las funciones asignadas
         if(util.esIndefinido(funcion)) {
@@ -690,6 +763,13 @@
         return elem;
     }
 
+    /**
+     * 
+     * @memberof external:EventTarget
+     * @param {*} nombre 
+     * @param {*} funcion 
+     * @param {*} captura 
+     */
     EventTarget.prototype.evento=function(nombre,funcion,captura) {
         //funcion puede ser un array para asignar múltiples listeners a la vez
         if(util.esArray(funcion)) {
@@ -720,6 +800,7 @@
 
     /**
      * Ejecuta todos los manejadores asignados a un evento.
+     * @memberof external:EventTarget
      * @param {string} nombre - Nombre del evento.
      */
     EventTarget.prototype.ejecutarEvento=function(nombre) {
@@ -744,6 +825,7 @@
     /**
      * Establece una función que será invocada cuando el evento suceda en los hijos que coincidan con el filtro. Si estricto es true, sólo se invocará cuando el 
      * elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
+     * @memberof external:EventTarget
      */
     EventTarget.prototype.eventoFiltrado=function(nombre,filtro,funcion,estricto) {
         if(util.esIndefinido(estricto)) estricto=false;
@@ -796,6 +878,7 @@
 
     /**
      * Remueve todos los manejadores de eventos asignados.
+     * @memberof external:EventTarget
      * @returns {EventTarget}
      */
     EventTarget.prototype.removerEventos=function() {
@@ -803,6 +886,12 @@
         return this;
     };
 
+    /**
+     * 
+     * @memberof external:EventTarget
+     * @param {*} nombre 
+     * @param {*} funcion 
+     */
     EventTarget.prototype.removerEvento=function(nombre,funcion) {
         //funcion puede ser un array para remover múltiples listeners a la vez
         if(util.esArray(funcion)) {
@@ -861,6 +950,7 @@
 
     /**
      * Filtra los elementos y devuelve un nuevo listado como array (¡no NodeList!).
+     * @memberof external:NodeList
      * @param {Object} filtro - Filtro (ver documentación de es().)
      * @param {boolean} negado - Negar el filtro.
      * @returns {Node[]|Element[]}
@@ -878,33 +968,296 @@
 
     /**
      * Devuelve un elemento dado su índice, o null.
+     * @memberof external:NodeList
      */
     NodeList.prototype.obtener=function(i) {
         if(i<0||i>=this.length) return null;
         return this[i];
     };
 
-    //Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
-    ["metadato","dato","agregarClase","removerClase","alternarClase","evento","removerEvento","atributo","removerAtributo","propiedad","estilos","estilo",
-        "texto","html","anexar","anexarA","remover","desacoplar"].forEach(function(m) {
-            NodeList.prototype[m]=function() {
-                var args=Array.from(arguments);
-                this.forEach(function(elem) {
-                    elem[m].apply(elem,args);
-                });
-                return this;
-            };
-        });
+    // Métodos de Node y EventTarget que se aplican sobre todos los elementos de la lista
 
-    //Copiar métodos de Node a Window
-    ["obtenerId","inicializarMetadatos","metadato","metadatos","propiedad","ancho","alto"].forEach(function(m) {
-        Window.prototype[m]=Node.prototype[m];
-    });
+    /**
+     * Invoca un método en cada elemento del NodeList.
+     * @private
+     * @param {*} lista 
+     * @param {*} metodo 
+     * @param {*} argumentos 
+     */
+    var aplicar=function(lista,metodo,argumentos) {
+        var args=Array.from(argumentos);
+        lista.forEach(function(elem) {
+            elem[metodo].apply(elem,args);
+        });
+    };
+
+    /**
+     * Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.metadato=function(clave,valor) {
+        aplicar(this,"metadato",arguments);
+        return this;
+    };
+
+    /**
+     * Establece o devuelve datos (dataset) del elemento.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.dato=function(clave,valor) {
+        aplicar(this,"dato",arguments);
+        return this;
+    };
+    
+    /**
+     * Devuelve o establece el valor del campo.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.valor=function(valor) {
+        aplicar(this,"valor",arguments);
+        return this;
+    };
+
+    /**
+     * Agrega los elementos especificados a los elementos de esta instancia.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.anexar=function(elemento) {
+        aplicar(this,"anexar",arguments);
+        return this;
+    };
+
+    /**
+     * Agrega los elementos especificados a antes de los elementos de esta instancia.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.insertarAntes=function(elemento) {
+        aplicar(this,"insertarAntes",arguments);
+        return this;
+    };
+
+    /**
+     * Agrega los elementos especificados después de los elementos de esta instancia.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.insertarDespues=function(elemento) {
+        aplicar(this,"insertarDespues",arguments);
+        return this;
+    };
+
+    /**
+     * Agrega una clase css a los elementos. Soporta múltiples clases separadas por espacios.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.agregarClase=function(clase) {
+        aplicar(this,"agregarClase",arguments);
+        return this;
+    };
+
+    /**
+     * Remueve una clase css de los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     * @memberof external:removerClase
+     */
+    NodeList.prototype.removerClase=function(clase) {
+        aplicar(this,"removerClase",arguments);
+        return this;
+    };
+
+    /**
+     * Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.alternarClase=function(clase) {
+        aplicar(this,"alternarClase",arguments);
+        return this;
+    };
+
+    /**
+     * Establece o devuelve el valor de un atributo.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.atributo=function(nombre,valor) {
+        aplicar(this,"atributo",arguments);
+        return this;
+    };
+
+    /**
+     * Remueve un atributo.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.removerAtributo=function(nombre) {
+        aplicar(this,"removerAtributo",arguments);
+        return this;
+    };
+
+    /**
+     * Devuelve o asigna una propiedad.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.propiedad=function(nombre,valor) {
+        aplicar(this,"propiedad",arguments);
+        return this;
+    };
+
+    /**
+     * Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.estilos=function(estilo,valor) {
+        aplicar(this,"estilos",arguments);
+        return this;
+    };
+
+    /**
+     * Alias de estilos(estilo,valor).
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.estilo=function(estilo,valor) {
+        aplicar(this,"estilo",arguments);
+        return this;
+    };
+
+    /**
+     * Acceso a innerHTML.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.establecerHtml=function(html) {
+        aplicar(this,"establecerHtml",arguments);
+        return this;
+    };
+
+    /**
+     * Acceso a innerText.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.establecerTexto=function(texto) {
+        aplicar(this,"establecerTexto",arguments);
+        return this;
+    };
+
+    /**
+     * Elimina el elemento.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.remover=function() {
+        aplicar(this,"remover");
+        return this;
+    };
+
+    /**
+     * Desacopla el elemento del DOM (sin eliminarlo).
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.desacoplar=function() {
+        aplicar(this,"desacoplar",arguments);
+        return this;
+    };
+
+    /**
+     * 
+     * @memberof external:NodeList
+     * @param {*} nombre 
+     * @param {*} funcion 
+     * @param {*} captura 
+     */
+    NodeList.prototype.evento=function(nombre,funcion,captura) {
+        aplicar(this,"evento",arguments);
+        return this;
+    };
+
+    /**
+     * Ejecuta todos los manejadores asignados a un evento.
+     * @memberof external:NodeList
+     * @param {string} nombre - Nombre del evento.
+     */
+    NodeList.prototype.ejecutarEvento=function(nombre) {
+        aplicar(this,"ejecutarEvento",arguments);
+        return this;
+    };
+
+    /**
+     * Establece una función que será invocada cuando el evento suceda en los hijos que coincidan con el filtro. Si estricto es true, sólo se invocará cuando el 
+     * elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.eventoFiltrado=function(nombre,filtro,funcion,estricto) {
+        aplicar(this,"eventoFiltrado",arguments);
+        return this;
+    };
+
+    /**
+     * Remueve todos los manejadores de eventos asignados.
+     * @memberof external:NodeList
+     * @returns {EventTarget}
+     */
+    NodeList.prototype.removerEventos=function() {
+        aplicar(this,"removerEventos",arguments);
+        return this;
+    };
+
+    /**
+     * 
+     * @memberof external:NodeList
+     * @param {*} nombre 
+     * @param {*} funcion 
+     */
+    NodeList.prototype.removerEvento=function(nombre,funcion) {
+        aplicar(this,"anexar",arguments);
+        return this;
+    };
+
+    ////// Métodos de Window
+
+    /**
+     * Devuelve el ID del elemento, inicializandolo si es necesario.
+     * @memberof external:Window
+     * @returns {number}
+     */
+    Window.prototype.obtenerId=Node.prototype.obtenerId;
+
+    /**
+     * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     * @memberof external:Window
+     */
+    Window.prototype.inicializarMetadatos=Node.prototype.inicializarMetadatos;
+
+    /**
+     * Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
+     * @memberof external:Window
+     */
+    Window.prototype.metadato=Node.prototype.metadato;
+
+    /**
+     * Devuelve todos los metadatos del elemento.
+     * @memberof external:Window
+     */
+    Window.prototype.metadatos=Node.prototype.metadatos;
+
+    /**
+     * Devuelve o asigna una propiedad.
+     * @memberof external:Window
+     */
+    Window.prototype.propiedad=Node.prototype.propiedad;
+
+    /**
+     * Devuelve el ancho del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el ancho de la página. Si el elemento
+     * es window, devolverá el ancho de la ventana (viewport).
+     * @memberof external:Window
+     */
+    Window.prototype.ancho=Node.prototype.ancho;
+
+    /**
+     * Devuelve el alto del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el alto de la página. Si el elemento
+     * es window, devolverá el alto de la ventana (viewport).
+     * @memberof external:Window
+     */
+    Window.prototype.alto=Node.prototype.alto;
 
     ////// Otros métodos útiles
 
     /**
      * Implementación de forEach en objetos.
+     * @memberof external:Object
      */
     Object.prototype.forEach=function(fn) {
         var t=this;
@@ -916,6 +1269,7 @@
 
     /**
      * Devuelve un array con los valores del objeto (descartando las propiedades).
+     * @memberof external:Object
      */
     Object.prototype.aArray=function() {
         return Object.values(this);
@@ -923,6 +1277,7 @@
 
     /**
      * Determina si el objeto es un objeto vacío.
+     * @memberof external:Object
      */
     Object.prototype.vacio=function() {
         for(var prop in this)
@@ -932,6 +1287,7 @@
 
     /**
      * Clona el objeto. El parámetro asignar permite asignar o reemplazar propiedades en la nueva instancia.
+     * @memberof external:Object
      */
     Object.prototype.clonar=function(asignar) {
         var nuevo=Object.assign(util.esArray(this)?[]:{},this);
@@ -945,6 +1301,7 @@
 
     /**
      * Copia las propiedades desde el objeto asignado.
+     * @memberof external:Object
      */
     Object.prototype.copiarDe=function(obj,reemplazar) {
         if(util.esIndefinido(reemplazar)) reemplazar=true;
@@ -958,6 +1315,7 @@
 
     /**
      * Devuelve el prototipo del objeto (atajo).
+     * @memberof external:Object
      */
     Object.prototype.prototipo=function() {
         return Object.getPrototypeOf(this);
@@ -965,6 +1323,7 @@
 
     /**
      * Devuelve el prototipo del objeto (atajo).
+     * @memberof external:Object
      */
     Object.prototype.cttr=function() {
         return Object.getPrototypeOf(this).constructor;
@@ -972,6 +1331,7 @@
 
     /**
      * Crea un elemento a partir de su representación HTML. Devuelve un nodo o un NodeList según haya uno o más de un elemento en el primer nivel.
+     * @memberof external:HTMLDocument
      */
     HTMLDocument.prototype.crear=function(html) {
         //Si html es un nombre de tag, utilizar createElement
@@ -983,5 +1343,11 @@
         if(div.children.length==1) return div.children[0];
         return div.childNodes;
     };
+
+    /** @var {Document} documento - Alias de document. */
+    window["documento"]=document;
+
+    /** @var {HTMLBodyElement} cuerpo - Alias de document.body. */
+    window["cuerpo"]=document.body;
 })();
 

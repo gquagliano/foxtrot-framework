@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: controlador</title>
+    <title>JSDoc: External: NodeList</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: controlador</h1>
+    <h1 class="page-title">External: NodeList</h1>
 
     
 
@@ -28,9 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>controlador<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-            <div class="class-description">Objeto base para los controladores.</div>
+        <h2>NodeList</h2>
         
     
 </header>
@@ -40,28 +38,7 @@
     
         
 
-    
-    <h2>Constructor</h2>
-    
-
-    
-    <h4 class="name" id="controlador"><span class="type-signature"></span>new controlador<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 <dl class="details">
@@ -93,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line18">line 18</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -105,24 +82,7 @@
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 
@@ -139,134 +99,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="componentes"><span class="type-signature"></span>componentes<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Componentes por nombre.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line24">line 24</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="instanciasComponentes"><span class="type-signature"></span>instanciasComponentes<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Listado de todos los componentes.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -277,7 +109,7 @@
     
 
     
-    <h4 class="name" id="agregarComponente"><span class="type-signature"></span>agregarComponente<span class="signature">(componente, nombre<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="controlador.html">controlador</a>}</span></h4>
+    <h4 class="name" id="agregarClase"><span class="type-signature">(static) </span>NodeList#agregarClase<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -285,7 +117,535 @@
 
 
 <div class="description">
-    Agrega la instancia del componente al repositorio.
+    Agrega una clase css a los elementos. Soporta múltiples clases separadas por espacios.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1052">line 1052</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="alternarClase"><span class="type-signature">(static) </span>NodeList#alternarClase<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Alterna una clase css en los elementos. Soporta RegExp o múltiples clases separadas por espacios.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1070">line 1070</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="anexar"><span class="type-signature">(static) </span>NodeList#anexar<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Agrega los elementos especificados a los elementos de esta instancia.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1025">line 1025</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="atributo"><span class="type-signature">(static) </span>NodeList#atributo<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Establece o devuelve el valor de un atributo.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1079">line 1079</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="dato"><span class="type-signature">(static) </span>NodeList#dato<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Establece o devuelve datos (dataset) del elemento.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1007">line 1007</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="desacoplar"><span class="type-signature">(static) </span>NodeList#desacoplar<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Desacopla el elemento del DOM (sin eliminarlo).
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1151">line 1151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="ejecutarEvento"><span class="type-signature">(static) </span>NodeList#ejecutarEvento<span class="signature">(nombre)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Ejecuta todos los manejadores asignados a un evento.
 </div>
 
 
@@ -309,8 +669,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -319,37 +677,6 @@
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>componente</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="componente.html">componente</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Componente.</td>
-        </tr>
-
     
 
         <tr>
@@ -367,20 +694,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">Si se especifica el nombre, será agregado a componentes en lugar de instanciasComponentes.</td>
+            <td class="description last">Nombre del evento.</td>
         </tr>
 
     
@@ -421,7 +738,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line73">line 73</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1173">line 1173</a>
     </li></ul></dd>
     
 
@@ -446,24 +763,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="controlador.html">controlador</a></span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -475,7 +774,7 @@
     
 
     
-    <h4 class="name" id="errorServidor"><span class="type-signature"></span>errorServidor<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="establecerHtml"><span class="type-signature">(static) </span>NodeList#establecerHtml<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -483,7 +782,7 @@
 
 
 <div class="description">
-    Evento 'Error Servidor' (método para sobreescribir).
+    Acceso a innerHTML.
 </div>
 
 
@@ -527,7 +826,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line207">line 207</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1124">line 1124</a>
     </li></ul></dd>
     
 
@@ -563,7 +862,7 @@
     
 
     
-    <h4 class="name" id="establecerNombre"><span class="type-signature"></span>establecerNombre<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="establecerTexto"><span class="type-signature">(static) </span>NodeList#establecerTexto<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -571,7 +870,7 @@
 
 
 <div class="description">
-    Establece el nombre de la instancia (método para sobreescribir).
+    Acceso a innerText.
 </div>
 
 
@@ -615,7 +914,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line105">line 105</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1133">line 1133</a>
     </li></ul></dd>
     
 
@@ -651,7 +950,7 @@
     
 
     
-    <h4 class="name" id="establecerNombreControlador"><span class="type-signature"></span>establecerNombreControlador<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="estilo"><span class="type-signature">(static) </span>NodeList#estilo<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -659,7 +958,7 @@
 
 
 <div class="description">
-    Establece el nombre de la instancia.
+    Alias de estilos(estilo,valor).
 </div>
 
 
@@ -703,7 +1002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line113">line 113</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1115">line 1115</a>
     </li></ul></dd>
     
 
@@ -739,7 +1038,7 @@
     
 
     
-    <h4 class="name" id="establecerVista"><span class="type-signature"></span>establecerVista<span class="signature">(nombre)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="estilos"><span class="type-signature">(static) </span>NodeList#estilos<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -747,8 +1046,92 @@
 
 
 <div class="description">
-    Establece el nombre de la vista que está controlando actualmente.
+    Devuelve el valor del estilo, si valor no está definido, o asigna el mismo. Estilo puede ser un objeto para establecer múltiples estilos a la vez.
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1106">line 1106</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="evento"><span class="type-signature">(static) </span>NodeList#evento<span class="signature">(nombre, funcion, captura)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
 
 
 
@@ -789,7 +1172,53 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funcion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>captura</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
 
 
             
@@ -840,7 +1269,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line55">line 55</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1163">line 1163</a>
     </li></ul></dd>
     
 
@@ -876,7 +1305,7 @@
     
 
     
-    <h4 class="name" id="fabricarControlador"><span class="type-signature"></span>fabricarControlador<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="eventoFiltrado"><span class="type-signature">(static) </span>NodeList#eventoFiltrado<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -884,7 +1313,7 @@
 
 
 <div class="description">
-    Fabrica una instancia de un controlador concreto dada su función.
+    Establece una función que será invocada cuando el evento suceda en los hijos que coincidan con el filtro. Si estricto es true, sólo se invocará cuando el elemento coincida con el filtro, pero no cuando se produzca en uno de sus hijos (por defecto es false).
 </div>
 
 
@@ -928,7 +1357,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line138">line 138</a>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1183">line 1183</a>
     </li></ul></dd>
     
 
@@ -964,7 +1393,7 @@
     
 
     
-    <h4 class="name" id="inicializado"><span class="type-signature"></span>inicializado<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="filtrar"><span class="type-signature">(static) </span>NodeList#filtrar<span class="signature">(filtro, negado)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="Node.html">Node</a>>|Array.&lt;Element>}</span></h4>
     
 
     
@@ -972,359 +1401,7 @@
 
 
 <div class="description">
-    Evento 'Inicializado' (método para sobreescribir).
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line181">line 181</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="inicializar"><span class="type-signature"></span>inicializar<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Inicializa la instancia (método para sobreescribir).
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line156">line 156</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="inicializarControlador"><span class="type-signature"></span>inicializarControlador<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Inicializa la instancia.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line164">line 164</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="listo"><span class="type-signature"></span>listo<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Evento 'Listo' (método para sobreescribir).
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line187">line 187</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="navegacion"><span class="type-signature"></span>navegacion<span class="signature">(nombreVista)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Evento 'Navegación' (método para sobreescribir).
+    Filtra los elementos y devuelve un nuevo listado como array (¡no NodeList!).
 </div>
 
 
@@ -1360,13 +1437,13 @@
 
         <tr>
             
-                <td class="name"><code>nombreVista</code></td>
+                <td class="name"><code>filtro</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="Object.html">Object</a></span>
 
 
             
@@ -1376,791 +1453,1082 @@
 
             
 
-            <td class="description last">Nombre de la vista de destino.</td>
+            <td class="description last">Filtro (ver documentación de es().)</td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line194">line 194</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="obtenerComponentes"><span class="type-signature"></span>obtenerComponentes<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;<a href="componente.html">componente</a>>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Devuelve el listado de componentes.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line63">line 63</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;<a href="componente.html">componente</a>></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="obtenerNombre"><span class="type-signature"></span>obtenerNombre<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Devuelve el nombre de la instancia.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="obtenerNombreVista"><span class="type-signature"></span>obtenerNombreVista<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Devuelve el nombre de la vista que está controlando actualmente.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line47">line 47</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="obtenerPropiedades"><span class="type-signature"></span>obtenerPropiedades<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Devuelve los parámetros del controlador para su almacenamiento.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line171">line 171</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="obtenerServidor"><span class="type-signature"></span>obtenerServidor<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Devuelve la instancia del gestor de la interfaz con el servidor.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line40">line 40</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="removerComponente"><span class="type-signature"></span>removerComponente<span class="signature">(componente)</span><span class="type-signature"> &rarr; {<a href="controlador.html">controlador</a>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Elimina las referencias a la instancia del componente.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>componente</code></td>
+                <td class="name"><code>negado</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="componente.html">componente</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Componente.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line87">line 87</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="controlador.html">controlador</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="volver"><span class="type-signature"></span>volver<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Evento 'Volver' (método para sobreescribir).
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controlador.js.html">controlador.js</a>, <a href="controlador.js.html#line201">line 201</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type">boolean</span>
 
 
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Negar el filtro.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line958">line 958</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="Node.html">Node</a>></span>
+|
+
+<span class="param-type">Array.&lt;Element></span>
+
+
     </dd>
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="insertarAntes"><span class="type-signature">(static) </span>NodeList#insertarAntes<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Agrega los elementos especificados a antes de los elementos de esta instancia.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1034">line 1034</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="insertarDespues"><span class="type-signature">(static) </span>NodeList#insertarDespues<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Agrega los elementos especificados después de los elementos de esta instancia.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1043">line 1043</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="metadato"><span class="type-signature">(static) </span>NodeList#metadato<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line998">line 998</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="obtener"><span class="type-signature">(static) </span>NodeList#obtener<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Devuelve un elemento dado su índice, o null.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line973">line 973</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="propiedad"><span class="type-signature">(static) </span>NodeList#propiedad<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Devuelve o asigna una propiedad.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1097">line 1097</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="remover"><span class="type-signature">(static) </span>NodeList#remover<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Elimina el elemento.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1142">line 1142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removerAtributo"><span class="type-signature">(static) </span>NodeList#removerAtributo<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Remueve un atributo.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1088">line 1088</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removerEvento"><span class="type-signature">(static) </span>NodeList#removerEvento<span class="signature">(nombre, funcion)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nombre</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funcion</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1204">line 1204</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removerEventos"><span class="type-signature">(static) </span>NodeList#removerEventos<span class="signature">()</span><span class="type-signature"> &rarr; {EventTarget}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Remueve todos los manejadores de eventos asignados.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1193">line 1193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">EventTarget</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="valor"><span class="type-signature">(static) </span>NodeList#valor<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Devuelve o establece el valor del campo.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dom.js.html">dom.js</a>, <a href="dom.js.html#line1016">line 1016</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

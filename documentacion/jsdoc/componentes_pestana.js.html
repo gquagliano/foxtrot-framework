@@ -40,6 +40,10 @@
  */
 var componentePestana=function() {    
     this.componente="pestana";
+    this.contenidoEditable=true;
+
+    this.etiquetas=null;
+    this.etiqueta=null;
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
@@ -54,7 +58,15 @@ var componentePestana=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear(""); 
+        this.elemento=document.crear("&lt;div>"); 
+
+        this.etiquetas=document.crear("&lt;div class='encabezado-pes")
+
+        this.etiqueta="&lt;button class='btn encabezado-pestana'>Pestaña&lt;/button>"
+        this.elementoEditable=this.etiqueta;
+
+        this.contenedor=document.crear("&lt;div class='cuerpo-pestana'>");
+
         this.crearComponente();
         return this;
     };
@@ -64,8 +76,7 @@ ui.registrarComponente("pestana",componentePestana,configComponente.clonar({
     descripcion:"Pestaña",
     etiqueta:"Pestaña",
     grupo:"Estructura",
-    icono:"pestana.png",
-    ocultar:true
+    icono:"pestana.png"
 }));</code></pre>
         </article>
     </section>
@@ -76,13 +87,13 @@ ui.registrarComponente("pestana",componentePestana,configComponente.clonar({
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ajax.html">ajax</a></li><li><a href="aplicacion.html">aplicacion</a></li><li><a href="componente.html">componente</a></li><li><a href="componenteAgenda.html">componenteAgenda</a></li><li><a href="componenteAlternar.html">componenteAlternar</a></li><li><a href="componenteArbol.html">componenteArbol</a></li><li><a href="componenteArchivo.html">componenteArchivo</a></li><li><a href="componenteBoton.html">componenteBoton</a></li><li><a href="componenteBucle.html">componenteBucle</a></li><li><a href="componenteBuscador.html">componenteBuscador</a></li><li><a href="componenteCampo.html">componenteCampo</a></li><li><a href="componenteCheckbox.html">componenteCheckbox</a></li><li><a href="componenteCodigo.html">componenteCodigo</a></li><li><a href="componenteColumna.html">componenteColumna</a></li><li><a href="componenteColumnaTabla.html">componenteColumnaTabla</a></li><li><a href="componenteCondicional.html">componenteCondicional</a></li><li><a href="componenteContenedor.html">componenteContenedor</a></li><li><a href="componenteContenedorMenu.html">componenteContenedorMenu</a></li><li><a href="componenteDeslizable.html">componenteDeslizable</a></li><li><a href="componenteDesplegable.html">componenteDesplegable</a></li><li><a href="componenteDialogo.html">componenteDialogo</a></li><li><a href="componenteEspaciador.html">componenteEspaciador</a></li><li><a href="componenteEtiqueta.html">componenteEtiqueta</a></li><li><a href="componenteFecha.html">componenteFecha</a></li><li><a href="componenteFila.html">componenteFila</a></li><li><a href="componenteFilaTabla.html">componenteFilaTabla</a></li><li><a href="componenteFormulario.html">componenteFormulario</a></li><li><a href="componenteGrupoOpciones.html">componenteGrupoOpciones</a></li><li><a href="componenteHora.html">componenteHora</a></li><li><a href="componenteIcono.html">componenteIcono</a></li><li><a href="componenteImagen.html">componenteImagen</a></li><li><a href="componenteImportar.html">componenteImportar</a></li><li><a href="componenteItemMenu.html">componenteItemMenu</a></li><li><a href="componenteMenu.html">componenteMenu</a></li><li><a href="componenteNavegacion.html">componenteNavegacion</a></li><li><a href="componentePestana.html">componentePestana</a></li><li><a href="componentePestanas.html">componentePestanas</a></li><li><a href="componenteTabla.html">componenteTabla</a></li><li><a href="componenteTexto.html">componenteTexto</a></li><li><a href="componenteVista.html">componenteVista</a></li><li><a href="controlador.html">controlador</a></li><li><a href="editable.html">editable</a></li><li><a href="enrutador.html">enrutador</a></li><li><a href="enrutadorPredeterminado.html">enrutadorPredeterminado</a></li><li><a href="expresion.html">expresion</a></li><li><a href="servidor.html">servidor</a></li><li><a href="ui.html">ui</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#componentes">componentes</a></li><li><a href="global.html#configComponente">configComponente</a></li><li><a href="global.html#controladores">controladores</a></li><li><a href="global.html#duracionAnimacion">duracionAnimacion</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-EventTarget.html">EventTarget</a></li><li><a href="external-HTMLDocument.html">HTMLDocument</a></li><li><a href="external-Node.html">Node</a></li><li><a href="external-NodeList.html">NodeList</a></li><li><a href="external-Object.html">Object</a></li><li><a href="external-Window.html">Window</a></li></ul><h3>Classes</h3><ul><li><a href="ajax.html">ajax</a></li><li><a href="aplicacion.html">aplicacion</a></li><li><a href="componente.html">componente</a></li><li><a href="componenteAgenda.html">componenteAgenda</a></li><li><a href="componenteAlternar.html">componenteAlternar</a></li><li><a href="componenteArbol.html">componenteArbol</a></li><li><a href="componenteArchivo.html">componenteArchivo</a></li><li><a href="componenteBoton.html">componenteBoton</a></li><li><a href="componenteBucle.html">componenteBucle</a></li><li><a href="componenteBuscador.html">componenteBuscador</a></li><li><a href="componenteCampo.html">componenteCampo</a></li><li><a href="componenteCheckbox.html">componenteCheckbox</a></li><li><a href="componenteCodigo.html">componenteCodigo</a></li><li><a href="componenteColumna.html">componenteColumna</a></li><li><a href="componenteColumnaTabla.html">componenteColumnaTabla</a></li><li><a href="componenteCondicional.html">componenteCondicional</a></li><li><a href="componenteContenedor.html">componenteContenedor</a></li><li><a href="componenteContenedorMenu.html">componenteContenedorMenu</a></li><li><a href="componenteDeslizable.html">componenteDeslizable</a></li><li><a href="componenteDesplegable.html">componenteDesplegable</a></li><li><a href="componenteDialogo.html">componenteDialogo</a></li><li><a href="componenteEspaciador.html">componenteEspaciador</a></li><li><a href="componenteEtiqueta.html">componenteEtiqueta</a></li><li><a href="componenteFecha.html">componenteFecha</a></li><li><a href="componenteFila.html">componenteFila</a></li><li><a href="componenteFilaTabla.html">componenteFilaTabla</a></li><li><a href="componenteFormulario.html">componenteFormulario</a></li><li><a href="componenteGrupoOpciones.html">componenteGrupoOpciones</a></li><li><a href="componenteHora.html">componenteHora</a></li><li><a href="componenteIcono.html">componenteIcono</a></li><li><a href="componenteImagen.html">componenteImagen</a></li><li><a href="componenteImportar.html">componenteImportar</a></li><li><a href="componenteItemMenu.html">componenteItemMenu</a></li><li><a href="componenteMenu.html">componenteMenu</a></li><li><a href="componenteNavegacion.html">componenteNavegacion</a></li><li><a href="componentePestana.html">componentePestana</a></li><li><a href="componentePestanas.html">componentePestanas</a></li><li><a href="componenteTabla.html">componenteTabla</a></li><li><a href="componenteTexto.html">componenteTexto</a></li><li><a href="componenteVista.html">componenteVista</a></li><li><a href="controlador.html">controlador</a></li><li><a href="editable.html">editable</a></li><li><a href="enrutador.html">enrutador</a></li><li><a href="enrutadorPredeterminado.html">enrutadorPredeterminado</a></li><li><a href="expresion.html">expresion</a></li><li><a href="servidor.html">servidor</a></li><li><a href="ui.html">ui</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#componentes">componentes</a></li><li><a href="global.html#configComponente">configComponente</a></li><li><a href="global.html#controladores">controladores</a></li><li><a href="global.html#cuerpo">cuerpo</a></li><li><a href="global.html#documento">documento</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Sun Sep 13 2020 11:31:03 GMT-0300 (GMT-03:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Sun Sep 13 2020 15:55:19 GMT-0300 (GMT-03:00)
 </footer>
 
 <script> prettyPrint(); </script>

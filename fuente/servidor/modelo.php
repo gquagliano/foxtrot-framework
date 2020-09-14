@@ -77,20 +77,22 @@ class modelo {
                 $aliasCampo='__'.$this->alias.'_'.$nombre;
 
                 if($campo->tipo=='relacional') {
-                    if($campo->relacion=='1:n'&&$this->consultaProcesarRelaciones&&$this->consultaProcesarRelaciones1n) {
-                        $obj->$campo=[];
-                        //TODO
-                    }
+                    if($campo->relacion=='1:n') $obj->$nombre=[];
                 } else {
                     $obj->$nombre=$fila->$aliasCampo;
                 }
             }
 
             if($this->consultaProcesarRelaciones) {
+                //Asignar valores existentes en la consulta
                 foreach($this->consultaRelaciones as $relacion) {
                     $campo=$relacion->campo;
                     $obj->$campo=$relacion->modelo->fabricarEntidad($fila);
+                    //Si no hubo coincidencias, mantener el campo nulo
+                    if(!$obj->$campo->id) $obj->$campo=null;
                 }
+                //Procesar valores adicionales (recursividad, 1:n)
+                $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones1n);
             }
         }
 
@@ -103,6 +105,14 @@ class modelo {
      */
     public function obtenerNombreTabla() {
         return $this->nombre;
+    }
+
+    /**
+     * Devuelve el nombre del modelo.
+     * @return string
+     */
+    public function obtenerNombre() {
+        return $this->nombreModelo;
     }
 
     /**
@@ -137,6 +147,7 @@ class modelo {
         //@requerido
         //@tamano
         //@etiqueta *
+        //@omitir
 
         $this->campos=(object)[
             'id'=>(object)[],
@@ -147,7 +158,7 @@ class modelo {
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
 
-            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
 
                 foreach($coincidencias[1] as $i=>$etiqueta) {
@@ -290,10 +301,47 @@ class modelo {
     }
 
     /**
-     * Procesa los campos relacionados sobre la instancia especificada luego de haber realizado una consulta con las relaciones desactivadas.
+     * Procesa los campos relacionados sobre la instancia especificada luego de haber realizado una consulta con las relaciones desactivadas, o cuando la entidad tenga
+     * campos con @omitir.
+     * @var \entidad $item Item a procesar.
+     * @var bool $procesarOmitidos Procesar los campos con @omitir.
+     * @var bool $procesar1n Procesar las relaciones 1:n.
+     * @return \modelo
      */
-    public function procesarRelaciones($obj,...$campos) {
-        //TODO
+    public function procesarRelaciones($item,$procesarOmitidos=true,$procesar1n=true) {
+        //TODO Detectar si el item ya apareció en la ascendencia, lo que daría lugar a un bucle infinito
+        //Por el momento se limita por nivel de recursividad
+        if(count(debug_backtrace(0))>50) return $this; 
+
+        //-Caminar el árbol de relaciones en busca de campos que no hayan sido relacionados (por ejemplo, relacionados con el mismo modelo)
+        //-Generar los listados de relaciones 1:n
+        foreach($this->campos as $nombre=>$campo) {
+            if($campo->tipo=='relacional') {
+                if(!$procesarOmitidos&&$campo->omitir) continue;
+
+                if($campo->relacion=='1:n') {
+                    if(!$procesar1n) continue;
+
+                    $modelo=modelo::fabricarModelo($campo->modelo,$this->bd);
+                    $item->$nombre=$modelo->donde([
+                            $campo->columna=>$item->id
+                        ])
+                        ->obtenerListado();
+                } else {
+                    $columna=$campo->columna;
+                    if($item->$columna&&!$item->$nombre) {
+                        //Hay un valor en la columna pero no en el campo relacional
+                        $modelo=modelo::fabricarModelo($campo->modelo,$this->bd);
+                        $relacion=$modelo->obtenerItem($item->$columna);
+                        if($relacion) {
+                            $item->$nombre=$relacion;
+                            $modelo->procesarRelaciones($relacion,$procesarOmitidos,$procesar1n);
+                        }
+                    } 
+                }
+            }
+        }
+
         return $this;
     }
 
@@ -684,9 +732,9 @@ class modelo {
     /**
      * Genera las relaciones automáticas a partir de los campos relacionales.
      */
-    public function prepararRelaciones(&$alias,$continuar=true) {
+    public function prepararRelaciones(&$alias,$recursivo=false) {
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional') {
+            if($campo->tipo=='relacional'&&!$campo->omitir) {
                 $obj=modelo::fabricarModelo($campo->modelo,$this->bd);
                 
                 $alias++;
@@ -709,8 +757,8 @@ class modelo {
                 );
 
                 //Avanzar recursivamente
-                //Cuando el modelo esté relacionado a sí mismo, solo evaluar una vez
-                if($continuar&&$campo->modelo!=$this->nombreModelo) $obj->prepararRelaciones($alias,$continuar);
+                //Si el modelo se relaciona con sí mismo, solo relacionar una vez
+                if(!$recursivo||$campo->modelo!=$this->nombreModelo) $obj->prepararRelaciones($alias,true);
             }
         }
 

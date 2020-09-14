@@ -68,6 +68,8 @@ Etiquetas:
 
 `@relacion` Tipo de relación: `1:1` (uno a uno), `1:0` (uno a uno, o nulo), `1:n` (uno a muchos). Es importante considerar durante el diseño de una entidad que las relaciones uno a muchos se procesan iterando sobre todo el resultado y relacionando fila por fila, luego de realizar la consulta principal, por lo que debe utilizarse con precaución en grandes conjuntos de resultados.
 
+`@omitir` Omite el campo relacional en el procesamiento automático de relaciones. Únicamente será cargada la relación con el método `$modelo->procesarRelaciones($entidad)`.
+
 `@columna` Columna de la tabla. Las propiedades que reciben el elemento foráneo no deben necesariamente coincidir con los nombres de las columnas. Sin embargo, *se requiere* que exista una propiedad para las columnas especificadas. Por defecto, se realizará la relación por la columna especificada contra la clave primaria (`id`). Nótese que cuando la relación es `1:n`, `@columna` hace referencia a la columna de la tabla foránea. Cabe mencionar que la clase del modelo permite establecer relaciones más complejas en forma manual.
 
 `@predeterminado` Valor predeterminado. Si se omite, será `NULL`, o `0` para los campos booleanos.

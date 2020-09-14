@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: componentes/item-menu.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: componentes/item-menu.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+ "use strict";
+
+/**
+ * @class Componente concreto Item de menú.
+ */
+var componenteItemMenu=function() {    
+    this.componente="item-menu";
+    this.contenidoEditable=true;
+
+    this.enlace=null;
+    this.submenuAbierto=false;
+
+    /**
+     * Propiedades de Botón.
+     */
+    this.propiedadesConcretas={
+        "Comportamiento":{
+            enlace:{
+                etiqueta:"Enlace",
+                adaptativa:false
+            },
+            nuevaVentana:{
+                etiqueta:"Abrir en nueva ventana",
+                tipo:"bool",
+                adaptativa:false
+            },
+            separador:{
+                etiqueta:"Separador",
+                tipo:"bool",
+                adaptativa:false
+            }
+        }
+    };
+
+    /**
+     * Inicializa la instancia tras ser creada o restaurada.
+     */
+    this.inicializar=function() {
+        if(this.fueInicializado) return this; 
+        
+        this.enlace=this.elemento.querySelector("a");
+        this.elementoEditable=this.enlace;
+        this.elementoEventos=this.enlace;
+        this.contenedor=this.elemento;
+
+        this.inicializarComponente();
+        return this;
+    };
+
+    /**
+     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     */
+    this.crear=function() {
+        this.elemento=document.crear("&lt;li>");
+        this.contenedor=this.elemento;
+
+        this.enlace=document.crear("&lt;a href='#'>Item&lt;/a>");
+        this.enlace.anexarA(this.elemento);
+
+        this.elementoEditable=this.enlace;
+        this.elementoEventos=this.enlace;
+
+        this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Establece los eventos.
+     */
+    this.establecerEventos=function() {
+        if(!ui.enModoEdicion()) {
+            var t=this;
+
+            var abrirConClick=function() {
+                //Determinar si debe abrirse al pasar el mouse o al hacer click (depende del contenedor de menú)
+                //TODO Revisar: Los componentes de menú quedaron muy acoplados, aunque quizás está bien tratándose de un mismo grupo de componentes que debe trabajar coordinado
+                var padre=t.elemento.padre({clase:"menu-click"});
+                return padre?true:false;
+            },
+            esPrimerNivel=function() {
+                return t.obtenerPadre().componente=="contenedor-menu";
+            },
+            abrir=function(submenu) {
+                var elem=submenu.obtenerElemento();
+
+                //Se deben cerrar todos los menús abiertos que no sean ascendencia de este
+                cerrarOtrosMenus(submenu);
+
+                ui.abrirMenu(elem);
+                t.submenuAbierto=true;
+
+                //Agregar una clase a la ascendencia
+                var padre=elem.padre({etiqueta:"li"});
+                if(padre) padre.agregarClase("submenu-abierto");
+
+                //Asignar evento para remover los estilos cuando se cierre
+                submenu.obtenerElemento()
+                    .removerEvento("menu-cerrado")
+                    .evento("menu-cerrado",function(ev) {
+                        ev.stopPropagation();
+                        cerrado(submenu);
+                    });
+            },
+            cerrarOtrosMenus=function(menu) {
+                //Buscar ascendencia
+                var padres=[],
+                    padre=menu.obtenerPadre();
+                while(1) {
+                    if(!padre||padre.compontente=="contenedor-menu") break;
+                    if(padre.obtenerTipo()=="menu") padres.push(padre.obtenerElemento());
+                    padre=padre.obtenerPadre();
+                }
+                
+                //Cerrar todo lo que no sea ascendencia
+                ui.obtenerMenuAbierto().clonar().forEach(function(elem) {
+                    if(padres.indexOf(elem)>=0) return;
+                    ui.cerrarMenu(elem,true);
+                });
+            },
+            cerrar=function(submenu) {
+                var elem=submenu.obtenerElemento();
+                ui.cerrarMenu(elem);
+            },
+            cerrado=function(submenu) {
+                var elem=submenu.obtenerElemento();
+
+                t.submenuAbierto=false;
+
+                //Remover clase
+                var padre=elem.padre({etiqueta:"li"});
+                if(padre) padre.removerClase("submenu-abierto");
+            },
+            alternar=function(submenu) {
+                if(t.submenuAbierto) {
+                    cerrar(submenu);
+                } else {
+                    abrir(submenu);
+                }
+            };
+
+            var ignorarClick=false;
+
+            this.elemento.evento("mouseenter",function(ev) {
+                var submenu=t.obtenerHijos();
+                if(!submenu.length||abrirConClick()) return;
+                
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                abrir(submenu[0]);
+            }).evento("mouseleave",function(ev) {
+                var submenu=t.obtenerHijos();
+                if(!submenu.length||abrirConClick()) return;
+                
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                cerrar(submenu[0]);
+            }).evento("mousedown",function(ev) {
+                ev.stopPropagation();
+                
+                var submenu=t.obtenerHijos();
+                if(!submenu.length||!abrirConClick()) return;
+                
+                ev.preventDefault();
+                ignorarClick=true;
+
+                alternar(submenu[0]);
+            }).evento("mouseup",function(ev) {
+                if(ignorarClick) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
+            }).evento("touchstart",function(ev) {
+                ev.stopPropagation();
+
+                var submenu=t.obtenerHijos();
+                if(!submenu.length) return;
+                
+                ev.preventDefault();
+
+                ignorarClick=true;
+                alternar(submenu[0]);
+            }).evento("click",function(ev) {
+                if(ignorarClick) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    ignorarClick=false;
+                }
+            });
+        }
+
+        this.establecerEventosComponente();
+        return this;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        if(propiedad=="enlace") {
+            if(!valor) valor="#";
+            this.enlace.atributo("href",valor);
+            return this;
+        }
+
+        if(propiedad=="nuevaVentana") {
+            if(!valor) {
+                this.enlace.removerAtributo("target");
+            } else {
+                this.enlace.atributo("target","_blank");
+            }
+            return this;
+        }
+
+        if(propiedad=="separador") {
+            if(valor) {
+                this.elemento.agregarClase("foxtrot-menu-separador");
+            } else {
+                this.elemento.removerClase("foxtrot-menu-separador");
+            }
+            return this;
+        }
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+
+    /**
+     * Modifica el texto de la etiqueta del menú.
+     * @param {string} valor - Valor a establecer (puede contener HTML.)
+     * @returns Componente
+     */
+    this.establecerEtiqueta=function(valor) {
+        this.enlace.establecerHtml(valor);
+        return this;
+    };
+};
+
+ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({
+    descripcion:"Ítem de menú",
+    etiqueta:"Item",
+    grupo:"Menú",
+    icono:"item-menu.png",
+    padre:["menu"],
+    aceptaHijos:["menu"]
+}));</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-EventTarget.html">EventTarget</a></li><li><a href="external-HTMLDocument.html">HTMLDocument</a></li><li><a href="external-Node.html">Node</a></li><li><a href="external-NodeList.html">NodeList</a></li><li><a href="external-Object.html">Object</a></li><li><a href="external-Window.html">Window</a></li></ul><h3>Classes</h3><ul><li><a href="ajax.html">ajax</a></li><li><a href="aplicacion.html">aplicacion</a></li><li><a href="componente.html">componente</a></li><li><a href="componenteAgenda.html">componenteAgenda</a></li><li><a href="componenteAlternar.html">componenteAlternar</a></li><li><a href="componenteArbol.html">componenteArbol</a></li><li><a href="componenteArchivo.html">componenteArchivo</a></li><li><a href="componenteBoton.html">componenteBoton</a></li><li><a href="componenteBucle.html">componenteBucle</a></li><li><a href="componenteBuscador.html">componenteBuscador</a></li><li><a href="componenteCampo.html">componenteCampo</a></li><li><a href="componenteCheckbox.html">componenteCheckbox</a></li><li><a href="componenteCodigo.html">componenteCodigo</a></li><li><a href="componenteColumna.html">componenteColumna</a></li><li><a href="componenteColumnaTabla.html">componenteColumnaTabla</a></li><li><a href="componenteCondicional.html">componenteCondicional</a></li><li><a href="componenteContenedor.html">componenteContenedor</a></li><li><a href="componenteContenedorMenu.html">componenteContenedorMenu</a></li><li><a href="componenteDeslizable.html">componenteDeslizable</a></li><li><a href="componenteDesplegable.html">componenteDesplegable</a></li><li><a href="componenteDialogo.html">componenteDialogo</a></li><li><a href="componenteEspaciador.html">componenteEspaciador</a></li><li><a href="componenteEtiqueta.html">componenteEtiqueta</a></li><li><a href="componenteFecha.html">componenteFecha</a></li><li><a href="componenteFila.html">componenteFila</a></li><li><a href="componenteFilaTabla.html">componenteFilaTabla</a></li><li><a href="componenteFormulario.html">componenteFormulario</a></li><li><a href="componenteGrupoOpciones.html">componenteGrupoOpciones</a></li><li><a href="componenteHora.html">componenteHora</a></li><li><a href="componenteIcono.html">componenteIcono</a></li><li><a href="componenteImagen.html">componenteImagen</a></li><li><a href="componenteImportar.html">componenteImportar</a></li><li><a href="componenteItemMenu.html">componenteItemMenu</a></li><li><a href="componenteMenu.html">componenteMenu</a></li><li><a href="componenteNavegacion.html">componenteNavegacion</a></li><li><a href="componentePestana.html">componentePestana</a></li><li><a href="componentePestanas.html">componentePestanas</a></li><li><a href="componenteTabla.html">componenteTabla</a></li><li><a href="componenteTexto.html">componenteTexto</a></li><li><a href="componenteVista.html">componenteVista</a></li><li><a href="controlador.html">controlador</a></li><li><a href="editable.html">editable</a></li><li><a href="enrutador.html">enrutador</a></li><li><a href="enrutadorPredeterminado.html">enrutadorPredeterminado</a></li><li><a href="expresion.html">expresion</a></li><li><a href="servidor.html">servidor</a></li><li><a href="ui.html">ui</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#componentes">componentes</a></li><li><a href="global.html#configComponente">configComponente</a></li><li><a href="global.html#controladores">controladores</a></li><li><a href="global.html#cuerpo">cuerpo</a></li><li><a href="global.html#documento">documento</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Sep 14 2020 00:39:48 GMT-0300 (GMT-03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

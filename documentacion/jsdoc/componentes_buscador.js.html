@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: componentes/buscador.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: componentes/buscador.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+ "use strict";
+
+/**
+ * @class Componente concreto Campo de búsqueda.
+ */
+var componenteBuscador=function() {    
+    this.componente="buscador";
+
+    this.elementoResultados=null;
+    this.indiceSeleccionado=-1;
+
+    this.seleccionarPrimerElemento=false;
+    this.buscando=false;
+    this.resultados=[];
+    this.ajax=null;
+
+    //Selección
+    this.item=null;
+    this.valorActual=null;
+    this.etiquetaActual="";
+
+    /**
+     * Propiedades de Campo.
+     */
+    this.propiedadesConcretas={
+        "Campo de búsqueda":{
+            valor:{
+                etiqueta:"Valor inicial",
+                adaptativa:false
+            },
+            relleno:{
+                etiqueta:"Texto de relleno",
+                adaptativa:false
+            },
+            propiedadValor:{
+                etiqueta:"Propiedad valor",
+                adaptativa:false
+            },
+            propiedadEtiqueta:{
+                etiqueta:"Propiedad a mostrar",
+                adaptativa:false
+            },
+            valor:{
+                etiqueta:"Valor inicial",
+                adaptativa:false,
+                ayuda:"Valor del item a seleccionar por defecto, realizando la búsqueda correspondiente al cargar la vista. Puede contener expresiones."
+            }
+        },
+        "Eventos":{
+            buscar:{
+                etiqueta:"Buscar",
+                adaptativa:false
+            }
+        }
+    };
+
+    /**
+     * Inicializa la instancia tras ser creada o restaurada.
+     */
+    this.inicializar=function() {
+        if(this.fueInicializado) return this; 
+
+        this.campo=this.elemento.querySelector("input");
+        this.elementoEventos=this.campo;
+
+        this.inicializarComponente();
+        return this;
+    };
+
+    /**
+     * Crea el elemento del DOM para esta instancia.
+     */
+    this.crear=function() {
+        this.elemento=document.crear("&lt;div>");
+        this.campo=document.crear("&lt;input class='form-control' autocomplete='off' type='text'>"); 
+        this.elemento.anexar(this.campo);
+        this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Establece los eventos predeterminados.
+     */
+    this.establecerEventos=function() {
+        var t=this;
+
+        this.campo.removerEventos();
+
+        this.campo.evento("keydown",function(ev) {
+            if(ev.which==27&amp;&amp;t.buscando) { //ESC
+                ev.preventDefault();
+                t.abortarBusqueda();
+            } else if(ev.which==13) { //Intro
+                t.procesarIntro(ev);
+            } else if(t.resultados.length&amp;&amp;(ev.which==38||ev.which==40)) { //Arriba/Abajo
+                t.moverSeleccion(ev);
+            }
+        });
+
+        this.campo.evento("paste input",function(ev) {
+            var valor=t.campo.valor();
+            if(valor=="") {
+                //Al borrar todo el texto, reestablecer
+                t.establecerValor(null);
+            } else {
+                t.buscar(valor);
+            }
+        });
+
+        this.elemento.evento("focusout",function(ev) {
+            t.abortarBusqueda();
+            t.cerrarResultados();
+            //Revertir el valor del campo cuando se pierda el foco sin haber hecho una nueva selección
+            t.campo.valor(t.etiquetaActual);
+        });
+
+        //this.establecerEventosComponente();
+        return this;
+    };
+
+    /**
+     * Inicia una nueva búsqueda.
+     * @param {string} texto - Búsqueda por texto.
+     * @param {string} [valor] - Busca un elemento específico.
+     * @returns {Componente}
+     */
+    this.buscar=function(texto,valor) {
+        this.abortarBusqueda();
+
+        this.buscando=true;
+        this.seleccionarPrimerElemento=false;
+        ui.mostrarPrecarga("barra");
+
+        var t=this,
+            obj={campo:this.nombre};
+
+        if(texto) obj.buscar=texto;
+        else if(valor) obj.valor=valor;
+        else return this;
+        
+        this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(resultado) {
+                t.buscando=false;
+                ui.ocultarPrecarga("barra");
+
+                t.resultados=resultado;
+
+                if(t.seleccionarPrimerElemento||valor) { //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
+                    if(resultado.length) t.establecerValor(0);
+                    return;
+                }
+
+                t.mostrarResultados();
+            },true);
+
+        return this;
+    };
+
+    /**
+     * Aborta la búsqueda actual.
+     * @returns {Componente}
+     */
+    this.abortarBusqueda=function() {
+        if(!this.buscando) return this;
+
+        this.cerrarResultados();
+        this.buscando=false;
+
+        if(typeof this.ajax!=="undefined"&amp;&amp;this.ajax!==null) this.ajax.abortar();
+
+        ui.ocultarPrecarga("barra");
+
+        return this;
+    };
+
+    /**
+     * Cierra el desplegable de resultados.
+     * @returns {Componente}
+     */
+    this.cerrarResultados=function() {
+        if(this.elementoResultados) this.elementoResultados.remover();
+        this.elementoResultados=null;
+        this.resultados=[];
+        this.indiceSeleccionado=-1;
+        return this;
+    };
+
+    /**
+     * Devuelve el valor de una propiedad del item de acuerdo al valor configurado en las propiedades del componente.
+     * @param {*} propiedad 
+     * @param {*} obj 
+     * @returns {string|null}
+     */
+    var obtenerValorItem=function(propiedad,obj) {
+        var valor=this.propiedad(propiedad);
+
+        //Predeterminados
+        if(!valor) valor={propiedadValor:"id",propiedadEtiqueta:"titulo"}[propiedad];
+
+        //Expresión
+        if(expresion.contieneExpresion(valor)) return ui.evaluarExpresion(valor,obj);
+
+        //Nombre de propiedad
+        if(obj.hasOwnProperty(valor)) return obj[valor];
+        
+        return null;
+    }.bind(this);
+
+    /**
+     * Muestra el desplegable de resultados.
+     * @returns {Componente}
+     */
+    this.mostrarResultados=function() {
+        if(this.elementoResultados) this.elementoResultados.remover();
+        this.elementoResultados=document.crear("&lt;div class='resultados-busqueda'>");
+        this.elemento.anexar(this.elementoResultados);
+
+        if(!this.resultados.length) {
+            this.elementoResultados.anexar("&lt;span class='sin-datos'>No se encontraron coincidencias.&lt;/span>");
+            return this;
+        }
+
+        var t=this,
+            clickItem=function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                t.establecerValor(this.dato("indice"));
+                t.campo.focus();
+            };
+
+        this.resultados.forEach(function(item,indice) {
+            var etiqueta=obtenerValorItem("propiedadEtiqueta",item);
+
+            t.elementoResultados.anexar(
+                document.crear("&lt;a href='#'>")
+                    .dato("indice",indice)
+                    .establecerHtml(etiqueta)
+                    .evento("mousedown",clickItem)
+            );
+        });
+
+        //Abrir hacia arriba si no entra en la pantalla
+        var pos=this.elementoResultados.posicionAbsoluta(),
+            alto=this.elementoResultados.alto(),
+            altoVentana=window.alto(),
+            c="desplegar-arriba";
+        if(pos.y+alto+15>altoVentana) {
+            this.elemento.agregarClase(c);
+        } else {
+            this.elemento.removerClase(c);
+        }
+    };
+
+    /**
+     * Establece el valor entre los resultados de la búsqueda.
+     * @param {number|null} indice - Índice del elemento a seleccionar, o null para reestablecer el valor.
+     * @returns {Componente}
+     */
+    this.establecerValor=function(indice) {
+        if(indice===null) {
+            this.item=null;
+            this.valorActual=null;
+            this.etiquetaActual="";
+        } else {
+            this.item=this.resultados[indice];
+
+            this.valorActual=obtenerValorItem("propiedadValor",this.item);
+            this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
+        }
+
+        this.campo.valor(this.etiquetaActual);
+
+        this.cerrarResultados();
+
+        //Evento
+        this.procesarEvento("modificacion","modificacion");
+
+        return this;
+    };
+
+    /**
+     * Mueve la selección arriba/abajo.
+     * @param {Event} ev 
+     */
+    this.moverSeleccion=function(ev) {
+        ev.preventDefault();
+
+        if(ev.which==38) { //Arriba
+            this.indiceSeleccionado--;
+            if(this.indiceSeleccionado&lt;0) this.indiceSeleccionado=this.resultados.length-1;
+        } else if(ev.which==40) { //Abajo
+            this.indiceSeleccionado++;
+            if(this.indiceSeleccionado>=this.resultados.length) this.indiceSeleccionado=0;
+        }     
+        
+        var e=this.elementoResultados.querySelector(".activo");
+        if(e) e.removerClase("activo");
+        e=this.elementoResultados.querySelector("a:nth-child("+(this.indiceSeleccionado+1)+")"); //nth-child es base 1
+        if(e) e.agregarClase("activo");
+    };
+
+    /**
+     * Procesa la tecla Intro (distinto al evento Intro).
+     * @returns {Componente}
+     */
+    this.procesarIntro=function(ev) {
+        if(!ui.enModoEdicion()) {
+            if(this.buscando) {
+                //Si está buscando, seleccionar el primer elemento en cuanto se complete la búsqueda
+                this.seleccionarPrimerElemento=true;
+                ev.stopPropagation();
+                return;
+            }
+            
+            if(this.resultados.length) {
+                //Si está mostrando los resultados de búsqueda, seleccionar el elemento activo
+                var indice=this.indiceSeleccionado&lt;0?0:this.indiceSeleccionado; //si no se presionó arriba/abajo, indiceSeleccionado=-1, seleccionar el primer elemento
+                this.establecerValor(indice);     
+                ev.stopPropagation();           
+                return;
+            }
+
+            //Si no hay un evento definido por el usuario, enviar el formulario
+            var manejador=this.propiedad(null,"intro");
+            if(!manejador) {
+                this.enviarFormulario();
+                return;
+            }
+
+            //Caso contrario, desencadenar el evento intro estándar
+            this.procesarEvento("intro","intro","intro",ev);
+        }
+    };
+
+    /**
+     * Evento Modificacion.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.modificacion=function(ev) {
+        //Detener evento
+        ev.stopPropagation();
+        return true;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        if(propiedad=="relleno") {
+            this.campo.atributo("placeholder",valor);
+            return this;
+        }
+
+        if(propiedad=="deshabilitado") {
+            //Aplicar al campo (por defecto se aplica al elemento)
+            if(valor) {
+                this.campo.propiedad("disabled",true);
+            } else {
+                this.campo.removerAtributo("disabled");
+            }
+            return this;
+        }        
+        
+        if(propiedad=="valor") return this; //No se asigna al campo realmente
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+
+    /**
+     * Evento Listo.
+     * @returns {componente}
+     */
+    this.listo=function() {
+        if(ui.enModoEdicion()) return;
+        
+        var valor=ui.evaluarExpresion(this.propiedad("valor"));
+        if(valor) this.valor(valor);
+        return this;
+    };
+
+    /**
+     * Devuelve o establece el valor del componente.
+     * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
+     * @returns {(*|undefined)}
+     */
+    this.valor=function(valor) {
+        if(typeof valor==="undefined") {
+            return this.valorActual;
+        } else if(!valor) {
+            this.establecerValor(null);
+        } else {
+            this.buscar(null,valor);
+        }
+    };
+
+    /**
+     * Devuelve el objeto correspondiente al item seleccionado.
+     * @returns {Object}
+     */
+    this.obtenerItem=function() {
+        return this.item;
+    };
+};
+
+ui.registrarComponente("buscador",componenteBuscador,configComponente.clonar({
+    descripcion:"Campo de búsqueda",
+    etiqueta:"Búsqueda",
+    grupo:"Formulario",
+    icono:"buscador.png"
+}));</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-EventTarget.html">EventTarget</a></li><li><a href="external-HTMLDocument.html">HTMLDocument</a></li><li><a href="external-Node.html">Node</a></li><li><a href="external-NodeList.html">NodeList</a></li><li><a href="external-Object.html">Object</a></li><li><a href="external-Window.html">Window</a></li></ul><h3>Classes</h3><ul><li><a href="ajax.html">ajax</a></li><li><a href="aplicacion.html">aplicacion</a></li><li><a href="componente.html">componente</a></li><li><a href="componenteAgenda.html">componenteAgenda</a></li><li><a href="componenteAlternar.html">componenteAlternar</a></li><li><a href="componenteArbol.html">componenteArbol</a></li><li><a href="componenteArchivo.html">componenteArchivo</a></li><li><a href="componenteBoton.html">componenteBoton</a></li><li><a href="componenteBucle.html">componenteBucle</a></li><li><a href="componenteBuscador.html">componenteBuscador</a></li><li><a href="componenteCampo.html">componenteCampo</a></li><li><a href="componenteCheckbox.html">componenteCheckbox</a></li><li><a href="componenteCodigo.html">componenteCodigo</a></li><li><a href="componenteColumna.html">componenteColumna</a></li><li><a href="componenteColumnaTabla.html">componenteColumnaTabla</a></li><li><a href="componenteCondicional.html">componenteCondicional</a></li><li><a href="componenteContenedor.html">componenteContenedor</a></li><li><a href="componenteContenedorMenu.html">componenteContenedorMenu</a></li><li><a href="componenteDeslizable.html">componenteDeslizable</a></li><li><a href="componenteDesplegable.html">componenteDesplegable</a></li><li><a href="componenteDialogo.html">componenteDialogo</a></li><li><a href="componenteEspaciador.html">componenteEspaciador</a></li><li><a href="componenteEtiqueta.html">componenteEtiqueta</a></li><li><a href="componenteFecha.html">componenteFecha</a></li><li><a href="componenteFila.html">componenteFila</a></li><li><a href="componenteFilaTabla.html">componenteFilaTabla</a></li><li><a href="componenteFormulario.html">componenteFormulario</a></li><li><a href="componenteGrupoOpciones.html">componenteGrupoOpciones</a></li><li><a href="componenteHora.html">componenteHora</a></li><li><a href="componenteIcono.html">componenteIcono</a></li><li><a href="componenteImagen.html">componenteImagen</a></li><li><a href="componenteImportar.html">componenteImportar</a></li><li><a href="componenteItemMenu.html">componenteItemMenu</a></li><li><a href="componenteMenu.html">componenteMenu</a></li><li><a href="componenteNavegacion.html">componenteNavegacion</a></li><li><a href="componentePestana.html">componentePestana</a></li><li><a href="componentePestanas.html">componentePestanas</a></li><li><a href="componenteTabla.html">componenteTabla</a></li><li><a href="componenteTexto.html">componenteTexto</a></li><li><a href="componenteVista.html">componenteVista</a></li><li><a href="controlador.html">controlador</a></li><li><a href="editable.html">editable</a></li><li><a href="enrutador.html">enrutador</a></li><li><a href="enrutadorPredeterminado.html">enrutadorPredeterminado</a></li><li><a href="expresion.html">expresion</a></li><li><a href="servidor.html">servidor</a></li><li><a href="ui.html">ui</a></li><li><a href="util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#componentes">componentes</a></li><li><a href="global.html#configComponente">configComponente</a></li><li><a href="global.html#controladores">controladores</a></li><li><a href="global.html#cuerpo">cuerpo</a></li><li><a href="global.html#documento">documento</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Sep 14 2020 00:39:48 GMT-0300 (GMT-03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

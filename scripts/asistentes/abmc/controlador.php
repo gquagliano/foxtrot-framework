@@ -15,8 +15,8 @@ defined('_inc') or exit;
  */
 class {controlador} extends \controlador {
     /**
-     * Devuelve el listasdo de usuarios.
-     * @param object $filtro Objeto con los parámetros del filtro (texto y pagina).
+     * Devuelve el listado de {plural}.
+     * @param object $filtro Objeto con los parámetros del filtro.
      * @return object
      */
     public function obtenerListado($filtro) {
@@ -24,24 +24,47 @@ class {controlador} extends \controlador {
         \foxtrot::obtenerAplicacion()->verificarLogin();
 
         $modelo=new {aliasModelo};
+        $modelo->establecerAlias('{plural}');
         
         $donde=null;
         $parametros=null;
-        if($filtro) {
-            $donde='`id`=@filtro or `nombre` like @filtroParcial';
+
+        if($filtro->texto) {
+            $donde='{plural}.`id`=@filtro{sqlFiltros}';
             $parametros=[
                 'filtro'=>$filtro->texto,
                 'filtroParcial'=>'%'.$filtro->texto.'%'
             ];
         }
+<!superior-multinivel
+
+        $modelo->donde('{plural}.`{relacion}`=@{relacion}',['{relacion}'=>$filtro->{relacion}]);
+!>
+
         $listado=$modelo->listarItems($donde,$parametros,$filtro->pagina);
+<!multinivel
+
+        $listado->titulo='{plural} '.implode(' › ',$this->obtenerRuta($filtro->{relacion}));
+!>
 
         return $listado;
     }
+<!multinivel
 
     /**
-     * Elimina un usuario.
-     * @param int $id ID del usuario.
+     * Genera la ruta desde el primer nivel hasta el nivel actual.
+     * @param int $id ID del elemento padre.
+     * @return array
+     */
+    protected function obtenerRuta($id) {
+        //TODO Implementar
+        return [];
+    }
+!>
+
+    /**
+     * Elimina un {singular}.
+     * @param int $id ID del {singular}.
      */
     public function eliminar($id) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
@@ -51,9 +74,9 @@ class {controlador} extends \controlador {
     }
 
     /**
-     * Guarda un usuario.
-     * @param object $datos Objeto con los datos del usuario.
-     * @param int $id ID del usuario, si se trata de actualización de un registro existente.
+     * Guarda un {singular}.
+     * @param object $datos Objeto con los datos del {singular}.
+     * @param int $id ID del {singular}, si se trata de actualización de un registro existente.
      */
     public function guardar($datos,$id) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
@@ -73,7 +96,7 @@ class {controlador} extends \controlador {
     }
 
     /**
-     * Devuelve un usuario dado su ID.
+     * Devuelve un {singular} dado su ID.
      * @param int $id ID.
      */
     public function obtenerItem($id) {

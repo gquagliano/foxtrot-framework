@@ -19,7 +19,7 @@
             <div class="formulario componente contenedor form {idVista}form-8" data-fxid="{idVista}7">
                 <div class="componente contenedor {idVista}contenedor-23 cuerpo-formulario" data-fxid="{idVista}22">
 
-/*campo
+<!campo
                     <div class="row contenedor componente fila {idVista}fila-10" data-fxid="{idVista}9-{n}">
                         <div class="contenedor componente columna {idVista}columna-12 col-12 col-md-2" data-fxid="{idVista}11-{n}">
                             <label class="componente texto" data-fxid="{idVista}5-{n}">{etiqueta}: {req}</label></div>
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-*/
+!>
 
                 </div>
                 <div class="componente contenedor {idVista}contenedor-17" data-fxid="{idVista}16"><a href="#" data-fxid="{idVista}63" class="componente btn btn-primary boton {idVista}boton-64 mr-2 predeterminado">Guardar</a><a href="#" data-fxid="{idVista}65" class="componente btn btn-secondary boton {idVista}boton-66 mr-2">Nuevo</a><a href="#" data-fxid="{idVista}67" class="componente btn btn-secondary boton {idVista}boton-68">Volver</a></div>

@@ -9,6 +9,9 @@ ui.registrarControlador("{nombreVista}",function() {
     var t=this;
 
     this.controladorServidor="{controlador}";
+<!superior-multinivel
+    this.{relacion}=ui.obtenerParametro("{relacion}");
+!>
 
     /**
      * Evento Listo.
@@ -25,6 +28,9 @@ ui.registrarControlador("{nombreVista}",function() {
      */
     this.cargarDatos=function() {
         var filtro={
+<!superior-multinivel
+            {relacion}:this.{relacion},
+!>
             texto:componentes.filtro.valor(),
             pagina:componentes.pagina.valor()
         };
@@ -33,6 +39,9 @@ ui.registrarControlador("{nombreVista}",function() {
             componentes.cantidad.establecerHtml(resp.cantidad);
             componentes.tabla.establecerDatos(resp.filas);
             crearDesplegablePaginas(componentes.pagina,resp.paginas);
+<!multinivel
+            componentes.encabezado.establecerHtml(resp.ruta);
+!>
         },filtro);
     };
 

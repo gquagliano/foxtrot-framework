@@ -65,22 +65,6 @@ class modeloBase extends \modelo {
     }
 
     /**
-     * Devuelve un registro.
-     * @param object|array $id ID.
-     * @return \entidad
-     */
-    public function obtenerItem($id) {
-        $usuario=$this
-            ->reiniciar()
-            ->donde([
-                'id'=>$id
-            ])
-            ->obtenerUno();
-
-        return $usuario;
-    }
-
-    /**
      * Crea o actualiza un registro.
      * @param object|array $campos Campos a asignar o actualizar. La operación de alta o modificación es determinada a partir de la propiedad o el elemento 'id'.
      * @return int

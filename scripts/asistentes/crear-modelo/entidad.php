@@ -14,7 +14,7 @@ defined('_inc') or exit;
 class {entidad} extends \entidad {
     protected $tipoModelo={modelo}::class;
 
-    //id y e (campo de baja lógica) son automáticos, no requieren propiedad ni comentario
+    //id y e (campo de baja lógica) son automáticos, no requieren propiedad ni documentación
     
-    //TODO Agregar las propiedades concretas
+    //TODO Agregar las propiedades concretas (ver: https://gquagliano.github.io/experimental-foxtrot-framework/docs/api/orm.html)
 }

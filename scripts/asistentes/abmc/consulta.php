@@ -18,7 +18,12 @@
         <div class="componente contenedor {idVista}contenedor-33 container-fluid d-flex flex-column" data-fxid="{idVista}4">
             <h1 class="componente texto" data-fxid="{idVista}34">{titulo}</h1>
             <div class="row contenedor componente fila" data-fxid="{idVista}56">
-                <div class="contenedor componente {idVista}columna-58 col- col-12 col-lg-6 col-xl-8 columna" data-fxid="{idVista}57"><a href="#" data-fxid="{idVista}35" class="componente btn btn-primary {idVista}boton-36 boton">Nuevo {singular}</a></div>
+                <div class="contenedor componente {idVista}columna-58 col- col-12 col-lg-6 col-xl-8 columna" data-fxid="{idVista}57">
+<!superior-multinivel
+                    <a href="#" data-fxid="{idVista}59" class="componente btn {idVista}boton-59 boton">🡐 Volver</a>
+!>
+                    <a href="#" data-fxid="{idVista}35" class="componente btn btn-primary {idVista}boton-36 boton">Nuevo {singular}</a>
+                </div>
                 <div class="contenedor componente {idVista}columna-4 col-12 col-lg-6 col-xl-4 columna" data-fxid="{idVista}3">
                     <div class="row contenedor componente fila {idVista}fila-2 mt-3 mt-lg-0" data-fxid="{idVista}5">
                         <div class="contenedor componente {idVista}columna-15 col-9 columna" data-fxid="{idVista}8">
@@ -35,10 +40,16 @@
                             <tbody class="contenedor">
                                 <tr data-fxid="{idVista}40" class="componente contenedor {idVista}tabla-fila-41 tabla-fila">
                                     <td data-fxid="{idVista}42" class="componente contenedor {idVista}tabla-columna-43 tabla-columna"><span class="etiqueta componente {idVista}etiqueta-45" data-fxid="{idVista}44"></span></td>
-/*campo
+<!campo
                                     <td data-fxid="{idVista}46-{n}" class="componente contenedor {idVista}tabla-columna-47 tabla-columna"><span class="etiqueta componente {idVista}etiqueta-49" data-fxid="{idVista}48-{n}"></span></td>
-*/
-                                    <td data-fxid="{idVista}50" class="componente contenedor {idVista}tabla-columna-51 tabla-columna"><a href="#" data-fxid="{idVista}52" class="componente btn {idVista}boton-54 boton">Modificar</a><a href="#" data-fxid="{idVista}53" class="componente btn {idVista}boton-55 boton">Eliminar</a></td>
+!>
+                                    <td data-fxid="{idVista}50" class="componente contenedor {idVista}tabla-columna-51 tabla-columna">
+                                        <a href="#" data-fxid="{idVista}52" class="componente btn {idVista}boton-54 boton">Modificar</a>
+                                        <a href="#" data-fxid="{idVista}53" class="componente btn {idVista}boton-55 boton">Eliminar</a>
+<!siguiente-multinivel
+                                        <a href="#" data-fxid="{idVista}60" class="componente btn {idVista}boton-60 ml-3 boton">{siguiente} 🡒</a>
+!>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

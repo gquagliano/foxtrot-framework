@@ -26,7 +26,7 @@
         },
         {
             "id": "{idVista}34",
-            "nombre": null,
+            "nombre": "encabezado",
             "selector": null,
             "componente": "texto",
             "propiedades": {
@@ -41,9 +41,22 @@
             "propiedades": {
                 "tipo": "boton",
                 "estilo": "primary",
-                "click": "ir:{nombreSingular}"
+                "click": "ir:{nombreSingular}/?idsuperior={parametros.id}"
             }
         },
+<!superior-multinivel
+        {
+            "id": "{idVista}59",
+            "nombre": null,
+            "selector": ".{idVista}boton-59",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "estilo": "primary",
+                "click": "ir:{anterior}"
+            }
+        },
+!>
         {
             "id": "{idVista}37",
             "nombre": null,
@@ -92,7 +105,7 @@
                 "propiedad": "id"
             }
         },
-/*campo
+<!campo
         {
             "id": "{idVista}46-{n}",
             "nombre": null,
@@ -113,7 +126,7 @@
                 "propiedad": "{columna}"
             }
         },
-*/
+!>
         {
             "id": "{idVista}50",
             "nombre": null,
@@ -123,6 +136,19 @@
                 "encabezado": "Opciones"
             }
         },
+<!siguiente-multinivel
+        {
+            "id": "{idVista}52",
+            "nombre": null,
+            "selector": ".{idVista}boton-54",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "click": "ir:{nombreSingular}/?id={id}&{relacion}={parametros.{relacion}}"
+            }
+        },
+!>
+<!no-multinivel
         {
             "id": "{idVista}52",
             "nombre": null,
@@ -133,6 +159,7 @@
                 "click": "ir:{nombreSingular}/?id={id}"
             }
         },
+!>
         {
             "id": "{idVista}53",
             "nombre": null,
@@ -143,6 +170,18 @@
                 "click": "eliminar"
             }
         },
+<!multinivel
+        {
+            "id": "{idVista}60",
+            "nombre": null,
+            "selector": ".{idVista}boton-60",
+            "componente": "boton",
+            "propiedades": {
+                "tipo": "boton",
+                "click": "ir:{siguiente}/?{relacion}={id}"
+            }
+        },
+!>
         {
             "id": "{idVista}56",
             "nombre": null,

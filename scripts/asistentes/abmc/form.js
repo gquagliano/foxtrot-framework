@@ -11,6 +11,9 @@ ui.registrarControlador("{nombreVista}",function() {
     this.controladorServidor="{controlador}";
 
     this.id=null;
+<!superior-multinivel
+    this.{relacion}=ui.obtenerParametro("{relacion}");
+!>
         
     /**
      * Evento Listo.
@@ -35,14 +38,13 @@ ui.registrarControlador("{nombreVista}",function() {
                 ui.establecerValores(obj);
             },parametros.id);
         }
-        componentes.titulo.obtenerElemento().establecerHtml(titulo);
+        componentes.encabezado.obtenerElemento().establecerHtml(titulo);
     };
 
     /**
      * Guarda el formulario.
      */
     this.guardar=function() {
-        var t=this;
         this.servidor.guardar(function(obj) {
             t.id=obj.id;
             componentes.titulo.obtenerElemento().establecerHtml("Modificar {singular}");
@@ -64,7 +66,15 @@ ui.registrarControlador("{nombreVista}",function() {
      */
     this.volver=function() {
         ui.confirmar("¿Estás seguro de querer continuar?",function(r) {
+<!superior-multinivel
+            if(r) ui.irA("{nombrePlural}/?{relacion}="+t.{relacion});
+!>
+<!no-multinivel
             if(r) ui.irA("{nombrePlural}");
+!>
+<!no-superior-multinivel
+            if(r) ui.irA("{nombrePlural}");
+!>
         });
     };
 

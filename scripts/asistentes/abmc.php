@@ -27,6 +27,10 @@ class abmc extends asistente {
     var $singular;
     var $titulo;
     var $claseModelo;
+    var $multinivel=false;
+    var $nivelAnterior=null;
+    var $siguienteNivel=null;
+    var $campoRelacion=null;
 
     private function validarOpciones($opc) {
         if(!$opc['m'])  $this->error('El parámetro -m es requerido.');
@@ -41,6 +45,11 @@ class abmc extends asistente {
 
         $this->nombreModelo=$opc['m'];
         $this->titulo=$opc['t']?$opc['t']:ucfirst($this->nombreModelo);
+
+        if($opc['u']) $this->multinivel=true;
+        if($opc['g']) $this->siguienteNivel=$opc['g'];
+        if($opc['v']) $this->nivelAnterior=$opc['v'];
+        if($opc['k']) $this->campoRelacion=$opc['k'];
 
         if($opc['p']) $this->plural=$opc['p'];
         if($opc['n']) $this->singular=$opc['n'];
@@ -64,12 +73,12 @@ class abmc extends asistente {
         $this->validarOpciones($opciones);
 
         if(!$this->plural) $this->plural=$this->nombreModelo;
-        $this->nombreControlador=$this->nombreModelo; //Por defecto, mismo nombre
+        $this->nombreControlador=$this->plural; //Por defecto, mismo nombre
         
         $this->rutaVistas=_vistasAplicacion.$this->ruta;
         $this->rutaJs=_controladoresClienteAplicacion.$this->ruta;
         $this->rutaPhp=_controladoresServidorAplicacion.$this->nombreControlador.'.pub.php'; //Por defecto, mismo nombre
-        $this->rutaModelo=_modeloAplicacion.$this->nombreModelo.'.php';
+        $this->rutaModelo=_modeloAplicacion.$this->plural.'.php';
 
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);
@@ -112,7 +121,7 @@ class abmc extends asistente {
     }
 
     private function extraerCampo($codigo) {
-        preg_match('#/\*campo(.+?)\*/#ims',$codigo,$coincidencias);
+        preg_match('#<!campo(.+?)!>#ims',$codigo,$coincidencias);
         return $coincidencias;
     }
 
@@ -219,15 +228,18 @@ class abmc extends asistente {
         $php=file_get_contents(__DIR__.'/abmc/controlador.php');
 
         $requeridos=[];
+        $sql='';
         foreach($this->modelo->obtenerCampos() as $nombre=>$campo) {
-            if($nombre=='e'||$nombre=='id'||!$campo->requerido) continue;
-            $requeridos[]='\''.$nombre.'\'';
+            if($nombre=='e'||$nombre=='id') continue;
+            if($campo->requerido) $requeridos[]='\''.$nombre.'\'';
+            if(preg_match('/cadena/',$campo->tipo)) $sql.=' or '.$this->plural.'.`'.$nombre.'` like @filtroParcial';
         }
 
         $php=$this->reemplazarVariables($php,[
             'claseModelo'=>$this->claseModelo,
             'aliasModelo'=>'modelo'.ucfirst($this->nombreControlador),
-            'requeridos'=>implode(',',$requeridos)
+            'requeridos'=>implode(',',$requeridos),
+            'sqlFiltros'=>$sql
         ]);
 
         file_put_contents($this->rutaPhp,$php);
@@ -271,16 +283,44 @@ class abmc extends asistente {
             'titulo'=>$this->titulo,
             'controlador'=>$this->nombreControlador,
             'singular'=>$this->singular,
+            'plural'=>$this->plural,
             'nombreApl'=>$this->aplicacion,
             'tema'=>$this->json->tema?$this->json->tema:'en-blanco',
             'nombreSingular'=>$this->ruta.$this->singular,
             'nombrePlural'=>$this->ruta.$this->plural,
+            'siguiente'=>$this->siguienteNivel,
+            'anterior'=>$this->nivelAnterior,
+            'relacion'=>$this->campoRelacion
         ],$adicionales);
         
         //Agregar { }
         $reemplazar=[];
         foreach($vars as $var=>$valor) $reemplazar['{'.$var.'}']=$valor;
 
-        return str_replace_array($reemplazar,$codigo);
+        $codigo=str_replace_array($reemplazar,$codigo);
+
+        //Procesar condicionales multinivel, no-multinivel y volver-multinivel
+        if(preg_match_all('#<!(multinivel|superior-multinivel|no-superior-multinivel|siguiente-multinivel|no-siguiente-multinivel|no-multinivel)(\n|\r\n)(.+?)!>(\n|\r\n)#ims',$codigo,$coincidencias)) {
+            foreach($coincidencias[0] as $i=>$bloque) {
+                $etiqueta=$coincidencias[1][$i];
+                $interior=$coincidencias[3][$i];
+
+                //Remover lo que no corresponda
+                if((!$this->multinivel&&($etiqueta=='multinivel'||$etiqueta=='volver-multinivel'||$etiqueta=='superior-multinivel'||$etiqueta=='no-superior-multinivel'||$etiqueta=='siguiente-multinivel'||$etiqueta=='no-siguiente-multinivel'))||
+                (!$this->nivelAnterior&&$etiqueta=='superior-multinivel')||
+                ($this->nivelAnterior&&$etiqueta=='no-superior-multinivel')||
+                (!$this->siguienteNivel&&$etiqueta=='siguiente-multinivel')||
+                ($this->siguienteNivel&&$etiqueta=='no-siguiente-multinivel')||
+                ($this->multinivel&&$etiqueta=='no-multinivel')) {
+                    $codigo=str_replace($bloque,'',$codigo);
+                    continue;
+                }
+
+                //Remover solo el comentario de lo que se mantiene
+                $codigo=str_replace($bloque,$interior,$codigo);
+            }
+        }
+
+        return $codigo;
     }
 }

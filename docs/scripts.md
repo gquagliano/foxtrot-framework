@@ -106,7 +106,7 @@ El asistente creará las clases del repositorio y de la entidad, vacías, para c
 
 ##### Asistente de creación de ABMC
 
-    php asistente abmc -a=nombre_aplicacion -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-s=singular]
+    php asistente abmc -a=nombre_aplicacion -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-n=singular] [-u [-v=vista_anterior] [-g=vista_siguiente_nivel] [-k=campo]]
 
 El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 
@@ -124,6 +124,14 @@ El asistente creará vistas, controladores JS y un controlador PHP, y agregará 
 
 `-n` Nombre singular (por defecto, el nombre de la entidad).
 
+`-u` Generará vistas con soporte *multinivel*, como, por ejemplo, Rubros 🡒 Subrubros.
+
+`-g` Nombre de la vista para las opciones para ingresar al siguiente nivel (por ejemplo `subrubros`).
+
+`-v` Nombre de la vista para las opciones para volver al nivel anterior (por ejemplo `rubros`).
+
+`-k` Nombre del campo que relaciona la entidad con su ascendente (por ejemplo `idrubro`).
+
 Las siguientes etiquetas adicionales compatibles con este asistente pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
 
 `@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
@@ -134,7 +142,7 @@ Las siguientes etiquetas adicionales compatibles con este asistente pueden utili
 
 Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión).
 
-*Nota:* Es posible que sea necesario realizar algunos ajustes al código generado. Por ejemplo, los nombres de campos de la base de datos seleccionados o filtrados en el controlador PHP pueden ser incorrectos.
+*Nota:* Siempre será necesario realizar algunos ajustes manuales al código generado, es solo una plantilla.
 
 ### Requerimientos
 

@@ -7,8 +7,10 @@
 - [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación y asistentes](scripts.md)
+- [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
+
+
 
 ![](img/editor.jpg)
 
@@ -37,7 +39,7 @@ En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación
 
 ## Comandos del gestor
 
-#### ![](img/gestor/aplicacion.jpg) Nueva aplicación
+#### ![](img/gestor/aplicacion.png) Nueva aplicación
 
 Crea una aplicación en blanco con sus archivos y elementos básicos, y configurará Foxtrot para que la misma se ejecute en el dominio especificado. Los archivos serán creados en `/desarrollo/aplicaciones/nombre/`.
 
@@ -45,7 +47,7 @@ Es posible que sea necesario editar el archivo `config.php` de la aplicación pa
 
 Ver [Primeros pasos](primeros-pasos.md) para más información.
 
-#### ![](img/gestor/vista.jpg) Nueva vista
+#### ![](img/gestor/vista.png) Nueva vista
 
 Abre el editor con los parámetros correspondientes para crear una nueva vista.
 
@@ -60,15 +62,15 @@ Cliente:
 - *Cordova*: Al guardar, generará un archivo HTML compatible con Cordova.
 - *Escritorio*: Al guardar, generará un archivo HTML compatible con el cliente de escritorio de Foxtrot.
 
-#### ![](img/gestor/editar.jpg) Editar una vista
+#### ![](img/gestor/editar.png) Editar una vista
 
 Se puede acceder al editor mediante el comando ubicado a la derecha de cada vista
 
-#### ![](img/gestor/controlador.jpg) Nuevo controlador de servidor
+#### ![](img/gestor/controlador.png) Nuevo controlador de servidor
 
 Crea un nuevo controlador de servidor (PHP).
 
-#### ![](img/gestor/modelo.jpg) Nuevo modelo de datos
+#### ![](img/gestor/modelo.png) Nuevo modelo de datos
 
 Crea las clases para un nuevo modelo de datos con su entidad.
 
@@ -76,11 +78,11 @@ Crea las clases para un nuevo modelo de datos con su entidad.
 
 [Más información sobre la estrcutrura de las clases del ORM](api/orm.md).
 
-#### ![](img/gestor/sincronizar.jpg) Sincronizar base de datos
+#### ![](img/gestor/sincronizar.png) Sincronizar base de datos
 
 Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
 
-#### ![](img/gestor/asistentes.jpg) Asistentes
+#### ![](img/gestor/asistentes.png) Asistentes
 
 Asistentes de creación de vistas y controladores.
 

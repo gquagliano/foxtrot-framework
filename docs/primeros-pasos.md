@@ -7,7 +7,7 @@
 - [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación y asistentes](scripts.md)
+- [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
 
 ## Primeros pasos
@@ -27,7 +27,7 @@ Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correc
 
 2- Debe crearse el archivo `desarrollo/config.php` utilizando `desarrollo/config-ejemplo.php` como plantilla y editándolo, como mínimo, para establecer la URL y la ruta donde fue instalado  (ver instrucciones en el código).
 
-**¡`localhost` ya está en uso!** En un entorno de desarrollo, no tendremos un dominio distinto para cada aplicación. Lo ideal es crear dominios locales modificando el [archivo hosts](https://es.wikipedia.org/wiki/Archivo_hosts).
+**¿`localhost` ya está en uso?** En un entorno de desarrollo, usualmente no tendremos un dominio distinto para cada aplicación. Lo ideal es crear dominios locales modificando el [archivo hosts](https://es.wikipedia.org/wiki/Archivo_hosts).
 
 3- Debe configurarse `desarrollo/.htaccess`. Normalmente solo será necesario cambiar la ruta en `RewriteBase`.
 
@@ -58,7 +58,7 @@ Desde allí se podrá:
 - Ejecutar los asistentes
 - Construir la aplicación para embeber (Cordova) o producción
 
-Ver [Gestor y editor](editor.md) para información.
+Ver [Gestor y editor](editor.md) para más información.
 
 ### Configurar la aplicación de ejemplo
 
@@ -68,7 +68,7 @@ Ver [Gestor y editor](editor.md) para información.
 
 ### Vista de inicio
 
-La vista de inicio será `inicio`. Ver instrucciones para el acceso al editor a continuación.
+La vista de inicio será `inicio`.
 
 ### Probar la aplicación
 

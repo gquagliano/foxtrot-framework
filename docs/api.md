@@ -4,7 +4,7 @@
 - [Primeros pasos](primeros-pasos.md)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
-- [Editor](editor.md)
+- [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
 - [Scripts de compilación y asistentes](scripts.md)

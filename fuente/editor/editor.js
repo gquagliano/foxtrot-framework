@@ -6,8 +6,11 @@
  */
 
 /**
- * Editor de vistas.
- * @typedef {editor}
+ * @typedef Editor
+ */
+
+/**
+ * @class Editor de vistas.
  */
 var editor=new function() {
     "use strict";

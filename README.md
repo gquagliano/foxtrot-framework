@@ -2,6 +2,8 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7.
 
 **Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión *MVP*!**
 
+**Nota: Se encuentra en curso la implementación del nuevo gestor, pero aún no todas sus funciones están disponibles.** Las funciones que aún no se han implementado se pueden encontrar en [Scripts deprecados](docs/scripts-deprecados.md).
+
 ### Qué es Foxtrot Framework
 
 ![](docs/img/editor.jpg)
@@ -79,13 +81,13 @@ https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
 
 ### Editor
 
-Editor de vistas *WYSIWYG* *Drag&drop*. Almacena la vista lista para mostrar en HTML/CSS, pero sin perder la relación entre elementos del DOM y los objetos del framework.
+Un gestor de aplicaciones permite crear vistas, crear controladores, ejecutar los distintos asistentes, gestionar el modelo de datos y acceder al editor en forma interactiva.
+
+El framework cuenta con un editor de vistas *WYSIWYG* *Drag&drop*, que almacena la vista lista para mostrar en HTML/CSS, lo cual lo hace **extremadamente rápido**, pero sin perder la relación entre elementos del DOM y los objetos del framework.
 
 El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc.), variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
 
-En el futuro, no solo será un editor, sino que se desarrollará un gestor interactivo de vistas, controladores, configuración, modelo de datos y demás recursos. Contará, además, con asistentes para creación de vistas y controladaores (por ejemplo, un ABMC en base al modelo de datos.)
-
-[Más información sobre el editor](docs/editor.md).
+[Más información sobre el gestor y el editor](docs/editor.md).
 
 [Listado de componentes](docs/componentes.md).
 
@@ -93,7 +95,7 @@ En el futuro, no solo será un editor, sino que se desarrollará un gestor inter
 
 ### Estructura de las aplicaciones
 
-El framework es multi-aplicación, simplificando el desarrollo y mantenimiento de múltiples proyectos en un servidor, tanto en desarrollo como en producción (una única instalación puede servir múltiples aplicaciones).
+El framework es multi-aplicación, lo que significa que el desarrollador puede trabajar en varias aplicaciones a la vez, y un servidor puede alojar múltiples aplicaciones a la vez, con una única instalación de Foxtrot, simplificando el mantenimiento y las actualizaciones.
 
 [Más información sobre las aplicaciones y su estructura](docs/estructura.md).
 

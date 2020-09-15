@@ -102,7 +102,9 @@ class foxtrot {
         include(_servidor.'enrutadores/enrutadorUnaPagina.php');
     }
 
-    protected static function cargarAplicacion() {
+    public static function cargarAplicacion($aplicacion=null) {
+        if($aplicacion!==null) self::$aplicacion=$aplicacion;
+
         self::definirConstantesAplicacion();
 
         if(!file_exists(_raizAplicacion)) self::error();

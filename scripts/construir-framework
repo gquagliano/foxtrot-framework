@@ -114,3 +114,4 @@ compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
 
 //Editor
 compilarJs(_fuente.'editor/editor.js',_desarrollo.'editor/editor.js',_depuracion);
+compilarJs(_fuente.'editor/gestor.js',_desarrollo.'editor/gestor.js',_depuracion);

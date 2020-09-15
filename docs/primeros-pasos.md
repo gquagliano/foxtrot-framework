@@ -4,7 +4,7 @@
 - [Primeros pasos](primeros-pasos.md)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
-- [Editor](editor.md)
+- [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
 - [Scripts de compilación y asistentes](scripts.md)
@@ -16,7 +16,9 @@ Configurar el framework es muy sencillo.
 
 Una vez clonado el repositorio, o descargado y extraído, dentro del directiorio de archivos de tu servidor local (Apache o Nginx),
 
-1- Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación y asistentes](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído.
+1- Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación y asistentes](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso.
+
+*Nota:* Esto solo es necesario ya que se está trabajando con el repositorio fuente de Foxtrot. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído, y este paso será necesario solo para aquellos que deseen modificar el núcleo del framework.
 
 	cd ruta/scripts
 	php construir-framework -d
@@ -24,6 +26,8 @@ Una vez clonado el repositorio, o descargado y extraído, dentro del directiorio
 Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correctamente configurado).
 
 2- Debe crearse el archivo `desarrollo/config.php` utilizando `desarrollo/config-ejemplo.php` como plantilla y editándolo, como mínimo, para establecer la URL y la ruta donde fue instalado  (ver instrucciones en el código).
+
+**¡`localhost` ya está en uso!** En un entorno de desarrollo, no tendremos un dominio distinto para cada aplicación. Lo ideal es crear dominios locales modificando el [archivo hosts](https://es.wikipedia.org/wiki/Archivo_hosts).
 
 3- Debe configurarse `desarrollo/.htaccess`. Normalmente solo será necesario cambiar la ruta en `RewriteBase`.
 
@@ -41,27 +45,26 @@ https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/
 
 https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
 
-### Crear una aplicación en blanco
+### Acceso al gestor de aplicaciones
 
-1- Puede utilizarse el asistente para crear una nueva aplicación.
+Para ingresar al gestor de aplicaciones, acceder a `http://localhost/experimental-foxtrot-framework/desarrollo/editor/` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
-    php asistente crear-apl -a=nombre -d="dominio"
+Desde allí se podrá:
 
-Ver [Scripts y asistentes](scripts.md) para más información sobre los parámetros.
+- Crear una aplicación en blanco
+- Crear y editar vistas
+- Crear controladores de servidor
+- Crear y sincronizar el modelo de datos
+- Ejecutar los asistentes
+- Construir la aplicación para embeber (Cordova) o producción
 
-Es necesario especificar el dominio ya que Foxtrot permite alojar múltiples aplicaciones en una única instalación.
-
-*Nota:* En `config-ejemplo.php`, `localhost` ya está en uso para la aplicación de ejemplo.
+Ver [Gestor y editor](editor.md) para información.
 
 ### Configurar la aplicación de ejemplo
 
 1- Para configurar la aplicación de ejemplo, primero se debe editar el archivo `desarrollo/aplicaciones/ejemplo/config.php` asignando los parámetros correctos de la base de datos, o removiéndolos si se desea tomarlos desde el archivo `config.php` global.
 
-2- Instalar la base de datos de la aplicación de ejemplo:
-
-	php sincronizar-bd -a=ejemplo
-
-Listo.
+2- Instalar la base de datos de la aplicación de ejemplo mediante el comando *Sincronizar modelo* del gestor de aplicaciones
 
 ### Vista de inicio
 
@@ -71,33 +74,13 @@ La vista de inicio será `inicio`. Ver instrucciones para el acceso al editor a 
 
 Puede ejecutarse la aplicación en el navegador web simplemente ingresando a `http://localhost/experimental-foxtrot-framework/desarrollo/` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
-### Crear o modificar una vista
-
-Puede ingresarse al editor en `http://localhost/experimental-foxtrot-framework/desarrollo/editor/?apl=aplicacion&vista=nombre_vista` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo y los parámetros correspondientes).
-
-Al abrir una vista inexistente, el editor la creará automáticamente.
-
-Ver [Editor](editor.md) para información sobre el acceso al editor de vistas.
-
 ### Compilación para producción
 
-1- Para construir la aplicación, puede utilizarse el script `construir-apl` (ver [Scripts de compilación y asistentes](scripts.md)):
-
-	php construir-apl -a=ejemplo
-
-Listo. Puede publicarse el contenido del directorio `produccion` directamente en el servidor web.
+Utilizar el comando correspondiente del gestor. Una vez construída la aplicación, puede publicarse el contenido del directorio `produccion` directamente en el servidor web.
 
 ### Compilación para Cordova
 
-1- Para construir la aplicación para Cordova, puede utilizarse el script `construir-embebible` (ver [Scripts de compilación y asistentes](scripts.md)):
-
-	php construir-embebible -a=ejemplo -i=cordova.html -d
-
-*Nota:* El valor de `-i` debe ser el nombre de una vista creada para Cordova.
-
-Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correctamente configurado).
-
-2- Creada la aplicación mediante la [línea de comandos de Cordova](https://cordova.apache.org/docs/es/latest/guide/cli/), solo se requiere modificar el archivo `config.xml` para que `<content>` apunte a `index-cordova.html`.
+1- Crear la aplicación mediante la [línea de comandos de Cordova](https://cordova.apache.org/docs/es/latest/guide/cli/).
 
 *Ejemplo:*
 
@@ -105,11 +88,7 @@ Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correc
     cordova create aplicacion
     cordova platform add android
 
-Listo. el contenido del directorio `embeber` debe copiarse tal cual al directorio `www` de la aplicación.
-
-También es posible construir y ejecutar la aplicación en un dispositivo conectado al equipo directamente desde Foxtrot:
-
-	php construir-embebible -a=ejemplo -i=cordova.html -d -c="ruta/a/www" -p=android
+2- Utilizar el comando correspondiente del gestor. Una vez construída la aplicación, el contenido del directorio `embeber` debe copiarse tal cual al directorio `www` de la aplicación.
 
 ### Probar una vista para Cordova
 

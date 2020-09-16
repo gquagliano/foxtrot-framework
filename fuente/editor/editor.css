@@ -509,23 +509,21 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-gestor .arbol li>label,
 .foxtrot-gestor .arbol li>div {
     transition: background-color .2s;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0;
 }
 .foxtrot-gestor .arbol li:hover>.vista,
 .foxtrot-gestor .arbol li:hover>.opciones {
     background-color: #e6e6e6;
 }
 .foxtrot-gestor .arbol .directorio {
-    margin-bottom: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid #e6e6e6;
     flex: 0 0 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .foxtrot-gestor .arbol .vista {
-    padding-top: .6rem;
-    padding-left: 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -535,10 +533,12 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-gestor .arbol .opciones {
     flex-grow: 0;
 }
+.foxtrot-gestor .arbol .opciones img {
+    height: 20px;
+}
 .foxtrot-gestor .arbol ul {
     margin: 0;
     padding: 0;
-    padding-left: 1.5rem;
     list-style-type: none;
     width: 100%;
 }

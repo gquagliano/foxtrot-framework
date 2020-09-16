@@ -31,7 +31,7 @@ Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correc
 
 3- Debe configurarse `desarrollo/.htaccess`. Normalmente solo será necesario cambiar la ruta en `RewriteBase`.
 
-Listo.
+**Nota:** El gestor de aplicaciones requiere valores elevados de `max_execution_time` y `max_input_time` (`0` no es recomendable), y acceso a la función `exec()` a fin de poder ejecutar las compilaciones de JavaScript y Cordova.
 
 ### Acceder a la documentación
 

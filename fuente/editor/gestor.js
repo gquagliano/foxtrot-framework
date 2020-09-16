@@ -32,12 +32,32 @@ var gestor=new function() {
     };
 
     /**
+     * Muestra un diálogo.
+     * @param {string} id - ID del elemento del diálogo.
+     */
+    this.abrirDialogo=function(id) {
+        //TODO Animación
+        var elem=document.querySelector("#"+id);
+        elem.estilo("display","block");
+        elem.querySelector("input,select,textarea").focus();
+    };
+
+    /**
+     * Cierra un diálogo.
+     * @param {HTMLElement} elem - Elemento del diálogo o cualquier elemento descendente.
+     */
+    this.cerrarDialogo=function(elem) {
+        //TODO Animación
+        var filtro={ clase:"dialogo" };
+        if(!elem.es(filtro)) elem=elem.padre(filtro);
+        elem.estilo("display","none");
+    };
+
+    /**
      * Abre el diálogo de nueva vista.
      */
     this.nuevaVista=function() {
-        //TODO Animación
-        document.querySelector("#dialogo-nueva-vista").estilo("display","block");
-        document.querySelector("#nueva-vista-nombre").focus();
+        this.abrirDialogo("dialogo-nueva-vista");
     };
 
     /**
@@ -55,14 +75,59 @@ var gestor=new function() {
     };
 
     /**
-     * Cierra un diálogo.
-     * @param {Element} elem - Elemento del diálogo o cualquier elemento descendiente.
+     * Abre el diálogo de nueva aplicación.
      */
-    this.cerrarDialogo=function(elem) {
-        //TODO Animación
-        var filtro={ clase:"dialogo" };
-        if(!elem.es(filtro)) elem=elem.padre(filtro);
-        elem.estilo("display","none");
+    this.nuevaAplicacion=function() {
+        this.abrirDialogo("dialogo-nueva-aplicacion");
+    };
+
+    /**
+     * Abre el diálogo de nuevo controlador.
+     */
+    this.nuevoControlador=function() {
+        this.abrirDialogo("dialogo-nuevo-controlador");
+    };
+
+    /**
+     * Abre el diálogo de nuevo modelo.
+     */
+    this.nuevoModelo=function() {
+        this.abrirDialogo("dialogo-nuevo-modelo");
+    };
+
+    /**
+     * Abre el diálogo de sincronización.
+     */
+    this.sincronizar=function() {
+        this.abrirDialogo("dialogo-sincronizacion");
+    };
+
+    /**
+     * Abre el diálogo de asistentes.
+     */
+    this.asistentes=function() {
+        this.abrirDialogo("dialogo-asistentes");
+    };
+
+    /**
+     * Abre el diálogo de construir embebible.
+     */
+    this.construirEmbebible=function() {
+        this.abrirDialogo("dialogo-construir-embebible");
+    };
+
+    /**
+     * Abre el diálogo de construir producción.
+     */
+    this.construirProduccion=function() {
+        this.abrirDialogo("dialogo-construir-produccion");
+    };
+
+    /**
+     * Recarga el gestor.
+     */
+    this.actualizar=function() {
+        window.location.reload();
     };
 
     //document.body.agregarClase("trabajando");

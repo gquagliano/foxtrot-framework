@@ -29,6 +29,8 @@ Contraseña: test
 
 ### Estado
 
+![](docs/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
+
 ![](docs/img/tick.jpg) Editor de vistas completamente funcional.
 
 ![](docs/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
@@ -79,7 +81,7 @@ https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
 
 ### Qué estamos desarrollando
 
-### Editor
+### Gestor de aplicaciones y editor visual
 
 Un gestor de aplicaciones permite crear vistas, crear controladores, ejecutar los distintos asistentes, gestionar el modelo de datos y acceder al editor en forma interactiva.
 

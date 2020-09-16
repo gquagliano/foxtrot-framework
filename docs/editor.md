@@ -10,11 +10,11 @@
 - [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
 
-
+  
 
 ![](img/editor.jpg)
 
-## Gestor
+## Gestor de aplicaciones
 
 El gestor de aplicaciones permite:
 

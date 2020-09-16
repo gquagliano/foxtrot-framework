@@ -45,14 +45,14 @@ foreach($aplicaciones as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicaci
 ?>
             </select>
         </div>
-        <button class="btn btn-sm separador" onclick="gestor.nuevaAplicacion()" disabled title="Nueva aplicación"><img src="img/aplicacion.png"></button>
+        <button class="btn btn-sm separador" onclick="gestor.nuevaAplicacion()" title="Nueva aplicación"><img src="img/aplicacion.png"></button>
         <button class="btn btn-sm" onclick="gestor.nuevaVista()" title="Nueva vista"><img src="img/vista.png"></button>
-        <button class="btn btn-sm separador" onclick="gestor.nuevoControlador()"  disabled title="Nuevo controlador de servidor"><img src="img/controlador.png"></button>
-        <button class="btn btn-sm" onclick="gestor.nuevoModelo()" disabled title="Nuevo modelo de datos"><img src="img/modelo.png"></button>
-        <button class="btn btn-sm separador" onclick="gestor.sincronizar()" disabled title="Sincronizar base de datos"><img src="img/sincronizar.png"></button>
-        <button class="btn btn-sm separador" onclick="gestor.asistentes()" disabled title="Asistentes"><img src="img/asistentes.png"></button>
-        <button class="btn btn-sm" onclick="gestor.construirEmbebible()" disabled title="Construir embebible"><img src="img/embebible.png"></button>
-        <button class="btn btn-sm" onclick="gestor.construirProduccion()" disabled title="Construir para producción"><img src="img/produccion.png"></button>
+        <button class="btn btn-sm separador" onclick="gestor.nuevoControlador()"  title="Nuevo controlador de servidor"><img src="img/controlador.png"></button>
+        <button class="btn btn-sm" onclick="gestor.nuevoModelo()" title="Nuevo modelo de datos"><img src="img/modelo.png"></button>
+        <button class="btn btn-sm separador" onclick="gestor.sincronizar()" title="Sincronizar base de datos"><img src="img/sincronizar.png"></button>
+        <button class="btn btn-sm separador" onclick="gestor.asistentes()" title="Asistentes"><img src="img/asistentes.png"></button>
+        <button class="btn btn-sm" onclick="gestor.construirEmbebible()" title="Construir embebible"><img src="img/embebible.png"></button>
+        <button class="btn btn-sm" onclick="gestor.construirProduccion()" title="Construir para producción"><img src="img/produccion.png"></button>
         <div class="float-right">
             <img src="img/cargando.svg" id="foxtrot-cargando">
         </div>
@@ -61,7 +61,7 @@ foreach($aplicaciones as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicaci
     <main>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6 pb-5">
+                <div class="col-12 pb-5">
                     <h1>Vistas</h1>
 
 <?php
@@ -114,14 +114,14 @@ if(!count($arbol)) {
         usort($lista,'compararArbol');
         //Avanzar recursivamente
         foreach($lista as $item) 
-            if($item->directorio) usort($item->hijos,'compararArbol');
+            if($item->directorio) ordenarArbol($item->hijos);
     }
     function compararArbol($a,$b) {
         //Subir los directorios
         if($a->directorio&&!$b->directorio) return -1;
         if(!$a->directorio&&$b->directorio) return 1;
         //Ordenar alfabéticamente tipos iguales
-        if($a->directorio) return strcmp($a->directorio,$b->directorio);
+        if($a->directorio&&$b->directorio) return strcmp($a->directorio,$b->directorio);
         return strcmp($a->item,$b->item);
     }
     ordenarArbol($arbol);
@@ -130,15 +130,15 @@ if(!count($arbol)) {
 ?>
                     <ul class="arbol" id="arbol-vistas">
 <?php
-    function mostrarArbol($lista) {
+    function mostrarArbol($lista,$nivel=0) {
         foreach($lista as $item) {
             if($item->directorio) {
 ?>
                         <li>
-                            <label class="directorio"><?=$item->directorio?>/</label>
+                            <label class="directorio" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->directorio?>/</label>
                             <ul>
 <?php
-                mostrarArbol($item->hijos);
+                mostrarArbol($item->hijos,$nivel+1);
 ?>
                             </ul>
                         </li>
@@ -146,7 +146,7 @@ if(!count($arbol)) {
             } else {
 ?>
                         <li class="clearfix">
-                            <label class="vista"><?=$item->item?></label>
+                            <label class="vista" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->item?></label>
                             <div class="opciones">
                                 <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar" disabled><img src="img/renombrar.png"></button>
@@ -168,6 +168,16 @@ if(!count($arbol)) {
             </div>
         </div>
     </main>
+
+    <div class="dialogo" id="dialogo-nueva-aplicacion">
+        <div class="dialogo-cuerpo">
+            <h1>Nueva aplicación</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaAplicacion()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <div class="dialogo" id="dialogo-nueva-vista">
         <div class="dialogo-cuerpo">
@@ -203,6 +213,67 @@ if(!count($arbol)) {
             </div>
         </div>
     </div>
+
+    <div class="dialogo" id="dialogo-nuevo-controlador"">
+        <div class="dialogo-cuerpo">
+            <h1>Nuevo controlador</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogo" id="dialogo-nuevo-modelo">
+        <div class="dialogo-cuerpo">
+            <h1>Nuevo modelo de datos</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogo" id="dialogo-sincronizacion">
+        <div class="dialogo-cuerpo">
+            <h1>Sincronizar base de datos</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogo" id="dialogo-asistentes">
+        <div class="dialogo-cuerpo">
+            <h1>Asistentes</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogo" id="dialogo-construir-embebible">
+        <div class="dialogo-cuerpo">
+            <h1>Construir embebible</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogo" id="dialogo-construir-produccion">
+        <div class="dialogo-cuerpo">
+            <h1>Construir para producción</h1>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     
     <script src="../cliente/foxtrot.js"></script>
     <script>

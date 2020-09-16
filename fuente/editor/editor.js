@@ -1163,6 +1163,8 @@ var editor=new function() {
                         ui.limpiar();
                         ui.obtenerMarco().atributo("src",resp.url);                     
                     }
+                    //Si acabamos de crear une vista nueva, refrescar el gestor
+                    if(window.opener&&window.opener.gestor) window.opener.gestor.actualizar();
                 }
             }
         });

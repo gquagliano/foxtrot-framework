@@ -44,7 +44,7 @@ var gestor=new function() {
                 ui.alerta("No fue posible seleccionar completar la operación.");
             },
             siempre:function() {
-                this.trabajando(false);
+                gestor.trabajando(false);
             }
         });
         return this;
@@ -80,6 +80,10 @@ var gestor=new function() {
             cuerpo:document.querySelector("#"+id)
         });
         ui.abrirDialogo(dialogo);
+
+        var campo=dialogo.obtenerElemento().querySelector("input,select,textarea");
+        if(campo) campo.focus();
+
         return this;
     };
 
@@ -168,7 +172,11 @@ var gestor=new function() {
     /**
      * Abre el diálogo de asistentes.
      */
-    this.asistentes=function() {
+    this.asistentes=function() {       
+        document.querySelector("#asistentes-seleccion select").valor(null); 
+        document.querySelector("#asistentes-seleccion").removerClase("d-none");
+        document.querySelectorAll(".formulario-asistente").agregarClase("d-none");
+
         this.abrirDialogo("dialogo-asistentes");
     };
 
@@ -199,6 +207,19 @@ var gestor=new function() {
                 gestor.actualizar();
             });
         });
+    };    
+
+    /**
+     * Procesa el cambio del desplegable de selección de asistente.
+     * @param {HTMLSelectElement} elem 
+     */
+    this.seleccionarAsistente=function(elem) {
+        document.querySelector("#asistentes-seleccion").agregarClase("d-none");
+        var formulario=document.querySelector("#asistente-"+elem.valor());
+        formulario.removerClase("d-none");
+        
+        var campo=formulario.querySelector("input,select,textarea");
+        if(campo) campo.focus();
     };
 
     /**

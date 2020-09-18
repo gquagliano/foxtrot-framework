@@ -34,13 +34,12 @@ class abmc extends asistente {
     var $campoRelacion=null;
 
     /**
-     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [nombre,visible=>bool].
+     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [titulo,visible=>bool].
      * @return object
      */
     public static function obtenerParametros() {
         return (object)[
-            'nombre'=>'ABMC',
-            'visible'=>true
+            'titulo'=>'ABMC'
         ];
     }
 

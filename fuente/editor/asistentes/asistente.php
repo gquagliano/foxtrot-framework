@@ -23,7 +23,7 @@ class asistente {
     }
 
     /**
-     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [nombre,visible=>bool].
+     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [titulo,visible=>bool].
      * @return object
      */
     public static function obtenerParametros() {
@@ -50,6 +50,9 @@ class asistente {
 class asistentes {
     protected static $asistentes=[];
 
+    /**
+     * Precarga los asistentes.
+     */
     public static function inicializar() {
         $archivos=glob(__DIR__.'/*.php');
         foreach($archivos as $archivo) {
@@ -58,19 +61,44 @@ class asistentes {
 
             include_once($archivo);
 
-            //Convertir nombre de clase removiendo los guiones, ejemplo: crear-aplicacion.php -> crearAplicacion
-            $partes=explode('-',substr($nombre,0,strrpos($nombre,'.')));
-            foreach($partes as $i=>$v) if($i>0) $partes[$i]=ucfirst($v);
-            $clase=implode('',$partes);
-
+            $nombre=substr($nombre,0,strrpos($nombre,'.'));
+            $clase=self::nombreClase($nombre);
+            
             $obj=$clase::obtenerParametros();
             $obj->clase=$clase;
+            $obj->nombre=$nombre;
+            if($obj->visible!==false) $obj->visible=true;
 
-            self::$asistentes=$obj;
+            self::$asistentes[]=$obj;
         }
     }
 
+    /**
+     * Devuelve el listado de asistentes.
+     * @return array
+     */
     public static function obtenerAsistentes() {
         return self::$asistentes;
+    }
+
+    /**
+     * Crea y devuelve la instancia de un asistente.
+     * @return asistente
+     */
+    public static function obtenerAsistente($nombre) {
+        $clase=self::nombreClase($nombre);
+        return new $clase(gestor::obtenerNombreAplicacion());
+    }
+    
+    /**
+     * Convertir nombre de clase removiendo los guiones, ejemplo: crear-aplicacion.php -> crearAplicacion
+     * @var string $nombre
+     * @return string
+     */
+    private static function nombreClase($nombre) {
+        $partes=explode('-',$nombre);
+        foreach($partes as $i=>$v) if($i>0) $partes[$i]=ucfirst($v);
+        $clase=implode('',$partes);
+        return $clase;
     }
 }

@@ -15,7 +15,7 @@ defined('_inc') or exit;
  */
 class crearModelo extends asistente {
     /**
-     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [nombre,visible=>bool].
+     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [titulo,visible=>bool].
      * @return object
      */
     public static function obtenerParametros() {

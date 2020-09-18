@@ -9,7 +9,7 @@
 define('_inc',1);
 
 include(__DIR__.'/../servidor/foxtrot.php');
-include(__DIR__.'/asistentes/asistente.php');
+include(__DIR__.'/gestor.php');
 
 foxtrot::inicializar(false);
 asistentes::inicializar();
@@ -173,12 +173,10 @@ if(!count($arbol)) {
 
     <div class="dialogo" id="dialogo-nueva-aplicacion">
         <h1>Nueva aplicación</h1>
-        <div class="form-group row">
-            <label class="col-3 col-form-label">Nombre</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="nueva-aplicacion-nombre">
-            </div>
-        </div>
+<?php
+//Asistente crear-aplicacion
+asistentes::obtenerAsistente('crear-aplicacion')->obtenerFormulario();
+?>
         <div class="text-center">
             <button type="button" onclick="gestor.aceptarNuevaAplicacion()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
@@ -187,31 +185,10 @@ if(!count($arbol)) {
 
     <div class="dialogo" id="dialogo-nueva-vista">
         <h1>Nueva vista</h1>
-        <div class="form-group row">
-            <label class="col-3 col-form-label">Ruta y nombre</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="nueva-vista-nombre">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-3 col-form-label">Modo</label>
-            <div class="col-sm-6">
-                <select class="custom-select" id="nueva-vista-modo">
-                    <option value="independiente">Independiente</option>
-                    <option value="embebible">Embebible</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-3 col-form-label">Cliente</label>
-            <div class="col-sm-6">
-                <select class="custom-select" id="nueva-vista-cliente">
-                    <option value="web">Web</option>
-                    <option value="cordova">Cordova</option>
-                    <option value="escritorio">Escritorio</option>
-                </select>
-            </div>
-        </div>
+<?php
+//Asistente crear-vista
+asistentes::obtenerAsistente('crear-vista')->obtenerFormulario();
+?>
         <div class="text-center">
             <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
@@ -220,37 +197,77 @@ if(!count($arbol)) {
 
     <div class="dialogo" id="dialogo-nuevo-controlador"">
         <h1>Nuevo controlador</h1>
+<?php
+//Asistente crear-controlador
+asistentes::obtenerAsistente('crear-controlador')->obtenerFormulario();
+?>
         <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.aceptarNuevoControlador()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-nuevo-modelo">
         <h1>Nuevo modelo de datos</h1>
+<?php
+//Asistente crear-modelo
+asistentes::obtenerAsistente('crear-modelo')->obtenerFormulario();
+?>
         <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.aceptarNuevoModelo()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-sincronizacion">
         <h1>Sincronizar base de datos</h1>
+<?php
+//Asistente sincronizar-bd
+asistentes::obtenerAsistente('sincronizar-bd')->obtenerFormulario();
+?>
         <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.aceptarSincronizacion()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-asistentes">
         <h1>Asistentes</h1>
+
+        <div id="asistentes-seleccion">   
+            <div class="form-group row">
+                <label class="col-3 col-form-label">Asistente</label>
+                <div class="col-sm-9">
+                    <select onchange="gestor.seleccionarAsistente(this)" class="custom-select">
+                        <option></option>
 <?php
-foreach(asistentes::obtenerAsistentes() as $asistente) {
+//Otros asistentes
+$asistentes=asistentes::obtenerAsistentes();
+foreach($asistentes as $asistente) {
+    if(!$asistente->visible) continue;
+    echo '<option value="'.$asistente->nombre.'">'.$asistente->titulo.'</option>';
+}
+?>
+                    </select>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
+        </div>
+
+<?php
+foreach($asistentes as $asistente) {
     if(!$asistente->visible) continue;
 ?>
-        <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+        <div class="formulario-asistente d-none" id="asistente-<?=$asistente->nombre?>">
+<?php
+    asistentes::obtenerAsistente($asistente->nombre)->obtenerFormulario();
+?>
+            <div class="text-center">
+                <button type="button" onclick="gestor.aceptarAsistente('<?=$asistente->nombre?>')" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+            </div>
         </div>
 <?php
 }
@@ -259,16 +276,24 @@ foreach(asistentes::obtenerAsistentes() as $asistente) {
 
     <div class="dialogo" id="dialogo-construir-embebible">
         <h1>Construir embebible</h1>
+<?php
+//Asistente construir-cordova
+asistentes::obtenerAsistente('construir-cordova')->obtenerFormulario();
+?>        
         <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.aceptarConstruirEmbebible()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-construir-produccion">
         <h1>Construir para producción</h1>
+<?php
+//Asistente construir-produccion
+asistentes::obtenerAsistente('construir-produccion')->obtenerFormulario();
+?>
         <div class="text-center">
-            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.aceptarConstruirProduccion()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>

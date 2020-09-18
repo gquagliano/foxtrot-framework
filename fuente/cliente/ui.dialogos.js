@@ -219,7 +219,10 @@
 
         return {
             elem:elem,
-            param:parametros
+            param:parametros,
+            obtenerElemento:function() {
+                return this.elem;
+            }
         };
     };
 

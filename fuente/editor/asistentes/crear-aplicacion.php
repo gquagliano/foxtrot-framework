@@ -13,7 +13,7 @@ defined('_inc') or exit;
  */
 class crearAplicacion extends asistente {
     /**
-     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [nombre,visible=>bool].
+     * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [titulo,visible=>bool].
      * @return object
      */
     public static function obtenerParametros() {
@@ -27,6 +27,14 @@ class crearAplicacion extends asistente {
      * @return string
      */
     public function obtenerFormulario() {
+?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="nombre">
+            </div>
+        </div>
+<?php
     }
 
     /**

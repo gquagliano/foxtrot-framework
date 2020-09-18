@@ -140,3 +140,22 @@ function limpiarHtml($html) {
     $html=preg_replace('/<link.+?data-autogenerado.*?>/m','',$html);
     return $html;
 }
+
+/* Restaurar un json a partir de las vistas existentes:
+$json=['vistas'=>[]];
+function recorrer($d='') {
+    global $json;
+    $archivos=glob('../aplicaciones/test/cliente/vistas/'.$d.'*');
+    foreach($archivos as $archivo) {
+        if(is_dir($archivo)) {
+            recorrer($d.basename($archivo).'/');
+        } else {
+            $pi=pathinfo($archivo);
+            $nombre=$pi['filename'];
+            $extension=$pi['extension'];        
+            if(!array_key_exists($d.$nombre,$json['vistas'])) $json['vistas'][$d.$nombre]=['tipo'=>'independiente','cliente'=>'web'];
+        }
+    }
+}
+recorrer();
+file_put_contents('../aplicaciones/test/aplicacion.json',json_encode($json));*/

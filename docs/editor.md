@@ -144,6 +144,45 @@ La siguiente etapa consistirá en:
 
 *Nota:* El editor solo está probado en la última versión de Opera.
 
+## Desarrollo de asistentes
+
+Es posible crear nuevos asistentes, los cuales se mostrarán en el diálogo de Asistentes del gestor de aplicaciones, simplemente agregando un archivo en `/fuente/editor/asistentes`, el cual contenga una clase del mismo nombre extendiendo `asistente`.
+
+*Nota:* Cuando el nombre de archivo contenga guiones, serán removidos y la primer letra de cada palabra será convertida a mayúscula, por ejemplo `crear-aplicacion` => `crearAplicacion`.
+
+    defined('_inc') or exit;
+
+    /**
+    * Asistente concreto.
+    */
+    class miAsistente extends asistente {
+        /**
+        * Devuelve los parámetros del asistente. Debe devolver un objeto con las propiedades [titulo,visible=>bool].
+        * @return object
+        */
+        public static function obtenerParametros() {
+            return (object)[
+                'titulo'=>'Nombre del asistente'
+            ];
+        }
+
+        /**
+        * Devuelve el formulario de configuración del asistente.
+        * @return string
+        */
+        public function obtenerFormulario() {
+            echo 'Formulario del asistente';
+        }
+
+        /**
+        * Ejecuta el asistente.
+        * @var object $parametros Parámetros recibidos desde el formulario.
+        */
+        public function ejecutar($parametros) {
+            //Lógica del asistente
+        }
+    }
+
 ## Más información
 
 contacto@foxtrot.ar

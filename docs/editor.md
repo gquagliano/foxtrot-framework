@@ -167,11 +167,17 @@ Es posible crear nuevos asistentes, los cuales se mostrarán en el diálogo de A
         }
 
         /**
-        * Devuelve el formulario de configuración del asistente.
-        * @return string
+        * Imprime el formulario de configuración del asistente.
         */
         public function obtenerFormulario() {
-            echo 'Formulario del asistente';
+    ?>
+    <div class="form-group row">
+        <label class="col-3 col-form-label">Parámetro</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="param">
+        </div>
+    </div>
+    <?php
         }
 
         /**
@@ -179,6 +185,8 @@ Es posible crear nuevos asistentes, los cuales se mostrarán en el diálogo de A
         * @var object $parametros Parámetros recibidos desde el formulario.
         */
         public function ejecutar($parametros) {
+            //Recibido $parametros->param desde el formulario
+            
             //Lógica del asistente
         }
     }

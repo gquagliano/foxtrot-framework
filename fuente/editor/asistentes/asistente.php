@@ -30,8 +30,7 @@ class asistente {
     }
 
     /**
-     * Devuelve el formulario de configuración del asistente.
-     * @return string
+     * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
     }

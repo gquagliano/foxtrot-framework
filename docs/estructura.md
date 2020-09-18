@@ -20,7 +20,7 @@
 
 `/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
 
-`/scripts/` Scripts de compilación.
+`/scripts/` Scripts útiles (solo para desarrolladores del núcleo de Foxtrot).
 
 ## Estructura de una aplicación
 

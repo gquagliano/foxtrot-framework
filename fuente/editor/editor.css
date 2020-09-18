@@ -545,26 +545,12 @@ body.trabajando #foxtrot-cargando {
 
 .foxtrot-gestor .dialogo {
     display: none;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.2);
-    z-index: 9999;
+    width: 650px;
+    overflow-x: hidden;
 }
-.foxtrot-gestor .dialogo-cuerpo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin: 30px 0;
-    max-width: 95%;
-    transform: translate(-50%,-50%);
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 3px;
-    min-width: 650px;
+.foxtrot-gestor .dialogo h1 {
+    margin-top: 0;
 }
-.foxtrot-gestor .dialogo-cuerpo h1 {
-    margin-top: 0;;
+.foxtrot-gestor .foxtrot-dialogo .dialogo {
+    display: block;
 }

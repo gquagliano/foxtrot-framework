@@ -6,6 +6,10 @@
  */
 
 /**
+ * @typedef Dialogo
+ */
+
+/**
  * Métodos anexados a la gestión de la interfaz.
  */
 (function() {
@@ -151,7 +155,7 @@
      * @param {function} [parametros[].retorno] - Función de retorno. Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
      * @param {boolean} [parametros[].mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
      * @param {boolean} [parametros[].eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
-     * @returns {Object}
+     * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
         //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
@@ -221,7 +225,7 @@
 
     /**
      * Abre un diálogo construido con construirDialogo().
-     * @param {Object} dialogo 
+     * @param {Dialogo} dialogo 
      */
     ui.abrirDialogo=function(dialogo) {
         if(dialogoAbierto) this.cerrarDialogo(dialogoAbierto,null,true);
@@ -242,7 +246,7 @@
 
     /**
      * Devuelve el diálogo actualmente abierto.
-     * @returns {Object}
+     * @returns {Dialogo}
      */
     ui.obtenerDialogoAbierto=function() {
         return dialogoAbierto;
@@ -250,7 +254,7 @@
 
     /**
      * Cierra un diálogo construido con construirDialogo().
-     * @param {Object} [dialogo] - Diálogo.
+     * @param {Dialogo} [dialogo] - Diálogo.
      * @param {number} [opcion=null] - Número de opción que cierra el diálogo, o NULL.
      * @param {boolean} [omitirAnimacion=false] - Si es true, ierra el diálogo inmediatamente.
      * @param {boolean} [eliminar] - Eliminar el diálogo luego de cerrar. Si se omite, se tomará de la configuración del diálogo.
@@ -288,7 +292,7 @@
 
     /**
      * Elimina o destruye un diálogo construido con construirDialogo().
-     * @param {Object} dialogo 
+     * @param {Dialogo} dialogo 
      */
     ui.eliminarDialogo=function(dialogo) {
         //Restaurar contenido a su ubicación original

@@ -40,7 +40,7 @@ foreach($directorios as $dir)
 ////php, html, css y otros recursos
 
 //Copiar
-$tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg'];
+$tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','.htaccess'];
 copiar(_fuente,$tipos,_desarrollo,false);
 copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
 copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');
@@ -49,6 +49,7 @@ copiar(_fuente.'editor/',$tipos,_desarrollo.'editor/');
 copiar(_fuente.'editor/img/',null,_desarrollo.'editor/img/');
 copiar(_fuente.'editor/operaciones/',null,_desarrollo.'editor/operaciones/');
 copiar(_fuente.'editor/plantillas/',null,_desarrollo.'editor/plantillas/');
+copiar(_fuente.'editor/asistentes/',null,_desarrollo.'editor/asistentes/');
 
 //Combinar todos los archivos css del framework (excepto el editor) y comprimir
 $css='';

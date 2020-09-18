@@ -57,15 +57,13 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 ### Documentación del código fuente
 
-(En desarrollo)
-
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/ (en desarrollo)
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/ (En desarrollo)
 
 ### Estructura del proyecto
 

@@ -12,6 +12,8 @@ define('_inc',1);
 
 include(__DIR__.'/../../servidor/foxtrot.php');
 
+session_start();
+
 header('Content-Type: text/plain; charset=utf-8',true);
 
 function prepararVariables() {

@@ -14,36 +14,32 @@
 
 Configurar el framework es muy sencillo.
 
-Una vez clonado el repositorio, o descargado y extraído, dentro del directiorio de archivos de tu servidor local (Apache o Nginx),
+1. Clonar el repositorio, o descarlo y extraerlo, dentro del directiorio de archivos de tu servidor local (Apache).
 
-1- Debe construirse el código fuente del framework utilizando el script `construir-framework` (ver [Scripts de compilación y asistentes](scripts.md)). Ante cambios en el código fuente del framework, debe repetirse este proceso.
+2. Debe construirse el código fuente del framework ingresando en `http://localhost/experimental-foxtrot-framework/fuente/construir/` (reemplazando `localhost/experimental-foxtrot-framework` por la URL del servidor). Ante cambios en el código fuente del núcleo del framework, debe repetirse este proceso.
 
-*Nota:* Esto solo es necesario ya que se está trabajando con el repositorio fuente de Foxtrot. Eventualmente, se realizarán lanzamientos de producción, es decir, con el núcleo del framework ya construído, y este paso será necesario solo para aquellos que deseen modificar el núcleo del framework.
-
-	cd ruta/scripts
-	php construir-framework -d
-
-Omitir el parámetro `-d` para obtener una salida compilada (requiere JRE correctamente configurado).
-
-2- Debe crearse el archivo `desarrollo/config.php` utilizando `desarrollo/config-ejemplo.php` como plantilla y editándolo, como mínimo, para establecer la URL y la ruta donde fue instalado  (ver instrucciones en el código).
+*Nota:* Esto solo es necesario ya que se está trabajando con el repositorio fuente de Foxtrot. Eventualmente, se realizarán lanzamientos de producción, con el núcleo del framework ya construído, y este paso será necesario solo para aquellos que deseen realizar modificaciones sobre el mismo.
 
 **¿`localhost` ya está en uso?** En un entorno de desarrollo, usualmente no tendremos un dominio distinto para cada aplicación. Lo ideal es crear dominios locales modificando el [archivo hosts](https://es.wikipedia.org/wiki/Archivo_hosts).
 
-3- Debe configurarse `desarrollo/.htaccess`. Normalmente solo será necesario cambiar la ruta en `RewriteBase`.
+### Requerimientos
 
-**Nota:** El gestor de aplicaciones requiere valores elevados de `max_execution_time` y `max_input_time` (`0` no es recomendable), y acceso a la función `exec()` a fin de poder ejecutar las compilaciones de JavaScript y Cordova.
+- PHP 7.4+
+
+**Para el gestor de aplicaciones:**
+
+- Para poder realizar la compilación, Java (JRE) debe estar disponible en PATH (puede omitirse utilizando los modos de depuración al construir)
+- Tanto para poder realizar la compilación como para construir Cordova automáticamente desde el gestor, debe estar habilitada la función `exec()`. Además, se recomiendan  valores elevados de `max_execution_time` y `max_input_time` (`0` no es recomendable).
 
 ### Acceder a la documentación
 
-(En desarrollo)
-
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/ (en desarrollo)
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/
+https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/ (en desarrollo)
 
 ### Acceso al gestor de aplicaciones
 
@@ -88,11 +84,11 @@ Utilizar el comando correspondiente del gestor. Una vez construída la aplicaci�
     cordova create aplicacion
     cordova platform add android
 
-2- Utilizar el comando correspondiente del gestor. Una vez construída la aplicación, el contenido del directorio `embeber` debe copiarse tal cual al directorio `www` de la aplicación.
+2- Utilizar el comando correspondiente del gestor. Una vez construída la aplicación, el contenido del directorio `embeber` debe copiarse tal cual al directorio `www` de la aplicación (el gestor de aplicaciones puede hacerlo automáticamente).
 
 ### Probar una vista para Cordova
 
-Para ejecutar una vista diseñada para Cordova en el navegador web, debe configurarse `/desarrollo/index-cordova.html` para que apunte a la misma y luego acceder a: `http://localhost/experimental-foxtrot-framework/desarrollo/index-cordova.html` (reemplazando `http://localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
+Para ejecutar una vista diseñada para Cordova en el navegador web, debe configurarse `/desarrollo/index-cordova.html` para que apunte a la misma y luego acceder a: `http://localhost/experimental-foxtrot-framework/desarrollo/index-cordova.html` (reemplazando `localhost/experimental-foxtrot-framework/` por la URL del servidor de desarrollo).
 
 ## Más información
 

@@ -31,11 +31,13 @@ Para acceder al mismo se debe ingresar a la URL:
 
 *Nota:* Debe haberse construido el framework antes de poder acceder al gestor.
 
+*Nota:* El gestor y el editor están diseñados para uso en escritorio exclusivamente, y están probados en la última versión de Opera (WebKit).
+
 ### ¡Muy importante!
 
-Actualmente, el gestor está en desarrollo y está pensado para uso personal en un servidor local, por lo que no presenta ningún tipo de seguridad. **Implementar el directorio `/editor/` en un servidor público o compartido deja abierta la posibilidad de cargar código arbitrario**.
+Actualmente, el gestor está en desarrollo y está pensado para uso personal en un servidor local, por lo que no presenta ningún tipo de seguridad. **Implementar el directorio `/editor/` en un servidor público o compartido deja abierta la posibilidad de cargar código arbitrario**. Por el mismo motivo, por el momento no presenta demasiadas validaciones ni control de errores, y debe usarse con precaución.
 
-En el futuro, el gestor de aplicaciones puede llegar a contar con autenticación de usuarios y mecanismos de seguridad para trabajo en equipo en servidores de desarrollo en línea o en intranet.
+En el futuro, el gestor de aplicaciones debe evolucionar y llegar a contar con autenticación de usuarios y mecanismos de seguridad para trabajo en equipo en servidores de desarrollo, ya sea en la nube o en intranet.
 
 ## Comandos del gestor
 
@@ -90,17 +92,11 @@ Asistentes de creación de vistas y controladores.
 
 El asistente creará vistas, controladores JS y un controlador PHP, y agregará métodos a la clase del modelo que permitan consultar, dar de alta, modificar y eliminar registros para el modelo especificado. No se sobreescribirán archivos si ya existen.
 
-Las siguientes etiquetas adicionales compatibles con este asistente pueden utilizarse en las entidades (ver [ORM](api/orm.md)):
-
-`@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
-
-`@requerido` Campo requerido (etiqueta sin valor).
-
-`@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10). Por defecto, será `10`.
+El asistente soporta algunas etiquetas adicionales en las propiedades de la entidad; ver: [ORM](api/orm.md).
 
 Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará según el tipo de columna y se añadirá la etiqueta `@tipo` para mayor precisión).
 
-*Nota:* Siempre será necesario realizar algunos ajustes manuales al código generado, es solo una plantilla.
+*Nota:* Usualmente será necesario realizar algunos ajustes manuales al código generado, esto genera solo una plantilla.
 
 #### ![](img/gestor/embebible.jpg) Construir embebible
 

@@ -15,12 +15,51 @@
 var gestor=new function() {
     "use strict";
 
+    var urlOperaciones="operaciones/gestor.php",
+        dialogo=null;
+
     /**
-     * Procesa el evento 'change' del desplegable de aplicaciones.
+     * Ejecuta una operación.
+     * @param {*} parametros - Parámetros.
+     * @param {function} retorno - Función de retorno.
+     * @returns {Gestor}
+     */
+    this.operacion=function(parametros,retorno) {
+        this.trabajando();
+        new ajax({
+            url:urlOperaciones,
+            parametros:parametros,
+            listo:function(respuesta) {
+                try {
+                    respuesta=JSON.parse(respuesta);
+                } catch { }
+
+                if(respuesta&&respuesta.r=="ok") {
+                    retorno(respuesta.d);
+                } else {
+                    ui.alerta("No fue posible seleccionar completar la operación.");
+                }
+            },
+            error:function() {
+                ui.alerta("No fue posible seleccionar completar la operación.");
+            },
+            siempre:function() {
+                this.trabajando(false);
+            }
+        });
+        return this;
+    };
+
+    /**
+     * Procesa el cambio del desplegable de aplicaciones.
      * @param {HTMLSelectElement} elem 
      */
     this.aplicacionSeleccionada=function(elem) {
-        window.location.href="operaciones/seleccionarAplicacion.php?aplicacion="+elem.valor();
+        this.operacion({
+            seleccionarAplicacion:elem.valor()
+        },function() {
+            gestor.actualizar();
+        });
     };
 
     /**
@@ -34,23 +73,23 @@ var gestor=new function() {
     /**
      * Muestra un diálogo.
      * @param {string} id - ID del elemento del diálogo.
+     * @returns {Gestor}
      */
     this.abrirDialogo=function(id) {
-        //TODO Animación
-        var elem=document.querySelector("#"+id);
-        elem.estilo("display","block");
-        elem.querySelector("input,select,textarea").focus();
+        dialogo=ui.construirDialogo({
+            cuerpo:document.querySelector("#"+id)
+        });
+        ui.abrirDialogo(dialogo);
+        return this;
     };
 
     /**
-     * Cierra un diálogo.
-     * @param {HTMLElement} elem - Elemento del diálogo o cualquier elemento descendente.
+     * Cierra el diálogo abirto.
+     * @returns {Gestor}
      */
-    this.cerrarDialogo=function(elem) {
-        //TODO Animación
-        var filtro={ clase:"dialogo" };
-        if(!elem.es(filtro)) elem=elem.padre(filtro);
-        elem.estilo("display","none");
+    this.cerrarDialogo=function() {
+        ui.cerrarDialogo(dialogo);
+        return this;
     };
 
     /**
@@ -69,6 +108,12 @@ var gestor=new function() {
         var nombre=dialogo.querySelector("#nueva-vista-nombre").valor(),
             modo=dialogo.querySelector("#nueva-vista-modo").valor(),
             cliente=dialogo.querySelector("#nueva-vista-cliente").valor();
+
+        if(!nombre) {
+            ui.alerta("Ingresá el nombre de la vista.");
+            return;
+        }
+
         window.open("editor.php?apl="+nombreAplicacion+"&vista="+nombre+"&modo="+modo+"&cliente="+cliente);
 
         this.cerrarDialogo(dialogo);
@@ -79,6 +124,24 @@ var gestor=new function() {
      */
     this.nuevaAplicacion=function() {
         this.abrirDialogo("dialogo-nueva-aplicacion");
+    };
+
+    /**
+     * Acepta el diálogo de nueva aplicación.
+     */
+    this.aceptarNuevaAplicacion=function() {
+        var nombre=document.querySelector("#nueva-aplicacion-nombre").valor();
+
+        if(!nombre) {
+            ui.alerta("Ingresá el nombre de la aplicación.");
+            return;
+        }
+
+        this.operacion({
+            crearAplicacion:nombre
+        },function() {
+            gestor.actualizar();
+        });
     };
 
     /**
@@ -124,13 +187,40 @@ var gestor=new function() {
     };
 
     /**
+     * Procesa el click en Eliminar vista.
+     * @param {string} nombre - Nombre de la vista.
+     */
+    this.eliminarVista=function(nombre) {
+        ui.confirmar("¿Estás seguro de querer eliminar la vista?",function(r) {
+            if(!r) return;
+            gestor.operacion({
+                eliminarVista:nombre
+            }, function() {
+                gestor.actualizar();
+            });
+        });
+    };
+
+    /**
      * Recarga el gestor.
      */
     this.actualizar=function() {
         window.location.reload();
     };
 
-    //document.body.agregarClase("trabajando");
+    /**
+     * Activa o desactiva la precarga.
+     * @param {boolean} [v=true] - Activar o desactivar.
+     * @returns {Gestor}
+     */
+    this.trabajando=function(v) {
+        if(typeof v==="undefined"||v) {
+            document.body.agregarClase("trabajando");
+        } else {
+            document.body.removerClase("trabajando");
+        }
+        return this;
+    };
 }();
 
 window["gestor"]=gestor;

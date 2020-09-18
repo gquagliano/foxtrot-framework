@@ -9,8 +9,10 @@
 define('_inc',1);
 
 include(__DIR__.'/../servidor/foxtrot.php');
+include(__DIR__.'/asistentes/asistente.php');
 
 foxtrot::inicializar(false);
+asistentes::inicializar();
 
 //TODO Esto debe venir de foxtrot
 $aplicaciones=[];
@@ -151,7 +153,7 @@ if(!count($arbol)) {
                                 <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar" disabled><img src="img/renombrar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar" disabled><img src="img/copiar.png"></button>
-                                <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar" disabled><img src="img/eliminar.png"></button>
+                                <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar"><img src="img/eliminar.png"></button>
                             </div>
                         </li>
 <?php
@@ -170,107 +172,104 @@ if(!count($arbol)) {
     </main>
 
     <div class="dialogo" id="dialogo-nueva-aplicacion">
-        <div class="dialogo-cuerpo">
-            <h1>Nueva aplicación</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaAplicacion()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+        <h1>Nueva aplicación</h1>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="nueva-aplicacion-nombre">
             </div>
+        </div>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaAplicacion()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-nueva-vista">
-        <div class="dialogo-cuerpo">
-            <h1>Nueva vista</h1>
-            <div class="form-group row">
-                <label class="col-3 col-form-label">Ruta y nombre</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="nueva-vista-nombre">
-                </div>
+        <h1>Nueva vista</h1>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Ruta y nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="nueva-vista-nombre">
             </div>
-            <div class="form-group row">
-                <label class="col-3 col-form-label">Modo</label>
-                <div class="col-sm-6">
-                    <select class="custom-select" id="nueva-vista-modo">
-                        <option value="independiente">Independiente</option>
-                        <option value="embebible">Embebible</option>
-                    </select>
-                </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Modo</label>
+            <div class="col-sm-6">
+                <select class="custom-select" id="nueva-vista-modo">
+                    <option value="independiente">Independiente</option>
+                    <option value="embebible">Embebible</option>
+                </select>
             </div>
-            <div class="form-group row">
-                <label class="col-3 col-form-label">Cliente</label>
-                <div class="col-sm-6">
-                    <select class="custom-select" id="nueva-vista-cliente">
-                        <option value="web">Web</option>
-                        <option value="cordova">Cordova</option>
-                        <option value="escritorio">Escritorio</option>
-                    </select>
-                </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Cliente</label>
+            <div class="col-sm-6">
+                <select class="custom-select" id="nueva-vista-cliente">
+                    <option value="web">Web</option>
+                    <option value="cordova">Cordova</option>
+                    <option value="escritorio">Escritorio</option>
+                </select>
             </div>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        </div>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-nuevo-controlador"">
-        <div class="dialogo-cuerpo">
-            <h1>Nuevo controlador</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Nuevo controlador</h1>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-nuevo-modelo">
-        <div class="dialogo-cuerpo">
-            <h1>Nuevo modelo de datos</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Nuevo modelo de datos</h1>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-sincronizacion">
-        <div class="dialogo-cuerpo">
-            <h1>Sincronizar base de datos</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Sincronizar base de datos</h1>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-asistentes">
-        <div class="dialogo-cuerpo">
-            <h1>Asistentes</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Asistentes</h1>
+<?php
+foreach(asistentes::obtenerAsistentes() as $asistente) {
+    if(!$asistente->visible) continue;
+?>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
+<?php
+}
+?>
     </div>
 
     <div class="dialogo" id="dialogo-construir-embebible">
-        <div class="dialogo-cuerpo">
-            <h1>Construir embebible</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Construir embebible</h1>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 
     <div class="dialogo" id="dialogo-construir-produccion">
-        <div class="dialogo-cuerpo">
-            <h1>Construir para producción</h1>
-            <div class="text-center">
-                <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
-                <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
-            </div>
+        <h1>Construir para producción</h1>
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
         </div>
     </div>
 

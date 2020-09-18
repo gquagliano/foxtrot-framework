@@ -74,7 +74,13 @@ Etiquetas:
 
 `@predeterminado` Valor predeterminado. Si se omite, será `NULL`, o `0` para los campos booleanos.
 
-Existen otras otras etiquetas opcionales que son utilizadas por los asistentes (ver [Scripts de compilación y asistentes](../scripts.md)).
+Existen otras otras etiquetas opcionales que son utilizadas por los asistentes:
+
+`@etiqueta` Etiqueta del campo. Por defecto, se utilizará el nombre de la propiedad.
+
+`@requerido` Campo requerido (etiqueta sin valor).
+
+`@tamano` Ancho del campo en unidades de la grilla de columnas (1 a 10). Por defecto, será `10`.
 
 El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus métodos.
 
@@ -86,7 +92,6 @@ El modo de uso es tan simple como instanciar el modelo e invocar algunos de sus 
         ->obtenerUno();
 
 Es posible filtrar consultas por coincidencia exacta con objetos, o bien utilizando cadenas SQL; estas últimas aceptan parámetros con nombre precedidos por `@`:
-
 
     $usuarios=new usuarios;
     $usuario=$usuarios
@@ -107,8 +112,6 @@ Durante las operaciones de inserción y actualización, serán procesados los ca
         ->guardar(); //Creará la foto y luego el usuario
 
 Consultar la documentación de la clase para más información.
-
-Consultá los [Scripts de compilación y asistentes](../scripts.md) para información sobre la sincronización de la base de datos con el modelo de datos (creación y actualización de tablas a partir de la estructura de las clases PHP).
 
 **Nota:** Si existe, el método `instalar()` de cada modelo será invocado luego de que hayan sido creadas todas las tablas en la base de datos.
 

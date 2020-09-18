@@ -116,11 +116,9 @@ El editor realizará este proceso automáticemente.
 
 Nota: En algunos casos, cuando hablamos de _archivo HTML_, puede que su extensión sea en realidad `.php` si se va a implementar en servidor web. De esa forma pueden aprovecharse características del servidor, como el acceso a la configuración, evitando que algunos parámetros queden fijos en el código HTML (ejemplo, `<base>`).
 
-Ver: [Scripts de compilación y asistentes](scripts.md).
-
 **Cordova:**
 
-Luego de ejecutar `php scripts/construir-embebible apl` (donde `apl` es el nombre de la aplicación), los archivos de `/embebible/` deben copiarse al directorio `www` de la aplicación Cordova.
+Luego de construir la aplicación mediante el gestor, los archivos de `/embebible/` deben copiarse al directorio `www` de la aplicación Cordova.
 
 Debe configurarse el `config.xml` para apuntar al archivo `index-cordova.html`. La aplicación puede probarse localmente accediendo al mismo archivo.
 
@@ -129,11 +127,9 @@ Algunos parámetros deben ser configurados dentro de `index-cordova.html` antes 
     var _nombreApl="test",              //Nombre de la aplicación
         _vistaInicial="inicio.HTML";    //Nombre de archivo de la vista inicial
 
-Nota: El script `construir-embebible` realizará esta configuración automáticamente (ver [Scripts de compilación](scripts.md)).
+La vista inicial debe ser de tipo independiente (no embebible).
 
-La vista inicial debe ser independiente (no embebible).
-
-Eventualmente, el editor realizará este proceso automáticemente.
+El gestor de aplicaciones puede realizar estos pasos automáticamente.
 
 **Desktop (Windows):**
 

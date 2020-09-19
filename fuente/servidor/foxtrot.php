@@ -110,6 +110,12 @@ class foxtrot {
         if(!file_exists(_raizAplicacion)) self::error();
 
         configuracion::cargarConfigAplicacion();
+
+        //Resetear conexión a la base da datos ya que las credenciales pueden haber cambiado
+        if(self::$bd) {
+            self::$bd->desconectar();
+            self::$bd=null;
+        }
         
         include(_servidorAplicacion.'aplicacion.php');
 

@@ -120,59 +120,62 @@ class foxtrot {
             } else {
                 self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
             }
-            if(!self::$aplicacion) self::error();
         } else {
             self::$aplicacion=$aplicacion;
         }
+		
+		if(self::$aplicacion) {
+	        self::definirConstantesAplicacion();
 
-        self::definirConstantesAplicacion();
+	        if(!file_exists(_raizAplicacion)) self::error();
 
-        if(!file_exists(_raizAplicacion)) self::error();
+	        configuracion::cargarConfigAplicacion();
 
-        configuracion::cargarConfigAplicacion();
+	        //Resetear conexión a la base da datos ya que las credenciales pueden haber cambiado
+	        if(self::$bd) {
+	            self::$bd->desconectar();
+	            self::$bd=null;
+	        }
+	        
+	        include(_servidorAplicacion.'aplicacion.php');
 
-        //Resetear conexión a la base da datos ya que las credenciales pueden haber cambiado
-        if(self::$bd) {
-            self::$bd->desconectar();
-            self::$bd=null;
-        }
+	        //Modelo de datos (importar completo)
+	        $archivos=glob(_modeloAplicacion.'*.php');
+	        foreach($archivos as $archivo) include($archivo);
+
+	        //Controladores privados (importar completo)
+	        $archivos=glob(_controladoresServidorAplicacion.'*.php');
+	        foreach($archivos as $archivo)
+	            if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
+
+	        if(configuracion::$enrutador) {
+	            $ruta=_servidorAplicacion.configuracion::$enrutador.'.php';
+	            if(file_exists($ruta)) {
+	                include(_servidorAplicacion.configuracion::$enrutador.'.php');            
+	                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
+	            } else {
+	                //Enrutador del sistema
+	                $cls='\\'.configuracion::$enrutador;
+	            }
+	            self::$enrutador=new $cls;
+	        }
+	    }
         
-        include(_servidorAplicacion.'aplicacion.php');
+        //Si la aplicación no definió un enrutador, utilizar el predeterminado
+        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
 
-        //Modelo de datos (importar completo)
-        $archivos=glob(_modeloAplicacion.'*.php');
-        foreach($archivos as $archivo) include($archivo);
+		if(self::$aplicacion) {
+	        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
+	            $cls='\\aplicaciones\\'._apl.'\\aplicacion';
+	            self::$instanciaAplicacion=new $cls;
+	        }
 
-        //Controladores privados (importar completo)
-        $archivos=glob(_controladoresServidorAplicacion.'*.php');
-        foreach($archivos as $archivo)
-            if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
-        
-        //Si la aplicación no definió un enrutador en su configuración, utilizar el predeterminado
-        if(!self::$enrutador&&!configuracion::$enrutador) {
-            self::$enrutador=new enrutadorPredetermiando;
-        } elseif(configuracion::$enrutador) {
-            $ruta=_servidorAplicacion.configuracion::$enrutador.'.php';
-            if(file_exists($ruta)) {
-                include(_servidorAplicacion.configuracion::$enrutador.'.php');            
-                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
-            } else {
-                //Enrutador del sistema
-                $cls='\\'.configuracion::$enrutador;
-            }
-            self::$enrutador=new $cls;
-        }
-
-        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
-            $cls='\\aplicaciones\\'._apl.'\\aplicacion';
-            self::$instanciaAplicacion=new $cls;
-        }
-
-        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) {
-            include(_servidorAplicacion.'aplicacion.pub.php');
-            $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
-            self::$instanciaAplicacionPublico=new $cls;
-        }
+	        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) {
+	            include(_servidorAplicacion.'aplicacion.pub.php');
+	            $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
+	            self::$instanciaAplicacionPublico=new $cls;
+	        }
+	    }
     }
 
     public static function inicializar($aplicacion=null) {

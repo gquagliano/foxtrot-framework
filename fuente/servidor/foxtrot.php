@@ -57,6 +57,14 @@ class foxtrot {
         return self::$instanciaAplicacion;
     }
 
+    /**
+     * Devuelve el nombre de la aplicación.
+     * @return string
+     */
+    public static function obtenerNombreAplicacion() {
+        return _apl;
+    }
+
     protected static function definirConstantes() {
         //TODO Las rutas, a excepción de _raiz, deberían consultarse con métodos, en lugar de usar constantes
         define('_raiz',realpath(__DIR__.'/..').'/');
@@ -103,7 +111,19 @@ class foxtrot {
     }
 
     public static function cargarAplicacion($aplicacion=null) {
-        if($aplicacion!==null) self::$aplicacion=$aplicacion;
+        //Si no se especifica $aplicacion, determinar automáticamente
+        if(!$aplicacion) {
+            //Es posible saltearse el enrutador de aplicación con el parámetro __apl
+            if($_REQUEST['__apl']) {
+                $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
+                self::$aplicacion=$aplicacion;
+            } else {
+                self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
+            }
+            if(!self::$aplicacion) self::error();
+        } else {
+            self::$aplicacion=$aplicacion;
+        }
 
         self::definirConstantesAplicacion();
 
@@ -171,22 +191,7 @@ class foxtrot {
 
         //foxtrot::inicializar(false) saltea la carga de una aplicación
         //foxtrot::inicializar() carga la aplicación utilizando el enrutador
-        if($aplicacion!==false) {
-            if(!$aplicacion) {
-                //Es posible saltearse el enrutador de aplicación con el parámetro __apl
-                if($_REQUEST['__apl']) {
-                    $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
-                    self::$aplicacion=$aplicacion;
-                } else {
-                    self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
-                }
-                if(!self::$aplicacion) self::error();
-            } else {
-                self::$aplicacion=$aplicacion;
-            }
-
-            self::cargarAplicacion();
-        }
+        if($aplicacion!==false) self::cargarAplicacion();
     }
 
     public static function error() {

@@ -14,7 +14,7 @@
 
 define('_inc',1);
 
-include(__DIR__.'/../../servidor/foxtrot.php');
+include(__DIR__.'/../servidor/foxtrot.php');
 
 function prepararVariables() {
     global $nombreApl,$nombreVista,$esPhp,$plantilla,$aplicacion,
@@ -32,7 +32,7 @@ function prepararVariables() {
     $cliente=$_REQUEST['cliente'];
     if(!$cliente) $cliente='web';
 
-    $rutaApl=__DIR__.'/../../../desarrollo/aplicaciones/'.$nombreApl.'/';
+    $rutaApl=__DIR__.'/../../desarrollo/aplicaciones/'.$nombreApl.'/';
     $rutaJsonApl=$rutaApl.'aplicacion.json';
 
     $aplicacion=json_decode(file_get_contents($rutaJsonApl));
@@ -82,7 +82,7 @@ function crearVista() {
     if($modo=='embebible') file_put_contents($rutaJson,$json);
 
     //Crear HTML
-    $codigo=file_get_contents(__DIR__.'/../plantillas/'.$plantilla);
+    $codigo=file_get_contents(__DIR__.'/plantillas/'.$plantilla);
 
     $codigo=str_replace_array([
         '{editor_nombreAplicacion}'=>$nombreApl,
@@ -109,7 +109,7 @@ function crearControlador() {
 
     if(!is_dir(dirname($rutaJs))) mkdir(dirname($rutaJs),0755,true);
 
-    $codigo=file_get_contents(__DIR__.'/../plantillas/controlador.js');
+    $codigo=file_get_contents(__DIR__.'/plantillas/controlador.js');
 
     $codigo=str_replace([
         '{editor_nombre}'
@@ -238,6 +238,8 @@ $archivosCssCombinados=[];
 function procesarVista($ruta) {
     global $archivosCssCombinados;
 
+    $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
+
     $html=file_get_contents($ruta);
 
     $cordova=preg_match('/\{.*?cordova.*?:.*?true.*?\}/i',$html)==1;
@@ -251,17 +253,17 @@ function procesarVista($ruta) {
             $css='';
             foreach($coincidencias[3] as $archivo) {
                 //TODO Esto depende del enrutador... Por el momento queda harcodeado
-                $archivo=preg_replace('#^aplicacion/#',_dirApl,$archivo);
+                $archivo=preg_replace('#^aplicacion/#',$rutaAplicacion,$archivo);
 
                 if(file_exists(_desarrollo.$archivo)) $css.=file_get_contents(_desarrollo.$archivo);
             }
 
             //Buscar una ruta libre
             $i=0;
-            $salida=_produccion._dirApl.'recursos/css/aplicacion.css';
+            $salida=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
             while(file_exists($salida)) {
                 $i++;
-                $salida=_produccion._dirApl.'recursos/css/aplicacion-'.$i.'.css';
+                $salida=_produccion.$rutaAplicacion.'recursos/css/aplicacion-'.$i.'.css';
             }
 
             //Cuardar y comprimir
@@ -272,7 +274,7 @@ function procesarVista($ruta) {
         }
 
         $nombre=basename($salida);
-        $href=$cordova?_dirApl.'recursos/css/'.$nombre:'aplicacion/recursos/css/'.$nombre;
+        $href=$cordova?$rutaAplicacion.'recursos/css/'.$nombre:'aplicacion/recursos/css/'.$nombre;
         $tag=$cordova?'"'.$href.'",'.PHP_EOL:'    <link rel="stylesheet" href="'.$href.'">'.PHP_EOL;
         
         //Agregar nuevo tag reemplazando la primer coincidencia

@@ -8,11 +8,7 @@
 
 define('_inc',1);
 
-include(__DIR__.'/../servidor/foxtrot.php');
 include(__DIR__.'/gestor.php');
-
-foxtrot::inicializar(false);
-asistentes::inicializar();
 
 //TODO Esto debe venir de foxtrot
 $aplicaciones=[];
@@ -61,7 +57,7 @@ foreach($aplicaciones as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicaci
     </div>
 
     <main>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-12 pb-5">
                     <h1>Vistas</h1>
@@ -185,10 +181,31 @@ asistentes::obtenerAsistente('crear-aplicacion')->obtenerFormulario();
 
     <div class="dialogo" id="dialogo-nueva-vista">
         <h1>Nueva vista</h1>
-<?php
-//Asistente crear-vista
-asistentes::obtenerAsistente('crear-vista')->obtenerFormulario();
-?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Ruta y nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="nombre">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Modo</label>
+            <div class="col-sm-6">
+                <select class="custom-select" name="modo">
+                    <option value="independiente">Independiente</option>
+                    <option value="embebible">Embebible</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Cliente</label>
+            <div class="col-sm-6">
+                <select class="custom-select" name="cliente">
+                    <option value="web">Web</option>
+                    <option value="cordova">Cordova</option>
+                    <option value="escritorio">Escritorio</option>
+                </select>
+            </div>
+        </div>
         <div class="text-center">
             <button type="button" onclick="gestor.aceptarNuevaVista()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
@@ -265,7 +282,7 @@ foreach($asistentes as $asistente) {
     asistentes::obtenerAsistente($asistente->nombre)->obtenerFormulario();
 ?>
             <div class="text-center">
-                <button type="button" onclick="gestor.aceptarAsistente('<?=$asistente->nombre?>')" class="btn btn-sm btn-primary">Aceptar</button>
+                <button type="button" onclick="gestor.procesarAsistente('<?=$asistente->nombre?>','asistente-<?=$asistente->nombre?>')" class="btn btn-sm btn-primary">Aceptar</button>
                 <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
             </div>
         </div>

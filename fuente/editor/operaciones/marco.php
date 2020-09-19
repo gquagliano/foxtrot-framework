@@ -10,8 +10,6 @@
 
 include(__DIR__.'/funciones.php');
 
-header('Content-Type: text/html; charset=utf-8',true);
-
 prepararVariables();
 
 $json=file_get_contents($rutaJson);

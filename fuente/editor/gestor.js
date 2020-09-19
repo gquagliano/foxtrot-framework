@@ -22,9 +22,10 @@ var gestor=new function() {
      * Ejecuta una operación.
      * @param {*} parametros - Parámetros.
      * @param {function} retorno - Función de retorno.
+     * @param {function} [error] - Función de retorno en caso de error.
      * @returns {Gestor}
      */
-    this.operacion=function(parametros,retorno) {
+    this.operacion=function(parametros,retorno,error) {
         this.trabajando();
         new ajax({
             url:urlOperaciones,
@@ -37,7 +38,11 @@ var gestor=new function() {
                 if(respuesta&&respuesta.r=="ok") {
                     retorno(respuesta.d);
                 } else {
-                    ui.alerta("No fue posible seleccionar completar la operación.");
+                    if(typeof error==="function") {
+                        error(respuesta.d);
+                    } else {
+                        ui.alerta("No fue posible seleccionar completar la operación.");
+                    }
                 }
             },
             error:function() {
@@ -97,6 +102,37 @@ var gestor=new function() {
     };
 
     /**
+     * Devuelve un objeto con los valores de los campos de un formulario.
+     * @param {(HTMLElement|string)} elem - Elemento que contiene los campos.
+     */
+    this.obtenerValoresFormulario=function(elem) {
+        if(typeof elem==="string") elem=document.querySelector("#"+elem);
+        var valores={};
+
+        elem.querySelectorAll("input,textarea,select").forEach(function(campo) {
+            valores[campo.atributo("name")]=campo.valor();
+        });
+
+        return valores;
+    };
+
+    /**
+     * Envía el formulario de un asistente.
+     * @param {string} nombre - Nombre del asistente.
+     * @param {(HTMLElement|string)} elem - Elemento que contiene los campos (no necesariamente <form>).
+     */
+    this.procesarAsistente=function(nombre,elem) {
+        this.operacion({
+            asistente:nombre,
+            parametros:JSON.stringify(this.obtenerValoresFormulario(elem))
+        },function() {
+            gestor.actualizar();
+        },function(error) {
+            ui.alerta(error);
+        });
+    };
+
+    /**
      * Abre el diálogo de nueva vista.
      */
     this.nuevaVista=function() {
@@ -107,18 +143,15 @@ var gestor=new function() {
      * Acepta el diálogo de nueva vista.
      */
     this.aceptarNuevaVista=function() {
-        var dialogo=document.querySelector("#dialogo-nueva-vista");
+        var dialogo=document.querySelector("#dialogo-nueva-vista"),
+            parametros=this.obtenerValoresFormulario(dialogo);
 
-        var nombre=dialogo.querySelector("#nueva-vista-nombre").valor(),
-            modo=dialogo.querySelector("#nueva-vista-modo").valor(),
-            cliente=dialogo.querySelector("#nueva-vista-cliente").valor();
-
-        if(!nombre) {
+        if(!parametros.nombre) {
             ui.alerta("Ingresá el nombre de la vista.");
             return;
         }
 
-        window.open("editor.php?apl="+nombreAplicacion+"&vista="+nombre+"&modo="+modo+"&cliente="+cliente);
+        window.open("editor.php?apl="+nombreAplicacion+"&vista="+parametros.nombre+"&modo="+parametros.modo+"&cliente="+parametros.cliente);
 
         this.cerrarDialogo(dialogo);
     };
@@ -134,18 +167,7 @@ var gestor=new function() {
      * Acepta el diálogo de nueva aplicación.
      */
     this.aceptarNuevaAplicacion=function() {
-        var nombre=document.querySelector("#nueva-aplicacion-nombre").valor();
-
-        if(!nombre) {
-            ui.alerta("Ingresá el nombre de la aplicación.");
-            return;
-        }
-
-        this.operacion({
-            crearAplicacion:nombre
-        },function() {
-            gestor.actualizar();
-        });
+        this.procesarAsistente("crear-aplicacion","dialogo-nueva-aplicacion");
     };
 
     /**
@@ -156,6 +178,13 @@ var gestor=new function() {
     };
 
     /**
+     * Acepta el diálogo de nuevo controlador.
+     */
+    this.aceptarNuevoControlador=function() {
+        this.procesarAsistente("crear-controlador","dialogo-nuevo-controlador");
+    };
+
+    /**
      * Abre el diálogo de nuevo modelo.
      */
     this.nuevoModelo=function() {
@@ -163,10 +192,24 @@ var gestor=new function() {
     };
 
     /**
+     * Acepta el diálogo de nuevo modelo.
+     */
+    this.aceptarNuevoModelo=function() {
+        this.procesarAsistente("crear-modelo","dialogo-nuevo-modelo");
+    };
+
+    /**
      * Abre el diálogo de sincronización.
      */
     this.sincronizar=function() {
         this.abrirDialogo("dialogo-sincronizacion");
+    };
+
+    /**
+     * Acepta el diálogo de sincronización.
+     */
+    this.aceptarSincronizacion=function() {
+        this.procesarAsistente("sincronizar-bd","dialogo-sincronizacion");
     };
 
     /**
@@ -178,6 +221,19 @@ var gestor=new function() {
         document.querySelectorAll(".formulario-asistente").agregarClase("d-none");
 
         this.abrirDialogo("dialogo-asistentes");
+    }; 
+
+    /**
+     * Procesa el cambio del desplegable de selección de asistente.
+     * @param {HTMLSelectElement} elem 
+     */
+    this.seleccionarAsistente=function(elem) {
+        document.querySelector("#asistentes-seleccion").agregarClase("d-none");
+        var formulario=document.querySelector("#asistente-"+elem.valor());
+        formulario.removerClase("d-none");
+        
+        var campo=formulario.querySelector("input,select,textarea");
+        if(campo) campo.focus();
     };
 
     /**
@@ -188,10 +244,24 @@ var gestor=new function() {
     };
 
     /**
+     * Acepta el diálogo de construir embebible.
+     */
+    this.aceptarConstruirEmbebible=function() {
+        this.procesarAsistente("construir-cordova","dialogo-construir-embebible");
+    };
+
+    /**
      * Abre el diálogo de construir producción.
      */
     this.construirProduccion=function() {
         this.abrirDialogo("dialogo-construir-produccion");
+    };
+
+    /**
+     * Acepta el diálogo de sincronización.
+     */
+    this.aceptarConstruirProduccion=function() {
+        this.procesarAsistente("construir-produccion","dialogo-construir-produccion");
     };
 
     /**
@@ -207,20 +277,7 @@ var gestor=new function() {
                 gestor.actualizar();
             });
         });
-    };    
-
-    /**
-     * Procesa el cambio del desplegable de selección de asistente.
-     * @param {HTMLSelectElement} elem 
-     */
-    this.seleccionarAsistente=function(elem) {
-        document.querySelector("#asistentes-seleccion").agregarClase("d-none");
-        var formulario=document.querySelector("#asistente-"+elem.valor());
-        formulario.removerClase("d-none");
-        
-        var campo=formulario.querySelector("input,select,textarea");
-        if(campo) campo.focus();
-    };
+    };   
 
     /**
      * Recarga el gestor.

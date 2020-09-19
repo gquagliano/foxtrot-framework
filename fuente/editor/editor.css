@@ -496,6 +496,7 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-gestor .arbol {
     margin: 0;
+    margin-left: -.5rem;
     padding: 0;
     list-style-type: none;
 }
@@ -546,7 +547,9 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-gestor .dialogo {
     display: none;
     width: 650px;
-    overflow-x: hidden;
+}
+.foxtrot-gestor .foxtrot-dialogo .dialogo-contenido {
+    overflow: visible;
 }
 .foxtrot-gestor .dialogo h1 {
     margin-top: 0;

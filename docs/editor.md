@@ -47,6 +47,8 @@ Crea una aplicación en blanco con sus archivos y elementos básicos, y configur
 
 Es posible que sea necesario editar el archivo `config.php` de la aplicación para establecer una base de datos diferente u otros ajustes; el asistente creará un archivo de configuración en blanco.
 
+Si se ingresa un nombre de dominio, el asistente intentará editar el archivo `desarrollo/config.php`. Esto solo funciona con el enrutador de aplicaciones predeterminado y el formato de configuración de ejemplo. *Debe omitirse el dominio cuando se haya realizado una configuración diferente*.
+
 Ver [Primeros pasos](primeros-pasos.md) para más información.
 
 #### ![](img/gestor/vista.png) Nueva vista

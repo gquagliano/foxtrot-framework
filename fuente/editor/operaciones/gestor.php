@@ -6,7 +6,12 @@
  * @version 1.0
  */
 
-include(__DIR__.'/funciones.php');
+define('_inc',1);
+
 include(__DIR__.'/../gestor.php');
+
+header('Content-Type: text/plain; charset=utf-8',true);
+
+asistentes::inicializar();
 
 gestor::procesarSolicitud();

@@ -12,7 +12,6 @@ defined('_inc') or exit;
 //enrutador nunevo que determine la aplicación por cualquier otro mecanismo. Soporta expresiones regulares. Las claves deben ser expresiones
 //regulares.
 $dominios=[
-    'localhost'=>'ejemplo'
 ];
 
 foxtrot::establecerEnrutadorAplicacion(new enrutadorAplicacionPredeterminado($dominios));

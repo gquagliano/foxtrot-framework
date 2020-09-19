@@ -62,16 +62,6 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Asistentes de creación de vistas y controladores.
 
-##### Plantilla de aplicación en blanco
-
-    php asistente crear-apl -a=nombre -d="dominio"
-
-El asistente creará una aplicación en blanco y configurará Foxtrot para que la misma se ejecute en el dominio especificado. Los archivos serán creados en `/desarrollo/aplicaciones/nombre/`.
-
-Es posible que sea necesario editar el archivo `config.php` de la aplicación para establecer una base de datos diferente u otros ajustes; el asistente creará un archivo de configuración en blanco.
-
-Ver [Primeros pasos](primeros-pasos.md) para más información.
-
 ##### Plantilla de modelo de datos
 
     php asistente crear-modelo -a=nombre_aplicacion -m=nombre_modelo -e=nombre_entidad [-t=nombre_tabla]

@@ -7,9 +7,9 @@
 
 /* Estilos comunes de Foxtrot */
 
-* {
+body * {
+    transform: scale(1);
     backface-visibility: hidden;
-    perspective: 100px;
 }
 
 #foxtrot-cuerpo {

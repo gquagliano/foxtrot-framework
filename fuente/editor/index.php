@@ -49,88 +49,97 @@ foreach(gestor::obtenerAplicaciones() as $apl) echo '<option value="'.$apl.'" '.
         <div class="container">
             <div class="row">
                 <div class="col-12 pb-5">
+
+<?php
+if(!count(gestor::obtenerAplicaciones())) {
+?>                  
+                    <h1>No hay aplicaciones</h1>
+                    <p>Creá tu primer aplicación haciendo click en <a href="#" onclick="gestor.nuevaAplicacion()" title="Nueva aplicación"><img src="img/aplicacion.png"></a>.</p>
+<?php
+} else {
+?>                
                     <h1>Vistas</h1>
 
 <?php
-//Construir árbol por subdirectorios
-$arbol=[];
-foreach(gestor::obtenerJsonAplicacion()->vistas as $nombre=>$vista) {
-    if(strpos($nombre,'/')===false) {
-        //Agregar directamente en la raíz
-        $arbol[]=(object)['item'=>$nombre,'ruta'=>$nombre,'vista'=>$vista];
-    } else {
-        $ruta=explode('/',$nombre);
-        $vista=array_pop($ruta);
+    //Construir árbol por subdirectorios
+    $arbol=[];
+    foreach(gestor::obtenerJsonAplicacion()->vistas as $nombre=>$vista) {
+        if(strpos($nombre,'/')===false) {
+            //Agregar directamente en la raíz
+            $arbol[]=(object)['item'=>$nombre,'ruta'=>$nombre,'vista'=>$vista];
+        } else {
+            $ruta=explode('/',$nombre);
+            $vista=array_pop($ruta);
 
-        //Buscar o crear la ruta, comenzando por la raíz del árbol
-        $lista=&$arbol;
-        foreach($ruta as $parte) {
-            $existe=false;
+            //Buscar o crear la ruta, comenzando por la raíz del árbol
+            $lista=&$arbol;
+            foreach($ruta as $parte) {
+                $existe=false;
 
-            //Buscar item [directorio=parte]
-            foreach($lista as $item) {
-                if($item->directorio==$parte) {
-                    //Si lo encontramos, buscaremos la siguiente parte dentro de los hijos
+                //Buscar item [directorio=parte]
+                foreach($lista as $item) {
+                    if($item->directorio==$parte) {
+                        //Si lo encontramos, buscaremos la siguiente parte dentro de los hijos
+                        $lista=&$item->hijos;
+                        $existe=true;
+                        break;
+                    }
+                }
+
+                //Si no existe, se agrega
+                if(!$existe) {
+                    $item=(object)['directorio'=>$parte,'hijos'=>[]];
+                    $lista[]=$item;
+                    //E insertamos dentro de hijos
                     $lista=&$item->hijos;
-                    $existe=true;
-                    break;
                 }
             }
 
-            //Si no existe, se agrega
-            if(!$existe) {
-                $item=(object)['directorio'=>$parte,'hijos'=>[]];
-                $lista[]=$item;
-                //E insertamos dentro de hijos
-                $lista=&$item->hijos;
-            }
+            //Agregar la vista en los hijos
+            $lista[]=(object)['item'=>$vista,'ruta'=>$nombre,'vista'=>$vista];
         }
-
-        //Agregar la vista en los hijos
-        $lista[]=(object)['item'=>$vista,'ruta'=>$nombre,'vista'=>$vista];
     }
-}
 
-if(!count($arbol)) {
+    if(!count($arbol)) {
 ?>
 <p>No hay vistas.</p>
 <?php
-} else {
-    //Ordenar
-    function ordenarArbol(&$lista) {
-        usort($lista,'compararArbol');
-        //Avanzar recursivamente
-        foreach($lista as $item) 
-            if($item->directorio) ordenarArbol($item->hijos);
-    }
-    function compararArbol($a,$b) {
-        //Subir los directorios
-        if($a->directorio&&!$b->directorio) return -1;
-        if(!$a->directorio&&$b->directorio) return 1;
-        //Ordenar alfabéticamente tipos iguales
-        if($a->directorio&&$b->directorio) return strcmp($a->directorio,$b->directorio);
-        return strcmp($a->item,$b->item);
-    }
-    ordenarArbol($arbol);
+    } else {
+        //Ordenar
+        function ordenarArbol(&$lista) {
+            usort($lista,'compararArbol');
+            //Avanzar recursivamente
+            foreach($lista as $item) 
+                if($item->directorio) ordenarArbol($item->hijos);
+        }
+        function compararArbol($a,$b) {
+            //Subir los directorios
+            if($a->directorio&&!$b->directorio) return -1;
+            if(!$a->directorio&&$b->directorio) return 1;
+            //Ordenar alfabéticamente tipos iguales
+            if($a->directorio&&$b->directorio) return strcmp($a->directorio,$b->directorio);
+            return strcmp($a->item,$b->item);
+        }
+        ordenarArbol($arbol);
 
-    //Construir
+        //Construir
 ?>
                     <ul class="arbol" id="arbol-vistas">
 <?php
-    function mostrarArbol($lista,$nivel=0) {
-        foreach($lista as $item) {
-            if($item->directorio) {
+        function mostrarArbol($lista,$nivel=0) {
+            foreach($lista as $item) {
+                if($item->directorio) {
 ?>
                         <li>
                             <label class="directorio" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->directorio?>/</label>
                             <ul>
 <?php
-                mostrarArbol($item->hijos,$nivel+1);
+                    mostrarArbol($item->hijos,$nivel+1);
 ?>
                             </ul>
                         </li>
 <?php
-            } else {
+                } else {
 ?>
                         <li class="clearfix">
                             <label class="vista" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->item?></label>
@@ -142,14 +151,15 @@ if(!count($arbol)) {
                             </div>
                         </li>
 <?php
+                }
             }
         }
-    }
-    mostrarArbol($arbol);
+        mostrarArbol($arbol);
 ?>
                     </ul>
 <?php
-}
+        }
+    }
 ?>
                 </div>
             </div>

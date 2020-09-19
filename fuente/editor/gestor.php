@@ -69,16 +69,18 @@ class gestor {
         self::$aplicaciones=[];
         foreach(glob(_aplicaciones.'*',GLOB_ONLYDIR) as $ruta) self::$aplicaciones[]=basename($ruta);
         
-        $aplicacion=$_SESSION['_gestorAplicacion'];
-        if(!$aplicacion||!in_array($aplicacion,self::$aplicaciones)) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
+        if(count(self::$aplicaciones)) {
+            $aplicacion=$_SESSION['_gestorAplicacion'];
+            if(!$aplicacion||!in_array($aplicacion,self::$aplicaciones)) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
 
-        define('_gestorAplicacion',$aplicacion);
-        self::$aplicacion=$_SESSION['_gestorAplicacion'];
+            define('_gestorAplicacion',$aplicacion);
+            self::$aplicacion=$_SESSION['_gestorAplicacion'];
 
-        foxtrot::cargarAplicacion(_gestorAplicacion);
+            foxtrot::cargarAplicacion(_gestorAplicacion);
         
-        //TODO Esto debe venir de foxtrot
-        self::$jsonApl=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));        
+            //TODO Esto debe venir de foxtrot
+            self::$jsonApl=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
+        }
     }
 
     /**

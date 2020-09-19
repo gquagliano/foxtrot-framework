@@ -70,7 +70,7 @@ class construirCordova extends asistente {
 <?php
         if(!function_exists('shell_exec')) {
 ?>
-        <p>¡shell_exec() no está habilitado</p>
+        <p>¡shell_exec() no está habilitado!</p>
 <?php
         }
     }

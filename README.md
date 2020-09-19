@@ -2,8 +2,6 @@ Trabajo en curso y experimentos para el desarrollo de Foxtrot 7.
 
 **Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión *MVP*!**
 
-**Nota: Se encuentra en curso la implementación del nuevo gestor, pero aún no todas sus funciones están disponibles.** Las funciones que aún no se han implementado se pueden encontrar en [Scripts deprecados](docs/scripts-deprecados.md).
-
 ### Qué es Foxtrot Framework
 
 ![](docs/img/editor.jpg)

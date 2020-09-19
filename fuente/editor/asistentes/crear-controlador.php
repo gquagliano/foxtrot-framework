@@ -27,18 +27,18 @@ class crearControlador extends asistente {
      */
     public function obtenerFormulario() {
 ?>
-        <div class="form-group row">
+        <div class="form-group row mb-0">
             <label class="col-3 col-form-label">Nombre</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" name="nombre">
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-3 col-form-label">Público</label>
+            <label class="col-3 col-form-label"></label>
             <div class="col-sm-9">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" name="publico" checked id="publico">
-                    <label class="custom-control-label" for="publico">Si</label>
+                    <input type="checkbox" class="custom-control-input" name="publico" checked id="cc-publico">
+                    <label class="custom-control-label" for="cc-publico">Público</label>
                 </div>
             </div>
         </div>

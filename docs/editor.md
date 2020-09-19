@@ -1,7 +1,7 @@
 ## Índice
 
 - [Introducción](../README.md)
-- [Primeros pasos](primeros-pasos.md)
+- [Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
 - [Gestor y editor](editor.md)
@@ -49,7 +49,7 @@ Es posible que sea necesario editar el archivo `config.php` de la aplicación pa
 
 Si se ingresa un nombre de dominio, el asistente intentará editar el archivo `desarrollo/config.php`. Esto solo funciona con el enrutador de aplicaciones predeterminado y el formato de configuración de ejemplo. *Debe omitirse el dominio cuando se haya realizado una configuración diferente*.
 
-Ver [Primeros pasos](primeros-pasos.md) para más información.
+Ver [Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos) para más información.
 
 #### ![](img/gestor/vista.png) Nueva vista
 

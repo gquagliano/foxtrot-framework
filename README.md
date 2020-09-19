@@ -12,7 +12,7 @@ Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, co
 
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](../../wiki/Inicio)** (en redacción).
 
-**[Guía de inicio rápido](docs/primeros-pasos.md)**
+**[Guía de inicio rápido](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)**
 
 **[Mirá el video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
 

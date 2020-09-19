@@ -1,7 +1,7 @@
 ## Índice
 
 - [Introducción](../README.md)
-- [Primeros pasos](primeros-pasos.md)
+- [Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
 - [Gestor y editor](editor.md)

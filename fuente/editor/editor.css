@@ -558,3 +558,6 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-gestor .foxtrot-dialogo .dialogo {
     display: block;
 }
+.foxtrot-gestor .dialogo .custom-control-label {
+    line-height: 1.5rem;
+}

@@ -26,12 +26,50 @@ class crearControlador extends asistente {
      * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
+?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="nombre">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Público</label>
+            <div class="col-sm-9">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="publico" checked id="publico">
+                    <label class="custom-control-label" for="publico">Si</label>
+                </div>
+            </div>
+        </div>
+<?php
     }
 
     /**
      * Ejecuta el asistente.
-     * @var object $parametros Parámetros recibidos desde el formulario.
+     * @var object $param Parámetros recibidos desde el formulario.
      */
-    public function ejecutar($parametros) {        
+    public function ejecutar($param) {
+        if(!$param->nombre||preg_match('/[^a-zA-Z0-9\/_-]/',$param->nombre)) gestor::error('Ingresá un nombre válido');
+
+        $ruta=dirname($param->nombre).'/';
+        $nombre=basename($param->nombre);
+        $clase=foxtrot::prepararNombreClase($nombre);
+
+        $ruta=__DIR__.'/../../../desarrollo/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/controladores/'.$ruta.$nombre.'.php';
+        if(file_exists($ruta)) gestor::error('El controlador ya existe.');
+
+        if(!is_dir(dirname($ruta))) mkdir(dirname($ruta),0755,true);
+
+        $php=file_get_contents(__DIR__.'/crear-controlador/controlador.php');
+        
+        $php=str_replace_array([
+            '{nombreApl}'=>gestor::obtenerNombreAplicacion(),
+            '{publico}'=>$param->publico?'\\publico':'',
+            '{controlador}'=>$clase,
+            '{nombre}'=>$param->nombre
+        ],$php);
+
+        file_put_contents($ruta,$php);
     }
 }

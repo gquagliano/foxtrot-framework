@@ -353,12 +353,14 @@ class foxtrot {
 
         if(strpos($nombre,'-')>0) {
             $partes=explode('-',$nombre);
-            $nombre='';
-            foreach($partes as $parte) $nombre.=ucfirst($parte);
+            $nombre=strtolower($partes[0]);
+            for($i=1;$i<count($partes);$i++) $nombre.=ucfirst(strtolower($partes[$i]));
+        } else {
+            $nombre=strtolower($nombre);
         }
 
         $nombre=str_replace('/','\\',$nombre);
-        $nombre=preg_replace('/[^a-z0-9_]/i','',$nombre);
+        $nombre=preg_replace('/[^a-z0-9\\_]/i','',$nombre);
         
         return $nombre;
     }

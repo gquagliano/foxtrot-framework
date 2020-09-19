@@ -12,6 +12,4 @@ include(__DIR__.'/../gestor.php');
 
 header('Content-Type: text/plain; charset=utf-8',true);
 
-asistentes::inicializar();
-
 gestor::procesarSolicitud();

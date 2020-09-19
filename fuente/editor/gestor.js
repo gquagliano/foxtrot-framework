@@ -120,15 +120,25 @@ var gestor=new function() {
      * Envía el formulario de un asistente.
      * @param {string} nombre - Nombre del asistente.
      * @param {(HTMLElement|string)} elem - Elemento que contiene los campos (no necesariamente <form>).
+     * @param {function} [retorno] - Función de retorno (por defecto, recargará la página).
+     * @param {function} [retornoError] - Función de retorno en caso de error (por defecto, mostrará un alerta con el texto recibido).
      */
-    this.procesarAsistente=function(nombre,elem) {
+    this.procesarAsistente=function(nombre,elem,retorno,retornoError) {
         this.operacion({
             asistente:nombre,
             parametros:JSON.stringify(this.obtenerValoresFormulario(elem))
-        },function() {
-            gestor.actualizar();
+        },function(resultado) {
+            if(typeof retorno==="function") {
+                retorno(resultado);
+            } else {
+                gestor.actualizar();
+            }
         },function(error) {
-            ui.alerta(error);
+            if(typeof retornoError==="function") {
+                retornoError(error);
+            } else {
+                ui.alerta(error);
+            }
         });
     };
 
@@ -209,7 +219,12 @@ var gestor=new function() {
      * Acepta el diálogo de sincronización.
      */
     this.aceptarSincronizacion=function() {
-        this.procesarAsistente("sincronizar-bd","dialogo-sincronizacion");
+        this.procesarAsistente("sincronizar-bd","dialogo-sincronizacion",function(sql) {
+            document.querySelector("#sincronizacion-sql").valor(sql);
+        },function(mensaje) {
+            ui.alerta(mensaje.error);
+            document.querySelector("#sincronizacion-sql").valor(mensaje.sql);
+        });
     };
 
     /**

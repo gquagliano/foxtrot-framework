@@ -9,4 +9,4 @@ desarrollo/*
 !desarrollo/.htaccess
 !desarrollo/index-cordova.html
 !desarrollo/config-ejemplo.php
-scripts/sincronizar.sql
+desarrollo/sincronizar.sql

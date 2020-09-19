@@ -10,18 +10,6 @@ define('_inc',1);
 
 include(__DIR__.'/gestor.php');
 
-//TODO Esto debe venir de foxtrot
-$aplicaciones=[];
-foreach(glob(_aplicaciones.'*',GLOB_ONLYDIR) as $ruta) $aplicaciones[]=basename($ruta);
-
-$aplicacion=$_SESSION['_gestorAplicacion'];
-if(!$aplicacion) $aplicacion=$_SESSION['_gestorAplicacion']=$aplicaciones[0];
-define('_gestorAplicacion',$aplicacion);
-
-foxtrot::cargarAplicacion(_gestorAplicacion);
-
-//TODO Esto debe venir de foxtrot
-$jsonApl=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
 ?>
 <!doctype html>
 <html lang="es">
@@ -39,7 +27,7 @@ $jsonApl=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
             <label>Aplicación:</label>
             <select onchange="gestor.aplicacionSeleccionada(this)" class="custom-select">
 <?php
-foreach($aplicaciones as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicacion==$apl?'selected':'').'>'.$apl.'</option>';
+foreach(gestor::obtenerAplicaciones() as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicacion==$apl?'selected':'').'>'.$apl.'</option>';
 ?>
             </select>
         </div>
@@ -65,7 +53,7 @@ foreach($aplicaciones as $apl) echo '<option value="'.$apl.'" '.(_gestorAplicaci
 <?php
 //Construir árbol por subdirectorios
 $arbol=[];
-foreach($jsonApl->vistas as $nombre=>$vista) {
+foreach(gestor::obtenerJsonAplicacion()->vistas as $nombre=>$vista) {
     if(strpos($nombre,'/')===false) {
         //Agregar directamente en la raíz
         $arbol[]=(object)['item'=>$nombre,'ruta'=>$nombre,'vista'=>$vista];

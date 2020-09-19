@@ -84,7 +84,11 @@ Crea las clases para un nuevo modelo de datos con su entidad.
 
 #### ![](img/gestor/sincronizar.png) Sincronizar base de datos
 
-Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
+Crea o actualiza* las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación.
+
+En caso de que sea necesario replicar la sincronización en otro servidor, el gestor mostrará las consultas SQL ejecutadas. El historial completo de consultas quedará almacenado en `desarrollo/sincronizacion.sql`.
+
+**Importante:** Al actualizar las tablas, agrega las columnas correspondientes a nuevas propiedades, modifica las columnas que hayan cambiado de tipo u otros parámetros (por ej. valor predeterminado) y elimina las columas correspondientes a propiedades inexistentes o removidas. Por lo tanto, es recomendable realizar una copia de seguridad antes de sincronizar una tabla con datos.
 
 #### ![](img/gestor/asistentes.png) Asistentes
 

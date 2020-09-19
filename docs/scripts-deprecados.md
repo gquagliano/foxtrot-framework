@@ -8,18 +8,6 @@ Construye y compila todos los archivos JS y CSS del framework y del editor, gene
 
 *Nota:* Los archivos `/desarrollo/config.php` y `/desarrollo/.htaccess` no son reemplazados a fin de preservar la configuración.
 
-#### sincronizar-bd
-
-Crea o actualiza las tablas a partir de la estructura del modelo de datos de la aplicación. Utiliza la base de datos y credenciales presentes en la configuración de la aplicación, excepto cuando se especifiquen los parámetros `-u`, `-c` y/o `-b`.
-
-    php sincronizar-bd -a=nombre_aplicacion [-m=nombre_modelo] [-u=usuario] [-c=contrasena] [-b=nombre_base_de_datos]
-
-Si no se especifica `-m`, se procesará el modelo de datos completo.
-
-Cuando *no* se use `-m`, el método `instalar()` de cada modelo, si existe, será invocado luego de que hayan sido creadas todas las tablas en la base de datos.
-
-Acumula un registro de consultas SQL, que se puede consultar en el gestor de aplicaciones o en el archivo `desarrollo/sincronizar.sql`, en caso de que sea necesario replicar los cambios en otro servidor.
-
 #### construir-apl
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).

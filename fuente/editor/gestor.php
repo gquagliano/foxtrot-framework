@@ -12,6 +12,7 @@ include(__DIR__.'/operaciones/funciones.php');
 include(__DIR__.'/asistentes/asistente.php');
 
 foxtrot::inicializar(false);
+gestor::inicializar();
 asistentes::inicializar();
 
 /**
@@ -20,6 +21,10 @@ asistentes::inicializar();
 class gestor {
     /** @var string $aplicacion Nombre de la aplicación activa. */
     protected static $aplicacion;
+    /** @var object $jsonApl JSON de la aplicación actual. */
+    protected static $jsonApl;
+    /** @var string[] $aplicaciones Listado de aplicaciones. */
+    protected static $aplicaciones;
 
     //TODO *Desharcodear* rutas
 
@@ -32,11 +37,45 @@ class gestor {
     }
 
     /**
+     * Devuelve el listado de nombres de aplicaciones.
+     * @return string[]
+     */
+    public static function obtenerAplicaciones() {
+        return self::$aplicaciones;
+    }
+
+    /**
+     * Devuelve el JSON de la aplicación activa.
+     * @return object
+     */
+    public static function obtenerJsonAplicacion() {
+        return self::$jsonApl;
+    }
+
+    /**
+     * Inicializa la clase.
+     */
+    public static function inicializar() {
+        //TODO Esto debe venir de foxtrot
+        self::$aplicaciones=[];
+        foreach(glob(_aplicaciones.'*',GLOB_ONLYDIR) as $ruta) self::$aplicaciones[]=basename($ruta);
+        
+        $aplicacion=$_SESSION['_gestorAplicacion'];
+        if(!$aplicacion) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
+
+        define('_gestorAplicacion',$aplicacion);
+        self::$aplicacion=$_SESSION['_gestorAplicacion'];
+
+        foxtrot::cargarAplicacion(_gestorAplicacion);
+        
+        //TODO Esto debe venir de foxtrot
+        self::$jsonApl=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));        
+    }
+
+    /**
      * Analiza y procesa la solicitud actual.
      */
     public static function procesarSolicitud() {
-        self::$aplicacion=$_SESSION['_gestorAplicacion'];
-
         if($_REQUEST['eliminarVista']) {
             self::eliminarVista($_REQUEST['eliminarVista']);
         } elseif($_REQUEST['seleccionarAplicacion']) {
@@ -44,7 +83,6 @@ class gestor {
         } elseif($_REQUEST['asistente']) {
             self::ejecutarAsistente($_REQUEST['asistente']);
         }
-
         self::ok();
     }
 

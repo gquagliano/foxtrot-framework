@@ -195,6 +195,9 @@ class foxtrot {
     }
 
     public static function error() {
+        //Si ya estamos en la página de error, detener
+        if($_SERVER['REQUEST_URI']==configuracion::$rutaBase.configuracion::$rutaEror) exit;
+        
         redir(configuracion::$rutaEror);
     }
 

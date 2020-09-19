@@ -53,6 +53,14 @@ class gestor {
     }
 
     /**
+     * Almacena el objeto en el JSON de la aplicación activa.
+     * @var object $json Objeto a almacenar.
+     */
+    public static function actualizarJsonAplicacion($json) {
+        file_put_contents(_raizAplicacion.'aplicacion.json',json_encode($json));
+    }
+
+    /**
      * Inicializa la clase.
      */
     public static function inicializar() {

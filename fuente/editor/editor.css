@@ -560,6 +560,7 @@ body.trabajando #foxtrot-cargando {
 }
 .foxtrot-gestor .foxtrot-dialogo .dialogo-contenido {
     overflow: visible;
+    max-height: none;
 }
 .foxtrot-gestor .dialogo h1 {
     margin-top: 0;

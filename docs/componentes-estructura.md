@@ -7,7 +7,6 @@
 - [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
 
 ## Estructura de los componentes

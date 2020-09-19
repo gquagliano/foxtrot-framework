@@ -7,7 +7,6 @@
 - [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
 
 ## Pendientes
@@ -22,6 +21,7 @@ En líneas generales,
 - Se deben normalizar los nombres de clases, algunos tienen prefijo `foxtrot-`, otros no.
 - ~~Crear el gestor de aplicaciones completo con ingregración en la interfaz web de los scripts y asistentes.~~
 - Completar la funcionalidad del gestor de aplicaciones: Renombrar, duplicar, ~~eliminar~~ vistas; gestionar controladores (actualmente se pueden crear desde el gestor); gestionar el modelo de datos (actualmente se pueden crear y sincronizar desde el gestor).
+- Testing.
 
 Luego seguirá:
 

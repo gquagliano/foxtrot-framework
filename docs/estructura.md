@@ -7,7 +7,6 @@
 - [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
-- [Scripts de compilación](scripts.md)
 - [Pendientes](pendientes.md)
 
 ## Estructura general del proyecto
@@ -19,8 +18,6 @@
 `/produccion/` Framework y aplicaciones compilados. Su contenido es el que se debe implementar en el servidor de producción.
 
 `/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
-
-`/scripts/` Scripts útiles (solo para desarrolladores del núcleo de Foxtrot).
 
 ## Estructura de una aplicación
 

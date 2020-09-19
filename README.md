@@ -75,8 +75,6 @@ https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/ (En desa
 
 `/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
 
-`/scripts/` Scripts de compilación.
-
 ### Qué estamos desarrollando
 
 ### Gestor de aplicaciones y editor visual

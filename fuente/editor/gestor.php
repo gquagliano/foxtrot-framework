@@ -61,7 +61,7 @@ class gestor {
         foreach(glob(_aplicaciones.'*',GLOB_ONLYDIR) as $ruta) self::$aplicaciones[]=basename($ruta);
         
         $aplicacion=$_SESSION['_gestorAplicacion'];
-        if(!$aplicacion) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
+        if(!$aplicacion||!in_array($aplicacion,self::$aplicaciones)) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
 
         define('_gestorAplicacion',$aplicacion);
         self::$aplicacion=$_SESSION['_gestorAplicacion'];
@@ -90,7 +90,7 @@ class gestor {
      * Cambia la aplicación activa.
      * @var string $nombre Nombre de la aplicación.
      */
-    protected static function seleccionarAplicacion($nombre) {
+    public static function seleccionarAplicacion($nombre) {
         $_SESSION['_gestorAplicacion']=$nombre;
     }
 
@@ -136,5 +136,21 @@ class gestor {
     public static function error($datos=null) {
         echo json_encode(['r'=>'error','d'=>$datos]);
         exit;
+    }
+    
+    /**
+     * Devuelve el modelo de datos de la aplicación activa.
+     * @return object[] Devuelve un array de objetos [nombre,clase], donde 'clase' es el nombre completo de la misma (no la instancia).
+     */
+    public static function obtenerModelos() {
+        //TODO Obtener de Foxtrot
+        $resultado=[];
+        foreach(get_declared_classes() as $clase) {
+            if(preg_match('/^aplicaciones\\\\'.gestor::obtenerNombreAplicacion().'\\\\modelo\\\\.+/',$clase)&&is_subclass_of($clase,'\\modelo')) {
+                $nombre=basename($clase);
+                $resultado[]=(object)['nombre'=>$nombre,'clase'=>$clase];
+            }
+        }
+        return $resultado;
     }
 }

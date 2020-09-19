@@ -33,7 +33,6 @@ class sincronizarBd extends asistente {
      * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
-
 ?>
         <div class="form-group row">
             <label class="col-3 col-form-label">Modelo</label>
@@ -41,7 +40,7 @@ class sincronizarBd extends asistente {
                 <select class="custom-select" name="modelo">
                     <option value="">Todos</option>
 <?php
-        foreach(self::obtenerModelos() as $modelo) echo '<option value="'.$modelo->nombre.'">'.$modelo->nombre.'</option>';
+        foreach(gestor::obtenerModelos() as $modelo) echo '<option value="'.$modelo->nombre.'">'.$modelo->nombre.'</option>';
 ?>
                 </select>
             </div>
@@ -76,7 +75,7 @@ class sincronizarBd extends asistente {
                         .'-- Base de datos: '.configuracion::$nombreBd);
 
         $clasesCreadas=[];
-        foreach(self::obtenerModelos() as $modelo) {
+        foreach(gestor::obtenerModelos() as $modelo) {
             if(!$filtrar||$filtrar==$modelo->nombre);
             $clase=$modelo->clase;
             $obj=new $clase;
@@ -230,17 +229,5 @@ class sincronizarBd extends asistente {
     protected function registro($valor) {  
         $this->sql.=$valor.PHP_EOL.PHP_EOL;
         file_put_contents(__DIR__.'/../../../desarrollo/sincronizar.sql',$valor.PHP_EOL.PHP_EOL,FILE_APPEND);
-    }
-
-    public static function obtenerModelos() {
-        //TODO Obtener de Foxtrot
-        $resultado=[];
-        foreach(get_declared_classes() as $clase) {
-            if(preg_match('/^aplicaciones\\\\'.gestor::obtenerNombreAplicacion().'\\\\modelo\\\\.+/',$clase)&&is_subclass_of($clase,'\\modelo')) {
-                $nombre=basename($clase);
-                $resultado[]=(object)['nombre'=>$nombre,'clase'=>$clase];
-            }
-        }
-        return $resultado;
     }
 }

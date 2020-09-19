@@ -28,37 +28,49 @@ class crearModelo extends asistente {
      * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
+?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="nombre">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Entidad (singular)</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="entidad">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Tabla</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="tabla" placeholder="Opcional">
+            </div>
+        </div>
+<?php
     }
 
     /**
      * Ejecuta el asistente.
-     * @var object $parametros Parámetros recibidos desde el formulario.
+     * @var object $param Parámetros recibidos desde el formulario.
      */
-    public function ejecutar($parametros) {
-        $opciones=obtenerArgumentos();
-      
-        $aplicacion=validarParametroAplicacion($opciones);        
-        foxtrot::inicializar($aplicacion);
+    public function ejecutar($param) {
+        if(!$param->nombre||!$param->entidad) gestor::error('Ingresá el nombre del modelo y el nombre de la entidad.');
+        
+        $ruta=__DIR__.'/../../../desarrollo/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/';
+        $rutaModelo=$ruta.$param->nombre.'.php';
+        $rutaEntidad=$ruta.$param->entidad.'.php';
 
-        if(!$opciones['m']) $this->error('El argumento `-m` es requerido.');
-        if(!$opciones['e']) $this->error('El argumento `-e` es requerido.');
-
-        $modelo=$opciones['m'];
-        $entidad=$opciones['e'];
-
-        $rutaModelo=_modeloAplicacion.$modelo.'.php';
-        $rutaEntidad=_modeloAplicacion.$entidad.'.php';
-
-        if(file_exists($rutaModelo)) $this->error('La clase del modelo ya existe.');
-        if(file_exists($rutaEntidad)) $this->error('La clase de la entidad ya existe.');
+        if(file_exists($rutaModelo)) gestor::error('La clase del modelo ya existe.');
+        if(file_exists($rutaEntidad)) gestor::error('La clase de la entidad ya existe.');
 
         $tabla='';
-        if($opciones['t']) $tabla='protected $nombre=\''.$opciones['t'].'\';'.PHP_EOL;
+        if($param->tabla) $tabla='protected $nombre=\''.$param->tabla.'\';'.PHP_EOL;
 
         $vars=[
             '{nombreApl}'=>$this->aplicacion,
-            '{modelo}'=>$modelo,
-            '{entidad}'=>$entidad,
+            '{modelo}'=>$param->nombre,
+            '{entidad}'=>$param->entidad,
             '{tabla}'=>$tabla
         ];
 

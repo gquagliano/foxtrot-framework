@@ -8,7 +8,7 @@
 
 //Script de PRUEBA para mostrar vistas embebibles en el marco del editor
 
-include(__DIR__.'/funciones.php');
+include(__DIR__.'/../funciones.php');
 
 prepararVariables();
 

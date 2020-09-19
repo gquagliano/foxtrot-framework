@@ -8,7 +8,7 @@
 
 //Script de PRUEBA para abrir los datos en el editor
 
-include(__DIR__.'/funciones.php');
+include(__DIR__.'/../funciones.php');
 
 header('Content-Type: text/plain; charset=utf-8',true);
 

@@ -8,7 +8,7 @@
 
 defined('_inc') or exit;
 
-include(__DIR__.'/operaciones/funciones.php');
+include(__DIR__.'/funciones.php');
 include(__DIR__.'/asistentes/asistente.php');
 
 foxtrot::inicializar(false);

@@ -12,9 +12,7 @@
 
 //TODO Remover funciones en desuso
 
-define('_inc',1);
-
-include(__DIR__.'/../servidor/foxtrot.php');
+defined('_inc') or exit;
 
 function prepararVariables() {
     global $nombreApl,$nombreVista,$esPhp,$plantilla,$aplicacion,
@@ -228,7 +226,11 @@ function compilarJs($archivos,$destino,$omitirClosure=false) {
         file_put_contents($destino,$codigo);
     } else {
         if(file_exists($destino)&&trim(fgets(fopen($destino,'r')))=='//'.$hash) return;
-        exec(_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg);
+
+        $comando=_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg.' 2&>1';
+        $o=shell_exec($comando);
+        file_put_contents(__DIR__.'/exec.log','# '.$comando.PHP_EOL.trim($o).PHP_EOL.PHP_EOL,FILE_APPEND);
+
         file_put_contents($destino,'//'.$hash.PHP_EOL.file_get_contents($destino));
     }
 }

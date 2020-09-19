@@ -62,18 +62,6 @@ Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicació
 
 Asistentes de creación de vistas y controladores.
 
-##### Plantilla de modelo de datos
-
-    php asistente crear-modelo -a=nombre_aplicacion -m=nombre_modelo -e=nombre_entidad [-t=nombre_tabla]
-
-`-t` Si se especifica, establecerá un nombre de tabla distinto al nombre del modelo (opcional).
-
-El asistente creará las clases del repositorio y de la entidad, vacías, para completar.
-
-*Nota:* Luego de agregar las propiedades a la clase de la entidad, se puede crear la tabla correspondiente en la base de datos mediante el script `sincronizar-bd` (ver más arriba).
-
-[Más información sobre la estrcutrura de las clases del ORM](api/orm.md).
-
 ##### Asistente de creación de ABMC
 
     php asistente abmc -a=nombre_aplicacion -m=nombre_modelo [-t=Título] [-r=ruta] [-o] [-f|c] [-p=plural] [-n=singular] [-u [-v=vista_anterior] [-g=vista_siguiente_nivel] [-k=campo]]

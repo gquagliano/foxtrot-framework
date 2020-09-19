@@ -7,6 +7,11 @@
 
 /* Estilos comunes de Foxtrot */
 
+* {
+    backface-visibility: hidden;
+    perspective: 100px;
+}
+
 #foxtrot-cuerpo {
     min-height: 100vh;
     position: relative;
@@ -201,7 +206,7 @@ li.foxtrot-menu-separador::after {
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;
+    height: 100vh;
     z-index: 999999999;
     background-color: rgba(0, 0, 0, 0.28);
 }
@@ -265,8 +270,6 @@ li.foxtrot-menu-separador::after {
 
 .cordova * {
     user-select: none;
-    backface-visibility: hidden;
-    perspective: 100px;
 }
 @keyframes cordova-listo {
     from { opacity: 0 }

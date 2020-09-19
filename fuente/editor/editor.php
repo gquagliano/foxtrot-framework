@@ -19,6 +19,7 @@ foxtrot::inicializar();
     <link rel="stylesheet" href="../recursos/css/foxtrot.css">
     <link rel="stylesheet" href="editor.css">
     <title>Editor de vistas</title>
+    <link rel="icon" type="image/png" href="../recursos/img/favicon.png">
   </head>
   <body class="foxtrot-editor">
 

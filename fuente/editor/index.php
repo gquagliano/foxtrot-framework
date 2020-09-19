@@ -19,6 +19,7 @@ include(__DIR__.'/gestor.php');
     <link rel="stylesheet" href="../recursos/css/foxtrot.css">
     <link rel="stylesheet" href="editor.css">
     <title>Gestor de aplicaciones</title>
+    <link rel="icon" type="image/png" href="../recursos/img/favicon.png">
   </head>
   <body class="foxtrot-gestor">
 

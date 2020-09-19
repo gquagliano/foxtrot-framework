@@ -30,6 +30,7 @@ var gestor=new function() {
         new ajax({
             url:urlOperaciones,
             parametros:parametros,
+            tiempo:0,
             listo:function(respuesta) {
                 try {
                     respuesta=JSON.parse(respuesta);

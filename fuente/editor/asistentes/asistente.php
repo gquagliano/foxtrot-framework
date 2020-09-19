@@ -8,6 +8,15 @@
 
 defined('_inc') or exit;
 
+set_time_limit(3600);
+chdir(__DIR__);
+define('_fuente',__DIR__.'/../../../fuente/');
+define('_desarrollo',__DIR__.'/../../../desarrollo/');
+define('_produccion',__DIR__.'/../../../produccion/');
+define('_embeber',__DIR__.'/../../../embeber/');
+
+define('_closure','java -jar closure-compiler-v20200517.jar');
+
 /**
  * Clase base de los asistentes.
  */

@@ -108,15 +108,19 @@ Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
-Es posible especificar la ruta al directorio `www` de la aplicación Cordova, en cuyo caso intentará copiar los archivos, y preparar y ejecutar la aplicación.
+Es posible especificar la ruta al directorio `www` de la aplicación Cordova, en cuyo caso intentará copiar los archivos, y preparar y ejecutar la aplicación. Para que esto sea posible, la ruta debe estar dentro del alcance de PHP.
 
 *Nota:* No hace falta construir la aplicación antes de construir la versión embebible.
+
+*Requisitos:* `shell_exec()` debe estar habilitado y tanto JRE (Java) como Cordova deben estar disponibles en PATH para poder compilar el código JavaScript (cuando se desmarque el modo de depuración) y construir la aplicación.
 
 #### ![](img/gestor/produccion.jpg) Construir para producción
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 
 *Nota:* Los archivos `/produccion/config.php` y `/produccion/.htaccess` no son reemplazados a fin de preservar la configuración. Es muy probable que se requieran modificaciones en estos archivos para completar la implementación.
+
+*Requisitos:* `shell_exec()` debe estar habilitado y JRE (Java) debe estar disponible en PATH para poder compilar el código JavaScript (cuando se desmarque el modo de depuración).
 
 ## Editor
 

@@ -10,3 +10,4 @@ desarrollo/*
 !desarrollo/index-cordova.html
 !desarrollo/config-ejemplo.php
 desarrollo/sincronizar.sql
+desarrollo/editor/exec.log

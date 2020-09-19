@@ -34,9 +34,7 @@ class vistas extends asistente {
         foreach($archivos as $archivo) unlink($archivo);
 
         //Si el directorio quedó vacío, eliminarlo también
-        $dir=$ruta.'cliente/vistas/'.dirname($nombre);
-        $archivos=glob($dir.'/*');
-        if(!count($archivos)) rmdir($dir);
+        $this->eliminarDirVacio($ruta.'cliente/vistas/'.dirname($nombre));
 
         $rutaJson=$ruta.'aplicacion.json';
         $json=json_decode(file_get_contents($rutaJson));
@@ -46,6 +44,29 @@ class vistas extends asistente {
                 unset($json->vistas->$clave);
 
         file_put_contents($rutaJson,json_encode($json));
+
+        //Eliminar el controlador
+        $archivo=$ruta.'cliente/controladores/'.$nombre.'.js';
+        if(file_exists($archivo)) unlink($archivo);
+
+        //Si el directorio quedó vacío, eliminarlo también
+        $this->eliminarDirVacio($ruta.'cliente/controladores/'.dirname($nombre));
+    }
+
+    /**
+     * Elimina el directorio y la ruta hasta el mismo, si está vacío.
+     */
+    private function eliminarDirVacio($dir) {        
+        while(1) {            
+            $archivos=glob($dir.'/*');
+            if(!count($archivos)) {
+                rmdir($dir);
+                //Subir un nivel y eliminar también si está vacío
+                $dir=dirname($dir);
+            } else {
+                break;
+            }
+        }
     }
 
     /**

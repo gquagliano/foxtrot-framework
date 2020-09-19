@@ -8,6 +8,8 @@
 
 //Script de PRUEBA para guardar los datos provenientes del editor
 
+define('_inc',1);
+include(__DIR__.'/../../servidor/foxtrot.php');
 include(__DIR__.'/../funciones.php');
 
 header('Content-Type: text/plain; charset=utf-8',true);

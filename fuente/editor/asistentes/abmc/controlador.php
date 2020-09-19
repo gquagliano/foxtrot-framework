@@ -21,7 +21,7 @@ class {controlador} extends \controlador {
      */
     public function obtenerListado($filtro) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
-        \foxtrot::obtenerAplicacion()->verificarLogin();
+        //\foxtrot::obtenerAplicacion()->verificarLogin();
 
         $modelo=new {aliasModelo};
         $modelo->establecerAlias('{plural}');
@@ -42,7 +42,7 @@ class {controlador} extends \controlador {
 !>
 
         $listado=$modelo->listarItems($donde,$parametros,$filtro->pagina);
-<!multinivel
+<!superior-multinivel
 
         $listado->titulo='{plural} '.implode(' › ',$this->obtenerRuta($filtro->{relacion}));
 !>
@@ -68,7 +68,7 @@ class {controlador} extends \controlador {
      */
     public function eliminar($id) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
-        \foxtrot::obtenerAplicacion()->verificarLogin();
+        //\foxtrot::obtenerAplicacion()->verificarLogin();
 
         (new {aliasModelo})->eliminarItem($id);
     }
@@ -80,7 +80,7 @@ class {controlador} extends \controlador {
      */
     public function guardar($datos,$id) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
-        \foxtrot::obtenerAplicacion()->verificarLogin();
+        //\foxtrot::obtenerAplicacion()->verificarLogin();
         
         //Validar campos obligatorios
         $obligatorios=[{requeridos}];
@@ -101,7 +101,7 @@ class {controlador} extends \controlador {
      */
     public function obtenerItem($id) {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
-        \foxtrot::obtenerAplicacion()->verificarLogin();
+        //\foxtrot::obtenerAplicacion()->verificarLogin();
         
         return (new {aliasModelo})->obtenerItem($id);
     }

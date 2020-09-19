@@ -47,22 +47,96 @@ class abmc extends asistente {
      * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
+?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Modelo</label>
+            <div class="col-sm-9">
+                <select class="custom-select" name="modelo">
+<?php
+        foreach(gestor::obtenerModelos() as $modelo) echo '<option value="'.$modelo->nombre.'">'.$modelo->nombre.'</option>';
+?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Título</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="titulo" placeholder="Opcional">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Ruta</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="ruta" placeholder="Opcional, relativa a /desarrollo/aplicaciones/<?=gestor::obtenerNombreAplicacion()?>/cliente/vistas/">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Plural</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="plural" placeholder="Opcional">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Singular</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="singular" placeholder="Opcional">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Generar</label>
+            <div class="col-sm-9">                
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" name="formulario" checked id="a-form">
+                    <label class="custom-control-label" for="a-form">Formulario</label>
+                </div>            
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" name="consulta" checked id="a-consulta">
+                    <label class="custom-control-label" for="a-consulta">Consulta</label>
+                </div>    
+                <div class="custom-control custom-checkbox custom-control-inline">
+                    <input type="checkbox" class="custom-control-input" name="multinivel" checked id="a-multi">
+                    <label class="custom-control-label" for="a-multi">Multinivel</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Multinivel</label>
+            <div class="col-sm-9">                
+                <div class="form-group row">
+                    <label class="col-3 col-form-label">Siguiente nivel</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="siguiente" placeholder="Ejemplo: subrubros">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-3 col-form-label">Nivel anterior</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="anterior" placeholder="Ejemplo: rubros">
+                    </div>
+                </div>
+                <div class="form-group row mb-0">
+                    <label class="col-3 col-form-label">Relación</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="anterior" placeholder="Ejemplo: idrubro">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="noModificar" id="a-no-modif-modelo">
+                <label class="custom-control-label" for="a-no-modif-modelo">No modificar la clase del modelo de datos</label>
+            </div>
+        </div>
+<?php
     }
 
     /**
      * Ejecuta el asistente.
-     * @var object $parametros Parámetros recibidos desde el formulario.
+     * @var object $param Parámetros recibidos desde el formulario.
      */
-    public function ejecutar($parametros) {
-        $opciones=obtenerArgumentos();
-
-        $aplicacion=validarParametroAplicacion($opciones);        
-        foxtrot::inicializar($aplicacion);
-
-        $this->validarOpciones($opciones);
-
-        if(!$this->plural) $this->plural=$this->nombreModelo;
-        $this->nombreControlador=$this->plural; //Por defecto, mismo nombre
+    public function ejecutar($param) {
+        $this->validarOpciones($param);
         
         $this->rutaVistas=_vistasAplicacion.$this->ruta;
         $this->rutaJs=_controladoresClienteAplicacion.$this->ruta;
@@ -71,9 +145,6 @@ class abmc extends asistente {
 
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);
-
-        if(!$this->singular) $this->singular=$this->modelo->singular();
-        define('_plantillas',__DIR__.'/abmc/');
 
         $this->json=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
 
@@ -90,35 +161,36 @@ class abmc extends asistente {
     }
 
     private function validarOpciones($opc) {
-        if(!$opc['m'])  $this->error('El parámetro -m es requerido.');
-
-        if($opc['c']||$opc['f']) {
-            //Por defecto, se hacen ambos
-            //Si se incluye uno de los dos, hacer solo lo que se haya especificado
-            $this->opcionGenerarConsulta=$opc['c'];
-            $this->opcionGenerarFormulario=$opc['f'];
-        }
-        $this->opcionActualizarModelo=!$opc['o'];
-
-        $this->nombreModelo=$opc['m'];
-        $this->titulo=$opc['t']?$opc['t']:ucfirst($this->nombreModelo);
-
-        if($opc['u']) $this->multinivel=true;
-        if($opc['g']) $this->siguienteNivel=$opc['g'];
-        if($opc['v']) $this->nivelAnterior=$opc['v'];
-        if($opc['k']) $this->campoRelacion=$opc['k'];
-
-        if($opc['p']) $this->plural=$opc['p'];
-        if($opc['n']) $this->singular=$opc['n'];
+        if(!$opc->modelo) exit; //En el buen uso del sistema, este parámetro nunca debería faltar ya que es un desplegable
+        $this->nombreModelo=$opc->modelo;
         
-        $this->claseModelo='\\aplicaciones\\'.$this->aplicacion.'\\modelo\\'.$this->nombreModelo;
-
-        if(!class_exists($this->claseModelo)) $this->error('El parámetro -m es inválido.');
+        $this->claseModelo='\\aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\'.$this->nombreModelo;
+        if(!class_exists($this->claseModelo)) exit; //En el buen uso del sistema, esto no debería suceder ya que se toma del desplegable
 
         $c=$this->claseModelo;
         $this->modelo=new $c;
 
-        $this->ruta=$opc['r']?$opc['r'].'/':'';
+        $this->opcionGenerarConsulta=$opc->consulta;
+        $this->opcionGenerarFormulario=$opc->formulario;
+        $this->opcionActualizarModelo=!$opc->noModificar;
+        
+        $this->titulo=$opc->titulo?$opc->titulo:ucfirst($this->nombreModelo);
+
+        $this->multinivel=$opc->multinivel;
+        $this->siguienteNivel=$opc->siguiente;
+        $this->nivelAnterior=$opc->anterior;
+        $this->campoRelacion=$opc->relacion;
+
+        $this->plural=$opc->plural;
+        if(!$this->plural) $this->plural=$this->nombreModelo;
+
+        $this->singular=$opc->singular;
+        if(!$this->singular) $this->singular=$this->modelo->singular();
+
+        $this->nombreControlador=$this->plural; //Por defecto, mismo nombre
+
+        $this->ruta=trim($opc->ruta);
+        if($this->ruta&&substr($this->ruta,-1)!='/') $this->ruta.='/';
     }
 
     private function generarFormulario() {

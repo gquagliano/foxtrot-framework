@@ -18,9 +18,10 @@ ui.registrarControlador("{nombreVista}",function() {
      */
     this.listo=function() {
         //TODO Implementar verificarUsuario()
-        ui.aplicacion().verificarUsuario(function() {
-            t.cargarDatos();
-        });
+        //ui.aplicacion().verificarUsuario(function() {
+        //    t.cargarDatos();
+        //});
+        t.cargarDatos();
     };
 
     /**

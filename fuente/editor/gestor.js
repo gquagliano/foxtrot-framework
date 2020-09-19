@@ -231,7 +231,7 @@ var gestor=new function() {
      * Abre el diálogo de asistentes.
      */
     this.asistentes=function() {       
-        document.querySelector("#asistentes-seleccion select").valor(null); 
+        document.querySelector("#asistentes-seleccion select").valor(""); 
         document.querySelector("#asistentes-seleccion").removerClase("d-none");
         document.querySelectorAll(".formulario-asistente").agregarClase("d-none");
 

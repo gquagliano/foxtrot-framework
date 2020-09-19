@@ -237,14 +237,13 @@ asistentes::obtenerAsistente('sincronizar-bd')->obtenerFormulario();
     </div>
 
     <div class="dialogo" id="dialogo-asistentes">
-        <h1>Asistentes</h1>
-
         <div id="asistentes-seleccion">   
+            <h1>Asistentes</h1>
             <div class="form-group row">
                 <label class="col-3 col-form-label">Asistente</label>
                 <div class="col-sm-9">
                     <select onchange="gestor.seleccionarAsistente(this)" class="custom-select">
-                        <option></option>
+                        <option value="">Seleccioná...</option>
 <?php
 //Otros asistentes
 $asistentes=asistentes::obtenerAsistentes();
@@ -266,6 +265,7 @@ foreach($asistentes as $asistente) {
     if(!$asistente->visible) continue;
 ?>
         <div class="formulario-asistente d-none" id="asistente-<?=$asistente->nombre?>">
+            <h1><?=$asistente->titulo?></h1>
 <?php
     asistentes::obtenerAsistente($asistente->nombre)->obtenerFormulario();
 ?>

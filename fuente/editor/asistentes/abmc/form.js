@@ -20,9 +20,10 @@ ui.registrarControlador("{nombreVista}",function() {
      */
     this.listo=function() {
         //TODO Implementar verificarUsuario()
-        ui.aplicacion().verificarUsuario(function() {
-            t.cargarDatos();
-        });
+        //ui.aplicacion().verificarUsuario(function() {
+        //    t.cargarDatos();
+        //});
+        t.cargarDatos();
     };
 
     /**
@@ -47,7 +48,7 @@ ui.registrarControlador("{nombreVista}",function() {
     this.guardar=function() {
         this.servidor.guardar(function(obj) {
             t.id=obj.id;
-            componentes.titulo.obtenerElemento().establecerHtml("Modificar {singular}");
+            componentes.encabezado.obtenerElemento().establecerHtml("Modificar {singular}");
             ui.alerta("Guardado correctamente.");
         },ui.obtenerValores(),this.id);
     };

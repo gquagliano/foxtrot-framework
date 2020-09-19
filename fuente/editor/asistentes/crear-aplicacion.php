@@ -39,6 +39,20 @@ class crearAplicacion extends asistente {
                 <input type="text" class="form-control" name="dominio" placeholder="Opcional">
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Tema</label>
+            <div class="col-sm-9">
+                <select class="custom-select" name="tema">
+<?php
+        $archivos=glob(__DIR__.'/../../recursos/css/tema-*.css');
+        foreach($archivos as $archivo) {
+            $nombre=preg_replace('/^tema-/','',pathinfo($archivo)['filename']);
+            echo '<option value="'.$nombre.'">'.$nombre.'</option>';
+        }
+?>
+                </select>
+            </div>
+        </div>
 <?php
     }
 
@@ -76,9 +90,13 @@ class crearAplicacion extends asistente {
         //Copiar plantillas
         $dir=__DIR__.'/crear-aplicacion/';
         copy($dir.'config.php',$ruta.'config.php');
-        copy($dir.'aplicacion.json',$ruta.'aplicacion.json');
         copy($dir.'aplicacion.js',$ruta.'cliente/aplicacion.js');
         copy($dir.'estilos.css',$ruta.'recursos/css/estilos.css');
+
+        //Json
+        $json=json_decode(file_get_contents($dir.'aplicacion.json'));
+        $json->tema=$parametros->tema;
+        file_put_contents($ruta.'aplicacion.json',json_encode($json));
 
         $reemplazar=[
             '{nombre}'=>$parametros->nombre

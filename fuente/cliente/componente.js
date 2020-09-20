@@ -388,6 +388,14 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve el elemento del campo de esta instancia.
+     * @reteurns {HTMLElement}
+     */
+    this.obtenerCampo=function() {
+        return this.campo;
+    };
+
+    /**
      * Devuelve el elemento correspondiente al contenedor de los hijos de esta instancia.
      */
     this.obtenerContenedor=function() {

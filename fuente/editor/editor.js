@@ -26,7 +26,8 @@ var editor=new function() {
         eventosPausados=false,
         bordesVisibles=true,
         invisiblesVisibles=true,
-        tamanoActual="g";
+        tamanoActual="g",
+        cambiosSinGuardar=false;
 
     this.listo=false;
     this.aplicacionArchivoAbierto=null
@@ -162,6 +163,7 @@ var editor=new function() {
                             fn.call(editor,componente,tamanoActual,nombre,v);
                         });
                     }
+                    cambiosSinGuardar=true;
                 });
             } else if(tipo=="opciones") {
                 var campo=document.crear("<select class='custom-select'>");
@@ -188,6 +190,7 @@ var editor=new function() {
                             fn.call(editor,componente,tamanoActual,nombre,v);
                         });
                     }
+                    cambiosSinGuardar=true;
                 });
             } else if(tipo=="archivo") {
                 //TODO Por el momento, simplemente mostramos un campo de archivo, eventualmente debe ser un gestor de archivos incluyendo subida y recorte de imagenes
@@ -199,6 +202,7 @@ var editor=new function() {
                     self.componentesSeleccionados.forEach(function(componente) {
                         if(fn) fn.call(editor,componente,tamanoActual,nombre,campo.files);
                     });
+                    cambiosSinGuardar=true;
                 });
             } else if(tipo=="comando") {
                 //Botón (no es realmene una propiedad)
@@ -211,6 +215,7 @@ var editor=new function() {
                     self.componentesSeleccionados.forEach(function(componente) {
                         if(fn) fn.call(editor,componente,tamanoActual,nombre);
                     });
+                    cambiosSinGuardar=true;
                 });
             } else {
                 //Campo de texto como predeterminado
@@ -229,6 +234,8 @@ var editor=new function() {
                     self.componentesSeleccionados.forEach(function(componente) {
                         fn.call(editor,componente,tamanoActual,nombre,nuevoValor);
                     });
+                    
+                    cambiosSinGuardar=true;
                 };
 
                 if(evento) {
@@ -382,6 +389,8 @@ var editor=new function() {
     function componenteSoltado(ev) {
         ev.preventDefault();
         ev.stopPropagation(); //Detener la propagación permitirá destinos anidados
+        
+        cambiosSinGuardar=true;
 
         var destino,
             ubicacion="dentro";       
@@ -550,6 +559,13 @@ var editor=new function() {
             }).evento("paste",function(ev) {
                 self.pegar(ev);
             });
+
+        window.onbeforeunload=function(ev) {
+            if(!cambiosSinGuardar) return;
+            var mensaje="¡Hay cambios sin guardar!";
+            (ev||event).returnValue=mensaje;
+            return mensaje;
+        };
     }    
 
     ////Gestión de componentes
@@ -566,6 +582,7 @@ var editor=new function() {
         var obj=ui.obtenerInstanciaComponente(id);
         obj.eliminar();
         this.limpiarSeleccion();
+        cambiosSinGuardar=true;
         return this;
     };
 
@@ -588,6 +605,8 @@ var editor=new function() {
         } else if(ubicacion=="despues") {
             destino.insertarDespues(obj.elemento);            
         }
+
+        cambiosSinGuardar=true;
 
         return this;
     };
@@ -756,6 +775,8 @@ var editor=new function() {
         obj.insertado();
 
         this.prepararComponenteInsertado(obj);
+        
+        cambiosSinGuardar=true;
 
         return obj;
     };
@@ -964,6 +985,9 @@ var editor=new function() {
         this.copiar();
         this.eliminarComponentes(this.componentesSeleccionados);
         this.limpiarSeleccion();
+        
+        cambiosSinGuardar=true;
+        
         return this;
     };
 
@@ -976,6 +1000,8 @@ var editor=new function() {
         if(!this.componentesSeleccionados.length) return this;
 
         var datos=(ev.clipboardData||window.clipboardData).getData("text");
+        
+        cambiosSinGuardar=true;
         
         //Intentar convertir a objeto
         try {
@@ -1119,6 +1145,8 @@ var editor=new function() {
 
                 //Volver a activar el editor
                 self.activar();
+
+                cambiosSinGuardar=false;
             }
         });
 

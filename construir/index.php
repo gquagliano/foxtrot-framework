@@ -135,7 +135,7 @@ if($_REQUEST['ejecutar']) {
         }
 
         if(!file_exists(_desarrollo.'.htaccess')) {
-            $codigo=file_get_contents(_fuente.'.htaccess');
+            $codigo=file_get_contents(_fuente.'.htaccess-ejemplo');
             $codigo=preg_replace('/RewriteBase .+/i','RewriteBase '.$ruta,$codigo);
             file_put_contents(_desarrollo.'.htaccess',$codigo);
         }

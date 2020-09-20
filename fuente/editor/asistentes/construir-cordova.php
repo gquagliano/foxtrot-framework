@@ -110,7 +110,7 @@ class construirCordova extends asistente {
 
         //Intentar configurar index-cordova.html
 
-        $html=file_get_contents(_desarrollo.'index-cordova.html');
+        $html=file_get_contents(_fuente.'index-cordova.html');
 
         file_put_contents(_embeber.'index-cordova.html',preg_replace([
             '/_nombreApl=".+?"/',

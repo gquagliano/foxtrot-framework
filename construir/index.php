@@ -125,7 +125,7 @@ if($_REQUEST['ejecutar']) {
         $ruta.='desarrollo/';
 
         if(!file_exists(_desarrollo.'config.php')) {
-            $codigo=file_get_contents(_desarrollo.'config-ejemplo.php');
+            $codigo=file_get_contents(_fuente.'config-ejemplo.php');
             $codigo=preg_replace('#configuracion::establecer\(\[.+?\]\);#s','configuracion::establecer([
     \'url\'=>(foxtrot::esHttps()?\'https\':\'http\').\'://\'.$_SERVER[\'HTTP_HOST\'].\''.$ruta.'\',
     //El parámetro rutaBase permite configurar el sistema en un subdirectorio (omitir si se instala en el raíz del servidor web)
@@ -134,9 +134,11 @@ if($_REQUEST['ejecutar']) {
             file_put_contents(_desarrollo.'config.php',$codigo);
         }
 
-        $codigo=file_get_contents(_desarrollo.'.htaccess');
-        $codigo=preg_replace('/RewriteBase .+/i','RewriteBase '.$ruta,$codigo);
-        file_put_contents(_desarrollo.'.htaccess',$codigo);
+        if(!file_exists(_desarrollo.'.htaccess')) {
+            $codigo=file_get_contents(_fuente.'.htaccess');
+            $codigo=preg_replace('/RewriteBase .+/i','RewriteBase '.$ruta,$codigo);
+            file_put_contents(_desarrollo.'.htaccess',$codigo);
+        }
     }
 
     header('Location: index.php');

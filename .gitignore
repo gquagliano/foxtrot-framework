@@ -3,11 +3,5 @@
 **/temp/temp-privado/*
 !**/temp/temp-privado/.htaccess
 .vscode
-produccion/*
 desarrollo/*
 !desarrollo/aplicaciones/ejemplo
-!desarrollo/.htaccess
-!desarrollo/index-cordova.html
-!desarrollo/config-ejemplo.php
-desarrollo/sincronizar.sql
-desarrollo/editor/exec.log

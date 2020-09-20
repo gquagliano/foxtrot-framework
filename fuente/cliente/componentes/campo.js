@@ -31,7 +31,7 @@ var componenteCampo=function() {
                 },
                 adaptativa:false
             },
-            valor:{
+            valorInicial:{
                 etiqueta:"Valor inicial",
                 adaptativa:false
             },
@@ -148,7 +148,7 @@ var componenteCampo=function() {
             return this;
         } 
         
-        if(propiedad=="valor") {
+        if(propiedad=="valorInicial") {
             this.campo.atributo("value",valor);
             return this;
         }

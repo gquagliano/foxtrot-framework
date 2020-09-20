@@ -4,7 +4,6 @@
 - [Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
-- [Gestor y editor](editor.md)
 - [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
 - [Pendientes](pendientes.md)

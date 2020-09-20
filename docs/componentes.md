@@ -11,11 +11,9 @@
 
 ## Componentes
 
+*Referencias:* Al mencionar propiedades, se utiliza el formato: *Etiqueta* (`nombre`), donde *Etiqueta* es cómo se describe la propiedad en el editor y `nombre` es el nombre real de la propiedad, a utilizar en caso de asignar o leer la misma desde JS (`componente.propiedad()`).
+
 #### ![](img/iconos/agenda.png) Agenda
-
-#### ![](img/iconos/alternar.png) Alternar (campo Si-No)
-
-Un campo que alterna entre verdadero y falso, devolviendo un valor lógico.
 
 #### ![](img/iconos/arbol.png) Árbol
 
@@ -65,8 +63,6 @@ El campo mostrará las etiquetas de acuerdo a la propiedad **Propiedad a mostrar
 Cuando sea necesario obtener un item específico (por ejemplo, cuando se establece el valor del campo), la invocación será la misma pero incluyendo la propiedad `valor` (en lugar de `buscar`) y se establecerá como valor del campo el primer elemento del resultado.
 
 #### ![](img/iconos/campo.png) Campo (texto, texto multilínea, numérico, contraseña)
-
-#### ![](img/iconos/checkbox.png) Checkbox (campo de opción única o múltiple)
 
 #### ![](img/iconos/codigo.png) Código (HTML)
 
@@ -160,7 +156,19 @@ Nota: Los menús quedarán siembre visibles dentro el editor, a fin de poder vis
 
 #### ![](img/iconos/navegacion.png) Navegación (paginado)
 
-#### ![](img/iconos/opciones.png) Opciones (grupo de botones de opción)
+#### ![](img/iconos/opcion.png) Campo de opción
+
+Este componente permite generar diferentes tipos de campos de opción:
+
+- Campo de *alternar*, que permite cambiar entre *encendido* y *apagado*.
+- Checkbox.
+- Botón de opción (*radio*).
+
+Es posible agruparlos para que solo uno de los campos de opción del grupo pueda estar activo a la vez asignando a todos ellos un mismo valor en la propiedad *Grupo* (`grupo`). Al enviar el formulario o consultar el valor de *cualquiera* de ellos, devolverán la propiedad *Valor* (`valor`) del que esté activo. Al asignar el valor a *cualquiera* de ellos, se activará el componente cuya propiedad *Valor* (`valor`) coincida con el valor que se está asignando, o se desactivarán todos si el valor no existe. Excepto cuando se asigne `true`, caso en el que se activará el componente al que se le está asignando el valor.
+
+Los componentes del grupo pueden tener diferentes nombres, lo cual puede ser útil para acceder a cada uno de ellos individualmente.
+
+*Nota:* Si no se asigna la propiedad *Valor* (`valor`), se utilizará por defecto el nombre del componente.
 
 #### ![](img/iconos/pestana.png) Pestaña
 

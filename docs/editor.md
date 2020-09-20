@@ -103,7 +103,7 @@ Por defecto, todos los campos serán de ingreso de texto (en el futuro, variará
 
 *Nota:* Usualmente será necesario realizar algunos ajustes manuales al código generado, esto genera solo una plantilla.
 
-#### ![](img/gestor/embebible.jpg) Construir embebible
+#### ![](img/gestor/embebible.png) Construir embebible
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando los archivos para embeber en Cordova o el cliente de escritorio (`/embeber/`).
 
@@ -113,7 +113,7 @@ Es posible especificar la ruta al directorio `www` de la aplicación Cordova, en
 
 *Requisitos:* `shell_exec()` debe estar habilitado y tanto JRE (Java) como Cordova deben estar disponibles en PATH para poder compilar el código JavaScript (cuando se desmarque el modo de depuración) y construir la aplicación.
 
-#### ![](img/gestor/produccion.jpg) Construir para producción
+#### ![](img/gestor/produccion.png) Construir para producción
 
 Construye y compila todos los archivos cliente (JS, HTML y CSS) de la aplicación, generando el entorno de producción (`/produccion/`).
 

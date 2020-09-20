@@ -153,6 +153,9 @@
                     }
                 }
                 return valor;
+            } else if(typeof valor==="boolean") {
+                //Marcar/desmarcar individualmente
+                this.checked=valor;
             } else {
                 //Marcar el botón correspondiente entre los elementos del mismo nombre
                 if(opciones) {

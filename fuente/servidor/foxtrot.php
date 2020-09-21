@@ -382,7 +382,7 @@ class foxtrot {
         return $nombre;
     }
 
-    ////Base de datos
+    ////Base de datos y modelo de datos
 
     public static function obtenerInstanciaBd() {
         if(!self::$bd) {
@@ -398,6 +398,16 @@ class foxtrot {
             );
         }
         return self::$bd;
+    }
+
+    /**
+     * Crea y deuvelve una instancia de un modelo de datos.
+     * @var string $nombre Nombre del modelo a crear.
+     * @return \modelo
+     */
+    public static function obtenerInstanciaModelo($nombre) {
+        $clase='\\aplicaciones\\'._apl.'\\modelo\\'.$nombre;
+        return new $clase;
     }
 
     ////Gestión de vistas

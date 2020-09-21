@@ -157,10 +157,8 @@ class modelo {
         $propiedades=get_class_vars($this->tipoEntidad);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
-
-            if(preg_match_all('/@(tipo|relacion|indice|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir)(.+?)(\n|\*\/)/',$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
-
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=trim($etiqueta);
                     $valor=trim($coincidencias[2][$i]);

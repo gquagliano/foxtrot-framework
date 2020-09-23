@@ -3,5 +3,3 @@
 **/temp/temp-privado/*
 !**/temp/temp-privado/.htaccess
 .vscode
-desarrollo/*
-!desarrollo/aplicaciones/ejemplo

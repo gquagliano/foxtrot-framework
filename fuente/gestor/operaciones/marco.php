@@ -9,8 +9,9 @@
 //Script de PRUEBA para mostrar vistas embebibles en el marco del editor
 
 define('_inc',1);
-include(__DIR__.'/../../servidor/foxtrot.php');
+
 include(__DIR__.'/../funciones.php');
+include(_raizGlobal.'desarrollo/servidor/foxtrot.php');
 
 prepararVariables();
 

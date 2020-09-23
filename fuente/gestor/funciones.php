@@ -14,6 +14,14 @@
 
 defined('_inc') or exit;
 
+define('_raizGlobal',realpath(__DIR__.'/..').'/'); //_raiz (definido por foxtrot.php) apunta al directorio 
+define('_fuente',_raizGlobal.'fuente/');
+define('_produccion',_raizGlobal.'produccion/');
+define('_desarrollo',_raizGlobal.'desarrollo/');
+define('_embeber',_raizGlobal.'embeber/');
+
+include(__DIR__.'/../construir/funciones.php');
+
 function prepararVariables() {
     global $nombreApl,$nombreVista,$esPhp,$plantilla,$aplicacion,
         $rutaApl,$rutaHtml,$rutaCss,$rutaJson,$rutaJsonApl,$rutaVista,
@@ -30,7 +38,7 @@ function prepararVariables() {
     $cliente=$_REQUEST['cliente'];
     if(!$cliente) $cliente='web';
 
-    $rutaApl=__DIR__.'/../../desarrollo/aplicaciones/'.$nombreApl.'/';
+    $rutaApl=_raiz.'/aplicaciones/'.$nombreApl.'/';
     $rutaJsonApl=$rutaApl.'aplicacion.json';
 
     $aplicacion=json_decode(file_get_contents($rutaJsonApl));
@@ -139,102 +147,6 @@ function limpiarHtml($html) {
     return $html;
 }
 
-function copiar($ruta,$filtro,$destino,$rec=true) {
-    if(is_array($filtro)) {
-        foreach($filtro as $f) copiar($ruta,$f,$destino,$rec);
-        return;
-    }
-
-    if(!$filtro) $filtro='{,.}*';
-    
-    if(!file_exists($destino)) mkdir($destino,0755,true);
-
-    $arr=glob($ruta.$filtro,GLOB_BRACE);
-
-    if($rec) $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
-
-    foreach($arr as $archivo) {
-        $archivo=basename($archivo);
-        if($archivo=='.'||$archivo=='..') continue;
-        if(is_dir($ruta.$archivo)) {
-            if($rec) copiar($ruta.$archivo.'/',$filtro,$destino.$archivo.'/',true);
-        } else {
-            copy($ruta.$archivo,$destino.$archivo);
-        }
-    }
-}
-
-function buscarArchivos($ruta,$filtro,$funcion=null) {
-    $res=[];
-
-    $arr=glob($ruta.$filtro,GLOB_BRACE);
-    $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
-    foreach($arr as $archivo) {
-        $archivo=basename($archivo);
-        if($archivo=='.'||$archivo=='..') continue;
-        if(is_dir($ruta.$archivo)) {
-            $res=array_merge($res,buscarArchivos($ruta.$archivo.'/',$filtro,$funcion));
-        } else {
-            $res[]=$ruta.$archivo;
-            if($funcion) call_user_func($funcion,$ruta.$archivo);
-        }
-    }
-
-    return $res;
-}
-
-function comprimirCss($archivo) {
-    $css=file_get_contents($archivo);
-
-    //Compresión rápida (solo limpieza de contenido innecesario)
-    $css=preg_replace('#/\*.*?\*/#sm','',$css);    
-    //$css=preg_replace('#url\s*?\(\s*?(\'|")(.+?)\1\)#msi','url($2)',$css);
-    $css=str_replace(["\r","\n"],'',$css);
-    $css=preg_replace('/[\s]*([,>:;\}\{])[\s]+/m','$1',$css);
-    $css=preg_replace('/\)[\s]+;/m',');',$css); //Evita remover el espacio cuando se encuentra en el selector, ejemplo :not(test) .test
-    $css=preg_replace('/[\s]+\{/m','{',$css);
-    $css=str_replace(';}','}',$css);
-
-    //Subir los @import al comienzo del archivo
-    if(preg_match_all('/(@import url\(.+?\);)/i',$css,$coincidencias)) {
-        foreach($coincidencias[0] as $coincidencia) {
-            $css=str_replace($coincidencia,'',$css);
-            $css=$coincidencia.$css;
-        }
-    }
-
-    file_put_contents($archivo,$css);
-}
-
-function compilarJs($archivos,$destino,$omitirClosure=false) {
-    //Agregaremos el hash del archivo original en el encabezado del archivo compilado a fin de poder omitirlo si el mismo no ha cambiado
-    //En caso de tratarse de múltiples archivos, el hash será sobre la concatenación de todos ellos
-    if(!is_array($archivos)) $archivos=[$archivos];
-    $codigo='';   
-    $arg='';
-    foreach($archivos as $item) {
-        //Soporte para comodines (ejemplo **.js)
-        $rutas=glob($item);
-        foreach($rutas as $ruta) {
-            $arg.=' "'.$ruta.'"'; 
-            $codigo.=file_get_contents($ruta);   
-        }
-    }
-    $hash=md5($codigo);
-
-    if($omitirClosure) {
-        file_put_contents($destino,$codigo);
-    } else {
-        if(file_exists($destino)&&trim(fgets(fopen($destino,'r')))=='//'.$hash) return;
-
-        $comando=_closure.' --js_output_file "'.escapeshellarg($destino).'" '.$arg.' 2&>1';
-        $o=shell_exec($comando);
-        file_put_contents(__DIR__.'/exec.log','# '.$comando.PHP_EOL.trim($o).PHP_EOL.PHP_EOL,FILE_APPEND);
-
-        file_put_contents($destino,'//'.$hash.PHP_EOL.file_get_contents($destino));
-    }
-}
-
 $archivosCssCombinados=[];
 
 function procesarVista($ruta) {
@@ -312,17 +224,6 @@ function comprimirHtml($html) {
         ''
     ],$html);
     return $html;
-}
-
-function eliminarDir($ruta) {
-    if(is_dir($ruta)) {
-        if(substr($ruta,-1)!=DIRECTORY_SEPARATOR) $ruta.=DIRECTORY_SEPARATOR;
-        $archivos=glob($ruta.'*');
-        foreach($archivos as $archivo) eliminarDir($archivo);
-        rmdir($ruta);
-    } elseif(file_exists($ruta)) {
-        unlink($ruta);
-    }
 }
 
 /*function obtenerArgumentos() {

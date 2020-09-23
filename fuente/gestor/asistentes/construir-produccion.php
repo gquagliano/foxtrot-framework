@@ -52,32 +52,7 @@ class construirProduccion extends asistente {
      * @var object $param Parámetros recibidos desde el formulario.
      */
     public function ejecutar($param) {
-        //Registro para depuración
-        $registro=__DIR__.'/../exec.log';
-        if(PHP_OS_FAMILY=='Windows') {
-            $path=shell_exec('echo %PATH%');
-            $cordova_home=shell_exec('echo %CORDOVA_HOME%');
-            $home_var='USERPROFILE';  
-            $home=shell_exec('echo %USERPROFILE%');
-            $android=shell_exec('echo %ANDROID_SDK_ROOT%');
-        } else {
-            $path=shell_exec('echo $PATH');
-            $cordova_home=shell_exec('echo $CORDOVA_HOME');
-            $home_var='HOME';
-            $home=shell_exec('echo $HOME');
-            $android=shell_exec('echo $ANDROID_SDK_ROOT');
-            $java=shell_exec('echo $JAVA_HOME');
-        }
-        $usuario=shell_exec('whoami');
-        file_put_contents($registro,'# '.date('d/m/Y H:i:s').PHP_EOL.
-            '# CWD = '.getcwd().PHP_EOL.
-            '# Usuario = '.$usuario.PHP_EOL.
-            '# PATH = '.trim($path).PHP_EOL.
-            '# CORDOVA_HOME = '.trim($cordova_home).PHP_EOL.
-            '# '.$home_var.' = '.trim($home).PHP_EOL.
-            '# ANDROID_SDK_ROOT = '.trim($android).PHP_EOL.
-            '# JAVA_HOME = '.trim($java).PHP_EOL.PHP_EOL
-        ,FILE_APPEND);    
+        iniciarRegistroExec(); 
 
         $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
 

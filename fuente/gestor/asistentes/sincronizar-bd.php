@@ -228,6 +228,6 @@ class sincronizarBd extends asistente {
 
     protected function registro($valor) {  
         $this->sql.=$valor.PHP_EOL.PHP_EOL;
-        file_put_contents(__DIR__.'/../../../desarrollo/sincronizar.sql',$valor.PHP_EOL.PHP_EOL,FILE_APPEND);
+        file_put_contents(_raiz.'sincronizar.sql',$valor.PHP_EOL.PHP_EOL,FILE_APPEND);
     }
 }

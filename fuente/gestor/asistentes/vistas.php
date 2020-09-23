@@ -28,7 +28,7 @@ class vistas extends asistente {
      * @var string $nombre Nombre de la vista.
      */
     public function eliminar($nombre) {
-        $ruta=__DIR__.'/../../aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
+        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
 
         $archivos=glob($ruta.'cliente/vistas/'.$nombre.'.*');
         foreach($archivos as $archivo) unlink($archivo);

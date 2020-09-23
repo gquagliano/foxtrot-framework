@@ -8,34 +8,38 @@
 
 define('_inc',1);
 
-//Vamos a utilizar código de los asistentes
-//TODO Integrar con los asistentes para no estar vinculando a los archivos de /editor/ desde aquí
-include(__DIR__.'/../fuente/editor/funciones.php');
-include(__DIR__.'/../fuente/editor/asistentes/asistente.php');
+define('_raiz',realpath(__DIR__.'/..').'/');
+define('_gestor',_raiz.'gestor/');
+define('_fuente',_raiz.'fuente/');
+define('_desarrollo',_raiz.'desarrollo/');
+
+include(__DIR__.'/funciones.php');
+
+set_time_limit(3600);
 
 if($_REQUEST['ejecutar']) {
     define('_depuracion',$_REQUEST['depuracion']=='1');
 
     //Crear estructura de directorios
     $directorios=[
-        'cliente',
-        'editor',
-        'editor/img',
-        'editor/operaciones',
-        'editor/plantillas',
-        'recursos',
-        'recursos/componentes',
-        'recursos/css',
-        'recursos/img',
-        'servidor',
-        'servidor/componentes',
-        'servidor/enrutadores',
-        'temp',
-        'temp/temp-privado'
+        _desarrollo.'cliente',
+        _gestor,
+        _gestor.'img',
+        _gestor.'operaciones',
+        _gestor.'plantillas',
+        _desarrollo.'recursos',
+        _desarrollo.'recursos/componentes',
+        _desarrollo.'recursos/css',
+        _desarrollo.'recursos/img',
+        _desarrollo.'servidor',
+        _desarrollo.'servidor/componentes',
+        _desarrollo.'servidor/enrutadores',
+        _desarrollo.'temp',
+        _desarrollo.'temp/temp-privado'
     ];
     foreach($directorios as $dir)
-        if(!file_exists(_desarrollo.$dir))
-            mkdir(_desarrollo.$dir,0755);
+        if(!file_exists($dir))
+            mkdir($dir,0755,true);
 
     ////php, html, css y otros recursos
 
@@ -45,13 +49,13 @@ if($_REQUEST['ejecutar']) {
     copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
     copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');
     copiar(_fuente.'temp/',null,_desarrollo.'temp/');
-    copiar(_fuente.'editor/',$tipos,_desarrollo.'editor/');
-    copiar(_fuente.'editor/img/',null,_desarrollo.'editor/img/');
-    copiar(_fuente.'editor/operaciones/',null,_desarrollo.'editor/operaciones/');
-    copiar(_fuente.'editor/plantillas/',null,_desarrollo.'editor/plantillas/');
-    copiar(_fuente.'editor/asistentes/',null,_desarrollo.'editor/asistentes/');
+    copiar(_fuente.'gestor/',$tipos,_gestor);
+    copiar(_fuente.'gestor/img/',null,_gestor.'img/');
+    copiar(_fuente.'gestor/operaciones/',null,_gestor.'operaciones/');
+    copiar(_fuente.'gestor/plantillas/',null,_gestor.'plantillas/');
+    copiar(_fuente.'gestor/asistentes/',null,_gestor.'asistentes/');
 
-    //Combinar todos los archivos css del framework (excepto el editor) y comprimir
+    //Combinar todos los archivos css del framework (excepto el gestor) y comprimir
     $css='';
     $archivos=[
         _fuente.'recursos/css/bootstrap.min.css',
@@ -74,14 +78,14 @@ if($_REQUEST['ejecutar']) {
     //Remover el directorio recursos/componentes/css (quedó vacío al combinar los css)
     rmdir(_desarrollo.'recursos/componentes/css');
 
-    //Css del editor
+    //Css del gestor
     $css='';
     $archivos=[
-        _fuente.'editor/editor.css'
+        _fuente.'gestor/gestor.css'
     ];
     $archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.edicion.css'));
     foreach($archivos as $arch) $css.=file_get_contents($arch);
-    $ruta=_desarrollo.'editor/editor.css';
+    $ruta=_gestor.'gestor.css';
     file_put_contents($ruta,$css);
     comprimirCss($ruta);
 
@@ -90,7 +94,7 @@ if($_REQUEST['ejecutar']) {
 
     ////js cliente (framework + componentes)
 
-    //Compilar archivo combinado (excepto el editor)
+    //Compilar archivo combinado (excepto el gestor)
     $archivos=[
         _fuente.'cliente/util.js',
         _fuente.'cliente/dom.js',
@@ -113,9 +117,9 @@ if($_REQUEST['ejecutar']) {
     ];
     compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
 
-    //Editor
-    compilarJs(_fuente.'editor/editor.js',_desarrollo.'editor/editor.js',_depuracion);
-    compilarJs(_fuente.'editor/gestor.js',_desarrollo.'editor/gestor.js',_depuracion);
+    //Gestor
+    compilarJs(_fuente.'gestor/editor.js',_gestor.'editor.js',_depuracion);
+    compilarJs(_fuente.'gestor/gestor.js',_gestor.'gestor.js',_depuracion);
 
     //Config.php y .htaccess
     $ruta=$_REQUEST['ruta'];
@@ -219,7 +223,7 @@ if(file_exists(__DIR__.'/../desarrollo/servidor/foxtrot.php')) {
         <div class="alert alert-success mt-5" role="alert">
             ¡Foxtrot fue construido en el directorio <code>desarrollo</code>!
         </div>
-        <p><a href="../desarrollo/editor" class="btn btn-success btn-sm">Acceder al gestor de aplicaciones</a></p>
+        <p><a href="../gestor" class="btn btn-success btn-sm">Acceder al gestor de aplicaciones</a></p>
         <p>Es posible que sea necesario completar la configuración en <code>desarrollo/config.php</code>.</p>
 <?php
 }

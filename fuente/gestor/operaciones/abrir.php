@@ -9,8 +9,9 @@
 //Script de PRUEBA para abrir los datos en el editor
 
 define('_inc',1);
-include(__DIR__.'/../../servidor/foxtrot.php');
+
 include(__DIR__.'/../funciones.php');
+include(_raizGlobal.'desarrollo/servidor/foxtrot.php');
 
 header('Content-Type: text/plain; charset=utf-8',true);
 

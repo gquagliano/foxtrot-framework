@@ -16,10 +16,10 @@ include(__DIR__.'/gestor.php');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../recursos/css/foxtrot.css">
-    <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="../desarrollo/recursos/css/foxtrot.css">
+    <link rel="stylesheet" href="gestor.css">
     <title>Gestor de aplicaciones</title>
-    <link rel="icon" type="image/png" href="../recursos/img/favicon.png">
+    <link rel="icon" type="image/png" href="../desarrollo/recursos/img/favicon.png">
   </head>
   <body class="foxtrot-gestor">
 
@@ -315,7 +315,7 @@ asistentes::obtenerAsistente('construir-produccion')->obtenerFormulario();
     </div>
 
     
-    <script src="../cliente/foxtrot.js"></script>
+    <script src="../desarrollo/cliente/foxtrot.js"></script>
     <script>
     "use strict";
     var nombreAplicacion="<?=_gestorAplicacion?>";

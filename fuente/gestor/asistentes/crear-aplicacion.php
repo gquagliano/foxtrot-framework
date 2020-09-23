@@ -44,7 +44,7 @@ class crearAplicacion extends asistente {
             <div class="col-sm-9">
                 <select class="custom-select" name="tema">
 <?php
-        $archivos=glob(__DIR__.'/../../recursos/css/tema-*.css');
+        $archivos=glob(_raiz.'recursos/css/tema-*.css');
         foreach($archivos as $archivo) {
             $nombre=preg_replace('/^tema-/','',pathinfo($archivo)['filename']);
             echo '<option value="'.$nombre.'">'.$nombre.'</option>';
@@ -63,10 +63,10 @@ class crearAplicacion extends asistente {
     public function ejecutar($parametros) {
         if(!$parametros->nombre) gestor::error('Ingresá el nombre de la aplicación.');
         
-        $ruta=__DIR__.'/../../../desarrollo/aplicaciones/'.$parametros->nombre.'/';
+        $ruta=_raiz.'aplicaciones/'.$parametros->nombre.'/';
         if(file_exists($ruta)) gestor::error('La aplicación ya existe.');
 
-        $rutaConfig=__DIR__.'/../../../desarrollo/config.php';
+        $rutaConfig=_raiz.'config.php';
 
         if($parametros->dominio) {                   
             //Verificar si el dominio está libre
@@ -110,7 +110,7 @@ class crearAplicacion extends asistente {
 
         if($parametros->dominio) {   
             //Intentar configurar dominio
-            $rutaPlantillaConfig=__DIR__.'/../../../desarrollo/config-ejemplo.php';
+            $rutaPlantillaConfig=_raiz.'config-ejemplo.php';
             $config=null;
             if(file_exists($ruta)) {
                 $config=file_get_contents($rutaConfig);

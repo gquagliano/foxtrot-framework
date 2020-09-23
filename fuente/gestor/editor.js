@@ -137,7 +137,7 @@ var editor=new function() {
                 timeout=0;
 
             if(ayuda) {
-                document.crear("<img src='"+editor.urlBase+"editor/img/ayuda.png'>")
+                document.crear("<img src='"+editor.urlBase+"../gestor/img/ayuda.png'>")
                     .atributo("title",ayuda)
                     .anexarA(label);
             }
@@ -1125,7 +1125,7 @@ var editor=new function() {
         var html=ui.obtenerHtml(modo!="embebible");
 
         new ajax({
-            url:this.urlBase+"editor/operaciones/guardar.php",
+            url:this.urlBase+"../gestor/operaciones/guardar.php",
             parametros:{
                 previsualizar:previsualizar?"1":"0",
                 aplicacion:apl,
@@ -1174,7 +1174,7 @@ var editor=new function() {
         document.body.agregarClase("trabajando");
 
         new ajax({
-            url:this.urlBase+"editor/operaciones/abrir.php",
+            url:this.urlBase+"../gestor/operaciones/abrir.php",
             parametros:{
                 aplicacion:opciones.aplicacion,
                 vista:opciones.vista,
@@ -1348,7 +1348,7 @@ var editor=new function() {
         localStorage.setItem("_urlBase",this.urlBase);
         
         doc.body.agregarClase("foxtrot-modo-edicion");
-        doc.head.anexar("<link rel='stylesheet' href='"+this.urlBase+"editor/editor.css'>");
+        doc.head.anexar("<link rel='stylesheet' href='"+this.urlBase+"../gestor/gestor.css'>");
 
         prepararComponentesInsertados();
 

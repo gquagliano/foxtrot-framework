@@ -8,7 +8,9 @@
 
 define('_inc',1);
 
-include(__DIR__.'/../servidor/foxtrot.php');
+include(__DIR__.'/funciones.php');
+include(_raizGlobal.'desarrollo/servidor/foxtrot.php');
+
 foxtrot::inicializar();
 ?>
 <!doctype html>
@@ -16,10 +18,10 @@ foxtrot::inicializar();
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../recursos/css/foxtrot.css">
-    <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="../desarrollo/recursos/css/foxtrot.css">
+    <link rel="stylesheet" href="gestor.css">
     <title>Editor de vistas</title>
-    <link rel="icon" type="image/png" href="../recursos/img/favicon.png">
+    <link rel="icon" type="image/png" href="../desarrollo/recursos/img/favicon.png">
   </head>
   <body class="foxtrot-editor">
 
@@ -53,7 +55,7 @@ foxtrot::inicializar();
     
     <iframe id="foxtrot-marco" src="about:blank"></iframe>
 
-    <script src="../cliente/foxtrot.js"></script>    
+    <script src="../desarrollo/cliente/foxtrot.js"></script>    
     <script src="editor.js"></script>
     <script>
     "use strict";

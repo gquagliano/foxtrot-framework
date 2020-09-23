@@ -57,7 +57,7 @@ class crearModelo extends asistente {
     public function ejecutar($param) {
         if(!$param->nombre||!$param->entidad) gestor::error('Ingresá el nombre del modelo y el nombre de la entidad.');
         
-        $ruta=__DIR__.'/../../../desarrollo/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/';
+        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/';
         $rutaModelo=$ruta.$param->nombre.'.php';
         $rutaEntidad=$ruta.$param->entidad.'.php';
 

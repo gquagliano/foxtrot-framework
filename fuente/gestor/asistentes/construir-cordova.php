@@ -87,12 +87,12 @@ class construirCordova extends asistente {
 
         if(!$param->inicio) gestor::error('Ingresá el nombre de la vista inicial.');
 
-        $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
-        if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe.');
-
         //Primero, construir aplicación
         asistentes::obtenerAsistente('construir-produccion')
             ->ejecutar($param);
+
+        $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
+        if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe o no es una vista Cordova.');
 
         //Limpiar directorio
         if($param->limpiar) {
@@ -145,18 +145,16 @@ class construirCordova extends asistente {
               
             chdir($dir);
             
-            $registro=__DIR__.'/../exec.log';
-            
             $pl=$param->plataforma;
             if(!$pl) $pl='android';
 
             $comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
             $o=shell_exec($comando);
-            file_put_contents($registro,'# '.$comando.PHP_EOL.trim($o).PHP_EOL.PHP_EOL,FILE_APPEND);
+            registroExec($comando,$o);
 
             $comando='cordova run '.escapeshellarg($pl).' 2>&1';
             $o=shell_exec($comando);
-            file_put_contents($registro,'# '.$comando.PHP_EOL.trim($o).PHP_EOL.PHP_EOL,FILE_APPEND);
+            registroExec($comando,$o);
         }
     }
     

@@ -194,7 +194,7 @@ class foxtrot {
 
         //foxtrot::inicializar(false) saltea la carga de una aplicación
         //foxtrot::inicializar() carga la aplicación utilizando el enrutador
-        if($aplicacion!==false) self::cargarAplicacion();
+        if($aplicacion!==false) self::cargarAplicacion($aplicacion);
     }
 
     public static function error() {

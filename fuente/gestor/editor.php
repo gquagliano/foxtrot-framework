@@ -11,7 +11,7 @@ define('_inc',1);
 include(__DIR__.'/funciones.php');
 include(_raizGlobal.'desarrollo/servidor/foxtrot.php');
 
-foxtrot::inicializar();
+foxtrot::inicializar(false);
 ?>
 <!doctype html>
 <html lang="es">

@@ -589,7 +589,9 @@ var componente=new function() {
             this.contenedor.agregarClase("contenedor"); //.contenedor hace referencia al elemento que contiene los hijos, a diferencia de
                                                         //.container que es la clase de Bootstrap.
             //if(!this.hijos.length) this.contenedor.agregarClase("vacio");
-        }        
+        }
+
+        if(!this.contenidoEditable) this.elemento.propiedad("contenteditable",false);
 
         this.establecerId();
 

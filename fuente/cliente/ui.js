@@ -1305,6 +1305,7 @@ var ui=new function() {
 
         //Si estamos en el marco del editor, utilizar los objetos de la ventana principal
         if(window.parent.ui!=ui&&window.parent.ui.enModoEdicion()) {
+            modoEdicion=true;
             ui=window.parent.ui;
             ui.preparar(document);
             ui.inicializar(nombreVista,opciones);

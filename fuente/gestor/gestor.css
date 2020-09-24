@@ -477,10 +477,12 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {
     display: block;
 }
+.foxtrot-modo-edicion [contenteditable=true] {
+    outline: none!important;
+}
 .foxtrot-modo-edicion [contenteditable=true],
 .foxtrot-modo-edicion [contenteditable=true] * {
     cursor: text;
-    outline: none!important;
 }
 .foxtrot-modo-edicion [contenteditable=true] .componente {
     cursor: pointer;

@@ -1254,6 +1254,27 @@ var editor=new function() {
     };
 
     /**
+     * Inicia la detección de nodos insertados, para intentar determinar si se insertan nodos basura, por ejemplo agregados por un plugin del
+     * navegador (Adblock, etc.) que tenemos que remover al guardar.
+     * @param {Document} doc
+     */
+    this.detectarNodosInsertados=function(doc) {
+        var obs=new MutationObserver(function(mutaciones) {
+            mutaciones.forEach(function(mutacion) {
+                if(typeof mutacion.addedNodes!=="undefined") {
+                    mutacion.addedNodes.forEach(function(nodo) {
+                        //En ninguna parte del editor se inserta un tag <style> (los estilos se trabajan directamente sobre la hoja de estilos enlazada),
+                        //por lo tanto podemos descartar los tags <style> insertados. Esto interceptará (al menos) el bloqueador de publicidad de Opera.
+                        //TODO Probar otros plugins populares como Adblock
+                        if(nodo.nodeName=="STYLE") nodo.remover();
+                    });
+                }
+            });
+        });
+        obs.observe(doc,{childList:true,subtree:true});
+    };
+
+    /**
      * Activa el editor y construye su interfaz (fuera del marco).
      */
     this.activar=function(opciones) {
@@ -1343,6 +1364,8 @@ var editor=new function() {
      */
     this.ejecutar=function() {
         var doc=ui.obtenerDocumento();
+
+        this.detectarNodosInsertados(doc);
         
         //Establecer _urlBase para poder ejecutar las vistas Cordova dentro del marco
         localStorage.setItem("_urlBase",this.urlBase);

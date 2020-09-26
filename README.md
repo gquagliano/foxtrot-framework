@@ -10,19 +10,14 @@ Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, co
 
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](https://github.com/gquagliano/experimental-foxtrot-framework/wiki)** (en redacción).
 
-**[Guía de inicio rápido](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)**
+**[Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)**
 
-**[Mirá el video de demostración de una aplicación Cordova](https://youtu.be/hNM4unnxXJg)**
+**[Video de introducción](https://youtu.be/j0hDNhlKW3Q)**  
+Instalación, descripción del gestor, el editor y la estructura del sistema, y vistazo general a las principales funciones.
 
-**[Mirá el video de demostración de los asistentes](https://youtu.be/BuxehZ6bPkY)**
-
-**[Mirá el video de demostración general](https://youtu.be/J7Ru9Mfumr8)**
-
-**[Accedé a la aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**
-
+**[Aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**  
 Usuario: admin  
-Contraseña: test
-
+Contraseña: test  
 *Nota: La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
 
 ### Estado

@@ -8,6 +8,8 @@
 
 defined('_inc') or exit;
 
+error_reporting(E_ERROR | E_WARNING);
+
 /**
  * Clase principal del sistema (prototipo).
  */
@@ -179,7 +181,6 @@ class foxtrot {
     }
 
     public static function inicializar($aplicacion=null) {
-        error_reporting(E_ALL^E_NOTICE^E_DEPRECATED);
         //TODO Registro de errores
 
         self::definirConstantes();

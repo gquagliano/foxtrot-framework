@@ -1,7 +1,6 @@
 Options -Indexes -MultiViews
 
 RewriteEngine On
-RewriteBase /experimental-foxtrot-framework/desarrollo/
 
 ## Redireccionamiento a HTTPS
 

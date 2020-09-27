@@ -12,6 +12,10 @@ body * {
     backface-visibility: hidden;
 }
 
+body {    
+    overflow-x: hidden;
+}
+
 #foxtrot-cuerpo {
     min-height: 100vh;
     position: relative;

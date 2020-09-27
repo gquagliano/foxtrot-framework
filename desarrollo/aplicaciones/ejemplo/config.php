@@ -12,5 +12,7 @@ configuracion::establecer([
     'enrutador'=>'miEnrutador',
     'usuarioBd'=>'root',
     'contrasenaBd'=>'toor',
-    'nombreBd'=>'test'
+    'nombreBd'=>'test',
+    //'recaptchaPublico'=>'',
+    //'recaptchaPrivado'=>''
 ]);

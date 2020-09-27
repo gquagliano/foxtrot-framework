@@ -22,6 +22,10 @@ class inicio extends \controlador {
      * @param object $campos Objeto con los valores del formulario.
      */
     public function iniciarSesion($campos) {
+        //Configurar credenciales en config.php y remover comentario para activar Recaptcha
+        //if(!\foxtrot::obtenerInstanciaModulo('recaptcha')->verificar($campos->recaptcha))
+        //    $this->cliente->errorRecaptcha();
+
         $usuarios=new usuarios;
 
         $usuario=$usuarios->buscarUsuario($campos->u);

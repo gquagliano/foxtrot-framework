@@ -146,6 +146,35 @@ function compilarJs($archivos,$destino,$omitirClosure=false) {
     }
 }
 
+function compilarFoxtrotJs($destino,$omitirClosure,$omitirModulos=false) {
+    $archivos=[
+        _fuente.'cliente/util.js',
+        _fuente.'cliente/dom.js',
+        _fuente.'cliente/arrastra.js',
+        _fuente.'cliente/editable.js',
+        _fuente.'cliente/servidor.js',
+        _fuente.'cliente/sesion.js',
+        _fuente.'cliente/ajax.js',
+        _fuente.'cliente/aplicacion.js',
+        _fuente.'cliente/componente.js',
+        _fuente.'cliente/controlador.js',
+        _fuente.'cliente/modulo.js',
+        _fuente.'cliente/enrutador.js',
+        _fuente.'cliente/ui.js',
+        _fuente.'cliente/ui.animaciones.js',
+        _fuente.'cliente/ui.menu.js',
+        _fuente.'cliente/ui.dialogos.js',
+        _fuente.'cliente/expresion.js',
+        _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
+        _fuente.'cliente/enrutadores/**.js'
+    ];
+    if(!$omitirModulos) {
+        //Integrar todos los módulos
+        $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.js'));
+    }
+    compilarJs($archivos,$destino,$omitirClosure);
+}
+
 function eliminarDir($ruta) {
     if(is_dir($ruta)) {
         if(substr($ruta,-1)!=DIRECTORY_SEPARATOR) $ruta.=DIRECTORY_SEPARATOR;

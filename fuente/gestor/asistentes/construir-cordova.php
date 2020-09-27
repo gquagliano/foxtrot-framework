@@ -55,6 +55,13 @@ class construirCordova extends asistente {
                 </div>
             </div>
         </div>        
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Incluir módulos</label>
+            <div class="col-sm-9">
+                <!--TODO Listado de módulos disponibles (checkbox)-->
+                <textarea class="form-control" name="modulos" rows="4" placeholder="Uno por línea."><?=$json->embebible->modulos?></textarea>
+            </div>
+        </div>
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="depuracion" checked id="ce-depuracion">
             <label class="custom-control-label" for="ce-depuracion">Depuración</label>
@@ -89,7 +96,7 @@ class construirCordova extends asistente {
 
         //Primero, construir aplicación
         asistentes::obtenerAsistente('construir-produccion')
-            ->ejecutar($param);
+            ->ejecutar($param,false);
 
         $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
         if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe o no es una vista Cordova.');

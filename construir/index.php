@@ -94,37 +94,16 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     file_put_contents($ruta,$css);
     comprimirCss($ruta);
 
-    ////Librerías de terceros (se compian tal cual)
-    //TOOD
+    ////Módulos (se copian tal cual)
 
-    ////js cliente (framework + componentes)
+    //Si bien los módulos se integrarán en foxtrot.js, deben copiarse a desarrollo ya que se utilizarán durante la construcción para producción
+    copiar(_fuente.'cliente/modulos/',null,_desarrollo.'cliente/modulos/');
 
-    //Compilar archivo combinado (excepto el gestor)
-    $archivos=[
-        _fuente.'cliente/util.js',
-        _fuente.'cliente/dom.js',
-        _fuente.'cliente/arrastra.js',
-        _fuente.'cliente/editable.js',
-        _fuente.'cliente/servidor.js',
-        _fuente.'cliente/sesion.js',
-        _fuente.'cliente/ajax.js',
-        _fuente.'cliente/aplicacion.js',
-        _fuente.'cliente/componente.js',
-        _fuente.'cliente/controlador.js',
-        _fuente.'cliente/modulo.js',
-        _fuente.'cliente/enrutador.js',
-        _fuente.'cliente/ui.js',
-        _fuente.'cliente/ui.animaciones.js',
-        _fuente.'cliente/ui.menu.js',
-        _fuente.'cliente/ui.dialogos.js',
-        _fuente.'cliente/expresion.js',
-        _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
-        _fuente.'cliente/enrutadores/**.js'
-    ];
-    //Integrar todos los módulos (serán optativos al pasar a producción)
-    $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.js'));
-    compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
+    ////js cliente (framework + componentes + modulos)
 
+    //Compilar archivo combinado (excepto el gestor) integrando todos los módulos (serán optativos al pasar a producción)
+    compilarFoxtrotJs(_desarrollo.'cliente/foxtrot.js',_depuracion);
+    
     //Gestor
     compilarJs(_fuente.'gestor/editor.js',_gestor.'editor.js',_depuracion);
     compilarJs(_fuente.'gestor/gestor.js',_gestor.'gestor.js',_depuracion);

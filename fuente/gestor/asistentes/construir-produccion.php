@@ -26,7 +26,15 @@ class construirProduccion extends asistente {
      * Imprime el formulario de configuración del asistente.
      */
     public function obtenerFormulario() {
+        $json=gestor::obtenerJsonAplicacion();
 ?>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Incluir módulos</label>
+            <div class="col-sm-9">
+                <!--TODO Listado de módulos disponibles (checkbox)-->
+                <textarea class="form-control" name="modulos" rows="4" placeholder="Uno por línea."><?=$json->produccion->modulos?></textarea>
+            </div>
+        </div>
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="depuracion" checked id="cp-depuracion">
             <label class="custom-control-label" for="cp-depuracion">Depuración</label>
@@ -50,8 +58,16 @@ class construirProduccion extends asistente {
     /**
      * Ejecuta el asistente.
      * @var object $param Parámetros recibidos desde el formulario.
+     * @var bool $formulario Estalecer a false si se está invocando el método desde el código, en lugar desde el formulario del asistente.
      */
-    public function ejecutar($param) {
+    public function ejecutar($param,$formulario=true) {
+        if($formulario) {
+            //Almacenar parámetros en el JSON para la próxima ejecución
+            $this->actualizarJson($param);
+        }
+
+        $modulos=explode("\n",$param->modulos);
+
         iniciarRegistroExec(); 
 
         $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
@@ -60,10 +76,23 @@ class construirProduccion extends asistente {
         $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
         copiar(_desarrollo.'cliente/',$tipos,_produccion.'cliente/');
         copiar(_desarrollo.'servidor/',$tipos,_produccion.'servidor/');
+
         //Omitir los íconos
         copiar(_desarrollo.'recursos/css/',$tipos,_produccion.'recursos/css/');
         copiar(_desarrollo.'recursos/img/',$tipos,_produccion.'recursos/img/');
         copiar(_desarrollo.'recursos/componentes/img/',$tipos,_produccion.'recursos/componentes/img/');
+
+        //Eliminar módulos innecesarios, ya que copiamos todo servidor en forma recursiva
+        $archivos=glob(_produccion.'servidor/modulos/*');
+        foreach($archivos as $archivo) {
+            if(!in_array(basename($archivo),$modulos))
+                eliminarDir($archivo);
+        }
+        //Eliminar todos los módulos en cliente ya que se integrarán en el js de la aplicación solo los necesarios
+        eliminarDir(_produccion.'cliente/modulos');
+
+        //Construir foxtrot.js sin módulos
+        compilarFoxtrotJs(_produccion.'cliente/foxtrot.js',$param->depuracion,true);
 
         //Intentar copiar y configurar .htaccess y config.php (no reemplazar)
         if(!file_exists(_produccion.'.htaccess')) {
@@ -130,13 +159,33 @@ class construirProduccion extends asistente {
                 //Imágenes, etc.
                 copy($archivo,$destino);
             }
+        }        
+
+        //Combinar los estilos de los módulos en el archivo CSS principal de la aplicación
+        $css='';
+        foreach($modulos as $modulo) {
+            $ruta=_desarrollo.'cliente/modulos/'.$modulo.'/';
+            if(!file_exists($ruta)) continue;
+            $archivos=buscarArchivos($ruta,'*.css');
+            foreach($archivos as $archivo) $css.=file_get_contents($archivo);
         }
+        $ruta=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
+        if(file_exists($ruta)) $css.=file_get_contents($ruta);
+        file_put_contents($ruta,$css);
+        comprimirCss($ruta);
 
         //Combinar los controladores en el archivo JS principal de la aplicación
         $archivos=[
             _desarrollo.$rutaAplicacion.'cliente/aplicacion.js'
         ];
         $archivos=array_merge($archivos,buscarArchivos(_desarrollo.$rutaAplicacion.'cliente/controladores/','*.js'));
+
+        //Combinar los módulos en el archivo JS principal de la aplicación
+        foreach($modulos as $modulo) {
+            $ruta=_desarrollo.'cliente/modulos/'.$modulo.'/';
+            if(!file_exists($ruta)) continue;
+            $archivos=array_merge($archivos,buscarArchivos($ruta,'*.js'));
+        }
 
         $jsonApl=json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'));
 
@@ -181,5 +230,13 @@ class construirProduccion extends asistente {
                 }
             }
         }
+    }
+    
+    protected function actualizarJson($param) {
+        $json=gestor::obtenerJsonAplicacion();
+        $json->produccion=[
+            'modulos'=>$param->modulos
+        ];
+        gestor::actualizarJsonAplicacion($json);  
     }
 }

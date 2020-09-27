@@ -55,7 +55,7 @@ class configuracion {
     public static function obtener($nombre) {
         //Es posible que se soliciten propiedades que no existen y que hayan sido creadas con establecer()
         if(!property_exists(self::class,$nombre)) {
-            if(array_key_exists($nombre,self::$otrosParametros)) return null;
+            if(!array_key_exists($nombre,self::$otrosParametros)) return null;
             return self::$otrosParametros[$nombre];
         }
         return self::$$nombre;

@@ -153,41 +153,33 @@ function procesarVista($ruta) {
     global $archivosCssCombinados;
 
     $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
+    $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
 
     $html=file_get_contents($ruta);
 
     $cordova=preg_match('/\{.*?cordova.*?:.*?true.*?\}/i',$html)==1;
 
-    //Combinar archivos CSS
+    //Combinar archivos CSS en aplicacion.css
     if(preg_match_all('#(/\*combinar( tema)?\*/"|[ \t]*?<link .+?href=")(.+?)(",/\*combinar( tema)?\*/|".*? combinar.*>).*?[\r\n]*#m',$html,$coincidencias)) {
-        $nombres=implode(',',$coincidencias[3]);
-        if(array_key_exists($nombres,$archivosCssCombinados)) {
-            $salida=$archivosCssCombinados[$nombres];
-        } else {
-            $css='';
-            foreach($coincidencias[3] as $archivo) {
+        $nombres=$coincidencias[3];
+
+        //Agregar los archivos que aún no estén en aplicacion.css
+        foreach($nombres as $archivo) {
+            if(!array_key_exists($archivo,$archivosCssCombinados)) {
+
                 //TODO Esto depende del enrutador... Por el momento queda harcodeado
                 $archivo=preg_replace('#^aplicacion/#',$rutaAplicacion,$archivo);
 
-                if(file_exists(_desarrollo.$archivo)) $css.=file_get_contents(_desarrollo.$archivo);
+                if(file_exists(_desarrollo.$archivo)) file_put_contents($rutaCssCombinado,file_get_contents(_desarrollo.$archivo),FILE_APPEND);
+
+                $archivosCssCombinados[]=$archivo;
             }
-
-            //Buscar una ruta libre
-            $i=0;
-            $salida=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
-            while(file_exists($salida)) {
-                $i++;
-                $salida=_produccion.$rutaAplicacion.'recursos/css/aplicacion-'.$i.'.css';
-            }
-
-            //Cuardar y comprimir
-            file_put_contents($salida,$css);
-            comprimirCss($salida);
-
-            $archivosCssCombinados[$nombres]=$salida;
         }
 
-        $nombre=basename($salida);
+        //Comprimir todo
+        comprimirCss($rutaCssCombinado);
+
+        $nombre=basename($rutaCssCombinado);
         $href=$cordova?$rutaAplicacion.'recursos/css/'.$nombre:'aplicacion/recursos/css/'.$nombre;
         $tag=$cordova?'"'.$href.'",'.PHP_EOL:'    <link rel="stylesheet" href="'.$href.'">'.PHP_EOL;
         

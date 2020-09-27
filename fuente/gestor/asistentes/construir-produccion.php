@@ -217,6 +217,12 @@ class construirProduccion extends asistente {
         copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,css,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');
 
         //Procesar las vistas
+
+        //Limpiar css
+        $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
+        file_put_contents($rutaCssCombinado,'');
+
+        //Procesar
         $archivos=buscarArchivos(_produccion.$rutaAplicacion.'cliente/vistas/','*.{php,html}');
         foreach($archivos as $archivo) procesarVista($archivo);
 

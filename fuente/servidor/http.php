@@ -12,9 +12,10 @@ defined('_inc') or exit;
  * Métodos útiles para realizar consultas HTTP.
  */
 class http {
-    protected $curl;
-    protected $curlAbierto=false;
-    protected $codigo;
+    protected static $curl;
+    protected static $curlAbierto=false;
+    protected static $codigo=null;
+    protected static $error=null;
 
     /**
      * Devuelve la última instancia de CURL.
@@ -30,6 +31,14 @@ class http {
      */
     public static function obtenerCodigoHttp() {
         return self::$codigo;
+    }
+
+    /**
+     * Devuelve el error de la última solicitud.
+     * @return string
+     */
+    public static function obtenerError() {
+        return self::$error;
     }
 
     /**
@@ -59,21 +68,23 @@ class http {
             }
         }
 
-        $opciones=array_merge([
+        $arrayOpciones=[
             CURLOPT_URL=>$url,
             CURLOPT_SSL_VERIFYPEER=>false,
             CURLOPT_POST=>$tipo=='post',
             CURLOPT_RETURNTRANSFER=>true,
             CURLOPT_POSTFIELDS=>$tipo=='post'?$campos:null,
             CURLOPT_HTTPHEADER=>$encabezados
-        ],$opciones);
+        ];
+        foreach($opciones as $clave=>$valor) $arrayOpciones[$clave]=$valor;
 
-        curl_setopt_array(self::$curl,$opciones);
+        curl_setopt_array(self::$curl,$arrayOpciones);
 
         $res=curl_exec(self::$curl);
 
         self::$codigo=curl_getinfo(self::$curl,CURLINFO_HTTP_CODE);
-        //TODO Extraer otros parámetros útiles
+        self::$error=curl_error(self::$curl);
+        //TODO Extraer otros parámetros útiles        
 
         if(!$mantener) {
             curl_close(self::$curl);

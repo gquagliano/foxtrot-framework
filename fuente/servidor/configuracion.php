@@ -25,6 +25,8 @@ class configuracion {
     public static $nombreBd;
     public static $prefijoBd='';
 
+    protected static $otrosParametros=[];
+
     public static function cargar() {
         include(_raiz.'config.php');
     }
@@ -35,6 +37,27 @@ class configuracion {
     }
 
     public static function establecer($obj) {
-        foreach($obj as $c=>$v) self::$$c=$v;
+        foreach($obj as $c=>$v) {
+            //Es posible que se establezcan propiedades que no existen
+            if(!property_exists(self::class,$c)) {
+                self::$otrosParametros[$c]=$v;
+            } else {
+                self::$$c=$v;
+            }
+        }
+    }
+
+    /**
+     * Devuelve el valor de un parámetro.
+     * @var string $nombre Nombre del parámetro.
+     * @return mixed
+     */
+    public static function obtener($nombre) {
+        //Es posible que se soliciten propiedades que no existen y que hayan sido creadas con establecer()
+        if(!property_exists(self::class,$nombre)) {
+            if(array_key_exists($nombre,self::$otrosParametros)) return null;
+            return self::$otrosParametros[$nombre];
+        }
+        return self::$$nombre;
     }
 }

@@ -120,7 +120,7 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 
 Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en muchos casos, el uso de código SQL, aumentando así la seguridad y mejorando el diseño de los objetos de la aplicación. Se define íntegramente mediante objetos, contribuyendo con el control de errores y el autocompletado al escribir código. El ORM permite crear y mantener actualizada la estructura de la base de datos a partir del código PHP del modelo de datos. Además, como todo en Foxtrot, sus métodos están en español.
 
-[Documentación del ORM](docs/api/orm.md).
+[Documentación del ORM](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM).
 
 **Intérprete lógico-matemático (JS)**
 

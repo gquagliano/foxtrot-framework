@@ -165,7 +165,7 @@ Si bien en PHP, PDO suele ser suficiente como ORM, el ORM de Foxtrot persigue lo
 - Al definirse íntegramente mediante objetos, contribuye con el control de errores y el autocompletado al escribir código.
 - Permite crear y mantener actualizada la estructura de la base de datos a partir del código PHP del modelo de datos.
 
-[Documentación del ORM](api/orm.md).
+[Documentación del ORM](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM).
 
 **Automatización**
 

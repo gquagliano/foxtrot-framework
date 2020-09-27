@@ -173,7 +173,7 @@ var editor=new function() {
                 campo.anexar("<option value=''></option>");
 
                 //Costruir opciones
-                prop.opciones.forEach(function(clave,etiqueta) {
+                prop.opciones.porCada(function(clave,etiqueta) {
                     campo.anexar(
                         document.crear("<option>")
                             .valor(clave)
@@ -345,7 +345,7 @@ var editor=new function() {
                 if(tipos.hasOwnProperty(tipo)) tipos[tipo]++; else tipos[tipo]=1;
             
                 var propiedadesComponente=componente.obtenerListadoPropiedades(tamanoActual);
-                propiedadesComponente.forEach(function(grupo,props) {
+                propiedadesComponente.porCada(function(grupo,props) {
                     if(!propiedades.hasOwnProperty(grupo)) propiedades[grupo]={};
                     Object.assign(propiedades[grupo],props);
                 });
@@ -353,7 +353,7 @@ var editor=new function() {
 
             //Título
             var titulo="";
-            tipos.forEach(function(tipo,cantidad) {
+            tipos.porCada(function(tipo,cantidad) {
                 if(titulo!="") titulo+=", ";
                 titulo+=tipo;
                 if(cantidad>1) titulo+="("+cantidad+")";

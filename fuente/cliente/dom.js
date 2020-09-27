@@ -607,7 +607,7 @@
 
         //Objeto de estilos
         var t=this;
-        estilo.forEach(function(clave,valor) {
+        estilo.porCada(function(clave,valor) {
             t.estilos(clave,valor);
         });
 

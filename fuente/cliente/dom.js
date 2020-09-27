@@ -918,7 +918,8 @@
             return this;
         }
 
-        var meta=this.metadato("eventos");
+        var meta=this.metadato("eventos"),
+            fn=null;
 
         if(meta) {
             if(util.esIndefinido(nombre)) {
@@ -945,10 +946,11 @@
 
             //Buscar la funcion asignada al listener (que difiere de la función del usuario ya que es un contenedor)
             if(util.esIndefinido(funcion._id)) return this;
-            var fn=meta[nombre][funcion._id][1];
+            var obj=meta[nombre][funcion._id];
+            if(typeof obj!=="undefined") fn=obj[1];
         }
         
-        this.removeEventListener(nombre,fn);
+        if(fn) this.removeEventListener(nombre,fn);
 
         return this;
     };

@@ -114,12 +114,17 @@ var componenteBuscador=function() {
             }
         });
 
-        this.elemento.evento("focusout",function(ev) {
+        var fn=function(ev) {
             t.abortarBusqueda();
             t.cerrarResultados();
             //Revertir el valor del campo cuando se pierda el foco sin haber hecho una nueva selección
             t.campo.valor(t.etiquetaActual);
-        });
+        };
+
+        this.elemento.evento("focusout",fn);
+
+        window.removerEvento("resize scroll mousewheel",fn)
+            .evento("resize scroll mousewheel",fn);
 
         //this.establecerEventosComponente();
         return this;
@@ -218,8 +223,18 @@ var componenteBuscador=function() {
      */
     this.mostrarResultados=function() {
         if(this.elementoResultados) this.elementoResultados.remover();
-        this.elementoResultados=document.crear("<div class='resultados-busqueda'>");
-        this.elemento.anexar(this.elementoResultados);
+        this.elementoResultados=document.crear("<div class='buscador-resultados-busqueda'>");
+        ui.obtenerCuerpo().anexar(this.elementoResultados);       
+        
+        //Posicionamiento
+        var posicion=this.elemento.posicionAbsoluta(),
+            alto=this.elemento.alto(),
+            ancho=this.elemento.ancho();
+        this.elementoResultados.estilos({
+            left:posicion.x,
+            top:posicion.y+alto,
+            width:ancho
+        });
 
         if(!this.resultados.length) {
             this.elementoResultados.anexar("<span class='sin-datos'>No se encontraron coincidencias.</span>");
@@ -244,17 +259,16 @@ var componenteBuscador=function() {
                     .establecerHtml(etiqueta)
                     .evento("mousedown",clickItem)
             );
-        });
+        }); 
 
         //Abrir hacia arriba si no entra en la pantalla
-        var pos=this.elementoResultados.posicionAbsoluta(),
-            alto=this.elementoResultados.alto(),
-            altoVentana=window.alto(),
-            c="desplegar-arriba";
-        if(pos.y+alto+15>altoVentana) {
-            this.elemento.agregarClase(c);
-        } else {
-            this.elemento.removerClase(c);
+        var posResultados=this.elementoResultados.posicionAbsoluta(),
+            altoResultados=this.elementoResultados.alto(),
+            altoVentana=window.alto();
+        if(posResultados.y+altoResultados+15>altoVentana) {
+            this.elementoResultados.estilos({
+                top:posicion.y-altoResultados
+            });
         }
     };
 

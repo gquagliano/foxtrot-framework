@@ -162,7 +162,7 @@ var componenteArchivo=function() {
             },
             retorno:function(ret) {
                 if(ret) {
-                    ret.forEach(function(clave,valor) {
+                    ret.porCada(function(clave,valor) {
                         var indice=parseInt(clave.substring(clave.indexOf("-")+1));
                         if(isNaN(indice)) return;
                         t.archivos[indice].archivo=valor;

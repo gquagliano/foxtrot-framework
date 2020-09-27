@@ -227,7 +227,7 @@ var componenteAlternar=function() {
             if(typeof valor==="undefined") return grupo.valorActivo;            
 
             //Activar el componente que coincida con el valor asignado y desactivar el resto
-            grupo.componentes.forEach(function(valorComponente,componente) {
+            grupo.componentes.porCada(function(valorComponente,componente) {
                 componente.valorIndividual(valor==valorComponente);
             });
             return this;

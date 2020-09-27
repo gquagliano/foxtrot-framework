@@ -266,7 +266,7 @@ var expresion=function(expr) {
     
     this.establecerVariables=function(obj) {
         var t=this;
-        obj.forEach(function(clave,valor) {
+        obj.porCada(function(clave,valor) {
             t.variables[clave]=valor;
         });
         return this;
@@ -274,7 +274,7 @@ var expresion=function(expr) {
     
     this.establecerFunciones=function(obj) {
         var t=this;
-        obj.forEach(function(clave,valor) {
+        obj.porCada(function(clave,valor) {
             t.funciones[clave]=valor;
         });
         return this;

@@ -626,7 +626,7 @@ var componente=new function() {
 
         var t=this;
 
-        this.valoresPropiedades.forEach(function(clave,valor) {
+        this.valoresPropiedades.porCada(function(clave,valor) {
             //Únicamente para valores no adaptativos
             if(typeof valor!=="string"||!valor.trim()||!/[\{\}]+/.test(valor)) return;
 
@@ -1216,8 +1216,8 @@ var componente=new function() {
 
             ["propiedadesComunes","propiedadesConcretas"].forEach(function(v) {
                 if(!t[v]) return;
-                t[v].forEach(function(grupo,propiedades) {
-                    propiedades.forEach(function(nombre,propiedad) {
+                t[v].porCada(function(grupo,propiedades) {
+                    propiedades.porCada(function(nombre,propiedad) {
                         if(!propiedadesCombinadas.hasOwnProperty(grupo)) propiedadesCombinadas[grupo]={};
 
                         if(!propiedad.hasOwnProperty("funcion")||!propiedad.funcion) propiedad.funcion=function(componentes,tamano,prop,valor) {
@@ -1230,8 +1230,8 @@ var componente=new function() {
             });
         }
 
-        propiedadesCombinadas.forEach(function(grupo,propiedades) {
-            propiedades.forEach(function(nombre,propiedad) {
+        propiedadesCombinadas.porCada(function(grupo,propiedades) {
+            propiedades.porCada(function(nombre,propiedad) {
                 propiedad.valor=t.propiedad(tamano,nombre);
             });
         });
@@ -1331,7 +1331,7 @@ var componente=new function() {
                 }
             };
 
-            asignaciones.forEach(function(evento,config) {
+            asignaciones.porCada(function(evento,config) {
                 var metodo=config.hasOwnProperty("metodo")?config.metodo:evento,
                     propiedad=config.hasOwnProperty("propiedad")?config.propiedad:evento;
 
@@ -1441,7 +1441,7 @@ var componente=new function() {
                 
         //Agregar los parámetros al evento
         if(parametros) {
-            parametros.forEach(function(nombre,valor) {
+            parametros.porCada(function(nombre,valor) {
                 evento[nombre]=valor;
             });
         }

@@ -130,7 +130,7 @@ var componenteImagen=function() {
             //Actualizar el origen para todos los tamaños
             var origen=this.propiedadObj("origen"),
                 t=this;
-            if(origen) origen.forEach(function(tamano,valor) {
+            if(origen) origen.porCada(function(tamano,valor) {
                     var resultado=ui.evaluarExpresion(valor,t.datos);
                     t.propiedadModificada("origen",resultado,tamano);
                 });

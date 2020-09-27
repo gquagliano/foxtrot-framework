@@ -924,8 +924,8 @@
             if(util.esIndefinido(nombre)) {
                 //Remover todos los eventos registrados mediante evento()
                 var t=this;
-                meta.forEach(function(nombre,arr) {
-                    arr.forEach(function(id,ev) {
+                meta.porCada(function(nombre,arr) {
+                    arr.porCada(function(id,ev) {
                         t.removeEventListener(nombre,ev[1]);
                     });
                 });
@@ -937,7 +937,7 @@
             if(util.esIndefinido(funcion)) {
                 //Remover todos los eventos nombre registrados mediante evento()
                 var t=this;
-                meta[nombre].forEach(function(id,ev) {
+                meta[nombre].porCada(function(id,ev) {
                     t.removeEventListener(nombre,ev[1]);
                 });
                 return this;
@@ -1266,7 +1266,7 @@
      * Implementación de forEach en objetos.
      * @memberof external:Object
      */
-    Object.prototype.forEach=function(fn) {
+    Object.prototype.porCada=function(fn) {
         var t=this;
         Object.keys(t).forEach(function(clave) {
             if(typeof fn==="function") fn.call(t,clave,t[clave]);
@@ -1299,7 +1299,7 @@
     Object.prototype.clonar=function(asignar) {
         var nuevo=Object.assign(util.esArray(this)?[]:{},this);
         if(!util.esIndefinido(asignar)) {
-            asignar.forEach(function(prop,val) {
+            asignar.porCada(function(prop,val) {
                 nuevo[prop]=val;
             });
         }

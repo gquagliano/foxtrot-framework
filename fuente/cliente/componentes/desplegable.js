@@ -147,7 +147,7 @@ var componenteDesplegable=function() {
                 fn(clave,valor);
             });
         } else if(util.esObjeto(obj)) {
-            obj.forEach(function(clave,valor) {
+            obj.porCada(function(clave,valor) {
                 //Si valor es un objeto, se admite el uso de propiedadValor para determinar qué propiedad mostrar
                 if(util.esObjeto(valor)&&propValor) valor=valor[propValor];
 

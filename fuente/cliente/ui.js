@@ -552,7 +552,7 @@ var ui=new function() {
         if(typeof nombreVista==="undefined") nombreVista=null;
 
         //La forma más fácil es solicitárselo a los componentes vista  
-        instanciasVistas.forEach(function(vista) {
+        instanciasVistas.porCada(function(vista) {
             if(nombreVista&&vista!=nombreVista) return;
             self.obtenerInstanciaVista(vista).establecerValores(objeto);
         });

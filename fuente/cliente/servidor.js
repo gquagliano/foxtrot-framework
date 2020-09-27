@@ -31,6 +31,7 @@ var servidor=new function() {
             controladorOrigen:null,
             modelo:null, //Por el momento, no se usa
             clase:null, //Por el momento, no se usa
+            modulo:null,
             retorno:null,
             error:null,
             listo:null,
@@ -64,6 +65,7 @@ var servidor=new function() {
      * @param {Object} [opciones.metodo] - Nombre del método.
      * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
      * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
+     * @param {Object} [opciones.modulo] - Nombre del Módulo.
      * @param {Object} [opciones.componente] - Nombre del componente.
      * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
      * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
@@ -98,18 +100,19 @@ var servidor=new function() {
         if(opciones.metodo) campos.__m=opciones.metodo;
         if(opciones.controlador) campos.__c=opciones.controlador;
         if(opciones.componente) campos.__o=opciones.componente;
+        if(opciones.modulo) campos.__u=opciones.modulo;
 
         var param;
         if(opciones.formulario) {
             param=new FormData;
             
-            campos.forEach(function(campo,valor)  {
+            campos.porCada(function(campo,valor)  {
                 param.append(campo,valor);
             });
             
             if(util.esObjeto(opciones.parametros)) {
                 //Extraer los archivos
-                opciones.parametros.forEach(function(campo,valor) {
+                opciones.parametros.porCada(function(campo,valor) {
                     if(valor instanceof File) {
                         param.append(campo,valor);
                         delete opciones[campo];
@@ -217,7 +220,18 @@ var servidor=new function() {
 
         return new Proxy(new function() {
             this.controlador=controlador;
-            this.controladorOrigen=controladorOrigen;            
+            this.controladorOrigen=controladorOrigen;        
+            this.predeterminados={};
+        
+            /**
+             * Establece las opciones predeterminadas.
+             * @param {*} opciones - Opciones. Ver documentación de servidor.invocarMetodo().
+             * @returns {*}
+             */
+            this.establecerPredeterminados=function(opciones) {
+                this.predeterminados=Object.assign(this.predeterminados,opciones);
+                return this;
+            };    
 
             /**
              * Establece opciones a ser utilizadas únicamente en la consulta inmediatamente siguiente.
@@ -243,6 +257,8 @@ var servidor=new function() {
                                 ui.evento("errorServidor");
                             }
                         };
+
+                    opc=Object.assign(opc,target.predeterminados);
         
                     //Los métodos admiten múltiples formas:
         

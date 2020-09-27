@@ -185,7 +185,7 @@ var componenteArchivo=function() {
 
         var t=this,
             archivos=this.campo.files;
-        if(archivos) archivos.forEach(function(i,archivo) {
+        if(archivos) archivos.porCada(function(i,archivo) {
             t.archivos.push({
                 nativo:archivo,
                 nombre:archivo.name,

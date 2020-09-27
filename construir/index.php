@@ -24,6 +24,7 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     //Crear estructura de directorios
     $directorios=[
         _desarrollo.'cliente',
+        _desarrollo.'cliente/modulos',
         _gestor,
         _gestor.'img',
         _gestor.'operaciones',
@@ -35,6 +36,7 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _desarrollo.'servidor',
         _desarrollo.'servidor/componentes',
         _desarrollo.'servidor/enrutadores',
+        _desarrollo.'servidor/modulos',
         _desarrollo.'temp',
         _desarrollo.'temp/temp-privado'
     ];
@@ -63,6 +65,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _fuente.'recursos/css/foxtrot.css'
     ];
     $archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.css'));
+    //Incorporar css de módulos
+    $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.css'));
     foreach($archivos as $arch) {
         //Excluir css de modo de edición
         if(preg_match('/\.edicion\.css$/',$arch)) continue;
@@ -107,6 +111,7 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _fuente.'cliente/aplicacion.js',
         _fuente.'cliente/componente.js',
         _fuente.'cliente/controlador.js',
+        _fuente.'cliente/modulo.js',
         _fuente.'cliente/enrutador.js',
         _fuente.'cliente/ui.js',
         _fuente.'cliente/ui.animaciones.js',
@@ -116,6 +121,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
         _fuente.'cliente/enrutadores/**.js'
     ];
+    //Integrar todos los módulos (serán optativos al pasar a producción)
+    $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.js'));
     compilarJs($archivos,_desarrollo.'cliente/foxtrot.js',_depuracion);
 
     //Gestor

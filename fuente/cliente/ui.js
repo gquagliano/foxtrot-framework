@@ -26,6 +26,7 @@ var ui=new function() {
         controladores={},
         instanciasControladores={},
         instanciaControladorPrincipal=null,
+        modulos={},
         modoEdicion=false,
         id=1,
         tamanos={ //TODO Configurable
@@ -886,6 +887,28 @@ var ui=new function() {
         return null;
     };
 
+    ////Módulos
+
+    /**
+     * Registra un módulo.
+     * @param {string} nombre - Nombre del módulo.
+     * @param {function} funcion - Función.
+     * @returns {ui}
+     */
+    this.registrarModulo=function(nombre,funcion) {
+        modulos[nombre]=funcion;
+        return this;
+    };
+
+    /**
+     * Crea y devuelve una nueva instancia del módulo especificado.
+     * @param {string} nombre - Nombre del módulo.
+     * @returns {Modulo}
+     */
+    this.obtenerInstanciaModulo=function(nombre) {
+        return modulo.fabricarModulo(modulos[nombre]);
+    };
+
     ////Gestión de la UI
 
     this.establecerModoEdicion=function() {
@@ -978,7 +1001,7 @@ var ui=new function() {
             componentes:componentes,
             parametros:this.obtenerParametros() //TODO Cache
         };
-        if(instanciasControladores) instanciasControladores.forEach(function(nombre,obj) {
+        if(instanciasControladores) instanciasControladores.porCada(function(nombre,obj) {
                 vars[nombre]=obj;
             });
         if(typeof variables!=="undefined") Object.assign(vars,variables);

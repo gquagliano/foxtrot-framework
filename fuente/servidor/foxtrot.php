@@ -75,6 +75,7 @@ class foxtrot {
         define('_componentes',_servidor.'componentes/');
         define('_temporales',_raiz.'temp/');
         define('_temporalesPrivados',_temporales.'temp-privado/');
+        define('_modulos',_servidor.'modulos/');
     }
 
     protected static function definirConstantesAplicacion() {
@@ -102,6 +103,7 @@ class foxtrot {
         include(_servidor.'entidad.php');
         include(_servidor.'modelo.php');
         include(_servidor.'componente.php');
+        include(_servidor.'modulo.php');
         include(_servidor.'http.php');
 
         //TODO Hacer configurable. En teoría, debería poderse implementar cualquier motor de base de datos o repositorio (archivo, API) implementando clases compatibles con bd
@@ -224,6 +226,7 @@ class foxtrot {
         $foxtrot=self::$enrutador->obtenerFoxtrot();
         $redir=self::$enrutador->obtenerRedireccionamiento();
         $componente=self::$enrutador->obtenerComponente();
+        $modulo=self::$enrutador->obtenerModulo();
 
         $html=null;
         $res=null;
@@ -337,6 +340,12 @@ class foxtrot {
             $obj=new $cls;
         }  
 
+        if($modulo) {
+            if(preg_match('/[^a-z0-9_-]/i',$modulo)) self::error();
+            $obj=self::obtenerInstanciaModulo($modulo,true);
+            if($obj===null) self::error();
+        }  
+
         if($metodo) {
             if(preg_match('/[^a-z0-9_]/i',$metodo)) self::error();
 
@@ -409,6 +418,24 @@ class foxtrot {
      */
     public static function obtenerInstanciaModelo($nombre) {
         $clase='\\aplicaciones\\'._apl.'\\modelo\\'.$nombre;
+        return new $clase;
+    }
+
+    ////Módulos
+
+    /**
+     * Crea y deuvelve una instancia de un módulo dado su nombre.
+     * @var string $nombre Nombre del módulo a crear.
+     * @var bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
+     * @return \modulo
+     */
+    public static function obtenerInstanciaModulo($nombre,$publico=false) {
+        $ruta=_modulos.$nombre.'/'.$nombre.($publico?'.pub':'').'.php';
+        if(!file_exists($ruta)) return null;
+        include_once($ruta);
+        
+        $clase='\\modulos\\'.$nombre.($publico?'\\publico':'').'\\'.$nombre;
+        if(!class_exists($clase)) return null;        
         return new $clase;
     }
 

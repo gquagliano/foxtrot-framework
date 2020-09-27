@@ -25,6 +25,7 @@ class enrutador {
     protected $redireccionar=null;
     protected $codigoRedireccion=null;
     protected $componente=null;
+    protected $modulo=null;
 
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
@@ -85,6 +86,9 @@ class enrutador {
         //Acceso a componentes
         $this->componente=$this->params->__o;
 
+        //Acceso a módulos
+        $this->modulo=$this->params->__u;
+
         //Acceso a controladores
         $this->controlador=$this->params->__c;
 
@@ -143,6 +147,10 @@ class enrutador {
 
     public function obtenerFoxtrot() {
         return $this->foxtrot;
+    }
+
+    public function obtenerModulo() {
+        return $this->modulo;
     }
 
     public function obtenerRedireccionamiento() {

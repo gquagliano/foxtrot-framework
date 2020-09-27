@@ -100,6 +100,10 @@ El lado del servidor está compuesto por controladores de servidor y el modelo d
 
 El lado del cliente está compuesto por controladores de cliente y vistas. Cada vista está compuesta por componentes, los cuales guardan relación con los elementos del DOM y permiten la manipulación de la vista mediante sus métodos y propiedades. Existen componentes que representan estructuras de control (condicionales, bucles, inclusión de una vista dentro de otra, etc.) automatizando la presentación de información y la navegación. Incluye un gestor del DOM propio (reemplaza a jQuery).
 
+[Más información sobre el API](docs/api.md).
+
+[Documentación](docs/api/indice.md).
+
 **Comunicación cliente<->servidor transparente**
 
 El framework permite una comunicación transparente entre controladores del lado del cliente y controladores del lado del servidor. El desarrollador puede invocar un método desde uno hacia el otro como si se tratara de una misma plataforma.
@@ -124,9 +128,11 @@ Desarrollamos un intérprete para permitir la inserción de variables, llamados 
 
 El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 
-[Más información sobre el API](docs/api.md).
+**Módulos**
 
-[Documentación](docs/api/indice.md).
+Existen diferentes utilidades que se pueden incluir del lado del cliente y/o del lado del servidor en forma de módulos o *plug-ins*, para la asistencia en la implementación de servicios de terceros (como reCaptcha o Firebase) y la realización de tareas específicas (como generar PDF o XLS).
+
+[Más información sobre los módulos y listado de módulos existentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Módulos).
 
 ### Colaboraciones
 

@@ -8,7 +8,7 @@
 /* Estilos comunes de Foxtrot */
 
 body * {
-    transform: scale(1);
+    zoom: 1;
     backface-visibility: hidden;
 }
 

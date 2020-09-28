@@ -64,9 +64,13 @@ https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/ (en desa
 
 `/desarrollo/` Framework compilado + Código fuente de las aplicaciones.
 
-`/produccion/` Framework y aplicaciones compilados.
+`/produccion/` Framework y aplicaciones compilados. No es necesario instalar nada en el servidor, solo copiar el contenido de este directorio.
 
 `/embeber/` Framework y una aplicación específica compilados para embeber en Cordova o el cliente de escritorio.
+
+`/gestor/` Gestor de aplicaciones.
+
+`/construir/` Asistente de construcción o compilación del framework.
 
 ### Qué estamos desarrollando
 

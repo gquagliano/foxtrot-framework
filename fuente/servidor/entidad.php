@@ -34,4 +34,27 @@ class entidad {
     public function obtenerObjeto() {
         return (object)get_object_vars($this);
     }
+
+    /**
+     * Procesa los campos relacionales que no hayan sido asignados.
+     * @return \entidad
+     */
+    public function procesarRelaciones() {
+        $modelo=$this->fabricarModelo();
+
+        foreach($modelo->obtenerCampos() as $nombre=>$campo) {
+            if($campo->tipo=='relacional'&&(!$this->$nombre||is_numeric($this->$nombre))) {
+                $modeloRelacionado=\foxtrot::obtenerInstanciaModelo($campo->modelo);
+                if($campo->relacion=='1:n') {
+                    $this->$nombre=$modeloRelacionado->donde([$campo->columna=>$this->id])
+                        ->obtenerListado();
+                } else {
+                    $this->$nombre=$modeloRelacionado->donde(['id'=>$this->$nombre])
+                        ->obtenerUno();
+                }
+            }
+        }
+
+        return $this;
+    }
 }

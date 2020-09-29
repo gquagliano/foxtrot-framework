@@ -1169,6 +1169,8 @@ var editor=new function() {
             cliente:"web",
             cbk:null
         },opciones);
+
+        document.title=opciones.vista+" - "+document.title;
         
         this.aplicacionArchivoAbierto=opciones.aplicacion;
         this.vistaArchivoAbierto=opciones.vista;

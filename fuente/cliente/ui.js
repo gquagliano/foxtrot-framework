@@ -540,6 +540,9 @@ var ui=new function() {
         //La forma más fácil es solicitárselo a los componentes vista  
         var valores=this.obtenerInstanciaVistaPrincipal().obtenerValores();
 
+        //Anexar los valores del controlador
+        valores=Object.assign(valores,this.obtenerInstanciaControladorPrincipal().obtenerValores());
+
         return valores;
     };
 

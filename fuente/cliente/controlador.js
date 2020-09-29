@@ -25,6 +25,12 @@ var controlador=new function() {
     /** Listado de todos los componentes. */
     this.instanciasComponentes=[];
 
+    /**
+     * @var {Object} datos - Valores a informar por obtenerValores(). Estos valores serán recuperados automáticamente por ui.obtenerValores(), por lo que,
+     * entre otros casos, serán enviados automáticamente al servidor en eventos 'enviar:'.
+     */
+    this.valores={};
+
     ////Acceso a propiedades    
 
     /**
@@ -93,9 +99,7 @@ var controlador=new function() {
         }
         if(this.componentes.hasOwnProperty(componente.nombre)) delete this.componentes[componente.obtenerNombre()];
         return this;
-    };
-
-    
+    };    
 
     ////Gestión de la instancia
 
@@ -171,6 +175,24 @@ var controlador=new function() {
     this.obtenerPropiedades=function() {
         return {
         };
+    };
+
+    /**
+     * Devuelve los valores del controlador (propiedades asignadas en this.valores).
+     * @returns {Object}
+     */
+    this.obtenerValores=function() {
+        return this.valores;
+    };
+
+    /**
+     * Establece los valores del controlador.
+     * @param {Object} obj - Objeto {valores:propiedades} a asignar.
+     * @returns {Controlador}
+     */
+    this.establecerValores=function(obj) {
+        this.valores=Object.assign(this.valores,obj);
+        return this;
     };
 
     ////Eventos

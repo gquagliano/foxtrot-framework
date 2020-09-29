@@ -75,7 +75,7 @@ Una columna de tabla de datos (`<td>`). Debe insertarse dentro del componente Fi
 
 Cada fila, junto con sus columnas (o celdas), se duplicará por cada uno de los elementos del origen de datos de la tabla. Las expresiones tendrán predefinidas las propiedades del elemento que se esté representando.
 
-Cada celda define también el encabezado de la columna, el cual será generado automáticamente cuando se utilice un origen de datos.
+Cada celda define también el encabezado de la columna, el cual será generado automáticamente cuando se utilice un origen de datos. En el editor, cada celda mostrará una etiqueta con su encabezado a modo ilustrativo, sin respetar el diseño o los estilos reales de los encabezados.
 
 #### ![](img/iconos/condicional.png) Condicional (estructura de control)
 

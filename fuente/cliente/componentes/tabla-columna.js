@@ -12,6 +12,7 @@
  */
 var componenteColumnaTabla=function() {    
     this.componente="tabla-columna";
+    this.encabezadoTemporal=null;
 
     /**
      * Propiedades de Columna de tabla.
@@ -63,7 +64,7 @@ var componenteColumnaTabla=function() {
 
         this.inicializarComponente();
         return this;
-    };
+    };    
 
     /**
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
@@ -72,6 +73,32 @@ var componenteColumnaTabla=function() {
         //Nota: Debe usarse el nombre del tag y no <td>
         this.elemento=document.crear("td"); 
         this.crearComponente();
+        return this;
+    };
+
+    /**
+     * Evento `editor`.
+     * @returns {Componente}
+     */
+    this.editor=function() {
+        //Mostrar encabezados en el editor
+        this.encabezadoTemporal=documento.crear("<div class='foxtrot-editor-temporal foxtrot-encabezado-temporal'>")
+            .anexarA(this.elemento);
+        var encabezado=this.propiedad("encabezado");
+        if(encabezado) this.encabezadoTemporal.establecerHtml(encabezado);
+        
+        return this.editorComponente();
+    };
+    
+    /**
+     * Actualiza el componente tras la modificación de una propiedad.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Actualizar encabezados en el editor
+        if(propiedad=="encabezado"&&ui.enModoEdicion()) 
+            this.encabezadoTemporal.establecerHtml(valor);
+
+        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

@@ -21,3 +21,18 @@
 .foxtrot-modo-edicion.foxtrot-bordes tfoot {
     display: block;
 }
+.foxtrot-modo-edicion td {
+    padding-top: 30px;
+}
+.foxtrot-modo-edicion td .foxtrot-encabezado-temporal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: .2rem .7rem;
+    font-weight: 600;
+    background: #0002;
+}

@@ -29,6 +29,16 @@ class bd {
 	protected $error=0;
 	protected $descripcionError=null;
 
+    /**
+     * Constructor. Los parámetros omitidos o nulos serán recuperados desde \configuracion.
+     * @param bool $conectar Conectar inmediatamente.
+     * @param string $servidor Dirección del servidor.
+     * @param string $usuario Nombre de usuario.
+     * @param string $contrasena Contraseña.
+     * @param string $nombre Nombre de la base de datos.
+     * @param string $prefijo Prefijo de las tablas (el prefijo `#__` en los nombres de tablas será reemplazado automáticamente por este valor).
+     * @param int $puerto Puerto del servidor.
+     */
 	function __construct($conectar=false,$servidor=null,$usuario=null,$contrasena=null,$nombre=null,$prefijo=null,$puerto=3306) {
         $this->establecerCredenciales($servidor,$usuario,$contrasena,$nombre,$prefijo,$puerto);
         if($conectar) $this->conectar();
@@ -67,9 +77,23 @@ class bd {
     }
 
     /**
-     * Establece las credenciales.
+     * Establece las credenciales. Los parámetros omitidos o nulos serán recuperados desde \configuracion. No afectará la conexión actualmente establecida.
+     * @param string $servidor Dirección del servidor.
+     * @param string $usuario Nombre de usuario.
+     * @param string $contrasena Contraseña.
+     * @param string $nombre Nombre de la base de datos.
+     * @param string $prefijo Prefijo de las tablas (el prefijo `#__` en los nombres de tablas será reemplazado automáticamente por este valor).
+     * @param int $puerto Puerto del servidor.
+     * @return \bd
      */
     public function establecerCredenciales($servidor=null,$usuario=null,$contrasena=null,$nombre=null,$prefijo=null,$puerto=3306) {
+        if(!$servidor) $servidor=\configuracion::$servidorBd;
+        if(!$usuario) $usuario=\configuracion::$usuarioBd;
+        if(!$contrasena) $contrasena=\configuracion::$contrasenaBd;
+        if(!$nombre) $nombre=\configuracion::$nombreBd;
+        if(!$prefijo) $prefijo=\configuracion::$prefijoBd;
+        if(!$puerto) $puerto=\configuracion::$puertoBd;
+
         $this->credenciales=(object)[
             'servidor'=>$servidor,
             'usuario'=>$usuario,
@@ -78,6 +102,7 @@ class bd {
             'prefijo'=>$prefijo,
             'puerto'=>$puerto
         ];
+
         return $this;
     }
 

@@ -395,18 +395,14 @@ class foxtrot {
 
     ////Base de datos y modelo de datos
 
+    /**
+     * Devuelve la instancia de la clase \bd, creándola si es necesario.
+     * @return \bd
+     */
     public static function obtenerInstanciaBd() {
         if(!self::$bd) {
             //El conector cambiará según qué clase `db` esté implementada
-            self::$bd=new bd(
-                true,
-                configuracion::$servidorBd,
-                configuracion::$usuarioBd,
-                configuracion::$contrasenaBd,
-                configuracion::$nombreBd,
-                configuracion::$prefijoBd,
-                configuracion::$puertoBd
-            );
+            self::$bd=new bd(true);
         }
         return self::$bd;
     }

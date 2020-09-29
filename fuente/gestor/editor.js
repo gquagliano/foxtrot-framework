@@ -1323,7 +1323,7 @@ var editor=new function() {
         };
 
         //Remover auxiliares
-        elem.querySelectorAll(".foxtrot-etiqueta-componente,.foxtrot-editor-temporal").remover();
+        elem.querySelectorAll(".foxtrot-etiqueta-componente,.foxtrot-editor-temporal,.foxtrot-menu-editor").remover();
 
         //Ejecutar el resto de la limpieza sobre el elemento en sí y sobre su descendencia
         if(elem!=ui.obtenerDocumento()&&elem!=document) fn(elem);
@@ -1351,7 +1351,7 @@ var editor=new function() {
         //Remover hoja de estilos del editor
         for(var i=0;i<doc.styleSheets.length;i++) {
             var hoja=doc.styleSheets[i];
-            if(/\/editor\/editor\.css$/.test(hoja.href)) {
+            if(/\/editor\/gestor\.css$/.test(hoja.href)) {
                 hoja.ownerNode.remover();
             }
         }

@@ -23,7 +23,7 @@ foxtrot::inicializar(false);
     <title>Editor de vistas</title>
     <link rel="icon" type="image/png" href="../desarrollo/recursos/img/favicon.png">
   </head>
-  <body class="foxtrot-editor trabajando">
+  <body class="foxtrot-editor foxtrot-trabajando">
 
     <div id="foxtrot-barra-principal" class="foxtrot-editor foxtrot-barra-herramientas">
         <button class="btn btn-sm separador" onclick="editor.guardar()" title="Guardar"><img src="img/guardar.png"></button>

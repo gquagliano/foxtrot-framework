@@ -1323,7 +1323,7 @@ var editor=new function() {
         };
 
         //Remover auxiliares
-        elem.querySelectorAll(".foxtrot-etiqueta-componente").remover();
+        elem.querySelectorAll(".foxtrot-etiqueta-componente,.foxtrot-editor-temporal").remover();
 
         //Ejecutar el resto de la limpieza sobre el elemento en sí y sobre su descendencia
         if(elem!=ui.obtenerDocumento()&&elem!=document) fn(elem);

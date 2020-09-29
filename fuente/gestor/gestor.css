@@ -560,21 +560,21 @@ body.foxtrot-trabajando #foxtrot-cargando {
     width: 100%;
 }
 
-.foxtrot-gestor .dialogo {
+.foxtrot-dialogo-gestor {
     display: none;
     width: 650px;
 }
-.foxtrot-gestor .foxtrot-dialogo .dialogo-contenido {
+.foxtrot-gestor .dialogo-contenido {
     overflow: visible;
     max-height: none;
 }
-.foxtrot-gestor .dialogo h1 {
+.foxtrot-dialogo-gestor h1 {
     margin-top: 0;
     margin-bottom: 1.3rem;
 }
-.foxtrot-gestor .foxtrot-dialogo .dialogo {
-    display: block;
-}
-.foxtrot-gestor .dialogo .custom-control-label {
+.foxtrot-dialogo-gestor .custom-control-label {
     line-height: 1.5rem;
+}
+.dialogo .foxtrot-dialogo-gestor {
+    display: block;
 }

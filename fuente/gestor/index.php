@@ -166,7 +166,7 @@ if(!count(gestor::obtenerAplicaciones())) {
         </div>
     </main>
 
-    <div class="dialogo" id="dialogo-nueva-aplicacion">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-nueva-aplicacion">
         <h1>Nueva aplicación</h1>
 <?php
 //Asistente crear-aplicacion
@@ -178,7 +178,7 @@ asistentes::obtenerAsistente('crear-aplicacion')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-nueva-vista">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-nueva-vista">
         <h1>Nueva vista</h1>
         <div class="form-group row">
             <label class="col-3 col-form-label">Ruta y nombre</label>
@@ -211,7 +211,7 @@ asistentes::obtenerAsistente('crear-aplicacion')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-nuevo-controlador"">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-nuevo-controlador"">
         <h1>Nuevo controlador</h1>
 <?php
 //Asistente crear-controlador
@@ -223,7 +223,7 @@ asistentes::obtenerAsistente('crear-controlador')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-nuevo-modelo">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-nuevo-modelo">
         <h1>Nuevo modelo de datos</h1>
 <?php
 //Asistente crear-modelo
@@ -235,7 +235,7 @@ asistentes::obtenerAsistente('crear-modelo')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-sincronizacion">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-sincronizacion">
         <h1>Sincronizar base de datos</h1>
 <?php
 //Asistente sincronizar-bd
@@ -247,7 +247,7 @@ asistentes::obtenerAsistente('sincronizar-bd')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-asistentes">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-asistentes">
         <div id="asistentes-seleccion">   
             <h1>Asistentes</h1>
             <div class="form-group row">
@@ -290,7 +290,7 @@ foreach($asistentes as $asistente) {
 ?>
     </div>
 
-    <div class="dialogo" id="dialogo-construir-embebible">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-construir-embebible">
         <h1>Construir embebible</h1>
 <?php
 //Asistente construir-cordova
@@ -302,7 +302,7 @@ asistentes::obtenerAsistente('construir-cordova')->obtenerFormulario();
         </div>
     </div>
 
-    <div class="dialogo" id="dialogo-construir-produccion">
+    <div class="foxtrot-dialogo-gestor" id="dialogo-construir-produccion">
         <h1>Construir para producción</h1>
 <?php
 //Asistente construir-produccion

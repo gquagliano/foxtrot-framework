@@ -126,8 +126,8 @@ class modelo {
     /**
      * Crea y devuelve una instancia del modelo especificado.
      */
-    public static function fabricarModelo($modelo,$bd=null) {       
-        if(!class_exists($modelo)) $modelo='\\aplicaciones\\test\\modelo\\'.$modelo;
+    public static function fabricarModelo($modelo,$bd=null) {           
+        $modelo='\\aplicaciones\\'._apl.'\\modelo\\'.$modelo;
         return new $modelo($bd);
     }
 

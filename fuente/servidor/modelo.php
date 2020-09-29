@@ -49,6 +49,7 @@ class modelo {
 
     protected $consultaProcesarRelaciones=true;
     protected $consultaProcesarRelaciones1n=true;
+    protected $consultaOmitirRelacionesCampos=[];
     protected $consultaSeleccionarEliminados=false;
 
     protected $consultaPreparada=false;
@@ -126,7 +127,7 @@ class modelo {
     /**
      * Crea y devuelve una instancia del modelo especificado.
      */
-    public static function fabricarModelo($modelo,$bd=null) {           
+    public static function fabricarModelo($modelo,$bd=null) {       
         $modelo='\\aplicaciones\\'._apl.'\\modelo\\'.$modelo;
         return new $modelo($bd);
     }
@@ -136,7 +137,7 @@ class modelo {
      */
     protected function cargarEstructura() {
         //Posibles valores de las etiquetas en los comentarios de las propiedades:
-        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|booleano|relacional)
+        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|logico|relacional)
         //@relacion (1:1|1:0|1:n)
         //@indice
         //@indice unico
@@ -198,6 +199,7 @@ class modelo {
         $this->alias='t1';
         $this->consultaProcesarRelaciones=true;
         $this->consultaProcesarRelaciones1n=true;
+        $this->consultaOmitirRelacionesCampos=[];
         $this->consultaSeleccionarEliminados=false;
 
         $this->ultimoId=null;
@@ -276,9 +278,14 @@ class modelo {
 
     /**
      * Omite los campos relacionales.
+     * @var string $campo Si se especifica, omitirá únicamente el procesamiento de este campo. En caso contrario, se omitirán todos los campos relacionales.
      */
-    public function omitirRelaciones() {
-        $this->consultaProcesarRelaciones=false;
+    public function omitirRelaciones($campo=null) {
+        if($campo) {
+            $this->consultaOmitirRelacionesCampos[]=$campo;
+        } else {
+            $this->consultaProcesarRelaciones=false;
+        }
         return $this;
     }
 
@@ -315,7 +322,7 @@ class modelo {
         //-Generar los listados de relaciones 1:n
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional') {
-                if(!$procesarOmitidos&&$campo->omitir) continue;
+                if(!$procesarOmitidos&&($campo->omitir||in_array($nombre,$this->consultaOmitirRelacionesCampos))) continue;
 
                 if($campo->relacion=='1:n') {
                     if(!$procesar1n) continue;
@@ -542,7 +549,7 @@ class modelo {
 
                 if($entidad===null) continue;
 
-                if(!$this->consultaProcesarRelaciones) {
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) {
                     //Cuando se inserte o actualice con las relaciones desactivadas, solo debemos copiar el ID a la columna correspondiente
                     if(is_object($entidad)) $this->consultaValores->$columna=$entidad->id;
                     continue;
@@ -641,11 +648,14 @@ class modelo {
      */
     public function eliminar($e=1) {
         $procesarRelaciones=$this->consultaProcesarRelaciones;
+        $relacionesCampos=$this->consultaOmitirRelacionesCampos;
         $this->consultaProcesarRelaciones=false;
+        $this->consultaOmitirRelacionesCampos=[];
 
         $this->establecerValores(['e'=>$e])->actualizar();
 
         $this->consultaProcesarRelaciones=$procesarRelaciones;
+        $this->consultaOmitirRelacionesCampos=$relacionesCampos;
 
         return $this;
     }
@@ -730,7 +740,11 @@ class modelo {
     /**
      * Genera las relaciones automáticas a partir de los campos relacionales.
      */
-    public function prepararRelaciones(&$alias,$recursivo=false) {
+    public function prepararRelaciones(&$alias,$recursivo,&$cadenaRelaciones) {
+        //Detectar una relación cíclica (se relaciona con un modelo que ya fue relacionado previamente, derivando en un bucle infinito)
+        $relacionadoPreviamente=in_array($this->nombreModelo,$cadenaRelaciones);
+        $cadenaRelaciones[]=$this->nombreModelo;
+
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&!$campo->omitir) {
                 $obj=modelo::fabricarModelo($campo->modelo,$this->bd);
@@ -742,6 +756,8 @@ class modelo {
 
                 if($campo->relacion=='1:n') {
                     $condicion=$obj->alias.'.`'.$campo->columna.'`='.$this->alias.'.`id`';
+                    //Desactivar el procesamiento del campo si se detecta una relación cíclica
+                    if(in_array($campo->modelo,$cadenaRelaciones)) $this->omitirRelaciones($nombre);
                 } else {
                     $condicion=$obj->alias.'.`id`='.$this->alias.'.`'.$campo->columna.'`';
                 }
@@ -754,9 +770,12 @@ class modelo {
                     $condicion
                 );
 
-                //Avanzar recursivamente
-                //Si el modelo se relaciona con sí mismo, solo relacionar una vez
-                if(!$recursivo||$campo->modelo!=$this->nombreModelo) $obj->prepararRelaciones($alias,true);
+                //Avanzar recursivamente                
+                if(!$relacionadoPreviamente&&$recursivo) {
+                    //Si el modelo se relaciona con sí mismo, solo procesar una vez
+                    $continuar=$campo->modelo!=$this->nombreModelo;
+                    $obj->prepararRelaciones($alias,$continuar,$cadenaRelaciones);
+                }
             }
         }
 
@@ -770,6 +789,8 @@ class modelo {
         if($this->consultaProcesarRelaciones) {
             foreach($this->consultaRelaciones as $relacion) {
                 if($relacion->tipo=='1:n') continue; //Las relaciones 1:n no se realizarán con join
+
+                if(in_array($relacion->campo,$this->consultaOmitirRelacionesCampos)) continue;
                 
                 $join='join';
                 if($relacion->tipo=='1:0') $join='left join';
@@ -814,7 +835,8 @@ class modelo {
         } else {
             $sql='select ';
 
-            $this->prepararRelaciones($alias)
+            $array=[];
+            $this->prepararRelaciones($alias,true,$array)
                 ->construirCamposYRelaciones($campos,$relaciones);
             
             $sql.=implode(',',$this->consultaColumnas?$this->consultaColumnas:$campos);

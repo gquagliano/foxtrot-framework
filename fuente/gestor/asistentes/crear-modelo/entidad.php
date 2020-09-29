@@ -16,5 +16,6 @@ class {entidad} extends \entidad {
 
     //id y e (campo de baja lógica) son automáticos, no requieren propiedad ni documentación
     
-    //TODO Agregar las propiedades concretas (ver: https://gquagliano.github.io/experimental-foxtrot-framework/docs/api/orm.html)
+    //TODO Agregar las propiedades concretas
+    //Ver: https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM
 }

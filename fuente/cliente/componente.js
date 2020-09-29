@@ -1288,7 +1288,7 @@ var componente=new function() {
         var elem=this.elementoEditable?this.elementoEditable:this.elemento;
         elem.iniciarEdicion().focus();
         
-        this.elemento.agregarClase("editando-texto");
+        this.elemento.agregarClase("foxtrot-editando-texto");
         
         if(pausar) {
             //Deshabilitar arrastre en todo el árbol
@@ -1304,7 +1304,7 @@ var componente=new function() {
         var elem=this.elementoEditable?this.elementoEditable:this.elemento;
         elem.finalizarEdicion();
 
-        this.elemento.removerClase("editando-texto");
+        this.elemento.removerClase("foxtrot-editando-texto");
 
         //Reestablecer eventos
         this.elemento.pausarArrastreArbol(false);

@@ -60,7 +60,7 @@ picture img {
 
 /* Menú y menú contextual */
 
-.foxtrot-menu, .foxtrot-submenu {
+.menu, .submenu {
     position: fixed;
     background: #fff;
     z-index: 999999;
@@ -72,20 +72,20 @@ picture img {
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
 }
-.foxtrot-menu li, .foxtrot-menu a {
+.menu li, .menu a {
     display: block;
     margin: 0;
     padding: 0;
     width: 100%;
     position: relative;
 }
-.foxtrot-submenu {
+.submenu {
     position: absolute;
     left: 100%;
     margin-left: -5px;
     top: -11px;
 }
-.foxtrot-menu a {
+.menu a {
     color: inherit !important;
     text-decoration: none !important;
     padding: 6px 16px;
@@ -95,20 +95,20 @@ picture img {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-body.escritorio .foxtrot-menu a:hover,
-.foxtrot-menu a:focus,
-.foxtrot-menu a:active,
-.foxtrot-menu .submenu-abierto>a {
+body.escritorio .menu a:hover,
+.menu a:focus,
+.menu a:active,
+.menu .abierto>a {
     background-color: #e8ebf1;
 }
-.foxtrot-menu .con-submenu>a {
+.menu .con-submenu>a {
     background-repeat: no-repeat;
     background-size: 14px;
     padding-right: 32px;
     background-position: calc(100% - 5px) center;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJmZWF0aGVyIGZlYXRoZXItY2hldnJvbi1yaWdodCI+PHBvbHlsaW5lIHBvaW50cz0iOSAxOCAxNSAxMiA5IDYiPjwvcG9seWxpbmU+PC9zdmc+");
 }
-li.foxtrot-menu-separador::after {
+li.menu-separador::after {
     content: "";
     display: block;
     height: 1px;
@@ -116,27 +116,27 @@ li.foxtrot-menu-separador::after {
     margin: 11px 0;
 }
 
-.foxtrot-menu.desplegar-izquierda,
-.foxtrot-menu.siempre-desplegar-izquierda {
+.menu.desplegar-izquierda,
+.menu.siempre-desplegar-izquierda {
     left: auto  !important;
     right: 0;
 }
-.foxtrot-menu.desplegar-arriba,
-.foxtrot-menu.siempre-desplegar-arriba {
+.menu.desplegar-arriba,
+.menu.siempre-desplegar-arriba {
     top: auto  !important;
     bottom: 100%;
 }
-.foxtrot-menu .foxtrot-menu.desplegar-izquierda,
-.foxtrot-menu .foxtrot-menu.siempre-desplegar-izquierda,
-.foxtrot-submenu.desplegar-izquierda,
-.foxtrot-submenu.siempre-desplegar-izquierda {
+.menu .menu.desplegar-izquierda,
+.menu .menu.siempre-desplegar-izquierda,
+.submenu.desplegar-izquierda,
+.submenu.siempre-desplegar-izquierda {
     left: auto  !important;
     right: 100%;
 }
-.foxtrot-menu .foxtrot-menu.desplegar-arriba,
-.foxtrot-menu .foxtrot-menu.siempre-desplegar-arriba,
-.foxtrot-submenu.desplegar-arriba,
-.foxtrot-submenu.siempre-desplegar-arriba {
+.menu .menu.desplegar-arriba,
+.menu .menu.siempre-desplegar-arriba,
+.submenu.desplegar-arriba,
+.submenu.siempre-desplegar-arriba {
     top: auto  !important;
     bottom: -10px;
 }
@@ -205,7 +205,7 @@ li.foxtrot-menu-separador::after {
     }
 }
 
-.foxtrot-dialogo {
+.dialogo {
     position: fixed;
     left: 0;
     right: 0;
@@ -214,7 +214,7 @@ li.foxtrot-menu-separador::after {
     z-index: 999999999;
     background-color: rgba(0, 0, 0, 0.28);
 }
-.foxtrot-dialogo .dialogo-cuerpo {
+.dialogo .dialogo-cuerpo {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -225,7 +225,7 @@ li.foxtrot-menu-separador::after {
     text-align: left;
     border-radius: 2px;
 }
-.foxtrot-dialogo .dialogo-x {
+.dialogo .dialogo-x {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -235,27 +235,27 @@ li.foxtrot-menu-separador::after {
     background-position: center;
     background-repeat: no-repeat;
 }
-.foxtrot-dialogo .dialogo-contenido {
+.dialogo .dialogo-contenido {
     max-width: 75vw;
     min-height: 1.1rem;
     max-height: 60vh;
     overflow: auto;
     word-break: break-word;
 }
-.foxtrot-dialogo .dialogo-opciones {
+.dialogo .dialogo-opciones {
     margin-top: 21px;
     display: flex;
     justify-content: flex-end;
 }
-.foxtrot-dialogo .dialogo-opciones .btn {
+.dialogo .dialogo-opciones .btn {
     flex: 0 0 auto;
     margin-left: 10px;
 }
-.foxtrot-dialogo .dialogo-opciones:empty {
+.dialogo .dialogo-opciones:empty {
     display: none;
 }
 
-.foxtrot-dialogo.aparece .dialogo-cuerpo {
+.dialogo.aparece .dialogo-cuerpo {
     animation: animacion-dialogo .2s;
     animation-fill-mode: both;
     animation-timing-function: ease-out;
@@ -284,10 +284,10 @@ li.foxtrot-menu-separador::after {
     animation: cordova-listo 1s;
     animation-fill-mode: forwards;
 }
-.cordova .foxtrot-dialogo .dialogo-contenido {
+.cordova .dialogo .dialogo-contenido {
     max-width: 100%;
 }
-.cordova .foxtrot-dialogo .dialogo-cuerpo {
+.cordova .dialogo .dialogo-cuerpo {
     width: 85vw;
     max-width: 450px;
 }

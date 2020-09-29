@@ -255,7 +255,7 @@ a:active {
     opacity: 0;
     margin-right: 10px;
 }
-body.trabajando #foxtrot-cargando {
+body.foxtrot-trabajando #foxtrot-cargando {
     opacity: 1;
 }
 
@@ -448,7 +448,7 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .componente * {
     cursor: pointer;
 }
-.foxtrot-modo-edicion .componente.seleccionado {
+.foxtrot-modo-edicion .componente.foxtrot-seleccionado {
     outline: 1px solid rgb(126, 186, 229) !important;
 }
 .foxtrot-etiqueta-componente {
@@ -478,7 +478,7 @@ body.trabajando #foxtrot-cargando {
     cursor: grab !important;
     display: block;
 }
-.foxtrot-modo-edicion .componente.seleccionado>.foxtrot-etiqueta-componente {
+.foxtrot-modo-edicion .componente.foxtrot-seleccionado>.foxtrot-etiqueta-componente {
     display: block;
 }
 .foxtrot-modo-edicion [contenteditable=true] {
@@ -491,8 +491,8 @@ body.trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion [contenteditable=true] .componente {
     cursor: pointer;
 }
-.foxtrot-modo-edicion .editando-texto,
-.foxtrot-modo-edicion .seleccionado.editando-texto {
+.foxtrot-modo-edicion .foxtrot-editando-texto,
+.foxtrot-modo-edicion .foxtrot-seleccionado.foxtrot-editando-texto {
     outline: 1px solid rgb(213, 229, 126)!important;
 }
 

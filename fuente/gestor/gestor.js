@@ -309,9 +309,9 @@ var gestor=new function() {
      */
     this.trabajando=function(v) {
         if(typeof v==="undefined"||v) {
-            document.body.agregarClase("trabajando");
+            document.body.agregarClase("foxtrot-trabajando");
         } else {
-            document.body.removerClase("trabajando");
+            document.body.removerClase("foxtrot-trabajando");
         }
         return this;
     };

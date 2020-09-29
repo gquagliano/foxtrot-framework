@@ -21,14 +21,14 @@
     text-overflow: ellipsis;
     text-align: center;
 }
-.nav li .foxtrot-menu {
+.nav li .menu {
     position: absolute;
     left: 0;
     top: 100%;
     min-width: 100%;
     margin: 0;
 }
-.nav li .foxtrot-menu .foxtrot-menu {
+.nav li .menu .menu {
     top: -10px;
     left: 100%;
     width: auto;

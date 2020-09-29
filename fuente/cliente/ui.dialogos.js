@@ -159,7 +159,7 @@
      */
     ui.construirDialogo=function(parametros) {
         //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
-        var elem=document.crear("<div class='foxtrot-dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
+        var elem=document.crear("<div class='dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
             .anexarA(document.body);
 
         parametros=Object.assign({

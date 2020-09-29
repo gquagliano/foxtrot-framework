@@ -790,7 +790,7 @@ var editor=new function() {
         var elem=obj;        
         if(util.esComponente(obj)) elem=obj.obtenerElemento();
         
-        if(elem.es({clase:"seleccionado"})) {
+        if(elem.es({clase:"foxtrot-seleccionado"})) {
             this.removerSeleccion(obj);
         } else {
             this.establecerSeleccion(obj);
@@ -815,14 +815,14 @@ var editor=new function() {
             elem=obj;
         }
 
-        elem.agregarClase("seleccionado");
+        elem.agregarClase("foxtrot-seleccionado");
 
         //Agregar clase a toda la ascendencia
         var padre=comp;
         while(1) {
             padre=padre.obtenerPadre();
             if(!padre) break;
-            padre.obtenerElemento().agregarClase("hijo-seleccionado");
+            padre.obtenerElemento().agregarClase("foxtrot-hijo-seleccionado");
         }
 
         this.componentesSeleccionados.push(comp);
@@ -866,18 +866,18 @@ var editor=new function() {
         }
 
         //Remover estilos
-        elem.removerClase("seleccionado");
+        elem.removerClase("foxtrot-seleccionado");
 
         //Reconstruir clase .hijo-seleccionado
         var cuerpo=ui.obtenerCuerpo();
-        cuerpo.querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
-        cuerpo.querySelectorAll(".seleccionado").forEach(function(sel) {
+        cuerpo.querySelectorAll(".foxtrot-hijo-seleccionado").removerClase("foxtrot-hijo-seleccionado");
+        cuerpo.querySelectorAll(".foxtrot-seleccionado").forEach(function(sel) {
             var padre=ui.obtenerInstanciaComponente(sel);
             if(!padre) return;
             while(1) {
                 padre=padre.obtenerPadre();
                 if(!padre) break;
-                padre.obtenerElemento().agregarClase("hijo-seleccionado");
+                padre.obtenerElemento().agregarClase("foxtrot-hijo-seleccionado");
             }
         });
 
@@ -902,8 +902,8 @@ var editor=new function() {
      * @returns {editor}
      */
     this.limpiarSeleccion=function() {
-        ui.obtenerCuerpo().querySelectorAll(".seleccionado").removerClase("seleccionado");
-        ui.obtenerCuerpo().querySelectorAll(".hijo-seleccionado").removerClase("hijo-seleccionado");
+        ui.obtenerCuerpo().querySelectorAll(".foxtrot-seleccionado").removerClase("foxtrot-seleccionado");
+        ui.obtenerCuerpo().querySelectorAll(".foxtrot-hijo-seleccionado").removerClase("foxtrot-hijo-seleccionado");
         this.componentesSeleccionados=[];
         this.construirPropiedades();        
 
@@ -1116,7 +1116,7 @@ var editor=new function() {
             previsualizar=false;
         if(util.esIndefinido(cbk)) cbk=null;
         
-        document.body.agregarClase("trabajando");
+        document.body.agregarClase("foxtrot-trabajando");
 
         //Desactivar el editor para que al obtener el HTML no tenga los elementos y las propiedades de la estructura del editor
         this.desactivar();
@@ -1171,7 +1171,7 @@ var editor=new function() {
         this.modoArchivoAbierto=opciones.modo;
         this.clienteArchivoAbierto=opciones.cliente;
         
-        document.body.agregarClase("trabajando");
+        document.body.agregarClase("foxtrot-trabajando");
 
         new ajax({
             url:this.urlBase+"../gestor/operaciones/abrir.php",
@@ -1312,7 +1312,7 @@ var editor=new function() {
             elem.removerArrastre()
                 .removerDestino()
             //Remover clases y otras propiedades
-                .removerClase("seleccionado hijo-seleccionado editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
+                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");
@@ -1382,7 +1382,7 @@ var editor=new function() {
 
         this.listo=true;
 
-        document.body.removerClase("trabajando");
+        document.body.removerClase("foxtrot-trabajando");
         
         //Notificar a los componentes que el editor ha sido activado mediante el evento `editor`
         ui.eventoComponentes(null,"editor",true);

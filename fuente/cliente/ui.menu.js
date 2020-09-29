@@ -120,7 +120,7 @@
                 a.establecerHtml(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
-                    var ulSubmenu=document.crear("<ul class='foxtrot-submenu oculto'>");
+                    var ulSubmenu=document.crear("<ul class='submenu oculto'>");
                     fn(ulSubmenu,items[i].submenu);
 
                     li.agregarClase("con-submenu");
@@ -128,7 +128,7 @@
                     items[i].elemSubmenu=ulSubmenu;
                 }
 
-                if(items[i].hasOwnProperty("separador")&&items[i].separador) li.agregarClase("foxtrot-menu-separador");
+                if(items[i].hasOwnProperty("separador")&&items[i].separador) li.agregarClase("menu-separador");
 
                 li.anexar(a);
                 ul.anexar(li);
@@ -163,7 +163,7 @@
         };
 
         var menu={
-            elem:document.crear("<ul class='foxtrot-menu oculto'>"),
+            elem:document.crear("<ul class='menu oculto'>"),
             items:items.clonar(),
             eliminar:false
         };

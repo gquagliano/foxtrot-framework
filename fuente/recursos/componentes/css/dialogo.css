@@ -8,6 +8,6 @@
 .contenido-componente-dialogo {
     display: none !important;
 }
-.foxtrot-dialogo .contenido-componente-dialogo {
+.dialogo .contenido-componente-dialogo {
     display: block !important;
 }

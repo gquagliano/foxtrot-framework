@@ -224,9 +224,9 @@ var componenteItemMenu=function() {
 
         if(propiedad=="separador") {
             if(valor) {
-                this.elemento.agregarClase("foxtrot-menu-separador");
+                this.elemento.agregarClase("menu-separador");
             } else {
-                this.elemento.removerClase("foxtrot-menu-separador");
+                this.elemento.removerClase("menu-separador");
             }
             return this;
         }

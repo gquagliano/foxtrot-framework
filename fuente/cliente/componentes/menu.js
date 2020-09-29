@@ -33,7 +33,7 @@ var componenteMenu=function() {
      */
     this.crear=function() {
         //El menú debe ser compatible con el gestor de menús de ui, para poder aprovechar los métodos existentes
-        this.elemento=document.crear("<ul class='foxtrot-menu oculto menu-contextual'>"); 
+        this.elemento=document.crear("<ul class='menu oculto menu-contextual'>"); 
         this.contenedor=this.elemento;
         this.crearComponente();
         return this;

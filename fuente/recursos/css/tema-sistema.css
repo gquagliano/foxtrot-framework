@@ -169,6 +169,10 @@ label.custom-control-label {
     height: 100%;
     overflow: auto;
 }
+.foxtrot-modo-edicion .formulario-tabla,
+.foxtrot-modo-edicion .formulario-tabla .table-responsive {
+    overflow: visible;
+}
 .formulario-tabla .componente.tabla {
     height: 100%;
 }

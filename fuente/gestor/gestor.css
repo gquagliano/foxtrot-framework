@@ -88,6 +88,10 @@ a:active {
     height: calc(100vh - 56px);
     border: none;
     box-shadow: 0 0 9px rgba(0,0,0,.08), 0 0 50px rgba(0,0,0,.05);
+    transition: opacity .2s;
+}
+.foxtrot-editor.trabajando #foxtrot-marco {
+    opacity: 0;
 }
 #foxtrot-cuerpo {
     position: relative;

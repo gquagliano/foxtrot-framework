@@ -9,7 +9,7 @@ namespace aplicaciones\{nombreApl}\modelo;
 defined('_inc') or exit;
 
 /**
- * Entidad del modelo de datos. Autogenerado por el asistente de Foxtrot.
+ * Modelo de datos. Autogenerado por el asistente de Foxtrot.
  */
 class {modelo} extends \modelo {
     protected $tipoEntidad={entidad}::class;

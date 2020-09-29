@@ -614,6 +614,23 @@ var componente=new function() {
      */
     this.listoComponente=function() {
         this.procesarPropiedades();
+        return this;
+    };
+
+    /**
+     * Evento `editor` (método para sobreescribir).
+     * @returns {Componente}
+     */
+    this.editor=function() {
+        return this.editorComponente();
+    };
+
+    /**
+     * Evento `editor`.
+     * @returns {Componente}
+     */
+    this.editorComponente=function() {
+        return this;
     };
 
     /**

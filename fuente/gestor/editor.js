@@ -1382,7 +1382,10 @@ var editor=new function() {
 
         this.listo=true;
 
-        document.body.removerClase("trabajando");   
+        document.body.removerClase("trabajando");
+        
+        //Notificar a los componentes que el editor ha sido activado mediante el evento `editor`
+        ui.eventoComponentes(null,"editor",true);
         
         return this;
     };

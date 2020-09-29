@@ -1118,37 +1118,41 @@ var editor=new function() {
         
         document.body.agregarClase("foxtrot-trabajando");
 
-        //Desactivar el editor para que al obtener el HTML no tenga los elementos y las propiedades de la estructura del editor
-        this.desactivar();
+        //Aguardar la transición CSS (no es necesario que sea exacto, es solo un efecto visual)
+        var t=this;
+        setTimeout(function() {
+            //Desactivar el editor para que al obtener el HTML no tenga los elementos y las propiedades de la estructura del editor
+            t.desactivar();
 
-        //Cuando la vista es embebible, solo necesitamos el HTML del cuerpo de la vista (obtenerHtml(false))
-        var html=ui.obtenerHtml(modo!="embebible");
+            //Cuando la vista es embebible, solo necesitamos el HTML del cuerpo de la vista (obtenerHtml(false))
+            var html=ui.obtenerHtml(modo!="embebible");
 
-        new ajax({
-            url:this.urlBase+"../gestor/operaciones/guardar.php",
-            parametros:{
-                previsualizar:previsualizar?"1":"0",
-                aplicacion:apl,
-                vista:vista,
-                modo:modo,
-                cliente:cliente,
-                html:html,
-                css:ui.obtenerCss(),
-                json:ui.obtenerJson()
-            },
-            listo:function(resp) {
-                if(!resp) {
-                    alert("No fue posible guardar la vista.");
-                } else {
-                    if(cbk) cbk.call(self,resp);
+            new ajax({
+                url:t.urlBase+"../gestor/operaciones/guardar.php",
+                parametros:{
+                    previsualizar:previsualizar?"1":"0",
+                    aplicacion:apl,
+                    vista:vista,
+                    modo:modo,
+                    cliente:cliente,
+                    html:html,
+                    css:ui.obtenerCss(),
+                    json:ui.obtenerJson()
+                },
+                listo:function(resp) {
+                    if(!resp) {
+                        alert("No fue posible guardar la vista.");
+                    } else {
+                        if(cbk) cbk.call(self,resp);
+                    }
+
+                    //Volver a activar el editor
+                    self.activar();
+
+                    cambiosSinGuardar=false;
                 }
-
-                //Volver a activar el editor
-                self.activar();
-
-                cambiosSinGuardar=false;
-            }
-        });
+            });
+        },200);
 
         return this;
     };
@@ -1349,12 +1353,15 @@ var editor=new function() {
         doc.body.removerClase("foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles");
         
         //Remover hoja de estilos del editor
-        for(var i=0;i<doc.styleSheets.length;i++) {
-            var hoja=doc.styleSheets[i];
-            if(/\/editor\/gestor\.css$/.test(hoja.href)) {
-                hoja.ownerNode.remover();
-            }
-        }
+
+        var remover=[];
+        doc.styleSheets.porCada(function(i,hoja) {
+            if(/\/gestor\/gestor\.css$/.test(hoja.href)) remover.push(hoja.ownerNode);
+        });
+        //Remover en un segundo bucle ya que remover las hojas hace mutar a styleSheets
+        remover.forEach(function(elem) {
+            elem.remover();
+        });
 
         return this;
     };

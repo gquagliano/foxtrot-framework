@@ -96,6 +96,7 @@ var componente=new function() {
                 opciones:{
                     bloque:"Bloque",
                     enLinea:"En línea",
+                    bloqueEnLinea:"Bloque en línea",
                     flex:"Flex",
                     flexInverso:"Flex inverso",
                     flexVertical:"Flex vertical",
@@ -974,13 +975,14 @@ var componente=new function() {
             var clases={
                     bloque:"block",
                     enLinea:"inline",
+                    bloqueEnLinea:"inline-block",
                     flex:"flex",
                     flexInverso:"flex",
                     flexVertical:"flex",
                     flexVerticalInverso:"flex"
                 };
 
-            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline)"));
+            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline|inline-block)"));
             if(valor) this.elemento.agregarClase("d-"+claseTamano+clases[valor]);
 
             this.elemento.removerClase(new RegExp("flex-"+claseTamano+"(row|column)(-reverse)?"));

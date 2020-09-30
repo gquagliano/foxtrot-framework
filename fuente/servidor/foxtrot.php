@@ -214,6 +214,11 @@ class foxtrot {
         $uri=substr($uri,strlen(configuracion::$rutaBase));
 
         self::$enrutador->establecerSolicitud($uri,$_REQUEST);
+
+        /////TODO
+        /////Esto fue desarrollado como prototipo y fue creciendo, hoy se debe reemplazar por un patrón más desacoplado, donde los distintos tipos posible
+        /////de solicitudes estén definidos por clases, que el enrutador sepa implementar según el formato de la URL, y que cada una se encargue de
+        /////ejecutar la solicitud
         
         if(self::$enrutador->obtenerError()) self::error();
 

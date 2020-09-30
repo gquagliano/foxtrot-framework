@@ -96,6 +96,7 @@ var gestor=new function() {
         this.abrirDialogo("dialogo-renombrar");
         document.querySelector("#dialogo-renombrar .nombre-vista").establecerHtml(nombreVista);
         document.querySelector("#dialogo-renombrar [name='nombre']").valor(nombreVista);
+        document.querySelector("#dialogo-renombrar [name='nuevo_nombre']").valor(nombreVista).select();
     };
 
     /**

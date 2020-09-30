@@ -168,13 +168,13 @@ if(!count(gestor::obtenerAplicaciones())) {
 
     <div class="foxtrot-dialogo-gestor" id="dialogo-renombrar">
         <h1>Renombrar <span class="nombre-vista"></span></h1>
-        <input type="hidden" name="nombre">
         <div class="form-group row">
             <label class="col-3 col-form-label">Nuevo nombre</label>
             <div class="col-sm-9">
                 <input type="text" class="form-control" name="nuevo_nombre">
             </div>
-        </div>        
+        </div>      
+        <input type="hidden" name="nombre">
         <div class="text-center">
             <button type="button" onclick="gestor.aceptarRenombrarVista()" class="btn btn-sm btn-primary">Aceptar</button>
             <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>

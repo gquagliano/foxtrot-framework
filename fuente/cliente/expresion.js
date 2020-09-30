@@ -749,7 +749,12 @@ expresion.evaluar=function(cadena) {
 
         if(enLlave&&caracter=="}"&&anterior!="\\") {
             //Ejecutar expresión
-            valor=expr.establecerExpresion("{"+bufer+"}").ejecutar();
+            try {
+                valor=expr.establecerExpresion("{"+bufer+"}").ejecutar();
+            } catch {
+                //Si falla, devolvere vacío
+                valor="";
+            }
             if(valor!==null) {
                 if(typeof valor==="string") {
                     resultado+=valor;            

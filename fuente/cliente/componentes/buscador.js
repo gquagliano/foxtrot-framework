@@ -56,7 +56,8 @@ var componenteBuscador=function() {
         "Eventos":{
             buscar:{
                 etiqueta:"Buscar",
-                adaptativa:false
+                adaptativa:false,
+                evento:true
             }
         }
     };

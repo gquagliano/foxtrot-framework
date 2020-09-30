@@ -75,13 +75,86 @@ class vistas extends asistente {
      * @var string $nuevoNombre Nuevo nombre de la vista.
      */
     public function renombrar($nombre,$nuevoNombre) {
+        //TODO Validar que el destino no exista
+        $this->duplicar($nombre,$nuevoNombre);
+        $this->eliminar($nombre);
     }
 
     /**
-     * Clona una vista.
+     * Actualiza el código provisto para cambiar el nombre de la vista/controlador.
+     * @param string $nombre
+     * @param string $nuevoNombre
+     * @param string $html
+     * @param string $css
+     * @param string $js
+     */
+    protected function renombrarCodigo($nombre,$nuevoNombre,&$html,&$css,&$js) {
+        $id=str_replace('/','-',$nombre);
+        $nuevoId=str_replace('/','-',$nuevoNombre);
+
+        $html=str_replace('/'.$nombre.'.css','/'.$nuevoNombre.'.css',$html);
+        $html=preg_replace('/class="(.*?)'.$id.'-(.+?)"/m','class="$1'.$nuevoId.'-$2"',$html);
+        $html=str_replace('inicializar("'.$nombre.'")','inicializar("'.$nuevoNombre.'")',$html);
+
+        $css=str_replace('.'.$id.'-','.'.$nuevoId.'-',$css);
+
+        $js=str_replace('"'.$nombre.'"','"'.$nuevoNombre.'"',$js);
+    }
+
+    /**
+     * Duplica o clona una vista.
      * @var string $nombre Nombre de la vista.
      * @var string $nuevoNombre Nombre de la vista nueva.
      */
-    public function clonar($nombre,$nuevoNombre) {
+    public function duplicar($nombre,$nuevoNombre=null) {
+        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
+
+        $rutaJson=$ruta.'aplicacion.json';
+        $json=json_decode(file_get_contents($rutaJson));
+        
+        if(!$nuevoNombre) {
+            //Buscar un nombre libre
+            $dir='';
+            $i=1;
+            $base=$nombre.'-copia';
+            if(strpos($nombre,'/')>0) {
+                $dir=dirname($nombre).'/';
+                $base=basename($nombre).'-copia';
+            }
+            do {
+                $prueba=$dir.$base.($i>1?'-'.$i:'');
+                $i++;
+            } while(array_key_exists($prueba,$json->vistas));
+            $nuevoNombre=$prueba;
+        }
+
+        $rutaHtml=$ruta.'cliente/vistas/'.$nombre;
+        $nuevaRutaHtml=$ruta.'cliente/vistas/'.$nuevoNombre;
+        if(file_exists($rutaHtml.'.html')) {
+            $rutaHtml.='.html';
+            $nuevaRutaHtml.='.html';
+        } elseif(file_exists($rutaHtml.'.php')) {
+            $rutaHtml.='.php';
+            $nuevaRutaHtml.='.php';
+        }
+        $html=file_get_contents($rutaHtml);
+        
+        $rutaCss=$ruta.'cliente/vistas/'.$nombre.'.css';
+        $nuevaRutaCss=$ruta.'cliente/vistas/'.$nuevoNombre.'.css';
+        $css=file_get_contents($rutaCss);
+
+        $rutaJs=$ruta.'cliente/controladores/'.$nombre.'.js';
+        $nuevaRutaJs=$ruta.'cliente/controladores/'.$nuevoNombre.'.js';
+        $js='';
+        if(file_exists($rutaJs)) $js=file_get_contents($rutaJs);
+
+        $this->renombrarCodigo($nombre,$nuevoNombre,$html,$css,$js);
+
+        file_put_contents($nuevaRutaHtml,$html);
+        file_put_contents($nuevaRutaCss,$css);
+        if($js) file_put_contents($nuevaRutaJs,$js);
+
+        $json->vistas->$nuevoNombre=clone $json->vistas->$nombre;
+        file_put_contents($rutaJson,json_encode($json));
     }
 }

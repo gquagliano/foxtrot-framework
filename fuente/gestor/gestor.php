@@ -88,9 +88,16 @@ class gestor {
      */
     public static function procesarSolicitud() {
         if($_REQUEST['eliminarVista']) {
+            //TODO Debería obtenerse desde los asistentes
             self::eliminarVista($_REQUEST['eliminarVista']);
         } elseif($_REQUEST['seleccionarAplicacion']) {
             self::seleccionarAplicacion($_REQUEST['seleccionarAplicacion']);            
+        } elseif($_REQUEST['duplicarVista']) {    
+            //TODO Debería obtenerse desde los asistentes
+            self::duplicarVista($_REQUEST['duplicarVista']);    
+        } elseif($_REQUEST['renombrarVista']) {
+            //TODO Debería obtenerse desde los asistentes
+            self::renombrarVista($_REQUEST['renombrarVista'],$_REQUEST['nuevoNombre']);
         } elseif($_REQUEST['asistente']) {
             self::ejecutarAsistente($_REQUEST['asistente']);
         }
@@ -112,6 +119,25 @@ class gestor {
     protected static function eliminarVista($nombre) {
         asistentes::obtenerAsistente('vistas')
             ->eliminar($nombre);
+    }
+
+    /**
+     * Duplica una vista.
+     * @var string $nombre Nombre de la vista.
+     */
+    protected static function duplicarVista($nombre) {
+        asistentes::obtenerAsistente('vistas')
+            ->duplicar($nombre);
+    }
+
+    /**
+     * Renombra una vista.
+     * @var string $nombre Nombre de la vista.
+     * @var string $nuevoNombre Nombre a asignar.
+     */
+    protected static function renombrarVista($nombre,$nuevoNombre) {
+        asistentes::obtenerAsistente('vistas')
+            ->renombrar($nombre,$nuevoNombre);
     }
 
     /**

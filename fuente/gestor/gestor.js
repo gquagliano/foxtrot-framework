@@ -42,12 +42,12 @@ var gestor=new function() {
                     if(typeof error==="function") {
                         error(respuesta.d);
                     } else {
-                        ui.alerta("No fue posible seleccionar completar la operación.");
+                        ui.alerta("No fue posible completar la operación.");
                     }
                 }
             },
             error:function() {
-                ui.alerta("No fue posible seleccionar completar la operación.");
+                ui.alerta("No fue posible completar la operación.");
             },
             siempre:function() {
                 gestor.trabajando(false);
@@ -74,6 +74,42 @@ var gestor=new function() {
      */
     this.abrirEditor=function(nombreVista) {
         window.open("editor.php?apl="+nombreAplicacion+"&vista="+nombreVista);
+    };
+
+    /**
+     * Duplica una vista.
+     * @param {string} nombreVista 
+     */
+    this.duplicarVista=function(nombreVista) {
+        this.operacion({
+            duplicarVista:nombreVista
+        },function() {
+            gestor.actualizar();
+        })
+    };
+
+    /**
+     * Inicia la operación de renombrar vista.
+     * @param {string} nombreVista 
+     */
+    this.renombrarVista=function(nombreVista) {
+        this.abrirDialogo("dialogo-renombrar");
+        document.querySelector("#dialogo-renombrar .nombre-vista").establecerHtml(nombreVista);
+        document.querySelector("#dialogo-renombrar [name='nombre']").valor(nombreVista);
+    };
+
+    /**
+     * Acepta el diálogo de renombrar vista.
+     * @param {string} nombreVista 
+     */
+    this.aceptarRenombrarVista=function() {
+        var valores=this.obtenerValoresFormulario("dialogo-renombrar");
+        this.operacion({
+            renombrarVista:valores.nombre,
+            nuevoNombre:valores.nuevo_nombre
+        },function() {
+            gestor.actualizar();
+        })
     };
 
     /**

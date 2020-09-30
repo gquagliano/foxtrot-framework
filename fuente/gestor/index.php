@@ -145,8 +145,8 @@ if(!count(gestor::obtenerAplicaciones())) {
                             <label class="vista" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->item?></label>
                             <div class="opciones">
                                 <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
-                                <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar" disabled><img src="img/renombrar.png"></button>
-                                <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar" disabled><img src="img/copiar.png"></button>
+                                <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar"><img src="img/renombrar.png"></button>
+                                <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar"><img src="img/copiar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar"><img src="img/eliminar.png"></button>
                             </div>
                         </li>
@@ -165,6 +165,21 @@ if(!count(gestor::obtenerAplicaciones())) {
             </div>
         </div>
     </main>
+
+    <div class="foxtrot-dialogo-gestor" id="dialogo-renombrar">
+        <h1>Renombrar <span class="nombre-vista"></span></h1>
+        <input type="hidden" name="nombre">
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Nuevo nombre</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="nuevo_nombre">
+            </div>
+        </div>        
+        <div class="text-center">
+            <button type="button" onclick="gestor.aceptarRenombrarVista()" class="btn btn-sm btn-primary">Aceptar</button>
+            <button type="button" onclick="gestor.cerrarDialogo(this)" class="btn btn-sm">Cancelar</button>
+        </div>
+    </div>
 
     <div class="foxtrot-dialogo-gestor" id="dialogo-nueva-aplicacion">
         <h1>Nueva aplicación</h1>

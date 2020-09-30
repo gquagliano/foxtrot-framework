@@ -108,6 +108,7 @@ label.custom-control-label {
     content: "Seleccionar...";
 }
 .custom-switch {
+    padding: .28rem;
     padding-left: 2.45rem;
 }
 .custom-switch * {

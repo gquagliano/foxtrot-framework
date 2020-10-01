@@ -54,6 +54,12 @@ class crearControlador extends asistente {
 
         $ruta=dirname($param->nombre).'/';
         $nombre=basename($param->nombre);
+        
+        $espacio='';
+        $p=strrpos($param->nombre,'/');
+        if($p!==false) $espacio.='\\'.str_replace('/','\\',substr($param->nombre,0,$p));
+        if($param->publico) $espacio.='\\publico';
+
         $clase=foxtrot::prepararNombreClase($nombre);
 
         $ruta=_raiz.'/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/controladores/'.$ruta.$nombre.($param->publico?'.pub':'').'.php';
@@ -65,8 +71,8 @@ class crearControlador extends asistente {
         
         $php=str_replace_array([
             '{nombreApl}'=>gestor::obtenerNombreAplicacion(),
-            '{publico}'=>$param->publico?'\\publico':'',
             '{controlador}'=>$clase,
+            '{espacio}'=>$espacio,
             '{nombre}'=>$param->nombre
         ],$php);
 

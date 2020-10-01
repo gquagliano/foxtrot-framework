@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\{nombreApl}{publico};
+namespace aplicaciones\{nombreApl}{espacio};
 
 defined('_inc') or exit;
 

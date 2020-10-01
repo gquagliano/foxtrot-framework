@@ -191,14 +191,15 @@ class foxtrot {
 
         configuracion::cargar();
 
-        sesion::inicializar();
-
         //Establecer url por defecto
         if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
         //foxtrot::inicializar(false) saltea la carga de una aplicación
         //foxtrot::inicializar() carga la aplicación utilizando el enrutador
         if($aplicacion!==false) self::cargarAplicacion($aplicacion);
+        
+        //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella
+        sesion::inicializar();
     }
 
     public static function error() {

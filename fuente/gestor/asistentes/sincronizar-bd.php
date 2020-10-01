@@ -93,7 +93,11 @@ class sincronizarBd extends asistente {
         $tipo=$parametros->tipo;
         $predeterminado=isset($parametros->predeterminado)?'\''.$parametros->predeterminado.'\'':'NULL';
 
-        if($tipo=='texto') return 'text';
+        if($tipo=='texto') return 'TEXT';
+
+        if($tipo=='fecha') return 'DATETIME';
+
+        if($parametros->busqueda) return 'VARCHAR(255) NOT NULL DEFAULT \'\'';
         
         if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)) {
             return 'VARCHAR('.$coincidencias[1].') NULL DEFAULT '.$predeterminado;
@@ -105,7 +109,7 @@ class sincronizarBd extends asistente {
         
         if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
             $long=$coincidencias[2]?$coincidencias[2]:3;
-            $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',8=>'BIGINT'];
+            $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',5=>'INT',6=>'INT',7=>'INT',8=>'BIGINT'];
             return $tipos[$long].
                 (trim($coincidencias[3])=='sin signo'?' UNSIGNED':'').
                 ' NULL DEFAULT '.$predeterminado;
@@ -149,6 +153,10 @@ class sincronizarBd extends asistente {
 
         if(preg_match('/logico/',$tipo,$coincidencias)&&!preg_match('/tinyint/i',$campoBd->Type)) return false;
 
+        if(preg_match('/fecha/',$tipo,$coincidencias)&&!preg_match('/datetime/i',$campoBd->Type)) return false;
+
+        if(preg_match('/busqueda/',$tipo,$coincidencias)&&!preg_match('/varchar/i',$campoBd->Type)) return false;
+
         return true;
     }
 
@@ -177,6 +185,8 @@ class sincronizarBd extends asistente {
             if($campo=='id'||$campo=='e'||$parametros->tipo=='relacional') continue;
 
             $tipo=$this->obtenerTipo($campo,$parametros);
+
+            if($parametros->busqueda) $parametros->indice=true;
 
             if(array_key_exists($campo,$campos)) {
                 $campoBd=$campos[$campo];

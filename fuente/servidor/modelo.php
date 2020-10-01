@@ -51,6 +51,7 @@ class modelo {
     protected $consultaProcesarRelaciones1n=true;
     protected $consultaOmitirRelacionesCampos=[];
     protected $consultaSeleccionarEliminados=false;
+    protected $consultaIncluirOcultos=false;
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -137,7 +138,7 @@ class modelo {
      */
     protected function cargarEstructura() {
         //Posibles valores de las etiquetas en los comentarios de las propiedades:
-        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|logico|relacional)
+        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|logico|relacional|fecha)
         //@relacion (1:1|1:0|1:n)
         //@indice
         //@indice unico
@@ -149,6 +150,8 @@ class modelo {
         //@tamano
         //@etiqueta *
         //@omitir
+        //@oculto
+        //@busqueda campos
 
         $this->campos=(object)[
             'id'=>(object)[],
@@ -158,7 +161,7 @@ class modelo {
         $propiedades=get_class_vars($this->tipoEntidad);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=trim($etiqueta);
@@ -201,6 +204,7 @@ class modelo {
         $this->consultaProcesarRelaciones1n=true;
         $this->consultaOmitirRelacionesCampos=[];
         $this->consultaSeleccionarEliminados=false;
+        //$this->consultaIncluirOcultos=false;
 
         $this->ultimoId=null;
 
@@ -294,6 +298,24 @@ class modelo {
      */
     public function omitirRelacionesUnoAMuchos() {
         $this->consultaProcesarRelaciones1n=false;
+        return $this;
+    }
+
+    /**
+     * Incluye los valores de campos ocultos en la próxima consulta.
+     * @return \modelo
+     */
+    public function incluirOcultos() {
+        $this->consultaIncluirOcultos=true;
+        return $this;
+    }
+
+    /**
+     * Excluye los valores de campos ocultos en la próxima consulta.
+     * @return \modelo
+     */
+    public function excluirOcultos() {
+        $this->consultaIncluirOcultos=false;
         return $this;
     }
 
@@ -415,6 +437,8 @@ class modelo {
             $parametros=[];
             foreach($condicion as $clave=>$valor) {
                 if($valor===null||!array_key_exists($clave,$this->campos)) continue;
+
+                $campo=$this->campos->$clave;
                 
                 if($valor===true) {
                     $valor=1;
@@ -424,10 +448,16 @@ class modelo {
                     $valor=null;
                 }
 
+                $nombre=$this->alias.'.`'.$clave.'`';
+
                 if($valor===null) {
-                    $sql[]=$this->alias.'.`'.$clave.'` is null';
+                    $sql[]=$nombre.' is null';
+                } elseif($campo->busqueda) {
+                    $busqueda=$this->generarConsultaBusquedaFonetica($nombre,$valor);
+                    $sql[]=$busqueda->sql;
+                    foreach($busqueda->parametros as $param) $parametros[]=$param;
                 } else {
-                    $sql[]=$this->alias.'.`'.$clave.'`=?';
+                    $sql[]=$nombre.'=?';
                     $parametros[]=$valor;
                 }
             }
@@ -803,7 +833,7 @@ class modelo {
         }
 
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional') continue;
+            if($campo->tipo=='relacional'||$campo->busqueda||($campo->oculto&&!$this->consultaIncluirOcultos)) continue;
 
             $campos[]=$this->alias.'.`'.$nombre.'` `__'.$this->alias.'_'.$nombre.'`';
         }
@@ -951,34 +981,68 @@ class modelo {
      */
     protected function construirCamposInsercionActualizacion(&$parametros,&$tipos,$alias=true) {
         $campos=[];
+        $camposAfectados=[];
+        $valores=[];
 
         foreach($this->campos as $nombre=>$campo) {
-            if($nombre=='id') continue;
-            if($campo->tipo!='relacional') {
+            if($nombre=='id'||$campo->tipo=='relacional'||$campo->busqueda) continue;
+            
+            $valor=null;
+            if(is_array($this->consultaValores)) {
+                $valor=$this->consultaValores[$nombre];
+            } else {
+                $valor=$this->consultaValores->$nombre;
+            }
+            if($valor===null) continue;
+
+            if($valor===true) {
+                $valor=1;
+            } elseif($valor===false) {
+                $valor=0;
+            } elseif($valor instanceof nulo) {
                 $valor=null;
-                if(is_array($this->consultaValores)) {
-                    $valor=$this->consultaValores[$nombre];
-                } else {
-                    $valor=$this->consultaValores->$nombre;
-                }
-                if($valor===null) continue;
+            }
 
-                if($valor===true) {
-                    $valor=1;
-                } elseif($valor===false) {
-                    $valor=0;
-                } elseif($valor instanceof nulo) {
-                    $valor=null;
-                }
+            $valores[$nombre]=$valor;
 
-                if($valor===null) {
-                    $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=null';
-                } else {
-                    $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=?';
-                    $parametros[]=$valor;
-                    $tipos[]=$this->determinarTipo($valor);
+            if($valor===null) {
+                $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=null';
+            } else {
+                $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=?';
+                $parametros[]=$valor;
+                $camposAfectados[]=$nombre;
+                $tipos[]=$this->determinarTipo($valor);
+            }
+        }        
+
+        //Actualizar caché de búsqueda fonética, si corresponde
+        foreach($this->campos as $nombre=>$campo) {
+            if(!$campo->busqueda) continue;
+
+            $camposIncluidos=explode(',',$campo->busqueda);
+
+            //Verificar que todos los campos estén en la consulta
+
+            $actualizar=true;
+            foreach($camposIncluidos as $campoIncluido) {
+                if(!in_array($campoIncluido,$camposAfectados)) {
+                    $actualizar=false;
+                    break;
                 }
             }
+            if(!$actualizar) continue;
+
+            //Construir valor y agregar
+
+            $cadena='';
+            foreach($camposIncluidos as $campoIncluido) {
+                $valor=$valores[$campoIncluido];
+                if(is_string($valor)) $cadena.=' '.$valor;
+            }
+            
+            $campos[]=($alias?$this->alias.'.':'').'`'.$nombre.'`=?';
+            $parametros[]=implode(' ',$this->prepararCadenaBusquedaFonetica($cadena));
+            $tipos[]='s';
         }
 
         return implode(',',$campos);
@@ -1000,5 +1064,44 @@ class modelo {
     public function instalar() {
     }
 
-    //TODO Métodos útiles para búsqueda fonética - Ver otras utilidades posibles
+    /**
+     * Procesa una cadena para realizar una búsqueda fonética o almacenar en el caché de búsqueda fonética.
+     * @param string $cadena Cadena.
+     * @return array
+     */
+    public function prepararCadenaBusquedaFonetica($cadena) {
+        $resultado=[];
+        $partes=explode(' ',$cadena);
+        foreach($partes as $parte) {
+            $parte=trim($parte);
+            if(strlen($parte)<3) continue;
+            $resultado[]=soundex($parte);
+        }
+        return $resultado;
+    }
+
+    /**
+     * Devuelve la porción de código SQL para realizar una búsqueda fonética. Devuelve un objeto [sql,parametros].
+     * @param string $campo Nombre del campo de búsqueda, listo para usar (incluyendo alias, apóstrofes, etc.).
+     * @param string $cadena Cadena a buscar.
+     * @return object
+     */
+    public function generarConsultaBusquedaFonetica($campo,$cadena) {
+        $sql='';
+        $parametros=[];
+
+        $partes=$this->prepararCadenaBusquedaFonetica($cadena);
+        foreach($partes as $parte) {
+            if($sql!='') $sql.=' or ';
+            $sql.=$campo.' like ?';
+            $parametros[]='%'.$parte.'%';
+        }
+
+        return (object)[
+            'sql'=>$sql,
+            'parametros'=>$parametros
+        ];
+    }
+
+    //TODO Ver otras utilidades posibles
 }

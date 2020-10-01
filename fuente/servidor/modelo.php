@@ -373,20 +373,80 @@ class modelo {
     }
 
     /**
-     * Establece la condición.
+     * Agrega una condición.
      * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
      * @var object $parametros Array parámetro/valor.
      */
     /**
-     * Establece la condición.
+     * Agrega una condición.
      * @var object $condicion Array campo=>valor a utilizar como filtro.
      */
     /**
-     * Establece la condición.
+     * Agrega una condición.
      * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
      */
     public function donde($condicion,$parametros=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros);
+        return $this;
+    }
+
+    /**
+     * Agrega una condición mediante un operador de desigualdad.
+     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @var object $parametros Array parámetro/valor.
+     */
+    /**
+     * Agrega una condición.
+     * @var object $condicion Array campo=>valor a utilizar como filtro.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     */
+    /**
+     * Agrega una condición.
+     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     */
+    public function dondeComparar($condicion,$operador,$parametros=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'and',$operador);
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR.
+     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
+     * @var object $parametros Array parámetro/valor.
+     */
+    /**
+     * Agrega una condición OR.
+     * @var object $condicion Array campo=>valor a utilizar como filtro.
+     */
+    /**
+     * Agrega una condición OR.
+     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     */
+    public function oDonde($condicion,$parametros=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'or');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR mediante un operador de desigualdad.
+     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @var object $parametros Array parámetro/valor.
+     */
+    /**
+     * Agrega una condición OR.
+     * @var object $condicion Array campo=>valor a utilizar como filtro.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     */
+    /**
+     * Agrega una condición OR.
+     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     */
+    public function oDondeComparar($condicion,$operador,$parametros=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'or',$operador);
         return $this;
     }
 
@@ -419,7 +479,7 @@ class modelo {
     /**
      * Genera un objeto representando intermanente una condición a partir de cualquera de los tres formatos que admiten donde() y teniendo().
      */
-    protected function generarCondicion($condicion,$parametros) {
+    protected function generarCondicion($condicion,$parametros,$union='and',$operador='=') {
         if(is_object($condicion)&&get_class($condicion)==$this->tipoEntidad) {
             //Convertir a un array campo=>valor
             //Ya conocemos los campos
@@ -457,7 +517,7 @@ class modelo {
                     $sql[]=$busqueda->sql;
                     foreach($busqueda->parametros as $param) $parametros[]=$param;
                 } else {
-                    $sql[]=$nombre.'=?';
+                    $sql[]=$nombre.$operador.'?';
                     $parametros[]=$valor;
                 }
             }
@@ -478,6 +538,7 @@ class modelo {
         }
         
         return (object)[
+            'union'=>$union,
             'condicion'=>$condicion,
             'parametros'=>$parametros
         ];
@@ -890,17 +951,18 @@ class modelo {
                 $sql.=$this->alias.'.`e`=0 and ';
             }
 
-            $condiciones=[];
+            $condiciones='';
             
             foreach($this->consultaCondiciones as $condicion) {
-                $condiciones[]=$condicion->condicion;
+                if($condiciones!='') $condiciones.=' '.$condicion->union.' ';
+                $condiciones.='( '.$condicion->condicion.' )';
                 foreach($condicion->parametros as $parametro) {
                     $parametros[]=$parametro;
                     $tipos[]=$this->determinarTipo($parametro);
                 }
             }
 
-            $sql.=' ( '.implode(' ) and ( ',$condiciones).' ) ';
+            $sql.=' ( '.$condiciones.' ) ';
         } elseif($operacion=='actualizar') {
             $sql.=' where '.$this->alias.'.`id`=? ';
             $parametros[]=$this->consultaValores->id;

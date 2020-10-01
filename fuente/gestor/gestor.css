@@ -11,12 +11,12 @@
 html {
     width: 100%;
     height: 100%;
-    overflow-x: hidden;
 }
 body.foxtrot-modo-edicion.foxtrot-bordes {
     box-shadow: 0 0 0 22px rgb(251, 251, 251);
     margin-top: 22px !important;
     margin-bottom: 22px !important;
+    overflow: visible !important;
 }
 body.foxtrot-editor,
 body.foxtrot-gestor {

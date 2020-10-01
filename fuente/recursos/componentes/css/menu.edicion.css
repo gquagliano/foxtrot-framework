@@ -21,9 +21,9 @@
     min-width: 80px;
     position: absolute;
 }
-.nav .seleccionado>.menu-contextual,
-.nav .menu-contextual.hijo-seleccionado,
-.nav .menu-contextual.seleccionado {
+.nav .foxtrot-seleccionado>.menu-contextual,
+.nav .menu-contextual.foxtrot-hijo-seleccionado,
+.nav .menu-contextual.foxtrot-seleccionado {
     display: block;
     opacity: 1;
 }

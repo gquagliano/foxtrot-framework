@@ -393,7 +393,7 @@ class foxtrot {
         }
 
         $nombre=str_replace('/','\\',$nombre);
-        $nombre=preg_replace('/[^a-z0-9\\_]/i','',$nombre);
+        $nombre=preg_replace('/[^a-z0-9\\\\_]/i','',$nombre);
         
         return $nombre;
     }

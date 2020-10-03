@@ -865,13 +865,11 @@
                 } else {
                     //Buscar en ev.path un elemento que coincida con el filtro
                     var elemento=null;
-                    for(var i=0;i<ev.path.length;i++) {
+                    for(var i=ev.path.length-1;i>=0;i--) {
                         var elem=ev.path[i];
-                        if(elem instanceof HTMLBodyElement||elem==this) break;
-                        if(elem.es(filtro)) {
-                            elemento=elem;
-                            break;
-                        }
+                        if(elem instanceof Window||elem instanceof Document) continue;
+                        //Tomamos la última coincidencia (el elemento más interior)
+                        if(elem.es(filtro)) elemento=elem;
                     }
                     if(!elemento) return;
                 }

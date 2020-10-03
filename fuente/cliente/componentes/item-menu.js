@@ -246,16 +246,19 @@ var componenteItemMenu=function() {
     };
 
     /**
-     * Elimina el componente.
+     * Elimina el componente (método para sobreescribir).
+     * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
+     * uso interno; omitir al solicitar eliminar este componente.
+     * @returns {Componente}
      */
-    this.eliminar=function() {
-        if(ui.enModoEdicion()) {
+    this.eliminar=function(descendencia) {
+        if(ui.enModoEdicion()&&(typeof descendencia==="undefined"||!descendencia)) {
             //Antes de eliminar, seleccionar el menú superior para mantener abierto el desplegable
             var comp=this.obtenerPadre();
-            if(comp.componente=="menu") editor.establecerSeleccion(comp);
+            if(comp&&comp.componente=="menu") editor.establecerSeleccion(comp);
         }
 
-        return this.eliminarComponente();
+        return this.eliminarComponente(descendencia);
     };
 };
 

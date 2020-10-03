@@ -680,16 +680,23 @@ var componente=new function() {
 
     /**
      * Elimina el componente (método para sobreescribir).
+     * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
+     * uso interno; omitir al solicitar eliminar este componente.
+     * @returns {Componente}
      */
-    this.eliminar=function() {
-        this.eliminarComponente();
+    this.eliminar=function(descendencia) {
+        this.eliminarComponente(descendencia);
         return this;
     };
 
     /**
      * Elimina el componente.
+     * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado.
+     * @returns {Componente}
      */
-    this.eliminarComponente=function() {
+    this.eliminarComponente=function(descendencia) {
+        if(typeof descendencia==="undefined") descendencia=false;
+
         this.elemento.remover();
         if(this.nombre) delete componentes[this.nombre];
         ui.eliminarInstanciaComponente(this.id);
@@ -699,7 +706,7 @@ var componente=new function() {
 
         //Avanzar recursivamente
         this.obtenerHijos().forEach(function(hijo) {
-            hijo.eliminar();
+            hijo.eliminar(true);
         });
         
         return this;

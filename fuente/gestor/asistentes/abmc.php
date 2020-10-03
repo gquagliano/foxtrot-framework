@@ -83,6 +83,12 @@ class abmc extends asistente {
             </div>
         </div>
         <div class="form-group row">
+            <label class="col-3 col-form-label">Controlador</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="controlador" placeholder="Opcional">
+            </div>
+        </div>
+        <div class="form-group row">
             <label class="col-3 col-form-label">Generar</label>
             <div class="col-sm-9">                
                 <div class="custom-control custom-checkbox custom-control-inline">
@@ -145,6 +151,7 @@ class abmc extends asistente {
 
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);
+        if(!file_exists(dirname($this->rutaPhp))) mkdir(dirname($this->rutaPhp),0755,true);
 
         $this->json=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
 
@@ -187,7 +194,7 @@ class abmc extends asistente {
         $this->singular=$opc->singular;
         if(!$this->singular) $this->singular=$this->modelo->singular();
 
-        $this->nombreControlador=$this->plural; //Por defecto, mismo nombre
+        $this->nombreControlador=$opc->controlador?$opc->controlador:$this->nombreModelo; //Por defecto, mismo nombre que el modelo
 
         $this->ruta=trim($opc->ruta);
         if($this->ruta&&substr($this->ruta,-1)!='/') $this->ruta.='/';
@@ -328,11 +335,16 @@ class abmc extends asistente {
             if(preg_match('/cadena/',$campo->tipo)) $sql.=' or '.$this->plural.'.`'.$nombre.'` like @filtroParcial';
         }
 
+        $espacio=\foxtrot::prepararNombreEspacio($this->nombreControlador);
+        $nombre=\foxtrot::prepararNombreClase($this->nombreControlador);
+
         $php=$this->reemplazarVariables($php,[
             'claseModelo'=>$this->claseModelo,
-            'aliasModelo'=>'modelo'.ucfirst($this->nombreControlador),
+            'aliasModelo'=>'modelo'.ucfirst(basename($this->claseModelo)),
             'requeridos'=>implode(',',$requeridos),
-            'sqlFiltros'=>$sql
+            'sqlFiltros'=>$sql,
+            'espacio'=>$espacio,
+            'nombre'=>$nombre
         ]);
 
         file_put_contents($this->rutaPhp,$php);

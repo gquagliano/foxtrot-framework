@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\{nombreApl}\publico;
+namespace aplicaciones\{nombreApl}{espacio}\publico;
 
 use {claseModelo} as {aliasModelo};
 
@@ -13,7 +13,7 @@ defined('_inc') or exit;
 /**
  * Métodos públicos del controlador de vista. Autogenerado por el asistente de Foxtrot.
  */
-class {controlador} extends \controlador {
+class {nombre} extends \controlador {
     /**
      * Devuelve el listado de {plural}.
      * @param object $filtro Objeto con los parámetros del filtro.

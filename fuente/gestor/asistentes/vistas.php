@@ -99,7 +99,7 @@ class vistas extends asistente {
         $html=preg_replace('/data-fxid="'.$id.'-([a-z0-9-]+)"/m','data-fxid="'.$nuevoId.'-$1"',$html);
         $html=preg_replace('/"id":"'.$id.'-([a-z0-9-]+)"/m','"id":"'.$nuevoId.'-$1"',$html);
         $html=preg_replace('/"selector":".'.$id.'-([a-z0-9-]+)"/m','"selector":".'.$nuevoId.'-$1"',$html);
-        $html=str_replace('"nombre":"'.$nombre.'"','"nombre":"'.$nuevoNombre.'"',$html);
+        $html=str_replace('"nombre":"'.str_replace('/','\\/',$nombre).'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$html);
 
         $css=str_replace('.'.$id.'-','.'.$nuevoId.'-',$css);
 

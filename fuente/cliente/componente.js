@@ -1805,7 +1805,8 @@ var componente=new function() {
             var elementos=padre.hijos();
             for(var i=0;i<elementos.length;i++) {
                 if(elementos[i].es({clase:"componente"})) {
-                    hijos.push(ui.obtenerInstanciaComponente(elementos[i]));
+                    var comp=ui.obtenerInstanciaComponente(elementos[i]);
+                    if(comp) hijos.push(comp);
                 } else {
                     fn(elementos[i]);
                 }

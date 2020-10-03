@@ -141,7 +141,7 @@ class abmc extends asistente {
         $this->rutaVistas=_vistasAplicacion.$this->ruta;
         $this->rutaJs=_controladoresClienteAplicacion.$this->ruta;
         $this->rutaPhp=_controladoresServidorAplicacion.$this->nombreControlador.'.pub.php'; //Por defecto, mismo nombre
-        $this->rutaModelo=_modeloAplicacion.$this->plural.'.php';
+        $this->rutaModelo=_modeloAplicacion.$this->nombreModelo.'.php';
 
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);

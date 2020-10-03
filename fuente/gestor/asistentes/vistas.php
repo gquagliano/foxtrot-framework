@@ -155,6 +155,12 @@ class vistas extends asistente {
 
         $this->renombrarCodigo($nombre,$nuevoNombre,$html,$css,$js);
 
+        //Crear árbol de directorios
+        $dir=dirname($nuevaRutaHtml); //dirname($nuevaRutaCss) es igual a dirname($nuevaRutaHtml)
+        if(!file_exists($dir)) mkdir($dir,755,true);
+        $dir=dirname($nuevaRutaJs);
+        if(!file_exists($dir)) mkdir($dir,755,true);
+
         file_put_contents($nuevaRutaHtml,$html);
         file_put_contents($nuevaRutaCss,$css);
         if($js) file_put_contents($nuevaRutaJs,$js);

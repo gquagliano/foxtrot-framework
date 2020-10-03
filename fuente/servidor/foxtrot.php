@@ -327,9 +327,12 @@ class foxtrot {
             if(!file_exists($ruta)) self::error();
 
             include($ruta);
-            $ctl=self::prepararNombreClase($ctl);
-            $cls='\\aplicaciones\\'._apl.'\\publico\\'.$ctl;
-            $obj=new $cls;       
+
+            $espacio=self::prepararNombreEspacio($ctl);
+            $nombre=self::prepararNombreClase($ctl);
+            $clase='\\aplicaciones\\'._apl.$espacio.'\\publico\\'.$nombre;
+
+            $obj=new $clase;       
         } elseif(self::$instanciaAplicacionPublico) {
             //Si no se definió un controlador, notificaremos la solicitud a la clase pública de la aplicación
             $obj=self::$instanciaAplicacionPublico;
@@ -383,20 +386,31 @@ class foxtrot {
      * @return string
      */
     public static function prepararNombreClase($nombre) {
-        $nombre=strtolower($nombre);
+        if(strpos($nombre,'/')!==false) $nombre=basename($nombre);
 
         if(strpos($nombre,'-')>0) {
             $partes=explode('-',$nombre);
-            $nombre=strtolower($partes[0]);
-            for($i=1;$i<count($partes);$i++) $nombre.=ucfirst(strtolower($partes[$i]));
-        } else {
-            $nombre=strtolower($nombre);
+            $nombre=$partes[0];
+            for($i=1;$i<count($partes);$i++) $nombre.=ucfirst($partes[$i]);
         }
 
         $nombre=str_replace('/','\\',$nombre);
         $nombre=preg_replace('/[^a-z0-9\\\\_]/i','',$nombre);
         
         return $nombre;
+    }
+
+    /**
+     * Extrae, valida y corrije el espacio de nombres de una clase dado su nombre, sin incluir \aplicaciones\aplicacion. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
+     * @var string $nombre Nombre a procesar.
+     * @return string
+     */
+    public static function prepararNombreEspacio($nombre) {
+        if(strpos($nombre,'/')===false) return '';
+        
+        $partes=explode('/',dirname($nombre));
+        foreach($partes as $i=>$parte) $partes[$i]=self::prepararNombreClase($parte);
+        return '\\'.implode('\\',$partes);
     }
 
     ////Base de datos y modelo de datos

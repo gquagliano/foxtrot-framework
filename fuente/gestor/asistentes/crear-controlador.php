@@ -55,12 +55,10 @@ class crearControlador extends asistente {
         $ruta=dirname($param->nombre).'/';
         $nombre=basename($param->nombre);
         
-        $espacio='';
-        $p=strrpos($param->nombre,'/');
-        if($p!==false) $espacio.='\\'.str_replace('/','\\',substr($param->nombre,0,$p));
+        $espacio=\foxtrot::prepararNombreEspacio($nombre);
         if($param->publico) $espacio.='\\publico';
 
-        $clase=foxtrot::prepararNombreClase($nombre);
+        $clase=\foxtrot::prepararNombreClase($nombre);
 
         $ruta=_raiz.'/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/controladores/'.$ruta.$nombre.($param->publico?'.pub':'').'.php';
         if(file_exists($ruta)) gestor::error('El controlador ya existe.');

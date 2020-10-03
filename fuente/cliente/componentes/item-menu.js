@@ -244,6 +244,19 @@ var componenteItemMenu=function() {
         this.enlace.establecerHtml(valor);
         return this;
     };
+
+    /**
+     * Elimina el componente.
+     */
+    this.eliminar=function() {
+        if(ui.enModoEdicion()) {
+            //Antes de eliminar, seleccionar el menú superior para mantener abierto el desplegable
+            var comp=this.obtenerPadre();
+            if(comp.componente=="menu") editor.establecerSeleccion(comp);
+        }
+
+        return this.eliminarComponente();
+    };
 };
 
 ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({

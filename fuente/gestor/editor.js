@@ -579,9 +579,9 @@ var editor=new function() {
     };
 
     this.eliminarComponente=function(id) {
+        this.limpiarSeleccion();
         var obj=ui.obtenerInstanciaComponente(id);
         obj.eliminar();
-        this.limpiarSeleccion();
         cambiosSinGuardar=true;
         return this;
     };

@@ -169,6 +169,7 @@ li.menu-separador::after {
     top: 0;
     left: 0;
     right: 0;
+    pointer-events: none;
 }
 #foxtrot-barra-precarga::after {
     content: "";
@@ -182,8 +183,12 @@ li.menu-separador::after {
     width: 0%;
     left: 0;
 }
-#foxtrot-barra-precarga.aparece::after {
+#foxtrot-barra-precarga.visible::after {
     animation-name: barra-precarga;
+}
+#foxtrot-barra-precarga.visible.completa::after {
+    animation-play-state: paused;
+    width: 100% !important;
 }
 @keyframes barra-precarga {
     0% {
@@ -315,12 +320,12 @@ li.menu-separador::after {
     display: none;
 }
 .aparece {
-    animation: aparece .1s;
+    animation: aparece .2s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
 }
 .desaparece {
-    animation: desaparece .1s;
+    animation: desaparece .2s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
     pointer-events: none;

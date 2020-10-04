@@ -18,6 +18,7 @@
 
     var temporizadorPrecarga,
         temporizadorBarra,
+        temporizadorBarraCompleta,
         precargas=0,
         precargasBarra=0,
         precargaVisible=false,
@@ -74,6 +75,8 @@
                     .anexarA(doc.body);
             }
 
+            elementoBarra.agregarClase("visible")
+                .removerClase("completa");
             ui.animarAparecer(elementoBarra);
 
             barraVisible=true;
@@ -110,6 +113,8 @@
             if(!elementoBarra||!barraVisible) return ui;
 
             clearTimeout(temporizadorBarra);
+            clearTimeout(temporizadorBarraCompleta);
+            ui.detenerAnimacion(elementoBarra);
 
             precargasBarra--;
 
@@ -119,8 +124,14 @@
             
             //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
             temporizadorBarra=setTimeout(function() {
-                ui.animarDesaparecer(elementoBarra);
-                barraVisible=false;
+                //Llevar la barra al 100% antes de ocultar
+                elementoBarra.agregarClase("completa");
+                temporizadorBarraCompleta=setTimeout(function() {
+                    ui.animarDesaparecer(elementoBarra,function() {
+                        elementoBarra.removerClase("visible");
+                    });
+                    barraVisible=false;
+                },500);
             },200);
         }
 

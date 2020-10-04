@@ -15,7 +15,7 @@
      * @ignore
      * @var {number} duracionAnimacion - Duración máxima de la animación, acorde al CSS.
      */
-    var duracionAnimacion=1000;
+    var duracionAnimacion=300;
 
     /**
      * Establece el evento animationend y un temporizador en caso de que el navegador no tenga soporte para el mismo.

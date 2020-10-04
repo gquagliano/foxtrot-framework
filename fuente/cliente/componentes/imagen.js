@@ -139,6 +139,28 @@ var componenteImagen=function() {
         this.actualizarComponente();
         return this;
     };
+
+    /**
+     * Evento `editor`.
+     * @returns {Componente}
+     */
+    this.editor=function() {
+        //Mostrar imagen de relleno, si corresponde
+        if(!this.propiedadAsignada("origen")) this.img.atributo("src",icono);
+
+        return this.editorComponente();
+    };    
+
+    /**
+     * Evento `editorDesactivado`.
+     * @returns {Componente}
+     */
+    this.editorDesactivado=function() {
+        //Remover imagen de relleno
+        if(this.img.atributo("src")==icono) this.img.atributo("src","");
+
+        return this.editorDesactivadoComponente();
+    };
 };
 
 ui.registrarComponente("imagen",componenteImagen,configComponente.clonar({

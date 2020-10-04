@@ -21,11 +21,15 @@ ui.registrarModulo("recaptcha",function() {
 
     /**
      * Carga Recaptcha en la página.
-     * @param {string} [clave] - Clave pública de Recaptcha. Si se omite, intentará obtener la configuración desde el servidor.
+     * @param {string} [clave] - Clave pública de Recaptcha. Si se omite o es nulo, intentará obtener la configuración desde el servidor.
+     * @param {Object} [opciones] - Opciones para la comunicación cliente-servidor (ver documentación de servidor.invocarMetodo).
      * @returns {Modulo}
      */
-    this.cargar=function(clave) {
+    this.cargar=function(clave,opciones) {
         if(this.recaptchaListo) return this;
+
+        if(typeof clave==="undefined") clave=null;
+        if(typeof opciones==="undefined") opciones=null;
 
         this.promesaRecaptcha=new Promise(function(resolver,rechazar) {        
             var cargarJs=function() {
@@ -35,8 +39,9 @@ ui.registrarModulo("recaptcha",function() {
                 });
             };
 
-            if(typeof clave==="undefined"||!clave) {
+            if(!clave) {
                 //Cargar clave desde el servidor
+                if(opciones) t.servidor.establecerPredeterminados(opciones);
                 t.servidor.obtenerConfiguracion(function(retorno) {
                     t.clave=retorno.clave;
                     cargarJs();

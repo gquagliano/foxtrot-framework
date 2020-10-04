@@ -635,6 +635,22 @@ var componente=new function() {
     };
 
     /**
+     * Evento `editorDesactivado` (método para sobreescribir).
+     * @returns {Componente}
+     */
+    this.editorDesactivado=function() {
+        return this.editorDesactivadoComponente();
+    };
+
+    /**
+     * Evento `editorDesactivado`.
+     * @returns {Componente}
+     */
+    this.editorDesactivadoComponente=function() {
+        return this;
+    };
+
+    /**
      * Verifica y procesa las propiedades al inicializarse la instancia.
      * @returns {Componente}
      */
@@ -883,6 +899,40 @@ var componente=new function() {
         //TODO ¿Otros?
 
         return valor;
+    };
+
+    /**
+     * Determina si la propiedad tiene un valor asignado, no vacío y distinto de null, ya sea global o en algún tamaño de pantalla.
+     * @param {string} nombre - Propiedad a evaluar.
+     * @returns {(boolean|null)}
+     */
+    this.propiedadAsignada=function(nombre) {
+        //Determinar si la propiedad es adaptativa (por defecto, si)
+        var adaptativa=true,
+            definicion=this.buscarPropiedad(nombre);
+
+        if(!definicion) return null;
+        if(definicion.hasOwnProperty("adaptativa")) adaptativa=definicion.adaptativa;
+
+        var fn=function(v) {
+            return typeof v!=="undefined"&&v!==null&&v!=="";
+        };
+
+        if(!this.valoresPropiedades.hasOwnProperty(nombre)) return false;
+
+        //Si no es adaptativa, devolver directamente si está asignado o no un valor
+        if(!adaptativa) return !fn(this.valoresPropiedades[nombre]);
+
+        //Si es adaptativa, verificar cada propiedad del objeto
+        var tieneValores=false;
+        for(var clave in this.valoresPropiedades[nombre]) {
+            if(!this.valoresPropiedades[nombre].hasOwnProperty(clave)) continue;
+            if(fn(this.valoresPropiedades[nombre][clave])) {
+                tieneValores=true;
+                break;
+            }
+        }
+        return tieneValores;            
     };
     
     /**

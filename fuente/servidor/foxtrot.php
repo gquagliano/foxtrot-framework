@@ -61,6 +61,14 @@ class foxtrot {
     }
 
     /**
+     * Alias de obtenerAplicacion().
+     * @return \aplicacion
+     */
+    public static function aplicacion() {
+        return self::obtenerAplicacion();
+    }
+
+    /**
      * Devuelve el objeto de parámetros de la aplicación ("JSON").
      * @return object
      */

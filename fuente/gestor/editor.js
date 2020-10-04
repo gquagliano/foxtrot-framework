@@ -1367,6 +1367,9 @@ var editor=new function() {
         remover.forEach(function(elem) {
             elem.remover();
         });
+        
+        //Notificar a los componentes que el editor ha sido desactivado mediante el evento `editorDesactivado`
+        ui.eventoComponentes(null,"editorDesactivado",true);
 
         return this;
     };

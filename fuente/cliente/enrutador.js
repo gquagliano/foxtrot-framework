@@ -58,6 +58,23 @@ var enrutador=new function() {
      */
     this.obtenerUrlVista=function(ruta) {
     };
+
+    /**
+     * Devuelve el nombre de una vista dada su URL (método para sobreescribir).
+     * @param {string} url - URL a evaluar.
+     */
+    this.obtenerNombreVista=function(url) {
+        //Por defecto, vamos a extraer la ruta relativa a la URL base
+
+        var base=ui.obtenerUrlBase(),
+            p=url.indexOf("?");
+        
+        if(p>0) url=url.substring(0,p);
+        url=url.substring(base.length);
+        if(url.substring(url.length-1)=="/") url=url.substring(0,url.length-1);
+
+        return url;
+    };
 };
 
 window["enrutador"]=enrutador;

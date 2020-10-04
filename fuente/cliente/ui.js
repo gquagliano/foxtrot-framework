@@ -77,7 +77,7 @@ var ui=new function() {
     };
 
     this.obtenerUrlBase=function() {
-        return urlBase;
+        return urlBase?urlBase:document.querySelector("base").atributo("href");
     };
 
     this.esCordova=function() {

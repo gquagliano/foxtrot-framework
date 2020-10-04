@@ -17,6 +17,7 @@ class foxtrot {
     protected static $enrutador=null;
     protected static $enrutadorApl=null;
     protected static $aplicacion=null;
+    protected static $jsonAplicacion=null;
     protected static $instanciaAplicacion=null;
     protected static $instanciaPublicaAplicacion=null;
     protected static $instanciaAplicacionPublico=null;
@@ -57,6 +58,14 @@ class foxtrot {
      */
     public static function obtenerAplicacion() {
         return self::$instanciaAplicacion;
+    }
+
+    /**
+     * Devuelve el objeto de parámetros de la aplicación ("JSON").
+     * @return object
+     */
+    public static function obtenerJsonAplicacion() {
+        return self::$jsonAplicacion;
     }
 
     /**
@@ -132,7 +141,9 @@ class foxtrot {
 		if(self::$aplicacion) {
 	        self::definirConstantesAplicacion();
 
-	        if(!file_exists(_raizAplicacion)) self::error();
+            if(!file_exists(_raizAplicacion)) self::error();
+            
+            self::$jsonAplicacion=json_decode(file_get_contents(_raizAplicacion.'aplicacion.json'));
 
 	        configuracion::cargarConfigAplicacion();
 
@@ -457,10 +468,20 @@ class foxtrot {
 
     ////Gestión de vistas
 
-    public static function devolverVista($nombre) {
+    /**
+     * Devuelve un objeto los parámetros y el cuerpo de una vista.
+     * @var string $nombre Nombre de la vista.
+     * @return object
+     */
+    public static function obtenerVista($nombre) {
         $nombre=preg_replace('#[^a-z0-9_/_]+#','',$nombre);
-        $ruta=_vistasAplicacion.$nombre;
 
+        $vista=self::$jsonAplicacion->vistas->$nombre;
+        if(!$vista) return null;
+
+        //Anexar cuerpo y URLs de recursos
+        
+        $ruta=_vistasAplicacion.$nombre;
         $esPhp=file_exists($ruta.'.php');
 
         if(!file_exists($ruta.'.'.($esPhp?'php':'html'))) {
@@ -471,16 +492,22 @@ class foxtrot {
         //TODO Evaluar las implicaciones de seguridad para ejecutar vistas PHP
         $html=file_get_contents($ruta.'.'.($esPhp?'php':'html'));
 
-        $json=file_get_contents($ruta.'.json');
+        //El JSON solo existirá para vistas embebibles
+        $json=null;
+        if(file_exists($ruta.'.json')) $json=file_get_contents($ruta.'.json');
 
         $enrutador=self::obtenerEnrutador();
 
-        cliente::responder([
-            'html'=>$html,
-            'json'=>$json,
-            'urlJs'=>$enrutador->obtenerUrlControlador($nombre),
-            'urlCss'=>$enrutador->obtenerUrlEstilosVista($nombre)
-        ]);
+        $vista->html=$html;
+        $vista->json=$json;
+        $vista->urlJs=$enrutador->obtenerUrlControlador($nombre);
+        $vista->urlCss=$enrutador->obtenerUrlEstilosVista($nombre);
+
+        return $vista;
+    }
+
+    public static function devolverVista($nombre) {
+        return self::obtenerVista($nombre);
     }
 }
 

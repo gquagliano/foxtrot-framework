@@ -515,7 +515,7 @@ class foxtrot {
     }
 
     public static function devolverVista($nombre) {
-        return self::obtenerVista($nombre);
+        cliente::responder(self::obtenerVista($nombre));
     }
 }
 

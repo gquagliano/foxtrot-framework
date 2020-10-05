@@ -370,7 +370,7 @@ var ui=new function() {
 
         //Formato: .vista-tipo-número o .vista-tipo-nombre
 
-        var clase="."+nombreVistaPrincipal.replace(/[^a-z0-9-]/,"-")+"-";
+        var clase="."+nombreVistaPrincipal.replace(/[^a-z0-9-]/g,"-")+"-";
 
         if(tipo) clase+=tipo+"-";
 

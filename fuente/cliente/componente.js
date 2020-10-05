@@ -53,7 +53,7 @@ var componente=new function() {
         "Estilo":{
             //nombre:{
             //    etiqueta
-            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool|archivo)
+            //    tipo (predeterminado texto|multilinea|opciones|multiple|color|numero|comando|bool o logico|archivo)
             //    opciones (objeto {valor:etiqueta} cuando tipo=opciones o tipo=multiple)
             //    placeholder
             //    funcion

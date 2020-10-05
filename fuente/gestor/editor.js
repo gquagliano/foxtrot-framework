@@ -142,8 +142,9 @@ var editor=new function() {
                     .anexarA(label);
             }
 
-            if(tipo=="bool") {
+            if(tipo=="bool"||tipo=="logico") { //TODO Reemplazar 'bool'
                 //Para las propiedades booleanas utilizaremos un desplegable en lugar de un checkbox
+                //TODO ¿Reemplazar por un switch?
                 var campo=document.crear("<select class='custom-select'>");
                 fila.anexar(campo);
 

@@ -770,6 +770,7 @@ class modelo {
      * Inserta el elemento establecido con establecerValores().
      */
     public function insertar() {
+        $this->consultaValores->id=null;
         return $this->ejecutarConsulta('insertar');
     }
 

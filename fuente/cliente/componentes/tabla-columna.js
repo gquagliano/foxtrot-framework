@@ -72,6 +72,9 @@ var componenteColumnaTabla=function() {
     this.crear=function() {
         //Nota: Debe usarse el nombre del tag y no <td>
         this.elemento=document.crear("td"); 
+
+        if(ui.enModoEdicion()) this.editor();
+
         this.crearComponente();
         return this;
     };
@@ -83,7 +86,7 @@ var componenteColumnaTabla=function() {
     this.editor=function() {
         //Mostrar encabezados en el editor
         this.encabezadoTemporal=documento.crear("<div class='foxtrot-editor-temporal foxtrot-encabezado-temporal'>")
-            .anexarA(this.elemento);
+            .anteponerA(this.elemento);
         var encabezado=this.propiedad("encabezado");
         if(encabezado) this.encabezadoTemporal.establecerHtml(encabezado);
         

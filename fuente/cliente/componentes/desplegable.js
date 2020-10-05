@@ -160,6 +160,16 @@ var componenteDesplegable=function() {
 
         return this;
     };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizar=function() {
+        //Reconstruir opciones
+        this.listo();
+
+        return this.actualizarComponente();
+    };
 };
 
 ui.registrarComponente("desplegable",componenteDesplegable,configComponente.clonar({

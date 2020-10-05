@@ -37,6 +37,12 @@ var componenteDesplegable=function() {
             propiedadEtiqueta:{
                 etiqueta:"Propiedad a mostrar",
                 adaptativa:false
+            },
+            opcional:{
+                etiqueta:"Opcional",
+                tipo:"logico",
+                adaptativa:false,
+                ayuda:"Agrega una opción en blanco al comienzo del listado."
             }
         }
     };
@@ -132,6 +138,8 @@ var componenteDesplegable=function() {
             };
 
         this.campo.querySelectorAll("option").remover();
+
+        if(this.propiedad("opcional")) fn("","");
 
         if(util.esArray(obj)) {
             obj.forEach(function(valor,indice) {

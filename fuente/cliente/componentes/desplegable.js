@@ -178,6 +178,32 @@ var componenteDesplegable=function() {
 
         return this.actualizarComponente();
     };
+
+    /**
+     * Devuelve el objeto correspondiente al item seleccionado.
+     * @returns {(Object|null)}
+     */
+    this.obtenerItem=function() {
+        var valor=this.campo.valor(),
+            propClave=this.propiedad("propiedadClave");
+
+        if(util.esArray(this.opciones)) {
+            for(var i=0;i<this.opciones.length;i++) {
+                if(util.esObjeto(this.opciones[i])) {
+                    if(this.opciones[i].hasOwnProperty(propClave)&&this.opciones[i][propClave]==valor) return this.opciones[i];
+                } else if(i==valor) {
+                    return this.opciones[i];
+                }
+            }
+        } else if(util.esObjeto(this.opciones)) {
+            for(var clave in this.opciones) {
+                if(!this.opciones.hasOwnProperty(clave)||!this.opciones[clave].hasOwnProperty(propClave)) continue;
+                if(this.opciones[clave][propClave]==valor) return this.opciones[clave];
+            }
+        }
+
+        return null;
+    };
 };
 
 ui.registrarComponente("desplegable",componenteDesplegable,configComponente.clonar({

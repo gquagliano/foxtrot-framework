@@ -195,6 +195,30 @@
     };
 
     /**
+     * Agrega los elementos especificados antes del primer hijo de esta instancia.
+     * @var {(Node|Element)} elemento - Elemento a anteponer.
+     * @returns {Node}
+     * @memberof external:Node
+     */
+    Node.prototype.anteponer=function(elemento) {
+        if(typeof elemento==="string") {
+            this.anteponer(document.crear(elemento));
+            return this;
+        }
+
+        if(util.esListaDeElementos(elemento)) {
+            var t=this;
+            elemento.forEach(function(elem) {
+                t.prepend(elem);
+            });
+            return this;
+        }
+
+        this.prepend(elemento);
+        return this;
+    };
+
+    /**
      * Agrega los elementos especificados a antes de los elementos de esta instancia.
      * @memberof external:Node
      */
@@ -250,6 +274,18 @@
     Node.prototype.anexarA=function(elemento) {
         //TODO Si elemento es un NodeList, ¿clonar?
         elemento.anexar(this);
+        return this;
+    };
+
+    /**
+     * Agrega este elemento como primer hijo de los elementos especificados.
+     * @var {(Node|Element)} elemento - Elemento de destino.
+     * @returns {Node}
+     * @memberof external:Node
+     */
+    Node.prototype.anteponerA=function(elemento) {
+        //TODO Si elemento es un NodeList, ¿clonar?
+        elemento.anteponer(this);
         return this;
     };
 
@@ -1035,6 +1071,15 @@
     };
 
     /**
+     * Agrega los elementos especificados antes del primer hijo de esta instancia.
+     * @memberof external:NodeList
+     */
+    NodeList.prototype.anteponer=function(elemento) {
+        aplicar(this,"anteponer",arguments);
+        return this;
+    };
+
+    /**
      * Agrega los elementos especificados a antes de los elementos de esta instancia.
      * @memberof external:NodeList
      */
@@ -1209,7 +1254,7 @@
      * @param {*} funcion 
      */
     NodeList.prototype.removerEvento=function(nombre,funcion) {
-        aplicar(this,"anexar",arguments);
+        aplicar(this,"removerEvento",arguments);
         return this;
     };
 

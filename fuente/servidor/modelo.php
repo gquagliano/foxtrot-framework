@@ -687,14 +687,37 @@ class modelo {
 
     /**
      * Ejecuta la consulta y devuelve un array de elementos.
+     * @param boolean $objetoEstandar Si es true, devolverá un listado de objetos anónimos (stdClass) en lugar de instancias de la entidad.
+     * @param string ...$campos Campos a asignar a la entidad. Si se omite, se asignarán todos los campos disponibles en la consulta. Esto es útil cuando se desee
+     * obtener un listado con menos campos que los que se han seleccionado con seleccionar().
+     * @return array
      */
-    public function obtenerListado() {
+    public function obtenerListado($objetoEstandar=false,...$campos) {
         $this->ejecutarConsulta();
         if(!$this->resultado) return [];
 
+        if($objetoEstandar&&!count($campos)) $campos=$this->campos;
+
         $resultado=[];
         while($fila=$this->resultado->siguiente()) {
-            $resultado[]=$this->fabricarEntidad($fila);
+            $asignar=(object)[];
+            if($objetoEstandar) {
+                foreach($campos as $campo) {
+                    $clave='__'.$this->alias.'_'.$campo;
+                    $asignar->$campo=$fila->$clave;
+                }
+                $resultado[]=$asignar;
+            } else {
+                if(count($campos)) {
+                    foreach($campos as $campo) {
+                        $campo='__'.$this->alias.'_'.$campo;
+                        $asignar->$campo=$fila->$campo;
+                    }
+                } else {
+                    $asignar=$fila;
+                }
+                $resultado[]=$this->fabricarEntidad($asignar);
+            }
         }
 
         return $resultado;

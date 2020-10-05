@@ -701,6 +701,31 @@ class modelo {
     }
 
     /**
+     * Ejecuta la consulta y devuelve un array asociativo [clave=>valor].
+     * @param string $clave Campo a utilizar como clave del array.
+     * @param string $valor Campo a utilizar como valor del array.
+     * @return array
+     *//**
+     * Ejecuta la consulta y devuelve un array asociativo [clave=>valor].
+     * @param string $clave Campo a utilizar como clave del array.
+     * @param callable $valor Función que devuelve el valor dada la entidad.
+     * @return array
+     */
+    public function obtenerListadoAsociativo($clave,$valor) {
+        $items=$this->obtenerListado();
+        $resultado=[];
+        foreach($items as $item) {
+            if(is_callable($valor)) {
+                $valorElem=$valor($item);
+            } else {
+                $valorElem=$item->$valor;
+            }
+            $resultado[$item->$clave]=$valorElem;
+        }
+        return $resultado;
+    }
+
+    /**
      * Devuelve la cantidad de elementos encontrados o afectados por la última consulta.
      */
     public function obtenerCantidad() {

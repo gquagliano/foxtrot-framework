@@ -775,6 +775,13 @@ class modelo {
     }
 
     /**
+     * Alias de insertar().
+     */
+    public function crear() {
+        return $this->insertar();
+    }
+
+    /**
      * Actualiza los elementos que coincidan con la consulta utilizando los campos del el elemento establecido con establecerValores().
      */
     public function actualizar() {

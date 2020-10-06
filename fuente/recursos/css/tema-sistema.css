@@ -166,6 +166,9 @@ label.custom-control-label {
     padding: 0;
     overflow: hidden;
 }
+.table {
+    margin: 0;
+}
 .formulario-tabla .table-responsive {
     height: 100%;
     overflow: auto;

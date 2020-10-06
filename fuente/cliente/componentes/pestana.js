@@ -116,6 +116,24 @@ var componentePestana=function() {
     this.esActiva=function() {
         return this.activa;
     };
+
+    /**
+     * Elimina el componente.
+     * @param {*} descendencia - Parámetro de uso interno.
+     * @returns {Componente}
+     */
+    this.eliminar=function(descendencia) {
+        var padre=this.obtenerPadre();
+
+        this.eliminarComponente(descendencia);
+        
+        //Regenerar los encabezados del componente Pestaña
+        padre.actualizarEncabezados(true);
+        //Activar la ultima pestaña
+        padre.activarPestana(-1);
+
+        return this;
+    };
 };
 
 ui.registrarComponente("pestana",componentePestana,configComponente.clonar({

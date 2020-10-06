@@ -350,6 +350,16 @@ body.foxtrot-trabajando #foxtrot-cargando {
     font-weight: normal;
     padding-top: 8px;
 }
+.foxtrot-propiedad .btn-propiedad {
+    background-color: #e8ebf1 !important;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+.foxtrot-propiedad .btn-propiedad:hover {
+    background-color: #d0d4db !important;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
 .foxtrot-propiedad label img {
     height: 16px;
     background: #e8ebf1;

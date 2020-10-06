@@ -208,7 +208,7 @@ var editor=new function() {
             } else if(tipo=="comando") {
                 //Botón (no es realmene una propiedad)
 
-                var campo=document.crear("<a href='#' class='btn'>");
+                var campo=document.crear("<a href='#' class='btn btn-propiedad'>");
                 campo.establecerHtml(prop.hasOwnProperty("boton")?prop.boton:prop.etiqueta);
                 fila.anexar(campo);
 

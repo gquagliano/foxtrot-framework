@@ -15,6 +15,7 @@ En líneas generales,
 - (En curso) Implementar más componentes.
 - (En curso) Completar la documentación; revisar y completar JSDOC y PHPDOC; mover la documentación a Wiki.
 - (En curso, son los nuevos módulos) Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
+- Nueva implementación del intérprete de expresiones.
 - Completar funcionalidad útil del editor, como deshacer, rehacer y la barra de formato de texto.
 - Revisar TODOs en el código.
 - Completar la funcionalidad del gestor de aplicaciones: ~~Renombrar, duplicar, eliminar vistas~~; gestionar controladores (actualmente se pueden crear desde el gestor); gestionar el modelo de datos (actualmente se pueden crear y sincronizar desde el gestor).

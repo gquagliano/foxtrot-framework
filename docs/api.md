@@ -52,27 +52,33 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
 ### Intérprete lógico-matemático (JS)
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
+**Debido a que detectamos la necesidad de algunos ajustes, el intérprete actualmente no está disponible y fue reemplazado por un formato más sencillo que admite los siguientes formatos:**
+
+- *Admite una sola sentencia por expresión.*
+- `?:` Operador ternario.
+- `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.
+- `func(foo,bar)` Llamado a una función.
+- Variables (sin prefijo).
+- `'cadenas'`
+
+~~Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
 
 Sintaxis:
 
 - `+ - * / % ^` Operaciones aritméticas.
 - `== != < > <= >=` Igualdad/desigualdad.
 - `! y o ox` Operaciones lógicas (en español).
-- `?:` Operador ternario.
+- `?:` Operador ternario. *Nota:* Cada operación ternaria debe *siempre* presentarse en una única sentencia (entre paréntesis o como un argumento), o puede derivar en resultados inesperados.
 - `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.
 - `foo(a,b,c)` Llamado a funciones.
-- `v verdadero f falso nulo` Constantes lógicas y otras (en español).
-- Variables sin prefijo.
+- `v verdadero f falso n nulo` Constantes lógicas y otras (en español).
+- Variables (sin prefijo).~~
 
 Ejemplo:
 
-    new expresion("{a(b?'Hola':'Adios')}")
-        .establecerFunciones({
-            a:function(m) { alert(m); }
-        })
+    new expresion("{entra?'Hola':'Adios'}")
         .establecerVariables({
-            b:true
+            entra:true
         })
         .ejecutar();
     
@@ -97,8 +103,9 @@ En las propiedades de componentes que admiten expresiones, como así también al
 - `componentes`
 - `parametros` Parámetros de la URL (GET)
 - `valor` Valor del componente (solo en expresiones asignadas a eventos)
-
-Las instancias de otros controladores también estarán disponibles por nombre. Cada componente [puede definir otras variables o fuciones específicas](componentes.md), además de las propiedades del origen de datos.
+- Las instancias de otros controladores también estarán disponibles por nombre
+- Cada componente [puede definir otras variables o fuciones específicas](componentes.md)
+- Cada propiedad del origen de datos estará definida como una variable
 
 ### Compilación
 

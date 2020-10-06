@@ -818,6 +818,9 @@ var editor=new function() {
 
         elem.agregarClase("foxtrot-seleccionado");
 
+        //Evento
+        comp.seleccionado(true);
+
         //Agregar clase a toda la ascendencia
         var padre=comp;
         while(1) {
@@ -864,7 +867,10 @@ var editor=new function() {
         } else {
             comp=ui.obtenerInstanciaComponente(obj);
             elem=obj;
-        }
+        }       
+
+        //Evento
+        comp.seleccionado(false);
 
         //Remover estilos
         elem.removerClase("foxtrot-seleccionado");
@@ -903,6 +909,11 @@ var editor=new function() {
      * @returns {editor}
      */
     this.limpiarSeleccion=function() {
+        //Evento
+        this.componentesSeleccionados.forEach(function(comp) {
+            comp.seleccionado(false);
+        });
+
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-seleccionado").removerClase("foxtrot-seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-hijo-seleccionado").removerClase("foxtrot-hijo-seleccionado");
         this.componentesSeleccionados=[];

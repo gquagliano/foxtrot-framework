@@ -602,55 +602,6 @@ var componente=new function() {
     };
 
     /**
-     * Evento Listo (método para sobreescribir).
-     * @returns {Componente}
-     */
-    this.listo=function() {
-        return this.listoComponente();
-    };
-
-    /**
-     * Evento Listo.
-     * @returns {Componente}
-     */
-    this.listoComponente=function() {
-        this.procesarPropiedades();
-        return this;
-    };
-
-    /**
-     * Evento `editor` (método para sobreescribir).
-     * @returns {Componente}
-     */
-    this.editor=function() {
-        return this.editorComponente();
-    };
-
-    /**
-     * Evento `editor`.
-     * @returns {Componente}
-     */
-    this.editorComponente=function() {
-        return this;
-    };
-
-    /**
-     * Evento `editorDesactivado` (método para sobreescribir).
-     * @returns {Componente}
-     */
-    this.editorDesactivado=function() {
-        return this.editorDesactivadoComponente();
-    };
-
-    /**
-     * Evento `editorDesactivado`.
-     * @returns {Componente}
-     */
-    this.editorDesactivadoComponente=function() {
-        return this;
-    };
-
-    /**
      * Verifica y procesa las propiedades al inicializarse la instancia.
      * @returns {Componente}
      */
@@ -1726,6 +1677,8 @@ var componente=new function() {
      */
     this.inicializado=function() {
     };
+
+    //TODO Agregar los métodos ...Componente que falten (inicializadoComponente, insertadoComponetne, etc.)
     
     /**
      * Evento 'Insertado'. El evento Insertado es invocado cuando el component es insertado en el DOM, ya sea tras ser creado o al
@@ -1734,12 +1687,73 @@ var componente=new function() {
      */
     this.insertado=function() {
     };
-    
+
     /**
-     * Evento 'Listo' (método para sobreescribir).
+     * Evento Listo (método para sobreescribir).
+     * @returns {Componente}
      */
     this.listo=function() {
-    };    
+        return this.listoComponente();
+    };
+
+    /**
+     * Evento Listo.
+     * @returns {Componente}
+     */
+    this.listoComponente=function() {
+        this.procesarPropiedades();
+        return this;
+    };
+
+    /**
+     * Evento `editor` (método para sobreescribir).
+     * @returns {Componente}
+     */
+    this.editor=function() {
+        return this.editorComponente();
+    };
+
+    /**
+     * Evento `editor`.
+     * @returns {Componente}
+     */
+    this.editorComponente=function() {
+        return this;
+    };
+
+    /**
+     * Evento `editorDesactivado` (método para sobreescribir).
+     * @returns {Componente}
+     */
+    this.editorDesactivado=function() {
+        return this.editorDesactivadoComponente();
+    };
+
+    /**
+     * Evento `editorDesactivado`.
+     * @returns {Componente}
+     */
+    this.editorDesactivadoComponente=function() {
+        return this;
+    };
+
+    /**
+     * Evento 'Seleccionado' (método para sobreescribir).
+     * @param {boolean} estado
+     * @returns {Componente}
+     */
+    this.seleccionado=function(estado) {
+        return this.seleccionadoComponente(estado);
+    };
+
+    /**
+     * Evento 'Seleccionado'.
+     * @param {boolean} estado
+     * @returns {Componente}
+     */
+    this.seleccionadoComponente=function(estado) {
+        return this;
+    }; 
     
     /**
      * Evento 'Navegación' (método para sobreescribir).

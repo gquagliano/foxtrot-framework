@@ -133,6 +133,7 @@ var componentePestanas=function() {
     this.activarPestana=function(pestana) {
         if(typeof pestana==="number") {
             var hijos=this.obtenerHijos();
+            if(pestana<0) pestana=hijos.length+pestana;
             if(hijos.length>pestana) pestana=hijos[pestana];
         }
         if(typeof pestana==="object") pestana.activar();

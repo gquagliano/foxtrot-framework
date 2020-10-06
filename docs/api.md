@@ -52,27 +52,27 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 
 ### Intérprete lógico-matemático (JS)
 
-**Debido a que detectamos la necesidad de algunos ajustes, el intérprete actualmente no está disponible y fue reemplazado por un formato más sencillo que admite los siguientes formatos:**
+**Debido a que detectamos la necesidad de algunos ajustes, el intérprete actualmente no está disponible y fue reemplazado por un formato más simple que admite los siguientes formatos:**
 
-- *Admite una sola sentencia por expresión.*
+- *Admite una sola sentencia por expresión, sin posibilidad de paréntesis, excepto para invocar una función.*
 - `?:` Operador ternario.
 - `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.
 - `func(foo,bar)` Llamado a una función.
 - Variables (sin prefijo).
 - `'cadenas'`
 
-~~Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.
+~~Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.~~
 
-Sintaxis:
+~~Sintaxis:~~
 
-- `+ - * / % ^` Operaciones aritméticas.
-- `== != < > <= >=` Igualdad/desigualdad.
-- `! y o ox` Operaciones lógicas (en español).
-- `?:` Operador ternario. *Nota:* Cada operación ternaria debe *siempre* presentarse en una única sentencia (entre paréntesis o como un argumento), o puede derivar en resultados inesperados.
-- `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.
-- `foo(a,b,c)` Llamado a funciones.
-- `v verdadero f falso n nulo` Constantes lógicas y otras (en español).
-- Variables (sin prefijo).~~
+~~- `+ - * / % ^` Operaciones aritméticas.~~
+~~- `== != < > <= >=` Igualdad/desigualdad.~~
+~~- `! y o ox` Operaciones lógicas (en español).~~
+~~- `?:` Operador ternario. *Nota:* Cada operación ternaria debe *siempre* presentarse en una única sentencia (entre paréntesis o como un argumento), o puede derivar en resultados inesperados.~~
+~~- `foo[bar] foo.bar` Acceso a elementos de arreglos y propiedades de objetos.~~
+~~- `foo(a,b,c)` Llamado a funciones.~~
+~~- `v verdadero f falso n nulo` Constantes lógicas y otras (en español).~~
+~~- Variables (sin prefijo).~~
 
 Ejemplo:
 
@@ -84,7 +84,7 @@ Ejemplo:
     
 `ejecutar()` devolverá como resultado el valor final de la expresión, o `null`.
 
-Se implementará de forma que tenga acceso en forma predefinida a las propiedades del controlador (por ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`). Se utilizará en propiedades, eventos y otros contenidos (como ser el componente Etiqueta) en forma automática.
+Se implementa de forma que tenga acceso en forma predefinida a las propiedades del controlador (por ejemplo, `{test}` hará referencia a la propiedad `test` del controlador de la vista actual) y a múltiples propiedades y funciones utiles del framework (ejemplo, `{ui.obtenerTamano()...}`). Se utiliza en propiedades no adaptativas, manejadores de eventos y el contenido de determinados componentes (como ser el componente Etiqueta) en forma automática.
 
 El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
 

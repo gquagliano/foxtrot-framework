@@ -91,9 +91,11 @@ Cabe aclarar que el efecto es solo visual. Al obtener los valores de la vista o 
 
 Permite insertar un bloque, el cual puede ser un contenedor (`container` o `container-fluid`) o bien mantenerse como un mero `<div>`.
 
-#### ![](img/iconos/contenedor-menu.png) Contenedor de menú: Barra de navegación o menú lateral (deslizable)
+#### ![](img/iconos/contenedor-menu.png) Contenedor de menú: Barra de navegación
 
 Genera un menú de navegación, el cual puede utilizarse como barra de navegación (fija o flotante) o como menú lateral (deslizable). Admite como hijos componentes Item de menú (*no componentes Menú*).
+
+La propiedad *Modo* (`modo`) permite convertir la barra de menú en un menú flotante o en un menú deslizable. Esta propiedad es adaptativa, por lo que se puede utilizar para convertir al menú en adaptativo a distintos tamaños de pantalla. Un menú flotante puede abrirse relativo a otro elemento (ejemplo, un botón) mediante `menu.abrir(componente)` o `menu.abrir(posicionIzquierda,posicionArriba)` (donde `posicion`... es e píxeles). Un menú deslizable puede abrirse mediante `menu.abrir()`. Nótese la diferencia con `ui.abrirMenu()`: Este último es compatible con componentes *Menú*, pero no con *contenedores* de menús.
 
 #### ![](img/iconos/deslizable.png) Deslizable (*slider*)
 

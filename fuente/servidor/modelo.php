@@ -567,7 +567,7 @@ class modelo {
      * Establece el ordenamiento. Puede invocarse múltiples veces para establecer múltiples columnas de ordenamiento.
      */
     public function ordenadoPor($campo,$orden='asc') {
-        $this->consultaOrden[]=[
+        $this->consultaOrden[]=(object)[
             'campo'=>$campo,
             'orden'=>$orden
         ];

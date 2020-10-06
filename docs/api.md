@@ -60,6 +60,7 @@ Es posible invocar métodos desde uno a otro en forma transparente para el desar
 - `func(foo,bar)` Llamado a una función.
 - Variables (sin prefijo).
 - `'cadenas'`
+- `1.23` Números.
 
 ~~Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`.~~
 

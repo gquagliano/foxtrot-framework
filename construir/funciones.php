@@ -94,11 +94,79 @@ function buscarArchivos($ruta,$filtro,$funcion=null) {
     return $res;
 }
 
+function limpiarNombreReglaCss($regla) {
+    //Remover saltos de línea
+    $regla=str_replace(["\n","\r"],[' ',''],$regla);
+    //Los espacios y saltos de línea alrededor de , > se pueden limpiar
+    $regla=preg_replace('/\s*(,|>)\s*/','$1',$regla);
+    return trim($regla);
+}
+
+function procesarReglasCss($codigo) {    
+    $enComentario=false;
+    $enRegla=false;
+    $enMedia=false;
+    $bufer='';
+    $regla='';
+    $reglas=[];
+
+    $len=strlen($codigo);
+    for($i=0;$i<$len;$i++) {
+        if(!$enComentario) {            
+            if($codigo[$i]=='/'&&$codigo[$i+1]=='*') {
+                $enComentario=true;
+            } elseif(!$enRegla) {
+                if($codigo[$i]=='{') {
+                    if(preg_match('/@media/',$bufer)) {
+                        $enMedia=true;
+                        $bufer='';
+                    } else {
+                        $enRegla=true;
+                        $regla=limpiarNombreReglaCss($bufer);
+                        $bufer='';
+                    }
+                } elseif($codigo[$i]=='}') {
+                    $enMedia=false;
+                    $bufer='';
+                } else {
+                    $bufer.=$codigo[$i];
+                }
+            } else {
+                if($codigo[$i]=='}') {
+                    if($enRegla) {
+                        $enRegla=false;
+                        if(!$enMedia) $reglas[$regla]=$bufer; //Ignorar las reglas dentro de media queries
+                        $bufer='';
+                    }
+                } else {
+                    $bufer.=$codigo[$i];
+                }
+            }
+
+        } else {
+            if($codigo[$i-1]=='*'&&$codigo[$i]=='/') $enComentario=false;
+        }        
+    }
+
+    return $reglas;
+}
+
 function comprimirCss($archivo) {
-    $css=file_get_contents($archivo);
+    $css=file_get_contents($archivo);  
+
+    //Procesar @copiar (permite duplicar el cuerpo de una regla dentro de otra)
+    if(preg_match_all('/@copiar (.+?)$/m',$css,$coincidencias)) {
+        $reglas=procesarReglasCss($css);
+        foreach($coincidencias[1] as $i=>$regla) {
+            $regla=limpiarNombreReglaCss($regla);
+            $cuerpo='';
+            if(array_key_exists($regla,$reglas)) $cuerpo=$reglas[$regla];
+            $css=str_replace($coincidencias[0][$i],$cuerpo,$css);
+        }
+    }
 
     //Compresión rápida (solo limpieza de contenido innecesario)
-    $css=preg_replace('#/\*.*?\*/#sm','',$css);    
+    $css=preg_replace('#/\*.*?\*/#sm','',$css);  
     //$css=preg_replace('#url\s*?\(\s*?(\'|")(.+?)\1\)#msi','url($2)',$css);
     $css=str_replace(["\r","\n"],'',$css);
     $css=preg_replace('/[\s]*([,>:;\}\{])[\s]+/m','$1',$css);

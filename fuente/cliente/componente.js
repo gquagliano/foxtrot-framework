@@ -902,7 +902,7 @@ var componente=new function() {
         if(util.esIndefinido(tamano)) tamano=null;
         if(util.esIndefinido(valorAnterior)) valorAnterior=null;
 
-        var claseTamano=(tamano!="g"&&tamano!="xs"?tamano+"-":"");
+        var claseTamano=(tamano!="g"&&tamano!="xs"?"-"+tamano:"");
 
         var estilos=this.obtenerEstilos(tamano);
 
@@ -916,8 +916,8 @@ var componente=new function() {
             if(valor=="izquierda") float="left";
             else if(valor=="derecha") float="right";
 
-            this.elemento.removerClase(new RegExp("float-"+claseTamano+"(left|right|none)"));
-            if(float) this.elemento.agregarClase("float-"+claseTamano+float);                
+            this.elemento.removerClase(new RegExp("float"+claseTamano+"-(left|right|none)"));
+            if(float) this.elemento.agregarClase("float"+claseTamano+"-"+float);                
             
             return this;
         }
@@ -967,8 +967,8 @@ var componente=new function() {
                 },
                 align=opc.hasOwnProperty(valor)?opc[valor]:null;
 
-            this.elemento.removerClase(new RegExp("text-"+claseTamano+"(left|right|center|justify)"));
-            if(align) this.elemento.agregarClase("text-"+claseTamano+align);
+            this.elemento.removerClase(new RegExp("text"+claseTamano+"-(left|right|center|justify)"));
+            if(align) this.elemento.agregarClase("text"+claseTamano+"-"+align);
             
             return this;
         }
@@ -990,17 +990,17 @@ var componente=new function() {
                     flexVerticalInverso:"flex"
                 };
 
-            this.elemento.removerClase(new RegExp("d-"+claseTamano+"(block|flex|inline|inline-block)"));
-            if(valor) this.elemento.agregarClase("d-"+claseTamano+clases[valor]);
+            this.elemento.removerClase(new RegExp("d"+claseTamano+"-(block|flex|inline|inline-block)"));
+            if(valor) this.elemento.agregarClase("d"+claseTamano+"-"+clases[valor]);
 
-            this.elemento.removerClase(new RegExp("flex-"+claseTamano+"(row|column)(-reverse)?"));
+            this.elemento.removerClase(new RegExp("flex"+claseTamano+"-(row|column)(-reverse)?"));
             
             if(valor=="flexVertical") {
-                this.elemento.agregarClase("flex-"+claseTamano+"column");
+                this.elemento.agregarClase("flex"+claseTamano+"-column");
             } else if(valor=="flexInverso") {
-                this.elemento.agregarClase("flex-"+claseTamano+"row-reverse");
+                this.elemento.agregarClase("flex"+claseTamano+"-row-reverse");
             } else if(valor=="flexVerticalInverso") {
-                this.elemento.agregarClase("flex-"+claseTamano+"column-reverse");
+                this.elemento.agregarClase("flex"+claseTamano+"-column-reverse");
             }
 
             return this;
@@ -1020,8 +1020,8 @@ var componente=new function() {
                 envolver:"around"
             };
 
-            this.elemento.removerClase(new RegExp("justify-content-"+claseTamano+"(start|end|center|between|around)"));
-            if(valor) this.elemento.agregarClase("justify-content-"+claseTamano+clases[valor]);            
+            this.elemento.removerClase(new RegExp("justify-content"+claseTamano+"-(start|end|center|between|around)"));
+            if(valor) this.elemento.agregarClase("justify-content"+claseTamano+"-"+clases[valor]);            
 
             return this;
         }
@@ -1035,18 +1035,22 @@ var componente=new function() {
                 estirar:"stretch"
             };
 
-            this.elemento.removerClase(new RegExp("align-items-"+claseTamano+"(start|end|center|baseline|stretch)"));
-            if(valor) this.elemento.agregarClase("align-items-"+claseTamano+clases[valor]);            
+            this.elemento.removerClase(new RegExp("align-items"+claseTamano+"-(start|end|center|baseline|stretch)"));
+            if(valor) this.elemento.agregarClase("align-items"+claseTamano+"-"+clases[valor]);            
 
             return this;
         }
 
-        if(propiedad=="visibilidad") {
-            this.elemento.removerClase(/(invisible|d-none)/);
+        if(propiedad=="visibilidad") {            
+            this.elemento.removerClase(new RegExp("^(visible|invisible)"+claseTamano+"$"))
+                .removerClase(new RegExp("^d"+claseTamano+"-(block|none)$"));
+
             if(valor=="invisible") {
-                this.elemento.agregarClase("invisible");
+                this.elemento.agregarClase("invisible"+claseTamano);
             } else if(valor=="oculto") {
-                this.elemento.agregarClase("d-none");
+                this.elemento.agregarClase("d"+claseTamano+"-none");
+            } else if(valor=="visible") {
+                this.elemento.agregarClase("d"+claseTamano+"-block visible"+claseTamano);
             }
             return this;
         }
@@ -1124,6 +1128,30 @@ var componente=new function() {
     };
 
     ////Propiedades y parámetros
+
+    /**
+     * Devuelve el valor efectivo de la propiedad, que puede ser heredado desde un tamaño de pantalla menor al solicitado.
+     * @param {string} tamano - Tamaño de pantalla.
+     * @param {string} nombre - Nombre de la propiedad.
+     * @returns {(string|null)}
+     */
+    this.propiedadAdaptada=function(tamano,nombre) {
+        var valores=this.propiedadObj(nombre),
+            tamanos=["g","sm","md","lg","xl"],
+            valor=null;
+
+        if(typeof valores!=="object") return valores;
+
+        if(valores.hasOwnProperty(tamano)) return valores[tamano];
+
+        for(var i=0;i<tamanos.length;i++)
+            if(valores.hasOwnProperty(tamanos[i])) {
+                valor=valores[tamanos[i]];
+                break;
+            }
+
+        return valor;
+    };
 
     /**
      * Establece o devuelve el valor de una propiedad como objeto (sin filtrar por tamaño).

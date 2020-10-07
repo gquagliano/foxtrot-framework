@@ -965,7 +965,7 @@
             fn=null;
 
         if(meta) {
-            if(util.esIndefinido(nombre)&&nombre) {
+            if(util.esIndefinido(nombre)||!nombre) {
                 //Remover todos los eventos registrados mediante evento()
                 var t=this;
                 meta.porCada(function(nombre,arr) {
@@ -978,7 +978,7 @@
 
             if(!meta.hasOwnProperty(nombre)) return this;
 
-            if(util.esIndefinido(funcion)&&funcion) {
+            if(util.esIndefinido(funcion)||!funcion) {
                 //Remover todos los eventos nombre registrados mediante evento()
                 var t=this;
                 meta[nombre].porCada(function(id,ev) {

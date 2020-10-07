@@ -122,27 +122,27 @@ li.menu-separador::after {
 
 .menu.desplegar-izquierda,
 .menu.siempre-desplegar-izquierda {
-    left: auto  !important;
-    right: 0;
+    left: auto !important;
+    right: 0 !important;
 }
 .menu.desplegar-arriba,
 .menu.siempre-desplegar-arriba {
     top: auto  !important;
-    bottom: 100%;
+    bottom: 100% !important;
 }
 .menu .menu.desplegar-izquierda,
 .menu .menu.siempre-desplegar-izquierda,
 .submenu.desplegar-izquierda,
 .submenu.siempre-desplegar-izquierda {
-    left: auto  !important;
-    right: 100%;
+    left: auto !important;
+    right: 100% !important;
 }
 .menu .menu.desplegar-arriba,
 .menu .menu.siempre-desplegar-arriba,
 .submenu.desplegar-arriba,
 .submenu.siempre-desplegar-arriba {
-    top: auto  !important;
-    bottom: -10px;
+    top: auto !important;
+    bottom: -10px !important;
 }
 
 .item-menu.deshabilitado {

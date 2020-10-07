@@ -20,14 +20,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.nav li .menu {
+.nav .menu {
     position: absolute;
     left: 0;
     top: 100%;
     min-width: 100%;
     margin: 0;
 }
-.nav li .menu .menu {
+.nav .menu .menu {
+    position: absolute;
     top: -10px;
     left: 100%;
     width: auto;
@@ -100,15 +101,25 @@
     pointer-events: all;
 }
 .menu-flotante .menu,
-.menu-deslizable .menu {
+.menu-flotante .menu .menu,
+.menu-deslizable .menu,
+.menu-deslizable .menu .menu {
     border: none;
     box-shadow: none;
-    position: relative !important;
-    top: auto !important;
-    bottom: auto !important;
-    left: 0 !important;
-    right: 0 !important;
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
     padding: 1rem 0;
+}
+.menu-bloque .menu {
+    @copiar .menu,.submenu
+    @copiar .nav .menu
+}
+.menu-bloque .menu .menu {
+    @copiar .menu,.submenu
+    @copiar .nav .menu .menu
 }
 @media (min-width: 576px) {
     .menu-sm-flotante {
@@ -127,8 +138,18 @@
         @copiar .menu-deslizable.menu-abierto
     }
     .menu-sm-flotante .menu,
-    .menu-sm-deslizable .menu {
-        @copiar .menu-flotante .menu,.menu-deslizable .menu
+    .menu-sm-flotante .menu .menu,
+    .menu-sm-deslizable .menu,
+    .menu-sm-deslizable .menu .menu {
+        @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
+    }
+    .menu-sm-bloque .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu
+    }
+    .menu-sm-bloque .menu .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu .menu
     }
 }
 @media (min-width: 768px) {
@@ -148,8 +169,18 @@
         @copiar .menu-deslizable.menu-abierto
     }
     .menu-md-flotante .menu,
-    .menu-md-deslizable .menu {
-        @copiar .menu-flotante .menu,.menu-deslizable .menu
+    .menu-md-flotante .menu .menu,
+    .menu-md-deslizable .menu,
+    .menu-md-deslizable .menu .menu {
+        @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
+    }
+    .menu-md-bloque .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu
+    }
+    .menu-md-bloque .menu .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu .menu
     }
 }
 @media (min-width: 992px) {
@@ -169,8 +200,18 @@
         @copiar .menu-deslizable.menu-abierto
     }
     .menu-lg-flotante .menu,
-    .menu-lg-deslizable .menu {
-        @copiar .menu-flotante .menu,.menu-deslizable .menu
+    .menu-lg-flotante .menu .menu,
+    .menu-lg-deslizable .menu,
+    .menu-lg-deslizable .menu .menu {
+        @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
+    }
+    .menu-lg-bloque .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu
+    }
+    .menu-lg-bloque .menu .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu .menu
     }
 }
 @media (min-width: 1200px) {
@@ -190,7 +231,17 @@
         @copiar .menu-deslizable.menu-abierto
     }
     .menu-xl-flotante .menu,
-    .menu-xl-deslizable .menu {
-        @copiar .menu-flotante .menu,.menu-deslizable .menu
+    .menu-xl-flotante .menu .menu,
+    .menu-xl-deslizable .menu,
+    .menu-xl-deslizable .menu .menu {
+        @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
+    }
+    .menu-xl-bloque .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu
+    }
+    .menu-xl-bloque .menu .menu {
+        @copiar .menu,.submenu
+        @copiar .nav .menu .menu
     }
 }

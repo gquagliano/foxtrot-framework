@@ -19,7 +19,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: center;
 }
 .nav li .menu {
     position: absolute;
@@ -51,6 +50,8 @@
     background-color: #fff;
     max-width: 75vw;
     max-height: 75vh;
+    padding: 1.3rem 0;
+    border-radius: 2px;
 }
 .menu-deslizable { 
     display: block;   
@@ -68,13 +69,15 @@
     background-color: #fff;
     max-width: none;
     max-height: none;
+    padding: 1.3rem 0;
+    border-radius: 0;
 }
 .menu-bloque {
     display: flex;
-    position: relative;
+    position: relative !important;
     width: auto;
-    left: auto;
-    top: auto;
+    left: auto !important;
+    top: auto !important;
     bottom: auto;
     overflow: visible;    
     opacity: 1;
@@ -84,6 +87,8 @@
     background-color: transparent;
     max-width: none;
     max-height: none;
+    padding: 0;
+    border-radius: 0;
 }
 .menu-flotante.menu-abierto {
     opacity: 1;
@@ -94,247 +99,98 @@
     left: 0;
     pointer-events: all;
 }
+.menu-flotante .menu,
+.menu-deslizable .menu {
+    border: none;
+    box-shadow: none;
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 1rem 0;
+}
 @media (min-width: 576px) {
     .menu-sm-flotante {
-        display: block;
-        position: fixed !important;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s;
-        pointer-events: none;
-        box-shadow: 0 0 13px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: 75vw;
-        max-height: 75vh;
+        @copiar .menu-flotante
     }
     .menu-sm-deslizable { 
-        display: block;  
-        position: fixed !important;
-        width: 90vw;
-        left: -90vw;
-        top: 0;
-        bottom: 0;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s,left .2s;
-        pointer-events: none;
-        box-shadow: 0 0 20px rgba(0,0,0,.1),0 0 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: none;
-        max-height: none;
+        @copiar .menu-deslizable
     }
     .menu-sm-bloque {
-        display: flex;
-        position: relative;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow: visible;    
-        opacity: 1;
-        transition: none;
-        pointer-events: all;
-        box-shadow: none;
-        background-color: transparent;
-        max-width: none;
-        max-height: none;
+        @copiar .menu-bloque
     }
     .menu-sm-flotante.menu-abierto {
-        opacity: 1;
-        pointer-events: all;
+        @copiar .menu-flotante.menu-abierto
     }
     .menu-sm-deslizable.menu-abierto {
-        opacity: 1;
-        left: 0;
-        pointer-events: all;
+        @copiar .menu-deslizable.menu-abierto
+    }
+    .menu-sm-flotante .menu,
+    .menu-sm-deslizable .menu {
+        @copiar .menu-flotante .menu,.menu-deslizable .menu
     }
 }
 @media (min-width: 768px) {
     .menu-md-flotante {
-        display: block;
-        position: fixed !important;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s;
-        pointer-events: none;
-        box-shadow: 0 0 13px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: 75vw;
-        max-height: 75vh;
+        @copiar .menu-flotante
     }
-    .menu-md-deslizable {
-        display: block;     
-        position: fixed !important;
-        width: 90vw;
-        left: -90vw;
-        top: 0;
-        bottom: 0;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s,left .2s;
-        pointer-events: none;
-        box-shadow: 0 0 20px rgba(0,0,0,.1),0 0 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: none;
-        max-height: none;
+    .menu-md-deslizable { 
+        @copiar .menu-deslizable
     }
     .menu-md-bloque {
-        display: flex;
-        position: relative;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow: visible;    
-        opacity: 1;
-        transition: none;
-        pointer-events: all;
-        box-shadow: none;
-        background-color: transparent;
-        max-width: none;
-        max-height: none;
+        @copiar .menu-bloque
     }
     .menu-md-flotante.menu-abierto {
-        opacity: 1;
-        pointer-events: all;
+        @copiar .menu-flotante.menu-abierto
     }
     .menu-md-deslizable.menu-abierto {
-        opacity: 1;
-        left: 0;
-        pointer-events: all;
+        @copiar .menu-deslizable.menu-abierto
+    }
+    .menu-md-flotante .menu,
+    .menu-md-deslizable .menu {
+        @copiar .menu-flotante .menu,.menu-deslizable .menu
     }
 }
 @media (min-width: 992px) {
     .menu-lg-flotante {
-        display: block;
-        position: fixed !important;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s;
-        pointer-events: none;
-        box-shadow: 0 0 13px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: 75vw;
-        max-height: 75vh;
+        @copiar .menu-flotante
     }
-    .menu-lg-deslizable {
-        display: block;   
-        position: fixed !important;
-        width: 90vw;
-        left: -90vw;
-        top: 0;
-        bottom: 0;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s,left .2s;
-        pointer-events: none;
-        box-shadow: 0 0 20px rgba(0,0,0,.1),0 0 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: none;
-        max-height: none;
+    .menu-lg-deslizable { 
+        @copiar .menu-deslizable
     }
     .menu-lg-bloque {
-        display: flex;
-        position: relative;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow: visible;    
-        opacity: 1;
-        transition: none;
-        pointer-events: all;
-        box-shadow: none;
-        background-color: transparent;
-        max-width: none;
-        max-height: none;
+        @copiar .menu-bloque
     }
     .menu-lg-flotante.menu-abierto {
-        opacity: 1;
-        pointer-events: all;
+        @copiar .menu-flotante.menu-abierto
     }
     .menu-lg-deslizable.menu-abierto {
-        opacity: 1;
-        left: 0;
-        pointer-events: all;
+        @copiar .menu-deslizable.menu-abierto
+    }
+    .menu-lg-flotante .menu,
+    .menu-lg-deslizable .menu {
+        @copiar .menu-flotante .menu,.menu-deslizable .menu
     }
 }
 @media (min-width: 1200px) {
     .menu-xl-flotante {
-        display: block;
-        position: fixed !important;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s;
-        pointer-events: none;
-        box-shadow: 0 0 13px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: 75vw;
-        max-height: 75vh;
+        @copiar .menu-flotante
     }
-    .menu-xl-deslizable {  
-        display: block;  
-        position: fixed !important;
-        width: 90vw;
-        left: -90vw;
-        top: 0;
-        bottom: 0;
-        overflow-y: auto;
-        z-index: 999999;
-        opacity: 0;
-        transition: opacity .2s,left .2s;
-        pointer-events: none;
-        box-shadow: 0 0 20px rgba(0,0,0,.1),0 0 3px rgba(0,0,0,.1);
-        background-color: #fff;
-        max-width: none;
-        max-height: none;
+    .menu-xl-deslizable { 
+        @copiar .menu-deslizable
     }
     .menu-xl-bloque {
-        display: flex;
-        position: relative;
-        width: auto;
-        left: auto;
-        top: auto;
-        bottom: auto;
-        overflow: visible;    
-        opacity: 1;
-        transition: none;
-        pointer-events: all;
-        box-shadow: none;
-        background-color: transparent;
-        max-width: none;
-        max-height: none;
+        @copiar .menu-bloque
     }
     .menu-xl-flotante.menu-abierto {
-        opacity: 1;
-        pointer-events: all;
+        @copiar .menu-flotante.menu-abierto
     }
     .menu-xl-deslizable.menu-abierto {
-        opacity: 1;
-        left: 0;
-        pointer-events: all;
+        @copiar .menu-deslizable.menu-abierto
+    }
+    .menu-xl-flotante .menu,
+    .menu-xl-deslizable .menu {
+        @copiar .menu-flotante .menu,.menu-deslizable .menu
     }
 }

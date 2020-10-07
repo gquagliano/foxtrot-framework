@@ -14,6 +14,15 @@ var componenteContenedorMenu=function() {
     this.componente="contenedor-menu";
     this.ancla=null;
     
+    var t=this;
+
+    var clickDocumento=function(ev) {
+        if(ev.target.es({elemento:t.elemento})||ev.target.padre({elemento:t.elemento})) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        t.cerrar();
+    };
+
     this.propiedadesConcretas={
         "Contenedor de menú":{
             comportamiento:{
@@ -179,7 +188,7 @@ var componenteContenedorMenu=function() {
      */
     this.abrir=function(a,b) {
         var tamano=ui.obtenerTamano(),
-            modo=this.propiedad(tamano,"modo"),
+            modo=this.propiedadAdaptada(tamano,"modo"),
             izquierda=null,
             arriba=null;
         
@@ -187,9 +196,11 @@ var componenteContenedorMenu=function() {
             if(typeof a!=="undefined") {
                 if(typeof b==="undefined") {
                     //a = componente
-                    var posicion=a.obtenerElemento().posicionAbsoluta();
+                    var elem=a.obtenerElemento(),
+                        posicion=elem.posicionAbsoluta(),
+                        alto=elem.alto();
                     izquierda=posicion.x;
-                    arriba=posicion.y+a.obtenerElemento().alto();
+                    arriba=posicion.y+alto;
                 } else {
                     //2 parámetros
                     izquierda=a;
@@ -222,6 +233,8 @@ var componenteContenedorMenu=function() {
 
         this.elemento.agregarClase("menu-abierto");
 
+        document.evento("mousedown touchstart mousewheel",clickDocumento,true);
+
         return this;
     };
 
@@ -231,6 +244,7 @@ var componenteContenedorMenu=function() {
      */
     this.cerrar=function() {
         this.elemento.removerClase("menu-abierto");
+        document.removerEvento("mousedown touchstart mousewheel",clickDocumento,true);
         return this;
     };
 

@@ -143,7 +143,7 @@
                         click(item,ev);
                     };
                 }(items[i]))
-                .evento("touchstart",function(item) {
+                .evento("touchend",function(item) {
                     return function(ev) {
                         toque(item,ev);
                     };

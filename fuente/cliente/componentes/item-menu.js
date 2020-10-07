@@ -145,7 +145,8 @@ var componenteItemMenu=function() {
                 }
             };
 
-            var ignorarClick=false;
+            var ignorarClick=false,
+                arrastre=false;
 
             this.elemento.evento("mouseenter",function(ev) {
                 var submenu=t.obtenerHijos();
@@ -178,7 +179,12 @@ var componenteItemMenu=function() {
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
-            }).evento("touchstart",function(ev) {
+            }).evento("touchend",function(ev) {
+                if(arrastre) {
+                    arrastre=false;
+                    return;
+                }
+
                 ev.stopPropagation();
 
                 var submenu=t.obtenerHijos();
@@ -188,6 +194,8 @@ var componenteItemMenu=function() {
 
                 ignorarClick=true;
                 alternar(submenu[0]);
+            }).evento("touchmove",function(ev) {
+                arrastre=true;
             }).evento("click",function(ev) {
                 if(ignorarClick) {
                     ev.preventDefault();

@@ -301,6 +301,7 @@
      * datos            Datos (dataset). Objeto {nombre:valor}. Coincidencia exacta o RegExp.
      * metadatos        Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
      * tipo             Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
+     * elemento         Instancia de un nodo o elemento.
      * Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos se evalúan como OR. Se evalúan como string (no es sensible al tipo).
      * @memberof external:Node
      */
@@ -313,6 +314,10 @@
             if(typeof origen!=="string") origen=new Object(origen).toString();
             if(typeof valor!=="string"&&!util.esExpresionRegular(valor)) valor=new Object(valor).toString();
             return (typeof valor==="string"&&origen.toLowerCase()==valor.toLowerCase())||(util.esExpresionRegular(valor)&&valor.test(origen));
+        }
+
+        if(filtro.hasOwnProperty("elemento")) {
+            resultado=this===filtro.elemento;
         }
 
         if(filtro.hasOwnProperty("clase")) {
@@ -800,7 +805,7 @@
         if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
         meta[nombre][funcion._id]=[funcion,funcionInterna]; 
 
-        elem.addEventListener(nombre,funcionInterna,captura);
+        elem.addEventListener(nombre,funcionInterna,{ passive:false, capture:captura });
 
         return elem;
     }
@@ -924,6 +929,7 @@
      */
     EventTarget.prototype.removerEventos=function() {
         this.removerEvento();
+        this.removerEvento(null,null,true);
         return this;
     };
 
@@ -932,13 +938,16 @@
      * @memberof external:EventTarget
      * @param {*} nombre 
      * @param {*} funcion 
+     * @param {boolean} [captura=false] - Si un manejador se registró dos veces, uno con captura y otro sin, cada uno debe ser eliminado por separado.
      */
-    EventTarget.prototype.removerEvento=function(nombre,funcion) {
+    EventTarget.prototype.removerEvento=function(nombre,funcion,captura) {
+        if(typeof captura==="undefined") captura=false;
+
         //funcion puede ser un array para remover múltiples listeners a la vez
         if(util.esArray(funcion)) {
             var t=this;
             funcion.forEach(function(fn) {
-                t.removerEvento(nombre,fn);
+                t.removerEvento(nombre,fn,captura);
             });
             return this;
         }
@@ -947,7 +956,7 @@
         if(typeof nombre==="string"&&nombre.indexOf(" ")>0) {
             var t=this;
             nombre.split(" ").forEach(function(n) {
-                t.removerEvento(n,funcion);
+                t.removerEvento(n,funcion,captura);
             });
             return this;
         }
@@ -956,12 +965,12 @@
             fn=null;
 
         if(meta) {
-            if(util.esIndefinido(nombre)) {
+            if(util.esIndefinido(nombre)&&nombre) {
                 //Remover todos los eventos registrados mediante evento()
                 var t=this;
                 meta.porCada(function(nombre,arr) {
                     arr.porCada(function(id,ev) {
-                        t.removeEventListener(nombre,ev[1]);
+                        t.removeEventListener(nombre,ev[1],{ passive:true, capture:captura });
                     });
                 });
                 return this;
@@ -969,11 +978,11 @@
 
             if(!meta.hasOwnProperty(nombre)) return this;
 
-            if(util.esIndefinido(funcion)) {
+            if(util.esIndefinido(funcion)&&funcion) {
                 //Remover todos los eventos nombre registrados mediante evento()
                 var t=this;
                 meta[nombre].porCada(function(id,ev) {
-                    t.removeEventListener(nombre,ev[1]);
+                    t.removeEventListener(nombre,ev[1],{ passive:true, capture:captura });
                 });
                 return this;
             }
@@ -984,7 +993,7 @@
             if(typeof obj!=="undefined") fn=obj[1];
         }
         
-        if(fn) this.removeEventListener(nombre,fn);
+        if(fn) this.removeEventListener(nombre,fn,{ passive:true, capture:captura });
 
         return this;
     };
@@ -1252,8 +1261,9 @@
      * @memberof external:NodeList
      * @param {*} nombre 
      * @param {*} funcion 
+     * @param {*} captura 
      */
-    NodeList.prototype.removerEvento=function(nombre,funcion) {
+    NodeList.prototype.removerEvento=function(nombre,funcion,captura) {
         aplicar(this,"removerEvento",arguments);
         return this;
     };

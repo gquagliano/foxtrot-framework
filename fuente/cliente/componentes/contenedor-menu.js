@@ -245,6 +245,8 @@ var componenteContenedorMenu=function() {
     this.cerrar=function() {
         this.elemento.removerClase("menu-abierto");
         document.removerEvento("mousedown touchstart mousewheel",clickDocumento,true);
+        //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
+        ui.cerrarMenu();
         return this;
     };
 

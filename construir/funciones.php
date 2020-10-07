@@ -160,7 +160,11 @@ function comprimirCss($archivo) {
         foreach($coincidencias[1] as $i=>$regla) {
             $regla=limpiarNombreReglaCss($regla);
             $cuerpo='';
-            if(array_key_exists($regla,$reglas)) $cuerpo=$reglas[$regla];
+            if(array_key_exists($regla,$reglas)) {
+                $cuerpo=$reglas[$regla];
+                //Agregar ; al final en caso de que ya no sea la última regla del bloque
+                if(substr(trim($cuerpo),-1)!=';') $cuerpo.=';';
+            }
             $css=str_replace($coincidencias[0][$i],$cuerpo,$css);
         }
     }

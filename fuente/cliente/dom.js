@@ -747,7 +747,7 @@
      * @memberof external:Node
      */
     Node.prototype.remover=function() {
-        this.parentNode.removeChild(this);
+        if(this.parentNode) this.parentNode.removeChild(this);
         return this;
     };
 
@@ -756,6 +756,7 @@
      * @memberof external:Node
      */
     Node.prototype.desacoplar=function() {
+        if(!this.parentNode) return this;
         var elem=this.parentNode.removeChild(this);
         return elem;
     };

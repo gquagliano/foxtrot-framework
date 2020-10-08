@@ -101,7 +101,11 @@ La propiedad *Modo* (`modo`) permite convertir la barra de menú en un menú flo
 
 #### ![](img/iconos/desplegable.png) Desplegable (campo)
 
-#### ![](img/iconos/dialogo.png) Diálogo (modal)
+#### ![](img/iconos/dialogo.png) Diálogo
+
+Permite construir un diálogo o *pop-up*. El contenido que se construya dentro de este se mostrará dentro del diálogo al invocar `dialogo.abrir()` (donde `dialogo` es el nombre del componente).
+
+Un diálogo modal (propiedad *Modal* (`modal`)) únicamente podrá cerrarse desde código (`dialogo.cerrar()`), quedando deshabilitada la posibilidad de cancelarlo mediante *Escape*, click en el fondo o ícono de ×.
 
 #### ![](img/iconos/espaciador.png) Espaciador
 

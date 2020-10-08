@@ -11,7 +11,22 @@
  * @class Componente concreto Diálogo (pop-up).
  */
 var componenteDialogo=function() {    
-    this.componente="dialogo";
+    this.componente="dialogo";    
+
+    this.propiedadesConcretas={
+        "Diálogo":{
+            modal:{
+                etiqueta:"Modal",
+                tipo:"logico",
+                adaptativa:false
+            },
+            ocultarIconoCerrar:{
+                etiqueta:"Ocultar ícono de cierre",
+                tipo:"logico",
+                adaptativa:false
+            }
+        }
+    };
 
     var dialogo=null;
 
@@ -24,7 +39,27 @@ var componenteDialogo=function() {
         this.contenedor=this.elemento;
 
         this.inicializarComponente();
+
+        //Remover la clase 'dialogo' (agregada por inicializarComponente) ya que es solo el cuerpo; ui.construirDialogo() va a
+        //insertar el elemento dentro de un <div class='dialogo'>
+        this.elemento.removerClase("dialogo");
+
         return this;
+    };
+   
+    /**
+     * Actualiza el componente tras modificarse el valor de una propiedad.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(propiedad=="modal"||propiedad=="ocultarIconoCerrar") {
+            //Destruir para que se reconstruya con los nuevos valores al abrir
+            if(dialogo) {
+                ui.eliminarDialogo(dialogo);
+                dialogo=null;
+            }
+        }
+            
+        return this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
     };
 
     /**
@@ -45,12 +80,13 @@ var componenteDialogo=function() {
         if(typeof retorno==="undefined") retorno =null;
         
         if(!dialogo) dialogo=ui.construirDialogo({
-            cuerpo:this.elemento,
-            mostrarCerrar:true,
-            retorno:function() {
-                if(retorno) retorno();
-            }
-        });
+                cuerpo:this.elemento,
+                mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
+                modal:this.propiedad("modal"),
+                retorno:function() {
+                    if(retorno) retorno();
+                }
+            });
 
         ui.abrirDialogo(dialogo);
     };

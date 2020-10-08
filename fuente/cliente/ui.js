@@ -763,8 +763,15 @@ var ui=new function() {
         return instanciasVistas[nombreVistaPrincipal];
     };
 
-    this.vista=function() {
-        return this.obtenerInstanciaVistaPrincipal();
+    /**
+     * Devuelve la instancia de la vista (es decir, del componente, no del controlador).
+     * @param {string} [nombre] - Nombre de la vista embebible. Si se omite, devolverá la vista principal.
+     * @returns {Componente}
+     */
+    this.vista=function(nombre) {
+        //Este método en realidad es un acceso directo a los siguientes métodos:
+        if(typeof nombre==="undefined") return this.obtenerInstanciaVistaPrincipal();
+        return this.obtenerInstanciaVista(nombre);
     };
 
     /**
@@ -839,10 +846,14 @@ var ui=new function() {
     };
 
     /**
-     * Acceso directo a la instancia del controlador de la vista principal (alias de ui.obtenerInstanciaControladorPrincipal()).
+     * Devuelve la instancia del controlador.
+     * @param {string} [nombre] - Nombre del controlador de vista embebible. Si se omite, devolverá el controlador de la vista principal.
+     * @returns {Controlador}
      */
-    this.controlador=function() {
-        return this.obtenerInstanciaControladorPrincipal();
+    this.controlador=function(nombre) {
+        //Este método en realidad es un acceso directo a los siguientes métodos:
+        if(typeof nombre==="undefined") return this.obtenerInstanciaControladorPrincipal();
+        return this.obtenerInstanciaControlador(nombre);
     };
 
     /**

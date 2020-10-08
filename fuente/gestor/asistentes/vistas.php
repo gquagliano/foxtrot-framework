@@ -87,25 +87,33 @@ class vistas extends asistente {
      * @param string $html
      * @param string $css
      * @param string $js
+     * @param string $json
      */
-    protected function renombrarCodigo($nombre,$nuevoNombre,&$html,&$css,&$js) {
+    protected function renombrarCodigo($nombre,$nuevoNombre,&$html,&$css,&$js,&$json) {
         $id=str_replace('/','-',$nombre);
         $nuevoId=str_replace('/','-',$nuevoNombre);
+
+        function procesarJson($codigo,$id,$nuevoId,$nombre,$nuevoNombre) {    
+            $codigo=preg_replace('/"id":"'.$id.'-([a-z0-9-]+)"/m','"id":"'.$nuevoId.'-$1"',$codigo);
+            $codigo=preg_replace('/"selector":".'.$id.'-([a-z0-9-]+)"/m','"selector":".'.$nuevoId.'-$1"',$codigo);
+            //En el JSON, el nombre puede encontrarse con las barras escapadas (\/) como sin escapar (/)
+            $codigo=str_replace('"nombre":"'.$nombre.'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
+            $codigo=str_replace('"nombre":"'.str_replace('/','\\/',$nombre).'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
+            return $codigo;
+        }
 
         $html=str_replace('/'.$nombre.'.css','/'.$nuevoNombre.'.css',$html);
         $html=str_replace('/'.$nombre.'.js','/'.$nuevoNombre.'.js',$html);
         $html=str_replace('inicializar("'.$nombre.'")','inicializar("'.$nuevoNombre.'")',$html);
         $html=preg_replace('/class="([a-z0-9_\s-]+ )?'.$id.'-([a-z0-9_\s-]+)"/m','class="$1'.$nuevoId.'-$2"',$html);
         $html=preg_replace('/data-fxid="'.$id.'-([a-z0-9-]+)"/m','data-fxid="'.$nuevoId.'-$1"',$html);
-        $html=preg_replace('/"id":"'.$id.'-([a-z0-9-]+)"/m','"id":"'.$nuevoId.'-$1"',$html);
-        $html=preg_replace('/"selector":".'.$id.'-([a-z0-9-]+)"/m','"selector":".'.$nuevoId.'-$1"',$html);
-        //En el JSON, el nombre puede encontrarse con las barras escapadas (\/) como sin escapar (/)
-        $html=str_replace('"nombre":"'.$nombre.'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$html);
-        $html=str_replace('"nombre":"'.str_replace('/','\\/',$nombre).'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$html);
+        $html=procesarJson($html,$id,$nuevoId,$nombre,$nuevoNombre);
 
         $css=str_replace('.'.$id.'-','.'.$nuevoId.'-',$css);
 
-        $js=str_replace('"'.$nombre.'"','"'.$nuevoNombre.'"',$js);
+        $js=str_replace('"'.$nombre.'"','"'.$nuevoNombre.'"',$js);        
+
+        $json=procesarJson($json,$id,$nuevoId,$nombre,$nuevoNombre);
     }
 
     /**
@@ -116,8 +124,8 @@ class vistas extends asistente {
     public function duplicar($nombre,$nuevoNombre=null) {
         $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
 
-        $rutaJson=$ruta.'aplicacion.json';
-        $json=json_decode(file_get_contents($rutaJson));
+        $rutaJsonApl=$ruta.'aplicacion.json';
+        $jsonApl=json_decode(file_get_contents($rutaJsonApl));
         
         if(!$nuevoNombre) {
             //Buscar un nombre libre
@@ -131,7 +139,7 @@ class vistas extends asistente {
             do {
                 $prueba=$dir.$base.($i>1?'-'.$i:'');
                 $i++;
-            } while(array_key_exists($prueba,$json->vistas));
+            } while(array_key_exists($prueba,$jsonApl->vistas));
             $nuevoNombre=$prueba;
         }
 
@@ -149,13 +157,18 @@ class vistas extends asistente {
         $rutaCss=$ruta.'cliente/vistas/'.$nombre.'.css';
         $nuevaRutaCss=$ruta.'cliente/vistas/'.$nuevoNombre.'.css';
         $css=file_get_contents($rutaCss);
+        
+        $rutaJson=$ruta.'cliente/vistas/'.$nombre.'.json';
+        $nuevaRutaJson=$ruta.'cliente/vistas/'.$nuevoNombre.'.json';
+        $json='';
+        if(file_exists($rutaJson)) $json=file_get_contents($rutaJson);
 
         $rutaJs=$ruta.'cliente/controladores/'.$nombre.'.js';
         $nuevaRutaJs=$ruta.'cliente/controladores/'.$nuevoNombre.'.js';
         $js='';
         if(file_exists($rutaJs)) $js=file_get_contents($rutaJs);
 
-        $this->renombrarCodigo($nombre,$nuevoNombre,$html,$css,$js);
+        $this->renombrarCodigo($nombre,$nuevoNombre,$html,$css,$js,$json);
 
         //Crear árbol de directorios
         $dir=dirname($nuevaRutaHtml); //dirname($nuevaRutaCss) es igual a dirname($nuevaRutaHtml)
@@ -166,8 +179,9 @@ class vistas extends asistente {
         file_put_contents($nuevaRutaHtml,$html);
         file_put_contents($nuevaRutaCss,$css);
         if($js) file_put_contents($nuevaRutaJs,$js);
+        if($json) file_put_contents($nuevaRutaJson,$json);
 
-        $json->vistas->$nuevoNombre=clone $json->vistas->$nombre;
-        file_put_contents($rutaJson,json_encode($json));
+        $jsonApl->vistas->$nuevoNombre=clone $jsonApl->vistas->$nombre;
+        file_put_contents($rutaJsonApl,json_encode($jsonApl));
     }
 }

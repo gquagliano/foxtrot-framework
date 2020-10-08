@@ -18,7 +18,7 @@
 var controlador=new function() {
     this.nombre=null;
     this.servidor=null;
-    this.nombreVista=null;
+    this.vista=null;
     this.controladorServidor=null;
     /** Componentes por nombre. */
     this.componentes={};
@@ -49,17 +49,27 @@ var controlador=new function() {
 
     /**
      * Devuelve el nombre de la vista que está controlando actualmente.
+     * @returns {string}
      */
     this.obtenerNombreVista=function() {
-        return this.nombreVista;
+        return this.vista.obtenerNombre();
     };
 
     /**
-     * Establece el nombre de la vista que está controlando actualmente.
-     * @param {string} nombre 
+     * Establece la instancia de la vista que está controlando actualmente.
+     * @param {Componente} vista 
      */
-    this.establecerVista=function(nombre) {
-        this.nombreVista=nombre;
+    this.establecerVista=function(vista) {
+        this.vista=vista;
+        return this;
+    };
+
+    /**
+     * Devuelve la instancia de la vista que está controlando actualmente.
+     * @param {Componente} vista 
+     */
+    this.obtenerVista=function(vista) {
+        return this.vista=vista;
     };
 
     /**

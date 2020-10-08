@@ -1421,7 +1421,7 @@ var ui=new function() {
         //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
         //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
         if(obj) {
-            obj.establecerVista(nombre);
+            obj.establecerVista(instanciasVistas[nombre]);
             instanciasVistas[nombre].establecerControlador(nombre);
 
             //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores

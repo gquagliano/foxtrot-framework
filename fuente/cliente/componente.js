@@ -560,7 +560,7 @@ var componente=new function() {
             propiedades:this.obtenerPropiedades()
         };
 
-        var comp=ui.crearComponente(propiedades);
+        var comp=ui.crearComponente(propiedades,this.nombreVista);
 
         comp.restaurar();
 

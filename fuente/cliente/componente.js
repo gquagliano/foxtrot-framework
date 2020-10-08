@@ -1398,6 +1398,11 @@ var componente=new function() {
             //Intro
             elemento.evento("keydown",function(ev) {
                 if(ev.which==13) t.procesarEvento("intro","intro","intro",ev);
+            });
+
+            //Click con botón medio
+            elemento.evento("mousedown",function(ev) {
+                if(ev.which==2) t.procesarEvento("click","click","click",ev,null,null,false,true);
             });            
         } else if(this.contenidoEditable) {
             this.elemento.evento("dblclick",function(ev) {
@@ -1453,14 +1458,16 @@ var componente=new function() {
      * @param {*} [parametros] - Parámetros a pasar a la función.
      * @param {function} [retorno] - Función de retorno.
      * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
+     * @param {boolean} [nuevaVentana=false] - En caso de navegación, abrir la nueva vista o URL en una nueva ventana.
      * @returns {(ajax|*|undefined)}
      */
-    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso) {
+    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana) {
         if(typeof metodo==="undefined") metodo=null;
         if(typeof evento==="undefined") evento=null;
         if(typeof parametros==="undefined") parametros=null;
         if(typeof retorno==="undefined") retorno=null;
         if(typeof silencioso==="undefined") silencioso=false;
+        if(typeof nuevaVentana==="undefined") nuevaVentana=false;
 
         if(!evento) evento=document.createEvent("Event");
 
@@ -1560,10 +1567,10 @@ var componente=new function() {
                 ajax=metodo.apply(obj.servidor,args);
             } else if(comando=="ir") {
                 //Navegación
-                ui.irA(manejador);
+                ui.irA(manejador,nuevaVentana);
             } else if(comando=="no-ir") {
                 //Reemplazar URL sin navegar
-                ui.noIrA(manejador);
+                ui.noIrA(manejador,nuevaVentana);
             } else if(comando=="abrir") {
                 //Popup
                 ui.abrirVentana(manejador);

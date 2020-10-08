@@ -1071,9 +1071,12 @@ var ui=new function() {
     /**
      * Navega a la vista o URL especificada.
      * @param {string} ruta - URL o nombre de vista de destino.
+     * @param {boolean} [nuevaVentana=false] - Abrir en una nueva ventana.
      * @returns {ui}
      */
-    this.irA=function(ruta) {
+    this.irA=function(ruta,nuevaVentana) {
+        if(typeof nuevaVentana==="undefined") nuevaVentana=false;
+
         var destino=this.procesarUrl(ruta);
 
         //Evento
@@ -1081,18 +1084,31 @@ var ui=new function() {
         //Si un método devolvió true, detener
         if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes(null,"navegacion",true,[destino.vista])) return;
 
-        window.location.href=destino.url;
+        if(nuevaVentana) {
+            if(!/^https?:\/\//i.test(destino.url)) destino.url=this.obtenerUrlBase()+destino.url;
+            window.open(destino.url);
+        } else {
+            window.location.href=destino.url;
+        }
+
         return this;
     };
 
     /**
      * Cambia la URL hacia la vista o URL especificada, sin navegar hacia ella.
      * @param {string} ruta - URL o nombre de vista de destino.
+     * @param {boolean} [nuevaVentana=false] - Abrir en una nueva ventana.
      * @returns {ui}
      */
-    this.noIrA=function(ruta) {
+    this.noIrA=function(ruta,nuevaVentana) {
+        if(typeof nuevaVentana==="undefined") nuevaVentana=false;
+
+        //Si se solicitó abrir en una nueva ventana, el efecto es el mismo que el de irA()
+        if(nuevaVentana) return this.irA(ruta,true);
+        
         var destino=this.procesarUrl(ruta);
         this.cambiarUrl(destino.url,{vista:destino.vista});
+        
         return this;
     };
 

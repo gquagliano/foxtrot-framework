@@ -14,6 +14,7 @@ defined('_inc') or exit;
 class configuracion {
     public static $url=null;
     public static $rutaEror='error/';
+    public static $urlError=null;
     public static $enrutador=null;
     public static $rutaBase='/';
     public static $zonaHoraria='America/Argentina/Buenos_Aires';

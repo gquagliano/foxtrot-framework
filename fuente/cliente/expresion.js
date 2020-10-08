@@ -78,6 +78,7 @@ var expresion=function(expr) {
         if(!this.cadena) return null;
         
         var pila=[],
+            uitlimoObjeto=null,
             objeto=null,
             bufer="",
             argumentos=[],
@@ -97,11 +98,13 @@ var expresion=function(expr) {
                     } else if(/^[0-9+]$/.test(bufer)) {
                         bufer+=".";
                     } else {
+                        uitlimoObjeto=objeto;
                         objeto=buscarObjeto(objeto,bufer);
                         bufer="";
                     }
                 } else if(caracter=="?") {
                     ternarioCondicion=!!buscarObjeto(objeto,bufer);
+                    uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter==":") {
@@ -109,29 +112,35 @@ var expresion=function(expr) {
                         //Si la condición del ternario fue verdadera, terminar
                         break;
                     }
+                    uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter=="[") {
                     pila.push(buscarObjeto(objeto,bufer));
+                    uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter=="]") {
+                    uitlimoObjeto=objeto;
                     objeto=buscarObjeto(objeto,bufer);
                     var superior=pila.pop();
                     objeto=buscarObjeto(superior,objeto);
                     bufer="";
                 } else if(caracter=="(") {
                     pila.push(buscarObjeto(objeto,bufer));
+                    uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                     argumentos=[];
                 } else if(caracter==",") {
                     argumentos.push(buscarObjeto(objeto,bufer));
+                    uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter==")") {
                     if(bufer!="") argumentos.push(buscarObjeto(objeto,bufer));
                     var superior=pila.pop();
+                    uitlimoObjeto=objeto;
                     objeto=superior.apply(window,argumentos);
                     bufer="";
                 } else {
@@ -147,7 +156,13 @@ var expresion=function(expr) {
             }
         }
 
-        if(bufer!="") objeto=buscarObjeto(objeto,bufer);
+        if(bufer!="") {
+            uitlimoObjeto=objeto;
+            objeto=buscarObjeto(objeto,bufer);
+        }
+
+        //Si es una función, devolver un bind al objeto anterior para que al invocarla this tenga el valor correcto
+        if(uitlimoObjeto&&typeof objeto==="function") return objeto.bind(uitlimoObjeto);
 
         return objeto;
     };

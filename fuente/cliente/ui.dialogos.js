@@ -145,6 +145,10 @@
     var docKeyDn=function(ev) {
         if(ev.which==27) {
             //ESC
+
+            //Ignorar si es modal
+            if(dialogoAbierto.param.modal) return;
+
             ui.cerrarDialogo(dialogoAbierto);
             ev.preventDefault();
             ev.stopPropagation();
@@ -166,6 +170,7 @@
      * @param {function} [parametros[].retorno] - Función de retorno. Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
      * @param {boolean} [parametros[].mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
      * @param {boolean} [parametros[].eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
+     * @param {boolean} [parametros[].modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
@@ -180,10 +185,11 @@
             mostrarCerrar:false,
             eliminar:false,
             padreAnterior:null,
-            abierto:false
+            abierto:false,
+            modal:false
         },parametros);
 
-        if(parametros.mostrarCerrar) {
+        if(!parametros.modal&&parametros.mostrarCerrar) {
             var cerrar=document.crear("<a href='#' class='dialogo-x'></a>");
             elem.querySelector(".dialogo-cuerpo").anexar(cerrar);
             cerrar.evento("click",function(ev) {
@@ -233,6 +239,9 @@
             param:parametros,
             obtenerElemento:function() {
                 return this.elem;
+            },
+            obtenerCuerpo:function() {
+                return this.elem.querySelector(".dialogo-cuerpo");
             }
         };
     };
@@ -254,6 +263,15 @@
 
         //Eventos
         document.evento("keydown",docKeyDn);
+        dialogo.elem
+            .removerEventos()
+            .evento("click",function(ev) {
+                //Click en la sombra (ignorar si es modal)
+                var c=dialogo.obtenerCuerpo();
+                if(dialogo.param.modal||ev.target.es({elemento:c})||ev.target.padre({elemento:c})) return;
+                ui.cerrarDialogo(dialogo);
+                ev.preventDefault();
+            });
 
         return ui;
     };

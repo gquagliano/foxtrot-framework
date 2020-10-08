@@ -134,8 +134,11 @@ var componenteImportar=function() {
         setTimeout(function() {
             //Si hemos vuelto a la vista principal, cargar el valor predeterminado
             if(nombreNuevaVista==ui.obtenerNombreVistaPrincipal()) nombreNuevaVista=t.propiedad(null,"vista");
-            if(!nombreNuevaVista) return;        
-            t.cargarVista(nombreNuevaVista);
+            if(!nombreNuevaVista) {
+                t.cerrarVistaActual();
+            } else {
+                t.cargarVista(nombreNuevaVista);
+            }
         },demora*1000);
     };
 
@@ -163,16 +166,27 @@ var componenteImportar=function() {
             },precarga);
         };
 
-        if(t.elementoVista) {
-            var elem=t.elementoVista;
+        this.cerrarVistaActual(fn);
+        
+        return this;
+    };
+
+    /**
+     * Cierra la vista actual.
+     * @param {function} retorno 
+     * @returns {Componente}
+     */
+    this.cerrarVistaActual=function(retorno) {
+        if(typeof retorno!=="function") retorno=null;
+        if(this.elementoVista) {
+            var elem=this.elementoVista;
             ui.animarDesaparecer(elem,function() {
                 elem.remover();
-                fn();
+                if(retorno) retorno();
             });
         } else {
-            fn();
+            if(retorno) retorno();
         }
-
         return this;
     };
 

@@ -800,6 +800,8 @@ var ui=new function() {
             foxtrot:"obtenerVista",
             parametros:[nombre],
             retorno:function(res) {
+                if(!res) return;
+
                 //Cargar el CSS (TODO varificar si ya existe)
                 ui.agregarHojaEstilos(res.urlCss);
 
@@ -1079,15 +1081,15 @@ var ui=new function() {
 
         var destino=this.procesarUrl(ruta);
 
-        //Evento
-        //Pasar a los controladores y componentes
-        //Si un método devolvió true, detener
-        if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes(null,"navegacion",true,[destino.vista])) return;
-
         if(nuevaVentana) {
             if(!/^https?:\/\//i.test(destino.url)) destino.url=this.obtenerUrlBase()+destino.url;
             window.open(destino.url);
         } else {
+            //Evento
+            //Pasar a los controladores y componentes
+            //Si un método devolvió true, detener
+            if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes(null,"navegacion",true,[destino.vista])) return;
+
             window.location.href=destino.url;
         }
 
@@ -1122,6 +1124,8 @@ var ui=new function() {
         urlModificada--;
         if(urlModificada<0) urlModificada=0;
 
+        procesarOnPopState();
+
         return this;
     };
 
@@ -1138,12 +1142,7 @@ var ui=new function() {
 
         urlModificada++;
 
-        //Evento
-        //Pasar a los controladores y componentes
-        //Si un método devolvió true, detener
-        if(ui.evento("navegacion",[estado.vista])||ui.eventoComponentes(null,"navegacion",true,[estado.vista])) return;
-
-        //El cambio de URL no tiene otro efecto
+        procesarOnPopState();
 
         return this;
     };
@@ -1162,19 +1161,25 @@ var ui=new function() {
 
     /**
      * Procesa el evento 'popstate'.
-     * @param {PopStateEvent} evento 
+     * @param {PopStateEvent} [evento] 
      */
     var procesarOnPopState=function(evento) {
-        //Por el momento, solo soportamos la navegación entre vistas mediante popState.
-        //TODO Debería ser posible determinar la vista a partir de la URL inicial, lo cual, por el momento, sucede exclusivamente del lado del servidor
-        if(evento.state&&evento.state.hasOwnProperty("vista")) {
-            //Evento
-            //Pasar a los controladores y componentes
-            //Si un método devolvió true, detener
-            if(ui.evento("navegacion",[evento.state.vista])||ui.eventoComponentes(null,"navegacion",true,[evento.state.vista])) return;
-
-            //El cambio de URL no tiene otro efecto
+        //TODO Por el momento, solo soportamos la navegación entre vistas mediante popState. Debería ser posible determinar la vista a partir
+        //de la URL inicial, lo cual, por el momento, sucede exclusivamente del lado del servidor
+        
+        var vista;
+        if(typeof evento!=="undefined"&&evento.state&&evento.state.hasOwnProperty("vista")) {
+            vista=evento.state.vista;
+        } else {
+            vista=instanciaEnrutador.obtenerNombreVista(window.location.href);
         }
+
+        //Evento
+        //Pasar a los controladores y componentes
+        if(ui.evento("navegacion",[vista])) return;
+        if(ui.eventoComponentes(null,"navegacion",true,[vista])) return;
+
+        //El cambio de URL no tiene otro efecto
     };
 
     /**
@@ -1212,7 +1217,7 @@ var ui=new function() {
                 },false);
             },false);
         }
-
+        
         win.addEventListener("popstate",procesarOnPopState);
     };
 

@@ -96,18 +96,19 @@ var componenteImportar=function() {
     this.listo=function() {
         if(ui.enModoEdicion()) return;
         
-        var vistaInicial=this.propiedad("vista");
-        if(vistaInicial) {
-            this.cargarVista(vistaInicial);
-        } else if(this.propiedad("escucharNavegacion")) {
-            //Si no hay configurada una vista inicial, pero sí está habilitado para escuchar navegación, intentar cargar la vista correspondiente a la URL actual
-
-            //Excepto en Cordova
-            if(ui.esCordova()) return;
-
+        //Si está habilitado para escuchar navegación, intentar cargar la vista correspondiente a la URL actual
+        //Excepto en Cordova
+        if(!ui.esCordova()&&this.propiedad("escucharNavegacion")) {
             var vista=ui.obtenerEnrutador().obtenerNombreVista(window.location.href);
-            if(vista!=ui.obtenerNombreVistaPrincipal()) this.cargarVista(vista);
+            if(vista!=ui.obtenerNombreVistaPrincipal()) {
+                this.cargarVista(vista);
+                return;
+            }
         }
+        
+        //Si la URL actual corresponde a la vista principal, intentar cargar la vista inicial
+        var vistaInicial=this.propiedad("vista");
+        if(vistaInicial) this.cargarVista(vistaInicial);
     };
 
     /**

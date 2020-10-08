@@ -110,7 +110,7 @@ class sincronizarBd extends asistente {
         if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
             $long=$coincidencias[2]?$coincidencias[2]:3;
             $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',5=>'INT',6=>'INT',7=>'INT',8=>'BIGINT'];
-            return $tipos[$long].
+            return $tipos[$long].'('.$long.')'.
                 (trim($coincidencias[3])=='sin signo'?' UNSIGNED':'').
                 ' NULL DEFAULT '.$predeterminado;
         }
@@ -143,6 +143,7 @@ class sincronizarBd extends asistente {
             $long=$coincidencias[2]?$coincidencias[2]:3;
             $tipos=[1=>'tinyint',2=>'smallint',3=>'mediumint',4=>'int',8=>'bigint'];
             if(!preg_match('/'.$tipos[$long].'/i',$campoBd->Type)||
+                ($coincidencias[2]&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
                 (trim($coincidencias[3])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
         }
 

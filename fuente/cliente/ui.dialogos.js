@@ -146,21 +146,37 @@
 
     var dialogoAbierto=null;
 
-    var docKeyDn=function(ev) {
+    var cerrarDialogoAbierto=function() {
+        //Ignorar si es modal
+        if(dialogoAbierto.param.modal) return;
+        ui.cerrarDialogo(dialogoAbierto);
+    },
+    docDialogoKeyDn=function(ev) {
         if(ev.which==27) {
             //ESC
-
-            //Ignorar si es modal
-            if(dialogoAbierto.param.modal) return;
-
-            ui.cerrarDialogo(dialogoAbierto);
-            ev.preventDefault();
+            cerrarDialogoAbierto();
             ev.stopPropagation();
         }
-    };
+    },
+    docBackbuttonDialogo=function(ev) {
+        cerrarDialogoAbierto();
+        ev.preventDefault();
+        ev.stopPropagation();
+    },
+    removerEventosDialogo=function() {
+        document.removerEvento("backbutton",docBackbuttonDialogo)
+            .removerEvento("keydown",docDialogoKeyDn);
+    },
+    establecerEventosDialogo=function() {
+        document.evento("backbutton",docBackbuttonDialogo)
+            .evento("keydown",docDialogoKeyDn);
 
-    var removerEventos=function() {
-        document.removerEvento("keydown",docKeyDn);
+        //Click en la sombra
+        ui.obtenerElementoSombra()
+            .evento("click",function(ev) {
+                cerrarDialogoAbierto();
+                ev.preventDefault();
+            });
     };
 
     /**
@@ -255,7 +271,7 @@
      * @param {Dialogo} dialogo 
      */
     ui.abrirDialogo=function(dialogo) {
-        if(dialogoAbierto) this.cerrarDialogo(dialogoAbierto,null,true);
+        if(dialogoAbierto) ui.cerrarDialogo(dialogoAbierto,null,true);
         dialogoAbierto=dialogo;
 
         ui.animarAparecer(dialogo.elem);
@@ -265,17 +281,10 @@
         var btn=dialogo.elem.querySelector(".predeterminado");
         if(btn) btn.focus();
 
-        //Eventos
-        document.evento("keydown",docKeyDn);
-        dialogo.elem
-            .removerEventos()
-            .evento("click",function(ev) {
-                //Click en la sombra (ignorar si es modal)
-                var c=dialogo.obtenerCuerpo();
-                if(dialogo.param.modal||ev.target.es({elemento:c})||ev.target.padre({elemento:c})) return;
-                ui.cerrarDialogo(dialogo);
-                ev.preventDefault();
-            });
+        //Sombra
+        ui.mostrarSombra();
+        
+        establecerEventosDialogo();
 
         return ui;
     };
@@ -304,7 +313,9 @@
 
         if(!dialogo) return ui;
 
-        removerEventos();
+        removerEventosDialogo();
+
+        ui.ocultarSombra();
 
         if(dialogo.abierto&&dialogo.param.retorno) dialogo.param.retorno(opcion);
 
@@ -344,16 +355,106 @@
 
     var desplegableAbierto=null;
 
-    var eventosVentanaDesplegable=function() {
+    /**
+     * Cierra el desplegable actual.
+     * @param {boolean} [forzar=false] - Fuerza el cierre, ignorando la opción mantener.
+     */
+    var cerrarDesplegableAbierto=function(forzar) {
         if(!desplegableAbierto) return;
-        if(desplegableAbierto.opciones.retornoCierre) desplegableAbierto.opciones.retornoCierre();
-        ui.cerrarDesplegable(desplegableAbierto,false);
+        if(typeof forzar==="undefined") forzar=false;
+        if(!forzar&&desplegableAbierto.opciones.mantener) {
+            posicionarDesplegable(desplegableAbierto);
+        } else {
+            if(desplegableAbierto.opciones.retornoCierre) desplegableAbierto.opciones.retornoCierre();
+            ui.cerrarDesplegable(desplegableAbierto,false);
+        }
     },
+    docBackbuttonDesplegable=function(ev) {
+        cerrarDesplegableAbierto();
+        ev.preventDefault();
+        ev.stopPropagation();
+    },
+    /**
+     * Remueve los manejadores de eventos relacionados con los desplegables.
+     */
     removerEventosDesplegable=function() {
-        window.removerEvento("resize scroll mousewheel blur",eventosVentanaDesplegable);
+        window.removerEvento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
+        document.removerEvento("backbutton",docBackbuttonDesplegable);
     },
+    /**
+     * Asigna los manejadores de eventos relacionados con los desplegables.
+     */
     establecerEventosDesplegable=function() {
-        window.evento("resize scroll mousewheel blur",eventosVentanaDesplegable);
+        window.evento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
+        document.evento("backbutton",docBackbuttonDesplegable);
+            
+        //Click en la sombra
+        ui.obtenerElementoSombra()
+            .evento("click",function(ev) {
+                cerrarDesplegableAbierto(true);
+                ev.preventDefault();
+            });
+    };
+
+    /**
+     * Posiciona el desplegable relativo al elemento elemento.
+     * @param {Desplegable} desplegable
+     */
+    var posicionarDesplegable=function(desplegable) {
+        var elem=desplegable.elem,
+            elemComponente=desplegable.componente.obtenerElemento();
+
+        var posicionComponente=elemComponente.posicionAbsoluta(),
+            altoComponente=elemComponente.alto(),
+            anchoComponente=elemComponente.ancho();
+
+        elem.estilos({
+            left:posicionComponente.x,
+            top:posicionComponente.y+altoComponente,
+            width:anchoComponente
+        });
+
+        //TODO Desplegar hacia arriba / hacia los costados
+        
+        //Verificar si entra en pantalla
+        var posicionDesplegable=elem.posicionAbsoluta(),
+            altoDesplegable=elem.alto(),
+            anchoDesplegable=elem.ancho(),
+            altoVentana=window.alto(),
+            anchoVentana=document.body.ancho(), //Usar el ancho del body, que no incluye el ancho de la barra de desplazamiento
+            margen=15;
+
+        if(posicionDesplegable.y+altoDesplegable+margen>altoVentana) {
+            if(desplegable.opciones.reposicionar) {
+                //Abrir hacia arriba
+                elem.estilos({
+                    top:"auto",
+                    bottom:altoVentana-posicionComponente.y
+                });
+            } else {
+                //Redimensionar
+                elem.estilos({
+                    height:altoVentana-margen-posicionComponente.y-altoComponente
+                });
+            }
+        }
+
+        //Posición lateral (si el ancho es superior al ancho del componente, por ejemplo si tiene min-width, puede excederse)
+        if(posicionDesplegable.x+anchoDesplegable+margen>anchoVentana) {
+            if(desplegable.opciones.reposicionar) {
+                //Abrir hacia la izquierda
+                elem.estilos({
+                    left:"auto",
+                    right:anchoVentana-(posicionComponente.x+anchoComponente)
+                });
+            } else {
+                //Redimensionar
+                elem.estilos({
+                    minWidth:"0",
+                    width:anchoVentana-margen-posicionComponente.x
+                });
+            }
+        }
     };
 
     /**
@@ -366,6 +467,7 @@
      * @param {string} [opciones.clase] - Clase CSS.
      * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
      * @param {boolean} [opciones.destruir=true] - Si es true, será destruido tras cerrarse.
+     * @param {boolean} [opciones.mantener=false] - Si es true, evitará que el desplegable se cierre automáticamente al perderse el foco o desplazarse la página.
      * @returns {Desplegable}
      *//**
      * Crea un desplegable debajo de un componente.
@@ -378,6 +480,7 @@
      * @param {string} [opciones.clase] - Clase CSS.
      * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
      * @param {boolean} [opciones.destruir=true] - Si es true, será destruido tras cerrarse.
+     * @param {boolean} [opciones.mantener=false] - Si es true, evitará que el desplegable se cierre automáticamente al perderse el foco o desplazarse la página.
      * @returns {Desplegable}
      */
     ui.crearDesplegable=function(componente,b,c) {
@@ -403,12 +506,22 @@
             adaptativo:true,
             clase:null,
             retornoCierre:null,
-            destruir:true
+            destruir:true,
+            mantener:false
         },opciones);
 
-        var elem=ui.obtenerDocumento()
-            .crear("<div class='desplegable"+(opciones.clase?" "+opciones.clase:"")+(opciones.adaptativo?" desplegable-adaptativo":"")+"'>")
-            .anexarA(ui.obtenerCuerpo());
+        var doc=ui.obtenerDocumento(),
+            elem=doc.crear("<div tabindex='-1' class='foxtrot-desplegable"+(opciones.clase?" "+opciones.clase:"")+(opciones.adaptativo?" foxtrot-desplegable-adaptativo":"")+"'>")
+                .anexarA(componente.obtenerElemento());
+
+        doc.crear("<a href='#' class='foxtrot-desplegable-x'>")
+            .evento("mousedown",function(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                cerrarDesplegableAbierto(true);
+            })
+            .anexarA(elem);
+        
         if(elemento) elem.anexar(elemento);
 
         return {
@@ -427,46 +540,19 @@
      * @returns {ui}
      */
     ui.abrirDesplegable=function(desplegable) {
-        var elem=desplegable.elem,
-            elemComponente=desplegable.componente.obtenerElemento();
-
+        var elem=desplegable.elem;
         ui.detenerAnimacion(elem)
             .animarAparecer(elem);
+        elem.agregarClase("foxtrot-desplegable-abierto");
 
-        //Posicionamiento
-        var posicionComponente=elemComponente.posicionAbsoluta(),
-            altoComponente=elemComponente.alto(),
-            anchoComponente=elemComponente.ancho();
+        posicionarDesplegable(desplegable);
 
-        elem.estilos({
-            left:posicionComponente.x,
-            top:posicionComponente.y+altoComponente,
-            width:anchoComponente
-        });
-
-        //TODO Desplegar hacia arriba / hacia los costados
-        
-        //Verificar si entra en pantalla
-        var posicionDesplegable=elem.posicionAbsoluta(),
-            altoDesplegable=elem.alto(),
-            altoVentana=window.alto(),
-            margen=15;
-
-        if(posicionDesplegable.y+altoDesplegable+margen>altoVentana) {
-            if(desplegable.opciones.reposicionar) {
-                //Abrir hacia arriba
-                elem.estilos({
-                    top:posicionComponente.y-altoDesplegable
-                });
-            } else {
-                //Redimensionar
-                elem.estilos({
-                    height:altoVentana-margen-posicionComponente.y-altoComponente
-                });
-            }
+        //Adaptativo
+        var t=ui.obtenerTamano();
+        if(desplegable.opciones.adaptativo&&(t=="xs"||t=="sm")) {
+            ui.mostrarSombra();
         }
 
-        //Eventos
         establecerEventosDesplegable();
 
         desplegableAbierto=desplegable;
@@ -483,8 +569,11 @@
     ui.cerrarDesplegable=function(desplegable,animar) {
         var elem=desplegable.elem,
             fn=function() {
+                elem.removerClase("foxtrot-desplegable-abierto");
                 if(desplegable.opciones.destruir) elem.remover();
             };
+
+        ui.ocultarSombra();
 
         if(typeof animar==="undefined"||animar) {
             ui.detenerAnimacion(elem)
@@ -581,5 +670,40 @@
         }));
 
         return ui;
+    };
+
+    //// Utilidades
+
+    var elemSombra=null;
+
+    /**
+     * Muestra la sombra debajo de los diálogos.
+     * @returns {ui}
+     */
+    ui.mostrarSombra=function() {
+        ui.obtenerElementoSombra();
+        elemSombra.removerEventos();
+        ui.detenerAnimacion(elemSombra).animarAparecer(elemSombra);
+        return ui;
+    };
+
+    /**
+     * Oculta la sombra debajo de los diálogos.
+     * @returns {ui}
+     */
+    ui.ocultarSombra=function() {
+        if(elemSombra) ui.detenerAnimacion(elemSombra).animarDesaparecer(elemSombra);
+        return ui;
+    };
+
+    /**
+     * Devuelve el emlemento de la sombra.
+     * @returns {Node}
+     */
+    ui.obtenerElementoSombra=function() {
+        var doc=ui.obtenerDocumento();
+        if(!elemSombra) elemSombra=doc.querySelector("#foxtrot-sombra");
+        if(!elemSombra) elemSombra=doc.crear("<div id='foxtrot-sombra' class='oculto'>").anexarA(doc.body);
+        return elemSombra;
     };
 })();

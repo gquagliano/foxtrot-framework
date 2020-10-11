@@ -42,7 +42,9 @@ var componenteBucle=function() {
      * Crea el elemento del DOM para esta instancia (método para sobreescribir).
      */
     this.crear=function() {
-        this.elemento=document.crear("<div><div class='componente-bucle-plantilla'></div></div>"); 
+        this.elemento=document.crear("<div></div>");
+        this.contenedor=document.crear("<div class='componente-bucle-plantilla'></div></div>")
+            .anexarA(this.elemento);
         this.crearComponente();
         return this;
     };

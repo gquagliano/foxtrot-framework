@@ -442,7 +442,8 @@ body.foxtrot-trabajando #foxtrot-cargando {
     transition: outline .1s;
 }
 .foxtrot-modo-edicion .componente input,
-.foxtrot-modo-edicion .componente select {
+.foxtrot-modo-edicion .componente select,
+.foxtrot-modo-edicion .componente textarea {
     /*Previniendo el foco evitamos problemas relacionados con algunos tipos de campo, por ejemplo que en WebKit cuando tiene foco un campo de contraseña no funciona el drag&drop*/
     pointer-events: none;
 }

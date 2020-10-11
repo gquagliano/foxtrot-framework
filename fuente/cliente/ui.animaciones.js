@@ -79,6 +79,8 @@
 
             elem.removerClase("desaparece")
                 .agregarClase("oculto");
+
+            removerEvento(elem);
         });
     };
 

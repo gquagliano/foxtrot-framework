@@ -622,10 +622,20 @@
 
     /**
      * Prepara un valor arbitrario para que pueda ser asignado como valor de un estilo css.
+     * @param {string} propiedad - Nombre de la propiedad CSS.
+     * @paran {*} valor - Valor a analizar.
+     * @returns {string}
      * @private
      */
-    function normalizarValorCss(valor) {
-        if(typeof valor==="number"||!isNaN(valor)) valor=valor+"px";
+    function normalizarValorCss(propiedad,valor) {
+        if(propiedad=="zIndex") return parseInt(valor).toString();
+        
+        //TODO Otras propiedades
+
+        if(typeof valor==="number"||!isNaN(valor)) return valor.toString()+"px";
+
+        if(typeof valor==="string"&&/^[0-9]+$/.test(valor)) return valor+"px";
+
         return valor;
     }
 
@@ -638,7 +648,7 @@
         
         if(!util.esIndefinido(valor)) {
             if(util.esIndefinido(valor)) return getComputedStyle(this)[estilo];
-            this.style[estilo]=normalizarValorCss(valor);
+            this.style[estilo]=normalizarValorCss(estilo,valor);
             return this;
         }
 

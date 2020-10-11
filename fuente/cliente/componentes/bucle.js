@@ -14,6 +14,8 @@ var componenteBucle=function() {
     this.componente="bucle";
 
     this.itemsAutogenerados=[];
+    this.itemSinDatos=null;
+    this.elementoPadre=null;
 
     /**
      * Propiedades de Bucle.
@@ -55,15 +57,20 @@ var componenteBucle=function() {
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
      * @returns Componente
      */
-    this.establecerDatos=function(obj,actualizar) {        
+    this.establecerDatos=function(obj,actualizar) {
         if(typeof actualizar==="undefined") actualizar=true;
 
-        this.datos=obj;
+        var propiedad=this.propiedad(null,"propiedad");
+        if(propiedad) {
+            //Tomar listado de una propiedad específica
+            this.datos=util.obtenerPropiedad(obj,propiedad);
+        } else {
+            this.datos=obj;
+        }
 
         if(actualizar) this.actualizar();
 
-        //No incovamos establecerDatosComponente ya que no queremos que el objeto se distribuya a la descendencia
-        return this;        
+        return this;
     };
 
     /**
@@ -77,10 +84,12 @@ var componenteBucle=function() {
         });
         this.itemsAutogenerados=[];
 
-        if(!this.datos) return this;
+        if(!this.datos||!util.esArray(this.datos)) return this;
 
         //Ocultamos toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
         this.ocultarDescendencia();
+
+        if(this.itemSinDatos) this.itemSinDatos.remover();
 
         if(!this.datos.length) {
             this.mostrarMensajeSinDatos();
@@ -97,13 +106,14 @@ var componenteBucle=function() {
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad(null,"mensajeVacio");
-        if(!texto) return this;
+        if(!texto||this.itemSinDatos) return this;
 
-        var div=document.crear("div")
+        if(!this.elementoPadre) this.elementoPadre=this.elemento.padre();
+
+        this.itemSinDatos=document.crear("div")
             .agregarClase("autogenerado item-sin-datos")
+            .anexarA(this.elementoPadre)
             .establecerHtml(texto);
-
-        this.contenedor.anexar(div);
 
         return this;
     };
@@ -116,11 +126,12 @@ var componenteBucle=function() {
      * @returns {Componente}
      */
     this.generarItem=function(hijo,obj,indice) {
-        var nuevo=hijo.clonar(this.elemento.padre(),true); //Anexar al padre del componente bucle
+        if(!this.elementoPadre) this.elementoPadre=this.elemento.padre();
+        var nuevo=hijo.clonar(this.elementoPadre,true); //Anexar al padre del componente bucle
 
         this.itemsAutogenerados.push(nuevo);
 
-        //Agregar método al oriden de datos
+        //Agregar método al origen de datos
         obj.obtenerIndice=(function(i) {
             return function() {
                 return i;

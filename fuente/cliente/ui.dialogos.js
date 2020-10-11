@@ -296,6 +296,8 @@
 
         ui.animarAparecer(dialogo.elem);
 
+        dialogo.obtenerCuerpo().scrollTop=0;
+
         dialogo.abierto=true;
 
         var btn=dialogo.elem.querySelector(".predeterminado");

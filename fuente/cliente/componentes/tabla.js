@@ -79,7 +79,13 @@ var componenteTabla=function() {
     this.establecerDatos=function(obj,actualizar) {        
         if(typeof actualizar==="undefined") actualizar=true;
 
-        this.datos=obj;
+        var propiedad=this.propiedad(null,"propiedad");
+        if(propiedad) {
+            //Tomar listado de una propiedad específica
+            this.datos=util.obtenerPropiedad(obj,propiedad);
+        } else {
+            this.datos=obj;
+        }
 
         if(actualizar) this.actualizar();
 

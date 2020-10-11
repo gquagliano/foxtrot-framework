@@ -447,7 +447,7 @@ var componente=new function() {
         this.datos=obj;
 
         this.obtenerHijos().forEach(function(hijo) {
-            hijo.establecerDatos(obj,false);
+            hijo.establecerDatos(obj,actualizar);
         });
 
         if(actualizar) this.actualizar();

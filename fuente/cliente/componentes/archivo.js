@@ -286,11 +286,20 @@ var componenteArchivo=function() {
     };
 
     /**
-     * Devuelve el valor del componente.
-     * @returns {Object[]}
+     * Devuelve o establece el valor del componente.
+     * @param {null} [valor] - Valor a establecer. Si se omite, devolverá el valor actual. Nótese que el único valor admitido es null para reestablecer el campo.
+     * @returns {(*|Componente)}
      */
-    this.valor=function() {
-        return this.archivos;
+    this.valor=function(valor) {
+        if(typeof valor==="undefined") return this.archivos;
+
+        if(!valor) {
+            this.abortar();
+            this.campo.value=null;
+            this.procesarArchivos();
+        }
+        //Cualquier otro valor es ignorado
+        return this;
     };
 };
 

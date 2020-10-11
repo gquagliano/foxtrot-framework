@@ -9,7 +9,6 @@
 
 body * {
     zoom: 1;
-    backface-visibility: hidden;
 }
 
 body {    
@@ -250,10 +249,10 @@ li.menu-separador::after {
 }
 .dialogo .dialogo-x {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 20px;
-    height: 20px;
+    right: 16px;
+    top: 0;
+    width: 30px;
+    height: 61px;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQZJREFUeNpi/P//PwMtAeOQt4AJXSA+tyYTiMVINQikB6QXrwVABVlAahoQ7yXFEqjavSC9UDNw+mA1EF8GYh0gPghULEmE4aJAag9Uzw0gXoc3DqAaQK7RhWpwWji55Tkew5HVOgLVviAYycRYQozheFMRPkuINZxgMsVmCRD/IdZwovIBUgoBReIVqDCM7Qw0/BXFGQ3NJwzEuBxnRiOlFKBKUUHTIMKWWoD4L7H5hNRkCg9zUjIjsRkNI0KJtYSYogJnaiHGEhQLSDGcWEvQk2koVCEohdgTk86Bal4DKReoHg0gDkRRAPIBMo7Lqc4EYjF0cUIYpAekF12ccbTSJwQAAgwAwmEQscLIYxgAAAAASUVORK5CYII=);
     background-position: center;
     background-repeat: no-repeat;

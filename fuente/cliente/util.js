@@ -538,13 +538,13 @@ var util={
     /**
      * Convierte una fecha a string. La salida será UTC.
      * @param d Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, d/m/Y).
+     * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
      */
     fecha:function(d,f) {
         if(!(d instanceof Date)) d=util.epochAFecha(d);
         if(!util.validarFecha(d)) return "";
 
-        if(typeof f=="undefined") f="d/m/Y";        
+        if(typeof f=="undefined") f="n/j/Y";        
 
         var m=d.getUTCMonth()+1;
         var a=d.getUTCDate();
@@ -554,7 +554,9 @@ var util={
         var dn=["Dom","Lun","Mar","Mie","Jue","Vie","Sab","Dom"];
         var r=[
             ["d",(a<10?"0":"")+a],
+            ["n",a],
             ["m",(m<10?"0":"")+m],
+            ["j",m],
             ["Y",d.getUTCFullYear()],
             ["H", d.getUTCHours()],
             ["i", (i<10?"0":"")+i],
@@ -576,20 +578,20 @@ var util={
      * @param f Formato de salida. Opcional (predeterminado, d/m/Y H:i).
      */
     fechaHora:function(v,f) {
-        if(typeof f=="undefined") f="d/m/Y H:i";
+        if(typeof f=="undefined") f="n/j/Y H:i";
         return util.fecha(v,f);
     },
 
     /**
      * Convierte una fecha a string. La salida se convertirá a hora local.
      * @param d Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, d/m/Y).
+     * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
      */
     fechaLocal:function(d,f) {
         if(!(d instanceof Date)) d=util.epochAFecha(d);
         if(!util.validarFecha(d)) return "";
 
-        if(typeof f=="undefined") f="d/m/Y";        
+        if(typeof f=="undefined") f="n/j/Y";        
 
         var m=d.getMonth()+1;
         var a=d.getDate();
@@ -599,7 +601,9 @@ var util={
         var dn=["Dom","Lun","Mar","Mie","Jue","Vie","Sab","Dom"];
         var r=[
             ["d",(a<10?"0":"")+a],
+            ["n",a],
             ["m",(m<10?"0":"")+m],
+            ["j",m],
             ["Y",d.getFullYear()],
             ["H", d.getHours()],
             ["i", (i<10?"0":"")+i],
@@ -618,10 +622,10 @@ var util={
     /**
      * Convierte una fecha a string, incluyendo horas y minutos. La salida se convertirá a hora local. Esta función es alias de util.dateToStringLocal(v,f) con distinto valor predeterminado para f.
      * @param v Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, d/m/Y H:i).
+     * @param f Formato de salida. Opcional (predeterminado, n/j/Y H:i).
      */
     fechaHoraLocal:function(v,f) {
-        if(typeof f=="undefined") f="d/m/Y H:i";
+        if(typeof f=="undefined") f="n/j/Y H:i";
         return util.fechaLocal(v,f);
     },
 

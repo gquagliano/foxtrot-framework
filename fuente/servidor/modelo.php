@@ -626,6 +626,8 @@ class modelo {
         $this->ultimoId=$this->bd->obtenerId();
         if($operacion=='insertar') $this->consultaValores->id=$this->ultimoId;
 
+        if($operacion=='insertar'||$operacion=='actualizar') $this->ejecutarConsultasRelacionadasUnoAMuchos();
+
         return $this;
     }
 
@@ -634,26 +636,62 @@ class modelo {
      */
     public function ejecutarConsultasRelacionadas() {
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional'&&$campo->relacion!='1:n') { //Las relaciones uno a muchos no están soportadas
+            if($campo->tipo=='relacional'&&($campo->relacion!='1:1'||$campo->relacion!='1:0')) { //Las relaciones uno a muchos se procesarán en otra etapa
+                //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                 $entidad=$this->consultaValores->$nombre;
-                $columna=$campo->columna;
-
                 if($entidad===null) continue;
+
+                $nombreModelo=$campo->modelo;
+                $columna=$campo->columna;
 
                 if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) {
                     //Cuando se inserte o actualice con las relaciones desactivadas, solo debemos copiar el ID a la columna correspondiente
-                    if(is_object($entidad)) $this->consultaValores->$columna=$entidad->id;
+                    if(is_object($entidad)) {
+                        $this->consultaValores->$columna=$entidad->id;
+                    } elseif(is_array($entidad)) {
+                        $this->consultaValores->$columna=$entidad['id'];
+                    }
                     continue;
                 }
 
-                $modelo=$entidad->fabricarModelo($this->db);
-
-                $modelo->establecerValores($entidad)
+                self::fabricarModelo($nombreModelo,$this->db)
+                    ->establecerValores($entidad)
                     ->guardar();
 
                 $idInsertado=$entidad->id;
 
                 $this->consultaValores->$columna=$idInsertado;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Ejecuta las consultas de inserción o actualización en los campos relacionales 1:n.
+     */
+    public function ejecutarConsultasRelacionadasUnoAMuchos() {
+        foreach($this->campos as $nombre=>$campo) {
+            if($campo->tipo=='relacional'&&$campo->relacion=='1:n') {
+                $listado=$this->consultaValores->$nombre;
+                if(!is_array($listado)) continue;
+
+                //Cuando se inserte o actualice con las relaciones desactivadas, ignorar
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) continue;
+
+                $nombreModelo=$campo->modelo;
+                $modelo=self::fabricarModelo($nombreModelo,$this->db);
+                $columna=$campo->columna;
+
+                foreach($listado as $entidad) {
+                    //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
+                    if($entidad===null) continue;
+
+                    $entidad->$columna=$this->ultimoId;
+                    
+                    $modelo->reiniciar()                
+                        ->establecerValores($entidad)
+                        ->guardar();
+                }
             }
         }
         return $this;
@@ -1095,12 +1133,32 @@ class modelo {
     }
 
     /**
+     * Asigna los valores de las propiedades relacionales a partir de las relaciones 1:1 o 1:0 en consultaValores.
+     */
+    protected function asignarCamposRelacionales() {
+        foreach($this->campos as $nombre=>$campo) {
+            if($campo->tipo!='relacional'||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
+            $columna=$campo->columna;
+            if(is_object($this->consultaValores->$nombre)) {
+                //Asignado como entidad u objeto anónimo
+                $this->consultaValores->$columna=$this->consultaValores->$nombre->id;
+            } elseif(is_array($this->consultaValores->$nombre)) {
+                //Asignado como array
+                $this->consultaValores->$columna=$this->consultaValores->$nombre['id'];
+            }
+        }
+    }
+
+    /**
      * Construye la porción SQL que contiene los campos a insertar o actualizar.
      */
     protected function construirCamposInsercionActualizacion(&$parametros,&$tipos,$alias=true) {
         $campos=[];
         $camposAfectados=[];
         $valores=[];
+
+        //Preparar campos relacionales para que se almacene el ID de las entidades relacionadas, cuando hayan sido asignados
+        $this->asignarCamposRelacionales();
 
         foreach($this->campos as $nombre=>$campo) {
             if($nombre=='id'||$campo->tipo=='relacional'||$campo->busqueda) continue;

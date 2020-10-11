@@ -282,11 +282,11 @@ class modelo {
 
     /**
      * Omite los campos relacionales.
-     * @var string $campo Si se especifica, omitirá únicamente el procesamiento de este campo. En caso contrario, se omitirán todos los campos relacionales.
+     * @var string $campos Si se especifica al menos un argumento, omitirá únicamente el procesamiento de estos campos. En caso contrario, se omitirán todos los campos relacionales.
      */
-    public function omitirRelaciones($campo=null) {
-        if($campo) {
-            $this->consultaOmitirRelacionesCampos[]=$campo;
+    public function omitirRelaciones(...$campos) {
+        if(count($campos)) {
+            foreach($campos as $campo) $this->consultaOmitirRelacionesCampos[]=$campo;
         } else {
             $this->consultaProcesarRelaciones=false;
         }

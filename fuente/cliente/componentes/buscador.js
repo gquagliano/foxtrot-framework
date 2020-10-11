@@ -11,9 +11,11 @@
  * @class Componente concreto Campo de búsqueda.
  */
 var componenteBuscador=function() {    
+    var t=this;
+
     this.componente="buscador";
 
-    this.elementoResultados=null;
+    this.desplegableResultados=null;
     this.indiceSeleccionado=-1;
 
     this.seleccionarPrimerElemento=false;
@@ -90,14 +92,13 @@ var componenteBuscador=function() {
      * Establece los eventos predeterminados.
      */
     this.establecerEventos=function() {
-        var t=this;
-
         this.campo.removerEventos();
 
         this.campo.evento("keydown",function(ev) {
-            if(ev.which==27&&t.buscando) { //ESC
+            if(ev.which==27) { //ESC
                 ev.preventDefault();
-                t.abortarBusqueda();
+                t.abortarBusqueda(true);
+                t.cerrarResultados();
             } else if(ev.which==13) { //Intro
                 t.procesarIntro(ev);
             } else if(t.resultados.length&&(ev.which==38||ev.which==40)) { //Arriba/Abajo
@@ -115,17 +116,10 @@ var componenteBuscador=function() {
             }
         });
 
-        var fn=function(ev) {
-            t.abortarBusqueda();
+        this.elemento.evento("focusout",function(ev) {
+            t.abortarBusqueda(true);
             t.cerrarResultados();
-            //Revertir el valor del campo cuando se pierda el foco sin haber hecho una nueva selección
-            t.campo.valor(t.etiquetaActual);
-        };
-
-        this.elemento.evento("focusout",fn);
-
-        window.removerEvento("resize scroll mousewheel",fn)
-            .evento("resize scroll mousewheel",fn);
+        });
 
         //this.establecerEventosComponente();
         return this;
@@ -144,8 +138,7 @@ var componenteBuscador=function() {
         this.seleccionarPrimerElemento=false;
         ui.mostrarPrecarga("barra");
 
-        var t=this,
-            obj={campo:this.nombre};
+        var obj={campo:this.nombre};
 
         if(texto) obj.buscar=texto;
         else if(valor) obj.valor=valor;
@@ -170,16 +163,16 @@ var componenteBuscador=function() {
 
     /**
      * Aborta la búsqueda actual.
+     * @param {boolean} [revertir=false] - Revertir el valor del campo.
      * @returns {Componente}
      */
-    this.abortarBusqueda=function() {
+    this.abortarBusqueda=function(revertir) {
+        if(typeof revertir!=="undefined"&&revertir) this.campo.valor(t.etiquetaActual);
+
         if(!this.buscando) return this;
 
-        this.cerrarResultados();
         this.buscando=false;
-
         if(typeof this.ajax!=="undefined"&&this.ajax!==null) this.ajax.abortar();
-
         ui.ocultarPrecarga("barra");
 
         return this;
@@ -190,8 +183,10 @@ var componenteBuscador=function() {
      * @returns {Componente}
      */
     this.cerrarResultados=function() {
-        if(this.elementoResultados) this.elementoResultados.remover();
-        this.elementoResultados=null;
+        if(this.desplegableResultados) {
+            ui.cerrarDesplegable(this.desplegableResultados);
+            this.desplegableResultados=null;
+        }
         this.resultados=[];
         this.indiceSeleccionado=-1;
         return this;
@@ -223,54 +218,44 @@ var componenteBuscador=function() {
      * @returns {Componente}
      */
     this.mostrarResultados=function() {
-        if(this.elementoResultados) this.elementoResultados.remover();
-        this.elementoResultados=document.crear("<div class='buscador-resultados-busqueda'>");
-        ui.obtenerCuerpo().anexar(this.elementoResultados);       
-        
-        //Posicionamiento
-        var posicion=this.elemento.posicionAbsoluta(),
-            alto=this.elemento.alto(),
-            ancho=this.elemento.ancho();
-        this.elementoResultados.estilos({
-            left:posicion.x,
-            top:posicion.y+alto,
-            width:ancho
-        });
+        if(!this.desplegableResultados) this.desplegableResultados=ui.crearDesplegable(this,{
+                adaptativo:false, //debe permitir continuar escribiendo
+                clase:"buscador-resultados-busqueda",
+                retornoCierre:function() {
+                    t.desplegableResultados=null;
+                    t.abortarBusqueda(true);
+                }
+            });
+
+        var elem=this.desplegableResultados.obtenerElemento();
+        elem.establecerHtml("");
 
         if(!this.resultados.length) {
-            this.elementoResultados.anexar("<span class='sin-datos'>No se encontraron coincidencias.</span>");
-            return this;
+            elem.anexar("<span class='sin-datos'>No se encontraron coincidencias.</span>");
+        } else {
+            var clickItem=function(ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+
+                    t.establecerValor(this.dato("indice"));
+                    t.campo.focus();
+                };
+
+            this.resultados.forEach(function(item,indice) {
+                var etiqueta=obtenerValorItem("propiedadEtiqueta",item);
+
+                elem.anexar(
+                    document.crear("<a href='#'>")
+                        .dato("indice",indice)
+                        .establecerHtml(etiqueta)
+                        .evento("mousedown",clickItem)
+                );
+            }); 
         }
+        
+        ui.abrirDesplegable(this.desplegableResultados);
 
-        var t=this,
-            clickItem=function(ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-
-                t.establecerValor(this.dato("indice"));
-                t.campo.focus();
-            };
-
-        this.resultados.forEach(function(item,indice) {
-            var etiqueta=obtenerValorItem("propiedadEtiqueta",item);
-
-            t.elementoResultados.anexar(
-                document.crear("<a href='#'>")
-                    .dato("indice",indice)
-                    .establecerHtml(etiqueta)
-                    .evento("mousedown",clickItem)
-            );
-        }); 
-
-        //Abrir hacia arriba si no entra en la pantalla
-        var posResultados=this.elementoResultados.posicionAbsoluta(),
-            altoResultados=this.elementoResultados.alto(),
-            altoVentana=window.alto();
-        if(posResultados.y+altoResultados+15>altoVentana) {
-            this.elementoResultados.estilos({
-                top:posicion.y-altoResultados
-            });
-        }
+        return this;
     };
 
     /**
@@ -307,6 +292,8 @@ var componenteBuscador=function() {
     this.moverSeleccion=function(ev) {
         ev.preventDefault();
 
+        if(!this.desplegableResultados) return;
+
         if(ev.which==38) { //Arriba
             this.indiceSeleccionado--;
             if(this.indiceSeleccionado<0) this.indiceSeleccionado=this.resultados.length-1;
@@ -315,9 +302,10 @@ var componenteBuscador=function() {
             if(this.indiceSeleccionado>=this.resultados.length) this.indiceSeleccionado=0;
         }     
         
-        var e=this.elementoResultados.querySelector(".activo");
+        var elem=this.desplegableResultados.obtenerElemento(),
+            e=elem.querySelector(".activo");
         if(e) e.removerClase("activo");
-        e=this.elementoResultados.querySelector("a:nth-child("+(this.indiceSeleccionado+1)+")"); //nth-child es base 1
+        e=elem.querySelector("a:nth-child("+(this.indiceSeleccionado+1)+")"); //nth-child es base 1
         if(e) e.agregarClase("activo");
     };
 

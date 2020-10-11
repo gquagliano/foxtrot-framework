@@ -245,6 +245,8 @@ li.menu-separador::after {
     padding: 30px;
     text-align: left;
     border-radius: 2px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .dialogo .dialogo-x {
     position: absolute;
@@ -257,10 +259,9 @@ li.menu-separador::after {
     background-repeat: no-repeat;
 }
 .dialogo .dialogo-contenido {
-    max-width: 75vw;
+    max-width: 90vw;
     min-height: 1.1rem;
-    max-height: 60vh;
-    overflow: auto;
+    max-height: 75vh;
     word-break: break-word;
 }
 .dialogo .dialogo-opciones {

@@ -1442,7 +1442,9 @@ var componente=new function() {
 
         var vars=Object.assign({
             evento:evento,
-            valor:this.valor()
+            valor:this.valor(),
+            //reemplazar controlador por el controlador de esta vista (puede no ser el principal, por ejemplo si es una vista embebible)
+            controlador:ui.obtenerInstanciaControladorVista(this.nombreVista)
         },this.datos);
         
         //Evaluar expresiones, si las contiene
@@ -1592,7 +1594,7 @@ var componente=new function() {
                 resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
 
                 if(retorno) retorno(resultadoLocal);
-            } else {
+            } else if(manejador!="") {
                 //Propiedad del controlador
                 var resultadoLocal=ctl[manejador].call(ctl,this,evento);
 

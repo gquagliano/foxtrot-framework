@@ -212,11 +212,15 @@ var servidor=new function() {
     /**
      * Genera una instancia de una clase que redirigirá todas las llamadas a métodos al controlador de servidor especificado.
      * @param {string} [controlador=null] - Nombre del controlador, o null.
-     * @param {string} [controladorOrigen] - Nombre del controlador que está fabricando la instancia.
+     * @param {(string|Controlador)} [controladorOrigen] - Instancia o nombre del controlador que está fabricando la instancia.
      */
     this.fabricar=function(controlador,controladorOrigen) {
         if(typeof controlador==="undefined") controlador=null;
-        if(typeof controladorOrigen==="undefined") controladorOrigen=null;
+        if(typeof controladorOrigen==="undefined") {
+            controladorOrigen=null;
+        } else if(typeof controladorOrigen==="object") {
+            controladorOrigen=controladorOrigen.obtenerNombre();
+        }
 
         return new Proxy(new function() {
             this.controlador=controlador;

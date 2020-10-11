@@ -122,6 +122,7 @@ class foxtrot {
         include(_servidor.'componente.php');
         include(_servidor.'modulo.php');
         include(_servidor.'http.php');
+        include(_servidor.'almacenamiento.php');
 
         //TODO Hacer configurable. En teoría, debería poderse implementar cualquier motor de base de datos o repositorio (archivo, API) implementando clases compatibles con bd
         include(_servidor.'mysql.php');

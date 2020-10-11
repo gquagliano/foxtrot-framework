@@ -49,6 +49,8 @@ Cada elemento autogenerado, al igual que toda su descendencia, tendrá asignado 
 
 El valor que se establezca al componente, ya sea mediante `establecerValores()` en la ascendencia o en la vista, o mediante `valor()`, se utilizará como origen de datos.
 
+**Nota:** El componente generará los ítems *dentro del componente padre* (no dentro de sí mismo), por lo que usualmente el bucle deberá ubicarse dentro de un contenedor, una fila, etc.
+
 #### ![](img/iconos/buscador.png) Buscador (campo de búsqueda)
 
 Al modificar el valor del campo, invocará el evento **Buscar**, el cual puede ser del lado del servidor o del cliente.

@@ -10,6 +10,10 @@
  */
 
 /**
+ * @typedef Desplegable
+ */
+
+/**
  * Métodos anexados a la gestión de la interfaz.
  */
 (function() {
@@ -335,6 +339,168 @@
 
         return ui;
     };
+
+    //// Desplegables
+
+    var desplegableAbierto=null;
+
+    var eventosVentanaDesplegable=function() {
+        if(!desplegableAbierto) return;
+        if(desplegableAbierto.opciones.retornoCierre) desplegableAbierto.opciones.retornoCierre();
+        ui.cerrarDesplegable(desplegableAbierto,false);
+    },
+    removerEventosDesplegable=function() {
+        window.removerEvento("resize scroll mousewheel blur",eventosVentanaDesplegable);
+    },
+    establecerEventosDesplegable=function() {
+        window.evento("resize scroll mousewheel blur",eventosVentanaDesplegable);
+    };
+
+    /**
+     * Crea un desplegable debajo de un componente.
+     * @param {Componente} componente - Componente relativo al cual se posicionará el desplegable.
+     * @param {Object} [opciones] - Configuración del desplegable.
+     * @param {string} [opciones.desplegar="abajo"] - Dirección hacia la cual se desplegará, relativo al componente (actualmente "abajo" es el único valor disponible).
+     * @param {boolean} [opciones.reposicionar=true] - Reposicionar el desplegable si no hay espacio suficiente hasta el borde de la ventana. Si es false, será redimensionado.
+     * @param {boolean} [opciones.adaptativo=true] - Si es true, tendrá una presentación diferente en pantallas pequeñas para mejor usabilidad.
+     * @param {string} [opciones.clase] - Clase CSS.
+     * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
+     * @param {boolean} [opciones.destruir=true] - Si es true, será destruido tras cerrarse.
+     * @returns {Desplegable}
+     *//**
+     * Crea un desplegable debajo de un componente.
+     * @param {Componente} componente - Componente relativo al cual se posicionará el desplegable.
+     * @param {(Element|Node)} elemento - Elemento a desplegar. Puede omitirse para crear un desplegable vacío.
+     * @param {Object} [opciones] - Configuración del desplegable.
+     * @param {string} [opciones.desplegar="abajo"] - Dirección hacia la cual se desplegará, relativo al componente (actualmente "abajo" es el único valor disponible).
+     * @param {boolean} [opciones.reposicionar=true] - Reposicionar el desplegable si no hay espacio suficiente hasta el borde de la ventana. Si es false, será redimensionado.
+     * @param {boolean} [opciones.adaptativo=true] - Si es true, tendrá una presentación diferente en pantallas pequeñas para mejor usabilidad.
+     * @param {string} [opciones.clase] - Clase CSS.
+     * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
+     * @param {boolean} [opciones.destruir=true] - Si es true, será destruido tras cerrarse.
+     * @returns {Desplegable}
+     */
+    ui.crearDesplegable=function(componente,b,c) {
+        var elemento=null,
+            opciones={};
+
+        //Argumentos
+        if(typeof b!=="undefined") {
+            if(util.esElemento(b)) {
+                //componente,elemento
+                elemento=b;
+                //componente,elemento,opciones
+                if(typeof c!=="undefined") opciones=c;
+            } else {
+                //componente,opciones
+                opciones=b;
+            }
+        }
+
+        opciones=Object.assign({
+            desplegar:"abajo",
+            reposicionar:true,
+            adaptativo:true,
+            clase:null,
+            retornoCierre:null,
+            destruir:true
+        },opciones);
+
+        var elem=ui.obtenerDocumento()
+            .crear("<div class='desplegable"+(opciones.clase?" "+opciones.clase:"")+(opciones.adaptativo?" desplegable-adaptativo":"")+"'>")
+            .anexarA(ui.obtenerCuerpo());
+        if(elemento) elem.anexar(elemento);
+
+        return {
+            opciones:opciones,
+            elem:elem,
+            componente:componente,
+            obtenerElemento:function() {
+                return this.elem;
+            }
+        };
+    };
+
+    /**
+     * Posiciona y muestra un desplegable.
+     * @param {Desplegable} desplegable - Objeto generado con ui.crearDesplegable().
+     * @returns {ui}
+     */
+    ui.abrirDesplegable=function(desplegable) {
+        var elem=desplegable.elem,
+            elemComponente=desplegable.componente.obtenerElemento();
+
+        ui.detenerAnimacion(elem)
+            .animarAparecer(elem);
+
+        //Posicionamiento
+        var posicionComponente=elemComponente.posicionAbsoluta(),
+            altoComponente=elemComponente.alto(),
+            anchoComponente=elemComponente.ancho();
+
+        elem.estilos({
+            left:posicionComponente.x,
+            top:posicionComponente.y+altoComponente,
+            width:anchoComponente
+        });
+
+        //TODO Desplegar hacia arriba / hacia los costados
+        
+        //Verificar si entra en pantalla
+        var posicionDesplegable=elem.posicionAbsoluta(),
+            altoDesplegable=elem.alto(),
+            altoVentana=window.alto(),
+            margen=15;
+
+        if(posicionDesplegable.y+altoDesplegable+margen>altoVentana) {
+            if(desplegable.opciones.reposicionar) {
+                //Abrir hacia arriba
+                elem.estilos({
+                    top:posicionComponente.y-altoDesplegable
+                });
+            } else {
+                //Redimensionar
+                elem.estilos({
+                    height:altoVentana-margen-posicionComponente.y-altoComponente
+                });
+            }
+        }
+
+        //Eventos
+        establecerEventosDesplegable();
+
+        desplegableAbierto=desplegable;
+
+        return ui;
+    };
+
+    /**
+     * Cierra un desplegable.
+     * @param {Desplegable} desplegable - Objeto generado con ui.crearDesplegable().
+     * @param {boolean} [animar=true] - Cerrar con animación.
+     * @returns {ui}
+     */
+    ui.cerrarDesplegable=function(desplegable,animar) {
+        var elem=desplegable.elem,
+            fn=function() {
+                if(desplegable.opciones.destruir) elem.remover();
+            };
+
+        if(typeof animar==="undefined"||animar) {
+            ui.detenerAnimacion(elem)
+                .animarDesaparecer(elem,fn);
+        } else {
+            fn();
+        }
+
+        removerEventosDesplegable();
+
+        desplegableAbierto=null;
+
+        return ui;
+    };
+
+    //// Implementaciones
 
     /**
      * Muestra un diálogo de alerta o información (equivalente a alert()).

@@ -262,6 +262,13 @@ body.escritorio .btn-secondary:hover,
 .pestanas>.encabezados .btn.activa {
     border-color: #337ab7;
 }
+.calendario a.calendario-hoy {
+    color: #337ab7;
+}
+.calendario a.calendario-seleccion {
+    background-color: #337ab7;   
+    color: #fff !important;
+}
 
 /*
 337ab7

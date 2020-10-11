@@ -115,6 +115,18 @@ Este componente permite insertar valores del origen de datos. Presenta dos posib
 
 #### ![](img/iconos/fecha.png) Fecha (campo de selección de fecha)
 
+Crea un campo que despliega un calendario al recibir foco.
+
+También admite el ingreso de fechas por teclado, con los siguientes formatos (donde `0` representa cualquier dígito, siempre que sean válidos para lo que se intenta representar):
+
+- `0` Será convertido al día del mes actual.
+- `0/0` Será convertido al día y mes del año actual.
+- `0/0/00` Será convertido a la fecha correspondiende, completando el año (`20..`).
+
+El campo devuelve (lo que es equivalente, también, a que envía al servidor) la fecha *epoch*, en formato numérico, a las 0:00 del día seleccionado. Asimismo, cuando se deba establecer una fecha, tanto desde el editor como mediante `valor()`, se debe especificar la fecha *epoch*. Esto busca elimianar cualquier duda o controversia en los formatos de fecha. Nótese que el *epoch* siempre es UTC.
+
+*Nota:* Por el momento, trabaja únicamente en formato *dia/mes/año de cuatro dígitos* o `j/n/Y`.
+
 #### ![](img/iconos/fila.png) Fila 
 
 #### ![](img/iconos/fila.png) Fila de tabla

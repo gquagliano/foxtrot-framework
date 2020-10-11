@@ -20,6 +20,26 @@ class entidad {
     public $e;
 
     /**
+     * Constructor.
+     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     */
+    function __construct($valores=null) {
+        if($valores) $this->establecerValores($valores);
+    }
+
+    /**
+     * Asigna los elementos o propiedades en las propiedades de esta instancia.
+     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @return \entidad
+     */
+    public function establecerValores($valores) {
+        foreach($valores as $clave=>$valor) {
+            if(property_exists($this,$clave)) $this->$clave=$valor;
+        }
+        return $this;
+    }
+
+    /**
      * Fabrica y devuelve una instancia del modelo o repositorio de este tipo de entidades.
      * @return \modelo
      */

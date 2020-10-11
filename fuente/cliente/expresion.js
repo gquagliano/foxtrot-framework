@@ -67,7 +67,7 @@ var expresion=function(expr) {
 
     var buscarObjeto=function(objeto,nombre) {
         if(nombre==="") return "";
-        if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre;
+        if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
         if(objeto) return objeto[nombre];
         if(this.variables.hasOwnProperty(nombre)) return this.variables[nombre];
         if(this.funciones.hasOwnProperty(nombre)) return this.funciones[nombre];
@@ -91,6 +91,12 @@ var expresion=function(expr) {
             if(!enCadena) {
                 if(caracter=="'") {
                     enCadena=true;
+                    bufer="'";
+                } else if(ternarioCondicion===false) {
+                    //Si la condición del ternario fue falsa, saltar hasta :
+                    if(caracter!=":") continue;
+                    ternarioCondicion=null;
+                    bufer="";
                 } else if(caracter==".") {
                     //¿Punto decimal?
                     if(bufer=="") {
@@ -147,12 +153,9 @@ var expresion=function(expr) {
                     bufer+=caracter;
                 }
             } else {
+                bufer+=caracter;
                 var anterior=this.cadena[i-1];
-                if(caracter=="'"&&anterior!="\\") {
-                    enCadena=false;
-                } else {
-                    bufer+=caracter;
-                }
+                if(caracter=="'"&&anterior!="\\") enCadena=false;
             }
         }
 

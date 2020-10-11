@@ -1966,6 +1966,7 @@ var componente=new function() {
     /**
      * Establece los valores de todos los componentes cuyos nombres coincidan con las propiedades del objeto.
      * @param {Object} valores - Pares nombre/valor a asignar.
+     * @returns {\Componente}
      */
     this.establecerValores=function(valores) {
         var hijos=this.obtenerHijos();
@@ -1980,6 +1981,19 @@ var componente=new function() {
             hijo.establecerValores(valores);
         });
 
+        return this;
+    };
+
+    /**
+     * Limpia los valores de todos los componentes con nombre que desciendan de este componente.
+     * @returns {\Componente}
+     */
+    this.limpiarValores=function() {
+        this.obtenerHijos().forEach(function(hijo) {   
+            if(hijo.obtenerNombre()) hijo.valor(null);
+            //Continuar la búsqueda en forma recursiva
+            hijo.limpiarValores();
+        });
         return this;
     };
 };

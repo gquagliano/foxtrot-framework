@@ -144,12 +144,29 @@
 
     //// Diálogos
 
-    var dialogoAbierto=null;
+    var dialogosAbiertos=[];
 
     var cerrarDialogoAbierto=function() {
+        var dialogoAbierto=ui.obtenerDialogoAbierto();
+        if(!dialogoAbierto) return;
         //Ignorar si es modal
         if(dialogoAbierto.param.modal) return;
         ui.cerrarDialogo(dialogoAbierto);
+    },
+    actualizarZIndexDialogos=function() {
+        if(!dialogosAbiertos.length) return;
+
+        //Traer al frente el último diálogo abierto y ubicar los demás detrás de la sombra
+
+        var z=9999; //z-index de la sombra, según CSS
+        z-=dialogosAbiertos.length-1;
+
+        for(var i=0;i<dialogosAbiertos.length-1;i++) {
+            dialogosAbiertos[i].elem.estilo("zIndex",z);
+            z++;
+        }
+        
+        dialogosAbiertos[dialogosAbiertos.length-1].elem.estilo("zIndex",z+1);
     },
     docDialogoKeyDn=function(ev) {
         if(ev.which==27) {
@@ -209,15 +226,6 @@
             modal:false
         },parametros);
 
-        if(!parametros.modal&&parametros.mostrarCerrar) {
-            var cerrar=document.crear("<a href='#' class='dialogo-x'></a>");
-            elem.querySelector(".dialogo-cuerpo").anexar(cerrar);
-            cerrar.evento("click",function(ev) {
-                ev.preventDefault();
-                ui.cerrarDialogo(dialogoAbierto,null);
-            });
-        }
-
         var cuerpo=elem.querySelector(".dialogo-contenido");
         if(typeof parametros.cuerpo==="string") {
             cuerpo.establecerHtml(parametros.cuerpo);
@@ -226,6 +234,17 @@
             parametros.padreAnterior=parametros.cuerpo.parentNode;
             cuerpo.anexar(parametros.cuerpo);
         }
+
+        var obj={
+            elem:elem,
+            param:parametros,
+            obtenerElemento:function() {
+                return this.elem;
+            },
+            obtenerCuerpo:function() {
+                return this.elem.querySelector(".dialogo-cuerpo");
+            }
+        };
 
         if(parametros.opciones) {
             var contenedor=elem.querySelector(".dialogo-opciones");
@@ -236,14 +255,14 @@
                     .dato("indice",i)
                     .evento("click",function(ev) {
                         ev.preventDefault();
-                        ui.cerrarDialogo(dialogoAbierto,parseInt(this.dato("indice")));
+                        ui.cerrarDialogo(obj,parseInt(this.dato("indice")));
                     })
                     .evento("keydown",function(ev) {
                         if(ev.which==13) {
                             //Enter
                             ev.preventDefault();
                             ev.stopPropagation();
-                            ui.cerrarDialogo(dialogoAbierto,parseInt(this.dato("indice")));
+                            ui.cerrarDialogo(obj,parseInt(this.dato("indice")));
                         }
                     })
                     .anexarA(contenedor);
@@ -254,16 +273,16 @@
             });
         }
 
-        return {
-            elem:elem,
-            param:parametros,
-            obtenerElemento:function() {
-                return this.elem;
-            },
-            obtenerCuerpo:function() {
-                return this.elem.querySelector(".dialogo-cuerpo");
-            }
-        };
+        if(!parametros.modal&&parametros.mostrarCerrar) {
+            var cerrar=document.crear("<a href='#' class='dialogo-x'></a>");
+            elem.querySelector(".dialogo-cuerpo").anexar(cerrar);
+            cerrar.evento("click",function(ev) {
+                ev.preventDefault();
+                ui.cerrarDialogo(obj,null);
+            });
+        }
+
+        return obj;
     };
 
     /**
@@ -271,8 +290,9 @@
      * @param {Dialogo} dialogo 
      */
     ui.abrirDialogo=function(dialogo) {
-        if(dialogoAbierto) ui.cerrarDialogo(dialogoAbierto,null,true);
-        dialogoAbierto=dialogo;
+        dialogosAbiertos.push(dialogo);
+
+        actualizarZIndexDialogos();
 
         ui.animarAparecer(dialogo.elem);
 
@@ -291,10 +311,18 @@
 
     /**
      * Devuelve el diálogo actualmente abierto.
-     * @returns {Dialogo}
+     * @returns {(Dialogo|null)}
      */
     ui.obtenerDialogoAbierto=function() {
-        return dialogoAbierto;
+        return dialogosAbiertos.length?dialogosAbiertos[dialogosAbiertos.length-1]:null;
+    };
+
+    /**
+     * Devuelve todos los diálogos abiertos.
+     * @returns {Dialogo[]}
+     */
+    ui.obtenerDialogosAbiertos=function() {
+        return dialogosAbiertos;
     };
 
     /**
@@ -306,7 +334,7 @@
      * @returns {ui}
      */
     ui.cerrarDialogo=function(dialogo,opcion,omitirAnimacion,eliminar) {
-        if(typeof dialogo==="undefined") dialogo=dialogoAbierto;
+        if(typeof dialogo==="undefined"||!dialogo) dialogo=ui.obtenerDialogoAbierto();
         if(typeof opcion==="undefined") opcion=null;
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
         if(typeof eliminar==="undefined") eliminar=dialogo.param.eliminar;
@@ -314,8 +342,6 @@
         if(!dialogo) return ui;
 
         removerEventosDialogo();
-
-        ui.ocultarSombra();
 
         if(dialogo.abierto&&dialogo.param.retorno) dialogo.param.retorno(opcion);
 
@@ -332,7 +358,18 @@
         }
 
         dialogo.abierto=false;
-        dialogoAbierto=null;
+        
+        //Remover de dialogosAbiertos
+        for(var i=0;i<dialogosAbiertos.length;i++) {
+            if(dialogosAbiertos[i]===dialogo) {
+                dialogosAbiertos.splice(i,1);
+                break;
+            }
+        }
+
+        if(!dialogosAbiertos.length) ui.ocultarSombra();
+
+        actualizarZIndexDialogos();
 
         return ui;
     };

@@ -116,7 +116,7 @@ var componenteBuscador=function() {
             }
         });
 
-        this.elemento.evento("focusout",function(ev) {
+        this.campo.evento("focusout",function(ev) {
             t.abortarBusqueda(true);
             t.cerrarResultados();
         });

@@ -176,8 +176,6 @@ function procesarVista($ruta) {
             $nombres=$coincidencias[1];
             foreach($nombres as $nombre) {
                 $css.=file_get_contents(_desarrollo.$nombre);
-                //Agregar a archivos combinados para excluirlo de aplicacion.css
-                $archivosCssCombinados[]=$nombre;
             }
             file_put_contents($rutaCssFoxtrot,$css);
             comprimirCss($rutaCssFoxtrot);
@@ -192,15 +190,15 @@ function procesarVista($ruta) {
     $destino=$cordova?$rutaCssCombinadoCordova:$rutaCssCombinado;
 
     //Combinar archivos CSS con combinar="aplicacion" o /*combinar*/ en aplicacion.css
-    if(preg_match_all('#(/\*combinar( tema)?\*/"|<link .+?href=")(.+?)(",?|".*? combinar="aplicacion".*>)#m',$html,$coincidencias)) {
-        $nombres=$coincidencias[3];
-
+    if(preg_match_all('#(<link .*?href="(.+?)" .*?combinar="aplicacion".*?>|/\*combinar( tema)?\*/"(.+?)",?)#m',$html,$coincidencias)) {
         //Agregar los archivos que aún no estén en aplicacion.css
-        foreach($nombres as $archivo) {
+        foreach($coincidencias[0] as $i=>$v) {
             if($cordova) {
+                $archivo=$coincidencias[4][$i];
                 if(in_array($archivo,$archivosCssCombinadosCordova)) continue;
                 $archivosCssCombinadosCordova[]=$archivo;
             } else {                
+                $archivo=$coincidencias[2][$i];
                 if(in_array($archivo,$archivosCssCombinados)) continue;
                 $archivosCssCombinados[]=$archivo;
             }

@@ -41,6 +41,8 @@ class almacenamiento {
      * @return string
      */
     public static function obtenerNombreLibre($directorio,$nombre) {
+        //TODO Gestión de concurrencia
+        
         $info=pathinfo($nombre);
 
         $nombre=$info['filename'];
@@ -58,6 +60,8 @@ class almacenamiento {
             $nombreFinal=$nombre.($i>0?'-'.$i:'').$extension;
             $i++;
         } while(file_exists($directorio.$nombreFinal));
+
+        touch($nombreFinal);
 
         return $nombreFinal;
     }

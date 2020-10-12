@@ -98,6 +98,7 @@ var componenteArchivo=function() {
         this.campo.removerEventos();
         
         this.campo.evento("change",function(ev) {
+            t.archivos=[];
             t.abortar(false)
                 .procesarArchivos()
                 .procesarEvento("change","modificacion","modificacion",ev,null);

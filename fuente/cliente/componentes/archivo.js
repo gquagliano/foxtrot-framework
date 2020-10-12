@@ -98,14 +98,12 @@ var componenteArchivo=function() {
         this.campo.removerEventos();
         
         this.campo.evento("change",function(ev) {
-            t.abortar()
+            t.abortar(false)
                 .procesarArchivos()
                 .procesarEvento("change","modificacion","modificacion",ev,null);
 
-            var subir=this.propiedad("subirInmediatamente");
-            if(typeof subir==="undefined"||subir===null||subir===true) { //por defecto, true
-                t.subirArchivos();
-            }
+            var subir=this.propiedad("subirInmediatamente"); //por defecto, true
+            if(typeof subir==="undefined"||subir===null||subir) t.subirArchivos();
         });
 
         return this;
@@ -122,11 +120,20 @@ var componenteArchivo=function() {
 
     /**
      * Aborta la carga en curso.
+     * @param {boolean} [limpiar=true] - Si es true, limpiará el valor del componente y del campo de archivo.
      * @returns {componente}
      */
-    this.abortar=function() {
+    this.abortar=function(limpiar) {
         if(this.ajax) this.ajax.abortar();
+
+        if(typeof limpiar==="undefined"||limpiar) {
+            this.archivos=[];
+            this.campo.value=null;
+            this.etiqueta.establecerHtml("");
+        }
+
         finalizarSubida();
+
         return this;
     };
 
@@ -177,9 +184,11 @@ var componenteArchivo=function() {
 
     /**
      * Genera el valor de archivos.
-     * @returns {componente}
+     * @returns {Componente}
      */
     this.procesarArchivos=function() {
+        if(this.archivos.length) return this;
+
         this.archivos=[];
         var nombres=[];
 
@@ -208,6 +217,15 @@ var componenteArchivo=function() {
      */
     this.subiendo=function() {
         return this.subidaEnCurso;
+    };
+
+    /**
+     * Devuelve el listado de archivos con todas sus propiedades, incluyendo la instancia nativa de File y el contenido del archivo en base 64 (luego de,
+     * haber invocado obtenerBase64()), a diferencia de valor() que devuelve un listado de objetos resumidos para la carga en el servidor.
+     * @returns {Object[]}
+     */
+    this.obtenerArchivos=function() {
+        return this.archivos;
     };
 
     /**
@@ -291,12 +309,17 @@ var componenteArchivo=function() {
      * @returns {(*|Componente)}
      */
     this.valor=function(valor) {
-        if(typeof valor==="undefined") return this.archivos;
+        if(typeof valor==="undefined") {
+            var retorno=[];
+            for(var i=0;i<this.archivos.length;i++) retorno.push({
+                    nombre:this.archivos[i].nombre,
+                    archivo:this.archivos[i].archivo
+                });
+            return retorno;
+        }
 
         if(!valor) {
             this.abortar();
-            this.campo.value=null;
-            this.procesarArchivos();
         }
         //Cualquier otro valor es ignorado
         return this;

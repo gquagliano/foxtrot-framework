@@ -145,7 +145,7 @@ var ui=new function() {
             //Por el momento vamos a ignorar otros tipos. No deberían existir (no se supone que el usuario deba modificar los estilos generados por el editor,
             //sus estilos adicionales deben ir en un archivo distinto.)
             
-            reglas.push(obj);
+            if(obj) reglas.push(obj);
         }
 
         //Si se filtró por tamaño, devolver solo las reglas del mismo
@@ -1448,14 +1448,18 @@ var ui=new function() {
      * @returns {ui}
      */
     this.ejecutar=function() {
-        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
-        for(var i=0;i<doc.styleSheets.length;i++) {
-            var hoja=doc.styleSheets[i];
-            if(new RegExp("cliente/vistas/"+nombreVistaPrincipal+".css").test(hoja.href)) {
-                estilos=hoja;
-                break;
+        var buscarHojaEstilos=function(nombre) {
+            for(var i=0;i<doc.styleSheets.length;i++) {
+                var hoja=doc.styleSheets[i];
+                if(new RegExp(nombre).test(hoja.href)) return hoja;
             }
-        }
+            return null;
+        };
+
+        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
+        estilos=buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+".css");
+        //Si no se encuentra, buscar hoja de estilos combinada (aplicacion.css o cordova.css)
+        if(!estilos) estilos=buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+".css");
 
         if(modoEdicion) {
             //En modo de edición, procesar el JSON y pasar el control al editor

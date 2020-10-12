@@ -158,7 +158,16 @@
 
         //Traer al frente el último diálogo abierto y ubicar los demás detrás de la sombra
 
-        var z=9999; //z-index de la sombra, según CSS
+        var dialogo=dialogosAbiertos[dialogosAbiertos.length-1],
+            z=9999; //z-index de la sombra, según CSS
+
+        if(dialogo.param.sobreponer) {
+            z=999999; //z-index de la sombra al sobreponer, según CSS
+            ui.obtenerElementoSombra().agregarClase("sobreponer");
+        } else {
+            ui.obtenerElementoSombra().removerClase("sobreponer");
+        }
+
         z-=dialogosAbiertos.length-1;
 
         for(var i=0;i<dialogosAbiertos.length-1;i++) {
@@ -166,7 +175,7 @@
             z++;
         }
         
-        dialogosAbiertos[dialogosAbiertos.length-1].elem.estilo("zIndex",z+1);
+        dialogo.elem.estilo("zIndex",z+1);
     },
     docDialogoKeyDn=function(ev) {
         if(ev.which==27) {
@@ -208,6 +217,7 @@
      * @param {boolean} [parametros[].mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
      * @param {boolean} [parametros[].eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
      * @param {boolean} [parametros[].modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
+     * @param {boolean} [parametros[].sobreponer=false] - Si es true, se forzará que quede por encima de todo, incluso de la precarga.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
@@ -223,7 +233,8 @@
             eliminar:false,
             padreAnterior:null,
             abierto:false,
-            modal:false
+            modal:false,
+            sobreponer:false
         },parametros);
 
         var cuerpo=elem.querySelector(".dialogo-contenido");
@@ -655,7 +666,8 @@
                 clase:"btn-primary",
                 predeterminado:true
             }],
-            eliminar:true
+            eliminar:true,
+            sobreponer:true
         }));
 
         return ui;
@@ -707,7 +719,8 @@
                 if(funcion) funcion(resultado);
             },
             opciones:botones,
-            eliminar:true
+            eliminar:true,
+            sobreponer:true
         }));
 
         return ui;

@@ -61,6 +61,8 @@ class construirProduccion extends asistente {
      * @var bool $formulario Estalecer a false si se está invocando el método desde el código, en lugar desde el formulario del asistente.
      */
     public function ejecutar($param,$formulario=true) {
+        global $archivosCssCombinados,$archivosCssCombinadosCordova;
+
         if($formulario) {
             //Almacenar parámetros en el JSON para la próxima ejecución
             $this->actualizarJson($param);
@@ -72,6 +74,14 @@ class construirProduccion extends asistente {
 
         $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
 
+        //Limpiar/crear directorios
+        if($param->limpiar) {
+            $archivos=buscarArchivos(_produccion,'*.*');
+            foreach($archivos as $archivo) unlink($archivo);
+        }
+        //Crear el árbol completo hasta vistas/
+        if(!is_dir(_produccion.$rutaAplicacion.'cliente/vistas/')) mkdir(_produccion.$rutaAplicacion.'cliente/vistas/',0755,true);
+
         ////Copiar framework
         $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
         copiar(_desarrollo.'cliente/',$tipos,_produccion.'cliente/');
@@ -81,6 +91,11 @@ class construirProduccion extends asistente {
         copiar(_desarrollo.'recursos/css/',$tipos,_produccion.'recursos/css/');
         copiar(_desarrollo.'recursos/img/',$tipos,_produccion.'recursos/img/');
         copiar(_desarrollo.'recursos/componentes/img/',$tipos,_produccion.'recursos/componentes/img/');
+
+        //Omitir temas (serán procesados junto con los estilos de las vistas)
+        unlink(_produccion.'recursos/css/foxtrot.css');
+        $archivos=glob(_produccion.'recursos/css/tema-*.css');
+        foreach($archivos as $archivo) unlink($archivo);
 
         //Eliminar módulos innecesarios, ya que copiamos todo servidor en forma recursiva
         $archivos=glob(_produccion.'servidor/modulos/*');
@@ -125,14 +140,6 @@ class construirProduccion extends asistente {
 
         ////Compilar aplicación
 
-        //Limpiar/crear directorios
-        if($param->limpiar) {
-            $archivos=buscarArchivos(_produccion.$rutaAplicacion,'*.*');
-            foreach($archivos as $archivo) unlink($archivo);
-        }
-        //Crear el árbol completo hasta vistas/
-        if(!is_dir(_produccion.$rutaAplicacion.'cliente/vistas/')) mkdir(_produccion.$rutaAplicacion.'cliente/vistas/',0755,true);
-
         //Copiar archivos PHP tal cual
         copy(_desarrollo.$rutaAplicacion.'config.php',_produccion.$rutaAplicacion.'config.php');
         copy(_desarrollo.$rutaAplicacion.'config.php',_produccion.$rutaAplicacion.'config.php');
@@ -144,26 +151,6 @@ class construirProduccion extends asistente {
         //Limpiar el css
         $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
         if(file_exists($rutaCssCombinado)) unlink($rutaCssCombinado);
-
-        //Los archivos del directorio recursos no deben combinarse; comprimir individualmente
-        $archivos=buscarArchivos(_desarrollo.$rutaAplicacion.'recursos/','*.*');
-        foreach($archivos as $archivo) {
-            $destino=str_replace(_desarrollo,_produccion,$archivo);
-            $dir=dirname($destino);
-            $ext=substr($archivo,strrpos($archivo,'.'));
-            
-            if(!file_exists($dir)) mkdir($dir,0755,true);
-
-            if($ext=='.css') {
-                copy($archivo,$destino);
-                comprimirCss($destino);
-            } elseif($ext=='.js') {
-                compilarJs($archivo,$destino,$param->depuracion);
-            } else {
-                //Imágenes, etc.
-                copy($archivo,$destino);
-            }
-        }
 
         //Copiar otros directorios
         $directorios=glob(_desarrollo.$rutaAplicacion.'*',GLOB_ONLYDIR);
@@ -208,11 +195,11 @@ class construirProduccion extends asistente {
                     $ruta=_desarrollo.$rutaAplicacion.'cliente/vistas/'.$nombre.'.';
                     
                     $rutaHtml=$ruta.(file_exists($ruta.'php')?'php':'html');
-                    $html=str_replace(["\r","\n",'"'],['',' ','\\"'],file_get_contents($rutaHtml));
+                    $html=str_replace(["\r","\n",'"'],['',' ','\\"'],comprimirHtml(file_get_contents($rutaHtml)));
 
                     $json=str_replace('"','\\"',file_get_contents($ruta.'json'));
 
-                    $js.='_vistasEmbebibles["'.$nombre.'"]={"html":"'.$html.'","json":"'.$json.'"};'.PHP_EOL.PHP_EOL;
+                    $js.=PHP_EOL.'_vistasEmbebibles["'.$nombre.'"]={"html":"'.$html.'","json":"'.$json.'"};';
                 }
             }
             file_put_contents($temp,$js);
@@ -223,26 +210,62 @@ class construirProduccion extends asistente {
 
         unlink($temp);
 
-        //Copiar las vistas tal cual
-        copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,css,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');
+        //Copiar las vistas tal cual (excepto CSS)
+        copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');
 
         //Procesar las vistas
-
-        //Procesar
         $archivos=buscarArchivos(_produccion.$rutaAplicacion.'cliente/vistas/','*.{php,html}');
         foreach($archivos as $archivo) procesarVista($archivo);
 
         if($param->embebibles) {
-            //Combinar archivos CSS de las vistas embebibles
             foreach($jsonApl->vistas as $nombre=>$vista) {
                 if($vista->tipo=='embebible') {
-                    $ruta=_desarrollo.$rutaAplicacion.'cliente/vistas/'.$nombre.'.css';
-                    file_put_contents($rutaCssCombinado,file_get_contents($ruta),FILE_APPEND);
+                    //Eliminar archivos de las vistas embebibles integrados dentro de aplicacion.js
+                    $ruta=$rutaAplicacion.'cliente/vistas/'.$nombre;
+                    if(file_exists(_produccion.$ruta.'.php')) unlink(_produccion.$ruta.'.php');
+                    if(file_exists(_produccion.$ruta.'.html')) unlink(_produccion.$ruta.'.html');
+                    if(file_exists(_produccion.$ruta.'.js')) unlink(_produccion.$ruta.'.js');
+                    if(file_exists(_produccion.$ruta.'.json')) unlink(_produccion.$ruta.'.json');
+
+                    //E incorporar los archivos CSS en aplicacion.css o cordova.css
+                    $rutaCss=_desarrollo.$ruta.'.css';
+                    $destino=_produccion.$rutaAplicacion.'recursos/css/'.($vista->cliente=='cordova'?'cordova':'aplicacion').'.css';
+                    if(file_exists($rutaCss)) file_put_contents($destino,file_get_contents($rutaCss),FILE_APPEND);
                 }
+            }
+            
+            //Volver a comprimir el CSS
+            //TODO Comprimir CSS solo una vez
+            comprimirCss(_produccion.$rutaAplicacion.'recursos/css/aplicacion.css');
+            comprimirCss(_produccion.$rutaAplicacion.'recursos/css/cordova.css');
+        }
+        
+        //Copiar directorio recursos
+        //Los archivos del directorio recursos no deben combinarse; comprimir individualmente
+        $archivos=buscarArchivos(_desarrollo.$rutaAplicacion.'recursos/','*.*');
+        foreach($archivos as $archivo) {
+            $destino=str_replace(_desarrollo,_produccion,$archivo);
+            $dir=dirname($destino);
+            $ext=substr($archivo,strrpos($archivo,'.'));
+            
+            if(!file_exists($dir)) mkdir($dir,0755,true);
+
+            if($ext=='.css') {
+                //Omitir archivos que se hayan integrado a aplicacion.css
+                $rutaFinal=preg_replace('#^'.str_replace('\\','\\\\',_desarrollo).'#','',$archivo);
+                if(in_array($rutaFinal,$archivosCssCombinados)||in_array($rutaFinal,$archivosCssCombinadosCordova)||!file_exists($destino)) continue;
+                copy($archivo,$destino);
+                comprimirCss($destino);
+            } elseif($ext=='.js') {
+                compilarJs($archivo,$destino,$param->depuracion);
+            } else {
+                //Imágenes, etc.
+                copy($archivo,$destino);
             }
         }
 
-        comprimirCss($rutaCssCombinado);
+        //Eliminar directorios vacíos
+        eliminarDirectoriosVacios(_produccion);
     }
     
     protected function actualizarJson($param) {

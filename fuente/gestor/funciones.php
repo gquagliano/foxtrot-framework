@@ -148,53 +148,83 @@ function limpiarHtml($html) {
 }
 
 $archivosCssCombinados=[];
+$archivosCssCombinadosCordova=[];
 
 function procesarVista($ruta) {
-    global $archivosCssCombinados;
+    global $archivosCssCombinados,$archivosCssCombinadosCordova;
 
     $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
     $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
+    $rutaCssCombinadoCordova=_produccion.$rutaAplicacion.'recursos/css/cordova.css';
 
     $html=file_get_contents($ruta);
 
     $cordova=preg_match('/\{.*?cordova.*?:.*?true.*?\}/i',$html)==1;
 
-    //Combinar archivos CSS en aplicacion.css
-    if(preg_match_all('#(/\*combinar( tema)?\*/"|[ \t]*?<link .+?href=")(.+?)(",/\*combinar( tema)?\*/|".*? combinar.*>).*?[\r\n]*#m',$html,$coincidencias)) {
+    //Combinar archivos CSS de Foxtrot en el tema
+    //Se asume que todas las vistas tienen tema (por eso existe el tema en-blanco)
+
+    //Buscar tema
+    preg_match('#<link .+?href="(.+?)".*? tema=?.*?>#m',$html,$coincidencias);
+    $tema=basename($coincidencias[1]);
+    $rutaCssFoxtrot=_produccion.'recursos/css/'.$tema;
+
+    //Combinar todo lo que tenga combinar="foxtrot" en el tema
+    if(preg_match_all('#<link .+?href="(.+?)".*? combinar="foxtrot".*?>#m',$html,$coincidencias)) {
+        if(!file_exists($rutaCssFoxtrot)) {
+            $css='';
+            $nombres=$coincidencias[1];
+            foreach($nombres as $nombre) $css.=file_get_contents(_desarrollo.$nombre);
+            file_put_contents($rutaCssFoxtrot,$css);
+            comprimirCss($rutaCssFoxtrot);
+        }
+
+        //Reemplazar primer coincidencia y remover las demás
+        $tag='<link rel="stylesheet" href="recursos/css/'.$tema.'">'.PHP_EOL;
+        $html=str_replace($coincidencias[0][0],$tag,$html);
+        foreach($coincidencias[0] as $coincidencia) $html=str_replace($coincidencia,'',$html);
+    }
+
+    $destino=$cordova?$rutaCssCombinadoCordova:$rutaCssCombinado;
+
+    //Combinar archivos CSS con combinar="aplicacion" o /*combinar*/ en aplicacion.css
+    if(preg_match_all('#(/\*combinar( tema)?\*/"|<link .+?href=")(.+?)(",?|".*? combinar="aplicacion".*>)#m',$html,$coincidencias)) {
         $nombres=$coincidencias[3];
 
         //Agregar los archivos que aún no estén en aplicacion.css
         foreach($nombres as $archivo) {
-            if(!in_array($archivo,$archivosCssCombinados)) {
+            if($cordova) {
+                if(in_array($archivo,$archivosCssCombinadosCordova)) continue;
+                $archivosCssCombinadosCordova[]=$archivo;
+            } else {                
+                if(in_array($archivo,$archivosCssCombinados)) continue;
                 $archivosCssCombinados[]=$archivo;
-
-                //TODO Esto depende del enrutador... Por el momento queda harcodeado
-                $archivo=preg_replace('#^aplicacion/#',$rutaAplicacion,$archivo);
-
-                if(file_exists(_desarrollo.$archivo)) file_put_contents($rutaCssCombinado,file_get_contents(_desarrollo.$archivo),FILE_APPEND);
             }
+
+            //TODO Esto depende del enrutador... Por el momento queda harcodeado
+            $archivo=preg_replace('#^aplicacion/#',$rutaAplicacion,$archivo);
+
+            if(file_exists(_desarrollo.$archivo)) file_put_contents($destino,file_get_contents(_desarrollo.$archivo),FILE_APPEND);
         }
 
         //Comprimir todo
-        comprimirCss($rutaCssCombinado);
+        comprimirCss($destino);
 
-        $nombre=basename($rutaCssCombinado);
+        $nombre=basename($destino);
         $href=$cordova?$rutaAplicacion.'recursos/css/'.$nombre:'aplicacion/recursos/css/'.$nombre;
         $tag=$cordova?'"'.$href.'",'.PHP_EOL:'    <link rel="stylesheet" href="'.$href.'">'.PHP_EOL;
         
-        //Agregar nuevo tag reemplazando la primer coincidencia
+        //Agregar nuevo tag reemplazando la primer coincidencia y remover el resto
         $html=str_replace($coincidencias[0][0],$tag,$html);
-        
-        //Y remover el resto
         foreach($coincidencias[0] as $coincidencia) $html=str_replace($coincidencia,'',$html);
     }
-
+    
     //Remover controlador
     $html=preg_replace('#[ \t]*?<script .+? controlador.*?>.*?</script>.*?[\r\n]*#m','',$html);
 
     if($cordova) {
         //Remover controlador
-        $html=preg_replace('#/\*controlador\*/.+?/\*controlador\*/.*?[\r\n]*#','',$html);
+        $html=preg_replace('#/\*controlador\*/".+?",?[\r\n]*#','',$html);
     }
 
     file_put_contents($ruta,comprimirHtml($html));
@@ -215,6 +245,22 @@ function comprimirHtml($html) {
         ''
     ],$html);
     return $html;
+}
+
+function eliminarDirectoriosVacios($ruta) {
+    $vacio=true;
+    foreach(glob($ruta.'{,.}*',GLOB_BRACE) as $archivo) {
+        if(basename($archivo)=='.'||basename($archivo)=='..') continue;
+        if(!is_dir($archivo)) {
+            $vacio=false;
+            break;
+        }
+        if(!eliminarDirectoriosVacios($archivo.'/')) {
+            $vacio=false;
+        }
+    }
+    if($vacio) rmdir($ruta);
+    return $vacio;
 }
 
 /*function obtenerArgumentos() {

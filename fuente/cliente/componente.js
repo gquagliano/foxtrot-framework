@@ -755,14 +755,13 @@ var componente=new function() {
 
         if(nombre&&!this.oculto) {
             //Registrar acceso rápido
-            if(this.nombreVista==ui.obtenerNombreVistaPrincipal()) {
-                //Si pertenece a la vista principal, en window.componentes
-                componentes[nombre]=this;
-            } else {
-                //En caso contrario, en el controlador
-                var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista);
-                if(controlador) controlador.agregarComponente(this,nombre); //el controlador puede no existir, por ejemplo en el editor
-            }
+            
+            //Si pertenece a la vista principal, en window.componentes
+            if(this.nombreVista==ui.obtenerNombreVistaPrincipal()) componentes[nombre]=this;
+
+            //Y siempre en el controlador
+            var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista);
+            if(controlador) controlador.agregarComponente(this,nombre); //el controlador puede no existir, por ejemplo en el editor
         }
 
         return this;

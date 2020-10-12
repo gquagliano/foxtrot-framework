@@ -174,7 +174,11 @@ function procesarVista($ruta) {
         if(!file_exists($rutaCssFoxtrot)) {
             $css='';
             $nombres=$coincidencias[1];
-            foreach($nombres as $nombre) $css.=file_get_contents(_desarrollo.$nombre);
+            foreach($nombres as $nombre) {
+                $css.=file_get_contents(_desarrollo.$nombre);
+                //Agregar a archivos combinados para excluirlo de aplicacion.css
+                $archivosCssCombinados[]=$nombre;
+            }
             file_put_contents($rutaCssFoxtrot,$css);
             comprimirCss($rutaCssFoxtrot);
         }

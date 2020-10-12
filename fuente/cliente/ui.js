@@ -1014,8 +1014,12 @@ var ui=new function() {
             util:util,
             aplicacion:instanciaAplicacion,
             controlador:instanciaControladorPrincipal,
+            principal:instanciaControladorPrincipal,
             componentes:componentes,
-            parametros:this.obtenerParametros() //TODO Cache
+            componentesPrincipal:componentes,
+            parametros:this.obtenerParametros(), //TODO Cache
+            window:win,
+            document:doc
         };
         if(instanciasControladores) instanciasControladores.porCada(function(nombre,obj) {
                 vars[nombre]=obj;

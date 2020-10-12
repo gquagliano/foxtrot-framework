@@ -23,8 +23,8 @@ Cuando se establece como cadena, los siguientes valores son posibles:
 - `servidor-apl:...` Invocará el método en el controlador de la aplicación del lado del servidor.
 - `enviar-apl:...` Invocará el método en el controlador de la aplicación del lado del servidor, con los valores de todos los componentes de la vista como primer parámetro.
 - `nombrecomponente:...` Pasará el valor especificado al componente de nombre `nombrecomponente`. Cada tipo de componente determina qué hacer con ese valor (ver [Componentes](../componentes.md) para más información). Esto se denomina **Evento externo**.
-- *Expresiones*: Si la expresión resuelve a una función, será ejecutada.
-- *Nombre de método*: Intentará invocar el método en el controlador de la vista principal.
+- *Expresiones*: Si la expresión resuelve a una función, será ejecutada al producirse el evento, por ejemplo `{aplicacion.funcion}` o `{window.close}` (la expresión devuelve la función). Nótese que si la expresión *invoca una función*, la misma será ejecutada al momento de evaluarse la expresión, devolviendo el resultado de esa función, por ejemplo `{aplicacion.funcion()}` (se ejecuta inmediatamente).
+- *Nombre de método*: Intentará invocar el método en el controlador de la vista, pudiendo tratarse tanto del controlador principal como del controlador de la vista embebible, según dónde se ubique el componente.
 
 Cuando se utiliza `propiedad()`, el valor puede ser una función.
 

@@ -100,13 +100,17 @@ En las propiedades de componentes que admiten expresiones, como así también al
 - `ui`
 - `util`
 - `aplicacion` Instancia del controlador de la aplicación
-- `controlador` Instancia del controlador principal
-- `componentes`
+- `controlador` Instancia del controlador de la vista; este valor puede variar entre el controlador principal y el controlador de una vista embebible, según el contexto
+- `principal` Instancia del controlador de la vista principal
+- `componentes` Listado de componentes; este valor puede variar entre el los componentes de la vista principal y los de una vista embebible, según el contexto
+- `componentesPrincipal` Listado de componentes de la vista principal
 - `parametros` Parámetros de la URL (GET)
 - `valor` Valor del componente (solo en expresiones asignadas a eventos)
 - Las instancias de otros controladores también estarán disponibles por nombre
 - Cada componente [puede definir otras variables o fuciones específicas](componentes.md)
 - Cada propiedad del origen de datos estará definida como una variable
+- `window`
+- `document`
 
 ### Compilación
 

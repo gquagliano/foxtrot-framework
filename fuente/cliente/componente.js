@@ -1440,12 +1440,14 @@ var componente=new function() {
         if(!valor) return null;
         if(typeof valor!=="string") return valor;
 
-        var vars=Object.assign({
-            evento:evento,
-            valor:this.valor(),
-            //reemplazar controlador por el controlador de esta vista (puede no ser el principal, por ejemplo si es una vista embebible)
-            controlador:ui.obtenerInstanciaControladorVista(this.nombreVista)
-        },this.datos);
+        var ctl=ui.obtenerInstanciaControladorVista(this.nombreVista),
+            vars=Object.assign({
+                evento:evento,
+                valor:this.valor(),
+                //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
+                controlador:ctl,
+                componentes:ctl.componentes
+            },this.datos);
         
         //Evaluar expresiones, si las contiene
         return ui.evaluarExpresion(valor,vars);

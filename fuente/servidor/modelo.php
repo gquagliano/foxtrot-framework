@@ -152,6 +152,7 @@ class modelo {
         //@omitir
         //@oculto
         //@busqueda campos
+        //@orden campo (asc|desc)
 
         $this->campos=(object)[
             'id'=>(object)[],
@@ -161,7 +162,7 @@ class modelo {
         $propiedades=get_class_vars($this->tipoEntidad);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $this->campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=trim($etiqueta);
@@ -350,10 +351,14 @@ class modelo {
                     if(!$procesar1n) continue;
 
                     $modelo=modelo::fabricarModelo($campo->modelo,$this->bd);
-                    $item->$nombre=$modelo->donde([
-                            $campo->columna=>$item->id
-                        ])
-                        ->obtenerListado();
+                    $modelo->donde([
+                        $campo->columna=>$item->id
+                    ]);
+                    if($campo->orden) {
+                        $orden=explode(' ',$campo->orden);
+                        $modelo->ordenadoPor($orden[0],$orden[1]);
+                    }
+                    $item->$nombre=$modelo->obtenerListado();
                 } else {
                     $columna=$campo->columna;
                     if($item->$columna&&!$item->$nombre) {

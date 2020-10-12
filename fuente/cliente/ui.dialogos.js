@@ -296,7 +296,9 @@
 
         ui.animarAparecer(dialogo.elem);
 
-        dialogo.obtenerCuerpo().scrollTop=0;
+        setTimeout(function() {
+            dialogo.obtenerCuerpo().scrollTop=0;
+        });
 
         dialogo.abierto=true;
 

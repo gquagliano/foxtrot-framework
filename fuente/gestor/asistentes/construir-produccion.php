@@ -141,6 +141,10 @@ class construirProduccion extends asistente {
         //Copiar metadatos comprimido
         file_put_contents(_produccion.$rutaAplicacion.'aplicacion.json',json_encode(json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'))));
 
+        //Limpiar el css
+        $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
+        if(file_exists($rutaCssCombinado)) unlink($rutaCssCombinado);
+
         //Los archivos del directorio recursos no deben combinarse; comprimir individualmente
         $archivos=buscarArchivos(_desarrollo.$rutaAplicacion.'recursos/','*.*');
         foreach($archivos as $archivo) {
@@ -159,8 +163,16 @@ class construirProduccion extends asistente {
                 //Imágenes, etc.
                 copy($archivo,$destino);
             }
-        }        
+        }
 
+        //Copiar otros directorios
+        $directorios=glob(_desarrollo.$rutaAplicacion.'*',GLOB_ONLYDIR);
+        foreach($directorios as $dir) {
+            if(!in_array(basename($dir),['cliente','servidor','recursos'])) {
+                copiar($dir.'/','*.*',_produccion.$rutaAplicacion.basename($dir).'/');
+            }
+        }
+        
         //Combinar los estilos de los módulos en el archivo CSS principal de la aplicación
         $css='';
         foreach($modulos as $modulo) {
@@ -169,10 +181,8 @@ class construirProduccion extends asistente {
             $archivos=buscarArchivos($ruta,'*.css');
             foreach($archivos as $archivo) $css.=file_get_contents($archivo);
         }
-        $ruta=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
-        if(file_exists($ruta)) $css.=file_get_contents($ruta);
-        file_put_contents($ruta,$css);
-        comprimirCss($ruta);
+        if(file_exists($rutaCssCombinado)) $css.=file_get_contents($rutaCssCombinado);
+        file_put_contents($rutaCssCombinado,$css);
 
         //Combinar los controladores en el archivo JS principal de la aplicación
         $archivos=[
@@ -198,11 +208,11 @@ class construirProduccion extends asistente {
                     $ruta=_desarrollo.$rutaAplicacion.'cliente/vistas/'.$nombre.'.';
                     
                     $rutaHtml=$ruta.(file_exists($ruta.'php')?'php':'html');
-                    $html=str_replace('"','\\"',file_get_contents($rutaHtml));
+                    $html=str_replace(["\r","\n",'"'],['',' ','\\"'],file_get_contents($rutaHtml));
 
                     $json=str_replace('"','\\"',file_get_contents($ruta.'json'));
 
-                    $js.='_vistasEmbebibles["'.$nombre.'"]={html:"'.$html.'",json:"'.$json.'"};'.PHP_EOL.PHP_EOL;
+                    $js.='_vistasEmbebibles["'.$nombre.'"]={"html":"'.$html.'","json":"'.$json.'"};'.PHP_EOL.PHP_EOL;
                 }
             }
             file_put_contents($temp,$js);
@@ -218,24 +228,21 @@ class construirProduccion extends asistente {
 
         //Procesar las vistas
 
-        //Limpiar css
-        $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
-        file_put_contents($rutaCssCombinado,'');
-
         //Procesar
         $archivos=buscarArchivos(_produccion.$rutaAplicacion.'cliente/vistas/','*.{php,html}');
         foreach($archivos as $archivo) procesarVista($archivo);
 
         if($param->embebibles) {
             //Combinar archivos CSS de las vistas embebibles
-            $rutaDestino=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
             foreach($jsonApl->vistas as $nombre=>$vista) {
                 if($vista->tipo=='embebible') {
                     $ruta=_desarrollo.$rutaAplicacion.'cliente/vistas/'.$nombre.'.css';
-                    file_put_contents($rutaDestino,file_get_contents($ruta),FILE_APPEND);
+                    file_put_contents($rutaCssCombinado,file_get_contents($ruta),FILE_APPEND);
                 }
             }
         }
+
+        comprimirCss($rutaCssCombinado);
     }
     
     protected function actualizarJson($param) {

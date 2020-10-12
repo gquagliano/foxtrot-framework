@@ -165,14 +165,13 @@ function procesarVista($ruta) {
 
         //Agregar los archivos que aún no estén en aplicacion.css
         foreach($nombres as $archivo) {
-            if(!array_key_exists($archivo,$archivosCssCombinados)) {
+            if(!in_array($archivo,$archivosCssCombinados)) {
+                $archivosCssCombinados[]=$archivo;
 
                 //TODO Esto depende del enrutador... Por el momento queda harcodeado
                 $archivo=preg_replace('#^aplicacion/#',$rutaAplicacion,$archivo);
 
                 if(file_exists(_desarrollo.$archivo)) file_put_contents($rutaCssCombinado,file_get_contents(_desarrollo.$archivo),FILE_APPEND);
-
-                $archivosCssCombinados[]=$archivo;
             }
         }
 

@@ -97,6 +97,7 @@ class vistas extends asistente {
             $codigo=preg_replace('/"id":"'.$id.'-([a-z0-9-]+)"/m','"id":"'.$nuevoId.'-$1"',$codigo);
             $codigo=preg_replace('/"selector":".'.$id.'-([a-z0-9-]+)"/m','"selector":".'.$nuevoId.'-$1"',$codigo);
             //En el JSON, el nombre puede encontrarse con las barras escapadas (\/) como sin escapar (/)
+            //TODO Corregir. Esto reemplaza también los componentes cuyos nombres coincidan con el nombre de la vista...
             $codigo=str_replace('"nombre":"'.$nombre.'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
             $codigo=str_replace('"nombre":"'.str_replace('/','\\/',$nombre).'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
             return $codigo;

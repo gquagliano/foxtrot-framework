@@ -3,10 +3,10 @@
     <base href="<?=\foxtrot::obtenerUrl()?>">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-    <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar="">
-    <link rel="stylesheet" href="recursos/css/tema-sistema.css" combinar="" tema="">
-    <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css" combinar="">
-    <link rel="stylesheet" href="aplicacion/cliente/vistas/principal.css">
+    <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar="foxtrot">
+    <link rel="stylesheet" href="recursos/css/tema-sistema.css" combinar="foxtrot" tema="">
+    <link rel="stylesheet" href="aplicacion/recursos/css/estilos.css" combinar="aplicacion">
+    <link rel="stylesheet" href="aplicacion/cliente/vistas/principal.css" combinar="aplicacion">
     <meta name="generator" content="Foxtrot 7">
   <title>Bienvenido a Foxtrot</title></head>
   <body>

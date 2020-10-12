@@ -89,7 +89,10 @@ var componenteBucle=function() {
         //Ocultamos toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
         this.ocultarDescendencia();
 
-        if(this.itemSinDatos) this.itemSinDatos.remover();
+        if(this.itemSinDatos) {
+            this.itemSinDatos.remover();
+            this.itemSinDatos=null;
+        }
 
         if(!this.datos.length) {
             this.mostrarMensajeSinDatos();

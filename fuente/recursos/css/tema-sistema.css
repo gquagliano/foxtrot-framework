@@ -148,6 +148,9 @@ label.custom-control-label {
     height: calc(1.1rem + .75rem + 2px);
     padding: .2rem .75rem;
     cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .form-control:focus,
 .custom-select:focus,

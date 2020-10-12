@@ -11,5 +11,29 @@
     min-height: 10px;
     font-size: 0;
     vertical-align: middle;
+    display: inline-block !important;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHpJREFUeNqs09EJgDAMBNB4uoHgeJ3ADZzZDRRMPgKltBWSC9xHIDzuJ0s5r0NENpnPo7k178/dCiam2cHErByYmC1gYiMwjPXAFNaCaawGKZiDNMxBGmblwMSsHJiYlQMTm31KCBuBYawHprAWTGM1SMEcpGE2nwADACdrPXB5ZkY6AAAAAElFTkSuQmCC);
+}
+.foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-block {
+    display: block !important;
+}
+@media (min-width: 576px) {
+    .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-sm-block {
+        @copiar .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-block
+    }
+}
+@media (min-width: 768px) {
+    .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-md-block {
+        @copiar .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-block
+    }
+}
+@media (min-width: 992px) {
+    .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-lg-block {
+        @copiar .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-block
+    }
+}
+@media (min-width: 1200px) {
+    .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-xl-block {
+        @copiar .foxtrot-modo-edicion.foxtrot-bordes .etiqueta.d-block
+    }
 }

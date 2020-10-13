@@ -262,6 +262,9 @@ body.escritorio .btn-secondary:hover,
     border-color: #337ab7;
     background-color: #337ab7;
 }
+.custom-file-input:focus~.custom-file-label {
+    border-color: #337ab7;
+}
 .pestanas>.encabezados .btn.activa {
     border-color: #337ab7;
 }

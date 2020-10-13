@@ -85,7 +85,7 @@ var componenteDialogo=function() {
                 cuerpo:this.elemento,
                 mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
                 modal:this.propiedad("modal"),
-                retorno:function() {                         
+                retornoAbierto:function() {                         
                     //Buscar componente con autofoco
                     var elem=t.elemento.querySelector(".autofoco");
                     if(elem&&elem.es({visible:true})) {

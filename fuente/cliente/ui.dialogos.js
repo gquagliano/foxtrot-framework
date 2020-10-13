@@ -213,7 +213,8 @@
      * @param {string} [parametros[].opciones[].etiqueta] - Etiqueta del botón.
      * @param {string} [parametros[].opciones[].clase] - Clase CSS del botón.
      * @param {boolean} [parametros[].opciones[].predeterminado] - Determina si es la acción predeterminada.
-     * @param {function} [parametros[].retorno] - Función de retorno. Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
+     * @param {function} [parametros[].retorno] - Función de retorno al cerrar el diálogo (Resultado). Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
+     * @param {function} [parametros[].retornoAbierto] - Función de retorno al abrir el diálogo.
      * @param {boolean} [parametros[].mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
      * @param {boolean} [parametros[].eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
      * @param {boolean} [parametros[].modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
@@ -229,6 +230,7 @@
             cuerpo:null,
             opciones:null,
             retorno:null,
+            retornoAbierto:null,
             mostrarCerrar:false,
             eliminar:false,
             padreAnterior:null,
@@ -305,7 +307,9 @@
 
         actualizarZIndexDialogos();
 
-        ui.animarAparecer(dialogo.elem);
+        ui.animarAparecer(dialogo.elem,function() {
+            if(dialogo.abierto&&dialogo.param.retornoAbierto) dialogo.param.retornoAbierto();
+        });
 
         setTimeout(function() {
             dialogo.obtenerCuerpo().scrollTop=0;

@@ -139,42 +139,7 @@ class modelo {
      * Carga la configuración desde los metadatos de la clase de la entidad.
      */
     protected function cargarEstructura() {
-        //Posibles valores de las etiquetas en los comentarios de las propiedades:
-        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|logico|relacional|fecha)
-        //@relacion (1:1|1:0|1:n)
-        //@indice
-        //@indice unico
-        //@modelo *
-        //@relacion *
-        //@columna *
-        //@predeterminado *
-        //@requerido
-        //@tamano
-        //@etiqueta *
-        //@omitir
-        //@oculto
-        //@busqueda campos
-        //@orden campo (asc|desc)
-
-        $this->campos=(object)[
-            'id'=>(object)[],
-            'e'=>(object)[]
-        ];
-
-        $propiedades=get_class_vars($this->tipoEntidad);
-        foreach($propiedades as $propiedad=>$v) {
-            $comentario=(new ReflectionProperty($this->tipoEntidad,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
-                $this->campos->$propiedad=(object)[];
-                foreach($coincidencias[1] as $i=>$etiqueta) {
-                    $etiqueta=trim($etiqueta);
-                    $valor=trim($coincidencias[2][$i]);
-                    if($valor=='') $valor=true;
-
-                    $this->campos->$propiedad->$etiqueta=$valor;
-                }
-            }
-        }
+        $this->campos=$this->tipoEntidad::obtenerCampos();
     }
 
     /**
@@ -587,6 +552,18 @@ class modelo {
     public function establecerValores($objeto) {
         $this->consultaValores=(object)$objeto;
         return $this;        
+    }
+
+    /**
+     * Crea una nueva entidad, asignando los valores provistos mediante entidad::establecerValoresPublicos(), y la asigna a los valores para la próxima consulta.
+     * @var object|array $valores Valores a asignar.
+     * @return \modelo
+     */
+    public function establecerValoresPublicos($valores) {
+        return $this->establecerValores(
+            $this->fabricarEntidad()
+                ->establecerValoresPublicos($valores)
+        );
     }
 
     /**

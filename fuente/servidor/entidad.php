@@ -41,6 +41,31 @@ class entidad {
     }
 
     /**
+     * Asigna los elementos o propiedades provistos en las propiedades de esta instancia que cuenten con la etiqueta @publico. Cuando se reciban datos desde el cliente,
+     * debe utilizarse este método en lugar de establecerValores().
+     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @return \entidad
+     */
+    public function establecerValoresPublicos($valores) {
+        if(!is_object($valores)&&!is_array($valores)) return $this;
+
+        //Crear un nuevo objeto que tome de $valores solo los elementos válidos y establecer
+
+        $esObj=is_object($valores);
+        $nuevosValores=(object)[];
+        $campos=$this->obtenerCampos();
+
+        foreach($campos as $nombre=>$campo) {
+            if(!$campo->publico) continue;
+
+            $valor=$esObj?$valores->$nombre:$valores[$nombre];
+            if($valor!==null) $nuevosValores->$nombre=$valor;
+        }
+
+        return $this->establecerValores($nuevosValores);
+    }
+
+    /**
      * Método para sobreescribir a ser invocado tras asignarse las propiedades de la instancia, a fin de realizar cualquier postproceso que requiera
      * la entidad concreta.
      * @return \entidad
@@ -86,5 +111,51 @@ class entidad {
         }
 
         return $this;
+    }
+
+    /**
+     * Devuelve el listado de campos con la configuración de cada uno.
+     * @return object[] Objeto nombre->parametros.
+     */
+    public static function obtenerCampos() {
+        //Posibles valores de las etiquetas en los comentarios de las propiedades:
+        //@tipo (texto|cadena(longitud)|entero(longitud)|decimal(longitud)|logico|relacional|fecha)
+        //@relacion (1:1|1:0|1:n)
+        //@indice
+        //@indice unico
+        //@modelo *
+        //@relacion *
+        //@columna *
+        //@predeterminado *
+        //@requerido
+        //@tamano
+        //@etiqueta *
+        //@omitir
+        //@oculto
+        //@busqueda campos
+        //@orden campo (asc|desc)
+        //@publico
+
+        $campos=(object)[
+            'id'=>(object)[],
+            'e'=>(object)[]
+        ];
+
+        $propiedades=get_class_vars(static::class);
+        foreach($propiedades as $propiedad=>$v) {
+            $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+                $campos->$propiedad=(object)[];
+                foreach($coincidencias[1] as $i=>$etiqueta) {
+                    $etiqueta=trim($etiqueta);
+                    $valor=trim($coincidencias[2][$i]);
+                    if($valor=='') $valor=true;
+
+                    $campos->$propiedad->$etiqueta=$valor;
+                }
+            }
+        }
+
+        return $campos;
     }
 }

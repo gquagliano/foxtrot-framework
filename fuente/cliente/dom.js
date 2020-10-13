@@ -290,19 +290,21 @@
     };
 
     /**
-     * Determina si el elemento coincide con el filtro (¿por qué tiene que ser un selector como string?).
-     * Propiedades de filtro:
-     * clase            Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.
-     * nombre           Atributo name. Coincidencia exacta o RegExp.
-     * id               Atributo id. Coincidencia exacta o RegExp.
-     * etiqueta         Nombre de tag. Coincidencia exacta o RegExp.
-     * atributos        Valor de atributos. Objeto {atributo:valor}. Coincidencia exacta o RegExp.
-     * propiedades      Propiedades (readonly, disabled, etc.). Cadena o Array. Coincidencia exacta.
-     * datos            Datos (dataset). Objeto {nombre:valor}. Coincidencia exacta o RegExp.
-     * metadatos        Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
-     * tipo             Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
-     * elemento         Instancia de un nodo o elemento.
-     * Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos se evalúan como OR. Se evalúan como string (no es sensible al tipo).
+     * Determina si el elemento coincide con el filtro. Todas las propiedades deben coincidir, pero todos fitros con múltiples elementos
+     * se evalúan como OR. Los valores de los filtros se evalúan como cadena (no es sensible al tipo).
+     * @param {Object} filtro - Filtro.
+     * @param {(string|RegExp)} [filtro.clase] - Tiene la(s) clase(s) css. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.nombre] - Atributo name. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.id] - Atributo id. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.etiqueta] - Nombre de tag. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.atributos] - Valor de atributos. Objeto {atributo:valor}. Coincidencia exacta o RegExp.
+     * @param {string|string[]} [filtro.propiedades] - Propiedades (readonly, disabled, etc.). Cadena o Array. Coincidencia exacta.
+     * @param {(string|RegExp)} [filtro.datos] - Datos (dataset). Objeto {nombre:valor}. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.metadatos] - Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
+     * @param {(string|RegExp)} [filtro.tipo] - Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
+     * @param {(Node|Element)} [filtro.elemento] - Instancia de un nodo o elemento.
+     * @param {boolean} [filtro.visible] - Visibilidad. Nótese que un elemento oculto mediande `visibility` u opacidad se considera visible ya que forma parte del DOM.
+     * @returns {boolean}
      * @memberof external:Node
      */
     Node.prototype.es=function(filtro) {
@@ -318,6 +320,11 @@
 
         if(filtro.hasOwnProperty("elemento")) {
             resultado=this===filtro.elemento;
+        }
+
+        if(filtro.hasOwnProperty("visible")) {
+            var esVisible=this.offsetWidth>0||this.offsetHeight>0;
+            resultado=filtro.visible==esVisible;
         }
 
         if(filtro.hasOwnProperty("clase")) {

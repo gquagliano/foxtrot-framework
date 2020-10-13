@@ -77,7 +77,7 @@ var componenteDialogo=function() {
      * @returns Componente
      */
     this.abrir=function(retorno) {
-        if(typeof retorno==="undefined") retorno =null;
+        if(typeof retorno!=="function") retorno=null;
         
         if(!dialogo) dialogo=ui.construirDialogo({
                 cuerpo:this.elemento,

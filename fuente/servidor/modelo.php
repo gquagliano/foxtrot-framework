@@ -570,7 +570,7 @@ class modelo {
      * Devuelve los valores establecidos para guardar, que pueden haber sido actualizados tras la última consulta (por ejemplo, los IDs tras una inserción.)
      */
     public function obtenerEntidad() {
-        return $this->consultavalores;
+        return $this->consultaValores;
     }
 
     /**

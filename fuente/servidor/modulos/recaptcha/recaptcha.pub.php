@@ -11,7 +11,7 @@ namespace modulos\recaptcha\publico;
 defined('_inc') or exit;
 
 /**
- * Componente concreto Recaptcha (público).
+ * Módulo concreto Recaptcha (público).
  */
 class recaptcha extends \modulo {
     /**

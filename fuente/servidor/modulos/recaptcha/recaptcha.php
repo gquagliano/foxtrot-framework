@@ -11,7 +11,7 @@ namespace modulos\recaptcha;
 defined('_inc') or exit;
 
 /**
- * Componente concreto Recaptcha (privado).
+ * Módulo concreto Recaptcha (privado).
  * 
  * El módulo define dos propiedades en la configuración de Foxtrot (global o de la aplicación):
  *  - recaptchaPublico

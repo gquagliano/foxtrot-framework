@@ -36,6 +36,16 @@ class entidad {
         foreach($valores as $clave=>$valor) {
             if(property_exists($this,$clave)) $this->$clave=$valor;
         }
+        $this->procesarValores();
+        return $this;
+    }
+
+    /**
+     * Método para sobreescribir a ser invocado tras asignarse las propiedades de la instancia, a fin de realizar cualquier postproceso que requiera
+     * la entidad concreta.
+     * @return \entidad
+     */
+    public function procesarValores() {
         return $this;
     }
 

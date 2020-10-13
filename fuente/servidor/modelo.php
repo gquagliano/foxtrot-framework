@@ -96,6 +96,8 @@ class modelo {
                 //Procesar valores adicionales (recursividad, 1:n)
                 $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones1n);
             }
+
+            $obj->procesarValores();
         }
 
         return $obj;

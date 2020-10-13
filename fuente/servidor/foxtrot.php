@@ -497,9 +497,10 @@ class foxtrot {
         $ruta=_vistasAplicacion.$nombre;
         $esPhp=file_exists($ruta.'.php');
 
-        if(!file_exists($ruta.'.'.($esPhp?'php':'html'))) {
-            self::detener();
-        }
+        //Las vistas embebibles pueden no existir en producción
+        //if(!file_exists($ruta.'.'.($esPhp?'php':'html'))) {
+        //    self::detener();
+        //}
 
         //Solo vamos a devolver código HTML
         //TODO Evaluar las implicaciones de seguridad para ejecutar vistas PHP

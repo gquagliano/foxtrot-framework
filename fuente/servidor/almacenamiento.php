@@ -61,7 +61,7 @@ class almacenamiento {
             $i++;
         } while(file_exists($directorio.$nombreFinal));
 
-        touch($nombreFinal);
+        touch($directorio.$nombreFinal);
 
         return $nombreFinal;
     }

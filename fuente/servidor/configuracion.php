@@ -25,6 +25,11 @@ class configuracion {
     public static $contrasenaBd;
     public static $nombreBd;
     public static $prefijoBd='';
+    public static $servidorSmtp='';
+    public static $autenticacionSmtp=true;
+    public static $puertoSmtp=25;
+    public static $usuarioSmtp='';
+    public static $contrasenaSmtp='';
 
     protected static $otrosParametros=[];
 

@@ -9,6 +9,7 @@
 
 body * {
     zoom: 1;
+    backface-visibility: visible;
 }
 
 body {    

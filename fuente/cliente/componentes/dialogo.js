@@ -10,7 +10,9 @@
 /**
  * @class Componente concreto Diálogo (pop-up).
  */
-var componenteDialogo=function() {    
+var componenteDialogo=function() { 
+    var t=this;
+    
     this.componente="dialogo";    
 
     this.propiedadesConcretas={
@@ -83,7 +85,20 @@ var componenteDialogo=function() {
                 cuerpo:this.elemento,
                 mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
                 modal:this.propiedad("modal"),
-                retorno:function() {
+                retorno:function() {                         
+                    //Buscar componente con autofoco
+                    var elem=t.elemento.querySelector(".autofoco");
+                    if(elem&&elem.es({visible:true})) {
+                        var comp=ui.obtenerInstanciaComponente(elem);
+                        if(comp) {
+                            //Componente
+                            comp.foco();
+                        } else {
+                            //Cualquier otro elemento del DOM puede usar la clase .autofoco
+                            elem.focus();
+                        }
+                    }
+
                     if(retorno) retorno();
                 }
             });

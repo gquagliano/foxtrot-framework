@@ -1489,7 +1489,7 @@ var ui=new function() {
 
             if(!esMovil) {
                 var elem=doc.querySelector(".autofoco");
-                if(elem) {
+                if(elem&&elem.es({visible:true})) {
                     var comp=this.obtenerInstanciaComponente(elem);
                     if(comp) {
                         //Componente

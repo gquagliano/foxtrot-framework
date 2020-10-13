@@ -497,21 +497,23 @@ class foxtrot {
         $ruta=_vistasAplicacion.$nombre;
         $esPhp=file_exists($ruta.'.php');
 
-        //Las vistas embebibles pueden no existir en producción
-        //if(!file_exists($ruta.'.'.($esPhp?'php':'html'))) {
-        //    self::detener();
-        //}
-
-        //Solo vamos a devolver código HTML
-        //TODO Evaluar las implicaciones de seguridad para ejecutar vistas PHP
-        $html=file_get_contents($ruta.'.'.($esPhp?'php':'html'));
-
-        //El JSON solo existirá para vistas embebibles
+        $html=null;
         $json=null;
-        if(file_exists($ruta.'.json')) $json=file_get_contents($ruta.'.json');
 
+        //TODO ¿Validaciones?
+
+        if(file_exists($ruta.'.'.($esPhp?'php':'html'))) { //Las vistas embebibles pueden no existir en producción
+            //Solo vamos a devolver código HTML
+            //TODO Evaluar las implicaciones de seguridad para ejecutar vistas PHP
+            $html=file_get_contents($ruta.'.'.($esPhp?'php':'html'));
+        }
+
+        if(file_exists($ruta.'.json')) { //El JSON solo existirá para vistas embebibles
+            $json=file_get_contents($ruta.'.json');
+        }
+            
         $enrutador=self::obtenerEnrutador();
-
+        
         $vista->html=$html;
         $vista->json=$json;
         $vista->urlJs=$enrutador->obtenerUrlControlador($nombre);

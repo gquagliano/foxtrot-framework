@@ -236,7 +236,7 @@ var util={
      * @returns {string[]}
      */
     separarGrupos:function(delimitadorComienzo,delimitadorFinal,cadena,escape) {
-        if(isUndefined(escape)) escape="\\";
+        if(typeof escape==="undefined") escape="\\";
         if(cadena.length<=1||cadena.indexOf(delimitadorComienzo)<0||cadena.indexOf(delimitadorFinal)<0) return [cadena]; //No presenta los delimitadores, nada que hacer
 
         var result=[];
@@ -274,10 +274,10 @@ var util={
      * @returns *
      */
     procesarValores:function(data) {
-        if(isUndefined(data)||data===null) return null;
+        if(typeof data==="undefined"||data===null) return null;
 
         var returnAsStr=false;
-        if(isString(data)) {
+        if(typeof data==="string") {
             //Si es un string, convertir a un array para unificar el procesamiento con los arrays de strings
             returnAsStr=true;
             data=[data];
@@ -322,10 +322,10 @@ var util={
      * @returns {string}
      */
     periodo:function(v,format) {
-        if(!isNumeric(v)) v=util.procesarValores(v);
+        if(isNaN(v)) v=util.procesarValores(v);
         if(isNaN(v)) v=0;
 
-        if(isUndefined(format)) format="hms";
+        if(typeof format==="undefined") format="hms";
 
         var res="";
 
@@ -405,7 +405,7 @@ var util={
      */
     tamanoArchivo:function(bytes,si){
         //Fuente (adaptado): http://en.wikipedia.org/wiki/Template:Quantities_of_bytes
-        if(isUndefined(si)) var si=true;
+        if(typeof si==="undefined") var si=true;
         var b,c,d;
         return (si=si?[1e3,'k','B']:[1024,'K','iB'],b=Math,c=b.log,
                 d=c(bytes)/c(si[0])|0,bytes/b.pow(si[0],d)).toFixed(2)
@@ -439,7 +439,7 @@ var util={
     minutosAHoras:function(q,str) {
         var j=Math.floor(q/60);
         var m=q-j*60;
-        if(!isUndefined(str)&&str) {
+        if(!typeof str==="undefined"&&str) {
             return j+':'+(m<10?"0":"")+m;
         } else {
             return [j,m];
@@ -679,7 +679,7 @@ var util={
      * @param v Fecha como string o tiempo epoch.
      */
     convertirAFecha:function(v) {
-        if(isNumeric(v)) {
+        if(!isNaN(v)) {
             return util.epochAFecha(v);
         } else {
             return util.cadenaAFecha(v);
@@ -691,7 +691,7 @@ var util={
      * @param v Fecha objeto Date o tiempo epoch.
      */
     convertirAEpoch:function(v) {
-        if(isNumeric(v)) {
+        if(!isNaN(v)) {
             return v;
         } else {
             return util.fechaAEpoch(v);
@@ -752,10 +752,10 @@ var util={
      * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     formatoNumero:function(v,decimalPlaces) {
-        if(isString(v)) v=util.procesarValores(v);
+        if(typeof v==="string") v=util.procesarValores(v);
         if(v===null) return "";
-        if(!isNumeric(v)) v=0;
-        if (isUndefined(decimalPlaces)) decimalPlaces=util.decimalesPredeterminados;
+        if(isNaN(v)) v=0;
+        if (typeof decimalPlaces==="undefined") decimalPlaces=util.decimalesPredeterminados;
 
         v = parseFloat(v);
 
@@ -791,9 +791,9 @@ var util={
      * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     redondear:function(v,decimalPlaces) {
-        if(isString(v)) v=util.procesarValores(v);
-        if(!isNumeric(v)) v=0;
-        if (isUndefined(decimalPlaces)) decimalPlaces=util.decimalesPredeterminados;
+        if(typeof v==="string") v=util.procesarValores(v);
+        if(isNaN(v)) v=0;
+        if (typeof decimalPlaces==="undefined") decimalPlaces=util.decimalesPredeterminados;
         return v.toFixed(decimalPlaces);
     },
     
@@ -813,13 +813,13 @@ var util={
     recorrerSinRecursion:function(arr,prop,fn,afterFn,par) {
         //Estamos eliminando la recursividad en busca de un mejor rendimiento
 
-        if(isUndefined(fn)) fn=null;
-        if(isUndefined(afterFn)) afterFn=null;
+        if(typeof fn==="undefined") fn=null;
+        if(typeof afterFn==="undefined") afterFn=null;
         
         var curr=arr,
             //parent permite llevar un control de herencia no de elementos del array original, sino del valores devueltos
             //por la función (ej. durante el renderizado)
-            parent=isUndefined(par)?null:par,
+            parent=typeof par==="undefined"?null:par,
             elem=null,
             i=0,
             stack=[];
@@ -832,7 +832,7 @@ var util={
                 if(fn!==null) {
                     var ret=fn(curr[i],i,parent);
                     //la función puede devolver undefined, un objeto {elem,continue} o false para detener
-                    if(!isUndefined(ret)) {
+                    if(!typeof ret==="undefined") {
                         if(isObject(ret)) {
                             elem=ret.elem;
                             conti=ret.continue;
@@ -843,7 +843,7 @@ var util={
                 }
 
                 //si la función devuelve false se detiene el proceso de esta rama
-                if(conti&&!isUndefined(children)&&children.length) {
+                if(conti&&!typeof children==="undefined"&&children.length) {
                     //guardar la posición actual en el stack y pasar a children
                     stack.push([curr,i,parent,elem]);
                     curr=children;
@@ -859,7 +859,7 @@ var util={
 
             //finalizado el objeto, volver a la posición anterior
             var t=stack.pop();
-            if(!isUndefined(t)) {
+            if(!typeof t==="undefined") {
                 curr=t[0];
                 i=t[1];
                 parent=t[2];
@@ -881,7 +881,7 @@ var util={
      * @param returnIndex=false Devolver el índice en lugar del elemento.
      */
     buscar:function(arr,prop,val,returnIndex) {
-        if(isUndefined(returnIndex)) returnIndex=false;
+        if(typeof returnIndex==="undefined") returnIndex=false;
 
         for(var i=0;i<arr.length;i++)
             if(arr[i].hasOwnProperty(prop)&&arr[i][prop]==val) return returnIndex?i:arr[i];

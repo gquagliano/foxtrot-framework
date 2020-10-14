@@ -185,12 +185,51 @@ class modelo {
     public function obtenerUltimaConsulta() {
         return (object)[
             'sql'=>$this->sql,
+            'sqlPublico'=>$this->mostrarSql(),
             'parametros'=>$this->parametros,
             'tipos'=>$this->tipos,
             'error'=>$this->bd->obtenerError(),
             'bd'=>$this->bd,
             'resultado'=>$this->resultado
         ];
+    }
+
+    /**
+     * Devuelve la última consulta SQL ejecutada en formato para exportar.
+     * @return string
+     */
+    protected function mostrarSql() {
+        $sql=$this->bd->reemplazarPrefijo($this->sql);
+        $resultado='';
+        $parametro=0;
+
+        //Buscar ?
+        $enComillas=false;
+        for($i=0;$i<strlen($sql);$i++) {
+            $caracter=$sql[$i];
+            if(!$enComillas) {
+                if($caracter=='\'') {
+                    $enComillas='\'';
+                } elseif($caracter=='"') {
+                    $enComillas='"';
+                } elseif($caracter=='?') {
+                    $tipo=$this->tipos[$parametro];
+                    $valor=$this->parametros[$parametro];
+                    $parametro++;
+                    if($tipo=='i'||$tipo=='d') {
+                        $resultado.=$valor;
+                    } else {
+                        $resultado.='"'.$this->bd->escape($valor).'"';
+                    }
+                    continue;
+                }
+            } elseif($caracter==$enComillas) {
+                $enComillas=false;
+            }
+            $resultado.=$caracter;
+        }
+
+        return $resultado;
     }
 
     /**
@@ -1258,9 +1297,11 @@ class modelo {
     }
 
     /**
-     * Instalación de la base de datos (método para sobreescribir).
+     * Instalación de la base de datos. Devuelve el SQL de las consultas ejecutadas (método para sobreescribir).
+     * @return string
      */
     public function instalar() {
+        return '';
     }
 
     /**

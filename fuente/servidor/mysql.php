@@ -12,6 +12,7 @@
  * Interfaz de bases de datos MySQL.
  */
 class bd {
+    /** @var \mysqli $e */
 	protected $e;
     protected $stmt=null;
     
@@ -147,7 +148,7 @@ class bd {
     /**
      * Reemplaza el prefijo #__ antes de los nombres de tabla por el prefijo real de las mismas.
      */
-	protected function reemplazarPrefijo($q) {
+	public function reemplazarPrefijo($q) {
 		return preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim",$this->credenciales->prefijo,$q);
 	}
 
@@ -312,5 +313,14 @@ class bd {
 			$this->stmt=null;
 		}
 		return $this;
-	}
+    }
+    
+    /**
+     * Escapa los caracteres especiales de una cadena para usarla en una sentencia SQL, tomando en cuenta el conjunto de caracteres actual de la conexión.
+     * @var string $cadena
+     * @return string
+     */
+    public function escape($cadena) {
+        return $this->e->real_escape_string($cadena);
+    }
 }

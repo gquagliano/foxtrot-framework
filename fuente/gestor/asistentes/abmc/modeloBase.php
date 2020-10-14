@@ -71,8 +71,9 @@ class modeloBase extends \modelo {
      */
     public function crearOModificarItem($campos) {
         $this->reiniciar()
-            ->establecerValores($campos)
-            ->guardar();
+            ->establecerValoresPublicos($campos);
+        if($campos->id) $this->establecerValor('id',$campos->id);
+        $this->guardar();
         
         return $this->ultimoId?
             $this->ultimoId:

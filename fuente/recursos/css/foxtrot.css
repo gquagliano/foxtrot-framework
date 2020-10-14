@@ -249,6 +249,7 @@ li.menu-separador::after {
     justify-content: center;
     text-align: center;
     display: flex !important;
+    pointer-events: none;
 }
 .dialogo.oculto {
     display: none !important;
@@ -265,6 +266,7 @@ li.menu-separador::after {
     border-radius: 2px;
     overflow-y: auto;
     overflow-x: hidden;
+    pointer-events: all;
 }
 .dialogo .dialogo-x {
     position: absolute;

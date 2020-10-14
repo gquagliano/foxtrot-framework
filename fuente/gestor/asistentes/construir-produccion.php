@@ -236,8 +236,10 @@ class construirProduccion extends asistente {
             
             //Volver a comprimir el CSS
             //TODO Comprimir CSS solo una vez
-            comprimirCss(_produccion.$rutaAplicacion.'recursos/css/aplicacion.css');
-            comprimirCss(_produccion.$rutaAplicacion.'recursos/css/cordova.css');
+            $ruta=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
+            if(file_exists(_produccion.$rutaAplicacion.'recursos/css/cordova.css')) comprimirCss($ruta);
+            $ruta=_produccion.$rutaAplicacion.'recursos/css/cordova.css';
+            if(file_exists(_produccion.$rutaAplicacion.'recursos/css/cordova.css')) comprimirCss($ruta);
         }
         
         //Copiar directorio recursos

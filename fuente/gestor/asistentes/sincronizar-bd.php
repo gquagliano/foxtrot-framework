@@ -84,7 +84,7 @@ class sincronizarBd extends asistente {
         }
 
         //Ejecutar instalar() en los modelos cuyas tablas fueron recién creadas
-        foreach($clasesCreadas as $clase) call_user_func([$clase,'instalar']);
+        foreach($clasesCreadas as $clase) $this->registro(call_user_func([$clase,'instalar']));
         
         gestor::ok($this->sql);
     }

@@ -194,6 +194,24 @@ class modelo {
     }
 
     /**
+     * Devuelve el ID de la entidad. Tras la inserción de una fila, será el último ID insertado.
+     * @return int|null
+     */
+    public function obtenerId() {
+        if($this->ultimoId) return $this->ultimoId;
+        if($this->consultaValores) return $this->consultaValores->id;
+        return null;
+    }
+
+    /**
+     * Alias de obtenerId().
+     * @return int|null
+     */
+    public function id() {
+        return $this->obtenerId();
+    }
+
+    /**
      * Establece los campos a seleccionar.
      */
     public function seleccionar(...$campos) {
@@ -547,11 +565,28 @@ class modelo {
     }
 
     /**
-     * Establece los valores a guardar.
+     * Establece los valores a guardar. En una segunda llamada a este método con un objeto o array, se asignarán los valores a la entidad establecida previamente. Especificar
+     * una entidad siempre sobreescribirá la entidad previamente asignada.
+     * @var object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].
+     * @return \modelo
      */
     public function establecerValores($objeto) {
-        $this->consultaValores=(object)$objeto;
+        if(!$this->consultaValores||$objeto instanceof entidad) {
+            $this->consultaValores=(object)$objeto;
+        } elseif(is_array($objeto)||is_object($objeto)) {
+            foreach($objeto as $clave=>$valor) $this->consultaValores->$clave=$valor;
+        }
         return $this;        
+    }
+
+    /**
+     * Establece un valor a guardar.
+     * @var string $propiedad Nombre de la propiedad.
+     * @var mixed $valor Valor a asignar.
+     * @return \modelo
+     */
+    public function establecerValor($propiedad,$valor) {
+        return $this->establecerValores([$propiedad=>$valor]);
     }
 
     /**
@@ -810,13 +845,16 @@ class modelo {
     public function eliminar($e=1) {
         $procesarRelaciones=$this->consultaProcesarRelaciones;
         $relacionesCampos=$this->consultaOmitirRelacionesCampos;
+        $valores=$this->consultaValores;
         $this->consultaProcesarRelaciones=false;
         $this->consultaOmitirRelacionesCampos=[];
+        $this->consultaValores=null;
 
         $this->establecerValores(['e'=>$e])->actualizar();
 
         $this->consultaProcesarRelaciones=$procesarRelaciones;
         $this->consultaOmitirRelacionesCampos=$relacionesCampos;
+        $this->consultaValores=$valores;
 
         return $this;
     }
@@ -852,7 +890,8 @@ class modelo {
     }
 
     /**
-     * Actualiza los elementos que coincidan con la consulta utilizando los campos del el elemento establecido con establecerValores().
+     * Actualiza los elementos que coincidan con la consulta utilizando los campos del el elemento establecido con establecerValores(). Si no se ha establecido una
+     * condición, utilizará la propiedad `id`.
      */
     public function actualizar() {
         return $this->ejecutarConsulta('actualizar');

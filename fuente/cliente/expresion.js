@@ -245,8 +245,8 @@ expresion.evaluar=function(cadena) {
                     resultado+=valor;            
                 } else if(typeof valor==="number") {
                     resultado+=valor.toString();
-                } else if(typeof valor==="function"||typeof valor==="object") {
-                    //Función u objeto, devolver directamente, descartando la parte literal previa
+                } else if(typeof valor==="function"||typeof valor==="object"||typeof valor==="boolean") {
+                    //Función, objeto o lógico, devolver directamente, descartando la parte literal previa
                     resultado=valor;
                 }
             }

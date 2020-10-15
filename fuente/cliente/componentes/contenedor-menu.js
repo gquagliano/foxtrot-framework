@@ -20,6 +20,7 @@ var componenteContenedorMenu=function() {
         if(ev.target.es({elemento:t.elemento})||ev.target.padre({elemento:t.elemento})) return;
         ev.preventDefault();
         ev.stopPropagation();
+        ev.stopImmediatePropagation();
         t.cerrar();
     };
 
@@ -233,7 +234,7 @@ var componenteContenedorMenu=function() {
 
         this.elemento.agregarClase("menu-abierto");
 
-        document.evento("mousedown touchstart mousewheel",clickDocumento,true);
+        document.evento("click mousewheel",clickDocumento,true);
 
         return this;
     };
@@ -243,8 +244,8 @@ var componenteContenedorMenu=function() {
      * @returns {Componente}
      */
     this.cerrar=function() {
-        this.elemento.removerClase("menu-abierto");
-        document.removerEvento("mousedown touchstart mousewheel",clickDocumento,true);
+        t.elemento.removerClase("menu-abierto");
+        document.removerEvento("click mousewheel",clickDocumento,true);
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();
         return this;

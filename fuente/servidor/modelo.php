@@ -1241,6 +1241,8 @@ class modelo {
                 $valor=null;
             }
 
+            if(!$campo->html&&preg_match('/^(cadena|texto)/',$campo->tipo)) $valor=htmlspecialchars($valor,ENT_COMPAT,'utf-8');
+
             $valores[$nombre]=$valor;
 
             if($valor===null) {
@@ -1313,7 +1315,7 @@ class modelo {
         $resultado=[];
         $partes=explode(' ',$cadena);
         foreach($partes as $parte) {
-            $parte=trim($parte);
+            $parte=trim(strip_tags(html_entity_decode($parte,ENT_COMPAT,'utf-8')));
             if(strlen($parte)<3) continue;
             $resultado[]=soundex($parte);
         }

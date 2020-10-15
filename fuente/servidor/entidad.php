@@ -135,6 +135,7 @@ class entidad {
         //@busqueda campos
         //@orden campo (asc|desc)
         //@publico
+        //@html
 
         $campos=(object)[
             'id'=>(object)[],
@@ -144,7 +145,7 @@ class entidad {
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=trim($etiqueta);

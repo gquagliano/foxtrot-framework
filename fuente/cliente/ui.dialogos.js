@@ -110,7 +110,9 @@
             
             //Utilizamos un temporizador para que llamados sucesivos no provoquen que aparezca y desaparezca reiteradas veces
             temporizadorPrecarga=setTimeout(function() {
-                ui.animarDesaparecer(elementoPrecarga);
+                ui.animarDesaparecer(elementoPrecarga,function() {
+                    elementoPrecarga.removerClase("visible");
+                });
                 precargaVisible=false;
             },200);
         } else if(tipo=="barra") {

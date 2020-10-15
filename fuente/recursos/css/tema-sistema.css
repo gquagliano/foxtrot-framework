@@ -99,7 +99,7 @@ label.custom-control-label {
     line-height: 1.1;
     margin: 0;
 }
-textarea {
+textarea.form-control {
     line-height: inherit;
 }
 .custom-file,.custom-file-input {

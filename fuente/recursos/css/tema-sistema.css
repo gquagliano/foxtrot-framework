@@ -11,6 +11,9 @@
 
 /*Estructura*/
 
+* {
+    outline: none;
+}
 html {
     font-size: 13px;
     color: #3b3e40;
@@ -203,6 +206,12 @@ textarea.form-control {
 .table td, .table th {
     border-top: none;
 }
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.03);
+}
+.table-hover tbody tr:hover {
+    background-color: #d2e2ef;
+}
 .table tr {
     transition: background-color .2s;
 }
@@ -232,7 +241,7 @@ a {
     color: #337ab7;
 }
 .text-primary {
-    color: #337ab7;
+    color: #337ab7 !important;
 }
 body.escritorio a:hover,
 a:focus,
@@ -257,9 +266,17 @@ body.escritorio .btn:hover,
 .btn-primary.focus, .btn-primary:focus,
 body.escritorio .btn-primary:hover,
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-    color: #fff;
+    color: #fff !important;
     background-color: #3790dc;
     border-color: #3790dc;
+}
+.btn-primary.focus, .btn-primary:focus {
+    border-color: #2e6291;
+}
+.btn.text-primary:hover,
+.btn.text-primary:focus,
+.btn.text-primary:active {
+    color: #51a5f0 !important;
 }
 .btn-secondary {
     color: #3b3e40;
@@ -272,6 +289,9 @@ body.escritorio .btn-secondary:hover,
     color: #3b3e40;
     background-color: #e8e8e8;
     border-color: #e8e8e8;
+}
+.btn-secondary.focus, .btn-secondary:focus {
+    border-color: #a3a3a3;
 }
 .custom-control-input:checked~.custom-control-label::before {
     border-color: #337ab7;

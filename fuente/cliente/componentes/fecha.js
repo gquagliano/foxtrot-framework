@@ -164,7 +164,11 @@ var componenteFecha=function() {
                 clase:"desplegable-calendario"
             });
         
-        if(!this.calendario) this.calendario=new calendario;
+        if(this.calendario) {
+            this.calendario.destruir();
+        } else {
+            this.calendario=new calendario;
+        }
         
         var opc={
             retorno:function(valor) {

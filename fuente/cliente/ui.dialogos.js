@@ -432,26 +432,31 @@
         ev.preventDefault();
         ev.stopPropagation();
     },
+    clickElemSombraDesplegable=function(ev) {
+        cerrarDesplegableAbierto(true);
+        ev.preventDefault();
+    },
     /**
      * Remueve los manejadores de eventos relacionados con los desplegables.
      */
     removerEventosDesplegable=function() {
         window.removerEvento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
         document.removerEvento("backbutton",docBackbuttonDesplegable);
+        ui.obtenerElementoSombra()
+            .removerEvento("click",clickElemSombraDesplegable);
     },
     /**
      * Asigna los manejadores de eventos relacionados con los desplegables.
      */
     establecerEventosDesplegable=function() {
+        removerEventosDesplegable();
+
         window.evento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
         document.evento("backbutton",docBackbuttonDesplegable);
             
         //Click en la sombra
         ui.obtenerElementoSombra()
-            .evento("click",function(ev) {
-                cerrarDesplegableAbierto(true);
-                ev.preventDefault();
-            });
+            .evento("click",clickElemSombraDesplegable);
     };
 
     /**
@@ -469,6 +474,8 @@
         elem.estilos({
             left:posicionComponente.x,
             top:posicionComponente.y+altoComponente,
+            right:"auto",
+            bottom:"auto",
             width:anchoComponente
         });
 

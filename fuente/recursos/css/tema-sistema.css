@@ -69,7 +69,7 @@ h6,.h6 {
 }
 .cuerpo-formulario,
 .formulario-tabla {
-    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    box-shadow: 0 1px 14px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05);
 }
 .cuerpo-formulario>.row {
     margin-bottom: 1rem;
@@ -98,6 +98,9 @@ label.custom-control-label {
     color: inherit;
     line-height: 1.1;
     margin: 0;
+}
+textarea {
+    line-height: inherit;
 }
 .custom-file,.custom-file-input {
     height: calc(1.1rem + .75rem + 2px);  
@@ -191,11 +194,17 @@ label.custom-control-label {
     margin-right: 1rem;
     height: auto;
 }
+.formulario-tabla .btn:last-child {
+    margin-right: 0;
+}
 .formulario-tabla .table {
     border-collapse: separate;
 }
 .table td, .table th {
     border-top: none;
+}
+.table tr {
+    transition: background-color .2s;
 }
 .table th {
     font-weight: 600;
@@ -220,15 +229,21 @@ label.custom-control-label {
 
 a {
     text-decoration: none !important;
-    color: #3790dc;
+    color: #337ab7;
+}
+.text-primary {
+    color: #337ab7;
 }
 body.escritorio a:hover,
 a:focus,
 a:active,
 body.escritorio .btn:hover,
 .btn:focus,
-.btn:active {
-    color: #337ab7;
+.btn:active,
+.btn.text-primary:hover,
+.btn.text-primary:focus,
+.btn.text-primary:active {
+    color: #3790dc;
 }
 .form-control:focus,
 .custom-select:focus {

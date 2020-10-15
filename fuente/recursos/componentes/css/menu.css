@@ -53,6 +53,8 @@
     max-height: 75vh;
     padding: 1.3rem 0;
     border-radius: 2px;
+    font-size: 1.2rem;
+    line-height: 2.5rem;
 }
 .menu-deslizable { 
     display: block;   
@@ -72,6 +74,8 @@
     max-height: none;
     padding: 1.3rem 0;
     border-radius: 0;
+    font-size: 1.1rem;
+    line-height: 2.5rem;
 }
 .menu-bloque {
     display: flex;
@@ -90,6 +94,8 @@
     max-height: none;
     padding: 0;
     border-radius: 0;
+    font-size: inherit;
+    line-height: inherit;
 }
 .menu-flotante.menu-abierto {
     opacity: 1;

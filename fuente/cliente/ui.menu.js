@@ -46,9 +46,14 @@
         }
     };
     
-    var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar) {
+    var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar,retorno) {
+        if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
+        if(typeof eliminar==="undefined") eliminar=false;
+        if(typeof retorno==="undefined") retorno=null;
+
         var fn=function() {
             if(eliminar) elem.remover();
+            if(retorno) retorno();
         };
 
         if(omitirAnimacion) {
@@ -317,10 +322,12 @@
      * Cierra el menú especificado, o todos los menús abiertos si se omite el primer parámetro.
      * @param {Object} [menu] - Menú a cerrar (objeto generado con ui.construirMenu o cualquier elemento del DOM compatible).
      * @param {boolean} [omitirAnimacion=false] - Cierra el menú inmediatamente, sin animaciones.
+     * @param {function} [retorno] - Función de retorno al completar la animación.
      * @returns {ui}
      */
-    ui.cerrarMenu=function(menu,omitirAnimacion) {
+    ui.cerrarMenu=function(menu,omitirAnimacion,retorno) {
         if(typeof omitirAnimacion==="undefined") omitirAnimacion=false;
+        if(typeof retorno==="undefined") retorno=null;
 
         if(typeof menu==="undefined"||!menu) {
             //Se debe crear una copia de menuAbierto para trabajar ya que ui.cerrarMenu() lo alterará
@@ -331,7 +338,7 @@
         }
 
         var elem=util.esElemento(menu)?menu:menu.elem; //Si no es un elemento del DOM, se asume un objeto menú
-        cerrarElementoMenu(elem,omitirAnimacion,menu.eliminar);
+        cerrarElementoMenu(elem,omitirAnimacion,menu.eliminar,retorno);
 
         removerEventosMenu();
         

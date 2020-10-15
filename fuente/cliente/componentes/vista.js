@@ -33,6 +33,13 @@ var componenteVista=function() {
                 etiqueta:"Imagen (OG)",
                 adaptativa:false
             }
+        },
+        "Comportamiento":{
+            precarga:{
+                etiqueta:"Precarga visible",
+                tipo:"logico",
+                adaptativa:false
+            }
         }
     };  
 
@@ -97,6 +104,17 @@ var componenteVista=function() {
                 elem=doc.querySelector("meta[property='og:image']");
             if(!elem) elem=doc.crear("<meta property='og:image'>").anexarA(doc.head);
             elem.propiedad("content",valor);
+            return this;
+        }
+        
+        if(propiedad=="precarga") {
+            var doc=ui.obtenerDocumento();
+            if(valor) {
+                ui.obtenerCuerpo().insertarDespues(doc.crear("<div id='foxtrot-precarga' class='visible'>"));
+            } else {
+                var elem=doc.querySelector("#foxtrot-precarga");
+                if(elem) elem.remover();
+            }
             return this;
         }
 

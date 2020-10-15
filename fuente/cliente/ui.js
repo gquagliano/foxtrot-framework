@@ -1497,6 +1497,7 @@ var ui=new function() {
                     } else {
                         //Cualquier otro elemento del DOM puede usar la clase .autofoco
                         elem.focus();
+                        if(typeof elem.select==="function") elem.select();
                     }
                 }
             }

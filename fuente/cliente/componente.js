@@ -1313,7 +1313,7 @@ var componente=new function() {
                 return this.campo.valor();
             } else {
                 this.campo.valor(valor);
-                if(document.activeElement===this.campo) this.campo.select();
+                if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
             }
         }
     };
@@ -1836,7 +1836,7 @@ var componente=new function() {
      */
     this.foco=function() {
         (this.campo||this.elemento).focus();
-        if(this.campo) this.campo.select();
+        if(this.campo&&typeof this.campo.select==="function") this.campo.select();
         return this;
     };
 

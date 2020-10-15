@@ -13,6 +13,8 @@
 var componenteTabla=function() {    
     this.componente="tabla";
 
+    var t=this;
+
     /**
      * Propiedades de Tabla.
      */
@@ -89,7 +91,7 @@ var componenteTabla=function() {
 
         if(actualizar) this.actualizar();
 
-        //No incovamos establecerDatosComponente ya que no queremos que el objeto se distribuya a la descendencia
+        //No invocamos establecerDatosComponente ya que no queremos que el objeto se distribuya a la descendencia
         return this;        
     };
 
@@ -106,12 +108,12 @@ var componenteTabla=function() {
         //Vamos a ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
         this.ocultarDescendencia();
 
-        this.generarEncabezados();
+        t.generarEncabezados();
 
         if(!this.datos.length) {
             this.mostrarMensajeSinDatos();
         } else {
-            this.generarFilas();
+            t.generarFilas();
         }
 
         return this;
@@ -185,8 +187,7 @@ var componenteTabla=function() {
      * @returns {Componente}
      */
     this.generarFilas=function() {
-        var t=this,
-            filas=this.buscarFilas();
+        var filas=this.buscarFilas();
 
         this.datos.forEach(function(obj,indice) {
             //Puede existir más de una fila como plantilla

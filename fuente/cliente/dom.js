@@ -823,7 +823,7 @@
         if(!meta.hasOwnProperty(nombre)) meta[nombre]={};
         meta[nombre][funcion._id]=[funcion,funcionInterna]; 
 
-        elem.addEventListener(nombre,funcionInterna,{ passive:false, capture:captura });
+        elem.addEventListener(nombre,funcionInterna,captura);
 
         return elem;
     }
@@ -988,7 +988,7 @@
                 var t=this;
                 meta.porCada(function(nombre,arr) {
                     arr.porCada(function(id,ev) {
-                        t.removeEventListener(nombre,ev[1],{ passive:true, capture:captura });
+                        t.removeEventListener(nombre,ev[1],captura);
                     });
                 });
                 return this;
@@ -1000,7 +1000,7 @@
                 //Remover todos los eventos nombre registrados mediante evento()
                 var t=this;
                 meta[nombre].porCada(function(id,ev) {
-                    t.removeEventListener(nombre,ev[1],{ passive:true, capture:captura });
+                    t.removeEventListener(nombre,ev[1],captura);
                 });
                 return this;
             }
@@ -1011,7 +1011,7 @@
             if(typeof obj!=="undefined") fn=obj[1];
         }
         
-        if(fn) this.removeEventListener(nombre,fn,{ passive:true, capture:captura });
+        if(fn) this.removeEventListener(nombre,fn,captura);
 
         return this;
     };

@@ -113,6 +113,16 @@ var componenteTexto=function() {
         this.elemento.establecerHtml(html);
         return this;
     };
+
+    /**
+     * Reemplaza el contenido del componente como texto plano (sin HTML).
+     * @param {string} texto - Contenido.
+     * @returns {Componente}
+     */
+    this.establecerTexto=function(texto) {
+        this.elemento.establecerTexto(texto);
+        return this;
+    };
 };
 
 ui.registrarComponente("texto",componenteTexto,configComponente.clonar({

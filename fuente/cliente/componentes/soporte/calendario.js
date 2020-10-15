@@ -103,7 +103,7 @@ var calendario=function(opciones) {
         var fecha=new Date(ano,mes,dia);
 
         var td=document.crear("td"),
-            a=document.crear("<a href='#' rel='"+util.fechaAEpoch(fecha)+"'>"+dia+"</a>")
+            a=document.crear("<a tabindex='-1' href='#' rel='"+util.fechaAEpoch(fecha)+"'>"+dia+"</a>")
                 .anexarA(td)
                 .evento("mousedown",clickFecha);
 
@@ -160,22 +160,22 @@ var calendario=function(opciones) {
             .anexar(
                 documento.crear("<div class='calendario-nav'>")
                     .anexar(
-                        documento.crear("<a href='#' class='btn calendario-btn-ano-previo' title='Año anterior'></a>")
+                        documento.crear("<a tabindex='-1' href='#' class='btn calendario-btn-ano-previo' title='Año anterior'></a>")
                             .evento("click",clickAnoAnterior)
                     )
                     .anexar(
-                        documento.crear("<a href='#' class='btn calendario-btn-mes-previo' title='Mes anterior'></a>")
+                        documento.crear("<a tabindex='-1' href='#' class='btn calendario-btn-mes-previo' title='Mes anterior'></a>")
                             .evento("click",clickMesAnterior)
                     )
                     .anexar(
                         documento.crear("<span class='calendario-titulo'>")
                     )
                     .anexar(
-                        documento.crear("<a href='#' class='btn calendario-btn-mes-siguiente' title='Mes siguiente'></a>")
+                        documento.crear("<a tabindex='-1' href='#' class='btn calendario-btn-mes-siguiente' title='Mes siguiente'></a>")
                             .evento("click",clickMesSiguiente)
                     )
                     .anexar(
-                        documento.crear("<a href='#' class='btn calendario-btn-ano-siguiente' title='Año siguiente'></a>")
+                        documento.crear("<a tabindex='-1' href='#' class='btn calendario-btn-ano-siguiente' title='Año siguiente'></a>")
                             .evento("click",clickAnoSiguiente)
                     )
             );
@@ -288,6 +288,15 @@ var calendario=function(opciones) {
             return this;
         }
         return this.valorActual;
+    };
+
+    /**
+     * Remueve y destruye el DOM del calendario.
+     * @returns {Calendario}
+     */
+    this.destruir=function() {
+        if(this.elem) this.elem.remover();
+        return this;
     };
 
     if(typeof opciones!=="undefined") this.establecerOpciones(opciones);

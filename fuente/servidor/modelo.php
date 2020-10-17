@@ -615,6 +615,9 @@ class modelo {
      * Genera un objeto representando intermanente una condición a partir de cualquera de los tres formatos que admiten donde() y teniendo().
      */
     protected function generarCondicion($condicion,$parametros,$union='and',$operador='=') {
+        $union=strtoupper($union);
+        $operador=strtoupper($operador);
+
         if(is_object($condicion)&&get_class($condicion)==$this->tipoEntidad) {
             //Convertir a un array campo=>valor
             //Ya conocemos los campos
@@ -626,7 +629,7 @@ class modelo {
             }
         }
 
-        if($operador==='in'||$operador=='not in') {
+        if($operador==='IN'||$operador=='NOT IN') {
             $condicion.=' '.strtoupper($operador).' (';
             //Generar condición, un ? por cada parámetro
             $condicion.=implode(',',str_split(str_repeat('?',count($parametros))));
@@ -670,7 +673,7 @@ class modelo {
                     $parametros[]=$valor;
                 }
             }
-            $condicion=implode(' and ',$sql);
+            $condicion=implode(' AND ',$sql);
         } elseif(is_string($condicion)) {
             if(preg_match('/^[a-z0-9_\.`]+$/i',$condicion)&&is_string($parametros)) {
                 //Si solo se estableció un campo y un valor, construir condición
@@ -733,8 +736,11 @@ class modelo {
 
     /**
      * Establece el ordenamiento. Puede invocarse múltiples veces para establecer múltiples columnas de ordenamiento.
+     * @var string $campo Campo o expresión.
+     * @var string $orden Orden ascendente o descendente. Omitir si se establece una expresión en $campo.
      */
-    public function ordenadoPor($campo,$orden='asc') {
+    public function ordenadoPor($campo,$orden=null) {
+        if($orden) $orden=strtoupper($orden);
         $this->consultaOrden[]=(object)[
             'campo'=>$campo,
             'orden'=>$orden
@@ -999,7 +1005,7 @@ class modelo {
         $cantidad=$this->consultaCantidad;
         $orden=$this->consultaOrden;
 
-        $this->consultaColumnas=['count(*) `cantidad`'];
+        $this->consultaColumnas=['COUNT(*) `cantidad`'];
         $this->consultaLimite=null;
         $this->consultaCantidad=null;
         $this->consultaOrden=[]; //No es necesario perder tiempo en ordenar
@@ -1103,7 +1109,7 @@ class modelo {
      * Bloquea las tablas dadas las instancias de los modelos.
      */
     public function bloquear($modo,...$modelos) {
-        if($modo=='lectura') $modo='read'; else $modo='write';
+        if($modo=='lectura') $modo='READ'; else $modo='WRITE';
         $this->bd->bloquear($modo,$modelos);
         return $this;
     }
@@ -1178,8 +1184,8 @@ class modelo {
 
                 if(in_array($relacion->campo,$this->consultaOmitirRelacionesCampos)) continue;
                 
-                $join='join';
-                if($relacion->tipo=='1:0') $join='left join';
+                $join='JOIN';
+                if($relacion->tipo=='1:0') $join='LEFT JOIN';
 
                 $relaciones[]=$join.' #__'.$relacion->modelo->nombre.' '.$relacion->modelo->alias.' on '.$relacion->condicion;
 
@@ -1217,9 +1223,9 @@ class modelo {
         $relaciones=[];
 
         if($operacion=='actualizar') {
-            $sql='update ';
+            $sql='UPDATE ';
         } else {
-            $sql='select ';
+            $sql='SELECT ';
 
             $array=[];
             $this->prepararRelaciones($alias,true,$array)
@@ -1227,7 +1233,7 @@ class modelo {
             
             $sql.=implode(',',$this->consultaColumnas?$this->consultaColumnas:$campos);
 
-            $sql.=' from ';
+            $sql.=' FROM ';
         }
 
         $sql.='#__'.$this->nombre.' '.$this->alias.' ';
@@ -1235,15 +1241,15 @@ class modelo {
         $sql.=implode(' ',$relaciones);
 
         if($operacion=='actualizar') {
-            $sql.=' set ';
+            $sql.=' SET ';
             $sql.=$this->construirCamposInsercionActualizacion($parametros,$tipos);
         }
 
         if(count($this->consultaCondiciones)) {
-            $sql.=' where ';
+            $sql.=' WHERE ';
 
             if(!$this->consultaSeleccionarEliminados) {
-                $sql.=$this->alias.'.`e`=0 and ';
+                $sql.=$this->alias.'.`e`=0 AND ';
             }
 
             $condiciones='';
@@ -1259,16 +1265,16 @@ class modelo {
 
             $sql.=' ( '.$condiciones.' ) ';
         } elseif($operacion=='actualizar') {
-            $sql.=' where '.$this->alias.'.`id`=? ';
+            $sql.=' WHERE '.$this->alias.'.`id`=? ';
             $parametros[]=$this->consultaValores->id;
             $tipos[]='d';
         } elseif(!$this->consultaSeleccionarEliminados) {
-            $sql.='where '.$this->alias.'.`e`=0 ';
+            $sql.='WHERE '.$this->alias.'.`e`=0 ';
         }
 
         if($operacion=='seleccionar') {
             if($this->consultaAgrupar) {
-                $sql.=' group by ';
+                $sql.=' GROUP BY ';
 
                 $campos=[];
                 foreach($this->consultaAgrupar as $campo) $campos[]=$this->alias.'.`'.$campo.'`';
@@ -1276,7 +1282,7 @@ class modelo {
             }
 
             if(count($this->consultaTeniendo)) {
-                $sql.=' having ';
+                $sql.=' HAVING ';
 
                 $condiciones=[];
                 
@@ -1288,22 +1294,28 @@ class modelo {
                     }
                 }
 
-                $sql.=' ( '.implode(' ) and ( ',$condiciones).' ) ';
+                $sql.=' ( '.implode(' ) AND ( ',$condiciones).' ) ';
             }
 
             if($this->consultaOrden) {
-                $sql.=' order by ';
+                $sql.=' ORDER BY ';
 
                 $campos=[];
                 foreach($this->consultaOrden as $orden) {
-                    $campos[]=$this->alias.'.`'.$orden->campo.'` '.$orden->orden;
+                    if($orden->orden) {
+                        $campo=$orden->campo;
+                        if(strpos($campo,'.')===false) $campo=$this->alias.'.`'.$orden->campo.'`';
+                        $campos[]=$campo.' '.$orden->orden;
+                    } else {
+                        $campos[]=$orden->campo;
+                    }
                 }
                 $sql.=implode(',',$campos);
             }
         }
 
         if($this->consultaLimite||$this->consultaCantidad) {
-            $sql.=' limit ';
+            $sql.=' LIMIT ';
 
             $sql.=$this->consultaLimite?$this->consultaLimite:'0';
 
@@ -1323,7 +1335,7 @@ class modelo {
         $parametros=[];
         $tipos=[];
 
-        $sql='insert into #__'.$this->nombre.' set ';
+        $sql='INSERT INTO #__'.$this->nombre.' SET ';
 
         $sql.=$this->construirCamposInsercionActualizacion($parametros,$tipos,false);
         
@@ -1473,8 +1485,8 @@ class modelo {
 
         $partes=$this->prepararCadenaBusquedaFonetica($cadena);
         foreach($partes as $parte) {
-            if($sql!='') $sql.=' or ';
-            $sql.=$campo.' like ?';
+            if($sql!='') $sql.=' OR ';
+            $sql.=$campo.' LIKE ?';
             $parametros[]='%'.$parte.'%';
         }
 

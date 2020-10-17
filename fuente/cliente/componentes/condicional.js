@@ -61,7 +61,7 @@ var componenteCondicional=function() {
     /**
      * Evento Listo.
      */
-    this.listoComponente=function() {
+    this.listo=function() {
         this.actualizar();
         this.listoComponente();
     };

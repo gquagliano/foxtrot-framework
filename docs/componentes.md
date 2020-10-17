@@ -87,7 +87,9 @@ Es posible utilizar como condición cualquier [manejador de evento](api/cliente-
 
 El valor que se establezca al componente, ya sea mediante `establecerValores()` en la ascendencia o en la vista, o mediante `valor()`, se utilizará como origen de datos.
 
-Cabe aclarar que el efecto es solo visual. Al obtener los valores de la vista o del formulario, no afectará la visibilidad de los campos que contenga.
+Cabe aclarar que el efecto es solo visual. Al obtener los valores de la vista o del formulario, no afectará la visibilidad* de los campos que contenga.
+
+*\* Nota:* En este caso, *visibilidad* no se refiere al estilo, o si el usuario puede *ver* el campo o no, sino a si su valor estaría disponible dentro del listado de componentes.
 
 #### ![](img/iconos/contenedor.png) Contenedor
 

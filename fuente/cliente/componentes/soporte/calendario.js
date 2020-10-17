@@ -105,7 +105,7 @@ var calendario=function(opciones) {
         var td=document.crear("td"),
             a=document.crear("<a tabindex='-1' href='#' rel='"+util.fechaAEpoch(fecha)+"'>"+dia+"</a>")
                 .anexarA(td)
-                .evento("mousedown",clickFecha);
+                .evento("click",clickFecha);
 
         if(iguales(hoy,fecha)) a.agregarClase("calendario-hoy");
         if(iguales(fechaSeleccionada,fecha)) a.agregarClase("calendario-seleccion");

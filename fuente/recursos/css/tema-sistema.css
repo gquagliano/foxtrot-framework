@@ -107,11 +107,14 @@ textarea.form-control {
 }
 .custom-file,.custom-file-input {
     height: calc(1.1rem + .75rem + 2px);  
+    cursor: pointer;
 }
 .custom-file-label::after {
     height: calc(1.1rem + .75rem + 2px);
     line-height: 1.1;
-    content: "Seleccionar...";
+    content: "Seleccionar";
+    font-weight: 600;
+    text-transform: uppercase;
 }
 .custom-switch {
     padding: .28rem;
@@ -280,15 +283,15 @@ body.escritorio .btn-primary:hover,
 }
 .btn-secondary {
     color: #3b3e40;
-    background-color: #dedede;
-    border-color: #dedede;
+    background-color: #eff1f5;
+    border-color: #eff1f5;
 }
 .btn-secondary.focus, .btn-secondary:focus,
 body.escritorio .btn-secondary:hover,
 .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
     color: #3b3e40;
-    background-color: #e8e8e8;
-    border-color: #e8e8e8;
+    background-color: #dcdcdc;
+    border-color: #dcdcdc;
 }
 .btn-secondary.focus, .btn-secondary:focus {
     border-color: #a3a3a3;
@@ -299,6 +302,13 @@ body.escritorio .btn-secondary:hover,
 }
 .custom-file-input:focus~.custom-file-label {
     border-color: #337ab7;
+}
+.custom-file-label::after {
+    transition: background-color .2s;
+    background-color: #eff1f5;
+}
+.custom-file:hover .custom-file-label::after {
+    background-color: #dcdcdc;
 }
 .pestanas>.encabezados .btn.activa {
     border-color: #337ab7;

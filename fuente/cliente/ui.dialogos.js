@@ -638,8 +638,6 @@
                 if(desplegable.opciones.destruir) elem.remover();
             };
 
-        ui.ocultarSombra();
-
         if(typeof animar==="undefined"||animar) {
             ui.detenerAnimacion(elem)
                 .animarDesaparecer(elem,fn);

@@ -12,3 +12,6 @@
 .ocultar-contenidos .autogenerado tr {
     display: table-row !important;
 }
+tr {
+    cursor: pointer;
+}

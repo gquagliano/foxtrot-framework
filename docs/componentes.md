@@ -137,6 +137,8 @@ El campo devuelve (lo que es equivalente, también, a que envía al servidor) la
 
 Representación lógica de una fila (`<tr>`) de una tabla de datos (componente Tabla). Recibe como hijos componentes Columna de tabla.
 
+Cuando el usuario haga click en una fila y no se haya establecido un manejador para el evento *Click* (`click`), intentará replicar el click en el botón que sea predeterminado en la fila (botón con propiedad *Acción predeterminada* `predeterminado` activa).
+
 *Nota:* Los encabezados se definen en las columnas. No es necesario agregar una fila para los encabezados cuando se vaya a utilizar un origen de datos.
 
 #### ![](img/iconos/form.png) Formulario

@@ -61,6 +61,23 @@ var componenteFilaTabla=function() {
         nuevo.obtenerElemento().agregarClase("autogenerado");
 
         return nuevo;
+    };    
+
+    /**
+     * Evento Click.
+     * @param {Object} evento - Parámetros del evento.
+     */
+    this.click=function(evento) {
+        var manejador=this.propiedad("click");
+        if(!manejador) {
+            //Sin manejador, buscar un botón predeterminado
+            var btn=this.elemento.querySelector(".predeterminado");
+            if(btn) {
+                comp.ejecutarEvento("click");
+                return true;
+            }
+        }
+        return this.clickComponente(evento);
     };
 };
 

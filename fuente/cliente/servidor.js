@@ -6,7 +6,7 @@
  */
 
 /**
- * Gestor de comunicación cliente->servidor.
+ * Gestor de comunicación cliente<->servidor.
  * @typedef Servidor
  */
 
@@ -14,15 +14,18 @@
  * @class Gestor de comunicación cliente->servidor.
  */
 var servidor=new function() {
+    "use strict";
+
     this.funcionesError=[];
     this.ajax=[];
     this.url="";
     this.predeterminados={};
+    this.temporizador=null;
 
     /**
      * Establece las opciones predeterminadas.
      * @param {*} opciones - Opciones. Ver documentación de invocarMetodo().
-     * @returns {servidor}
+     * @returns {Servidor}
      */
     this.establecerPredeterminados=function(opciones) {
         this.predeterminados=Object.assign({
@@ -46,11 +49,20 @@ var servidor=new function() {
         return this;
     };
 
+    /**
+     * Establece la URL para las próximas consultas.
+     * @param {string} url
+     * @returns {Servidor}
+     */
     this.establecerUrl=function(url) {
         this.url=url;
         return this;
     };
 
+    /**
+     * Aborta todas las solicitudes en curso.
+     * @returns {Servidor}
+     */
     this.abortarTodo=function() {
         this.ajax.forEach(function(obj) {
             obj.abortar();
@@ -78,7 +90,7 @@ var servidor=new function() {
      * @param {boolean} [opciones.formulario=false] - Envía la solicitud como datos de formulario (FormData).
      * @param {function} [opciones.progreso] - Función de notificación de progreso. Recibirá el progreso de 0 a 1 como argumento.
      * @param {number} [opciones.tiempo] - Tiempo límite (si se omite, será el valor por defecto de ajax).
-     * @returns {ajax}
+     * @returns {Ajax}
      */
     this.invocarMetodo=function(opciones) {
         //Valores predeterminados
@@ -161,10 +173,32 @@ var servidor=new function() {
         return this;
     };
 
+    /**
+     * Inicia solicitudes periódicas al servidor para mantener la sesión. Nota: Actualmente este comportamiento no puede deshabilitarse; la duración
+     * de la sesión debería gestionarse del lado del servidor.
+     * @returns {Servidor}
+     */
+    this.mantenerSesion=function() {
+        clearInterval(this.temporizador); //En caso de que sea invocado por segunda vez
+        this.temporizador=setInterval(function() {
+            servidor.invocarMetodo({
+                foxtrot:"noop",
+                precarga:false
+            });
+        },60000);
+        return this;
+    };
+
+    /**
+     * Evalúa y ejecuta la respuesta recibida desde el servidor.
+     * @param {string} resp - Respuesta recibida.
+     * @param {Object} opciones - Opciones establecidas al iniciar la solicitud.
+     * @returns {Servidor}
+     */
     this.evaluarRespuesta=function(resp,opciones) {
         if(!resp||!util.esObjeto(resp)) {
             if(opciones.error) opciones.error.call(ctl);
-            return;
+            return this;
         }
 
         var procesado=false;
@@ -207,12 +241,15 @@ var servidor=new function() {
         }
 
         if(opciones.listo) opciones.listo(); //TODO usar call()
+
+        return this;
     };
 
     /**
      * Genera una instancia de una clase que redirigirá todas las llamadas a métodos al controlador de servidor especificado.
      * @param {string} [controlador=null] - Nombre del controlador, o null.
      * @param {(string|Controlador)} [controladorOrigen] - Instancia o nombre del controlador que está fabricando la instancia.
+     * @returns {Proxy}
      */
     this.fabricar=function(controlador,controladorOrigen) {
         if(typeof controlador==="undefined") controlador=null;
@@ -287,6 +324,8 @@ var servidor=new function() {
     };
 
     this.establecerPredeterminados({});
+
+    this.mantenerSesion();
 }();
 
 window["servidor"]=servidor;

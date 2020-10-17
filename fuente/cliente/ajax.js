@@ -5,6 +5,10 @@
  * @version 1.0
  */
 
+/**
+ * @typedef Ajax
+ */
+
  /**
  * @class Utilidades para consultas AJAX
  */

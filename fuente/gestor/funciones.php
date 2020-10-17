@@ -150,7 +150,7 @@ function limpiarHtml($html) {
 $archivosCssCombinados=[];
 $archivosCssCombinadosCordova=[];
 
-function procesarVista($ruta) {
+function procesarVista($ruta,$vista,$version) {
     global $archivosCssCombinados,$archivosCssCombinadosCordova;
 
     $rutaAplicacion='aplicaciones/'.gestor::obtenerNombreAplicacion().'/';
@@ -182,6 +182,10 @@ function procesarVista($ruta) {
         }
 
         //Reemplazar primer coincidencia y remover las demás
+
+        //Agregar versión, solo en web
+        if($version&&$vista->cliente=='web') $tema=preg_replace('/\.css$/','-'.$version.'.css',$tema);
+
         $tag='<link rel="stylesheet" href="recursos/css/'.$tema.'">'.PHP_EOL;
         $html=str_replace($coincidencias[0][0],$tag,$html);
         foreach($coincidencias[0] as $coincidencia) $html=str_replace($coincidencia,'',$html);
@@ -213,6 +217,10 @@ function procesarVista($ruta) {
         comprimirCss($destino);
 
         $nombre=basename($destino);
+
+        //Agregar versión, solo en web
+        if($version&&$vista->cliente=='web') $nombre=preg_replace('/\.css$/','-'.$version.'.css',$nombre);
+
         $href=$cordova?$rutaAplicacion.'recursos/css/'.$nombre:'aplicacion/recursos/css/'.$nombre;
         $tag=$cordova?'"'.$href.'",'.PHP_EOL:'    <link rel="stylesheet" href="'.$href.'">'.PHP_EOL;
         
@@ -223,10 +231,13 @@ function procesarVista($ruta) {
     
     //Remover controlador
     $html=preg_replace('#[ \t]*?<script .+? controlador.*?>.*?</script>.*?[\r\n]*#m','',$html);
+    if($cordova) $html=preg_replace('#/\*controlador\*/".+?",?[\r\n]*#','',$html);
 
-    if($cordova) {
-        //Remover controlador
-        $html=preg_replace('#/\*controlador\*/".+?",?[\r\n]*#','',$html);
+    //Agregar versión a los JS también, solo en web
+    if($version&&$vista->cliente=='web'&&preg_match_all('#<script .*?src="(.+?)".*?>#',$html,$coincidencias)) {
+        $tag=$coincidencias[0];
+        $tagNuevo=preg_replace('/\.js"/','-'.$version.'.js"',$tag);
+        $html=str_replace($tag,$tagNuevo,$html);
     }
 
     file_put_contents($ruta,comprimirHtml($html));

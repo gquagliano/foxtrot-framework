@@ -27,12 +27,21 @@ class construirProduccion extends asistente {
      */
     public function obtenerFormulario() {
         $json=gestor::obtenerJsonAplicacion();
+
+        $version=$json->produccion->version;
+        if(is_numeric($version)) $version++;
 ?>
         <div class="form-group row">
             <label class="col-3 col-form-label">Incluir módulos</label>
             <div class="col-sm-9">
                 <!--TODO Listado de módulos disponibles (checkbox)-->
                 <textarea class="form-control" name="modulos" rows="4" placeholder="Uno por línea."><?=$json->produccion->modulos?></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label">Versión</label>
+            <div class="col-sm-2">
+                <input class="form-control" name="version" value="<?=$version?>">
             </div>
         </div>
         <div class="custom-control custom-checkbox">
@@ -214,8 +223,11 @@ class construirProduccion extends asistente {
         copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');
 
         //Procesar las vistas
-        $archivos=buscarArchivos(_produccion.$rutaAplicacion.'cliente/vistas/','*.{php,html}');
-        foreach($archivos as $archivo) procesarVista($archivo);
+        foreach($jsonApl->vistas as $nombre=>$vista) {
+            $archivo=_produccion.$rutaAplicacion.'cliente/vistas/'.$nombre.'.';
+            $archivo.=file_exists($archivo.'php')?'php':'html';
+            procesarVista($archivo,$vista,$param->version);
+        }
 
         if($param->embebibles) {
             foreach($jsonApl->vistas as $nombre=>$vista) {
@@ -273,7 +285,8 @@ class construirProduccion extends asistente {
     protected function actualizarJson($param) {
         $json=gestor::obtenerJsonAplicacion();
         $json->produccion=[
-            'modulos'=>$param->modulos
+            'modulos'=>$param->modulos,
+            'version'=>$param->version
         ];
         gestor::actualizarJsonAplicacion($json);  
     }

@@ -103,6 +103,9 @@ class enrutador {
             } elseif(preg_match('#^([A-Za-z0-9_/-]+)#',$this->url)) {
                 $this->vista=trim($this->url,'/');
             }
+
+            $this->validarRecurso();
+
             if($this->vista||$this->recurso) return $this;
         }
 
@@ -115,6 +118,16 @@ class enrutador {
      */
     protected function solicitudValida() {
         return !$this->error&&($this->pagina||$this->vista||$this->controlador||$this->metodo||$this->recurso||$this->foxtrot||$this->redireccionar);
+    }
+
+    /**
+     * Valida la ruta asignada como recurso.
+     */
+    protected function validarRecurso() {
+        if(!$this->recurso) return;
+
+        //Remover versión
+        $this->recurso=preg_replace('/-[0-9]+\.(css|js)$/','',$this->recurso);
     }
 
     public function obtenerError() {

@@ -1536,75 +1536,79 @@ var componente=new function() {
 
             if(retorno) retorno(resultadoLocal);
         } else if(typeof manejador==="string") {
-            var comando=null,
-                p=manejador.indexOf(":");
-            if(p>0) {
-                comando=manejador.substring(0,p);
-                manejador=manejador.substring(p+1);
+            if(!isNaN(manejador)) {
+                resultadoLocal=manejador.indexOf(".")>=0?parseFloat(manejador):parseInt(manejador);
+            } else {
+                var comando=null,
+                    p=manejador.indexOf(":");
+                if(p>0) {
+                    comando=manejador.substring(0,p);
+                    manejador=manejador.substring(p+1);
+                }
+
+                var vista=ui.obtenerInstanciaVista(this.nombreVista),
+                    ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador()),
+                    apl=ui.aplicacion();
+
+                if(comando=="servidor"||comando=="enviar"||comando=="servidor-apl"||comando=="enviar-apl") {
+                    //Método del controlador de servidor
+
+                    //servidor y enviar => Controlador de vista
+                    var obj=ctl;
+                    //servidor-apl y enviar-apl => Controlador de aplicacion
+                    if(comando=="servidor-apl"||comando=="enviar-apl") obj=apl;
+
+                    if(silencioso) obj.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
+
+                    var args=[parametrosServidor];
+                    //enviar y enviar-apl => El primer parámetro serán los valores de los componentes
+                    if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores());
+
+                    //Retorno
+                    args.unshift(function(respuesta) {
+                        if(retorno) retorno(respuesta);
+                    });
+
+                    //Invocar el método
+                    var metodo=obj.servidor[manejador];
+                    ajax=metodo.apply(obj.servidor,args);
+                } else if(comando=="ir") {
+                    //Navegación
+                    ui.irA(manejador,nuevaVentana);
+                } else if(comando=="no-ir") {
+                    //Reemplazar URL sin navegar
+                    ui.noIrA(manejador,nuevaVentana);
+                } else if(comando=="abrir") {
+                    //Popup
+                    ui.abrirVentana(manejador);
+                } else if(comando=="apl") {
+                    //Propiedad del controlador de aplicacion
+                    var obj=ui.aplicacion();
+                    resultadoLocal=obj[manejador].call(obj,this,evento);
+
+                    if(retorno) retorno(resultadoLocal);
+                } else if(comando) {
+                    //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
+                    //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
+                    //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
+                    
+                    //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
+                    var nombre=comando,
+                        valor=manejador,
+                        obj=componentes[nombre];
+                    resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
+
+                    if(retorno) retorno(resultadoLocal);
+                } else if(manejador!="") {
+                    //Propiedad del controlador
+                    if(typeof ctl[manejador]==="function") resultadoLocal=ctl[manejador].call(ctl,this,evento);
+
+                    if(retorno) retorno(resultadoLocal);
+                }
+                //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
+                //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
+                //      un control de errores interno, que valide estos casos y arroje errores de Foxtrot.
             }
-
-            var vista=ui.obtenerInstanciaVista(this.nombreVista),
-                ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador()),
-                apl=ui.aplicacion();
-
-            if(comando=="servidor"||comando=="enviar"||comando=="servidor-apl"||comando=="enviar-apl") {
-                //Método del controlador de servidor
-
-                //servidor y enviar => Controlador de vista
-                var obj=ctl;
-                //servidor-apl y enviar-apl => Controlador de aplicacion
-                if(comando=="servidor-apl"||comando=="enviar-apl") obj=apl;
-
-                if(silencioso) obj.servidor.establecerOpcionesProximaConsulta({ precarga:false });                
-
-                var args=[parametrosServidor];
-                //enviar y enviar-apl => El primer parámetro serán los valores de los componentes
-                if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores());
-
-                //Retorno
-                args.unshift(function(respuesta) {
-                    if(retorno) retorno(respuesta);
-                });
-
-                //Invocar el método
-                var metodo=obj.servidor[manejador];
-                ajax=metodo.apply(obj.servidor,args);
-            } else if(comando=="ir") {
-                //Navegación
-                ui.irA(manejador,nuevaVentana);
-            } else if(comando=="no-ir") {
-                //Reemplazar URL sin navegar
-                ui.noIrA(manejador,nuevaVentana);
-            } else if(comando=="abrir") {
-                //Popup
-                ui.abrirVentana(manejador);
-            } else if(comando=="apl") {
-                //Propiedad del controlador de aplicacion
-                var obj=ui.aplicacion();
-                resultadoLocal=obj[manejador].call(obj,this,evento);
-
-                if(retorno) retorno(resultadoLocal);
-            } else if(comando) {
-                //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
-                //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
-                //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
-                
-                //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
-                var nombre=comando,
-                    valor=manejador,
-                    obj=componentes[nombre];
-                resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
-
-                if(retorno) retorno(resultadoLocal);
-            } else if(manejador!="") {
-                //Propiedad del controlador
-                var resultadoLocal=ctl[manejador].call(ctl,this,evento);
-
-                if(retorno) retorno(resultadoLocal);
-            }
-            //El acceso a otras funciones o métodos se puede realizar a través de expresiones que devuelvan funciones
-            //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
-            //      un control de errores interno, que valide estos casos y arroje errores de Foxtrot.
         } else {
             procesado=false;
         }

@@ -420,23 +420,21 @@ class modelo {
     }
 
     /**
-     * Agrega una condición mediante un operador de desigualdad.
-     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
+     * Agrega una condición.
+     * @var object $condicion Nombre del campo a filtrar.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     * @var object $parametros Array parámetro/valor.
-     */
-    /**
+     * @var mixed $valor Valor a evaluar.
+     *//**
      * Agrega una condición.
      * @var object $condicion Array campo=>valor a utilizar como filtro.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     */
-    /**
+     *//**
      * Agrega una condición.
      * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
      */
-    public function dondeComparar($condicion,$operador,$parametros=null) {
-        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'and',$operador);
+    public function dondeComparar($condicion,$operador,$valor=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'and',$operador);
         return $this;
     }
 
@@ -459,23 +457,131 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR mediante un operador de desigualdad.
-     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
+     * Agrega una condición.
+     * @var object $condicion Nombre del campo a filtrar.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     * @var object $parametros Array parámetro/valor.
-     */
-    /**
-     * Agrega una condición OR.
+     * @var mixed $valor Valor a evaluar.
+     *//**
+     * Agrega una condición.
      * @var object $condicion Array campo=>valor a utilizar como filtro.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     */
-    /**
-     * Agrega una condición OR.
+     *//**
+     * Agrega una condición.
      * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
      * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
      */
-    public function oDondeComparar($condicion,$operador,$parametros=null) {
-        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'or',$operador);
+    public function oDondeComparar($condicion,$operador,$valor=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'or',$operador);
+        return $this;
+    }
+
+    /**
+     * Agrega una condición negativa (los valores deben ser distintos al filtro).
+     * @var object $condicion Array u objeto campo=>valor a utilizar como filtro.
+     */
+    /**
+     * Agrega una condición negativa (los valores deben ser distintos a los de la entidad).
+     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     */
+    public function dondeNo($condicion,$valor=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'and','<>');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición negativa (los valores deben ser distintos al filtro) OR.
+     * @var object $condicion Array u objeto campo=>valor a utilizar como filtro.
+     */
+    /**
+     * Agrega una condición negativa (los valores deben ser distintos a los de la entidad) OR.
+     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     */
+    public function oDondeNo($condicion,$valor=null) {
+        $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'or','<>');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición IN().
+     * @var string $campo Campo.
+     * @var array $valores Listado de valores posibles.
+     */
+    public function dondeEn($campo,$valores) {
+        if(!is_array($valores)||!count($valores)) return $this;     
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valores,'and','in');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición NOT IN() (negado).
+     * @var string $campo Campo.
+     * @var array $valores Listado de valores a excluir.
+     */
+    public function dondeNoEn($campo,$valores) {    
+        if(!is_array($valores)||!count($valores)) return $this;    
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valores,'and','not in');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR IN().
+     * @var string $campo Campo.
+     * @var array $valores Listado de valores posibles.
+     */
+    public function oDondeEn($campo,$valores) {  
+        if(!is_array($valores)||!count($valores)) return $this;      
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valores,'or','in');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR NOT IN() (negado).
+     * @var string $campo Campo.
+     * @var array $valores Listado de valores a excluir.
+     */
+    public function oDondeNoEn($campo,$valores) {  
+        if(!is_array($valores)||!count($valores)) return $this;      
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valores,'or','not in');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición LIKE.
+     * @var string $campo Campo.
+     * @var array $valor Valor a evaluar.
+     */
+    public function dondeComo($campo,$valor) {        
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'and','like');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición NOT LIKE (negado).
+     * @var string $campo Campo.
+     * @var array $valor Valor a evaluar.
+     */
+    public function dondeNoComo($campo,$valor) {        
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'and','not like');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR LIKE.
+     * @var string $campo Campo.
+     * @var array $valor Valor a evaluar.
+     */
+    public function oDondeComo($campo,$valor) {        
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'or','like');
+        return $this;
+    }
+
+    /**
+     * Agrega una condición OR NOT LIKE (negado).
+     * @var string $campo Campo.
+     * @var array $valor Valor a evaluar.
+     */
+    public function oDondeNoComo($campo,$valor) {        
+        $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'or','not like');
         return $this;
     }
 
@@ -520,14 +626,20 @@ class modelo {
             }
         }
 
-        if(is_object($condicion)||is_array($condicion)) {
+        if($operador==='in'||$operador=='not in') {
+            $condicion.=' '.strtoupper($operador).' (';
+            //Generar condición, un ? por cada parámetro
+            $condicion.=implode(',',str_split(str_repeat('?',count($parametros))));
+            $condicion.=')';
+        } elseif(is_object($condicion)||is_array($condicion)) {
             //Si se recibe un objeto/array, siempre será coincidencia exacta
             $sql=[];
             $parametros=[];
             foreach($condicion as $clave=>$valor) {
-                if($valor===null||!array_key_exists($clave,$this->campos)) continue;
-
-                $campo=$this->campos->$clave;
+                if($valor===null) continue;
+                
+                $campo=null;
+                if(array_key_exists($clave,$this->campos)) $campo=$this->campos->$clave;
                 
                 if($valor===true) {
                     $valor=1;
@@ -537,11 +649,19 @@ class modelo {
                     $valor=null;
                 }
 
-                $nombre=$this->alias.'.`'.$clave.'`';
+                if(strpos($clave,'.')===false) {
+                    $nombre=$this->alias.'.`'.$clave.'`';
+                } else {
+                    $nombre=$clave;
+                }
 
                 if($valor===null) {
-                    $sql[]=$nombre.' is null';
-                } elseif($campo->busqueda) {
+                    if($operador=='<>') {
+                        $sql[]=$nombre.' IS NOT NULL';
+                    } else {
+                        $sql[]=$nombre.' IS NULL';
+                    }
+                } elseif($campo&&$campo->busqueda) {
                     $busqueda=$this->generarConsultaBusquedaFonetica($nombre,$valor);
                     $sql[]=$busqueda->sql;
                     foreach($busqueda->parametros as $param) $parametros[]=$param;
@@ -552,18 +672,37 @@ class modelo {
             }
             $condicion=implode(' and ',$sql);
         } elseif(is_string($condicion)) {
-            //Reemplazar variables, construyendo array de parámetros en el orden en que aparecen
-            //TODO Esta forma de asignar parámetros en orden es muy específica de PDO, ¿debería estar en la clase bd?
-            $parametrosEnOrden=[];
-            while(preg_match('/@([A-Za-z0-9_]+)/',$condicion,$coincidencia,PREG_OFFSET_CAPTURE)) {
-                $variable=$coincidencia[0][0];
-                $posicion=$coincidencia[0][1];
-                $propiedad=$coincidencia[1][0];
+            if(preg_match('/^[a-z0-9_\.`]+$/i',$condicion)&&is_string($parametros)) {
+                //Si solo se estableció un campo y un valor, construir condición
+                if(strpos($condicion,'.')===false) $condicion=$this->alias.'.`'.$condicion.'`';
+                $condicion.=' '.$operador.' ?';
+                $parametros=[$parametros];
+            } else {
+                //Si se estableció una condición, potencialmente con parámetros, buscar y reemplazar variables, construyendo array de parámetros en el orden en que aparecen
+                //TODO Esta forma de asignar parámetros en orden es muy específica de PDO, ¿debería estar en la clase bd?
+                $parametrosEnOrden=[];
+                while(preg_match('/([\s<>=]*)@([A-Za-z0-9_]+)/',$condicion,$coincidencia,PREG_OFFSET_CAPTURE)) {
+                    $variable=$coincidencia[0][0];                
+                    $posicion=$coincidencia[0][1];
+                    $operador=$coincidencia[1][0];
+                    $propiedad=$coincidencia[2][0];
 
-                $condicion=substr($condicion,0,$posicion).'?'.substr($condicion,$posicion+strlen($variable));
-                $parametrosEnOrden[]=$parametros[$propiedad];
+                    $valor=$parametros[$propiedad];
+                    $esNulo=$valor instanceof nulo;
+
+                    //Considerar NULL
+                    if($esNulo&&$operador=='=') {
+                        $condicion=substr($condicion,0,$posicion).' IS NULL';
+                    } elseif($esNulo&&$operador=='<>') {
+                        $condicion=substr($condicion,0,$posicion).' IS NOT NULL';
+                    } else {
+                        //Reemplazar la variable por ?
+                        $condicion=substr($condicion,0,$posicion+strlen($operador)).'?'.substr($condicion,$posicion+strlen($variable));
+                        $parametrosEnOrden[]=$valor;
+                    }
+                }
+                $parametros=$parametrosEnOrden;
             }
-            $parametros=$parametrosEnOrden;
         }
         
         return (object)[

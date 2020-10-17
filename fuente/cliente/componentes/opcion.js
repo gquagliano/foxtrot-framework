@@ -87,6 +87,19 @@ var componenteAlternar=function() {
     };
 
     /**
+     * Evento `editor`.
+     * @returns {Componente}
+     */
+    this.editor=function() {
+        //Actualizar ID de los elementos
+        var id="checkbox-"+this.id;
+        this.elemento.querySelector("input").atributo("id",id);
+        this.elemento.querySelector("label").atributo("for",id);
+
+        return this.editorComponente();
+    };
+
+    /**
      * Establece los eventos predeterminados.
      * @returns {Componente}
      */

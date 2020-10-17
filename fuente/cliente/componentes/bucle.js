@@ -50,6 +50,14 @@ var componenteBucle=function() {
         this.crearComponente();
         return this;
     };
+
+    /**
+     * Evento Listo.
+     */
+    this.listo=function() {
+        this.actualizar();
+        this.listoComponente();
+    };
     
     /**
      * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.

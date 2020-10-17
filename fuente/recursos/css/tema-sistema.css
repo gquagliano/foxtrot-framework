@@ -283,15 +283,15 @@ body.escritorio .btn-primary:hover,
 }
 .btn-secondary {
     color: #3b3e40;
-    background-color: #eff1f5;
-    border-color: #eff1f5;
+    background-color: #e1e4eb;
+    border-color: #e1e4eb;
 }
 .btn-secondary.focus, .btn-secondary:focus,
 body.escritorio .btn-secondary:hover,
 .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
     color: #3b3e40;
-    background-color: #dcdcdc;
-    border-color: #dcdcdc;
+    background-color: #cdd3e0;
+    border-color: #cdd3e0;
 }
 .btn-secondary.focus, .btn-secondary:focus {
     border-color: #a3a3a3;
@@ -305,10 +305,10 @@ body.escritorio .btn-secondary:hover,
 }
 .custom-file-label::after {
     transition: background-color .2s;
-    background-color: #eff1f5;
+    background-color: #e1e4eb;
 }
 .custom-file:hover .custom-file-label::after {
-    background-color: #dcdcdc;
+    background-color: #cdd3e0;
 }
 .pestanas>.encabezados .btn.activa {
     border-color: #337ab7;

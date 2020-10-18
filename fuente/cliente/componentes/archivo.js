@@ -166,7 +166,6 @@ var componenteArchivo=function() {
             tiempo:0,
             progreso:function(p) {
                 if(t.barra) t.barra.querySelector(".progreso-barra").estilos("width",Math.round(p*100)+"%");
-                if(p==1) finalizarSubida();
             },
             retorno:function(ret) {
                 if(ret) {
@@ -174,6 +173,7 @@ var componenteArchivo=function() {
                         var indice=parseInt(clave.substring(clave.indexOf("-")+1));
                         if(isNaN(indice)) return;
                         t.archivos[indice].archivo=valor;
+                        finalizarSubida();
                     });
                 }
                 t.procesarEvento("listo","listo");

@@ -55,7 +55,7 @@ var componenteCondicional=function() {
         } else {
             this.elemento.removerClase("visible");
         }
-        return this;
+        return this.actualizarComponente();
     };
 
     /**

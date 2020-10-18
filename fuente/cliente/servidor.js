@@ -30,6 +30,7 @@ var servidor=new function() {
     this.establecerPredeterminados=function(opciones) {
         this.predeterminados=Object.assign({
             metodo:null,
+            aplicacion:null,
             controlador:undefined,
             controladorOrigen:null,
             modelo:null, //Por el momento, no se usa
@@ -75,6 +76,7 @@ var servidor=new function() {
      * Invoca un método en un controlador de servidor.
      * @param {Object} [opciones] - Parámetros de la solicitud.
      * @param {Object} [opciones.metodo] - Nombre del método.
+     * @param {Object} [opciones.aplicacion] - Nombre del método del controlador principal de la aplicación (clase pública). Equivalente a establecer metodo con controlador=null.
      * @param {Object} [opciones.foxtrot] - Nombre del método interno de Foxtrot.
      * @param {Object} [opciones.controlador] - Nombre del controlador. Por defecto, el controlador principal actual.
      * @param {Object} [opciones.modulo] - Nombre del Módulo.
@@ -110,9 +112,16 @@ var servidor=new function() {
         var campos={};
         if(opciones.foxtrot) campos.__f=opciones.foxtrot;
         if(opciones.metodo) campos.__m=opciones.metodo;
+        if(opciones.aplicacion) campos.__a=opciones.aplicacion;
         if(opciones.controlador) campos.__c=opciones.controlador;
         if(opciones.componente) campos.__o=opciones.componente;
         if(opciones.modulo) campos.__u=opciones.modulo;
+
+        //Si se especificó un método pero no un controlador, redirigir a la aplicación
+        if(opciones.metodo&&!opciones.aplicacion&&!opciones.controlador&&!opciones.componente&&!opciones.modulo) {
+            campos.__a=campos.__m;
+            delete campos.__m;
+        }
 
         var param;
         if(opciones.formulario) {

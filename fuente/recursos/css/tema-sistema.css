@@ -124,20 +124,25 @@ textarea.form-control {
     cursor: pointer;
 }
 .custom-switch .custom-control-label::before {
-    left: -2.45rem;
-    width: 2rem;
-    height: 1.3rem;
+    left: -3.45rem;
+    width: 2.6rem;
+    height: .99rem;
     border-radius: 3rem;
-    top: .1rem;
-    border-color: #bcc4cc;
+    top: .26rem;
+    border: none;
+    background-color: #ced4da;
 }
 .custom-switch .custom-control-label::after {
-    top: calc(.1rem + 2px);
-    left: calc(-2.45rem + 2px);
-    width: calc(1.3rem - 4px);
-    height: calc(1.3rem - 4px);
-    background-color: #5e6c7b;
+    top: 0;
+    left: -3.45rem;
+    width: calc(1.8rem - 4px);
+    height: calc(1.8rem - 4px);
+    background-color: #ffffff;
     border-radius: 100%;
+    border: 1px solid #ced4da;
+}
+.custom-switch .custom-control-input:checked~.custom-control-label::after {
+    transform: translateX(1.15rem);
 }
 .custom-radio .custom-control-label::after,
 .custom-checkbox .custom-control-label::after {
@@ -319,6 +324,13 @@ body.escritorio .btn-secondary:hover,
 .calendario a.calendario-seleccion {
     background-color: #337ab7;   
     color: #fff !important;
+}
+.custom-control-input:checked~.custom-control-label::before {
+    background-color: #aecbe4;
+}
+.custom-switch .custom-control-input:checked~.custom-control-label::after {
+    border-color: #357ab7;
+    background-color: #347ab7;
 }
 
 /*

@@ -37,10 +37,10 @@ class enrutadorUnaPagina extends enrutador {
         if($this->error) return $this;
 
         //Para toda vista cargar en realidad la vista de inicio
-        if($this->vista) $this->vista=$this->vistaInicio;
-
-        if(!$this->solicitudValida()) $this->error=true;
-
+        if($this->recurso->obtenerTipo()=='vista') {
+            $this->recurso->establecerVista($this->vistaInicio);
+        }
+        
         return $this;
     }
 }

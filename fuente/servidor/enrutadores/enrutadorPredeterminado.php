@@ -18,9 +18,13 @@ class enrutadorPredetermiando extends enrutador {
      */
     public function analizar() {
         //Analisis básico
-        parent::analizar();
-
-        if(!$this->solicitudValida()) $this->error=true;
+        parent::analizar();        
+        
+        //En caso de vistas embebibles, cargar la principal
+        if($this->recurso&&$this->recurso->obtenerTipo()=='vista') {
+            $vista=\foxtrot::obtenerVista($this->recurso->obtenerNombreVista());
+            if($vista->tipo=='embebible') $this->recurso->establecerVista(\foxtrot::aplicacion()->determinarVistaPrincipal());
+        }
 
         return $this;
     }

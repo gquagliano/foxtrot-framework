@@ -19,7 +19,6 @@ class foxtrot {
     protected static $aplicacion=null;
     protected static $jsonAplicacion=null;
     protected static $instanciaAplicacion=null;
-    protected static $instanciaPublicaAplicacion=null;
     protected static $instanciaAplicacionPublico=null;
     protected static $bd=null;
 
@@ -69,6 +68,14 @@ class foxtrot {
     }
 
     /**
+     * Devuelve la instancia de la clase pública de aplicación.
+     * @return \aplicacion
+     */
+    public static function obtenerAplicacionPublica() {
+        return self::$instanciaAplicacionPublico;
+    }
+
+    /**
      * Devuelve el objeto de parámetros de la aplicación ("JSON").
      * @return object
      */
@@ -115,6 +122,7 @@ class foxtrot {
         include(_servidor.'sesion.php');
         include(_servidor.'controlador.php');
         include(_servidor.'aplicacion.php');
+        include(_servidor.'solicitud.php');
         include(_servidor.'enrutador.php');
         include(_servidor.'enrutadorAplicacion.php');
         include(_servidor.'entidad.php');
@@ -239,163 +247,26 @@ class foxtrot {
         $uri=substr($uri,strlen(configuracion::$rutaBase));
 
         self::$enrutador->establecerSolicitud($uri,$_REQUEST);
-
-        /////TODO
-        /////Esto fue desarrollado como prototipo y fue creciendo, hoy se debe reemplazar por un patrón más desacoplado, donde los distintos tipos posible
-        /////de solicitudes estén definidos por clases, que el enrutador sepa implementar según el formato de la URL, y que cada una se encargue de
-        /////ejecutar la solicitud
         
         if(self::$enrutador->obtenerError()) self::error();
 
-        $pagina=self::$enrutador->obtenerPagina();
-        $vista=self::$enrutador->obtenerVista();
-        $ctl=self::$enrutador->obtenerControlador();
-        $metodo=self::$enrutador->obtenerMetodo();
-        $params=self::$enrutador->obtenerParametros();
-        $recurso=self::$enrutador->obtenerRecurso();
-        $foxtrot=self::$enrutador->obtenerFoxtrot();
         $redir=self::$enrutador->obtenerRedireccionamiento();
-        $componente=self::$enrutador->obtenerComponente();
-        $modulo=self::$enrutador->obtenerModulo();
-
-        $html=null;
-        $res=null;
-
         if($redir) {
             header('Location: '.self::obtenerUrl().$redir->ruta,true,$redir->codigo?$redir->codigo:302);
             exit;
         }
 
-        if($foxtrot) {
-            //Acceso HTTP a funciones internas de Foxtrot
-
-            //Por el momento queda harcodeado ya que es muy limitado y, además, necesitamos tener control preciso de esta funcionalidad. Eventualmente puede implementarse
-            //algún mecanismo para abstraerlo adecuadamente.
-
-            header('Content-Type: text/plain; charset=utf-8',true);
-
-            if($foxtrot=='sesion') {
-                sesion::responderSolicitud();
-            } elseif($foxtrot=='obtenerVista') {
-                self::devolverVista($params[0]);
-            } elseif($foxtrot=='noop') {
-                echo 'ok';
-                self::detener();
-            } else {
-                self::error();
-            }
-        }
-
-        if($pagina) {
-            //Cargar una página independiente
-
-            header('Content-Type: text/html; charset=utf-8',true);
-
-            //TODO Validación configurable de páginas disponibles públicamente.
-            $rutas=[
-                'error'=>'error.php',
-                'index-cordova'=>'index-cordova.html'
-            ];
-            if(!array_key_exists($pagina,$rutas)) self::error();
-
-            include($rutas[$pagina]);
-
-            exit;
-        }
-
+        $recurso=self::$enrutador->obtenerRecurso();
         if($recurso) {
-            //Enviar archivos de la aplicación
-            $dir=realpath(_raizAplicacion);
-            $ruta=realpath($dir.'/'.$recurso);
-            if(substr($ruta,0,strlen($dir))!=$dir||!file_exists($ruta)) self::error();
+            $recurso->ejecutar();
 
-            $mime=\mime($ruta);
-            header('Content-Type: '.$mime.'; charset=utf-8',true);       
-            
-            $f=fopen($ruta,'r');
-            fpassthru($f);
-            fclose($f);
-            exit;
-        }
+            //Volver a verificar errores
+            if(self::$enrutador->obtenerError()) self::error();
 
-        if($vista) {
-            //Devuelve el contenido html de la vista
-            
-            header('Content-Type: text/html; charset=utf-8',true);
-
-            //Validar que el archivo solicitado exista y no salga del directorio de cliente
-            //TODO Verificar tipo de vista en aplicacion.json
-            $dir=realpath(_vistasAplicacion);
-            $rutaPhp=realpath($dir.'/'.$vista.'.php');
-            $rutaHtml=realpath($dir.'/'.$vista.'.html');
-            if($rutaPhp) {
-                if(substr($rutaPhp,0,strlen($dir))!=$dir) self::error();
-                ob_start();
-                include($rutaPhp);
-                $html=ob_get_clean();
-            } elseif($rutaHtml) {
-                if(substr($rutaHtml,0,strlen($dir))!=$dir) self::error();
-                $html=file_get_contents($rutaHtml);
-            } else {
-                self::error();
-            }
-        }
-
-        if($ctl) {
-            //Los controladores que presenten /, se buscan en el subdirectorio
-            //Esto debería ser seguro ya que no se admiten caracteres que puedan hacer que salga del directorio controladores
-
-            if(preg_match('/[^a-z0-9_\/-]/i',$ctl)) self::error();
-
-            $ruta=_controladoresServidorAplicacion.$ctl.'.pub.php';
-            if(!file_exists($ruta)) self::error();
-
-            include($ruta);
-
-            $espacio=self::prepararNombreEspacio($ctl);
-            $nombre=self::prepararNombreClase($ctl);
-            $clase='\\aplicaciones\\'._apl.$espacio.'\\publico\\'.$nombre;
-
-            $obj=new $clase;       
-        } elseif(self::$instanciaAplicacionPublico) {
-            //Si no se definió un controlador, notificaremos la solicitud a la clase pública de la aplicación
-            $obj=self::$instanciaAplicacionPublico;
-        }
-
-        if($componente) {
-            if(preg_match('/[^a-z0-9_-]/i',$componente)) self::error();
-
-            $ruta=_componentes.$componente.'.pub.php';
-            if(!file_exists($ruta)) self::error();
-
-            include($ruta);
-            $cls='\\componentes\\publico\\'.$componente;
-            $obj=new $cls;
-        }  
-
-        if($modulo) {
-            if(preg_match('/[^a-z0-9_-]/i',$modulo)) self::error();
-            $obj=self::obtenerInstanciaModulo($modulo,true);
-            if($obj===null) self::error();
-        }  
-
-        if($metodo) {
-            if(preg_match('/[^a-z0-9_]/i',$metodo)) self::error();
-
-            if(!$obj||!method_exists($obj,$metodo)) self::error();
-            $res=call_user_func_array([$obj,$metodo],$params);
-
-            header('Content-Type: text/plain; charset=utf-8',true);
-            cliente::responder($res);   
-        }
-
-        if($html!==null) {
-            //Pasaremos el html por el método html() del controlador para que pueda hacer algún preproceso si lo desea
-            $html=$obj->html($html);
-            echo $html;
-        }
-        
-        exit;     
+            self::detener(); 
+        } else {
+            self::error();
+        }        
     }
 
     public static function detener() {

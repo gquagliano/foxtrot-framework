@@ -12,25 +12,37 @@ defined('_inc') or exit;
  * Clase base de los enrutadores.
  */
 class enrutador {
+    protected $tipos;
     protected $uri=null;
-    protected $params=null;
-    protected $pagina=null;
-    protected $vista=null;
-    protected $error=false;
-    protected $controlador=null;
-    protected $metodo=null;
+    protected $solicitud=null;
     protected $parametros=null;
-    protected $recurso=null;
-    protected $foxtrot=null;
+    protected $error=false;
     protected $redireccionar=null;
     protected $codigoRedireccion=null;
-    protected $componente=null;
-    protected $modulo=null;
+    protected $recurso=null;
+
+    function __construct() {
+        //Importar los tipos de solicitud
+        $this->tipos=[
+            'foxtrot'=>null,
+            'recurso'=>null,
+            'pagina'=>null,
+            'controlador'=>null,
+            'aplicacion'=>null,
+            'componente'=>null,
+            'modulo'=>null,
+            'vista'=>null
+        ];
+        foreach($this->tipos as $tipo=>$v) {
+            $this->tipos[$tipo]='\\solicitud\\tipos\\'.$tipo;
+            include_once(_servidor.'enrutadores/tipos/'.$tipo.'.php');
+        }
+    }
 
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
         if(is_array($params)) $params=(object)$params;        
-        $this->params=$params;
+        $this->solicitud=$params;
         $this->analizar();
         return $this;
     }
@@ -62,7 +74,7 @@ class enrutador {
         //No hace falta validar estos parámetros, ya que Foxtrot lo hará a continuación
 
         //Parámetros
-        $this->parametros=json_decode($this->params->__p);
+        $this->parametros=json_decode($this->solicitud->__p);
 
         //Remover los parámetros GET de la URL
         $p=strpos($this->url,'?');
@@ -71,43 +83,16 @@ class enrutador {
         //Remover barra inicial
         if(substr($this->url,0,1)=='/') $this->url=substr($this->url,1);
 
-        //Página de error
-        if(preg_match('#^error/#i',$this->url)) {
-            $this->pagina='error';
-            return $this;
-        }
-        
-        //Acceso a funciones internas de Foxtrot
-        if($this->params->__f) {
-            $this->foxtrot=$this->params->__f;
-            return $this;
-        }
-
-        //Acceso a componentes
-        $this->componente=$this->params->__o;
-
-        //Acceso a módulos
-        $this->modulo=$this->params->__u;
-
-        //Acceso a controladores
-        $this->controlador=$this->params->__c;
-
-        //Método de controlador/commponente
-        $this->metodo=$this->params->__m;
-
-        if(!$this->params->__c&&!$this->params->__o&&!$this->params->__m) {
-            if($this->url=='') {
-                $this->vista='inicio';
-            } elseif(preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias)) {
-                $this->recurso=$coincidencias[1];
-            } elseif(preg_match('#^([A-Za-z0-9_/-]+)#',$this->url)) {
-                $this->vista=trim($this->url,'/');
+        //Buscar a qué tipo corresponde la solicitud
+        foreach($this->tipos as $tipo) {
+            if(call_user_func($tipo.'::es',$this->url,$this->solicitud)) {
+                //Si la solicitud corresponde a este tipo, generar la instancia
+                $this->recurso=new $tipo($this,$this->url,$this->solicitud);
+                return $this;
             }
-
-            $this->validarRecurso();
-
-            if($this->vista||$this->recurso) return $this;
         }
+
+        $this->error=true;
 
         return $this;
     }
@@ -117,53 +102,19 @@ class enrutador {
      * @return bool
      */
     protected function solicitudValida() {
-        return !$this->error&&($this->pagina||$this->vista||$this->controlador||$this->metodo||$this->recurso||$this->foxtrot||$this->redireccionar);
+        return !$this->error&&($this->recurso||$this->redireccionar);
     }
 
-    /**
-     * Valida la ruta asignada como recurso.
-     */
-    protected function validarRecurso() {
-        if(!$this->recurso) return;
-
-        //Remover versión
-        $this->recurso=preg_replace('/-[0-9]+\.(css|js)$/','',$this->recurso);
+    public function obtenerParametros() {
+        return $this->parametros;
     }
 
     public function obtenerError() {
         return $this->error;
     }
 
-    public function obtenerControlador() {
-        return $this->controlador;
-    }
-
-    public function obtenerMetodo() {
-        return $this->metodo;
-    }
-
-    public function obtenerParametros() {
-        return is_array($this->parametros)?$this->parametros:[];
-    }
-
-    public function obtenerVista() {
-        return $this->vista;
-    }
-
-    public function obtenerPagina() {
-        return $this->pagina;
-    }
-
     public function obtenerRecurso() {
         return $this->recurso;
-    }
-
-    public function obtenerFoxtrot() {
-        return $this->foxtrot;
-    }
-
-    public function obtenerModulo() {
-        return $this->modulo;
     }
 
     public function obtenerRedireccionamiento() {
@@ -173,8 +124,25 @@ class enrutador {
             'codigo'=>$this->codigoRedireccion
         ];
     }
+    
+    /**
+     * Establece un redireccionamiento. Únicamente válido durante la etapa de análisis.
+     * @param string $destino
+     * @param string $codigo
+     * @return \enrutador
+     */
+    public function establecerRedireccionamiento($destino,$codigo='301') {
+        $this->redireccionar=$destino;
+        $this->codigoRedireccion=$codigo;
+        return $this;
+    }
 
-    public function obtenerComponente() {
-        return $this->componente;
+    /**
+     * Establece que la solicitud es errónea. Únicamente válido durante la etapa de análisis.
+     * @return \enrutador
+     */
+    public function establecerError() {
+        $this->error=true;
+        return $this;
     }
 }

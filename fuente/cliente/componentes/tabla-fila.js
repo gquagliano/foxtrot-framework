@@ -73,7 +73,7 @@ var componenteFilaTabla=function() {
             //Sin manejador, buscar un botón predeterminado
             var btn=this.elemento.querySelector(".predeterminado");
             if(btn) {
-                comp.ejecutarEvento("click");
+                btn.ejecutarEvento("click");
                 return true;
             }
         }

@@ -9,6 +9,9 @@ RewriteEngine On
 
 RewriteRule favicon.ico recursos/img/favicon.png [L,R=301]
 
+## Rutas con código de versión
+RewriteRule (cliente|recursos)(/.+?)?/([a-z-]+)-[0-9]+\.([a-z]+) $1$2/$3.$4 [L]
+
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L,QSA]

@@ -1461,9 +1461,9 @@ var ui=new function() {
         };
 
         //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
-        estilos=buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+".css");
+        estilos=buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+"(-.+?)?\.css");
         //Si no se encuentra, buscar hoja de estilos combinada (aplicacion.css o cordova.css)
-        if(!estilos) estilos=buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+".css");
+        if(!estilos) estilos=buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+"(-.+?)?\.css");
 
         if(modoEdicion) {
             //En modo de edición, procesar el JSON y pasar el control al editor

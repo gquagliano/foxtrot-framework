@@ -25,7 +25,7 @@ class recurso extends \solicitud {
         $recurso=$coincidencias[1];
 
         //Remover versión
-        $recurso=preg_replace('/-[0-9]+\.(css|js)$/','',$recurso);
+        $recurso=preg_replace('/-[0-9]+\.(css|js)$/','.$1',$recurso);
 
         $dir=realpath(_raizAplicacion);
         $ruta=realpath($dir.'/'.$recurso);

@@ -710,14 +710,12 @@
                 predeterminado:true
             },
             {
-                etiqueta:etiquetaNo,
-                clase:"btn-secondary"
+                etiqueta:etiquetaNo
             }
         ];
         
         if(cancelar) botones.push({
-                etiqueta:etiquetaCancelar,
-                clase:"btn-secondary"
+                etiqueta:etiquetaCancelar
             });
 
         ui.abrirDialogo(ui.construirDialogo({

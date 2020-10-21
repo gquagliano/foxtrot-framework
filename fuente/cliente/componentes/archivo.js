@@ -172,11 +172,24 @@ var componenteArchivo=function() {
                     ret.porCada(function(clave,valor) {
                         var indice=parseInt(clave.substring(clave.indexOf("-")+1));
                         if(isNaN(indice)) return;
-                        t.archivos[indice].archivo=valor;
-                        finalizarSubida();
+
+                        if(typeof valor!=="object") {
+                            ui.alerta("Falló la carga de los archivos.");
+                        } else if(typeof valor.error==="undefined") {
+                            t.archivos[indice].archivo=valor.nombre;
+                        } else if(valor.error==1) {
+                            ui.alerta("El archivo "+valor.origen+" es demasiado grande.");
+                        } else {
+                            ui.alerta("Falló la carga del archivo "+valor.origen+".");
+                        }
                     });
                 }
+                finalizarSubida();
                 t.procesarEvento("listo","listo");
+            },
+            error:function() {
+                ui.alerta("Falló la carga de los archivos.");
+                finalizarSubida();
             }
         });
 

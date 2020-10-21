@@ -18,10 +18,18 @@ class archivo extends \componente {
         $archivos=[];
 
         foreach($_FILES as $clave=>$archivo) {
-            if(!is_uploaded_file($archivo['tmp_name'])) continue;
-            $temp=tempnam(_temporalesPrivados,'a');
-            move_uploaded_file($archivo['tmp_name'],$temp);
-            $archivos[$clave]=basename($temp);
+            $resultado=(object)['origen'=>$archivo['name']];
+            if($archivo['error']==UPLOAD_ERR_INI_SIZE) {
+                $resultado->error=1;
+            } else {
+                $nombre=\almacenamiento::subirTemporal($archivo);
+                if($nombre) {
+                    $resultado->nombre=$nombre;
+                } else {
+                    $resultado->error=2;
+                }
+            }
+            $archivos[$clave]=$resultado;
         }
 
         return $archivos;

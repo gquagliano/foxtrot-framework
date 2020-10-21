@@ -360,7 +360,25 @@ class foxtrot {
         if(!file_exists($ruta)) return null;
         include_once($ruta);
         
-        $clase='\\modulos\\'.$nombre.($publico?'\\publico':'').'\\'.$nombre;
+        $clase='\\modulos'.($publico?'\\publico':'').'\\'.$nombre;
+        if(!class_exists($clase)) return null;        
+        return new $clase;
+    }
+
+    ////Componentes
+
+    /**
+     * Crea y deuvelve una instancia de un componente dado su nombre.
+     * @var string $nombre Nombre del componente a crear.
+     * @var bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
+     * @return \modulo
+     */
+    public static function obtenerInstanciaComponente($nombre,$publico=false) {
+        $ruta=_componentes.$nombre.($publico?'.pub':'').'.php';
+        if(!file_exists($ruta)) return null;
+        include_once($ruta);
+        
+        $clase='\\componentes'.($publico?'\\publico':'').'\\'.$nombre;
         if(!class_exists($clase)) return null;        
         return new $clase;
     }

@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-namespace modulos\recaptcha;
+namespace modulos;
 
 defined('_inc') or exit;
 

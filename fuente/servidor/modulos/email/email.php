@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-namespace modulos\email;
+namespace modulos;
 
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;

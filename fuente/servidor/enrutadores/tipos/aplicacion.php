@@ -19,14 +19,9 @@ class aplicacion extends \solicitud {
      * @return \solicitud
      */
     public function ejecutar() {
-        $metodo=$this->parametros->__a;
-
+        $metodo=\util::limpiarValor($this->parametros->__a);
         $obj=\foxtrot::obtenerAplicacionPublica();
-        
-        $params=$this->enrutador->obtenerParametros();
-
-        $this->ejecutarMetodo($obj,$metodo,$params);        
-
+        $this->ejecutarMetodo($obj,$metodo);
         return $this;
     }
 

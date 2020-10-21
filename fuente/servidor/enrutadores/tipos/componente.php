@@ -19,21 +19,18 @@ class componente extends \solicitud {
      * @return \solicitud
      */
     public function ejecutar() {
-        $componente=$this->parametros->__o;
-
-        if(preg_match('/[^a-z0-9_-]/i',$componente)) return $this->error();
+        $componente=\util::limpiarValor($this->parametros->__o);
 
         $ruta=_componentes.$componente.'.pub.php';
-        if(!file_exists($ruta))  return $this->error();
+        if(!file_exists($ruta)) return $this->error();
+
+        $partes=\foxtrot::prepararNombreClase($componente);
 
         include_once($ruta);
-        $cls='\\componentes\\publico\\'.$componente;
+        $cls='\\componentes\\publico'.$partes->espacio.'\\'.$partes->nombre;
         $obj=new $cls;
 
-        $metodo=$this->parametros->__m;
-        $params=$this->enrutador->obtenerParametros();
-
-        $this->ejecutarMetodo($obj,$metodo,$params);
+        $this->ejecutarMetodo($obj);
 
         return $this;
     }

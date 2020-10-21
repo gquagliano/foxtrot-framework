@@ -68,21 +68,11 @@ class enrutador {
      * @return \enrutador
      */
     public function analizar() {
-        //Analizaremos los parámetros internos de Foxtrot y acceso a archivos públicos. La clase concreta debería completar el análisis, o puede sobreescribir
+        //Analizaremos los parámetros internos de Foxtrot y acceso a archivos públicos. La clase concreta debería completar el análisis o bien sobreescribir
         //por completo este método.
 
-        //No hace falta validar estos parámetros, ya que Foxtrot lo hará a continuación
-
-        //Parámetros
         $this->parametros=json_decode($this->solicitud->__p);
-
-        //Remover los parámetros GET de la URL
-        $p=strpos($this->url,'?');
-        if($p!==false) $this->url=substr($this->url,0,$p);
-
-        //Remover barra inicial
-        if(substr($this->url,0,1)=='/') $this->url=substr($this->url,1);
-
+        
         //Buscar a qué tipo corresponde la solicitud
         foreach($this->tipos as $tipo) {
             if(call_user_func($tipo.'::es',$this->url,$this->solicitud)) {

@@ -25,13 +25,14 @@ class pagina extends \solicitud {
 
         //TODO Validación configurable de páginas disponibles públicamente.
 
-        preg_match('#^([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia);
+        if(!preg_match('#^([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia)) //La URL ya fue validada y sanitizada por foxtrot
+            return $this->error();                                         //No admitimos barras ni puntos que representen riesgo de seleccionar un archivo distinto
 
         $nombre=_raiz.$coincidencia[1];
 
         //Excluir archivos
-        //(dotfiles son excluidos por la expresión regular en es()).
-        if(in_array($nombre,['config'])) return $this->error();
+        //(dotfiles ya son excluidos por la expresión regular en es()).
+        if(in_array($nombre,['config','index'])) return $this->error();
 
         if(file_exists($nombre.'.html')) {
             $nombre.='.html';
@@ -50,6 +51,8 @@ class pagina extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
+        //$url se asume validado y sanitizado por el enrutador
+
         //Página de error
         if(preg_match('#^error/#i',$url)) return true;
 

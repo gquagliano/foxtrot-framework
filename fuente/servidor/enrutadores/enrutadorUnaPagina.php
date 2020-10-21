@@ -38,7 +38,9 @@ class enrutadorUnaPagina extends enrutador {
 
         //Para toda vista cargar en realidad la vista de inicio
         if($this->recurso->obtenerTipo()=='vista') {
-            $this->recurso->establecerVista($this->vistaInicio);
+            /** @var \solicitud\tipos\vista $tipo */
+            $tipo=$this->recurso;
+            $tipo->establecerVista($this->vistaInicio);
         }
         
         return $this;

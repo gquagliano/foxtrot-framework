@@ -19,27 +19,22 @@ class controlador extends \solicitud {
      * @return \solicitud
      */
     public function ejecutar() {
-        $controlador=$this->parametros->__c;
+        $controlador=\util::limpiarValor($this->parametros->__c,true);
+
+        $partes=\foxtrot::prepararNombreClase($controlador);
 
         //Los controladores que presenten /, se buscan en el subdirectorio
-        //Esto debería ser seguro ya que no se admiten caracteres que puedan hacer que salga del directorio controladores
-        if(preg_match('/[^a-z0-9_\/-]/i',$controlador))  return $this->error();
-
         $ruta=_controladoresServidorAplicacion.$controlador.'.pub.php';
         if(!file_exists($ruta)) return $this->error();
 
         include_once($ruta);
 
-        $espacio=\foxtrot::prepararNombreEspacio($controlador);
-        $nombre=\foxtrot::prepararNombreClase($controlador);
-        $clase='\\aplicaciones\\'._apl.$espacio.'\\publico\\'.$nombre;
+        $clase='\\aplicaciones\\'._apl.$partes->espacio.'\\publico\\'.$partes->nombre;
+        if(!class_exists($clase)) return $this->error();
 
         $obj=new $clase;
 
-        $metodo=$this->parametros->__m;
-        $params=$this->enrutador->obtenerParametros();
-
-        $this->ejecutarMetodo($obj,$metodo,$params);        
+        $this->ejecutarMetodo($obj);        
 
         return $this;
     }

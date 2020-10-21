@@ -31,7 +31,8 @@ class solicitud {
      * @return string
      */
     public function obtenerTipo() {
-        return basename(static::class);
+        $partes=\util::separarRuta(static::class);
+        return $partes->nombre;
     }
 
     /**
@@ -43,14 +44,17 @@ class solicitud {
     }
 
     /**
-     * Intenta ejecutar un método en el objeto especificado.
+     * Intenta ejecutar el método en el objeto especificado.
      * @var object $obj Instancia.
-     * @var string $metodo Nombre del método.
-     * @var array $parametros Parámetros.
+     * @var string $metodo Nombre del método. Si es nulo, utilizará el parámetro __m de la solicitud.
+     * @var array $parametros Parámetros. Si es nulo, utilizará los parámetros de la instancia.
      * @return \solicitud
      */
-    protected function ejecutarMetodo($obj,$metodo,$params=[]) {
-        if(preg_match('/[^a-z0-9_]/i',$metodo)||!$obj||!method_exists($obj,$metodo)) $this->enrutador->establecerError();
+    protected function ejecutarMetodo($obj,$metodo=null,$params=null) {
+        if($metodo===null) $metodo=\foxtrot::prepararNombreMetodo($this->parametros->__m);
+        if($params===null) $params=$this->enrutador->obtenerParametros();
+
+        if(!$metodo||!$obj||!method_exists($obj,$metodo)) $this->enrutador->establecerError();
         if(!is_array($params)) $params=[];
 
         $res=call_user_func_array([$obj,$metodo],$params);

@@ -335,16 +335,15 @@ class abmc extends asistente {
             if(preg_match('/cadena/',$campo->tipo)) $sql.=' or '.$this->plural.'.`'.$nombre.'` like @filtroParcial';
         }
 
-        $espacio=\foxtrot::prepararNombreEspacio($this->nombreControlador);
-        $nombre=\foxtrot::prepararNombreClase($this->nombreControlador);
+        $partes=\foxtrot::prepararNombreClase($this->nombreControlador);
 
         $php=$this->reemplazarVariables($php,[
             'claseModelo'=>$this->claseModelo,
             'aliasModelo'=>'modelo'.ucfirst(basename($this->claseModelo)),
             'requeridos'=>implode(',',$requeridos),
             'sqlFiltros'=>$sql,
-            'espacio'=>$espacio,
-            'nombre'=>$nombre
+            'espacio'=>$partes->espacio,
+            'nombre'=>$partes->nombre
         ]);
 
         file_put_contents($this->rutaPhp,$php);

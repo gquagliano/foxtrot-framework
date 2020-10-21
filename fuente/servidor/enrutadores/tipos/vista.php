@@ -22,7 +22,8 @@ class vista extends \solicitud {
      */
     public function obtenerNombreVista() {
         if($this->nombre) return $this->nombre;
-
+ 
+       //La URL ya fue validada y sanitizada por foxtrot
         if($this->url=='') {
             $vista='inicio';
         } else {
@@ -84,6 +85,7 @@ class vista extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return $url==''||preg_match('#^([A-Za-z0-9_/-]+)#',$url);
+        //$url se asume validado y sanitizado por el enrutador
+        return true;
     }
 }

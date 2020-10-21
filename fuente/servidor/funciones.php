@@ -6,6 +6,8 @@
  * @version 1.0
  */
 
+//TODO Mover a clases de utilidades
+
 defined('_inc') or exit;
 
 /**
@@ -106,3 +108,4 @@ function minutosAHoras($min) {
     $minutos=str_pad(round(abs($min)-abs($horas*60)),2,'0',STR_PAD_LEFT);
     return $horas.':'.$minutos;
 }
+

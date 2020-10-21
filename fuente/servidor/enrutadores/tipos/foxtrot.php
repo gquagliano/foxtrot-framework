@@ -26,13 +26,13 @@ class foxtrot extends \solicitud {
 
         header('Content-Type: text/plain; charset=utf-8',true);
 
-        $operacion=$this->parametros->__f;
+        $operacion=\util::limpiarValor($this->parametros->__f);
 
-        if($operacion=='sesion') {
+        if($operacion==='sesion') {
             \sesion::responderSolicitud();
-        } elseif($operacion=='obtenerVista') {
+        } elseif($operacion==='obtenerVista') {
             \foxtrot::devolverVista($this->enrutador->obtenerParametros()[0]);
-        } elseif($operacion=='noop') {
+        } elseif($operacion==='noop') {
             echo 'ok';
             \foxtrot::detener();
         } else {
@@ -50,6 +50,7 @@ class foxtrot extends \solicitud {
      */
     public static function es($url,$parametros) {
         $valoresPosibles=['sesion','obtenerVista','noop'];
-        return $parametros->__f&&in_array($parametros->__f,$valoresPosibles);
+        $valor=\util::limpiarValor($parametros->__f);
+        return $valor&&in_array($valor,$valoresPosibles);
     }
 }

@@ -21,7 +21,7 @@ class recurso extends \solicitud {
     public function ejecutar() {
         //Enviar archivos de recursoss de la aplicación
 
-        preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias);
+        preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias); //La URL ya fue validada y sanitizada por foxtrot
         $recurso=$coincidencias[1];
 
         //Remover versión
@@ -29,7 +29,7 @@ class recurso extends \solicitud {
 
         $dir=realpath(_raizAplicacion);
         $ruta=realpath($dir.'/'.$recurso);
-        if(substr($ruta,0,strlen($dir))!=$dir||!file_exists($ruta)) return $this->error();
+        if(substr($ruta,0,strlen($dir))!=$dir||!file_exists($ruta)||is_dir($ruta)) return $this->error();
 
         $mime=\mime($ruta);
         header('Content-Type: '.$mime.'; charset=utf-8',true);       
@@ -48,6 +48,7 @@ class recurso extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
+        //$url se asume validado y sanitizado por el enrutador
         return preg_match('#^aplicacion/(.+)#',$url);
     }
 }

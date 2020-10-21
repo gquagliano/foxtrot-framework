@@ -117,6 +117,7 @@ class foxtrot {
 
     protected static function incluirArchivos() {
         include(_servidor.'funciones.php');
+        include(_servidor.'util.php');
         include(_servidor.'configuracion.php');
         include(_servidor.'cliente.php');
         include(_servidor.'sesion.php');
@@ -146,7 +147,7 @@ class foxtrot {
         if(!$aplicacion) {
             //Es posible saltearse el enrutador de aplicación con el parámetro __apl
             if($_REQUEST['__apl']) {
-                $aplicacion=preg_replace('/[^a-z0-9-]+/i','',$_REQUEST['__apl']);
+                $aplicacion=util::limpiarValor($_REQUEST['__apl']);
                 self::$aplicacion=$aplicacion;
             } else {
                 self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
@@ -242,10 +243,7 @@ class foxtrot {
     }
 
     public static function ejecutar() {
-        $uri=$_SERVER['REQUEST_URI'];
-        //Remover la ruta base al sistema
-        $uri=substr($uri,strlen(configuracion::$rutaBase));
-
+        $uri=self::prepararUri($_SERVER['REQUEST_URI']);
         self::$enrutador->establecerSolicitud($uri,$_REQUEST);
         
         if(self::$enrutador->obtenerError()) self::error();
@@ -276,36 +274,53 @@ class foxtrot {
     ////Seguridad y métodos útiles
 
     /**
-     * Valida y corrije un nombre de clase. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
-     * @var string $nombre Nombre a procesar.
+     * Limpia una URI.
+     * @var string $uri Ruta a procesar.
      * @return string
      */
+    public static function prepararUri($uri) {
+        $uri=util::limpiarValor($uri,true,true,'?');
+
+        //Remover base
+        $uri=substr($uri,strlen(\configuracion::$rutaBase));
+
+        //Separar la URL
+        $uri=parse_url($uri)['path'];
+
+        //Limpiar espacios y barra inicial y final
+        $uri=trim(trim($uri),'/');
+
+        return $uri;
+    }    
+
+    /**
+     * Valida y corrije un nombre de clase, devolviendo un objeto con las propiedades 'nombre' y 'espacio' con el nombre de la clase y el espacio
+     * de nombres relativo respectivamente. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo:
+     * espacio/consulta-producto -> [nombre=>consultaProducto,espacio=>\espacio).
+     * @var string $nombre Nombre a procesar.
+     * @return object
+     */
     public static function prepararNombreClase($nombre) {
-        if(strpos($nombre,'/')!==false) $nombre=basename($nombre);
+        $nombre=\util::limpiarValor($nombre,true);
+        $nombre=trim($nombre,'/');
+        $partes=\util::separarRuta($nombre);
 
-        if(strpos($nombre,'-')>0) {
-            $partes=explode('-',$nombre);
-            $nombre=$partes[0];
-            for($i=1;$i<count($partes);$i++) $nombre.=ucfirst($partes[$i]);
-        }
+        $espacio=trim($partes->ruta,'/');
+        if($espacio!='') $espacio='\\'.str_replace('/','\\',$espacio);
 
-        $nombre=str_replace('/','\\',$nombre);
-        $nombre=preg_replace('/[^a-z0-9\\\\_]/i','',$nombre);
-        
-        return $nombre;
+        return (object)[
+            'nombre'=>$partes->nombre,
+            'espacio'=>$espacio
+        ];
     }
 
     /**
-     * Extrae, valida y corrije el espacio de nombres de una clase dado su nombre, sin incluir \aplicaciones\aplicacion. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
+     * Valida y corrije un nombre de método. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
      * @var string $nombre Nombre a procesar.
      * @return string
      */
-    public static function prepararNombreEspacio($nombre) {
-        if(strpos($nombre,'/')===false) return '';
-        
-        $partes=explode('/',dirname($nombre));
-        foreach($partes as $i=>$parte) $partes[$i]=self::prepararNombreClase($parte);
-        return '\\'.implode('\\',$partes);
+    public static function prepararNombreMetodo($nombre) {
+        return \util::limpiarValor($nombre);
     }
 
     ////Base de datos y modelo de datos

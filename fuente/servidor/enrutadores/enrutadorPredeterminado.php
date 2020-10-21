@@ -22,8 +22,11 @@ class enrutadorPredetermiando extends enrutador {
         
         //En caso de vistas embebibles, cargar la principal
         if($this->recurso&&$this->recurso->obtenerTipo()=='vista') {
-            $vista=\foxtrot::obtenerVista($this->recurso->obtenerNombreVista());
-            if($vista->tipo=='embebible') $this->recurso->establecerVista(\foxtrot::aplicacion()->determinarVistaPrincipal());
+            /** @var \solicitud\tipos\vista $tipo */
+            $tipo=$this->recurso;
+
+            $vista=\foxtrot::obtenerVista($tipo->obtenerNombreVista());
+            if($vista->tipo=='embebible') $tipo->establecerVista(\foxtrot::aplicacion()->determinarVistaPrincipal());
         }
 
         return $this;

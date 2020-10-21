@@ -19,17 +19,12 @@ class modulo extends \solicitud {
      * @return \solicitud
      */
     public function ejecutar() {
-        $modulo=$this->parametros->__u;
+        $modulo=\util::limpiarValor($this->parametros->__u);
 
-        if(preg_match('/[^a-z0-9_-]/i',$modulo)) return $this->error();
-            
         $obj=\foxtrot::obtenerInstanciaModulo($modulo,true);
         if($obj===null) return $this->error();
 
-        $metodo=$this->parametros->__m;
-        $params=$this->enrutador->obtenerParametros();
-
-        $this->ejecutarMetodo($obj,$metodo,$params);
+        $this->ejecutarMetodo($obj);
 
         return $this;
     }

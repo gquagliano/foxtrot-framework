@@ -62,4 +62,13 @@ class util {
         foreach($partes as $parte) $resultado.=ucfirst($parte);
         return $resultado;
     }
+
+    /**
+     * Genera y devuelve una cadena alfanumerica al azar.
+     * @var int $longitud Longitud.
+     * @return string
+     */
+    public static function cadenaAzar($longitud=10) {
+        return substr(random_bytes($longitud),0,$longitud);
+    }
 }

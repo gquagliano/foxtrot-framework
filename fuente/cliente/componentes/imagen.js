@@ -11,6 +11,8 @@
  * @class Componente concreto Imagen.
  */
 var componenteImagen=function() {
+    var t=this;
+
     this.componente="imagen";
 
     this.img=null;
@@ -69,7 +71,34 @@ var componenteImagen=function() {
 
         this.img=this.elemento.querySelector("img");
 
+        //Recuperar origen (no se guarda en el JSON)
+        this.recuperarPropiedades();
+
         this.inicializarComponente();
+        return this;
+    };
+
+    /**
+     * Recupera desde el DOM los valores de las propiedades.
+     * @returns {Componente}
+     */
+    this.recuperarPropiedades=function() {
+        var tamanos=ui.obtenerTamanosPx();
+
+        //Origen
+        var src=this.img.atributo("src");
+        if(src&&src.substr(0,5)!="data:") this.valoresPropiedades.origen={g:src}; //excluir data:...
+        this.elemento.querySelectorAll("source").porCada(function(i,elem) {
+            var media=elem.atributo("media").match(/:([0-9]+)px/);
+            if(media) {
+                var px=media[1];
+                if(tamanos.hasOwnProperty(px)) {
+                    var src=elem.atributo("srcset");
+                    if(src&&src.substr(0,5)!="data:") t.valoresPropiedades.origen[tamanos[px]]=src; //excluir data:...
+                }
+            }
+        });
+
         return this;
     };
     
@@ -114,12 +143,25 @@ var componenteImagen=function() {
                     });
                 }
             }
+
+            return this;
         } else if(propiedad=="alt") {
             this.img.atributo("alt",valor);
+            return this;
         }
         
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
         return this;
+    };    
+
+    /**
+     * Devuelve un objeto con todos los parámetros de configuración.
+     */
+    this.obtenerPropiedades=function() {
+        //Excluir el origen para evitar que se guarde dos veces el contenido de las imágenes, una en el HTML y de nuevo en el JSON
+        var obj=this.valoresPropiedades.clonar();
+        delete obj.origen;
+        return obj;
     };
 
     /**

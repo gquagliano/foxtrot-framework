@@ -222,6 +222,7 @@ function compilarFoxtrotJs($destino,$omitirClosure,$omitirModulos=false) {
     $archivos=[
         _fuente.'cliente/util.js',
         _fuente.'cliente/dom.js',
+        _fuente.'cliente/ui.js',
         _fuente.'cliente/arrastra.js',
         _fuente.'cliente/editable.js',
         _fuente.'cliente/servidor.js',
@@ -232,7 +233,6 @@ function compilarFoxtrotJs($destino,$omitirClosure,$omitirModulos=false) {
         _fuente.'cliente/controlador.js',
         _fuente.'cliente/modulo.js',
         _fuente.'cliente/enrutador.js',
-        _fuente.'cliente/ui.js',
         _fuente.'cliente/ui.animaciones.js',
         _fuente.'cliente/ui.menu.js',
         _fuente.'cliente/ui.dialogos.js',

@@ -143,7 +143,7 @@
 
                 //Eventos
 
-                a.evento("click",function(item) {
+                a.evento("mouseup",function(item) {
                     return function(ev) {
                         click(item,ev);
                     };

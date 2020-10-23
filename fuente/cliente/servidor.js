@@ -20,7 +20,6 @@ var servidor=new function() {
     this.ajax=[];
     this.url="";
     this.predeterminados={};
-    this.temporizador=null;
 
     /**
      * Establece las opciones predeterminadas.
@@ -183,22 +182,6 @@ var servidor=new function() {
     };
 
     /**
-     * Inicia solicitudes periódicas al servidor para mantener la sesión. Nota: Actualmente este comportamiento no puede deshabilitarse; la duración
-     * de la sesión debería gestionarse del lado del servidor.
-     * @returns {Servidor}
-     */
-    this.mantenerSesion=function() {
-        clearInterval(this.temporizador); //En caso de que sea invocado por segunda vez
-        this.temporizador=setInterval(function() {
-            servidor.invocarMetodo({
-                foxtrot:"noop",
-                precarga:false
-            });
-        },60000);
-        return this;
-    };
-
-    /**
      * Evalúa y ejecuta la respuesta recibida desde el servidor.
      * @param {string} resp - Respuesta recibida.
      * @param {Object} opciones - Opciones establecidas al iniciar la solicitud.
@@ -333,8 +316,6 @@ var servidor=new function() {
     };
 
     this.establecerPredeterminados({});
-
-    this.mantenerSesion();
 }();
 
 window["servidor"]=servidor;

@@ -407,6 +407,8 @@ var componente=new function() {
      * Devuelve un objeto con todos los parámetros de configuración.
      */
     this.obtenerPropiedades=function() {
+        //TODO Excluir del JSON las propiedades que se puedan obtener desde el DOM (ejemplo origen en imagen)
+
         return this.valoresPropiedades;
     };
 

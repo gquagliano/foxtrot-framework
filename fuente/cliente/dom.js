@@ -1348,6 +1348,19 @@
     };
 
     /**
+     * Genera y devuelve un nuevo objeto intercambiando las claves por los valores.
+     * @returns {Object}
+     * @memberof external:Object
+     */
+    Object.prototype.intercambiar=function() {
+        var obj={};
+        Object.entries(this).forEach(function(arr) {
+            obj[arr[1]]=arr[0];
+        });
+        return obj;
+    };
+
+    /**
      * Devuelve un array con los valores del objeto (descartando las propiedades).
      * @memberof external:Object
      */

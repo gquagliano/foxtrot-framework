@@ -10,7 +10,9 @@
 /**
  * @class Componente concreto Item de menú.
  */
-var componenteItemMenu=function() {    
+var componenteItemMenu=function() {  
+    var t=this;
+
     this.componente="item-menu";
     this.contenidoEditable=true;
 
@@ -188,7 +190,10 @@ var componenteItemMenu=function() {
                 ev.stopPropagation();
 
                 var submenu=t.obtenerHijos();
-                if(!submenu.length) return;
+                if(!submenu.length) {
+                    t.cerrarContenedor();
+                    return;
+                }
                 
                 ev.preventDefault();
 
@@ -201,7 +206,9 @@ var componenteItemMenu=function() {
                     ev.preventDefault();
                     ev.stopPropagation();
                     ignorarClick=false;
+                    return;
                 }
+                t.cerrarContenedor();
             });
         }
 
@@ -267,6 +274,18 @@ var componenteItemMenu=function() {
         }
 
         return this.eliminarComponente(descendencia);
+    };
+
+    /**
+     * Determina si el item pertenece a un menú que, a su vez, se encuentre en un contenedor de menú y, en caso afirmativo, cierra el contenedor.
+     * @returns {Componente}
+     */
+    this.cerrarContenedor=function() {
+        setTimeout(function() {
+            var elem=t.elemento.padre({clase:"contenedor-menu"});
+            if(elem) ui.obtenerInstanciaComponente(elem).cerrar();
+        });
+        return this;
     };
 };
 

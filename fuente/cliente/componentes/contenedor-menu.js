@@ -22,6 +22,9 @@ var componenteContenedorMenu=function() {
         ev.stopPropagation();
         ev.stopImmediatePropagation();
         t.cerrar();
+    },
+    blur=function() {
+        t.cerrar();
     };
 
     this.propiedadesConcretas={
@@ -235,6 +238,7 @@ var componenteContenedorMenu=function() {
         this.elemento.agregarClase("menu-abierto");
 
         document.evento("click mousewheel",clickDocumento,true);
+        window.evento("blur",blur);
 
         return this;
     };
@@ -246,6 +250,7 @@ var componenteContenedorMenu=function() {
     this.cerrar=function() {
         t.elemento.removerClase("menu-abierto");
         document.removerEvento("click mousewheel",clickDocumento,true);
+        window.removerEvento("blur",blur);
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();
         return this;

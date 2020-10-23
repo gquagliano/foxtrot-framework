@@ -19,6 +19,7 @@ class util {
      * @return object
      */
     public static function separarRuta($ruta) {
+        $ruta=str_replace('\\','/',$ruta);
         $partes=explode('/',trim($ruta));
         return (object)[
             'nombre'=>array_pop($partes),

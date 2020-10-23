@@ -10,6 +10,8 @@
  * @typedef Sesion
  */
 var sesion=new function() {
+    "use strict";
+
     var temporizador=null;
 
     /**
@@ -39,7 +41,7 @@ var sesion=new function() {
         if(typeof activar==="undefined") activar=true;
         
         clearTimeout(temporizador);
-        if(!activar) return;
+        if(!activar) return this;
 
         var fn=function() {
             temporizador=setTimeout(fn2,60000);
@@ -52,6 +54,8 @@ var sesion=new function() {
 
         return this;
     };
+
+    if(!ui.enModoEdicion()) this.mantenerSesion();
 }();
 
 window["sesion"]=sesion;

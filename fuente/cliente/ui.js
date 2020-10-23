@@ -36,6 +36,7 @@ var ui=new function() {
             sm:576,
             xs:0
         },
+        tamanosPx=tamanos.intercambiar(),
         urlBase=null,
         esCordova=false,
         instanciasVistas={},
@@ -964,6 +965,13 @@ var ui=new function() {
     this.obtenerArrayTamanos=function() {
         //TODO Cuando esto sea configurable se debe des-harcodear
         return ["xs","sm","md","lg","xl"];
+    };
+
+    /**
+     * Devuelve todos los posibles tamaños con formato {ancho máximo:nombre}.
+     */
+    this.obtenerTamanosPx=function() {
+        return tamanosPx;
     };
 
     /**

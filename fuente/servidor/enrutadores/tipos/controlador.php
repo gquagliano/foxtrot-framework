@@ -13,13 +13,22 @@ defined('_inc') or exit;
 /**
  * Tipo de solicitud concreta que representa el acceso a un método de un controlador.
  */
-class controlador extends \solicitud {    
+class controlador extends \solicitud {   
+    protected $controlador=null;
+    protected $metodo=null;
+
     /**
      * Ejecuta la solicitud.
      * @return \solicitud
      */
     public function ejecutar() {
-        $controlador=\util::limpiarValor($this->parametros->__c,true);
+        $controlador=$this->controlador?
+            $this->controlador:
+            \util::limpiarValor($this->parametros->__c,true);
+
+        $metodo=$this->metodo?
+            $this->metodo:
+            null; //lo determinará ejecutarMetodo()
 
         $partes=\foxtrot::prepararNombreClase($controlador);
 
@@ -34,7 +43,7 @@ class controlador extends \solicitud {
 
         $obj=new $clase;
 
-        $this->ejecutarMetodo($obj);        
+        $this->ejecutarMetodo($obj,$metodo);        
 
         return $this;
     }
@@ -47,5 +56,25 @@ class controlador extends \solicitud {
      */
     public static function es($url,$parametros) {
         return isset($parametros->__c)&&isset($parametros->__m);
+    }
+
+    /**
+     * Establece el controlador. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $nombre
+     * @return \solicitud\tipos\controlador
+     */
+    public function establecerControlador($nombre) {
+        $this->controlador=$nombre;
+        return $this;
+    }
+
+    /**
+     * Establece el método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $nombre
+     * @return \solicitud\tipos\controlador
+     */
+    public function establecerMetodo($nombre) {
+        $this->metodo=$nombre;
+        return $this;
     }
 }

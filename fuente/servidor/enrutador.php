@@ -21,24 +21,32 @@ class enrutador {
     protected $codigoRedireccion=null;
     protected $recurso=null;
 
+    /**
+     * Constructor.
+     */
     function __construct() {
         //Importar los tipos de solicitud
         $this->tipos=[
-            'foxtrot'=>null,
-            'recurso'=>null,
-            'pagina'=>null,
-            'controlador'=>null,
-            'aplicacion'=>null,
-            'componente'=>null,
-            'modulo'=>null,
-            'vista'=>null
+            'foxtrot',
+            'recurso',
+            'pagina',
+            'controlador',
+            'aplicacion',
+            'componente',
+            'modulo',
+            'vista'
         ];
-        foreach($this->tipos as $tipo=>$v) {
-            $this->tipos[$tipo]='\\solicitud\\tipos\\'.$tipo;
+        foreach($this->tipos as $tipo) {
             include_once(_servidor.'enrutadores/tipos/'.$tipo.'.php');
         }
     }
 
+    /**
+     * Establece la solicitud a analizar.
+     * @var string $uri URI.
+     * @var object|array $params Parámetros.
+     * @return \enrutador
+     */
     public function establecerSolicitud($uri,$params) {
         $this->url=$uri;
         if(is_array($params)) $params=(object)$params;        
@@ -47,18 +55,37 @@ class enrutador {
         return $this;
     }
 
+    /**
+     * Determina la URL de una vista.
+     * @var string $vista Nombre de la vista.
+     * @return string
+     */
     public function obtenerUrlVista($vista) {
         return foxtrot::obtenerUrl().$vista.'/';
     }
 
+    /**
+     * Devuelve la URL de recursos de la aplicación.
+     * @return string
+     */
     public function obtenerUrlRecursosAplicacion() {
         return foxtrot::obtenerUrl().'aplicacion/recursos/';
     }
 
+    /**
+     * Determina la URL del archivo CSS de una vista.
+     * @var string $vista Nombre de la vista.
+     * @return string
+     */
     public function obtenerUrlEstilosVista($nombre) {
         return foxtrot::obtenerUrl().'aplicacion/cliente/vistas/'.$nombre.'.css';
     }
 
+    /**
+     * Determina la URL del controlador de una vista.
+     * @var string $vista Nombre de la vista.
+     * @return string
+     */
     public function obtenerUrlControlador($nombre) {
         return foxtrot::obtenerUrl().'aplicacion/cliente/controladores/'.$nombre.'.js';
     }
@@ -75,9 +102,9 @@ class enrutador {
         
         //Buscar a qué tipo corresponde la solicitud
         foreach($this->tipos as $tipo) {
-            if(call_user_func($tipo.'::es',$this->url,$this->solicitud)) {
+            if(call_user_func('\\solicitud\\tipos\\'.$tipo.'::es',$this->url,$this->solicitud)) {
                 //Si la solicitud corresponde a este tipo, generar la instancia
-                $this->recurso=new $tipo($this,$this->url,$this->solicitud);
+                $this->fabricarRecurso($tipo);
                 return $this;
             }
         }
@@ -95,18 +122,64 @@ class enrutador {
         return !$this->error&&($this->recurso||$this->redireccionar);
     }
 
+    /**
+     * Devuelve la URI actual.
+     * @return string
+     */
+    public function obtenerUri() {
+        return $this->url;
+    }
+
+    /**
+     * Devuelve los parámetros actuales.
+     * @return object
+     */
     public function obtenerParametros() {
         return $this->parametros;
     }
 
+    /**
+     * Devuelve si el análisis resultó o no en un error.
+     * @return bool
+     */
     public function obtenerError() {
         return $this->error;
     }
 
+    /**
+     * Devuelve el recurso establecido.
+     * @return \solicitud
+     */
     public function obtenerRecurso() {
         return $this->recurso;
     }
 
+    /**
+     * Establece el recurso que responderá a la solicitud.
+     * @var \solicitud $recurso Instancia del recurso.
+     * @return \enrutador
+     */
+    public function establecerRecurso($recurso) {
+        $this->recurso=$recurso;
+        return $this;
+    }
+
+    /**
+     * Crea una instancia del recurso y lo establece como el que responderá a la solicitud. Devuelve la instancia del recurso creada. Nota: Este valor no será
+     * sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $tipo Nombre del tipo de recurso.
+     * @return \solicitud
+     */
+    public function fabricarRecurso($tipo) {
+        $tipo='\\solicitud\\tipos\\'.$tipo;
+        $this->recurso=new $tipo($this,$this->url,$this->solicitud);
+        return $this->recurso;
+    }
+
+    /**
+     * Devuelve un objeto con el redireccionamiento a realizar, o null.
+     * @return object
+     */
     public function obtenerRedireccionamiento() {
         if(!$this->redireccionar) return null;
         return (object)[

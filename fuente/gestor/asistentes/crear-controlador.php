@@ -52,13 +52,14 @@ class crearControlador extends asistente {
     public function ejecutar($param) {
         if(!$param->nombre||preg_match('/[^a-zA-Z0-9\/_-]/',$param->nombre)) gestor::error('Ingresá un nombre válido');
 
-        $ruta=dirname($param->nombre).'/';
-        $nombre=basename($param->nombre);
-        
-        $partes=\foxtrot::prepararNombreClase($nombre);
+        $partes=\util::separarRuta($param->nombre);
+        $nombre=$partes->nombre;
+        $ruta=$partes->ruta;
+
+        $partes=\foxtrot::prepararNombreClase($param->nombre);
         if($param->publico) $partes->espacio.='\\publico';
 
-        $ruta=_raiz.'/aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/controladores/'.$ruta.$nombre.($param->publico?'.pub':'').'.php';
+        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/controladores/'.$ruta.$nombre.($param->publico?'.pub':'').'.php';
         if(file_exists($ruta)) gestor::error('El controlador ya existe.');
 
         if(!is_dir(dirname($ruta))) mkdir(dirname($ruta),0755,true);

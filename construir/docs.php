@@ -34,11 +34,16 @@ $clasesJs=[];
 $funcionesJs=[];
 $externosJs=[];
 $tiposJs=[];
+$procesarDespues=[];
 
 limpiar(_salidaJs);
 limpiar(_salidaPhp);
 procesarDirectorio(__DIR__.'/../fuente/servidor/');
 procesarDirectorio(__DIR__.'/../fuente/cliente/');
+
+//Archivos pospuestos (contenían una referencia que requería esperar hasta el final)
+foreach($procesarDespues as $archivo) procesarArchivo($archivo);
+
 crearPaginas(_salidaPhp,'php');
 crearPaginas(_salidaJs,'js');
 
@@ -75,7 +80,7 @@ function procesarComentario($codigo) {
                 if($ultimaEtiqueta) $etiquetas[]=$ultimaEtiqueta;
 
                 $ultimaEtiqueta=(object)[
-                    'etiqueta'=>$etiqueta[1],
+                    'etiqueta'=>trim($etiqueta[1]),
                     'comentario'=>trim($etiqueta[3])
                 ];
             } elseif($ultimaEtiqueta) {
@@ -135,6 +140,10 @@ function procesarArchivo($ruta) {
 }
 
 function procesarParametros($lenguaje,$parametros,$comentario) {
+    $s=function($s) {
+        return str_replace('|','\\|',$s);
+    };
+
     $buscarReturn=function($bloque) use($lenguaje) {
         $etiqueta=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
@@ -174,8 +183,8 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     $miembros=[];
 
     foreach($comentario->bloques as $i=>$bloque) {
-        if(count($comentario->bloques)>1) $salida.='#### Sobrecarga '.($i+1).PHP_EOL;
-        $salida.='| Parámetro | Tipo | Descripción | Opcional | Valor predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+        if(count($comentario->bloques)>1) $salida.='##### Sobrecarga '.($i+1).PHP_EOL;
+        $salida.='| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 
         //Buscar @var/@param
         foreach($bloque->etiquetas as $etiqueta) {
@@ -243,16 +252,16 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         }
 
         foreach($parametros as $parametro) {
-            $salida.='| '.$parametro->variable.' | '.$parametro->tipo.' | '.$parametro->descripcion.' | '.($parametro->opcional?'Si':'').' | '.$parametro->predeterminado.' |'.PHP_EOL;
+            $salida.='| `'.$s($parametro->variable).'` | `'.$s($parametro->tipo).'` | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | `'.$s($parametro->predeterminado).'` |'.PHP_EOL;
         }
 
         //Miembros
         foreach($miembros as $parametro=>$parametros) {
-            $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
-            $salida.='| Propiedad | Tipo | Descripción | Opcional | Valor predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+            $salida.='##### Propiedades de `'.$parametro.'`'.PHP_EOL;
+            $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 
             foreach($parametros as $parametro) {
-                $salida.='| '.$parametro->variable.' | '.$parametro->tipo.' | '.$parametro->descripcion.' | '.($parametro->opcional?'Si':'').' | '.$parametro->predeterminado.' |'.PHP_EOL;
+                $salida.='| `'.$s($parametro->variable).'` | `'.$s($parametro->tipo).'` | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | `'.$s($parametro->predeterminado).'` |'.PHP_EOL;
             }
         }
         
@@ -282,6 +291,8 @@ function procesarPhp($archivo,$comentarios) {
     if(!$comentarios[0]->sentencia) $descripcionArchivo=array_shift($comentarios);
 
     foreach($comentarios as $comentario) {
+        if(!$comentario->sentencia) continue;
+
         //Buscar @ignore
         $ignorar=false;
         foreach($comentario->bloques[0]->etiquetas as $etiqueta) {
@@ -296,7 +307,7 @@ function procesarPhp($archivo,$comentarios) {
             $clase=nombreObjeto($espacio,$coincidencia[1]);
             if(count($coincidencia)==4) $extiende=nombreObjeto($espacio,$coincidencia[3]);
 
-            $salida='## `'.$clase.'`'.PHP_EOL;
+            $salida='### `'.$clase.'`'.PHP_EOL;
             $salida.=$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
             if($extiende) $salida.='Extiende: [`'.$extiende.'`]('.enlace('phpdoc',$extiende).')'.PHP_EOL.PHP_EOL;
 
@@ -305,12 +316,12 @@ function procesarPhp($archivo,$comentarios) {
                 'metodos'=>[],
                 'propiedades'=>[]
             ];
-        } elseif(preg_match('/(public |private | protected )?(static )?function (.+?)\((.*?)\) {/',$comentario->sentencia,$coincidencia)) {
-            if($coincidencia[1]!='private ') { //No documentamos privadas
+        } elseif(preg_match('/(public |private | protected )?(static )?function (.+?)\s*?\((.*?)\) {/',$comentario->sentencia,$coincidencia)) {
+            if(trim($coincidencia[1])!='private') { //No documentamos privadas
                 $modificadores=[];
-                $salida='### `'.$coincidencia[3].'`';
-                if($coincidencia[1]=='protected ') $modificadores[]='protegido';
-                if($coincidencia[2]=='static ') $modificadores[]='estático';
+                $salida='#### `'.trim($coincidencia[3]).'`';
+                if(trim($coincidencia[1])=='protected') $modificadores[]='protegido';
+                if(trim($coincidencia[2])=='static') $modificadores[]='estático';
                 if(count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
                 $salida.=PHP_EOL.$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
 
@@ -329,7 +340,7 @@ function procesarPhp($archivo,$comentarios) {
 }
 
 function procesarJs($archivo,$comentarios) {
-    global $clasesJs,$funcionesJs,$tiposJs,$externosJs;
+    global $clasesJs,$funcionesJs,$tiposJs,$externosJs,$procesarDespues;
 
     $codigo=file_get_contents($archivo);
 
@@ -339,22 +350,37 @@ function procesarJs($archivo,$comentarios) {
     //Primer comentario = descripción del archivo
     if(!$comentarios[0]->sentencia) $descripcionArchivo=array_shift($comentarios);
 
-    //Buscar @typedef
+    //Buscar @typedef y @external
     foreach($comentarios as $i=>$comentario) {
-        if($i==0||$comentario->sentencia||$comentario->bloques[0]->etiquetas[0]->etiqueta!='typedef') continue;
-        $tipo=trim($comentario->bloques[0]->etiquetas[0]->comentario,'{}');
-        $comentario=$comentario->bloques[0]->comentario;
-        $tiposJs[$tipo]='### `'.$tipo.'`'.PHP_EOL.$comentario.PHP_EOL.PHP_EOL;
+        if($comentario->sentencia) continue;
+        if($comentario->bloques[0]->etiquetas[0]->etiqueta=='typedef') {
+            if(preg_match('/\{(.+?)\}(.+)?$/m',$comentario->bloques[0]->etiquetas[0]->comentario,$coincidencia)) {
+                $tipo=$coincidencia[1];
+                $comentario=trim($coincidencia[2]);
+                $tiposJs[$tipo]='### `'.$tipo.'`'.PHP_EOL.$comentario.PHP_EOL.PHP_EOL;
+            }
+        } elseif($comentario->bloques[0]->etiquetas[0]->etiqueta=='external') {
+            $tipo=trim($comentario->bloques[0]->etiquetas[0]->comentario);
+            if(!array_key_exists($tipo,$externosJs)) {
+                $externosJs[$tipo]=(object)[
+                    'encabezado'=>'### `'.$tipo.'`'.PHP_EOL.'Métodos y propiedades añadidos al prototipo de `'.$tipo.'`.'.PHP_EOL.PHP_EOL,
+                    'metodos'=>[],
+                    'propiedades'=>[]
+                ];
+            }
+        }
     }
 
     foreach($comentarios as $comentario) {
-        //Buscar @class, @extends, @ignore, @memberof
+        if(!$comentario->sentencia) continue;
+
+        //Buscar @class, @extends, @ignore, @memberof, @private
         $ignorar=false;
         $esClase=null;
         $miembroDe=null;
         $extiende=null;
         foreach($comentario->bloques[0]->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta=='ignore') {
+            if($etiqueta->etiqueta=='ignore'||$etiqueta->etiqueta=='private') {
                 $ignorar=true;
                 break;
             } elseif($etiqueta->etiqueta=='class') {
@@ -369,21 +395,21 @@ function procesarJs($archivo,$comentarios) {
         if($ignorar) continue;
 
         if($esClase) {
-            if(preg_match('/var (.+?)=(new )?function\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
+            if(preg_match('/var (.+?)=(new )?function\s*?\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
                 $clase=trim($coincidencia[1]);
                 $parametros=trim($coincidencia[3]);
-            } elseif(preg_match('/function (.+?)\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
+            } elseif(preg_match('/function (.+?)\s*?\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
                 $clase=trim($coincidencia[1]);
                 $parametros=trim($coincidencia[2]);
             } else {
                 continue;
             }
 
-            $salida='## `'.$clase.'`'.PHP_EOL;
+            $salida='### `'.$clase.'`'.PHP_EOL;
             $salida.=$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
             if($extiende) $salida.='Extiende: [`'.$extiende.'`]('.enlace('jsdoc',$extiende).')'.PHP_EOL.PHP_EOL;
 
-            if($parametros) $salida.='#### Parámetros del constructor'.PHP_EOL.PHP_EOL.procesarParametros('js',$parametros,$comentario).PHP_EOL;
+            if($parametros) $salida.='##### Parámetros del constructor'.PHP_EOL.PHP_EOL.procesarParametros('js',$parametros,$comentario).PHP_EOL;
             
             $clasesJs[$clase]=(object)[
                 'encabezado'=>$salida,
@@ -393,53 +419,45 @@ function procesarJs($archivo,$comentarios) {
 
             //Crear tipo automáticamente
             if(!array_key_exists($clase,$tiposJs)) $tiposJs[$clase]='### `'.$clase.'` \*'.PHP_EOL.$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
-        }
+        } else {
+            $salida='';
 
-
-
-        /*if(preg_match('/class (.+?)( extends (.+?))? {/',$comentario->sentencia,$coincidencia)) {
-            $clase=nombreObjeto($espacio,$coincidencia[1]);
-            if(count($coincidencia)==4) $extiende=nombreObjeto($espacio,$coincidencia[3]);
-
-
-            
-        } elseif(preg_match('/(public |private | protected )?(static )?function (.+?)\((.*?)\) {/',$comentario->sentencia,$coincidencia)) {
-            if($coincidencia[1]!='private ') { //No documentamos privadas
-                $modificadores=[];
-                $salida='### `'.$coincidencia[3].'`';
-                if($coincidencia[1]=='protected ') $modificadores[]='protegido';
-                if($coincidencia[2]=='static ') $modificadores[]='estático';
-                if(count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-                $salida.=PHP_EOL.$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
-
-                if(trim($coincidencia[4])) {
-                    //Procesar parámetros
-                    
-
-                    //Buscar @return
-                    foreach($bloque->etiquetas as $etiqueta) {
-                        if($etiqueta->etiqueta=='return') {
-                            $salida.'Devuelve: '.trim($etiqueta->comentario).PHP_EOL.PHP_EOL;
-                            break;
-                        }
-                    }
-                } else {
-                    //Buscar @return
-                    foreach($comentario->bloques[0]->etiquetas as $etiqueta) {
-                        if($etiqueta->etiqueta=='return') {
-                            $salida.'Devuelve: '.trim($etiqueta->comentario).PHP_EOL.PHP_EOL;
-                            break;
-                        }
-                    }
-                }
-
-                if($clase) {
-                    $clasesJs[$clase]->metodos[]=$salida;
-                } else {
-                    $funcionesJs[]=$salida;
-                }
+            //Solo tomamos propiedades o funciones globales
+            if(preg_match('/(this|.+?\.prototype|.+?)\.(.+?)=function\s*?\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
+                $nombre=$coincidencia[2];
+                $parametros=$coincidencia[3];
+            } elseif(preg_match('/function (.+?)\s*?\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
+                if($clase) continue;
+                $nombre=$coincidencia[1];
+                $parametros=$coincidencia[2];
+            } else {
+                continue;
             }
-        }*/
+
+            $salida='#### `'.trim($nombre).'`';
+            $salida.=PHP_EOL.$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
+
+            //Parámetros y retorno
+            $salida.=procesarParametros('js',$parametros,$comentario);
+
+            if($miembroDe) {
+                if(substr($miembroDe,0,9)=='external:') {
+                    $externo=substr($miembroDe,9);
+                    $externosJs[$externo]->metodos[]=$salida;
+                } else {
+                    if(!array_key_exists($miembroDe,$clasesJs)) {
+                        //La clase todavía no existe, esperar hasta el final
+                        $procesarDespues[]=$archivo;
+                        return;
+                    }
+                    $clasesJs[$miembroDe]->metodos[]=$salida;
+                }
+            } elseif($clase) {
+                $clasesJs[$clase]->metodos[]=$salida;
+            } else {
+                $funcionesJs[]=$salida;
+            }
+        }
 
         //TODO Variables globales, propiedades (que no sean función)
         //TODO @enum
@@ -508,6 +526,8 @@ function crearPaginas($rutaSalida,$lenguaje) {
         foreach($tiposJs as $tipo) $salida.=$tipo;
 
         $salida.='\* Tipo definido por una clase (ver documentación en la página de la misma).';
+
+        file_put_contents($rutaSalida.$archivo.'.md',$salida);
     }
 
     //Índice
@@ -517,12 +537,12 @@ function crearPaginas($rutaSalida,$lenguaje) {
     ksort($indice);
     foreach($indice as $nombre=>$ruta) {
         if($nombre=='funciones') $nombre='Funciones globales';
-        if($nombre=='tipo') $nombre='Tipos';
+        if($nombre=='tipos') $nombre='Tipos';
         $salida.='- [`'.$nombre.'`]('.$ruta.')'.PHP_EOL;
     }
 
     if($lenguaje=='js') {
-        $salida.=PHP_EOL.'### Externos'.PHP_EOL.'Prototipos extendidos por Foxtrot.'.PHP_EOL;
+        $salida.=PHP_EOL.'#### Externos'.PHP_EOL;
         ksort($indiceExternos);
         foreach($indiceExternos as $nombre=>$ruta) $salida.='- [`'.$nombre.'`]('.enlace('jsdoc','externo-'.$nombre).')'.PHP_EOL;
     }

@@ -1135,7 +1135,7 @@
 
     /**
      * Remueve una clase css de los elementos. Soporta RegExp o múltiples clases separadas por espacios.
-     * @memberof external:removerClase
+     * @memberof external:NodeList
      */
     NodeList.prototype.removerClase=function(clase) {
         aplicar(this,"removerClase",arguments);

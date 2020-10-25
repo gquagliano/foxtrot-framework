@@ -8,10 +8,6 @@
 "use strict";
 
 /**
- * @typedef UI
- */
-
-/**
  * @class Gestión de la interfaz.
  */
 var ui=new function() {

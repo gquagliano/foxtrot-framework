@@ -45,6 +45,9 @@ class bd {
         if($conectar) $this->conectar();
 	}
 
+    /**
+     * 
+     */
 	function __destruct() {
         $this->desconectar();
     }

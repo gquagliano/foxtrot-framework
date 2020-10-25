@@ -58,6 +58,9 @@ class modelo {
 
     protected $ultimoId=null;
 
+    /**
+     * 
+     */
     function __construct($bd=null) {
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
         

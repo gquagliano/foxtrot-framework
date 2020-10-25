@@ -15,6 +15,9 @@ class controlador {
     protected $nombre;
     protected $cliente;
 
+    /**
+     * 
+     */
     function __construct() {
         $clase=get_called_class();
         $nombre=substr($clase,strrpos($clase,'\\')+1);
@@ -24,14 +27,23 @@ class controlador {
         if(!$this->cliente) $this->cliente=new cliente();
     }
 
+    /**
+     * 
+     */
     public function obtenerNombre() {
         return $this->nombre;
     }
 
+    /**
+     * 
+     */
     public function obtenerCliente() {
         return $this->cliente;
     }
 
+    /**
+     * 
+     */
     public function html($html) {
         return $html;
     }

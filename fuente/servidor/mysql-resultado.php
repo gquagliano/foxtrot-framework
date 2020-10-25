@@ -18,6 +18,9 @@ class resultado {
 
 	var $filas=0;
 
+    /**
+     * 
+     */
 	function __destruct() {
 		//if(!$this->r) return;
 		//if($this->stmt) $this->r->free_result(); else $this->r->free();

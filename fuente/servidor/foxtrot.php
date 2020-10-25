@@ -22,31 +22,52 @@ class foxtrot {
     protected static $instanciaAplicacionPublico=null;
     protected static $bd=null;
 
+    /**
+     * 
+     */
     public function __destruct() {
         foxtrot::destructor();
     }
 
+    /**
+     * 
+     */
     public static function destructor() {
     }
 
+    /**
+     * 
+     */
     public static function obtenerUrl() {
         return configuracion::$url;
     }
 
+    /**
+     * 
+     */
     public static function esHttps() {
         return (!empty($_SERVER['REQUEST_SCHEME'])&&$_SERVER['REQUEST_SCHEME']== 'https')||
             (!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']=='on')||
             (!empty($_SERVER['SERVER_PORT'])&&$_SERVER['SERVER_PORT']=='443');
     }
 
+    /**
+     * 
+     */
     public static function establecerEnrutador($obj) {
         self::$enrutador=$obj;
     }
 
+    /**
+     * 
+     */
     public static function obtenerEnrutador() {
         return self::$enrutador;
     }
 
+    /**
+     * 
+     */
     public static function establecerEnrutadorAplicacion($obj) {
         self::$enrutadorApl=$obj;
     }
@@ -91,6 +112,9 @@ class foxtrot {
         return _apl;
     }
 
+    /**
+     * 
+     */
     protected static function definirConstantes() {
         //TODO Las rutas, a excepción de _raiz, deberían consultarse con métodos, en lugar de usar constantes
         define('_raiz',realpath(__DIR__.'/..').'/');
@@ -102,6 +126,9 @@ class foxtrot {
         define('_modulos',_servidor.'modulos/');
     }
 
+    /**
+     * 
+     */
     protected static function definirConstantesAplicacion() {
         //TODO Las rutas deberían consultarse con métodos, en lugar de usar constantes
         define('_apl',self::$aplicacion);
@@ -115,6 +142,9 @@ class foxtrot {
         define('_recursosAplicacion',_raizAplicacion.'recursos/');
     }
 
+    /**
+     * 
+     */
     protected static function incluirArchivos() {
         include(_servidor.'funciones.php');
         include(_servidor.'util.php');
@@ -142,6 +172,9 @@ class foxtrot {
         include(_servidor.'enrutadores/enrutadorUnaPagina.php');
     }
 
+    /**
+     * 
+     */
     public static function cargarAplicacion($aplicacion=null) {
         //Si no se especifica $aplicacion, determinar automáticamente
         if(!$aplicacion) {
@@ -212,6 +245,9 @@ class foxtrot {
 	    }
     }
 
+    /**
+     * 
+     */
     public static function inicializar($aplicacion=null) {
         //TODO Registro de errores
 
@@ -231,6 +267,9 @@ class foxtrot {
         sesion::inicializar();
     }
 
+    /**
+     * 
+     */
     public static function error() {
         $url=configuracion::$urlError?
             configuracion::$urlError:
@@ -242,6 +281,9 @@ class foxtrot {
         redir($url);
     }
 
+    /**
+     * 
+     */
     public static function ejecutar() {
         $uri=self::prepararUri($_SERVER['REQUEST_URI']);
         self::$enrutador->establecerSolicitud($uri,$_REQUEST);
@@ -267,6 +309,9 @@ class foxtrot {
         }        
     }
 
+    /**
+     * 
+     */
     public static function detener() {
         exit;
     }
@@ -426,6 +471,9 @@ class foxtrot {
         return $vista;
     }
 
+    /**
+     * 
+     */
     public static function devolverVista($nombre) {
         cliente::responder(self::obtenerVista($nombre));
     }

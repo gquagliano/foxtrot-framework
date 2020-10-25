@@ -13,6 +13,9 @@ class sesion {
     protected static $usuario=null;
     protected static $datosPublicos=null;
 
+    /**
+     * 
+     */
 	public static function inicializar() {
 		//session_cache_limiter('private');
 		session_cache_expire(60);
@@ -21,6 +24,9 @@ class sesion {
 		self::verificarUsuario();
 	}
 	
+    /**
+     * 
+     */
 	public static function establecerUsuario($usuario,$datosPublicos) {
         self::$usuario=$usuario;
         self::$datosPublicos=$datosPublicos;
@@ -28,26 +34,41 @@ class sesion {
         $_SESSION[self::sv.'usuarioPub']=$datosPublicos;
 	}
 
+    /**
+     * 
+     */
 	public static function cerrarSesion() {
         self::$usuario=null;
         self::$datosPublicos=null;
 		unset($_SESSION[self::sv.'usuario'],$_SESSION[self::sv.'usuarioPub']);
 	}
 
+    /**
+     * 
+     */
 	public static function obtenerUsuario() {
 		return self::$usuario;
 	}
 
+    /**
+     * 
+     */
 	public static function obtenerDatosPublicos() {
 		return self::$datosPublicos;
 	}
 
+    /**
+     * 
+     */
 	public static function verificarUsuario() {
         self::$usuario=$_SESSION[self::sv.'usuario'];
         self::$datosPublicos=$_SESSION[self::sv.'usuarioPub'];
         return self::$datosPublicos?true:false;
     }
     
+    /**
+     * 
+     */
     public static function responderSolicitud() {
         cliente::responder(self::$datosPublicos);
     }

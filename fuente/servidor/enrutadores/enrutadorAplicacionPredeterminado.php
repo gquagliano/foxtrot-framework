@@ -14,10 +14,16 @@ defined('_inc') or exit;
 class enrutadorAplicacionPredeterminado extends enrutadorAplicacion {
     protected $dominios;
 
+    /**
+     * 
+     */
     public function __construct($dominios) {
         $this->dominios=$dominios;
     }
 
+    /**
+     * 
+     */
     public function determinarAplicacion() {
         $actual=$_SERVER['HTTP_HOST'];
         foreach($this->dominios as $dominio=>$aplicacion) {

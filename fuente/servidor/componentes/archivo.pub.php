@@ -14,6 +14,9 @@ defined('_inc') or exit;
  * Clase pública del componente Archivo.
  */
 class archivo extends \componente {
+    /**
+     * 
+     */
     public function recibirArchivos() {
         $archivos=[];
 

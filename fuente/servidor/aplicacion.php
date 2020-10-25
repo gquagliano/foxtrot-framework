@@ -12,6 +12,9 @@ defined('_inc') or exit;
  * Clase base de las aplicaciones.
  */
 class aplicacion extends controlador {
+    /**
+     * 
+     */
     function __construct() {
         //Inicializar comunicación con el cliente
         $this->cliente=new cliente();

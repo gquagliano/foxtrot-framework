@@ -145,9 +145,9 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     };
 
     $buscarReturn=function($bloque) use($lenguaje) {
-        $etiqueta=$lenguaje=='js'?'returns':'return';
+        $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$etiqueta) return 'Devuelve: '.trim($etiqueta->comentario).PHP_EOL.PHP_EOL;
+            if($etiqueta->etiqueta==$nombre) return 'Devuelve: '.trim($etiqueta->comentario).PHP_EOL.PHP_EOL;
         }
     };
 

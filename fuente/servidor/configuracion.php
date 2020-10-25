@@ -34,15 +34,24 @@ class configuracion {
 
     protected static $otrosParametros=[];
 
+    /**
+     * 
+     */
     public static function cargar() {
         include(_raiz.'config.php');
     }
 
+    /**
+     * 
+     */
     public static function cargarConfigAplicacion() {
         $ruta=_raizAplicacion.'config.php';
         if(file_exists($ruta)) include($ruta);
     }
 
+    /**
+     * 
+     */
     public static function establecer($obj) {
         foreach($obj as $c=>$v) {
             //Es posible que se establezcan propiedades que no existen

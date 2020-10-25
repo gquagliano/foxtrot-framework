@@ -12,6 +12,9 @@ defined('_inc') or exit;
  * Clase base de los enrutadores de aplicación.
  */
 class enrutadorAplicacion {
+    /**
+     * 
+     */
     public function determinarAplicacion() {
         return null;
     }

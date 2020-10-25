@@ -15,6 +15,9 @@ class cliente {
     protected $controlador;
     protected $esAplicacion=false;
 
+    /**
+     * 
+     */
     function __construct($controlador=null) {
         $this->controlador=$controlador;
     }
@@ -38,6 +41,9 @@ class cliente {
         \foxtrot::detener();
     }
 
+    /**
+     * 
+     */
     public static function invocar($controlador,$metodo,$args=null) {
         echo json_encode([
             'c'=>$controlador,
@@ -60,6 +66,9 @@ class cliente {
         \foxtrot::detener();
     }
 
+    /**
+     * 
+     */
     public static function irA($ruta) {
         echo json_encode([
             'n'=>$ruta

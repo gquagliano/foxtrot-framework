@@ -14,10 +14,16 @@ defined('_inc') or exit;
 class modulo {
     protected $cliente;
 
+    /**
+     * 
+     */
     function __construct() {
         if(!$this->cliente) $this->cliente=new cliente();
     }
 
+    /**
+     * 
+     */
     public function obtenerCliente() {
         return $this->cliente;
     }

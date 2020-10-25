@@ -52,11 +52,11 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 #### PHP
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/phpdoc/ (en desarrollo)
+https://github.com/gquagliano/experimental-foxtrot-framework/wiki/phpdoc-indice
 
 #### JS
 
-https://gquagliano.github.io/experimental-foxtrot-framework/docs/jsdoc/ (en desarrollo)
+https://github.com/gquagliano/experimental-foxtrot-framework/wiki/jsdoc-indice
 
 ### Estructura del proyecto
 

@@ -13,7 +13,7 @@
 En líneas generales,
 
 - (En curso) Implementar más componentes.
-- (En curso) Completar la documentación; revisar y completar JSDOC y PHPDOC; mover la documentación a Wiki.
+- (En curso) Completar la documentación; revisar y completar JSDOC y PHPDOC; ~~mover la documentación a Wiki~~.
 - (En curso, son los nuevos módulos) Sumar librerías y clases útiles para generación de PDF, lectura y generación de archivos Excel, generación de archivos HTML desde plantillas, etc.
 - Nueva implementación del intérprete de expresiones.
 - Completar funcionalidad útil del editor, como deshacer, rehacer y la barra de formato de texto.

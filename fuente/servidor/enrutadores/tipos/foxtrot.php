@@ -14,9 +14,11 @@ defined('_inc') or exit;
  * Tipo de solicitud concreta que representa una solicitud a una función interna de Foxtrot.
  */
 class foxtrot extends \solicitud {
+    protected $operacion=null;
+
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud
+     * @return \solicitud\tipos\foxtrot
      */
     public function ejecutar() {
         //Acceso HTTP a funciones internas de Foxtrot
@@ -26,7 +28,7 @@ class foxtrot extends \solicitud {
 
         header('Content-Type: text/plain; charset=utf-8',true);
 
-        $operacion=\util::limpiarValor($this->parametros->__f);
+        $operacion=$this->obtenerOperacion();
 
         if($operacion==='sesion') {
             \sesion::responderSolicitud();
@@ -52,5 +54,24 @@ class foxtrot extends \solicitud {
         $valoresPosibles=['sesion','obtenerVista','noop'];
         $valor=\util::limpiarValor($parametros->__f);
         return $valor&&in_array($valor,$valoresPosibles);
+    }
+
+    /**
+     * Devuelve el nombre de la operación solicitada.
+     * @return string
+     */
+    public function obtenerOperacion() {
+        if(!$this->operacion) $this->operacion=\util::limpiarValor($this->parametros->__f);
+        return $this->operacion;
+    }
+
+    /**
+     * Establece la operación. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $nombre Nombre de la operación.
+     * @return \solicitud\tipos\foxtrot
+     */
+    public function establecerOperacion($nombre) {
+        $this->operacion=$nombre;
+        return $this;
     }
 }

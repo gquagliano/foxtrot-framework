@@ -14,32 +14,27 @@ defined('_inc') or exit;
  * Tipo de solicitud concreta que representa una página HTML, existente en el sistema de archivos.
  */
 class pagina extends \solicitud {    
+    protected $ruta=null;
+
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud
+     * @return \solicitud\tipos\pagina
      */
     public function ejecutar() {
         //Cargar una página independiente
 
         header('Content-Type: text/html; charset=utf-8',true);
 
-        //TODO Validación configurable de páginas disponibles públicamente.
+        $ruta=$this->obtenerRuta();
 
-        if(!preg_match('#^([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia)) //La URL ya fue validada y sanitizada por foxtrot
-            return $this->error();                                         //No admitimos barras ni puntos que representen riesgo de seleccionar un archivo distinto
-
-        $nombre=_raiz.$coincidencia[1];
+        if(!$ruta) return $this->error();
 
         //Excluir archivos
-        //(dotfiles ya son excluidos por la expresión regular en es()).
-        if(in_array($nombre,['config','index'])) return $this->error();
+        //dotfiles ya son excluidos por la expresión regular en es().
+        //TODO Validación configurable de páginas disponibles públicamente.
+        if(preg_match('/(index|config)\.php/',$ruta)) return $this->error();
 
-        if(file_exists($nombre.'.html')) {
-            $nombre.='.html';
-        } elseif(file_exists($nombre.'.php')) {
-            $nombre.='.php';
-        }
-        include($nombre);
+        include($ruta);
 
         return $this;
     }
@@ -60,5 +55,35 @@ class pagina extends \solicitud {
         if(preg_match('#^([a-zA-Z0-9_-]+)/?$#',$url,$coincidencia)&&(file_exists(_raiz.$coincidencia[1].'.html')||file_exists(_raiz.$coincidencia[1].'.php'))) return true;
 
         return false;
+    }   
+
+    /**
+     * Devuelve la ruta local a la página solicitada.
+     * @return string
+     */
+    public function obtenerRuta() {
+        if(!$this->ruta) {
+            //Ecluir barras o puntos que representen riesgo de seleccionar un archivo distinto
+            if(preg_match('#^([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia)) {
+                $nombre=_raiz.$coincidencia[1];
+                if(file_exists($nombre.'.html')) {
+                    $nombre.='.html';
+                } elseif(file_exists($nombre.'.php')) {
+                    $nombre.='.php';
+                }
+                $this->ruta=$nombre;
+            }
+        }
+        return $this->ruta;
+    }
+
+    /**
+     * Establece la página a mostrar. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $ruta Ruta local al archivo.
+     * @return \solicitud\tipos\pagina
+     */
+    public function establecerRuta($ruta) {
+        $this->ruta=$ruta;
+        return $this;
     }
 }

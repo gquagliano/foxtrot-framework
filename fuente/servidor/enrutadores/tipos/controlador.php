@@ -19,16 +19,10 @@ class controlador extends \solicitud {
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud
+     * @return \solicitud\tipos\controlador
      */
     public function ejecutar() {
-        $controlador=$this->controlador?
-            $this->controlador:
-            \util::limpiarValor($this->parametros->__c,true);
-
-        $metodo=$this->metodo?
-            $this->metodo:
-            null; //lo determinará ejecutarMetodo()
+        $controlador=$this->obtenerControlador();
 
         $partes=\foxtrot::prepararNombreClase($controlador);
 
@@ -43,7 +37,7 @@ class controlador extends \solicitud {
 
         $obj=new $clase;
 
-        $this->ejecutarMetodo($obj,$metodo);        
+        $this->ejecutarMetodo($obj,$this->obtenerMetodo());        
 
         return $this;
     }
@@ -59,8 +53,26 @@ class controlador extends \solicitud {
     }
 
     /**
+     * Devuelve el nombre del controlador solicitado.
+     * @return string
+     */
+    public function obtenerControlador() {
+        if(!$this->controlador) $this->controlador=\util::limpiarValor($this->parametros->__c,true);
+        return $this->controlador;
+    }
+
+    /**
+     * Devuelve el nombre del método solicitado.
+     * @return string
+     */
+    public function obtenerMetodo() {
+        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__m);
+        return $this->metodo;
+    }
+
+    /**
      * Establece el controlador. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
-     * @var string $nombre
+     * @var string $nombre Nombre del controlador.
      * @return \solicitud\tipos\controlador
      */
     public function establecerControlador($nombre) {
@@ -70,7 +82,7 @@ class controlador extends \solicitud {
 
     /**
      * Establece el método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
-     * @var string $nombre
+     * @var string $nombre Nombre del método.
      * @return \solicitud\tipos\controlador
      */
     public function establecerMetodo($nombre) {

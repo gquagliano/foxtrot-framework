@@ -14,47 +14,18 @@ defined('_inc') or exit;
  * Tipo de solicitud concreta que representa el acceso a una vista.
  */
 class vista extends \solicitud {
-    protected $nombre=null;
-
-    /**
-     * Devuelve el nombre de la vista.
-     * @return string
-     */
-    public function obtenerNombreVista() {
-        if($this->nombre) return $this->nombre;
- 
-       //La URL ya fue validada y sanitizada por foxtrot
-        if($this->url=='') {
-            $vista='inicio';
-        } else {
-            preg_match('#^([A-Za-z0-9_/-]+)#',$this->url,$coincidencia);
-            $vista=trim($coincidencia[1],'/');
-        }
-
-        $this->vista=$vista;
-
-        return $this->vista;
-    }
-
-    /**
-     * Modifica el nombre de la vista.
-     * @return \solicitud
-     */
-    public function establecerVista($nombre) {
-        $this->nombre=$nombre;
-        return $this;
-    }
+    protected $vista=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud
+     * @return \solicitud\tipos\vista
      */
     public function ejecutar() {
         //Devuelve el contenido html de la vista
             
         header('Content-Type: text/html; charset=utf-8',true);
 
-        $vista=$this->obtenerNombreVista();        
+        $vista=$this->obtenerVista();        
 
         //Validar que el archivo solicitado exista y no salga del directorio de cliente
         //TODO Verificar tipo de vista en aplicacion.json
@@ -87,5 +58,35 @@ class vista extends \solicitud {
     public static function es($url,$parametros) {
         //$url se asume validado y sanitizado por el enrutador
         return true;
+    }
+
+    /**
+     * Devuelve el nombre de la vista solicitada
+     * @return string
+     */
+    public function obtenerVista() {
+        if(!$this->vista) {
+            //La URL ya fue validada y sanitizada por foxtrot
+            if($this->url=='') {
+                $vista='inicio';
+            } else {
+                preg_match('#^([A-Za-z0-9_/-]+)#',$this->url,$coincidencia);
+                $vista=trim($coincidencia[1],'/');
+            }
+
+            $this->vista=$vista;
+        }
+
+        return $this->vista;
+    }
+
+    /**
+     * Establece el nombre de la vista.
+     * @var string $nombre Nombre de la vista.
+     * @return \solicitud\tipos\vista
+     */
+    public function establecerVista($nombre) {
+        $this->vista=$nombre;
+        return $this;
     }
 }

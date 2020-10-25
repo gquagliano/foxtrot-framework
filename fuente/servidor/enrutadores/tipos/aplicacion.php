@@ -14,14 +14,15 @@ defined('_inc') or exit;
  * Tipo de solicitud concreta que representa el acceso a un método del controlador público de la aplicación.
  */
 class aplicacion extends \solicitud {    
+    protected $metodo=null;
+
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud
+     * @return \solicitud\tipos\aplicacion
      */
     public function ejecutar() {
-        $metodo=\util::limpiarValor($this->parametros->__a);
         $obj=\foxtrot::obtenerAplicacionPublica();
-        $this->ejecutarMetodo($obj,$metodo);
+        $this->ejecutarMetodo($obj,$this->obtenerMetodo());
         return $this;
     }
 
@@ -33,5 +34,24 @@ class aplicacion extends \solicitud {
      */
     public static function es($url,$parametros) {
         return isset($parametros->__a);
+    }
+
+    /**
+     * Devuelve el nombre del método solicitado.
+     * @return string
+     */
+    public function obtenerMetodo() {
+        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__a);
+        return $this->metodo;
+    }
+
+    /**
+     * Establece el nombre del método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
+     * @var string $nombre Nombre del método.
+     * @return \solicitud\tipos\aplicacion
+     */
+    public function establecerMetodo($nombre) {
+        $this->metodo=$nombre;
+        return $this;
     }
 }

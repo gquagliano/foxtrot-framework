@@ -252,7 +252,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         }
 
         foreach($parametros as $parametro) {
-            $salida.='| `'.$s($parametro->variable).'` | `'.$s($parametro->tipo).'` | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | `'.$s($parametro->predeterminado).'` |'.PHP_EOL;
+            $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
         }
 
         //Miembros
@@ -261,7 +261,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
             $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 
             foreach($parametros as $parametro) {
-                $salida.='| `'.$s($parametro->variable).'` | `'.$s($parametro->tipo).'` | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | `'.$s($parametro->predeterminado).'` |'.PHP_EOL;
+                $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
             }
         }
         
@@ -495,13 +495,11 @@ function crearPaginas($rutaSalida,$lenguaje) {
     } elseif($lenguaje=='js') {
         $funciones=$funcionesJs;
     }
-    $archivo=$lenguaje.'doc-funciones';
-    $indice['funciones']=$archivo;
 
     $salida='## Funciones globales ('.strtoupper($lenguaje).')'.PHP_EOL.PHP_EOL;
     foreach($funciones as $funcion) $salida.=$funcion;
 
-    file_put_contents($rutaSalida.$archivo.'.md',$salida);
+    file_put_contents($rutaSalida.$lenguaje.'doc-funciones.md',$salida);
 
     if($lenguaje=='js') {
         //Externos
@@ -519,25 +517,24 @@ function crearPaginas($rutaSalida,$lenguaje) {
 
         //Tipos
         
-        $archivo='jsdoc-tipos';
-        $indice['tipos']=$archivo;
-
         $salida='## Tipos (JS)'.PHP_EOL.PHP_EOL;
         foreach($tiposJs as $tipo) $salida.=$tipo;
 
-        $salida.='\* Tipo definido por una clase (ver documentación en la página de la misma).';
+        $salida.=PHP_EOL.'*\* Tipo definido por una clase (ver documentación en la página de la misma).*';
 
-        file_put_contents($rutaSalida.$archivo.'.md',$salida);
+        file_put_contents($rutaSalida.'jsdoc-tipos.md',$salida);
     }
 
     //Índice
     
     $salida='## Documentación '.strtoupper($lenguaje).PHP_EOL.PHP_EOL;
 
+    $salida.='- [Funciones globales]('.$lenguaje.'doc-funciones)'.PHP_EOL;
+    if($lenguaje=='js') $salida.='- [Tipos](jsdoc-tipos)'.PHP_EOL;
+    
+    $salida.=PHP_EOL.'#### Clases'.PHP_EOL;
     ksort($indice);
     foreach($indice as $nombre=>$ruta) {
-        if($nombre=='funciones') $nombre='Funciones globales';
-        if($nombre=='tipos') $nombre='Tipos';
         $salida.='- [`'.$nombre.'`]('.$ruta.')'.PHP_EOL;
     }
 
@@ -547,7 +544,7 @@ function crearPaginas($rutaSalida,$lenguaje) {
         foreach($indiceExternos as $nombre=>$ruta) $salida.='- [`'.$nombre.'`]('.enlace('jsdoc','externo-'.$nombre).')'.PHP_EOL;
     }
 
-    $salida.=PHP_EOL.'*Autogenerado por el script de documentación de Foxtrot el '.
+    $salida.=PHP_EOL.PHP_EOL.'*Autogenerado por el script de documentación de Foxtrot el '.
         str_replace(
             ['January','February','March','April','May','June','July','August','September','October','November','December'],
             ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],

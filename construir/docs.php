@@ -502,7 +502,7 @@ function crearPaginas($rutaSalida,$lenguaje) {
         //Externos
 
         foreach($externosJs as $nombre=>$clase) {
-            $archivo=enlace('jsdoc',$nombre);
+            $archivo=enlace('jsdoc','externo-'.$nombre);
             $indiceExternos[$nombre]=$archivo;
     
             $salida=$clase->encabezado;

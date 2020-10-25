@@ -8,6 +8,9 @@
 
 defined('_inc') or exit;
 
+/**
+ * Gestión de la sesión.
+ */
 class sesion {
 	const sv='login_';
     protected static $usuario=null;

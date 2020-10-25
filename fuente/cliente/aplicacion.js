@@ -13,7 +13,7 @@
  * Objeto base para las aplicaciones.
  * @class
  */
-function aplicacion() {
+var aplicacion=new function() {
     "use strict";
 
     this.servidor=null;
@@ -91,6 +91,6 @@ function aplicacion() {
      */
     this.errorServidor=function() {
     };
-}();
+};
 
 window["aplicacion"]=aplicacion;

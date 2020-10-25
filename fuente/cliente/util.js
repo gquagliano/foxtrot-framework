@@ -312,7 +312,7 @@ var util=new function() {
      * @param {string} t 
      * @returns {string}
      */
-    nl2this.br=function(t) {
+    this.nl2br=function(t) {
         return t.replace(/\n/g,"<br>");
     };
 

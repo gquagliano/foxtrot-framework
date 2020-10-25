@@ -8,7 +8,7 @@
 /**
  * Componente concreto Lista jerárquica (árbol).
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteArbol=function() {    
     "use strict";

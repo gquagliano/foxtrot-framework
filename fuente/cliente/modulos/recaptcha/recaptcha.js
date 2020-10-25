@@ -9,7 +9,7 @@
 /**
  * Módulo concreto Recaptcha.
  * @class
- * @extends {modulo}
+ * @extends modulo
  */
 var moduloRecaptcha=function() {
     "use strict";

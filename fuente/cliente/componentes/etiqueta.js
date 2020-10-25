@@ -8,7 +8,7 @@
 /**
  * Componente concreto Etiqueta.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteEtiqueta=function() {
     "use strict";

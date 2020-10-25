@@ -8,7 +8,7 @@
 /**
  * Componente concreto Opción.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteAlternar=function() {   
     "use strict";

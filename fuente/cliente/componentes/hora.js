@@ -8,7 +8,7 @@
 /**
  * Componente concreto Campo de horario.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteHora=function() {    
     "use strict";

@@ -8,7 +8,7 @@
 /**
  * Componente concreto Fila.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteFila=function() {
     "use strict";

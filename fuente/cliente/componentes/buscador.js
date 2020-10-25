@@ -8,7 +8,7 @@
 /**
  * Componente concreto Campo de búsqueda.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteBuscador=function() {  
     "use strict";

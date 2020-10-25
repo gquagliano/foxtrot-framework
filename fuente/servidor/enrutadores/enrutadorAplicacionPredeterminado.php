@@ -11,7 +11,7 @@ defined('_inc') or exit;
 /**
  * Enrutador de aplicaciones predeterminado, determina la aplicación a ejecutar en base a un listado de expresiones regulares de nombres de dominio.
  */
-class enrutadorAplicacionPredeterminado {
+class enrutadorAplicacionPredeterminado extends enrutadorAplicacion {
     protected $dominios;
 
     public function __construct($dominios) {

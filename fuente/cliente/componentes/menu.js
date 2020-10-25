@@ -8,7 +8,7 @@
 /**
  * Componente concreto Menú contextual.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteMenu=function() { 
     "use strict";

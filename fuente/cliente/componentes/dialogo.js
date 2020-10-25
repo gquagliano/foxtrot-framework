@@ -8,7 +8,7 @@
 /**
  * Componente concreto Diálogo (pop-up).
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteDialogo=function() { 
     "use strict";

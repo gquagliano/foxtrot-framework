@@ -8,7 +8,7 @@
 /**
  * Componente concreto Campo desplegable.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteDesplegable=function() {   
     "use strict";

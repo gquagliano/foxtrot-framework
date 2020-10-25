@@ -8,7 +8,7 @@
 /**
  * Componente concreto Navegación.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteNavegacion=function() {    
     "use strict";

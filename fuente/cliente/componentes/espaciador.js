@@ -8,7 +8,7 @@
 /**
  * Componente concreto Espaciador.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteEspaciador=function() { 
     "use strict";

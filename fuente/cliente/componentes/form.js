@@ -8,7 +8,7 @@
 /**
  * Componente concreto Formulario.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteFormulario=function() {   
     "use strict";

@@ -10,7 +10,7 @@
 /**
  * Enrutador concreto predeterminado.
  * @class
- * @extends {enrutador}
+ * @extends enrutador
  */
 var enrutadorPredeterminado=function() {    
     /**

@@ -8,7 +8,7 @@
 /**
  * Componente concreto Pestaña.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componentePestana=function() { 
     "use strict";

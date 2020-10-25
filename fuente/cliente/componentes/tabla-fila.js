@@ -8,7 +8,7 @@
 /**
  * Componente concreto Fila de tabla.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteFilaTabla=function() {   
     "use strict";

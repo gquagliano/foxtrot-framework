@@ -8,7 +8,7 @@
 /**
  * Componente concreto Contenedor.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteContenedor=function() {
     "use strict";

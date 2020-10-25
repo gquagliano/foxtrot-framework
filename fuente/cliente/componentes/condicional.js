@@ -8,7 +8,7 @@
 /**
  * Componente concreto Condicional.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteCondicional=function() {   
     "use strict";

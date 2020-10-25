@@ -8,7 +8,7 @@
 /**
  * Componente concreto Campo.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteCampo=function() {  
     "use strict";

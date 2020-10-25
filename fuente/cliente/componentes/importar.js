@@ -8,7 +8,7 @@
 /**
  * Componente concreto Importar.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteImportar=function() { 
     "use strict";

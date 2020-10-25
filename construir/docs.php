@@ -385,7 +385,6 @@ function procesarJs($archivo,$comentarios) {
                 break;
             } elseif($etiqueta->etiqueta=='class') {
                 $esClase=true;
-                break;
             } elseif($etiqueta->etiqueta=='extends') {
                 $extiende=$etiqueta->comentario;
             } elseif($etiqueta->etiqueta=='memberof') {

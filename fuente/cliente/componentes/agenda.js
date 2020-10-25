@@ -8,7 +8,7 @@
 /**
  * Componente concreto Agenda.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteAgenda=function() {    
     "use strict";

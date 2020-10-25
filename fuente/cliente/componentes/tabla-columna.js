@@ -8,7 +8,7 @@
 /**
  * Componente concreto Columna de tabla.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteColumnaTabla=function() {  
     "use strict";

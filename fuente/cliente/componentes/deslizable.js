@@ -8,7 +8,7 @@
 /**
  * Componente concreto Deslizable o carrusel.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componenteDeslizable=function() {   
     "use strict";

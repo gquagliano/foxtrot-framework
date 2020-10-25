@@ -8,7 +8,7 @@
 /**
  * Componente concreto Bloque de pestañas.
  * @class
- * @extends {componente}
+ * @extends componente
  */
 var componentePestanas=function() { 
     "use strict";

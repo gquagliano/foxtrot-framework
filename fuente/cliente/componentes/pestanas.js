@@ -5,13 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Bloque de pestañas.
- * @extends {Componente}
+ * Componente concreto Bloque de pestañas.
+ * @class
+ * @extends {componente}
  */
-var componentePestanas=function() {    
+var componentePestanas=function() { 
+    "use strict";
+
     this.componente="pestanas";
 
     /**

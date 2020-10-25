@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Campo desplegable.
+ * Componente concreto Campo desplegable.
+ * @class
+ * @extends {componente}
  */
 var componenteDesplegable=function() {   
+    "use strict";
+
     var t=this;
     
     this.componente="desplegable";

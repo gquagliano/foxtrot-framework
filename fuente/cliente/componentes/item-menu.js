@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Item de menú.
+ * Componente concreto Item de menú.
+ * @class
+ * @extends {componente}
  */
 var componenteItemMenu=function() {  
+    "use strict";
+
     var t=this;
 
     this.componente="item-menu";

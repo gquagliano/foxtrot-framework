@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Vista.
+ * Componente concreto Vista.
+ * @class
+ * @extends {componente}
  */
-var componenteVista=function() {    
+var componenteVista=function() {   
+    "use strict";
+
     this.componente="vista";
     this.arrastrable=false;
     this.nombreControlador=null;  

@@ -5,17 +5,21 @@
  * @version 1.0
  */
 
-"use strict";
-
 /**
- * Componente concreto.
- * @typedef Componente
+ * @typedef {componente} Componente concreto.
  */
 
 /**
- * @class Objeto base de los componentes.
+ * @external Object
+ */
+
+/**
+ * Objeto base para los componentes.
+ * @class
  */
 var componente=new function() {
+    "use strict";
+
     //Los métodos para sobreescribir en el componente concreto tienen una versión nnnComponente que permiten invocar
     //la funcionalidad por defecto.
 
@@ -276,7 +280,7 @@ var componente=new function() {
     /**
      * Asigna el nombre de la vista a la cual pertenece el componente.
      * @param {string} nombre - Nombre de la vista.
-     * @reeturns {Componente}
+     * @returns {componente}
      */
     this.establecerNombreVista=function(nombre) {
         this.nombreVista=nombre;
@@ -306,7 +310,7 @@ var componente=new function() {
 
     /**
      * Establece que el componente está oculto.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.establecerComponenteOculto=function() {
         this.oculto=true;
@@ -348,7 +352,7 @@ var componente=new function() {
      * Establece el selector para el elemento, actualizando los estilos preexistentes.
      * @param {(string|null)} nuevo - Nuevo selector. Puede ser un ID (#id), clase (.clase) o NULL para remover.
      * @param {boolean} [actualizar=true] - Determina si se deben actualizar el elemento y los estilos.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.establecerSelector=function(nuevo,actualizar) {
         if(typeof actualizar==="undefined") actualizar=true;
@@ -486,6 +490,7 @@ var componente=new function() {
 
     /**
      * Determina si un objeto es instancia de un componente.
+     * @memberof external:Object
      */
     Object.prototype.esComponente=function() {
         return this.cttr()==componente.cttr();
@@ -509,10 +514,10 @@ var componente=new function() {
 
     /**
      * Genera y devuelve un nuevo componente con las mismas propiedades y una copia del elemento del DOM.
-     * @param {Componente} padre - Padre del nuevo componente. Puede ser null si se especificará elemento.
+     * @param {componente} padre - Padre del nuevo componente. Puede ser null si se especificará elemento.
      * @param {boolean} [oculto=false] - Determina si el componente debe ser visible o permanecer anónimo aunque tenga un nombre asignado (a nivel API, no interfaz).
      * @param {(Node|Element)} [elemento] - Elemento del DOM. Si se especifica, en lugar de duplicar el actual, se intentará recuperar el mismo.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.clonar=function(padre,oculto,elemento) {
         if(typeof oculto==="undefined") oculto=false;
@@ -605,7 +610,7 @@ var componente=new function() {
 
     /**
      * Verifica y procesa las propiedades al inicializarse la instancia.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.procesarPropiedades=function() {
         //Vamos a verificar si hay propiedades cuyos valores contengan expresiones y, en esos casos, reasignarlas para que las expresiones sean procesadas.
@@ -651,7 +656,7 @@ var componente=new function() {
      * Elimina el componente (método para sobreescribir).
      * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
      * uso interno; omitir al solicitar eliminar este componente.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.eliminar=function(descendencia) {
         this.eliminarComponente(descendencia);
@@ -661,7 +666,7 @@ var componente=new function() {
     /**
      * Elimina el componente.
      * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.eliminarComponente=function(descendencia) {
         if(typeof descendencia==="undefined") descendencia=false;
@@ -735,7 +740,7 @@ var componente=new function() {
      * Establece el nombre de la instancia (método para sobreescribir).
      * @param {string} nombre - Nuevo nombre.
      * @param {boolean} [oculto=false] - Si es true, permanecerá oculto, es decir que no se publicará en componentes.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.establecerNombre=function(nombre,oculto) {
         if(typeof oculto==="undefined") oculto=false;
@@ -1735,7 +1740,7 @@ var componente=new function() {
 
     /**
      * Evento Listo (método para sobreescribir).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.listo=function() {
         return this.listoComponente();
@@ -1743,7 +1748,7 @@ var componente=new function() {
 
     /**
      * Evento Listo.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.listoComponente=function() {
         this.procesarPropiedades();
@@ -1752,7 +1757,7 @@ var componente=new function() {
 
     /**
      * Evento `editor` (método para sobreescribir).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.editor=function() {
         return this.editorComponente();
@@ -1760,7 +1765,7 @@ var componente=new function() {
 
     /**
      * Evento `editor`.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.editorComponente=function() {
         return this;
@@ -1768,7 +1773,7 @@ var componente=new function() {
 
     /**
      * Evento `editorDesactivado` (método para sobreescribir).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.editorDesactivado=function() {
         return this.editorDesactivadoComponente();
@@ -1776,7 +1781,7 @@ var componente=new function() {
 
     /**
      * Evento `editorDesactivado`.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.editorDesactivadoComponente=function() {
         return this;
@@ -1785,7 +1790,7 @@ var componente=new function() {
     /**
      * Evento 'Seleccionado' (método para sobreescribir).
      * @param {boolean} estado
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.seleccionado=function(estado) {
         return this.seleccionadoComponente(estado);
@@ -1794,7 +1799,7 @@ var componente=new function() {
     /**
      * Evento 'Seleccionado'.
      * @param {boolean} estado
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.seleccionadoComponente=function(estado) {
         return this;
@@ -1818,7 +1823,7 @@ var componente=new function() {
 
     /**
      * Intenta enviar el formulario (componente Formulario) al que pertenece el componente.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.enviarFormulario=function() {
         //Ejecutar evento Click en el botón predeterminado del formulario
@@ -1857,7 +1862,7 @@ var componente=new function() {
 
     /**
      * Habilita el componente (acceso directo a establecer la propiedad deshabilitado=false).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.habilitar=function() {
         this.propiedad(null,"deshabilitado",false);
@@ -1866,7 +1871,7 @@ var componente=new function() {
 
     /**
      * Deshabilita el componente (acceso directo a establecer la propiedad deshabilitado=true).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.deshabilitar=function() {
         this.propiedad(null,"deshabilitado",true);
@@ -1875,7 +1880,7 @@ var componente=new function() {
 
     /**
      * Oculta el componente (acceso directo a establecer la propiedad visibilidad=oculto).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.ocultar=function() {
         this.propiedad(null,"visibilidad","oculto");
@@ -1884,7 +1889,7 @@ var componente=new function() {
 
     /**
      * Muestra el componente (acceso directo a establecer la propiedad visibilidad=visible).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.mostrar=function() {
         this.propiedad(null,"visibilidad","visible");
@@ -1897,7 +1902,7 @@ var componente=new function() {
 
     /**
      * Devuelve el componente padre.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.obtenerPadre=function() {
         var elem=this.elemento.padre({
@@ -1937,8 +1942,8 @@ var componente=new function() {
 
     /**
      * Establece toda la descendencia como oculta.
-     * @param {Componente} [comp] - Uso interno.
-     * @returns {Componente}
+     * @param {componente} [comp] - Uso interno.
+     * @returns {componente}
      */
     this.ocultarDescendencia=function(comp) {
         if(typeof comp==="undefined") comp=this;

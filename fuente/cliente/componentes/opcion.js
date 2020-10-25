@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Opción.
+ * Componente concreto Opción.
+ * @class
+ * @extends {componente}
  */
-var componenteAlternar=function() {    
+var componenteAlternar=function() {   
+    "use strict";
+
     this.componente="opcion";
     this.contenidoEditable=true; 
 

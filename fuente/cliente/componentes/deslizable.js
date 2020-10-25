@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Deslizable o carrusel.
+ * Componente concreto Deslizable o carrusel.
+ * @class
+ * @extends {componente}
  */
-var componenteDeslizable=function() {    
+var componenteDeslizable=function() {   
+    "use strict";
+
     this.componente="deslizable";
 
     /**

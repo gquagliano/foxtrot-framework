@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Código.
+ * Componente concreto Código.
+ * @class
+ * @extends {componente}
  */
 var componenteCodigo=function() {    
+    "use strict";
+
     this.componente="codigo";
 
     /**

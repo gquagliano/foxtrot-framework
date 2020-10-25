@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Importar.
+ * Componente concreto Importar.
+ * @class
+ * @extends {componente}
  */
 var componenteImportar=function() { 
+    "use strict";
+
     this.componente="importar";
     this.elementoVista=null;
     this.nombreVista=null;

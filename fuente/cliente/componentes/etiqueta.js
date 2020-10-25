@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Etiqueta.
+ * Componente concreto Etiqueta.
+ * @class
+ * @extends {componente}
  */
 var componenteEtiqueta=function() {
+    "use strict";
+
     this.componente="etiqueta";
 
     /**

@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Lista jerárquica (árbol).
+ * Componente concreto Lista jerárquica (árbol).
+ * @class
+ * @extends {componente}
  */
 var componenteArbol=function() {    
+    "use strict";
+
     this.componente="arbol";
 
     /**

@@ -5,13 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Pestaña.
- * @extends {Componente}
+ * Componente concreto Pestaña.
+ * @class
+ * @extends {componente}
  */
-var componentePestana=function() {    
+var componentePestana=function() { 
+    "use strict";
+
     this.componente="pestana";
 
     this.activa=false;

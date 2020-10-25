@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Fila de tabla.
+ * Componente concreto Fila de tabla.
+ * @class
+ * @extends {componente}
  */
-var componenteFilaTabla=function() {    
+var componenteFilaTabla=function() {   
+    "use strict";
+
     this.componente="tabla-fila";
 
     this.autogenerado=false;

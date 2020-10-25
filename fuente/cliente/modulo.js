@@ -5,17 +5,22 @@
  * @version 1.0
  */
 
-"use strict";
+/**
+ * @external Object
+ */
 
 /**
  * Módulo concreto.
- * @typedef Modulo
+ * @typedef {modulo}
  */
 
 /**
- * @class Objeto base para los módulos.
+ * Objeto base para los módulos.
+ * @class
  */
 var modulo=new function() {
+    "use strict";
+
     this.servidor=null;
     this.nombre=null;
 
@@ -29,6 +34,7 @@ var modulo=new function() {
 
     /**
      * Determina si un objeto es instancia de un módulo.
+     * @memberof external:Object
      * @returns {boolean}
      */
     Object.prototype.esModulo=function() {
@@ -37,7 +43,7 @@ var modulo=new function() {
 
     /**
      * Fabrica una instancia de un módulo concreto dada su función.
-     * @returns {Modulo}
+     * @returns {modulo}
      */
     this.fabricarModulo=function(fn) {
         //Heredar prototipo
@@ -49,7 +55,7 @@ var modulo=new function() {
 
     /**
      * Inicializa la instancia tras ser creada (método para sobreescribir).
-     * @returns {Modulo}
+     * @returns {modulo}
      */
     this.inicializar=function() {
         return this.inicializarModulo();
@@ -57,7 +63,7 @@ var modulo=new function() {
 
     /**
      * Inicializa la instancia tras ser creada.
-     * @returns {Modulo}
+     * @returns {modulo}
      */
     this.inicializarModulo=function() {
         this.servidor=servidor.fabricar();

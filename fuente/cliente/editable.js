@@ -5,22 +5,33 @@
  * @version 1.0
  */
 
- "use strict";
+/**
+ * @external Node
+ */
 
 /**
- * @class Gestión de elementos editables (contenteditable).
+ * Gestión de elementos editables (contenteditable).
+ * @class
  */
 var editable=new function() {
+    "use strict";
+
     this.observador=null;
 
     var componentesEliminados={},
         moviendoSeleccion=false,
         moviendoNodo=null;
 
+    /**
+     * 
+     */
     this.mostrarBarra=function(elem) {
         //TODO
     };
 
+    /**
+     * 
+     */
     this.ocultarBarra=function() {
         //TODO
     };
@@ -164,6 +175,7 @@ var editable=new function() {
 
     /**
      * Establece la propiedad contentEditable.
+     * @memberof external:Node
      */
     Node.prototype.editable=function(estado) {
         if(util.esIndefinido(estado)) estado=true;
@@ -198,6 +210,7 @@ var editable=new function() {
     
     /**
      * Activa el modo de edición.
+     * @memberof external:Node
      */
     Node.prototype.iniciarEdicion=function() {
         this.editable(true);
@@ -236,6 +249,7 @@ var editable=new function() {
 
     /**
      * Desactiva el modo de edición.
+     * @memberof external:Node
      */
     Node.prototype.finalizarEdicion=function() {
         this.editable(false);

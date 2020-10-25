@@ -7,11 +7,7 @@
 
 /**
  * Gestor de comunicación cliente<->servidor.
- * @typedef Servidor
- */
-
-/**
- * @class Gestor de comunicación cliente->servidor.
+ * @class
  */
 var servidor=new function() {
     "use strict";
@@ -24,7 +20,7 @@ var servidor=new function() {
     /**
      * Establece las opciones predeterminadas.
      * @param {*} opciones - Opciones. Ver documentación de invocarMetodo().
-     * @returns {Servidor}
+     * @returns {servidor}
      */
     this.establecerPredeterminados=function(opciones) {
         this.predeterminados=Object.assign({
@@ -52,7 +48,7 @@ var servidor=new function() {
     /**
      * Establece la URL para las próximas consultas.
      * @param {string} url
-     * @returns {Servidor}
+     * @returns {servidor}
      */
     this.establecerUrl=function(url) {
         this.url=url;
@@ -61,7 +57,7 @@ var servidor=new function() {
 
     /**
      * Aborta todas las solicitudes en curso.
-     * @returns {Servidor}
+     * @returns {servidor}
      */
     this.abortarTodo=function() {
         this.ajax.forEach(function(obj) {
@@ -185,7 +181,7 @@ var servidor=new function() {
      * Evalúa y ejecuta la respuesta recibida desde el servidor.
      * @param {string} resp - Respuesta recibida.
      * @param {Object} opciones - Opciones establecidas al iniciar la solicitud.
-     * @returns {Servidor}
+     * @returns {servidor}
      */
     this.evaluarRespuesta=function(resp,opciones) {
         if(!resp||!util.esObjeto(resp)) {

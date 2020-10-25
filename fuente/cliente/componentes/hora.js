@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Campo de horario.
+ * Componente concreto Campo de horario.
+ * @class
+ * @extends {componente}
  */
 var componenteHora=function() {    
+    "use strict";
+
     this.componente="hora";
 
     /**

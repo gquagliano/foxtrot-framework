@@ -70,6 +70,7 @@
 
     /**
      * Construye un menú.
+     * @memberof ui
      * @param {Object[]} items - Items del menú.
      * @param {string} items[].etiqueta - Etiqueta.
      * @param {function} [items[].accion] - Función a ejecutar al seleccionarse la opción.
@@ -184,6 +185,7 @@
 
     /**
      * Actualiza el estado de los items del menú.
+     * @memberof ui
      * @param {Object} menu - Menú generado con ui.construirMenu().
      * @returns {ui}
      */
@@ -248,6 +250,7 @@
 
     /**
      * Devuelve los menú actualmente abiertos.
+     * @memberof ui
      * @returns {Object[]}
      */
     ui.obtenerMenuAbierto=function() {
@@ -256,6 +259,7 @@
 
     /**
      * Abre un menú.
+     * @memberof ui
      * @param {(Object[]|Object)} obj - Array de items de menú, un menú generado con ui.construirMenu() o cualquier elemento del DOM compatible.
      * @param {(Node|Element|Object)} [posicion] - Si se especifica un elemento del DOM, se posicionará el menú sobre el mismo; en caso contrario, debe especificarse un objeto con las propiedades {x,y}.
      * @param {string} [clase] - Clase CSS.
@@ -319,6 +323,7 @@
     };
 
     /**
+     * @memberof ui
      * Cierra el menú especificado, o todos los menús abiertos si se omite el primer parámetro.
      * @param {Object} [menu] - Menú a cerrar (objeto generado con ui.construirMenu o cualquier elemento del DOM compatible).
      * @param {boolean} [omitirAnimacion=false] - Cierra el menú inmediatamente, sin animaciones.

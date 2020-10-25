@@ -6,17 +6,20 @@
  */
 
 /**
- * @typedef Dialogo
+ * Instancia de un diálogo.
+ * @typedef {dialogo}
  */
 
 /**
- * @typedef Desplegable
+ * Instancia de un desplegable.
+ * @typedef {desplegable}
  */
 
 /**
  * Métodos anexados a la gestión de la interfaz.
  */
 (function() {
+    "use strict";
     
     //// Precarga
 
@@ -32,6 +35,7 @@
 
     /**
      * Muestra una animación de precarga.
+     * @memberof ui
      * @param {string} [tipo] - Tipo de precarga. "barra" mostrará una barra de progreso superior que no bloquee la vista; cualquier otro valor mostrará la precarga normal a pantalla completa.
      * @returns {ui}
      */
@@ -91,6 +95,7 @@
 
     /**
      * Oculta la animación de precarga.
+     * @memberof ui
      * @param {string} [tipo] - Tipo de precarga. "barra" mostrará una barra de progreso superior que no bloquee la vista; cualquier otro valor mostrará la precarga normal a pantalla completa.
      * @returns {ui}
      */
@@ -209,6 +214,7 @@
 
     /**
      * Construye un cuadro de diálogo.
+     * @memberof ui
      * @param {Object} parametros - Parámetros.
      * @param {(string|Node|Element)} [parametros[].cuerpo] - Elemento o HTML a incluir en el cuerpo.
      * @param {Object[]} [parametros[].opciones] - Botones de acción a generar.
@@ -302,6 +308,7 @@
 
     /**
      * Abre un diálogo construido con construirDialogo().
+     * @memberof ui
      * @param {Dialogo} dialogo 
      */
     ui.abrirDialogo=function(dialogo) {
@@ -332,6 +339,7 @@
 
     /**
      * Devuelve el diálogo actualmente abierto.
+     * @memberof ui
      * @returns {(Dialogo|null)}
      */
     ui.obtenerDialogoAbierto=function() {
@@ -340,6 +348,7 @@
 
     /**
      * Devuelve todos los diálogos abiertos.
+     * @memberof ui
      * @returns {Dialogo[]}
      */
     ui.obtenerDialogosAbiertos=function() {
@@ -348,6 +357,7 @@
 
     /**
      * Cierra un diálogo construido con construirDialogo().
+     * @memberof ui
      * @param {Dialogo} [dialogo] - Diálogo.
      * @param {number} [opcion=null] - Número de opción que cierra el diálogo, o NULL.
      * @param {boolean} [omitirAnimacion=false] - Si es true, ierra el diálogo inmediatamente.
@@ -397,6 +407,7 @@
 
     /**
      * Elimina o destruye un diálogo construido con construirDialogo().
+     * @memberof ui
      * @param {Dialogo} dialogo 
      */
     ui.eliminarDialogo=function(dialogo) {
@@ -524,6 +535,7 @@
 
     /**
      * Crea un desplegable debajo de un componente.
+     * @memberof ui
      * @param {Componente} componente - Componente relativo al cual se posicionará el desplegable.
      * @param {Object} [opciones] - Configuración del desplegable.
      * @param {string} [opciones.desplegar="abajo"] - Dirección hacia la cual se desplegará, relativo al componente (actualmente "abajo" es el único valor disponible).
@@ -536,6 +548,7 @@
      * @returns {Desplegable}
      *//**
      * Crea un desplegable debajo de un componente.
+     * @memberof ui
      * @param {Componente} componente - Componente relativo al cual se posicionará el desplegable.
      * @param {(Element|Node)} elemento - Elemento a desplegar. Puede omitirse para crear un desplegable vacío.
      * @param {Object} [opciones] - Configuración del desplegable.
@@ -601,6 +614,7 @@
 
     /**
      * Posiciona y muestra un desplegable.
+     * @memberof ui
      * @param {Desplegable} desplegable - Objeto generado con ui.crearDesplegable().
      * @returns {ui}
      */
@@ -627,6 +641,7 @@
 
     /**
      * Cierra un desplegable.
+     * @memberof ui
      * @param {Desplegable} desplegable - Objeto generado con ui.crearDesplegable().
      * @param {boolean} [animar=true] - Cerrar con animación.
      * @returns {ui}
@@ -656,6 +671,7 @@
 
     /**
      * Muestra un diálogo de alerta o información (equivalente a alert()).
+     * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
      * @param {function} [funcion] - Función de retorno.
      * @param {string} [etiquetaBoton="Aceptar"] - Etiqueta del botón.
@@ -686,6 +702,7 @@
     
     /**
      * Muestra un diálogo de confirmación.
+     * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
      * @param {function} [funcion] - Función de retorno. Recibirá un parámetro con la respuesta (true, false o null si fue cancelado).
      * @param {boolean} [cancelar=false] - Mostrar opción "Cancelar".
@@ -741,6 +758,7 @@
 
     /**
      * Muestra la sombra debajo de los diálogos.
+     * @memberof ui
      * @returns {ui}
      */
     ui.mostrarSombra=function() {
@@ -752,6 +770,7 @@
 
     /**
      * Oculta la sombra debajo de los diálogos.
+     * @memberof ui
      * @returns {ui}
      */
     ui.ocultarSombra=function() {
@@ -761,6 +780,7 @@
 
     /**
      * Devuelve el emlemento de la sombra.
+     * @memberof ui
      * @returns {Node}
      */
     ui.obtenerElementoSombra=function() {

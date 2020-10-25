@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Navegación.
+ * Componente concreto Navegación.
+ * @class
+ * @extends {componente}
  */
 var componenteNavegacion=function() {    
+    "use strict";
+
     this.componente="navegacion";
 
     /**

@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Bucle.
+ * Componente concreto Bucle.
+ * @class
+ * @extends {componente}
  */
-var componenteBucle=function() {    
+var componenteBucle=function() {   
+    "use strict";
+
     this.componente="bucle";
 
     this.itemsAutogenerados=[];

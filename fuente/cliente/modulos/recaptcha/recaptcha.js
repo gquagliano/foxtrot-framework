@@ -5,12 +5,15 @@
  * @version 1.0
  */
 
- "use strict";
 
 /**
- * @class Módulo concreto Recaptcha.
+ * Módulo concreto Recaptcha.
+ * @class
+ * @extends {modulo}
  */
-ui.registrarModulo("recaptcha",function() {
+var moduloRecaptcha=function() {
+    "use strict";
+
     var t=this;
     this.nombre="recaptcha";
     this.recaptchaListo=false;
@@ -88,4 +91,6 @@ ui.registrarModulo("recaptcha",function() {
 
         return this;
     };
-});
+};
+
+ui.registrarModulo("recaptcha",moduloRecaptcha);

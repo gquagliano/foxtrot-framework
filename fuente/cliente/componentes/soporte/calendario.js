@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
-/** @typedef {Calendario} */
-
 /**
- * @class Constructor de calendarios HTML.
+ * Constructor de calendarios HTML.
+ * @param {Object} opciones - Opciones.
+ * @param {number} [opciones.valor] - Valor en tiempo epoch.
+ * @param {function} [opciones.retorno] - Función a invocar cuando cambie el valor seleccionado. Recibirá como parámetros el nuevo valor y la instancia del calendario.
+ * @class
  */
-var calendario=function(opciones) {
+function calendario(opciones) {
     "use strict";
 
     //TODO Deshabilitar fechas

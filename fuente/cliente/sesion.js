@@ -6,8 +6,8 @@
  */
 
 /**
- * @class Gestor de acceso a los datos públicos de la sesión en el servidor.
- * @typedef Sesion
+ * Gestor de acceso a los datos públicos de la sesión en el servidor.
+ * @class
  */
 var sesion=new function() {
     "use strict";
@@ -18,7 +18,7 @@ var sesion=new function() {
      * Obtiene los datos públicos de usuario desde la sesión del servidor.
      * @param {function} funcion - Retorno. Recibirá como parámetro el valor público establecido en el servidor.
      * @param {Object} opciones - Parámetros de la solicitud. Ver documentación de servidor.invocarMetodo().
-     * @returns {Sesion}
+     * @returns {sesion}
      */
     this.obtenerUsuario=function(funcion,opciones) {
         if(typeof opciones==="undefined") opciones={};
@@ -35,7 +35,7 @@ var sesion=new function() {
     /**
      * Mantiene la sesión abierta realizando solicitudes periódicamente para prevenir el vencimiento.
      * @param {boolean} [activar=true] - Si se especifica false, detendrá este comportamiento.
-     * @returns {Sesion}
+     * @returns {sesion}
      */
     this.mantenerSesion=function(activar) {
         if(typeof activar==="undefined") activar=true;

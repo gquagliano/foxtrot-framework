@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Espaciador.
+ * Componente concreto Espaciador.
+ * @class
+ * @extends {componente}
  */
-var componenteEspaciador=function() {    
+var componenteEspaciador=function() { 
+    "use strict";
+
     this.componente="espaciador";
 
     this.propiedadesConcretas={

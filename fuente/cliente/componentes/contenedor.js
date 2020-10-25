@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Contenedor.
+ * Componente concreto Contenedor.
+ * @class
+ * @extends {componente}
  */
 var componenteContenedor=function() {
+    "use strict";
+
     this.componente="contenedor";
 
     this.propiedadesConcretas={

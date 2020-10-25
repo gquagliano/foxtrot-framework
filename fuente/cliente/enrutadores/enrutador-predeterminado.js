@@ -8,7 +8,9 @@
  "use strict";
 
 /**
- * @class Enrutador concreto predeterminado.
+ * Enrutador concreto predeterminado.
+ * @class
+ * @extends {enrutador}
  */
 var enrutadorPredeterminado=function() {    
     /**
@@ -17,8 +19,7 @@ var enrutadorPredeterminado=function() {
      */
     this.obtenerUrlVista=function(ruta) {
         return ruta+"/";
-    };
-    
+    };    
 };
 
 ui.registrarEnrutador("predeterminado",enrutadorPredeterminado);

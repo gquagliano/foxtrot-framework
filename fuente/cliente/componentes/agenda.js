@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Agenda.
+ * Componente concreto Agenda.
+ * @class
+ * @extends {componente}
  */
 var componenteAgenda=function() {    
+    "use strict";
+
     this.componente="agenda";
 
     /**

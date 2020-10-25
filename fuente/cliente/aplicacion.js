@@ -5,17 +5,17 @@
  * @version 1.0
  */
 
-"use strict";
-
 /**
- * Aplicación concreta.
- * @typedef Aplicacion
+ * @typedef {aplicacion} Aplicación concreta.
  */
 
 /**
- * @class Objeto base para las aplicaciones.
+ * Objeto base para las aplicaciones.
+ * @class
  */
-var aplicacion=new function() {
+function aplicacion() {
+    "use strict";
+
     this.servidor=null;
     
     /**

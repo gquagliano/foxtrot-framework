@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Campo de carga de archivo.
+ * Componente concreto Campo de carga de archivo.
+ * @class
+ * @extends {componente}
  */
-var componenteArchivo=function() {    
+var componenteArchivo=function() {
+    "use strict";
+
     this.componente="archivo";
 
     this.etiqueta=null;

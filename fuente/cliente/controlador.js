@@ -5,17 +5,21 @@
  * @version 1.0
  */
 
-"use strict";
-
 /**
- * Controlador concreto.
- * @typedef Controlador
+ * @typedef {controlador} Controlador concreto.
+ */
+ 
+/**
+ * @external Object
  */
 
 /**
- * @class Objeto base para los controladores.
+ * Objeto base para los controladores.
+ * @class
  */
 var controlador=new function() {
+    "use strict";
+
     this.nombre=null;
     this.servidor=null;
     this.vista=null;
@@ -141,6 +145,7 @@ var controlador=new function() {
 
     /**
      * Determina si un objeto es instancia de un controlador.
+     * @memberof external:Object
      */
     Object.prototype.esControlador=function() {
         return this.cttr()==controlador.cttr();
@@ -198,7 +203,7 @@ var controlador=new function() {
     /**
      * Establece los valores del controlador.
      * @param {Object} obj - Objeto {valores:propiedades} a asignar.
-     * @returns {Controlador}
+     * @returns {controlador}
      */
     this.establecerValores=function(obj) {
         this.valores=Object.assign(this.valores,obj);

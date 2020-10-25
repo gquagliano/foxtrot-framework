@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Menú contextual.
+ * Componente concreto Menú contextual.
+ * @class
+ * @extends {componente}
  */
-var componenteMenu=function() {    
+var componenteMenu=function() { 
+    "use strict";
+
     this.componente="menu";
 
     /**

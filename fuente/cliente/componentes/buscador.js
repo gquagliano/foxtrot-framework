@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Campo de búsqueda.
+ * Componente concreto Campo de búsqueda.
+ * @class
+ * @extends {componente}
  */
-var componenteBuscador=function() {    
+var componenteBuscador=function() {  
+    "use strict";
+
     var t=this;
 
     this.componente="buscador";

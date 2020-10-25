@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Tabla de datos.
+ * Componente concreto Tabla de datos.
+ * @class
+ * @extends {componente}
  */
-var componenteTabla=function() {    
+var componenteTabla=function() {   
+    "use strict";
+
     this.componente="tabla";
 
     var t=this;

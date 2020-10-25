@@ -6,13 +6,10 @@
  */
 
 /**
- * @typedef Ajax
+ * Utilidades para consultas AJAX
+ * @class
  */
-
- /**
- * @class Utilidades para consultas AJAX
- */
-var ajax=function(param) {
+function ajax(param) {
     "use strict";
 
     var self=this;
@@ -34,10 +31,16 @@ var ajax=function(param) {
 
     if(param.tiempo!==null) xhr.timeout=param.tiempo;
 
+    /**
+     * 
+     */
     this.obtenerXhr=function() {
         return xhr;
     };
 
+    /**
+     * 
+     */
     this.abortar=function() {
         xhr.abort();
         if(param.siempre) param.siempre.call(self);

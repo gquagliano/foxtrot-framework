@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Columna de tabla.
+ * Componente concreto Columna de tabla.
+ * @class
+ * @extends {componente}
  */
-var componenteColumnaTabla=function() {    
+var componenteColumnaTabla=function() {  
+    "use strict";
+
     this.componente="tabla-columna";
     this.encabezadoTemporal=null;
 

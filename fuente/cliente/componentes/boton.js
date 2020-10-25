@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Botón.
+ * Componente concreto Botón.
+ * @class
+ * @extends {componente}
  */
 var componenteBoton=function() {    
+    "use strict";
+
     this.componente="boton"; 
     this.contenidoEditable=true;
 

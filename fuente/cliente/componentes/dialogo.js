@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Diálogo (pop-up).
+ * Componente concreto Diálogo (pop-up).
+ * @class
+ * @extends {componente}
  */
 var componenteDialogo=function() { 
+    "use strict";
+
     var t=this;
     
     this.componente="dialogo";    

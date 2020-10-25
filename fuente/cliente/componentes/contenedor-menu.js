@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Contenedor de menú.
+ * Componente concreto Contenedor de menú.
+ * @class
+ * @extends {componente}
  */
 var componenteContenedorMenu=function() { 
+    "use strict";
+
     this.componente="contenedor-menu";
     this.ancla=null;
     

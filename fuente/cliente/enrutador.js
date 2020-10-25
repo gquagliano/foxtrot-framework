@@ -9,11 +9,12 @@
 
 /**
  * Enrutador concreto.
- * @typedef Enrutador
+ * @typedef {enrutador}
  */
 
 /**
- * @class Objeto base de los enrutadores.
+ * Objeto base para los enrutadores.
+ * @class
  */
 var enrutador=new function() {
     //Los enrutadores de cliente permiten traducir URL a nombres de vistas (para implementaciones sin servidor) y traducir nombres de vistas y rutas a recursos a URL

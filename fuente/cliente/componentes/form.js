@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Formulario.
+ * Componente concreto Formulario.
+ * @class
+ * @extends {componente}
  */
-var componenteFormulario=function() {    
+var componenteFormulario=function() {   
+    "use strict";
+
     this.componente="form";
 
     /**

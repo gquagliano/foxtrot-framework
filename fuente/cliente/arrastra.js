@@ -5,6 +5,10 @@
  * @version 1.0
  */
 
+/**
+ * @external Node
+ */
+
  /**
  * Gestor de eventos de arrastrar y soltar (drag and drop), ideado para abastraer el acceso al mismo para abreviar el código y simplificar
  * la resolución de cualquier incompatibilidad entre navegadores, pero implementando las funciones HTML5 nativas.
@@ -15,6 +19,9 @@
     var opcionesArrastre={},
         opcionesDestinos={};
 
+    /**
+     * @memberof external:Node
+     */
     Node.prototype.removerArrastre=function() {
         var id=this.obtenerId();
         if(!opcionesArrastre.hasOwnProperty(id)) return this;
@@ -38,6 +45,9 @@
         return this;
     };
 
+    /**
+     * @memberof external:Node
+     */
     Node.prototype.removerDestino=function() {
         var id=this.obtenerId();
         if(!opcionesDestinos.hasOwnProperty(id)) return this;
@@ -112,6 +122,7 @@
 
     /**
      * Hace a los elementos arrastrables. Establecer opciones=false para deshabilitar.
+     * @memberof external:Node
      */
     Node.prototype.arrastrable=function(opciones) {
         if(util.esIndefinido(opciones)) opciones={};
@@ -179,6 +190,7 @@
 
     /**
      * Hace que los elementos admitan que se suelte otro elemento dentro de sí. Establecer opciones=false para deshabilitar. 
+     * @memberof external:Node
      */
     Node.prototype.crearDestino=function(opciones) {
         if(util.esIndefinido(opciones)) opciones={};
@@ -215,6 +227,7 @@
 
     /**
      * Hace que los elementos acepten arrastrar y soltar archivos desde el escritorio del cliente sobre ellos. Establecer opciones=false para deshabilitar.
+     * @memberof external:Node
      */
     Node.prototype.crearDestinoArchivo=function(opciones) {
 
@@ -224,6 +237,7 @@
 
     /**
      * Detiene momentáneamente o reestablece las operaciones de arrastre para el elemento.
+     * @memberof external:Node
      */
     Node.prototype.pausarArrastre=function(pausar) {
         if(util.esIndefinido(pausar)) pausar=true;
@@ -281,6 +295,7 @@
 
     /**
      * Aplica pausarArrastre(estado) en el elemento y toda su ascendencia.
+     * @memberof external:Node
      */
     Node.prototype.pausarArrastreArbol=function(estado) {
         var elem=this;

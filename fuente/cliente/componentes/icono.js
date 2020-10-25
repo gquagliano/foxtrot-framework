@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Ícono.
+ * Componente concreto Ícono.
+ * @class
+ * @extends {componente}
  */
-var componenteIcono=function() {    
+var componenteIcono=function() { 
+    "use strict";
+
     this.componente="icono";
 
     /**

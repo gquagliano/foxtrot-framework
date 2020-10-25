@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Texto.
+ * Componente concreto Texto.
+ * @class
+ * @extends {componente}
  */
 var componenteTexto=function() {    
+    "use strict";
+
     this.componente="texto";
     this.contenidoEditable=true;   
 

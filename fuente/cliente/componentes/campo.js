@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Campo.
+ * Componente concreto Campo.
+ * @class
+ * @extends {componente}
  */
-var componenteCampo=function() {    
+var componenteCampo=function() {  
+    "use strict";
+
     var t=this;
     
     this.componente="campo";

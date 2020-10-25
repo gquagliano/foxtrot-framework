@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Fila.
+ * Componente concreto Fila.
+ * @class
+ * @extends {componente}
  */
 var componenteFila=function() {
+    "use strict";
+
     this.componente="fila";
 
     /**

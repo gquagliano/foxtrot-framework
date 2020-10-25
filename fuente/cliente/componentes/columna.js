@@ -5,12 +5,14 @@
  * @version 1.0
  */
 
- "use strict";
-
 /**
- * @class Componente concreto Columna.
+ * Componente concreto Columna.
+ * @class
+ * @extends {componente}
  */
 var componenteColumna=function() {
+    "use strict";
+
     this.componente="columna";
 
     this.propiedadesConcretas={

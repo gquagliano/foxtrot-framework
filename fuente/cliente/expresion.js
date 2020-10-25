@@ -5,14 +5,13 @@
  * @version 1.0
  */
 
-"use strict";
-
-//Versión provisoria simplificada
-
 /**
- * @class Intérprete de expresiones.
+ * Intérprete de expresiones (Versión provisoria simplificada).
+ * @class 
  */
-var expresion=function(expr) {
+function expresion(expr) {
+    "use strict";
+
     this.cadena=null;
 
     this.variables={
@@ -32,6 +31,9 @@ var expresion=function(expr) {
         eco:function(v) { return v; },
     };
     
+    /**
+     * 
+     */
     this.establecerVariables=function(obj) {
         var t=this;
         obj.porCada(function(clave,valor) {
@@ -40,6 +42,9 @@ var expresion=function(expr) {
         return this;
     };
     
+    /**
+     * 
+     */
     this.establecerFunciones=function(obj) {
         var t=this;
         obj.porCada(function(clave,valor) {
@@ -48,14 +53,23 @@ var expresion=function(expr) {
         return this;
     };
 
+    /**
+     * 
+     */
     this.obtenerVariables=function() {
         return this.variables;
     };
     
+    /**
+     * 
+     */
     this.obtenerFunciones=function() {
         return this.funcion;
     };
     
+    /**
+     * 
+     */
     this.establecerExpresion=function(expr) {
         this.cadena=null;
         if(expresion.esExpresion(expr)) {
@@ -74,6 +88,9 @@ var expresion=function(expr) {
         return null;
     }.bind(this);
 
+    /**
+     * 
+     */
     this.ejecutar=function() {
         if(!this.cadena) return null;
         
@@ -175,6 +192,7 @@ var expresion=function(expr) {
 
 /**
  * Determina si un objeto es una expresión o no.
+ * @memberof expresion
  */
 expresion.esExpresion=function(obj) {
     return typeof obj==="string"&&obj.trim().length>1&&obj.trim().substr(0,1)=="{"&&obj.trim().substr(-1)=="}";
@@ -182,6 +200,7 @@ expresion.esExpresion=function(obj) {
 
 /**
  * Determina si una cadena probablemente contiene expresiones o no.
+ * @memberof expresion
  */
 expresion.contieneExpresion=function(obj) {
     return typeof obj==="string"&&obj.trim().length>2&&/\{.+?\}/.test(obj);
@@ -193,6 +212,7 @@ expresion.funcionesGlobales={};
 /**
  * Establece las variables que estarán siempre disponibles al utilizar expresion.evaluar().
  * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de variables.
+ * @memberof expresion
  */
 expresion.establecerVariablesGlobales=function(obj) {
     expresion.variablesGlobales=obj;
@@ -202,6 +222,7 @@ expresion.establecerVariablesGlobales=function(obj) {
 /**
  * Establece las funciones que estarán siempre disponibles al utilizar expresion.evaluar().
  * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de funciones.
+ * @memberof expresion
  */
 expresion.establecerFuncionesGlobales=function(obj) {
     expresion.funcionesGlobales=obj;
@@ -211,6 +232,7 @@ expresion.establecerFuncionesGlobales=function(obj) {
 /**
  * Busca y ejecuta todas las expresiones presentes en una cadena. Las llaves pueden escaparse con \{ \} para evitar que una expresión sea evaluada.
  * @returns {*} Cuando la cadena contenga una única expresión, el valor de retorno puede ser cualquier tipo resultante de la misma. Cuando se trate de una cadena con múltiples expresiones, el retorno siempre será una cadena con las expresiones reemplazadas por sus valores.
+ * @memberof expresion
  */
 expresion.evaluar=function(cadena) {
     if(typeof cadena!=="string") return null;

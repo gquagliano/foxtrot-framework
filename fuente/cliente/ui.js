@@ -58,14 +58,23 @@ var ui=new function() {
 
     ////Acceso a variables generales
 
+    /**
+     * 
+     */
     this.obtenerMarco=function() {
         return marco;
     };
 
+    /**
+     * 
+     */
     this.obtenerDocumento=function() {
         return doc;
     };
 
+    /**
+     * 
+     */
     this.obtenerCuerpo=function(vista) {
         if(typeof vista==="undefined") return cuerpo;
 
@@ -73,20 +82,32 @@ var ui=new function() {
         if(instanciasVistas.hasOwnProperty(vista)) return instanciasVistas[vista].obtenerElemento();
     };
 
+    /**
+     * 
+     */
     this.obtenerElementoEstilos=function() {
         return estilos;
     };
 
+    /**
+     * 
+     */
     this.obtenerUrlBase=function() {
         return urlBase?urlBase:document.querySelector("base").atributo("href");
     };
 
+    /**
+     * 
+     */
     this.esCordova=function() {
         return esCordova;
     };
 
     ////Estilos
 
+    /**
+     * 
+     */
     this.obtenerEstilos=function(selector,tamano,origen) {        
         if(util.esIndefinido(selector)) selector=null;
         if(util.esIndefinido(tamano)) tamano=null;
@@ -349,6 +370,9 @@ var ui=new function() {
 
     ////Gestión de componentes
 
+    /**
+     * 
+     */
     this.generarId=function() {
         var elem;
         do {
@@ -394,6 +418,9 @@ var ui=new function() {
         return clase;
     };
 
+    /**
+     * 
+     */
     this.registrarComponente=function(nombre,funcion,configuracion) {
         configuracion.nombre=nombre;
         componentesRegistrados[nombre]={
@@ -403,10 +430,16 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * 
+     */
     this.obtenerConfigComponente=function(nombre) {
         return componentesRegistrados[nombre].config;
     };
 
+    /**
+     * 
+     */
     this.obtenerComponentes=function() {
         return componentesRegistrados;
     };
@@ -738,15 +771,24 @@ var ui=new function() {
     //Asimismo, la recomendación es acceder a la vista a través del controlador; los siguientes métodos existen principalmente para 
     //procesos internos de Foxtrot.
 
+    /**
+     * 
+     */
     this.obtenerInstanciasVistas=function() {
         return instanciasVistas;
     };
 
+    /**
+     * 
+     */
     this.obtenerInstanciaVista=function(nombre) {
         if(!instanciasVistas.hasOwnProperty(nombre)) return null;
         return instanciasVistas[nombre];
     };
 
+    /**
+     * 
+     */
     this.establecerNombreVistaPrincipal=function(nombre) {
         nombreVistaPrincipal=nombre;
 
@@ -756,10 +798,16 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * 
+     */
     this.obtenerNombreVistaPrincipal=function() {
         return nombreVistaPrincipal;
     };
 
+    /**
+     * 
+     */
     this.obtenerInstanciaVistaPrincipal=function() {
         return instanciasVistas[nombreVistaPrincipal];
     };
@@ -834,6 +882,9 @@ var ui=new function() {
 
     ////Controladores
 
+    /**
+     * 
+     */
     this.registrarControlador=function(nombre,funcion) {
         controladores[nombre]=funcion;        
         return this;
@@ -928,12 +979,18 @@ var ui=new function() {
 
     ////Gestión de la UI
 
+    /**
+     * 
+     */
     this.establecerModoEdicion=function() {
         modoEdicion=true;
         marco=document.querySelector("#foxtrot-marco");
         return this;
     };
 
+    /**
+     * 
+     */
     this.enModoEdicion=function() {
         return modoEdicion;
     };
@@ -1072,6 +1129,9 @@ var ui=new function() {
         return this.obtenerEnrutador();
     };
 
+    /**
+     * 
+     */
     this.procesarUrl=function(url) {
         var resultado={
             url:url,
@@ -1317,6 +1377,9 @@ var ui=new function() {
 
     ////Inicialización y ejecución del cliente
 
+    /**
+     * 
+     */
     this.establecerCordova=function() {
         esCordova=true;
         urlBase=localStorage.getItem("_urlBase");
@@ -1546,9 +1609,9 @@ var configComponente={
     grupo:null
 };
 
-/** @var {Componente[]} componentes - Instancias de componentes con nombre. */
+/** @var {componente[]} componentes - Instancias de componentes con nombre. */
 var componentes={};
-/** @var {Controlador[]} controladores - Instancias de controladores cargados. */
+/** @var {controlador[]} controladores - Instancias de controladores cargados. */
 var controladores={};
 var _vistasEmbebibles={};
 

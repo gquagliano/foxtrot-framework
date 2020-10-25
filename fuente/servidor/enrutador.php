@@ -91,6 +91,14 @@ class enrutador {
     }
 
     /**
+     * Devuelve el nombre de la vista principal.
+     * @return string
+     */
+    public function obtenerNombreVistaPrincipal() {
+        return 'inicio';
+    }
+
+    /**
      * Analiza la URL provista, estableciendo las propiedades del entutador.
      * @return \enrutador
      */

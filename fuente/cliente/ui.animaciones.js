@@ -19,6 +19,7 @@
 
     /**
      * Establece el evento animationend y un temporizador en caso de que el navegador no tenga soporte para el mismo.
+     * @private
      * @param {(Node|Element)} elem 
      * @param {function} funcion
      */
@@ -38,6 +39,7 @@
 
     /**
      * Remueve el evento animationend y el temporizador.
+     * @private
      * @param {(Node|Element)} elem 
      */
     function removerEvento(elem) {

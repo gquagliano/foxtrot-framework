@@ -266,10 +266,8 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         }
         
         //Buscar @return/@returns de este bloque
-        $salida.=$buscarReturn($bloque);
+        $salida.=PHP_EOL.$buscarReturn($bloque);
     }
-
-    $salida.=PHP_EOL;
 
     return $salida;
 }

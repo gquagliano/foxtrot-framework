@@ -190,7 +190,7 @@ var componenteImagen=function() {
      */
     this.editor=function() {
         //Mostrar imagen de relleno, si corresponde
-        if(!this.propiedadAsignada("origen")) this.img.atributo("src",icono);
+        if(!this.img.atributo("src")) this.img.atributo("src",icono);
 
         return this.editorComponente();
     };    

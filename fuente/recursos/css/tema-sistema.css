@@ -88,6 +88,7 @@ label,.label {
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: inherit;
+    vertical-align: top;
 }
 label.custom-control-label {
     margin: 0;

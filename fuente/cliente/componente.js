@@ -1453,7 +1453,7 @@ var componente=new function() {
                 valor:this.valor(),
                 //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
                 controlador:ctl,
-                componentes:ctl.componentes
+                componentes:ctl?ctl.componentes:componentes
             },this.datos);
         
         //Evaluar expresiones, si las contiene

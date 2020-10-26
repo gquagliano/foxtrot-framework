@@ -87,6 +87,10 @@ var componenteColumnaTabla=function() {
      */
     this.editor=function() {
         //Mostrar encabezados en el editor
+
+        var elem=this.elemento.querySelectorAll(".foxtrot-encabezado-temporal");
+        if(elem.length) elem.remover();
+        
         this.encabezadoTemporal=documento.crear("<div class='foxtrot-editor-temporal foxtrot-encabezado-temporal'>")
             .anteponerA(this.elemento);
         var encabezado=this.propiedad("encabezado");

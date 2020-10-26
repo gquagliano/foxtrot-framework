@@ -12,7 +12,7 @@
 .table-responsive {
     overflow: visible;
 }
-.foxtrot-modo-edicion tr {
+.foxtrot-modo-edicion .ocultar-contenidos tr {
     /* Debe ser block/flex, no table-row, a fin de que se pueda seleccionar cuando no tiene celdas */
     display: flex !important;
 }
@@ -22,7 +22,7 @@
     display: block;
 }
 .foxtrot-modo-edicion td {
-    padding-top: 3em;
+    padding-top: 3em !important;
 }
 .foxtrot-modo-edicion td .foxtrot-encabezado-temporal {
     white-space: nowrap;

@@ -15,9 +15,9 @@ Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, co
 **[Video de introducción](https://youtu.be/j0hDNhlKW3Q)**  
 Instalación, descripción del gestor, el editor y la estructura del sistema, y vistazo general a las principales funciones.
 
-**[Aplicación de ejemplo](https://demo.f7.foxtrot.net.ar)**  
+**[Aplicación de ejemplo](https://demo.foxtrotcloud.com)**  
 Usuario: admin  
-Contraseña: test  
+Contraseña: admin  
 *Nota: La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
 
 ### Estado

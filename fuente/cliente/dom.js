@@ -1290,6 +1290,7 @@
 
     /**
      * Devuelve el ID del elemento, inicializandolo si es necesario.
+     * @function
      * @memberof external:Window
      * @returns {number}
      */
@@ -1297,24 +1298,32 @@
 
     /**
      * Inicializa los metadatos de un elemento del DOM. Trabaja con una instancia de Element (no objetoDom).
+     * @function
      * @memberof external:Window
      */
     Window.prototype.inicializarMetadatos=Node.prototype.inicializarMetadatos;
 
     /**
      * Establece o devuelve matadatos del elemento. Trabaja con un almacén de metadatos común a todos los elementos.
+     * @function
+     * @param {*} clave
+     * @param {*} valor
      * @memberof external:Window
      */
     Window.prototype.metadato=Node.prototype.metadato;
 
     /**
      * Devuelve todos los metadatos del elemento.
+     * @function
      * @memberof external:Window
      */
     Window.prototype.metadatos=Node.prototype.metadatos;
 
     /**
      * Devuelve o asigna una propiedad.
+     * @function
+     * @param {*} nombre
+     * @param {*} valor
      * @memberof external:Window
      */
     Window.prototype.propiedad=Node.prototype.propiedad;
@@ -1322,6 +1331,7 @@
     /**
      * Devuelve el ancho del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el ancho de la página. Si el elemento
      * es window, devolverá el ancho de la ventana (viewport).
+     * @function
      * @memberof external:Window
      */
     Window.prototype.ancho=Node.prototype.ancho;
@@ -1329,6 +1339,7 @@
     /**
      * Devuelve el alto del elemento, incluyendo bordes (pero no márgenes). Si el elemento es document, devolverá el alto de la página. Si el elemento
      * es window, devolverá el alto de la ventana (viewport).
+     * @function
      * @memberof external:Window
      */
     Window.prototype.alto=Node.prototype.alto;

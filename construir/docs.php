@@ -147,7 +147,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$nombre) return 'Devuelve: `'.trim(trim($etiqueta->comentario),'{}').'`'.PHP_EOL.PHP_EOL;
+            if($etiqueta->etiqueta==$nombre) return '**Devuelve:** `'.trim(trim($etiqueta->comentario),'{}()').'`'.PHP_EOL.PHP_EOL;
         }
     };
 
@@ -157,27 +157,33 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     }    
 
     $salida='';
-    
-    $parametros=explode(',',$parametros);
 
-    //Analizar (solo php)
-    foreach($parametros as $i=>$parametro) {
-        $parametros[$i]=(object)[
-            'variable'=>trim($parametro),
-            'opcional'=>false,
-            'predeterminado'=>'',
-            'tipo'=>false,
-            'descripcion'=>''
-        ];
-        
-        if($lenguaje=='php') {
-            $p=strpos($parametro,'=');
-            if($p!==false) {
-                $parametros[$i]->variable=trim(substr($parametro,0,$p));
-                $parametros[$i]->opcional=true;
-                $parametros[$i]->predeterminado=trim(substr($parametro,$p+1));
+    $autogenerarParametros=$parametros===true;
+    
+    if(is_string($parametros)) {
+        $parametros=explode(',',$parametros);
+
+        //Analizar (solo php)
+        foreach($parametros as $i=>$parametro) {
+            $parametros[$i]=(object)[
+                'variable'=>trim($parametro),
+                'opcional'=>false,
+                'predeterminado'=>'',
+                'tipo'=>false,
+                'descripcion'=>''
+            ];
+            
+            if($lenguaje=='php') {
+                $p=strpos($parametro,'=');
+                if($p!==false) {
+                    $parametros[$i]->variable=trim(substr($parametro,0,$p));
+                    $parametros[$i]->opcional=true;
+                    $parametros[$i]->predeterminado=trim(substr($parametro,$p+1));
+                }
             }
         }
+    } else {
+        $parametros=[];
     }
 
     $miembros=[];
@@ -191,17 +197,30 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
             if($lenguaje=='php') {
                 if($etiqueta->etiqueta=='var'&&preg_match('/^(.+?) (\$.+?)( (.+?))$/',$etiqueta->comentario,$coincidencia2)) {
                     $variable=trim($coincidencia2[2]);
-                    foreach($parametros as $parametro) {
-                        if($variable==$parametro->variable) {
-                            $parametro->tipo=$coincidencia2[1];
-                            $parametro->descripcion=$coincidencia2[4];
+                    if($autogenerarParametros) {
+                        //Crear parámetro desde el comentario
+                        $parametros[]=(object)[
+                            'variable'=>$variable,
+                            'tipo'=>$coincidencia2[1],
+                            'descripcion'=>$coincidencia2[4],
+                            //El inconveniente es que en phpdoc lo siguiente no se puede especificar
+                            'opcional'=>false,    
+                            'predeterminado'=>''
+                        ];
+                    } else {
+                        //Actualizar parámetro de la función
+                        foreach($parametros as $parametro) {
+                            if($variable==$parametro->variable) {
+                                $parametro->tipo=$coincidencia2[1];
+                                $parametro->descripcion=$coincidencia2[4];
+                            }
                         }
                     }
                 }
             } elseif($lenguaje=='js') {
                 //En js, la información sobre si es opcional y el valor predeterminado están en los comentarios
-                if($etiqueta->etiqueta=='param'&&preg_match('/^\{(.+?)\} (\[.+?=.+=\]|\[.+?\]|.+?)( - (.+?))$/',$etiqueta->comentario,$coincidencia2)) {
-                    $tipo=trim($coincidencia2[1],'{}');
+                if($etiqueta->etiqueta=='param'&&preg_match('/^\{(.+?)\} (\[.+?=.+=\]|\[.+?\]|.+?)( - (.+?))?$/',$etiqueta->comentario,$coincidencia2)) {
+                    $tipo=trim($coincidencia2[1],'{}()');
                     $descripcion=$coincidencia2[4];
                     $opcional=false;
                     $predeterminado=null;
@@ -229,7 +248,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
                         //parametro.propiedad => Agregar a $miembros
                         if(!is_array($miembros[$miembroDe])) $miembros[$miembroDe]=[];
                         $miembros[$miembroDe][]=(object)[
-                            'variable'=>trim($nombre),
+                            'variable'=>$nombre,
                             'opcional'=>$opcional,
                             'predeterminado'=>$predeterminado,
                             'tipo'=>$tipo,
@@ -237,13 +256,24 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
                         ];
                         continue;
                     } else {
-                        //Actualizar parámetro
-                        foreach($parametros as $parametro) {
-                            if($nombre==$parametro->variable) {
-                                $parametro->tipo=$tipo;
-                                $parametro->descripcion=$descripcion;
-                                $parametro->opcional=$opcional;
-                                $parametro->predeterminado=$predeterminado;
+                        if($autogenerarParametros) {
+                            //Crear parámetro desde el comentario
+                            $parametros[]=(object)[
+                                'variable'=>$nombre,
+                                'tipo'=>$tipo,
+                                'descripcion'=>$descripcion,
+                                'opcional'=>$opcional,    
+                                'predeterminado'=>$predeterminado
+                            ];
+                        } else {
+                            //Actualizar parámetro
+                            foreach($parametros as $parametro) {
+                                if($nombre==$parametro->variable) {
+                                    $parametro->tipo=$tipo;
+                                    $parametro->descripcion=$descripcion;
+                                    $parametro->opcional=$opcional;
+                                    $parametro->predeterminado=$predeterminado;
+                                }
                             }
                         }
                     }
@@ -251,8 +281,10 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
             }
         }
 
-        foreach($parametros as $parametro) {
-            $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
+        if(!count($parametros)) {
+            $salida.='| (Ninguno) |'.PHP_EOL;
+        } else {
+            foreach($parametros as $parametro) $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
         }
 
         //Miembros
@@ -372,11 +404,12 @@ function procesarJs($archivo,$comentarios) {
     foreach($comentarios as $comentario) {
         if(!$comentario->sentencia) continue;
 
-        //Buscar @class, @extends, @ignore, @memberof, @private
+        //Buscar @class, @extends, @ignore, @memberof, @private, @function
         $ignorar=false;
         $esClase=null;
         $miembroDe=null;
         $extiende=null;
+        $funcion=null;
         foreach($comentario->bloques[0]->etiquetas as $etiqueta) {
             if($etiqueta->etiqueta=='ignore'||$etiqueta->etiqueta=='private') {
                 $ignorar=true;
@@ -387,6 +420,8 @@ function procesarJs($archivo,$comentarios) {
                 $extiende=$etiqueta->comentario;
             } elseif($etiqueta->etiqueta=='memberof') {
                 $miembroDe=$etiqueta->comentario;
+            } elseif($etiqueta->etiqueta=='function') {
+                $funcion=true;
             }
         }
         if($ignorar) continue;
@@ -420,6 +455,7 @@ function procesarJs($archivo,$comentarios) {
             $salida='';
 
             //Solo tomamos propiedades o funciones globales
+            //Las propiedades que no tengan asignada una función, deben tener @function para ser consideradas
             if(preg_match('/(this|.+?\.prototype|.+?)\.(.+?)=function\s*?\((.*?)\)/',$comentario->sentencia,$coincidencia)) {
                 $nombre=$coincidencia[2];
                 $parametros=$coincidencia[3];
@@ -427,6 +463,9 @@ function procesarJs($archivo,$comentarios) {
                 if($clase) continue;
                 $nombre=$coincidencia[1];
                 $parametros=$coincidencia[2];
+            } elseif($funcion&&preg_match('/(this|.+?\.prototype|.+?)\.(.+?)=/',$comentario->sentencia,$coincidencia)) {
+                $nombre=$coincidencia[2];
+                $parametros=true; //El valor true forzará el uso de los @param en lugar de los parámetros reales de la función
             } else {
                 continue;
             }

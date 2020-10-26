@@ -37,7 +37,7 @@ var util=new function() {
      * Determina si un objeto es estrictamente un objeto (está definido y no es un array).
      */
     this.esObjeto=function(obj) {
-        return typeof obj==="object"&&!util.esArray(obj);
+        return typeof obj==="object"&&!this.esArray(obj);
     };
 
     /**
@@ -204,7 +204,7 @@ var util=new function() {
      * @returns {string}
      */
     this.hexARgb=function(hex) {
-        return util.hexARgba(hex);
+        return this.hexARgba(hex);
     };
 
     /**
@@ -213,7 +213,7 @@ var util=new function() {
      * @returns {string}
      */
     this.rgbaAString=function(color) {
-        if(typeof color=="string") color=util.hexARgba(color);
+        if(typeof color=="string") color=this.hexARgba(color);
         if(!color) return "";
         return "rgba("+color.r+","+color.g+","+color.b+","+color.a+")";
     };
@@ -323,7 +323,7 @@ var util=new function() {
      * @returns {string}
      */
     this.periodo=function(v,format) {
-        if(isNaN(v)) v=util.procesarValores(v);
+        if(isNaN(v)) v=this.procesarValores(v);
         if(isNaN(v)) v=0;
 
         if(typeof format==="undefined") format="hms";
@@ -382,7 +382,7 @@ var util=new function() {
                 res+="00";
             }
         } else if(format=="dec") {
-            res=util.formatoNumero(v/60/60);
+            res=this.formatoNumero(v/60/60);
         }
 
         return res;
@@ -459,7 +459,7 @@ var util=new function() {
     };
 
     this.horasAMinutosUtc=function(q) {
-        q=util.horasAMinutos(q);
+        q=this.horasAMinutos(q);
         if(q===null) return q;
         t+=new Date().getTimezoneOffset();
     };
@@ -480,7 +480,7 @@ var util=new function() {
     * @param q String.
     */
     this.horasASegundosUtc=function(q) {
-        q=util.horasASegundos(q);
+        q=this.horasASegundos(q);
         if(q===null) return q;
         q+=new Date().getTimezoneOffset()*60;
         return q;
@@ -504,7 +504,7 @@ var util=new function() {
      * @param q Tiempo epoch.
      */
     this.epochAMinutos=function(q) {
-        q= util.fechaHora(q,"this.H=i").split(":");
+        q=this.fechaHora(q,"H:i").split(":");
         return parseInt(q[0])*60+parseInt(q[1]);
     };
 
@@ -542,8 +542,8 @@ var util=new function() {
      * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
      */
     this.fecha=function(d,f) {
-        if(!(d instanceof Date)) d=util.epochAFecha(d);
-        if(!util.validarFecha(d)) return "";
+        if(!(d instanceof Date)) d=this.epochAFecha(d);
+        if(!this.validarFecha(d)) return "";
 
         if(typeof f=="undefined") f="n/j/Y";        
 
@@ -574,13 +574,13 @@ var util=new function() {
     };
 
     /**
-     * Convierte una fecha a string, incluyendo horas y minutos. La salida será UTC. Esta función es alias de util.dateToString(v,f) con distinto valor predeterminado para f.
+     * Convierte una fecha a string, incluyendo horas y minutos. La salida será UTC. Esta función es alias de this.dateToString(v,f) con distinto valor predeterminado para f.
      * @param v Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, d/m/Y this.H=i).
+     * @param f Formato de salida. Opcional (predeterminado, d/m/Y H:i).
      */
     this.fechaHora=function(v,f) {
-        if(typeof f=="undefined") f="n/j/Y this.H=i";
-        return util.fecha(v,f);
+        if(typeof f=="undefined") f="n/j/Y H:i";
+        return this.fecha(v,f);
     };
 
     /**
@@ -589,8 +589,8 @@ var util=new function() {
      * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
      */
     this.fechaLocal=function(d,f) {
-        if(!(d instanceof Date)) d=util.epochAFecha(d);
-        if(!util.validarFecha(d)) return "";
+        if(!(d instanceof Date)) d=this.epochAFecha(d);
+        if(!this.validarFecha(d)) return "";
 
         if(typeof f=="undefined") f="n/j/Y";        
 
@@ -621,13 +621,13 @@ var util=new function() {
     };
 
     /**
-     * Convierte una fecha a string, incluyendo horas y minutos. La salida se convertirá a hora local. Esta función es alias de util.dateToStringLocal(v,f) con distinto valor predeterminado para f.
+     * Convierte una fecha a string, incluyendo horas y minutos. La salida se convertirá a hora local. Esta función es alias de this.dateToStringLocal(v,f) con distinto valor predeterminado para f.
      * @param v Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, n/j/Y this.H=i).
+     * @param f Formato de salida. Opcional (predeterminado, n/j/Y H:i).
      */
     this.fechaHoraLocal=function(v,f) {
-        if(typeof f=="undefined") f="n/j/Y this.H=i";
-        return util.fechaLocal(v,f);
+        if(typeof f=="undefined") f="n/j/Y H:i";
+        return this.fechaLocal(v,f);
     };
 
     /**
@@ -672,7 +672,7 @@ var util=new function() {
      * @param v String.
      */
     this.cadenaAEpoch=function(v) {
-        return Math.floor(util.cadenaAFecha(v).getTime()/1000);
+        return Math.floor(this.cadenaAFecha(v).getTime()/1000);
     };
 
     /**
@@ -681,9 +681,9 @@ var util=new function() {
      */
     this.convertirAFecha=function(v) {
         if(!isNaN(v)) {
-            return util.epochAFecha(v);
+            return this.epochAFecha(v);
         } else {
-            return util.cadenaAFecha(v);
+            return this.cadenaAFecha(v);
         }
     };
 
@@ -695,7 +695,7 @@ var util=new function() {
         if(!isNaN(v)) {
             return v;
         } else {
-            return util.fechaAEpoch(v);
+            return this.fechaAEpoch(v);
         }
     };
 
@@ -704,21 +704,21 @@ var util=new function() {
      * @param d Fecha.
      */
     this.fechaAEpoch=function(d) {
-        return util.epochAUtc(Math.floor(d.getTime()/1000));
+        return this.epochAUtc(Math.floor(d.getTime()/1000));
     };
 
     /**
      * Devuelve el tiempo epoch actual (UTC).
      */
     this.epoch=function() {
-        return util.epochAUtc(util.fechaAEpoch(new Date()));
+        return this.epochAUtc(this.fechaAEpoch(new Date()));
     };
 
     /**
      * Devuelve el tiempo epoch actual (zona local).
      */
     this.epochLocal=function() {
-        return util.fechaAEpoch(new Date());
+        return this.fechaAEpoch(new Date());
     };
 
     /**
@@ -742,7 +742,7 @@ var util=new function() {
      * @param d Fecha (objeto Date)
      */
     this.medianoche=function(d) {
-        if(!(d instanceof Date)) d=util.epochAFecha(d);
+        if(!(d instanceof Date)) d=this.epochAFecha(d);
         d=new Date(d.getFullYear(), d.getUTCMonth(), d.getUTCDate(), 0,0,0);
         return d;
     };
@@ -753,10 +753,10 @@ var util=new function() {
      * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     this.formatoNumero=function(v,decimalPlaces) {
-        if(typeof v==="string") v=util.procesarValores(v);
+        if(typeof v==="string") v=this.procesarValores(v);
         if(v===null) return "";
         if(isNaN(v)) v=0;
-        if (typeof decimalPlaces==="undefined") decimalPlaces=util.decimalesPredeterminados;
+        if (typeof decimalPlaces==="undefined") decimalPlaces=this.decimalesPredeterminados;
 
         v = parseFloat(v);
 
@@ -792,14 +792,14 @@ var util=new function() {
      * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     this.redondear=function(v,decimalPlaces) {
-        if(typeof v==="string") v=util.procesarValores(v);
+        if(typeof v==="string") v=this.procesarValores(v);
         if(isNaN(v)) v=0;
-        if (typeof decimalPlaces==="undefined") decimalPlaces=util.decimalesPredeterminados;
+        if (typeof decimalPlaces==="undefined") decimalPlaces=this.decimalesPredeterminados;
         return v.toFixed(decimalPlaces);
     };
     
     /**
-     * Valor predeterminado para el parámetro decimalPlaces de util.numberFormat.
+     * Valor predeterminado para el parámetro decimalPlaces de this.numberFormat.
      */
     this.decimalesPredeterminados=null,
 

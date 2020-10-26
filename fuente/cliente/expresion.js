@@ -82,7 +82,12 @@ function expresion(expr) {
     var buscarObjeto=function(objeto,nombre) {
         if(nombre==="") return "";
         if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
-        if(objeto) return objeto[nombre];
+        if(objeto) {
+            var elem=objeto[nombre];
+            //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
+            if(typeof elem==="function") return elem.bind(objeto);
+            return elem;
+        }
         if(this.variables.hasOwnProperty(nombre)) return this.variables[nombre];
         if(this.funciones.hasOwnProperty(nombre)) return this.funciones[nombre];
         return null;

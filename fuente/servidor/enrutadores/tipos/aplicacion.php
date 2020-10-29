@@ -11,14 +11,14 @@ namespace solicitud\tipos;
 defined('_inc') or exit;
 
 /**
- * Tipo de solicitud concreta que representa el acceso a un método del controlador público de la aplicación.
+ * Tipo de solicitud concreta que representa el acceso a un método del controlador público de la aplicación. Parámetro POST: `__a`. Parámetro CLI: `-metodo-apl`.
  */
-class aplicacion extends \solicitud {    
+class aplicacion extends \tipoSolicitud {    
     protected $metodo=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\aplicacion
+     * @return \tipoSolicitud\tipos\aplicacion
      */
     public function ejecutar() {
         $obj=\foxtrot::obtenerAplicacionPublica();
@@ -33,7 +33,8 @@ class aplicacion extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return isset($parametros->__a);
+        return (!\foxtrot::esCli()&&isset($parametros->__a))||
+            isset($parametros->metodoApl);
     }
 
     /**
@@ -41,14 +42,16 @@ class aplicacion extends \solicitud {
      * @return string
      */
     public function obtenerMetodo() {
-        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__a);
+        if(!$this->metodo)
+            $this->metodo=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->metodoApl:$this->parametros->__a);
+
         return $this->metodo;
     }
 
     /**
      * Establece el nombre del método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del método.
-     * @return \solicitud\tipos\aplicacion
+     * @return \tipoSolicitud\tipos\aplicacion
      */
     public function establecerMetodo($nombre) {
         $this->metodo=$nombre;

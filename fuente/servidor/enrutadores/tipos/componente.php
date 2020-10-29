@@ -11,15 +11,15 @@ namespace solicitud\tipos;
 defined('_inc') or exit;
 
 /**
- * Tipo de solicitud concreta que representa el acceso a un método de un componente.
+ * Tipo de solicitud concreta que representa el acceso a un método de un componente. Parámetros POST: `__o` y `__m`. Parámetros CLI: `-componente` y `-metodo`.
  */
-class componente extends \solicitud {
+class componente extends \tipoSolicitud {
     protected $componente=null;
     protected $metodo=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\componente
+     * @return \tipoSolicitud\tipos\componente
      */
     public function ejecutar() {
         $componente=$this->obtenerComponente();
@@ -45,7 +45,8 @@ class componente extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return isset($parametros->__o)&&isset($parametros->__m);
+        return (!\foxtrot::esCli()&&isset($parametros->__o)&&isset($parametros->__m))||
+            (isset($parametros->componente)&&isset($parametros->metodo));
     }
 
     /**
@@ -53,7 +54,9 @@ class componente extends \solicitud {
      * @return string
      */
     public function obtenerComponente() {
-        if(!$this->componente) $this->componente=\util::limpiarValor($this->parametros->__o);
+        if(!$this->componente) 
+            $this->componente=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->componente:$this->parametros->__o);
+            
         return $this->componente;
     }
 
@@ -62,14 +65,16 @@ class componente extends \solicitud {
      * @return string
      */
     public function obtenerMetodo() {
-        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__m);
+        if(!$this->metodo)
+            $this->metodo=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->metodo:$this->parametros->__m);
+
         return $this->metodo;
     }
 
     /**
      * Establece el nombre del componente. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del componente.
-     * @return \solicitud\tipos\componente
+     * @return \tipoSolicitud\tipos\componente
      */
     public function establecerComponente($nombre) {
         $this->componente=$nombre;
@@ -79,7 +84,7 @@ class componente extends \solicitud {
     /**
      * Establece el nombre del método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del método.
-     * @return \solicitud\tipos\componente
+     * @return \tipoSolicitud\tipos\componente
      */
     public function establecerMetodo($nombre) {
         $this->metodo=$nombre;

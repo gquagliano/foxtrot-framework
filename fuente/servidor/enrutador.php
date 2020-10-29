@@ -156,7 +156,7 @@ class enrutador {
 
     /**
      * Devuelve el recurso establecido.
-     * @return \solicitud
+     * @return \tipoSolicitud
      */
     public function obtenerRecurso() {
         return $this->recurso;
@@ -164,7 +164,7 @@ class enrutador {
 
     /**
      * Establece el recurso que responderá a la solicitud.
-     * @var \solicitud $recurso Instancia del recurso.
+     * @var \tipoSolicitud $recurso Instancia del recurso.
      * @return \enrutador
      */
     public function establecerRecurso($recurso) {
@@ -176,7 +176,7 @@ class enrutador {
      * Crea una instancia del recurso y lo establece como el que responderá a la solicitud. Devuelve la instancia del recurso creada. Nota: Este valor no será
      * sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $tipo Nombre del tipo de recurso.
-     * @return \solicitud
+     * @return \tipoSolicitud
      */
     public function fabricarRecurso($tipo) {
         $tipo='\\solicitud\\tipos\\'.$tipo;

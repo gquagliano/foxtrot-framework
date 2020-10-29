@@ -13,12 +13,12 @@ defined('_inc') or exit;
 /**
  * Tipo de solicitud concreta que representa el acceso a recursos (CSS, JS, imágenes, etc.) de la aplicación.
  */
-class recurso extends \solicitud {
+class recurso extends \tipoSolicitud {
     protected $ruta=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\recurso
+     * @return \tipoSolicitud\tipos\recurso
      */
     public function ejecutar() {
         //Enviar archivos de recursoss de la aplicación
@@ -28,7 +28,7 @@ class recurso extends \solicitud {
         if(!file_exists($ruta)||is_dir($ruta)) return $this->error();
 
         $mime=\mime($ruta);
-        header('Content-Type: '.$mime.'; charset=utf-8',true);       
+        \solicitud::establecerEncabezado('Content-Type',$mime.'; charset=utf-8');
         
         $f=fopen($ruta,'r');
         fpassthru($f);
@@ -71,7 +71,7 @@ class recurso extends \solicitud {
     /**
      * Establece el recurso a devolver. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $ruta Ruta local al archivo.
-     * @return \solicitud\tipos\recurso
+     * @return \tipoSolicitud\tipos\recurso
      */
     public function establecerRuta($ruta) {
         $this->ruta=$ruta;

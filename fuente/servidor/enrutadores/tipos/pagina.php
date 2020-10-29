@@ -13,17 +13,17 @@ defined('_inc') or exit;
 /**
  * Tipo de solicitud concreta que representa una página HTML, existente en el sistema de archivos.
  */
-class pagina extends \solicitud {    
+class pagina extends \tipoSolicitud {    
     protected $ruta=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\pagina
+     * @return \tipoSolicitud\tipos\pagina
      */
     public function ejecutar() {
         //Cargar una página independiente
 
-        header('Content-Type: text/html; charset=utf-8',true);
+        \solicitud::establecerEncabezado('Content-Type','text/html; charset=utf-8');
 
         $ruta=$this->obtenerRuta();
 
@@ -80,7 +80,7 @@ class pagina extends \solicitud {
     /**
      * Establece la página a mostrar. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $ruta Ruta local al archivo.
-     * @return \solicitud\tipos\pagina
+     * @return \tipoSolicitud\tipos\pagina
      */
     public function establecerRuta($ruta) {
         $this->ruta=$ruta;

@@ -11,14 +11,14 @@ namespace solicitud\tipos;
 defined('_inc') or exit;
 
 /**
- * Tipo de solicitud concreta que representa una solicitud a una función interna de Foxtrot.
+ * Tipo de solicitud concreta que representa una solicitud a una función interna de Foxtrot. Parámetro POST: `__f`. Parámetro CLI: `-foxtrot`.
  */
-class foxtrot extends \solicitud {
+class foxtrot extends \tipoSolicitud {
     protected $operacion=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\foxtrot
+     * @return \tipoSolicitud\tipos\foxtrot
      */
     public function ejecutar() {
         //Acceso HTTP a funciones internas de Foxtrot
@@ -26,7 +26,7 @@ class foxtrot extends \solicitud {
         //Por el momento queda harcodeado ya que es muy limitado y, además, necesitamos tener control preciso de esta funcionalidad. Eventualmente puede implementarse
         //algún mecanismo para abstraerlo adecuadamente.
 
-        header('Content-Type: text/plain; charset=utf-8',true);
+        \solicitud::establecerEncabezado('Content-Type','text/plain; charset=utf-8');
 
         $operacion=$this->obtenerOperacion();
 
@@ -52,7 +52,7 @@ class foxtrot extends \solicitud {
      */
     public static function es($url,$parametros) {
         $valoresPosibles=['sesion','obtenerVista','noop'];
-        $valor=\util::limpiarValor($parametros->__f);
+        $valor=\util::limpiarValor(\foxtrot::esCli()?$parametros->foxtrot:$parametros->__f);
         return $valor&&in_array($valor,$valoresPosibles);
     }
 
@@ -61,14 +61,16 @@ class foxtrot extends \solicitud {
      * @return string
      */
     public function obtenerOperacion() {
-        if(!$this->operacion) $this->operacion=\util::limpiarValor($this->parametros->__f);
+        if(!$this->operacion)
+            $this->operacion=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->foxtrot:$this->parametros->__f);
+
         return $this->operacion;
     }
 
     /**
      * Establece la operación. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre de la operación.
-     * @return \solicitud\tipos\foxtrot
+     * @return \tipoSolicitud\tipos\foxtrot
      */
     public function establecerOperacion($nombre) {
         $this->operacion=$nombre;

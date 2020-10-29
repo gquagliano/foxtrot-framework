@@ -13,17 +13,17 @@ defined('_inc') or exit;
 /**
  * Tipo de solicitud concreta que representa el acceso a una vista.
  */
-class vista extends \solicitud {
+class vista extends \tipoSolicitud {
     protected $vista=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\vista
+     * @return \tipoSolicitud\tipos\vista
      */
     public function ejecutar() {
         //Devuelve el contenido html de la vista
             
-        header('Content-Type: text/html; charset=utf-8',true);
+        \solicitud::establecerEncabezado('Content-Type','text/html; charset=utf-8');
 
         $vista=$this->obtenerVista();        
 
@@ -83,7 +83,7 @@ class vista extends \solicitud {
     /**
      * Establece el nombre de la vista.
      * @var string $nombre Nombre de la vista.
-     * @return \solicitud\tipos\vista
+     * @return \tipoSolicitud\tipos\vista
      */
     public function establecerVista($nombre) {
         $this->vista=$nombre;

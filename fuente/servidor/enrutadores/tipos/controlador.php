@@ -11,15 +11,15 @@ namespace solicitud\tipos;
 defined('_inc') or exit;
 
 /**
- * Tipo de solicitud concreta que representa el acceso a un método de un controlador.
+ * Tipo de solicitud concreta que representa el acceso a un método de un controlador. Parámetros POST: `__c` y `__m`. Parámetros CLI: `-controlador` y `-metodo`.
  */
-class controlador extends \solicitud {   
+class controlador extends \tipoSolicitud {   
     protected $controlador=null;
     protected $metodo=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\controlador
+     * @return \tipoSolicitud\tipos\controlador
      */
     public function ejecutar() {
         $controlador=$this->obtenerControlador();
@@ -49,7 +49,8 @@ class controlador extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return isset($parametros->__c)&&isset($parametros->__m);
+        return (!\foxtrot::esCli()&&isset($parametros->__c)&&isset($parametros->__m))||
+            (isset($parametros->controlador)&&isset($parametros->metodo));
     }
 
     /**
@@ -57,7 +58,9 @@ class controlador extends \solicitud {
      * @return string
      */
     public function obtenerControlador() {
-        if(!$this->controlador) $this->controlador=\util::limpiarValor($this->parametros->__c,true);
+        if(!$this->controlador) 
+            $this->controlador=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->controlador:$this->parametros->__c,true);
+        
         return $this->controlador;
     }
 
@@ -66,14 +69,16 @@ class controlador extends \solicitud {
      * @return string
      */
     public function obtenerMetodo() {
-        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__m);
+        if(!$this->metodo) 
+            $this->metodo=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->metodo:$this->parametros->__m);
+        
         return $this->metodo;
     }
 
     /**
      * Establece el controlador. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del controlador.
-     * @return \solicitud\tipos\controlador
+     * @return \tipoSolicitud\tipos\controlador
      */
     public function establecerControlador($nombre) {
         $this->controlador=$nombre;
@@ -83,7 +88,7 @@ class controlador extends \solicitud {
     /**
      * Establece el método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del método.
-     * @return \solicitud\tipos\controlador
+     * @return \tipoSolicitud\tipos\controlador
      */
     public function establecerMetodo($nombre) {
         $this->metodo=$nombre;

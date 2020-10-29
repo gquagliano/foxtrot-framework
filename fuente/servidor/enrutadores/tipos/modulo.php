@@ -11,15 +11,15 @@ namespace solicitud\tipos;
 defined('_inc') or exit;
 
 /**
- * Tipo de solicitud concreta que representa el acceso a un método de la clase pública de un módulo.
+ * Tipo de solicitud concreta que representa el acceso a un método de la clase pública de un módulo. Parámetros POST: `__u` y `__m`. Parámetros CLI: `-modulo` y `-metodo`.
  */
-class modulo extends \solicitud {    
+class modulo extends \tipoSolicitud {    
     protected $modulo=null;
     protected $metodo=null;
 
     /**
      * Ejecuta la solicitud.
-     * @return \solicitud\tipos\modulo
+     * @return \tipoSolicitud\tipos\modulo
      */
     public function ejecutar() {
         $modulo=$this->obtenerModulo();
@@ -39,7 +39,8 @@ class modulo extends \solicitud {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return isset($parametros->__u)&&isset($parametros->__m);
+        return (!\foxtrot::esCli()&&isset($parametros->__u)&&isset($parametros->__m))||
+            (isset($parametros->modulo)&&isset($parametros->metodo));
     }
 
     /**
@@ -47,7 +48,9 @@ class modulo extends \solicitud {
      * @return string
      */
     public function obtenerModulo() {
-        if(!$this->modulo) $this->modulo=\util::limpiarValor($this->parametros->__u);
+        if(!$this->modulo)
+            $this->modulo=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->modulo:$this->parametros->__u);
+
         return $this->modulo;
     }
 
@@ -56,14 +59,16 @@ class modulo extends \solicitud {
      * @return string
      */
     public function obtenerMetodo() {
-        if(!$this->metodo) $this->metodo=\util::limpiarValor($this->parametros->__m);
+        if(!$this->metodo)
+            $this->metodo=\util::limpiarValor(\foxtrot::esCli()?$this->parametros->metodo:$this->parametros->__m);
+
         return $this->metodo;
     }
 
     /**
      * Establece el nombre del módulo. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del módulo.
-     * @return \solicitud\tipos\modulo
+     * @return \tipoSolicitud\tipos\modulo
      */
     public function establecerModulo($nombre) {
         $this->modulo=$nombre;
@@ -73,7 +78,7 @@ class modulo extends \solicitud {
     /**
      * Establece el nombre del método. Nota: Este valor no será sanitizado, no debe pasarse un valor obtenido desde el cliente.
      * @var string $nombre Nombre del método.
-     * @return \solicitud\tipos\modulo
+     * @return \tipoSolicitud\tipos\modulo
      */
     public function establecerMetodo($nombre) {
         $this->metodo=$nombre;

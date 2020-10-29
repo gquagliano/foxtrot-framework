@@ -177,9 +177,10 @@ class foxtrot {
         include(_servidor.'mysql.php');
         include(_servidor.'mysql-resultado.php');
 
-        include(_servidor.'enrutadores/enrutadorPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
+        include(_servidor.'enrutadores/enrutadorPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorUnaPagina.php');
+        include(_servidor.'enrutadores/enrutadorApi.php');
     }
 
     /**

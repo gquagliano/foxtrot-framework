@@ -10,14 +10,14 @@
 // Script para generar la documentación PHP y JS en formato MD
 // -----------------------------------------------------------
 // phpdoc y jsdoc son muy complejos para lo que necesitamos, además los plug-ins o versiones con salida en formato MD no han dado buenas resultados,
-// por lo que se implementa un pequeño intérprete de comentarios de documentación compatible con los elementos que se usan en el código de Foxtrot.
+// por lo que se implementa a continuación un pequeño intérprete de comentarios de documentación compatible con los elementos que se usan en el código de Foxtrot.
 //
 // La documentación que se genera está destinada al usuario final que consume el API de Foxtrot. Por eso, no se documentan métodos, propiedades o funciones privadas (por
 // definición, quien esté accediendo a ellas está modificando la clase y puede ver la documentación en el mismo código fuente), solo se documentan aquellas que el
 // usuario pueda necesitar al escribir su aplicación o extender el código de Foxtrot.
 //
-// Asimismo, se excluyen las propiedades, dado que, normalmente, las deben tener métodos de acceso (las que no lo tengan, están pendientes de agregar), por lo
-// que cuando se documenta una variable o una propiedad es para que IDE reconozca el tipo, o para dejar una aclaración para la persona que está trabajando en el código
+// Asimismo, se excluyen las propiedades, dado que, normalmente, las mismas deben tener métodos de acceso (las que no lo tengan, están pendientes de agregar), por lo
+// que cuando se documenta una variable o una propiedad es para que IDE reconozca el tipo, o destinado a la persona que está trabajando en el código
 // fuente, y no es necesario publicarla en la documentación.
 
 define('_wiki',__DIR__.'/../../experimental-foxtrot-framework.wiki/');

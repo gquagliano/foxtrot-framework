@@ -23,7 +23,7 @@ class aplicacionApi extends aplicacion {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return preg_match('#^([a-z0-9_-]+)/?$#',$url);
+        return preg_match('#^/([a-z0-9_-]+)/?$#',$url);
     }
 
     /**
@@ -32,7 +32,7 @@ class aplicacionApi extends aplicacion {
      */
     public function obtenerMetodo() {
         if(!$this->metodo) {
-            preg_match('#^([a-z0-9_-]+)/?$#',$this->url,$concidencia);
+            preg_match('#^/([a-z0-9_-]+)/?$#',$this->url,$concidencia);
             $this->metodo=$concidencia[1];
         }            
 

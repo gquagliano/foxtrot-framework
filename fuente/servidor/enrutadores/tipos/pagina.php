@@ -49,10 +49,10 @@ class pagina extends \tipoSolicitud {
         //$url se asume validado y sanitizado por el enrutador
 
         //Página de error
-        if(preg_match('#^error/?$#i',$url)) return true;
+        if(preg_match('#^/error/?$#i',$url)) return true;
 
         //Página HTML o PHP
-        if(preg_match('#^([a-zA-Z0-9_-]+)/?$#',$url,$coincidencia)&&(file_exists(_raiz.$coincidencia[1].'.html')||file_exists(_raiz.$coincidencia[1].'.php'))) return true;
+        if(preg_match('#^/([a-zA-Z0-9_-]+)/?$#',$url,$coincidencia)&&(file_exists(_raiz.$coincidencia[1].'.html')||file_exists(_raiz.$coincidencia[1].'.php'))) return true;
 
         return false;
     }   

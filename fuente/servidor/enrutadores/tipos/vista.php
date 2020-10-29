@@ -67,10 +67,10 @@ class vista extends \tipoSolicitud {
     public function obtenerVista() {
         if(!$this->vista) {
             //La URL ya fue validada y sanitizada por foxtrot
-            if($this->url=='') {
+            if(!$this->url||$this->url=='/') {
                 $vista='inicio';
             } else {
-                preg_match('#^([A-Za-z0-9_/-]+)#',$this->url,$coincidencia);
+                preg_match('#^/([A-Za-z0-9_/-]+)#',$this->url,$coincidencia);
                 $vista=trim($coincidencia[1],'/');
             }
 

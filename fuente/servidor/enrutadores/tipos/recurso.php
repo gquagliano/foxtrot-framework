@@ -45,7 +45,7 @@ class recurso extends \tipoSolicitud {
      */
     public static function es($url,$parametros) {
         //$url se asume validado y sanitizado por el enrutador
-        return preg_match('#^aplicacion/(.+)#',$url);
+        return preg_match('#^/aplicacion/(.+)#',$url);
     }
 
     /**
@@ -54,7 +54,7 @@ class recurso extends \tipoSolicitud {
      */
     public function obtenerRuta() {
         if(!$this->ruta) {
-            preg_match('#^aplicacion/(.+)#',$this->url,$coincidencias);
+            preg_match('#^/aplicacion/(.+)#',$this->url,$coincidencias);
             $recurso=$coincidencias[1];
 
             //Remover versión

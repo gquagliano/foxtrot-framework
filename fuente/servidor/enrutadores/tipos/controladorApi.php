@@ -23,7 +23,7 @@ class controladorApi extends controlador {
      * @return bool
      */
     public static function es($url,$parametros) {
-        return preg_match('#([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$url);
+        return preg_match('#/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$url);
     }
 
     /**
@@ -32,7 +32,7 @@ class controladorApi extends controlador {
      */
     public function obtenerControlador() {
         if(!$this->controlador) {
-            preg_match('#([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
+            preg_match('#^/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
             $this->controlador=$coincidencia[1];
         }
         
@@ -45,7 +45,7 @@ class controladorApi extends controlador {
      */
     public function obtenerMetodo() {
         if(!$this->metodo) {
-            preg_match('#([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
+            preg_match('#^/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
             $this->metodo=$coincidencia[2];
         }
         

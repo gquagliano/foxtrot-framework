@@ -970,22 +970,24 @@ class modelo {
     /**
      * Ejecuta la consulta y devuelve un array asociativo [clave=>valor].
      * @param string $clave Campo a utilizar como clave del array.
-     * @param string $valor Campo a utilizar como valor del array.
+     * @param string $valor Campo a utilizar como valor del array. Si se omite, se asignará la entidad completa.
      * @return array
      *//**
      * Ejecuta la consulta y devuelve un array asociativo [clave=>valor].
      * @param string $clave Campo a utilizar como clave del array.
-     * @param callable $valor Función que devuelve el valor dada la entidad.
+     * @param callable $valor Función que devuelve el valor dada la entidad. Si se omite, se asignará la entidad completa.
      * @return array
      */
-    public function obtenerListadoAsociativo($clave,$valor) {
+    public function obtenerListadoAsociativo($clave,$valor=null) {
         $items=$this->obtenerListado();
         $resultado=[];
         foreach($items as $item) {
             if(is_callable($valor)) {
                 $valorElem=$valor($item);
-            } else {
+            } elseif($valor) {
                 $valorElem=$item->$valor;
+            } else {
+                $valorElem=$item;
             }
             $resultado[$item->$clave]=$valorElem;
         }

@@ -239,8 +239,8 @@ class almacenamiento {
         if(!$contenido) return null;
 
         $mime=\mime($ruta.$nombre);
-        header('Content-Type: '.$mime.'; charset=utf-8',true);  
-        if($descargar) header('Content-Disposition: attachment; filename="'.$nombre.'"',true);
+        \solicitud::establecerEncabezado('Content-Type',$mime.'; charset=utf-8');  
+        if($descargar) \solicitud::establecerEncabezado('Content-Disposition','attachment; filename="'.$nombre.'"');
 
         ob_clean();
         echo $contenido;

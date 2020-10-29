@@ -15,7 +15,7 @@ defined('_inc') or exit;
  */
 function redir($uri) {
     if(!preg_match('#^https?:#i',$uri)) $uri=\configuracion::$url.$uri;
-    header('Location: '.$uri);
+    \solicitud::establecerEncabezado('Location',$uri);
     exit;
 }
 

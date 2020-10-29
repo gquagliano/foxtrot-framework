@@ -228,23 +228,8 @@ class foxtrot {
 	        //Controladores privados (importar completo)
 	        $archivos=glob(_controladoresServidorAplicacion.'*.php');
 	        foreach($archivos as $archivo)
-	            if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
-
-	        if(configuracion::$enrutador) {
-	            $ruta=_servidorAplicacion.configuracion::$enrutador.'.php';
-	            if(file_exists($ruta)) {
-	                include(_servidorAplicacion.configuracion::$enrutador.'.php');            
-	                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.configuracion::$enrutador;
-	            } else {
-	                //Enrutador del sistema
-	                $cls='\\'.configuracion::$enrutador;
-	            }
-	            self::$enrutador=new $cls;
-	        }
-	    }
-        
-        //Si la aplicación no definió un enrutador, utilizar el predeterminado
-        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
+                if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
+        }
 
 		if(self::$aplicacion) {
 	        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
@@ -258,6 +243,46 @@ class foxtrot {
 	            self::$instanciaAplicacionPublico=new $cls;
 	        }
 	    }
+    }
+
+    /**
+     * Crea la instancia del enrutador. Devuelve la URI final, en caso de que haya sido removida la base (prefijo).
+     * @param mixed $enrutador Nombre del enrutador, array [base=>nombre] o función.
+     * @param string $uri URI actual.
+     * @param mixed $params Parámetros de la solicitud actual.
+     * @return string
+     */
+    public static function fabricarEnrutador($enrutador,$uri,$params) {
+        if(is_string($enrutador)) {            
+            $ruta=_servidorAplicacion.$enrutador.'.php';
+            if(file_exists($ruta)) {
+                //Enrutador personalizado
+                include(_servidorAplicacion.$enrutador.'.php');            
+                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.$enrutador;
+            } else {
+                //Enrutador del sistema
+                $cls='\\'.$enrutador;
+            }
+            self::$enrutador=new $cls;
+            return $uri ;
+        }
+
+        if(is_array($enrutador)) {
+            foreach($enrutador as $base=>$nombre) {
+                if(preg_match('#^'.$base.'#',$uri)) {
+                    self::fabricarEnrutador($nombre,$uri,$params);
+                    $uri=substr($uri,strlen($base)-1); //Remover la base de la uri, anteniendo la barra inicial
+                    return $uri;
+                }
+            }
+        }
+
+        if(is_callable($enrutador)) {
+            self::$enrutador=$enrutador($uri,$params);
+        }
+
+        self::$enrutador=null;
+        return $uri;
     }
 
     /**
@@ -312,6 +337,12 @@ class foxtrot {
     public static function ejecutar() {
         $uri=self::prepararUri($_SERVER['REQUEST_URI']);
         $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+
+        //Crear el enrutador
+        $uri=self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
+	    //Si no quedó definido, utilizar el predeterminado
+        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
+
         self::$enrutador->establecerSolicitud($uri,$params);
         
         if(self::$enrutador->obtenerError()) self::error();
@@ -358,8 +389,12 @@ class foxtrot {
         //Separar la URL
         $uri=parse_url($uri)['path'];
 
-        //Limpiar espacios y barra inicial y final
-        $uri=trim(trim($uri),'/');
+        //Limpiar espacios
+        $uri=trim($uri);
+
+        //Agregar barra inicial y final
+        if(substr($uri,0,1)!='/') $uri='/'.$uri;
+        if(substr($uri,-1)!='/') $uri.='/';
 
         return $uri;
     }    

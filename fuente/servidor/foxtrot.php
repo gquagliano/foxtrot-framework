@@ -264,15 +264,14 @@ class foxtrot {
                 $cls='\\'.$enrutador;
             }
             self::$enrutador=new $cls;
-            return $uri ;
+            return;
         }
 
         if(is_array($enrutador)) {
             foreach($enrutador as $base=>$nombre) {
                 if(preg_match('#^'.$base.'#',$uri)) {
                     self::fabricarEnrutador($nombre,$uri,$params);
-                    $uri=substr($uri,strlen($base)-1); //Remover la base de la uri, anteniendo la barra inicial
-                    return $uri;
+                    return;
                 }
             }
         }
@@ -282,7 +281,7 @@ class foxtrot {
         }
 
         self::$enrutador=null;
-        return $uri;
+        return;
     }
 
     /**
@@ -339,7 +338,7 @@ class foxtrot {
         $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
 
         //Crear el enrutador
-        $uri=self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
+        self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
 	    //Si no quedó definido, utilizar el predeterminado
         if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
 

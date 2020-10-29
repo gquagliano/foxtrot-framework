@@ -20,8 +20,7 @@ class enrutadorApi extends enrutador {
         $this->tipos=[
             'recurso',
             'pagina',
-            'controladorApi',
-            'aplicacionApi'
+            'controladorApi'
         ];
         foreach($this->tipos as $tipo) include_once(_servidor.'enrutadores/tipos/'.$tipo.'.php');
     }

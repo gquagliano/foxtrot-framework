@@ -35,9 +35,15 @@ class cliente {
      * Envía una respuesta como texto plano al cliente.
      */
     public static function responder($data) {
-        echo json_encode([
-            'r'=>$data
-        ]);
+        if(!\foxtrot::esCli()) {
+            echo json_encode([
+                'r'=>$data
+            ]);
+        } elseif(is_array($data)||is_object($data)) {
+            print_r($data);
+        } else {
+            echo $data;
+        }
         \foxtrot::detener();
     }
 
@@ -45,11 +51,11 @@ class cliente {
      * 
      */
     public static function invocar($controlador,$metodo,$args=null) {
-        echo json_encode([
-            'c'=>$controlador,
-            'm'=>$metodo,
-            'p'=>$args
-        ]);
+            if(!\foxtrot::esCli()) echo json_encode([
+                'c'=>$controlador,
+                'm'=>$metodo,
+                'p'=>$args
+            ]);
         \foxtrot::detener();
     }
 
@@ -59,10 +65,10 @@ class cliente {
      * @param mixed $args=null Argumentos.
      */
     public static function invocarAplicacion($metodo,$args=null) {
-        echo json_encode([
-            'a'=>$metodo,
-            'p'=>$args
-        ]);
+        if(!\foxtrot::esCli()) echo json_encode([
+                'a'=>$metodo,
+                'p'=>$args
+            ]);
         \foxtrot::detener();
     }
 
@@ -70,9 +76,9 @@ class cliente {
      * 
      */
     public static function irA($ruta) {
-        echo json_encode([
-            'n'=>$ruta
-        ]);
+        if(!\foxtrot::esCli()) echo json_encode([
+                'n'=>$ruta
+            ]);
         \foxtrot::detener();
     }
 

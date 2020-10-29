@@ -21,6 +21,7 @@ class foxtrot {
     protected static $instanciaAplicacion=null;
     protected static $instanciaAplicacionPublico=null;
     protected static $bd=null;
+    protected static $cli=false;
 
     /**
      * 
@@ -40,6 +41,14 @@ class foxtrot {
      */
     public static function obtenerUrl() {
         return configuracion::$url;
+    }
+
+    /**
+     * Devuelve true si la solicitud proviene de la línea de comandos.
+     * @return bool
+     */
+    public static function esCli() {
+        return self::$cli;
     }
 
     /**
@@ -154,6 +163,7 @@ class foxtrot {
         include(_servidor.'controlador.php');
         include(_servidor.'aplicacion.php');
         include(_servidor.'solicitud.php');
+        include(_servidor.'tipo-solicitud.php');
         include(_servidor.'enrutador.php');
         include(_servidor.'enrutadorAplicacion.php');
         include(_servidor.'entidad.php');
@@ -176,13 +186,17 @@ class foxtrot {
      * 
      */
     public static function cargarAplicacion($aplicacion=null) {
-        //Si no se especifica $aplicacion, determinar automáticamente
-        if(!$aplicacion) {
-            //Es posible saltearse el enrutador de aplicación con el parámetro __apl
-            if($_REQUEST['__apl']) {
+        if(!$aplicacion) {            
+            //Si no se especifica $aplicacion, determinar automáticamente
+            if(self::$cli) {
+                //Desde CLI, parámetro -apl
+                self::$aplicacion=solicitud::obtenerParametros()->apl;
+            } elseif($_REQUEST['__apl']) {
+                //Es posible saltearse el enrutador de aplicación con el parámetro __apl
                 $aplicacion=util::limpiarValor($_REQUEST['__apl']);
                 self::$aplicacion=$aplicacion;
             } else {
+                //Utilizar el enrutador de aplicaciones
                 self::$aplicacion=self::$enrutadorApl->determinarAplicacion();
             }
         } else {
@@ -254,17 +268,27 @@ class foxtrot {
         self::definirConstantes();
         self::incluirArchivos();
 
+        solicitud::incializar();
+
         configuracion::cargar();
 
         //Establecer url por defecto
-        if(!configuracion::$url) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
+        if(!configuracion::$url&&!self::$cli) configuracion::$url=(self::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].configuracion::$rutaBase;
 
         //foxtrot::inicializar(false) saltea la carga de una aplicación
-        //foxtrot::inicializar() carga la aplicación utilizando el enrutador
+        //foxtrot::inicializar() carga la aplicación utilizando el enrutador, o el parámetro -apl si es CLI
         if($aplicacion!==false) self::cargarAplicacion($aplicacion);
         
         //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella
         sesion::inicializar();
+    }
+
+    /**
+     * Inicializa el framework desde la línea de comandos.
+     */
+    public static function inicializarCli() {
+        self::$cli=true;
+        self::inicializar();
     }
 
     /**
@@ -286,13 +310,14 @@ class foxtrot {
      */
     public static function ejecutar() {
         $uri=self::prepararUri($_SERVER['REQUEST_URI']);
-        self::$enrutador->establecerSolicitud($uri,$_REQUEST);
+        $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+        self::$enrutador->establecerSolicitud($uri,$params);
         
         if(self::$enrutador->obtenerError()) self::error();
 
         $redir=self::$enrutador->obtenerRedireccionamiento();
         if($redir) {
-            header('Location: '.self::obtenerUrl().$redir->ruta,true,$redir->codigo?$redir->codigo:302);
+            \solicitud::establecerEncabezado('Location',self::obtenerUrl().$redir->ruta,$redir->codigo?$redir->codigo:302);
             exit;
         }
 

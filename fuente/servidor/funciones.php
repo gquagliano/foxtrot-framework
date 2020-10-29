@@ -12,8 +12,14 @@ defined('_inc') or exit;
 
 /**
  * Realiza un redireccionamiento.
+ * @var string $uri URI o URL.
+ * @var array|object $params Parámetros adicionales. Utilizando esta opción, se codificarán los valores y se tendrá en cuenta si la URL ya presenta o no parámetros.
  */
-function redir($uri) {
+function redir($uri,$params=null) {
+    if($params) {
+        $uri.=strpos($uri,'?')===false?'?':'&';
+        $uri.=http_build_query((array)$params);
+    }
     if(!preg_match('#^https?:#i',$uri)) $uri=\configuracion::$url.$uri;
     \solicitud::establecerEncabezado('Location',$uri);
     exit;
@@ -21,6 +27,8 @@ function redir($uri) {
 
 /**
  * Alias de htmlentites().
+ * @var string $cadena
+ * @return string
  */
 function h($cadena) {
     return htmlentities($cadena,ENT_COMPAT,'utf-8');
@@ -28,6 +36,8 @@ function h($cadena) {
 
 /**
  * Alias de html_entity_decode().
+ * @var string $cadena
+ * @return string
  */
 function uh($cadena) {
     return html_entity_decode($cadena,ENT_COMPAT,'utf-8');
@@ -35,6 +45,8 @@ function uh($cadena) {
 
 /**
  * Determina y devuelve el tipo MIME de un archivo.
+ * @var string $ruta Ruta local.
+ * @return string
  */
 function mime($ruta) {
     $ext=strtolower(substr($ruta,strrpos($ruta,'.')+1));
@@ -87,6 +99,9 @@ function mime($ruta) {
 
 /**
  * Alias de str_replace() donde $arr es un array asociativo.
+ * @var array $arr Array [buscar=>reemplazar].
+ * @var string $cadena Cadena de origen.
+ * @return string
  */
 function str_replace_array($arr,$cadena) {
     $a=[];

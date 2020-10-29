@@ -195,7 +195,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         //Buscar @var/@param
         foreach($bloque->etiquetas as $etiqueta) {
             if($lenguaje=='php') {
-                if($etiqueta->etiqueta=='var'&&preg_match('/^(.+?) (\$.+?)( (.+?))$/',$etiqueta->comentario,$coincidencia2)) {
+                if(($etiqueta->etiqueta=='var'||$etiqueta->etiqueta=='param')&&preg_match('/^(.+?) (\$.+?)( (.+?))$/',$etiqueta->comentario,$coincidencia2)) {
                     $variable=trim($coincidencia2[2]);
                     if($autogenerarParametros) {
                         //Crear parámetro desde el comentario

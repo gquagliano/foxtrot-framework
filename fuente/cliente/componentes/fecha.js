@@ -243,13 +243,13 @@ var componenteFecha=function() {
         }
 
         if(typeof coincidencias[3]!=="undefined") {
-            mes=parseInt(coincidencias[3]);
-            if(mes<1||mes>12) {
+            mes=parseInt(coincidencias[3])-1;
+            if(mes<0||mes>11) {
                 error();
                 return this;            
             }
         } else {
-            mes=new Date().getUTCMonth()+1;
+            mes=new Date().getUTCMonth();
         }
 
         if(typeof coincidencias[5]!=="undefined") {
@@ -269,7 +269,7 @@ var componenteFecha=function() {
         if(anoCadena.length==3) anoCadena="2"+anoCadena;
         else if(anoCadena.length==2) anoCadena="20"+anoCadena;
         else if(anoCadena.length==1) anoCadena="200"+anoCadena;
-        this.campo.valor(dia.toString()+"/"+mes.toString()+"/"+anoCadena);
+        this.campo.valor(dia.toString()+"/"+(mes+1).toString()+"/"+anoCadena);
 
         return this;
     };    

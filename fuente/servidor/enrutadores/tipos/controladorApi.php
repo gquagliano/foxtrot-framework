@@ -17,13 +17,26 @@ include_once(__DIR__.'/controlador.php');
  */
 class controladorApi extends controlador {
     /**
+     * Intenta ejecutar el método en el objeto especificado.
+     * @var object $obj Instancia.
+     * @var string $metodo Nombre del método. Si es nulo, utilizará el parámetro __m o -metodo (CLI) de la solicitud.
+     * @var array $parametros Parámetros. Si es nulo, utilizará los parámetros de la instancia.
+     * @return \solicitud\tipos\controladorApi
+     */
+    protected function ejecutarMetodo($obj,$metodo=null,$params=null) {
+        //Configurar la respuesta en modo crudo (raw) y realizar la acción predeterminada
+        \cliente::establecerResponderCrudo();
+        return parent::ejecutarMetodo($obj,$metodo,$params);
+    }
+
+    /**
      * Determina si los parámetros dados a una solicitud de este tipo.
      * @var string $url URL
      * @var object $parametros Parámetros de la solicitud.
      * @return bool
      */
     public static function es($url,$parametros) {
-        return preg_match('#/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$url);
+        return preg_match('#/([a-zA-Z0-9_/-]+)/([a-zA-Z0-9_-]+)/?#',$url);
     }
 
     /**
@@ -32,7 +45,7 @@ class controladorApi extends controlador {
      */
     public function obtenerControlador() {
         if(!$this->controlador) {
-            preg_match('#^/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
+            preg_match('#^/([a-zA-Z0-9_/-]+)/([a-zA-Z0-9_-]+)/?#',$this->url,$coincidencia);
             $this->controlador=$coincidencia[1];
         }
         
@@ -45,7 +58,7 @@ class controladorApi extends controlador {
      */
     public function obtenerMetodo() {
         if(!$this->metodo) {
-            preg_match('#^/([a-z0-9_/-]+)/([a-z0-9_-]+)/?#',$this->url,$coincidencia);
+            preg_match('#^/([a-zA-Z0-9_/-]+)/([a-zA-Z0-9_-]+)/?#',$this->url,$coincidencia);
             $this->metodo=$coincidencia[2];
         }
         

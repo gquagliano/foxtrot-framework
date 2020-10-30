@@ -388,12 +388,17 @@ class foxtrot {
         //Separar la URL
         $uri=parse_url($uri)['path'];
 
+        //Estimar si se trata de un archivo o un directorio
+        $partes=\util::separarRuta($uri);
+        $esArchivo=strpos($partes->nombre,'.')!==false;
+
         //Limpiar espacios
         $uri=trim($uri);
 
         //Agregar barra inicial y final
         if(substr($uri,0,1)!='/') $uri='/'.$uri;
-        if(substr($uri,-1)!='/') $uri.='/';
+        if(!$esArchivo&&substr($uri,-1)!='/') $uri.='/';
+        if($esArchivo&&substr($uri,-1)=='/') $uri=substr($uri,0,strlen($uri)-1);
 
         return $uri;
     }    
@@ -496,7 +501,7 @@ class foxtrot {
      * @return object
      */
     public static function obtenerVista($nombre) {
-        $nombre=preg_replace('#[^a-z0-9_/_]+#','',$nombre);
+        $nombre=preg_replace('#[^a-zA-Z0-9_/-]+#','',$nombre);
 
         $vista=self::$jsonAplicacion->vistas->$nombre;
         if(!$vista) return null;

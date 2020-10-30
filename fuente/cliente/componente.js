@@ -471,7 +471,7 @@ var componente=new function() {
 
     /**
      * Busca una propiedad por su nombre y devuelve sus parámetros.
-     * @param {strong} nombre - Nombre de la propiedad.
+     * @param {string} nombre - Nombre de la propiedad.
      * @returns {(Object|null)}
      */
     this.obtenerParametrosPropiedad=function(nombre) {

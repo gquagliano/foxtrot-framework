@@ -289,20 +289,15 @@ class foxtrot {
      */
     protected static function inicializarEnrutador() {
         $uri=null;
-        $params=null;
-        if(!self::$cli) {
-            $uri=self::prepararUri($_SERVER['REQUEST_URI']);
-            $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
-        }
-
+        if(!self::$cli) $uri=self::prepararUri($_SERVER['REQUEST_URI']);
+        $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+        
         //Crear el enrutador
         self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
 	    //Si no quedó definido, utilizar el predeterminado
         if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
 
-        if(!self::$cli) {
-            self::$enrutador->establecerSolicitud($uri,$params);
-        }
+        self::$enrutador->establecerSolicitud($uri,$params);
     }
 
     /**

@@ -147,7 +147,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$nombre) return '**Devuelve:** `'.trim(trim($etiqueta->comentario),'{}()').'`'.PHP_EOL.PHP_EOL;
+            if($etiqueta->etiqueta==$nombre) return '**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje).PHP_EOL.PHP_EOL;
         }
     };
 
@@ -284,7 +284,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         if(!count($parametros)) {
             $salida.='| (Ninguno) |'.PHP_EOL;
         } else {
-            foreach($parametros as $parametro) $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
+            foreach($parametros as $parametro) $salida.='| `'.$s($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
         }
 
         //Miembros
@@ -293,13 +293,48 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
             $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 
             foreach($parametros as $parametro) {
-                $salida.='| `'.$s($parametro->variable).'` | '.($parametro->tipo?'`'.$s($parametro->tipo).'`':'').' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
+                $salida.='| `'.$s($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.$s($parametro->descripcion).' | '.$s(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.$s($parametro->predeterminado).'`':'').' |'.PHP_EOL;
             }
         }
         
         //Buscar @return/@returns de este bloque
         $salida.=PHP_EOL.$buscarReturn($bloque);
     }
+
+    return $salida;
+}
+
+function procesarTipo($cadena,$lenguaje,$tabla=false) {
+    if(!$cadena) return '';
+
+    $cadena=str_replace(['\\|','(',')','{','}'],['|','','','',''],trim($cadena));
+    
+    $comentario=null;
+    if(strpos($cadena,' ')!==false) {
+        $comentario=substr($cadena,strpos($cadena,' ')+1);
+        $cadena=substr($cadena,0,strpos($cadena,' '));
+    }
+
+    $salida='';
+
+    $tipos=explode('|',$cadena);
+    foreach($tipos as $tipo) {
+        if($salida!='') $salida.=($tabla?'\\':'').'|';
+        $esArray=substr($tipo,-2)=='[]';
+        if($esArray){
+            echo '';
+        } 
+        $tipo=trim(trim($tipo),'[]');
+        if(($lenguaje=='php'&&in_array(strtolower($tipo),['int','integer','string','bool','boolean','true','false','null','float','double','array','iterable','callable','resource','void','object','mixed','function']))||
+            ($lenguaje=='js'&&in_array(strtolower($tipo),['null','undefined','boolean','number','string','array','object','function','node','element','nodelist','event','*','regexp']))) {
+                //Tipos nativos
+                $salida.='`'.$tipo.($esArray?'[]':'').'`';
+        } else {
+            $salida.='[`'.$tipo.($esArray?'[]':'').'`]('.enlace($lenguaje.'doc',$tipo).')';
+        }
+    }
+
+    if($comentario) $salida.='  '.PHP_EOL.'*'.$comentario.'*';
 
     return $salida;
 }
@@ -600,5 +635,5 @@ function nombreObjeto($espacio,$nombre) {
 }
 
 function enlace($prefijo,$nombre) {
-    return $prefijo.'-'.trim(preg_replace('/[^a-zA-Z0-9]+/','-',trim($nombre)),'-');
+    return $prefijo.'-'.trim(preg_replace('/[^a-z0-9]+/','-',trim(strtolower($nombre))),'-');
 }

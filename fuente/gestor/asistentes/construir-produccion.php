@@ -138,7 +138,8 @@ class construirProduccion extends asistente {
         //Otros archivos del raíz
         $archivos=[
             'error.php',
-            'index.php'
+            'index.php',
+            'cli.php'
         ];
         foreach($archivos as $archivo) copy(_desarrollo.$archivo,_produccion.$archivo);
 

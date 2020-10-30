@@ -84,10 +84,23 @@ class entidad {
 
     /**
      * Devuelve un objeto estándar con los valores de la instancia.
+     * @param bool $incluirOcultos Si es false, omitirá los campos ocultos (`@oculto`).
      * @return object
      */
-    public function obtenerObjeto() {
-        return (object)get_object_vars($this);
+    public function obtenerObjeto($incluirOcultos=false) {
+        $obj=(object)get_object_vars($this);
+        
+        //Como estamos invocando get_object_vars() desde un método de la instancia, ha incluido propiedades protegidas y privadas
+        unset($obj->tipoModelo);
+
+        if(!$incluirOcultos) {
+            //Remover propiedades ocultas
+            foreach($this->obtenerCampos() as $nombre=>$campo)
+                if($campo->oculto)
+                    unset($obj->$nombre);
+        }
+
+        return $obj;
     }
 
     /**

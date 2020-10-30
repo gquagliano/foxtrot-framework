@@ -285,6 +285,27 @@ class foxtrot {
     }
 
     /**
+     * Prepara de enrutador para la ejecución.
+     */
+    protected static function inicializarEnrutador() {
+        $uri=null;
+        $params=null;
+        if(!self::$cli) {
+            $uri=self::prepararUri($_SERVER['REQUEST_URI']);
+            $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+        }
+
+        //Crear el enrutador
+        self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
+	    //Si no quedó definido, utilizar el predeterminado
+        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
+
+        if(!self::$cli) {
+            self::$enrutador->establecerSolicitud($uri,$params);
+        }
+    }
+
+    /**
      * 
      */
     public static function inicializar($aplicacion=null) {
@@ -306,6 +327,8 @@ class foxtrot {
         
         //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella
         sesion::inicializar();
+
+        self::inicializarEnrutador();
     }
 
     /**
@@ -334,16 +357,6 @@ class foxtrot {
      * 
      */
     public static function ejecutar() {
-        $uri=self::prepararUri($_SERVER['REQUEST_URI']);
-        $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
-
-        //Crear el enrutador
-        self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
-	    //Si no quedó definido, utilizar el predeterminado
-        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
-
-        self::$enrutador->establecerSolicitud($uri,$params);
-        
         if(self::$enrutador->obtenerError()) self::error();
 
         $redir=self::$enrutador->obtenerRedireccionamiento();

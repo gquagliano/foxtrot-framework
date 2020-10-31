@@ -21,16 +21,22 @@ class nulo {
  */
 class modelo {
     /**
-     * @var bd $bd
-     * @var resultado $resultado
+     * @var \bd $bd
+     * @var \resultado $resultado
+     * @ignore
      */
     protected $bd;
     protected $resultado;
 
     protected $nombreModelo;
-    protected $nombre;
-    protected $tipoEntidad;
     protected $campos;
+
+    /**
+     * @var string $tipoEntidad Tipo de las entidades (asignar `entidad::class`).
+     * @var string $nombre Nombre de la tabla.
+     */
+    protected $tipoEntidad;
+    protected $nombre;
     
     protected $consultaColumnas=null;
     protected $consultaCondiciones=[];
@@ -56,10 +62,14 @@ class modelo {
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
 
+    /**
+     * @var int $ultimoId Último ID insertado.
+     */
     protected $ultimoId=null;
 
     /**
-     * 
+     * Constructor.
+     * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
      */
     function __construct($bd=null) {
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
@@ -73,6 +83,8 @@ class modelo {
 
     /**
      * Crea y devuelve una instancia de la entidad de este modelo.
+     * @param mixed $fila Datos a asignar (objeto, array asociativo o instancia de la entidad).
+     * @return \entidad
      */
     public function fabricarEntidad($fila=null) {
         $obj=new $this->tipoEntidad;
@@ -132,6 +144,9 @@ class modelo {
 
     /**
      * Crea y devuelve una instancia del modelo especificado.
+     * @param string $modelo Nombre del modelo.
+     * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
+     * @return \modelo
      */
     public static function fabricarModelo($modelo,$bd=null) {       
         $modelo='\\aplicaciones\\'._apl.'\\modelo\\'.$modelo;
@@ -147,6 +162,7 @@ class modelo {
 
     /**
      * Devuelve los campos de las entidades de este modelo.
+     * @return object
      */
     public function obtenerCampos() {
         return $this->campos;
@@ -154,6 +170,7 @@ class modelo {
 
     /**
      * Reinicia el repositorio.
+     * @return \modelo
      */
     public function reiniciar() {
         $this->consultaColumnas=null;
@@ -183,7 +200,8 @@ class modelo {
     }
 
     /**
-     * Devuelve el código de la última consulta realizada.
+     * Devuelve la información de la última consulta realizada.
+     * @return object
      */
     public function obtenerUltimaConsulta() {
         return (object)[
@@ -246,7 +264,7 @@ class modelo {
     }
 
     /**
-     * Alias de obtenerId().
+     * Alias de `obtenerId()`.
      * @return int|null
      */
     public function id() {
@@ -255,6 +273,8 @@ class modelo {
 
     /**
      * Establece los campos a seleccionar.
+     * @param string $campos Nombres de los campos.
+     * @return \modelo
      */
     public function seleccionar(...$campos) {
         $this->consultaColumnas=$campos;
@@ -263,6 +283,8 @@ class modelo {
     
     /**
      * Establece el alias para la próxima consulta.
+     * @param string $alias Alias.
+     * @return \modelo
      */
     public function establecerAlias($alias) {
         $this->alias=$alias;
@@ -270,7 +292,14 @@ class modelo {
     }
 
     /**
-     * Establece una relación con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato :nombre.
+     * Establece una relación con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
+     * @param string $campo Campo a relacionar.
+     * @param string $tipo Tipo de relación (`1:0`, `1:1`, `1:N`)
+     * @param string $modelo Nombre del modelo a relacionar.
+     * @param string $alias Alias a asignar al modelo relacionado.
+     * @param string $condicion Condición, como SQL.
+     * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @return \modelo
      */
     public function relacionar($campo,$tipo,$modelo,$alias,$condicion,$parametros=null) {
         if(is_string($modelo)) $modelo=self::fabricarModelo($modelo,$this->bd);
@@ -278,7 +307,7 @@ class modelo {
         if($alias) $modelo->establecerAlias($alias);
 
         $this->consultaRelaciones[$alias]=(object)[
-            'tipo'=>$tipo,
+            'tipo'=>strtolower($tipo),
             'modelo'=>$modelo,
             'condicion'=>$condicion,
             'parametros'=>$parametros,
@@ -288,21 +317,39 @@ class modelo {
     }
 
     /**
-     * Establece una relación 1:1 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato :nombre.
+     * Establece una relación 1:1 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
+     * @param string $campo Campo a relacionar.
+     * @param string $modelo Nombre del modelo a relacionar.
+     * @param string $alias Alias a asignar al modelo relacionado.
+     * @param string $condicion Condición, como SQL.
+     * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @return \modelo
      */
     public function relacionarUnoAUno($campo,$modelo,$alias,$condicion,$parametros=null) {
         return $this->relacionar($campo,'1:1',$modelo,$alias,$condicion,$parametros);
     }
 
     /**
-     * Establece una relación 1:0 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato :nombre.
+     * Establece una relación 1:0 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
+     * @param string $campo Campo a relacionar.
+     * @param string $modelo Nombre del modelo a relacionar.
+     * @param string $alias Alias a asignar al modelo relacionado.
+     * @param string $condicion Condición, como SQL.
+     * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @return \modelo
      */
     public function relacionarUnoAUnoNulo($campo,$modelo,$alias,$condicion,$parametros=null) {
         return $this->relacionar($campo,'1:0',$modelo,$alias,$condicion,$parametros);
     }
 
     /**
-     * Establece una relación 1:n con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato :nombre.
+     * Establece una relación 1:N con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
+     * @param string $campo Campo a relacionar.
+     * @param string $modelo Nombre del modelo a relacionar.
+     * @param string $alias Alias a asignar al modelo relacionado.
+     * @param string $condicion Condición, como SQL.
+     * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @return \modelo
      */
     public function relacionarUnoAMuchos($campo,$modelo,$alias,$condicion,$parametros=null) {
         return $this->relacionar($campo,'1:n',$modelo,$alias,$condicion,$parametros);
@@ -310,7 +357,8 @@ class modelo {
 
     /**
      * Omite los campos relacionales.
-     * @var string $campos Si se especifica al menos un argumento, omitirá únicamente el procesamiento de estos campos. En caso contrario, se omitirán todos los campos relacionales.
+     * @param string $campos Si se especifica al menos un argumento, omitirá únicamente el procesamiento de estos campos. En caso contrario, se omitirán todos los campos relacionales.
+     * @return \modelo
      */
     public function omitirRelaciones(...$campos) {
         if(count($campos)) {
@@ -322,7 +370,8 @@ class modelo {
     }
 
     /**
-     * Omite solo las relaciones 1:n.
+     * Omite solo las relaciones 1:N.
+     * @return \modelo
      */
     public function omitirRelacionesUnoAMuchos() {
         $this->consultaProcesarRelaciones1n=false;
@@ -349,6 +398,7 @@ class modelo {
 
     /**
      * Permite que se seleccionen registros eliminados en la próxima consulta.
+     * @return \modelo
      */
     public function seleccionarEliminados() {
         $this->consultaSeleccionarEliminados=true;
@@ -357,10 +407,10 @@ class modelo {
 
     /**
      * Procesa los campos relacionados sobre la instancia especificada luego de haber realizado una consulta con las relaciones desactivadas, o cuando la entidad tenga
-     * campos con @omitir.
-     * @var \entidad $item Item a procesar.
-     * @var bool $procesarOmitidos Procesar los campos con @omitir.
-     * @var bool $procesar1n Procesar las relaciones 1:n.
+     * campos con `@omitir`.
+     * @param \entidad $item Item a procesar.
+     * @param bool $procesarOmitidos Procesar los campos con @omitir.
+     * @param bool $procesar1n Procesar las relaciones 1:n.
      * @return \modelo
      */
     public function procesarRelaciones($item,$procesarOmitidos=true,$procesar1n=true) {
@@ -406,16 +456,19 @@ class modelo {
 
     /**
      * Agrega una condición.
-     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
-     * @var object $parametros Array parámetro/valor.
+     * @param string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato `@nombre`.
+     * @param object $parametros Array parámetro/valor.
+     * @return \modelo
      */
     /**
      * Agrega una condición.
-     * @var object $condicion Array campo=>valor a utilizar como filtro.
+     * @param object $condicion Array campo=>valor a utilizar como filtro.
+     * @return \modelo
      */
     /**
      * Agrega una condición.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @return \modelo
      */
     public function donde($condicion,$parametros=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros);
@@ -424,17 +477,20 @@ class modelo {
 
     /**
      * Agrega una condición.
-     * @var object $condicion Nombre del campo a filtrar.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     * @var mixed $valor Valor a evaluar.
+     * @param object $condicion Nombre del campo a filtrar.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @param mixed $valor Valor a evaluar.
+     * @return \modelo
      *//**
      * Agrega una condición.
-     * @var object $condicion Array campo=>valor a utilizar como filtro.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @param object $condicion Array campo=>valor a utilizar como filtro.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @return \modelo
      *//**
      * Agrega una condición.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @return \modelo
      */
     public function dondeComparar($condicion,$operador,$valor=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'and',$operador);
@@ -442,17 +498,18 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR.
-     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
-     * @var object $parametros Array parámetro/valor.
-     */
-    /**
-     * Agrega una condición OR.
-     * @var object $condicion Array campo=>valor a utilizar como filtro.
-     */
-    /**
-     * Agrega una condición OR.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * Agrega una condición `OR`.
+     * @param string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato `@nombre`.
+     * @param object $parametros Array parámetro/valor.
+     * @return \modelo
+     *//**
+     * Agrega una condición `OR`.
+     * @param object $condicion Array campo=>valor a utilizar como filtro.
+     * @return \modelo
+     *//**
+     * Agrega una condición `OR`.
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @return \modelo
      */
     public function oDonde($condicion,$parametros=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$parametros,'or');
@@ -461,17 +518,20 @@ class modelo {
 
     /**
      * Agrega una condición.
-     * @var object $condicion Nombre del campo a filtrar.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
-     * @var mixed $valor Valor a evaluar.
+     * @param object $condicion Nombre del campo a filtrar.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @param mixed $valor Valor a evaluar.
+     * @return \modelo
      *//**
      * Agrega una condición.
-     * @var object $condicion Array campo=>valor a utilizar como filtro.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @param object $condicion Array campo=>valor a utilizar como filtro.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @return \modelo
      *//**
      * Agrega una condición.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
-     * @var string $operador Operador, como cadena ('<','<=','<>','>','>=','like').
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @param string $operador Operador, como cadena (`<`,`<=`,`<>`,`>`,`>=`,`like`).
+     * @return \modelo
      */
     public function oDondeComparar($condicion,$operador,$valor=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'or',$operador);
@@ -480,11 +540,12 @@ class modelo {
 
     /**
      * Agrega una condición negativa (los valores deben ser distintos al filtro).
-     * @var object $condicion Array u objeto campo=>valor a utilizar como filtro.
-     */
-    /**
+     * @param object $condicion Array u objeto campo=>valor a utilizar como filtro.
+     * @return \modelo
+     *//**
      * Agrega una condición negativa (los valores deben ser distintos a los de la entidad).
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @return \modelo
      */
     public function dondeNo($condicion,$valor=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'and','<>');
@@ -492,12 +553,13 @@ class modelo {
     }
 
     /**
-     * Agrega una condición negativa (los valores deben ser distintos al filtro) OR.
-     * @var object $condicion Array u objeto campo=>valor a utilizar como filtro.
-     */
-    /**
-     * Agrega una condición negativa (los valores deben ser distintos a los de la entidad) OR.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * Agrega una condición negativa (los valores deben ser distintos al filtro) `OR`.
+     * @param object $condicion Array u objeto campo=>valor a utilizar como filtro.
+     * @return \modelo
+     *//**
+     * Agrega una condición negativa (los valores deben ser distintos a los de la entidad) `OR`.
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @return \modelo
      */
     public function oDondeNo($condicion,$valor=null) {
         $this->consultaCondiciones[]=$this->generarCondicion($condicion,$valor,'or','<>');
@@ -505,9 +567,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición IN().
-     * @var string $campo Campo.
-     * @var array $valores Listado de valores posibles.
+     * Agrega una condición `IN()`.
+     * @param string $campo Campo.
+     * @param array $valores Listado de valores posibles.
+     * @return \modelo
      */
     public function dondeEn($campo,$valores) {
         if(!is_array($valores)||!count($valores)) return $this;     
@@ -516,9 +579,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición NOT IN() (negado).
-     * @var string $campo Campo.
-     * @var array $valores Listado de valores a excluir.
+     * Agrega una condición `NOT IN()` (negado).
+     * @param string $campo Campo.
+     * @param array $valores Listado de valores a excluir.
+     * @return \modelo
      */
     public function dondeNoEn($campo,$valores) {    
         if(!is_array($valores)||!count($valores)) return $this;    
@@ -527,9 +591,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR IN().
-     * @var string $campo Campo.
-     * @var array $valores Listado de valores posibles.
+     * Agrega una condición `OR IN()`.
+     * @param string $campo Campo.
+     * @param array $valores Listado de valores posibles.
+     * @return \modelo
      */
     public function oDondeEn($campo,$valores) {  
         if(!is_array($valores)||!count($valores)) return $this;      
@@ -538,9 +603,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR NOT IN() (negado).
-     * @var string $campo Campo.
-     * @var array $valores Listado de valores a excluir.
+     * Agrega una condición `OR NOT IN()` (negado).
+     * @param string $campo Campo.
+     * @param array $valores Listado de valores a excluir.
+     * @return \modelo
      */
     public function oDondeNoEn($campo,$valores) {  
         if(!is_array($valores)||!count($valores)) return $this;      
@@ -549,9 +615,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición LIKE.
-     * @var string $campo Campo.
-     * @var array $valor Valor a evaluar.
+     * Agrega una condición `LIKE`.
+     * @param string $campo Campo.
+     * @param array $valor Valor a evaluar.
+     * @return \modelo
      */
     public function dondeComo($campo,$valor) {        
         $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'and','like');
@@ -559,9 +626,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición NOT LIKE (negado).
-     * @var string $campo Campo.
-     * @var array $valor Valor a evaluar.
+     * Agrega una condición `NOT LIKE` (negado).
+     * @param string $campo Campo.
+     * @param array $valor Valor a evaluar.
+     * @return \modelo
      */
     public function dondeNoComo($campo,$valor) {        
         $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'and','not like');
@@ -569,9 +637,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR LIKE.
-     * @var string $campo Campo.
-     * @var array $valor Valor a evaluar.
+     * Agrega una condición `OR LIKE`.
+     * @param string $campo Campo.
+     * @param array $valor Valor a evaluar.
+     * @return \modelo
      */
     public function oDondeComo($campo,$valor) {        
         $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'or','like');
@@ -579,9 +648,10 @@ class modelo {
     }
 
     /**
-     * Agrega una condición OR NOT LIKE (negado).
-     * @var string $campo Campo.
-     * @var array $valor Valor a evaluar.
+     * Agrega una condición `OR NOT LIKE` (negado).
+     * @param string $campo Campo.
+     * @param array $valor Valor a evaluar.
+     * @return \modelo
      */
     public function oDondeNoComo($campo,$valor) {        
         $this->consultaCondiciones[]=$this->generarCondicion($campo,$valor,'or','not like');
@@ -589,7 +659,8 @@ class modelo {
     }
 
     /**
-     * Establece el o los campos por los cuales se agruparán los
+     * Establece el o los campos por los cuales se agruparán los resultados.
+     * @return \modelo
      */
     public function agrupadoPor(...$campos) {
         $this->consultaAgrupar=$campos;
@@ -597,17 +668,18 @@ class modelo {
     }
 
     /**
-     * Establece la condición HAVING.
-     * @var string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato @nombre.
-     * @var object $parametros Array parámetro/valor.
-     */
-    /**
-     * Establece la condición HAVING.
-     * @var object $condicion Array campo=>valor a utilizar como filtro.
-     */
-    /**
-     * Establece la condición HAVING.
-     * @var object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * Establece la condición `HAVING`.
+     * @param string $condicion Condición como cadena SQL. Pueden insertarse parámetros con el formato `@nombre`.
+     * @param object $parametros Array parámetro/valor.
+     * @return \modelo
+     *//**
+     * Establece la condición `HAVING`.
+     * @param object $condicion Array campo=>valor a utilizar como filtro.
+     * @return \modelo
+     *//**
+     * Establece la condición `HAVING`.
+     * @param object $condicion Instancia de la entidad cuyos campos se utilizarán como filtro.
+     * @return \modelo
      */
     public function teniendo($condicion,$parametros=null) {
         $this->consultaTeniendo[]=$this->generarCondicion($condicion,$parametros);
@@ -615,7 +687,8 @@ class modelo {
     }
 
     /**
-     * Genera un objeto representando intermanente una condición a partir de cualquera de los tres formatos que admiten donde() y teniendo().
+     * Genera un objeto representando intermanente una condición a partir de cualquera de los tres formatos que admiten `donde()` y `teniendo()`.
+     * @return \modelo
      */
     protected function generarCondicion($condicion,$parametros,$union='and',$operador='=') {
         $union=strtoupper($union);
@@ -720,6 +793,9 @@ class modelo {
 
     /**
      * Establece el límite.
+     * @param int $limite Límite inicial.
+     * @param int $cantidad Cantidad de registros a seleccionar/afectar.
+     * @return \modelo
      */
     public function limite($limite,$cantidad) {
         $this->consultaLimite=$limite;
@@ -729,6 +805,9 @@ class modelo {
 
     /**
      * Establece la paginación.
+     * @param int $cantidad Cantidad de registros a seleccionar.
+     * @param int $pagina Número de página (base 1).
+     * @return \modelo
      */
     public function paginacion($cantidad,$pagina=1) {
         if(!$pagina) $pagina=1;
@@ -739,8 +818,9 @@ class modelo {
 
     /**
      * Establece el ordenamiento. Puede invocarse múltiples veces para establecer múltiples columnas de ordenamiento.
-     * @var string $campo Campo o expresión.
-     * @var string $orden Orden ascendente o descendente. Omitir si se establece una expresión en $campo.
+     * @param string $campo Campo o expresión.
+     * @param string $orden Orden ascendente o descendente. Omitir si se establece una expresión en `$campo`.
+     * @return \modelo
      */
     public function ordenadoPor($campo,$orden=null) {
         if($orden) $orden=strtoupper($orden);
@@ -754,7 +834,7 @@ class modelo {
     /**
      * Establece los valores a guardar. En una segunda llamada a este método con un objeto o array, se asignarán los valores a la entidad establecida previamente. Especificar
      * una entidad siempre sobreescribirá la entidad previamente asignada.
-     * @var object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].
+     * @param object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].
      * @return \modelo
      */
     public function establecerValores($objeto) {
@@ -768,8 +848,8 @@ class modelo {
 
     /**
      * Establece un valor a guardar.
-     * @var string $propiedad Nombre de la propiedad.
-     * @var mixed $valor Valor a asignar.
+     * @param string $propiedad Nombre de la propiedad.
+     * @param mixed $valor Valor a asignar.
      * @return \modelo
      */
     public function establecerValor($propiedad,$valor) {
@@ -777,8 +857,8 @@ class modelo {
     }
 
     /**
-     * Crea una nueva entidad, asignando los valores provistos mediante entidad::establecerValoresPublicos(), y la asigna a los valores para la próxima consulta.
-     * @var object|array $valores Valores a asignar.
+     * Crea una nueva entidad, asignando los valores provistos mediante `entidad::establecerValoresPublicos()`, y la asigna a los valores para la próxima consulta.
+     * @param object|array $valores Valores a asignar.
      * @return \modelo
      */
     public function establecerValoresPublicos($valores) {
@@ -790,6 +870,7 @@ class modelo {
 
     /**
      * Devuelve los valores establecidos para guardar, que pueden haber sido actualizados tras la última consulta (por ejemplo, los IDs tras una inserción.)
+     * @return mixed
      */
     public function obtenerEntidad() {
         return $this->consultaValores;
@@ -797,6 +878,7 @@ class modelo {
 
     /**
      * Prepara la consulta.
+     * @return \modelo
      */
     public function prepararConsulta($operacion='seleccionar') {
         $this->construirConsulta($operacion);
@@ -807,6 +889,7 @@ class modelo {
 
     /**
      * Reutiliza la consulta preparada en la próxima consulta, reemplazando los parámetros, en lugar de crear una nueva.
+     * @return \modelo
      */
     public function reutilizarConsulta() {
         $this->reutilizarConsultaPreparada=true;
@@ -815,6 +898,7 @@ class modelo {
 
     /**
      * Ejecuta la consulta, sin devolver ningún elemento.
+     * @return \modelo
      */
     public function ejecutarConsulta($operacion='seleccionar') {
         if($operacion=='insertar'||$operacion=='actualizar') $this->ejecutarConsultasRelacionadas();
@@ -839,6 +923,7 @@ class modelo {
 
     /**
      * Ejecuta las consultas de inserción o actualización en los campos relacionales.
+     * @return \modelo
      */
     public function ejecutarConsultasRelacionadas() {
         foreach($this->campos as $nombre=>$campo) {
@@ -873,7 +958,8 @@ class modelo {
     }
 
     /**
-     * Ejecuta las consultas de inserción o actualización en los campos relacionales 1:n.
+     * Ejecuta las consultas de inserción o actualización en los campos relacionales 1:N.
+     * @return \modelo
      */
     public function ejecutarConsultasRelacionadasUnoAMuchos() {
         foreach($this->campos as $nombre=>$campo) {
@@ -905,6 +991,7 @@ class modelo {
     
     /**
      * Ejecuta la consulta devolviendo un único elemento.
+     * @return \modelo
      */
     public function obtenerUno() {
         $this->consultaCantidad=1;
@@ -931,9 +1018,9 @@ class modelo {
 
     /**
      * Ejecuta la consulta y devuelve un array de elementos.
-     * @param boolean $objetoEstandar Si es true, devolverá un listado de objetos anónimos (stdClass) en lugar de instancias de la entidad.
+     * @param boolean $objetoEstandar Si es `true`, devolverá un listado de objetos anónimos (`stdClass`) en lugar de instancias de la entidad.
      * @param string ...$campos Campos a asignar a la entidad. Si se omite, se asignarán todos los campos disponibles en la consulta. Esto es útil cuando se desee
-     * obtener un listado con menos campos que los que se han seleccionado con seleccionar().
+     * obtener un listado con menos campos que los que se han seleccionado con `seleccionar()`.
      * @return array
      */
     public function obtenerListado($objetoEstandar=false,...$campos) {
@@ -996,6 +1083,7 @@ class modelo {
 
     /**
      * Devuelve la cantidad de elementos encontrados o afectados por la última consulta.
+     * @return \modelo
      */
     public function obtenerCantidad() {
         return $this->bd->obtenerNumeroFilas();
@@ -1003,6 +1091,7 @@ class modelo {
 
     /**
      * Calcula la cantidad de elementos totales que arrojaría la consulta (puede ser aproximado) sin considerar el límite.
+     * @return int
      */
     public function estimarCantidad() {
         $columnas=$this->consultaColumnas;
@@ -1030,6 +1119,7 @@ class modelo {
 
     /**
      * Elimina los elementos que coincidan con la consulta.
+     * @return \modelo
      */
     public function eliminar($e=1) {
         $procesarRelaciones=$this->consultaProcesarRelaciones;
@@ -1050,13 +1140,15 @@ class modelo {
 
     /**
      * Restaura los elementos que coincidan con la consulta.
+     * @return \modelo
      */
     public function restaurar() {
         return $this->eliminar(0);
     }
 
     /**
-     * Guarda el elemento establecido con establecerValores(). El mismo será insertado si no cuenta con campo `id`, o actualizado en caso contrario.
+     * Guarda el elemento establecido con `establecerValores()`. El mismo será insertado si no cuenta con campo `id`, o actualizado en caso contrario.
+     * @return \modelo
      */
     public function guardar() {
         if($this->consultaValores->id) return $this->actualizar();
@@ -1065,6 +1157,7 @@ class modelo {
 
     /**
      * Inserta el elemento establecido con establecerValores().
+     * @return \modelo
      */
     public function insertar() {
         $this->consultaValores->id=null;
@@ -1072,15 +1165,17 @@ class modelo {
     }
 
     /**
-     * Alias de insertar().
+     * Alias de `insertar()`.
+     * @return \modelo
      */
     public function crear() {
         return $this->insertar();
     }
 
     /**
-     * Actualiza los elementos que coincidan con la consulta utilizando los campos del el elemento establecido con establecerValores(). Si no se ha establecido una
+     * Actualiza los elementos que coincidan con la consulta utilizando los campos del el elemento establecido con `establecerValores()`. Si no se ha establecido una
      * condición, utilizará la propiedad `id`.
+     * @return \modelo
      */
     public function actualizar() {
         return $this->ejecutarConsulta('actualizar');
@@ -1088,6 +1183,7 @@ class modelo {
 
     /**
      * Comienza una transacción.
+     * @return \modelo
      */
     public function comenzarTransaccion() {
         $this->bd->comenzarTransaccion();
@@ -1096,6 +1192,7 @@ class modelo {
 
     /**
      * Finaliza la transacción.
+     * @return \modelo
      */
     public function finalizarTransaccion() {
         $this->bd->finalizarTransaccion();
@@ -1104,6 +1201,7 @@ class modelo {
 
     /**
      * Descarta y revierte la transacción.
+     * @return \modelo
      */
     public function descartarTransaccion() {
         $this->bd->descartarTransaccion();
@@ -1112,15 +1210,20 @@ class modelo {
 
     /**
      * Bloquea las tablas dadas las instancias de los modelos.
+     * @param string $modo Modo (`lectura` o `escritura`).
+     * @param string $modelos Nombre de *las tablas* a bloquear.
+     * @return \modelo
      */
     public function bloquear($modo,...$modelos) {
         if($modo=='lectura') $modo='READ'; else $modo='WRITE';
+        //TODO Consultar el nombre de la tabla a cada modelo, puede no coincidir
         $this->bd->bloquear($modo,$modelos);
         return $this;
     }
 
     /**
      * Desbloquea las tablas.
+     * @return \modelo
      */
     public function desbloquear() {
         $this->bd->desbloquear();
@@ -1128,7 +1231,8 @@ class modelo {
     }
 
     /**
-     * 
+     * Devuelve el último mensaje de error.
+     * @return string
      */
     public function obtenerError() {
         return $this->bd->obtenerError();
@@ -1136,6 +1240,7 @@ class modelo {
 
     /**
      * Genera las relaciones automáticas a partir de los campos relacionales.
+     * @return \modelo
      */
     public function prepararRelaciones(&$alias,$recursivo,&$cadenaRelaciones) {
         //Detectar una relación cíclica (se relaciona con un modelo que ya fue relacionado previamente, derivando en un bucle infinito)
@@ -1181,6 +1286,7 @@ class modelo {
 
     /**
      * Genera el listado de porciones SQL para selección de campos y tablas relacionadas.
+     * @return \modelo
      */
     public function construirCamposYRelaciones(&$campos,&$relaciones) {
         if($this->consultaProcesarRelaciones) {
@@ -1210,6 +1316,7 @@ class modelo {
 
     /**
      * Construye la consulta SQL.
+     * @return \modelo
      */
     protected function construirConsulta($operacion='seleccionar') {
         if($operacion=='insertar') {
@@ -1335,6 +1442,7 @@ class modelo {
 
     /**
      * Construye la consulta SQL para insertar una fila.
+     * @return \modelo
      */
     protected function construirConsultaInsercion() {   
         $parametros=[];
@@ -1351,7 +1459,7 @@ class modelo {
     }
 
     /**
-     * Asigna los valores de las propiedades relacionales a partir de las relaciones 1:1 o 1:0 en consultaValores.
+     * Asigna los valores de las propiedades relacionales a partir de las relaciones 1:1 o 1:0 en `consultaValores`.
      */
     protected function asignarCamposRelacionales() {
         foreach($this->campos as $nombre=>$campo) {
@@ -1369,6 +1477,7 @@ class modelo {
 
     /**
      * Construye la porción SQL que contiene los campos a insertar o actualizar.
+     * @return string
      */
     protected function construirCamposInsercionActualizacion(&$parametros,&$tipos,$alias=true) {
         $campos=[];
@@ -1445,7 +1554,9 @@ class modelo {
     }
 
     /**
-     * Determina (o estima) y establece el tipo de un valor dado, devolviendo 'i', 'd', 's' o 'b'.
+     * Determina (o estima) y establece el tipo de un valor dado, devolviendo `i`, `d`, `s` o `b`.
+     * @param mixed $valor Valor a analizar.
+     * @return string
      */
     protected function determinarTipo($valor) { //TODO Es muy específico de PDO, ¿debería estar en la clase bd?
         if(is_integer($valor)) return 'i';

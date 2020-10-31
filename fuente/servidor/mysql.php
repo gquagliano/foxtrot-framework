@@ -149,7 +149,7 @@ class bd {
 	}
 
     /**
-     * Reemplaza el prefijo #__ antes de los nombres de tabla por el prefijo real de las mismas.
+     * Reemplaza el prefijo `#__` antes de los nombres de tabla por el prefijo real de las mismas.
      */
 	public function reemplazarPrefijo($q) {
 		return preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim",$this->credenciales->prefijo,$q);
@@ -205,7 +205,7 @@ class bd {
 	}
 
 	/**
-	 * Ejecuta una consulta MySQL y devuelve una instancia de resultado. La cadena #__ previo a un nombre de tabla se reemplazará
+	 * Ejecuta una consulta MySQL y devuelve una instancia de resultado. La cadena `#__` previo a un nombre de tabla se reemplazará
 	 * por el prefijo.
 	 * @var $q Consulta.
 	 * @var $parametros Array de parámetros. Opcional, si se incluye, se preparará y ejecutará la sentencia preparada en una sola operación.
@@ -233,7 +233,7 @@ class bd {
 	}
 
 	/**
-	 * Comienza una consulta preparada. La cadena #__ previo a un nombre de tabla se reemplazará
+	 * Comienza una consulta preparada. La cadena `#__` previo a un nombre de tabla se reemplazará
 	 * por el prefijo.
 	 * @var $q Consulta.
 	 * @var $parametros Array de parámetros.

@@ -14,14 +14,18 @@ defined('_inc') or exit;
  * Clase base de los repositorios del modelo de datos.
  */
 class entidad {
+    /**
+     * @var string $tipoModelo Tipo del modelo de datos (asignar `modelo::class`).
+     * @var int $id ID.
+     * @var int $e Baja lógica (`1` = Registro *e*liminado).
+     */
     protected $tipoModelo;
-
     public $id;
     public $e;
 
     /**
      * Constructor.
-     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @param object|array $valores Valores a asignar en las propiedades de la instancia.
      */
     function __construct($valores=null) {
         if($valores) $this->establecerValores($valores);
@@ -29,7 +33,7 @@ class entidad {
 
     /**
      * Asigna los elementos o propiedades en las propiedades de esta instancia.
-     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @param object|array $valores Valores a asignar en las propiedades de la instancia.
      * @return \entidad
      */
     public function establecerValores($valores) {
@@ -43,7 +47,7 @@ class entidad {
     /**
      * Asigna los elementos o propiedades provistos en las propiedades de esta instancia que cuenten con la etiqueta @publico. Cuando se reciban datos desde el cliente,
      * debe utilizarse este método en lugar de establecerValores().
-     * @var object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @param object|array $valores Valores a asignar en las propiedades de la instancia.
      * @return \entidad
      */
     public function establecerValoresPublicos($valores) {
@@ -76,6 +80,7 @@ class entidad {
 
     /**
      * Fabrica y devuelve una instancia del modelo o repositorio de este tipo de entidades.
+     * @param \bd $bd Instancia de la interfaz de la base de datos (por defecto, se utilizará la conexión abierta, no se iniciará una nueva instancia).
      * @return \modelo
      */
     public function fabricarModelo($bd=null) {
@@ -161,9 +166,12 @@ class entidad {
             if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
-                    $etiqueta=trim($etiqueta);
+                    $etiqueta=strtolower(trim($etiqueta));
                     $valor=trim($coincidencias[2][$i]);
                     if($valor=='') $valor=true;
+
+                    //Valores que no diferencian mayusc/minusc
+                    if(is_string($valor)&&in_array($etiqueta,['tipo','relacion','relacion'])) $valor=strtolower($valor);
 
                     $campos->$propiedad->$etiqueta=$valor;
                 }

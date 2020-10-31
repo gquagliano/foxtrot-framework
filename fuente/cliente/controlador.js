@@ -4,10 +4,6 @@
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
  */
-
-/**
- * @typedef {controlador} Controlador concreto.
- */
  
 /**
  * @external Object
@@ -21,17 +17,19 @@ var controlador=new function() {
     "use strict";
 
     this.nombre=null;
+    /** @var {servidor} servidor - Acceso al controlador de servidor. */
     this.servidor=null;
+    /** @var {componente} vista - Componente vista. */
     this.vista=null;
+    /** @var {string} controladorServidor - Nombre del controlador de servidor. Por defecto, coincide con el nombre propio. */
     this.controladorServidor=null;
-    /** Componentes por nombre. */
+    /** @var {Object) componentes - Componentes por nombre. */
     this.componentes={};
-    /** Listado de todos los componentes. */
+    /** @var {componente[]} instanciasComponentes - Listado de todos los componentes. */
     this.instanciasComponentes=[];
-
     /**
-     * @var {Object} datos - Valores a informar por obtenerValores(). Estos valores serán recuperados automáticamente por ui.obtenerValores(), por lo que,
-     * entre otros casos, serán enviados automáticamente al servidor en eventos 'enviar:'.
+     * @var {Object} datos - Valores a informar por `obtenerValores()`. Estos valores serán recuperados automáticamente por `ui.obtenerValores()`, por lo que,
+     * entre otros casos, serán enviados automáticamente al servidor en eventos con prefijo `enviar:`.
      */
     this.valores={};
 
@@ -39,6 +37,7 @@ var controlador=new function() {
 
     /**
      * Devuelve el nombre de la instancia.
+     * @returns {string}
      */
     this.obtenerNombre=function() {
         return this.nombre;
@@ -46,6 +45,7 @@ var controlador=new function() {
 
     /**
      * Devuelve la instancia del gestor de la interfaz con el servidor.
+     * @returns {servidor}
      */
     this.obtenerServidor=function() {
         return this.servidor;

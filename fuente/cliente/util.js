@@ -801,7 +801,7 @@ var util=new function() {
     /**
      * Valor predeterminado para el parámetro decimalPlaces de this.numberFormat.
      */
-    this.decimalesPredeterminados=null,
+    this.decimalesPredeterminados=null;
 
     /**
      * Recorre un array de objetos multidimensional sin recursión (utilizando una pila) para mayor eficiencia.

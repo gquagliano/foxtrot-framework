@@ -153,15 +153,38 @@ $ruta=dirname($uri).'/';
         font-family: Montserrat, sans-serif;
         font-size: 14px;
     }
+    a {
+        text-decoration: none !important;
+        transition: color .2s;
+    }
     .btn {
         text-transform: uppercase;
         font-weight: 500;
         padding-left: 1rem;
         padding-right: 1rem;
     }
-    form {
-        max-width: 450px;
-        margin: auto;
+    .custom-control-label::before,
+    .custom-control-label::after {
+        top: 0.095rem;
+    }
+    .custom-control-input:checked~.custom-control-label::before {
+        border-color: #337ab7;
+        background-color: #337ab7;
+    }
+    .btn-primary {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+    }
+    .btn-primary.focus, .btn-primary:focus,
+    .btn-primary:hover,
+    .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+        color: #fff;
+        background-color: #3790dc;
+        border-color: #3790dc;
+    }
+    .col-form-label {
+        line-height: inherit;
     }
     code {
         color: inherit;
@@ -169,41 +192,66 @@ $ruta=dirname($uri).'/';
     #logo {
         height: 90px;
     }
+    form {
+        background: #efefef;
+        border-radius: .2rem;
+        padding: 1.5rem 2rem;
+    }
+    .alert {
+        border: none;
+    }
+    @media(max-width:768px) {
+        form {
+            max-width: 450px;
+            margin: auto;
+        }
+    }
     </style>
     <title>Construir Foxtrot</title>
     <link rel="icon" type="image/png" href="../fuente/recursos/img/favicon.png">
   </head>
   <body>
     <div class="container text-center">
-        <img src="../fuente/recursos/img/foxtrot-transp.png" class="mt-5 mb-4" id="logo">
-        <h3 class="mb-3">Hola</h3>
-        <p>¡Gracias por descargar Foxtrot!</p>
-        <p><a href="https://github.com/gquagliano/experimental-foxtrot-framework/wiki" target="_blank">Wiki / Documentación</a></p>
-        <form method="get" class="mt-5">
-            <input type="hidden" name="ejecutar" value="1">
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label text-right">Ruta</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control form-control-sm" name="ruta" value="<?=$ruta?>">
-                </div>
+        <p>
+            <img src="../fuente/recursos/img/foxtrot-transp.png" class="my-5" id="logo">
+        </p>
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h3 class="mb-3">Hola</h3>
+                <p>¡Gracias por descargar Foxtrot!</p>
+                <p class="mb-0"><a href="https://github.com/gquagliano/experimental-foxtrot-framework/wiki" target="_blank"><strong>Wiki / Documentación</strong></a></p>
             </div>
-            <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" checked name="depuracion" value="1" id="depuracion">
-                    <label class="custom-control-label" for="depuracion">Modo de depuración</label>
-                </div>
+            <div class="col-md-8 text-md-left">
+                <form method="get">
+                    <input type="hidden" name="ejecutar" value="1">
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label text-right text-md-left">Ruta:</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control form-control-sm" name="ruta" value="<?=$ruta?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-2 d-none d-md-block">&nbsp;</div>
+                        <div class="col-md-10">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" checked name="depuracion" value="1" id="depuracion">
+                                <label class="custom-control-label" for="depuracion">Modo de depuración</label>
+                            </div>
+                        </div>
+                    </div>
+        <?php
+        if(!function_exists('shell_exec')) {
+        ?>
+                    <p>¡<code>shell_exec()</code> no está habilitado!</p>
+        <?php
+        }
+        ?>
+                    <div class="form-group mb-0 text-center">
+                        <button type="submit" class="btn btn-primary btn-sm">Construir Foxtrot</button>
+                    </div>
+                </form>
             </div>
-<?php
-if(!function_exists('shell_exec')) {
-?>
-            <p>¡<code>shell_exec()</code> no está habilitado!</p>
-<?php
-}
-?>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-sm">Construir Foxtrot</button>
-            </div>
-        </form>
+        </div>
 <?php
 if(file_exists(__DIR__.'/../desarrollo/servidor/foxtrot.php')) {
 ?>
@@ -211,6 +259,7 @@ if(file_exists(__DIR__.'/../desarrollo/servidor/foxtrot.php')) {
             ¡Foxtrot fue construido en el directorio <code>desarrollo</code>!
         </div>
         <p><a href="../gestor" class="btn btn-success btn-sm">Acceder al gestor de aplicaciones</a></p>
+        <p><a href="../desarrollo" class="btn btn-success btn-sm">Acceder a la aplicación</a></p>
         <p>Es posible que sea necesario completar la configuración en <code>desarrollo/config.php</code>.</p>
 <?php
 }

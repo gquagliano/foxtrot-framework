@@ -23,7 +23,7 @@ Contraseña: admin
 ☝ ¿Comentarios?  
 🤷‍♂️ ¿Dudas?  
 🤓 ¿Querés aprender a usar el framework? (cursos y soporte personalizado *sin cargo*)  
-⌨ ¿Querés contribuir?
+⌨ ¿Te gustaría contribuir?  
 **Escribinos:** contacto@foxtrot.ar
 
 ### Estado

@@ -20,6 +20,12 @@ Usuario: admin
 Contraseña: admin  
 *Nota: La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
 
+☝ ¿Comentarios?  
+🤷‍♂️ ¿Dudas?  
+🤓 ¿Querés aprender a usar el framework? (*sin cargo*)  
+⌨ ¿Querés contribuir?
+**Escribinos:** contacto@foxtrot.ar
+
 ### Estado
 
 ![](docs/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).

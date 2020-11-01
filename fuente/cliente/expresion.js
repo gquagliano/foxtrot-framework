@@ -81,6 +81,8 @@ function expresion(expr) {
 
     var buscarObjeto=function(objeto,nombre) {
         if(nombre==="") return "";
+        if(/^[0-9]$/.test(nombre)) return parseInt(nombre);
+        if(/^[0-9\.]$/.test(nombre)) return parseFloat(nombre);
         if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
         if(objeto) {
             var elem=objeto[nombre];

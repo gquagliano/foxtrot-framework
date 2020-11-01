@@ -47,21 +47,56 @@ var editor=new function() {
 
     ////Construcción de la interfaz
 
+    function guardarConfigInterfaz() {
+        window.localStorage.setItem("configEditor",JSON.stringify({
+            posicionBarraComponentes:barraComponentes.posicionAbsoluta(),
+            posicionBarraPropiedades:barraPropiedades.posicionAbsoluta()
+        }));
+    }
+
+    function obtenerConfigInterfaz() {
+        var obj=window.localStorage.getItem("configEditor");
+        if(!obj) return {
+            posicionBarraComponentes:null,
+            posicionBarraPropiedades:null
+        };
+        return JSON.parse(obj);
+    }
+
     function configurarBarrasHerramientas() {
         barraComponentes.arrastrable({
             asa:barraComponentes.querySelector(".foxtrot-asa-arrastre"),
             mover:true,
+            drag:function() {
+                removerZonas();
+            },
             dragend:function() {
                 removerZonas();
+                guardarConfigInterfaz();
             }
         });
         barraPropiedades.arrastrable({
             asa:barraPropiedades.querySelector(".foxtrot-asa-arrastre"),
             mover:true,
+            drag:function() {
+                removerZonas();
+            },
             dragend:function() {
                 removerZonas();
+                guardarConfigInterfaz();
             }
         });
+
+        //Restaurar posicionamiento
+        var config=obtenerConfigInterfaz();
+        if(config.posicionBarraComponentes) barraComponentes.estilos({
+                left:config.posicionBarraComponentes.x,
+                top:config.posicionBarraComponentes.y
+            });
+        if(config.posicionBarraPropiedades) barraPropiedades.estilos({
+                left:config.posicionBarraPropiedades.x,
+                top:config.posicionBarraPropiedades.y
+            });
     }
 
     function contruirBarrasHerramientas() {

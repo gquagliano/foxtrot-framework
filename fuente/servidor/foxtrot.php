@@ -384,7 +384,7 @@ class foxtrot {
 
     /**
      * Limpia una URI.
-     * @var string $uri Ruta a procesar.
+     * @param string $uri Ruta a procesar.
      * @return string
      */
     public static function prepararUri($uri) {
@@ -415,7 +415,7 @@ class foxtrot {
      * Valida y corrije un nombre de clase, devolviendo un objeto con las propiedades 'nombre' y 'espacio' con el nombre de la clase y el espacio
      * de nombres relativo respectivamente. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo:
      * espacio/consulta-producto -> [nombre=>consultaProducto,espacio=>\espacio).
-     * @var string $nombre Nombre a procesar.
+     * @param string $nombre Nombre a procesar.
      * @return object
      */
     public static function prepararNombreClase($nombre) {
@@ -434,7 +434,7 @@ class foxtrot {
 
     /**
      * Valida y corrije un nombre de método. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
-     * @var string $nombre Nombre a procesar.
+     * @param string $nombre Nombre a procesar.
      * @return string
      */
     public static function prepararNombreMetodo($nombre) {
@@ -457,7 +457,7 @@ class foxtrot {
 
     /**
      * Crea y deuvelve una instancia de un modelo de datos.
-     * @var string $nombre Nombre del modelo a crear.
+     * @param string $nombre Nombre del modelo a crear.
      * @return \modelo
      */
     public static function obtenerInstanciaModelo($nombre) {
@@ -469,8 +469,8 @@ class foxtrot {
 
     /**
      * Crea y deuvelve una instancia de un módulo dado su nombre.
-     * @var string $nombre Nombre del módulo a crear.
-     * @var bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
+     * @param string $nombre Nombre del módulo a crear.
+     * @param bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
      * @return \modulo
      */
     public static function obtenerInstanciaModulo($nombre,$publico=false) {
@@ -487,8 +487,8 @@ class foxtrot {
 
     /**
      * Crea y deuvelve una instancia de un componente dado su nombre.
-     * @var string $nombre Nombre del componente a crear.
-     * @var bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
+     * @param string $nombre Nombre del componente a crear.
+     * @param bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
      * @return \modulo
      */
     public static function obtenerInstanciaComponente($nombre,$publico=false) {
@@ -501,11 +501,34 @@ class foxtrot {
         return new $clase;
     }
 
+    ////Controladores
+
+    /**
+     * Crea y devuelve una instancia de un controlador dado su nombre.
+     * @param string $nombre Nombre del controlador a crear.
+     * @param bool $publico Determina si debe devolver la clase pública (`true`) o privada (`false`).
+     * @return \controlador
+     */
+    public static function obtenerInstanciaControlador($nombre,$publico=false) {
+        $partes=\foxtrot::prepararNombreClase($nombre);
+
+        //Los controladores que presenten /, se buscan en el subdirectorio
+        $ruta=_controladoresServidorAplicacion.$nombre.($publico?'.pub':'').'.php';
+        if(!file_exists($ruta)) return null;
+        include_once($ruta);
+
+        //Cuando presenten /, además, cambia su espacio
+        $clase='\\aplicaciones\\'._apl.$partes->espacio.($publico?'\\publico':'').'\\'.$partes->nombre;
+        if(!class_exists($clase)) return null;
+
+        return new $clase;
+    }
+
     ////Gestión de vistas
 
     /**
      * Devuelve un objeto los parámetros y el cuerpo de una vista.
-     * @var string $nombre Nombre de la vista.
+     * @param string $nombre Nombre de la vista.
      * @return object
      */
     public static function obtenerVista($nombre) {

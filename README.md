@@ -92,7 +92,7 @@ El editor también permite configurar visualmente estructuras de control (bucles
 
 [Más información sobre el editor de vistas](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Editor-de-vistas).
 
-[Listado de componentes](docs/componentes.md).
+[Listado de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Listado-de-componentes).
 
 [Estructura y guía de desarrollo de componentes](docs/componentes-estructura.md).
 
@@ -106,13 +106,11 @@ El framework es multi-aplicación, lo que significa que el desarrollador puede t
 
 El framework está dividido en cliente y servidor, pero desacoplados: Ambos pueden residir en la misma ubicación (el cliente se descarga desde el mismo servidor web) o separados (por ejemplo, cliente local en una aplicación móvil o de escritorio).
 
-El lado del servidor está compuesto por controladores de servidor y el modelo de datos (incluye ORM propio).
+El lado del servidor está compuesto por controladores de servidor y el modelo de datos (incluye [ORM propio](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM)).
 
 El lado del cliente está compuesto por controladores de cliente y vistas. Cada vista está compuesta por componentes, los cuales guardan relación con los elementos del DOM y permiten la manipulación de la vista mediante sus métodos y propiedades. Existen componentes que representan estructuras de control (condicionales, bucles, inclusión de una vista dentro de otra, etc.) automatizando la presentación de información y la navegación. Incluye un gestor del DOM propio (reemplaza a jQuery).
 
 [Más información sobre el API](docs/api.md).
-
-[Documentación](docs/api/indice.md).
 
 **Comunicación cliente<->servidor transparente**
 
@@ -150,8 +148,7 @@ Toda colaboración es bienvenida. Podés ponerte en contacto con nosotros en con
 
 ### Más información
 
-contacto@foxtrot.ar
-
+contacto@foxtrot.ar  
 www.foxtrot.ar
 
 Licencia: Apache 2.0

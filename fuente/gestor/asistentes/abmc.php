@@ -332,7 +332,7 @@ class abmc extends asistente {
         foreach($this->modelo->obtenerCampos() as $nombre=>$campo) {
             if($nombre=='e'||$nombre=='id') continue;
             if($campo->requerido) $requeridos[]='\''.$nombre.'\'';
-            if(preg_match('/cadena/',$campo->tipo)) $sql.=' or '.$this->plural.'.`'.$nombre.'` like @filtroParcial';
+            if(preg_match('/cadena/',$campo->tipo)) $sql.=' or t.`'.$nombre.'` like @filtroParcial';
         }
 
         $partes=\foxtrot::prepararNombreClase($this->nombreControlador);

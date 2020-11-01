@@ -24,13 +24,12 @@ class {nombre} extends \controlador {
         //\foxtrot::obtenerAplicacion()->verificarLogin();
 
         $modelo=new {aliasModelo};
-        $modelo->establecerAlias('{plural}');
         
         $donde=null;
         $parametros=null;
 
         if($filtro->texto) {
-            $donde='{plural}.`id`=@filtro{sqlFiltros}';
+            $donde='t.`id`=@filtro{sqlFiltros}';
             $parametros=[
                 'filtro'=>$filtro->texto,
                 'filtroParcial'=>'%'.$filtro->texto.'%'

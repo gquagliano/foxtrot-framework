@@ -91,11 +91,13 @@ var editor=new function() {
         var config=obtenerConfigInterfaz();
         if(config.posicionBarraComponentes) barraComponentes.estilos({
                 left:config.posicionBarraComponentes.x,
-                top:config.posicionBarraComponentes.y
+                top:config.posicionBarraComponentes.y,
+                right:"auto"
             });
         if(config.posicionBarraPropiedades) barraPropiedades.estilos({
                 left:config.posicionBarraPropiedades.x,
-                top:config.posicionBarraPropiedades.y
+                top:config.posicionBarraPropiedades.y,
+                right:"auto"
             });
     }
 

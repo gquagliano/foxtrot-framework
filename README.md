@@ -26,6 +26,10 @@ Contraseña: admin
 ⌨ ¿Te gustaría contribuir?  
 **Escribinos:** contacto@foxtrot.ar
 
+[![](https://c5.patreon.com/external/favicon/favicon-16x16.png?v=69kMELnXkB)](https://www.patreon.com/gquagliano) *Apoyá el desarrollo*  
+[![](https://static.twitchcdn.net/assets/favicon-16-2d5d1f5ddd489ee10398.png)](https://www.twitch.tv/gquagliano) *Desarrollo en vivo*  
+[![](https://www.youtube.com/favicon.ico)](https://www.youtube.com/channel/UCd8V_YL-kL-BbqB_koAbfBg/) *Podcast, tutoriales y más*
+
 ### Estado
 
 ![](docs/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).

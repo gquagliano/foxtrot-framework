@@ -398,7 +398,7 @@ function procesarTipo($cadena,$lenguaje,$tabla=false) {
         }
     }
 
-    if($comentario) $salida.='  '.PHP_EOL.'*'.$comentario.'*';
+    if($comentario) $salida.=' '.$comentario;
 
     return $salida;
 }

@@ -79,20 +79,34 @@ function expresion(expr) {
         return this;
     };
 
-    var buscarObjeto=function(objeto,nombre) {
+    var analizarObjeto=function(nombre) {
         if(nombre==="") return "";
         if(/^[0-9]$/.test(nombre)) return parseInt(nombre);
         if(/^[0-9\.]$/.test(nombre)) return parseFloat(nombre);
         if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
-        if(objeto) {
+        if(nombre==="verdadero"||nombre==="v") return true;
+        if(nombre==="falso"||nombre==="f") return false;
+        if(nombre==="n"||nombre==="nulo") return null;
+        if(typeof nombre==="undefined") return null;
+        return nombre;
+    }.bind(this);
+
+    var buscarPropiedad=function(objeto,nombre) {
+        nombre=analizarObjeto(nombre);
+
+        if(objeto&&(typeof nombre==="string"||typeof nombre==="number")) {
             var elem=objeto[nombre];
             //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
             if(typeof elem==="function") return elem.bind(objeto);
             return elem;
         }
-        if(this.variables.hasOwnProperty(nombre)) return this.variables[nombre];
-        if(this.funciones.hasOwnProperty(nombre)) return this.funciones[nombre];
-        return null;
+
+        if(typeof nombre==="string") {
+            if(this.variables.hasOwnProperty(nombre)) return this.variables[nombre];
+            if(this.funciones.hasOwnProperty(nombre)) return this.funciones[nombre];
+        }
+
+        return nombre;
     }.bind(this);
 
     /**
@@ -122,18 +136,20 @@ function expresion(expr) {
                     ternarioCondicion=null;
                     bufer="";
                 } else if(caracter==".") {
-                    //¿Punto decimal?
                     if(bufer=="") {
+                        //Punto decimal (.123)
                         bufer="0";
                     } else if(/^[0-9+]$/.test(bufer)) {
+                        //Punto decimal (12.345)
                         bufer+=".";
                     } else {
+                        //Acceso a propiedad
                         uitlimoObjeto=objeto;
-                        objeto=buscarObjeto(objeto,bufer);
+                        objeto=buscarPropiedad(objeto,bufer);
                         bufer="";
                     }
                 } else if(caracter=="?") {
-                    ternarioCondicion=!!buscarObjeto(objeto,bufer);
+                    ternarioCondicion=!!buscarPropiedad(objeto,bufer);
                     uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
@@ -146,29 +162,29 @@ function expresion(expr) {
                     objeto=null;
                     bufer="";
                 } else if(caracter=="[") {
-                    pila.push(buscarObjeto(objeto,bufer));
+                    pila.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter=="]") {
                     uitlimoObjeto=objeto;
-                    objeto=buscarObjeto(objeto,bufer);
+                    objeto=buscarPropiedad(objeto,bufer);
                     var superior=pila.pop();
-                    objeto=buscarObjeto(superior,objeto);
+                    objeto=buscarPropiedad(superior,objeto);
                     bufer="";
                 } else if(caracter=="(") {
-                    pila.push(buscarObjeto(objeto,bufer));
+                    pila.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                     argumentos=[];
                 } else if(caracter==",") {
-                    argumentos.push(buscarObjeto(objeto,bufer));
+                    argumentos.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
                     objeto=null;
                     bufer="";
                 } else if(caracter==")") {
-                    if(bufer!="") argumentos.push(buscarObjeto(objeto,bufer));
+                    if(bufer!="") argumentos.push(buscarPropiedad(objeto,bufer));
                     var superior=pila.pop();
                     uitlimoObjeto=objeto;
                     objeto=superior.apply(window,argumentos);
@@ -185,7 +201,7 @@ function expresion(expr) {
 
         if(bufer!="") {
             uitlimoObjeto=objeto;
-            objeto=buscarObjeto(objeto,bufer);
+            objeto=buscarPropiedad(objeto,bufer);
         }
 
         //Si es una función, devolver un bind al objeto anterior para que al invocarla this tenga el valor correcto

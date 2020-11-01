@@ -237,7 +237,9 @@
 
     /**
      * Detiene momentáneamente o reestablece las operaciones de arrastre para el elemento.
+     * @param {boolean} [pausar=true] - Pausar (`true`) o restaurar (`false`).
      * @memberof external:Node
+     * @returns {Node}
      */
     Node.prototype.pausarArrastre=function(pausar) {
         if(util.esIndefinido(pausar)) pausar=true;
@@ -294,8 +296,10 @@
     };
 
     /**
-     * Aplica pausarArrastre(estado) en el elemento y toda su ascendencia.
+     * Aplica `pausarArrastre(estado)` en el elemento y toda su ascendencia.
+     * @param {boolean} estado - Activar o adesactivar.
      * @memberof external:Node
+     * @returns {Node}
      */
     Node.prototype.pausarArrastreArbol=function(estado) {
         var elem=this;
@@ -306,9 +310,24 @@
         return this;
     };
 
+    /**
+     * Aplica `pausarArrastre(estado)` en el elemento y toda su descendencia.
+     * @param {boolean} estado - Activar o adesactivar.
+     * @memberof external:Node
+     * @returns {Node}
+     */
+    Node.prototype.pausarArrastreArbolDesc=function(estado) {
+        this.pausarArrastre(estado);
+        if(this.hasChildNodes)
+            this.childNodes.forEach(function(hijo) {
+                hijo.pausarArrastreArbolDesc(estado);
+            });
+        return this;
+    };
+
     //Implementación automática de arrastre
     
-    var moverX,moverY;
+    var moverX,moverY,moverLeft,moverTop;
 
     function moverDragover(e) {
         e=(e||event);
@@ -319,39 +338,51 @@
 
     function moverDragstart(e) {
         e=e||event;
+
+        var elem=this.metadato("arrastra"),
+            pos=elem.posicionEstilos();
+
         moverX=e.clientX;
         moverY=e.clientY;
+        moverLeft=pos.left;
+        moverTop=pos.top;
+
+        ui.obtenerCuerpo().pausarArrastreArbolDesc(true);
 
         //Remover el elemento "fantasma"
         e.dataTransfer.setDragImage(new Image,0,0);
         //Implementar dragover en el documento para controlar el cursor
         document.evento("dragover",moverDragover);
+
+        var elem=this.metadato("arrastra");
+        elem.agregarClase("foxtrot-arrastrable-arrastrando");
     }
 
     function moverDrag(e) {
         e=e||event;
-        if(e.clientX==0&&e.clientY==0) return;
         
         var elem=this.metadato("arrastra"),
-            dx=e.clientX-moverX,
-            dy=e.clientY-moverY;
+            dx=moverX-e.clientX,
+            dy=moverY-e.clientY;
+
+        if(dx==0&&dy==0) return;
+
         moverX=e.clientX;
         moverY=e.clientY;
 
-        var pos=elem.posicionEstilos(),
-            ancho=elem.ancho(),
-            alto=elem.alto(),
-            anchoVentana=window.ancho(),
-            altoVentana=window.alto();
+        //var ancho=elem.ancho(),
+        //    alto=elem.alto(),
+        //    anchoVentana=window.ancho(),
+        //    altoVentana=window.alto();
 
-        if(pos.x+dx<=0||pos.y+dy<=0||pos.x+dx+ancho>=anchoVentana||pos.y+dy+alto>=altoVentana) {
-            //Fuera de los límites
-            return;
-        }
+        //if(moverLeft+dx<=0||moverTop+dy<=0||moverLeft+dx+ancho>=anchoVentana||moverTop+dy+alto>=altoVentana) return; //Fuera de los límites
 
+        moverLeft-=dx;
+        moverTop-=dy;
+        
         elem.estilos({
-            left:pos.left+dx,
-            top:pos.top+dy,
+            left:moverLeft,
+            top:moverTop,
             //Cambiamos el posicionamiento de right a left y bottom a top 
             //TODO Poder configurar este comportamiento
             right:"auto",
@@ -360,7 +391,11 @@
     }
 
     function moverDragend(e) {
+        ui.obtenerCuerpo().pausarArrastreArbolDesc(false);
         document.removerEvento("dragover",moverDragover);
+
+        var elem=this.metadato("arrastra");
+        elem.removerClase("foxtrot-arrastrable-arrastrando");
     }
 })();
 

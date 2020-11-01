@@ -97,16 +97,16 @@ function expresion(expr) {
         if(objeto&&(typeof nombre==="string"||typeof nombre==="number")) {
             var elem=objeto[nombre];
             //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
-            if(typeof elem==="function") return elem.bind(objeto);
-            return elem;
+            if(typeof elem==="function") return analizarValor(elem.bind(objeto));
+            return expresion.analizarValor(elem);
         }
 
         if(typeof nombre==="string") {
-            if(this.variables.hasOwnProperty(nombre)) return this.variables[nombre];
-            if(this.funciones.hasOwnProperty(nombre)) return this.funciones[nombre];
+            if(this.variables.hasOwnProperty(nombre)) return expresion.analizarValor(this.variables[nombre]);
+            if(this.funciones.hasOwnProperty(nombre)) return expresion.analizarValor(this.funciones[nombre]);
         }
 
-        return nombre;
+        return expresion.analizarValor(nombre);
     }.bind(this);
 
     /**
@@ -252,6 +252,17 @@ expresion.establecerFuncionesGlobales=function(obj) {
     return expresion;
 };
 
+expresion.analizarValor=function(valor) {
+    if(typeof valor==="undefined") return null;
+    if(typeof valor!=="string") return valor;
+    if(/^[0-9]$/.test(valor)) return parseInt(valor);
+    if(/^[0-9\.]$/.test(valor)) return parseFloat(valor);
+    if(valor==="false") return false;
+    if(valor==="true") return true;
+    if(valor==="null") return null;
+    return valor;
+};
+
 /**
  * Busca y ejecuta todas las expresiones presentes en una cadena. Las llaves pueden escaparse con \{ \} para evitar que una expresión sea evaluada.
  * @returns {*} Cuando la cadena contenga una única expresión, el valor de retorno puede ser cualquier tipo resultante de la misma. Cuando se trate de una cadena con múltiples expresiones, el retorno siempre será una cadena con las expresiones reemplazadas por sus valores.
@@ -309,7 +320,7 @@ expresion.evaluar=function(cadena) {
         }
     }
     
-    return resultado;
+    return expresion.analizarValor(resultado);
 };
 
 window["expresion"]=expresion;

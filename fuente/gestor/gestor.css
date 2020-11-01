@@ -425,7 +425,8 @@ body.foxtrot-trabajando #foxtrot-cargando {
     background-color: rgba(0,123,255,.35);
     box-shadow: none !important;
 }
-.foxtrot-zona-1 {
+.foxtrot-zona-1,
+.foxtrot-zona-4 {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -433,13 +434,23 @@ body.foxtrot-trabajando #foxtrot-cargando {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-.foxtrot-zona-3 {
+.foxtrot-zona-3,
+.foxtrot-zona-6 {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 .foxtrot-zona-4 {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+.foxtrot-zona-5,
+.foxtrot-zona-6 {
+    z-index: 9998;
+    background-color: rgba(255, 166, 0, 0.158);
+}
+.foxtrot-zona-5.foxtrot-arrastrable-arrastrando-sobre,
+.foxtrot-zona-6.foxtrot-arrastrable-arrastrando-sobre {
+    background-color: rgba(255, 174, 0, 0.445);
 }
 
 /* Componentes */

@@ -377,12 +377,6 @@ var editor=new function() {
 
     ////Eventos
 
-    function stopPropagation(e) {
-        //Detener la propagación permitirá destinos anidados
-        e.stopPropagation();
-        e.preventDefault();
-    }
-
     /**
      * Inserta (crea o mueve) el componente soltado.
      * @param {Object} e - Evento.
@@ -650,7 +644,6 @@ var editor=new function() {
             zona4.metadato("destino",elem)
                 .anexarA(doc.body);
 
-
             var anchoZona=14;
 
             zona1.estilos({
@@ -694,6 +687,55 @@ var editor=new function() {
             zona2.crearDestino(params);
             zona3.crearDestino(params);
             zona4.crearDestino(params);
+
+            //Agregar zona antes/despues del padre
+            var padre=elem.parentNode;
+            if(padre!=ui.obtenerCuerpo()&&padre.nodeName!="BODY") {
+                var posicion=padre.posicionAbsoluta(),
+                    ancho=padre.ancho(),
+                    zona5=doc.crear("<div class='foxtrot-zona foxtrot-zona-anterior foxtrot-zona-5'>"),
+                    zona6=doc.crear("<div class='foxtrot-zona foxtrot-zona-siguiente foxtrot-zona-6'>");
+
+                zona5.metadato("destino",padre)
+                    .anexarA(doc.body);
+
+                zona6.metadato("destino",padre)
+                    .anexarA(doc.body);
+
+                anchoZona+=10;
+                    
+                zona5.estilos({
+                    left:posicion.x,
+                    top:posicion.y-anchoZona,
+                    width:ancho,
+                    height:anchoZona
+                });
+
+                zona6.estilos({
+                    left:posicion.x,
+                    top:posicion.y+alto,
+                    width:ancho,
+                    height:anchoZona
+                });
+
+                var params={
+                    drop:componenteSoltado,
+                    dragenter:function(ev) {
+                        ev.stopPropagation();
+                        ev.preventDefault();
+                        clearTimeout(temporizadorZonas);
+                    }
+                };
+
+                zona5.crearDestino(params);
+                zona6.crearDestino(params);     
+                            
+                //Agregar clase a la ascendencia
+                while(padre&&padre!=ui.obtenerCuerpo()&&padre.nodeName!="BODY") {
+                    padre.agregarClase("foxtrot-arrastrable-arrastrando-sobre-hijo");
+                    padre=padre.parentNode;
+                }
+            }
         },700);
     },
     /**
@@ -701,7 +743,9 @@ var editor=new function() {
      */
     removerZonas=function() {
         clearTimeout(temporizadorZonas);
-        ui.obtenerDocumento().querySelectorAll(".foxtrot-zona").remover();
+        var doc=ui.obtenerDocumento();
+        doc.querySelectorAll(".foxtrot-zona").remover();
+        doc.querySelectorAll(".foxtrot-arrastrable-arrastrando-sobre-hijo").removerClase("foxtrot-arrastrable-arrastrando-sobre-hijo");
     };
 
     this.prepararComponenteInsertado=function(obj) {      
@@ -722,8 +766,16 @@ var editor=new function() {
                     ev.preventDefault();
                     mostrarZonas(ev);
                 },
-                dragover:stopPropagation,
-                dragleave:stopPropagation
+                dragover:function(ev) {
+                    //Detener la propagación permitirá destinos anidados
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                },
+                dragleave:function(ev) {
+                    //Detener la propagación permitirá destinos anidados
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                }
             });
         }
         
@@ -1333,7 +1385,7 @@ var editor=new function() {
             elem.removerArrastre()
                 .removerDestino()
             //Remover clases y otras propiedades
-                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles")
+                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");

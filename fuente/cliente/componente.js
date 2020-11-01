@@ -1827,8 +1827,9 @@ var componente=new function() {
      */
     this.enviarFormulario=function() {
         //Ejecutar evento Click en el botón predeterminado del formulario
-        var formulario=this.campo.padre({clase:"formulario"}),
+        var formulario=this.elemento,
             boton=null;
+        if(!formulario.es({clase:"formulario"})) formulario=formulario.padre({clase:"formulario"});
         if(formulario) boton=formulario.querySelector(".predeterminado");
         if(boton) boton.ejecutarEvento("click");
         return this;

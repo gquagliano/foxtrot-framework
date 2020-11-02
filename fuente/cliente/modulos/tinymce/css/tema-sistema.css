@@ -1,0 +1,27 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+/* Estilos para el cuerpo de editores Tinymce acorde al tema Sistema */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    padding: 0;
+    margin: .375rem .5rem;
+}
+p,h1,h2,h3,h4,h5,h6,ul,ol {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+:last-child {
+    margin-bottom: 0;
+}

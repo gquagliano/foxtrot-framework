@@ -78,6 +78,8 @@ function copiar($ruta,$filtro,$destino,$rec=true) {
 function buscarArchivos($ruta,$filtro,$funcion=null) {
     $res=[];
 
+    if(file_exists($ruta.'.ignorar')) return $res;
+
     $arr=glob($ruta.$filtro,GLOB_BRACE);
     $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
     foreach($arr as $archivo) {
@@ -248,12 +250,14 @@ function compilarFoxtrotJs($destino,$omitirClosure,$omitirModulos=false) {
     compilarJs($archivos,$destino,$omitirClosure);
 }
 
-function eliminarDir($ruta) {
+function eliminarDir($ruta,$preservarIgnorados=false) {
     if(is_dir($ruta)) {
         if(substr($ruta,-1)!=DIRECTORY_SEPARATOR) $ruta.=DIRECTORY_SEPARATOR;
+        if(file_exists($ruta.'.ignorar')) return;        
         $archivos=glob($ruta.'*');
-        foreach($archivos as $archivo) eliminarDir($archivo);
-        rmdir($ruta);
+        foreach($archivos as $archivo) eliminarDir($archivo,$preservarIgnorados);
+        $archivos=glob($ruta.'*');
+        if(!count($archivos)) rmdir($ruta);
     } elseif(file_exists($ruta)) {
         unlink($ruta);
     }

@@ -112,8 +112,10 @@ class construirProduccion extends asistente {
             if(!in_array(basename($archivo),$modulos))
                 eliminarDir($archivo);
         }
-        //Eliminar todos los módulos en cliente ya que se integrarán en el js de la aplicación solo los necesarios
-        eliminarDir(_produccion.'cliente/modulos');
+
+        //En los módulos de cliente, preservar los archivos que no hayan sido incluidos
+        copiar(_desarrollo.'cliente/modulos/',null,_produccion.'cliente/modulos/');
+        eliminarDir(_produccion.'cliente/modulos/',true);
 
         //Construir foxtrot.js sin módulos
         compilarFoxtrotJs(_produccion.'cliente/foxtrot.js',$param->depuracion,true);

@@ -24,7 +24,6 @@ define('_wiki',__DIR__.'/../../experimental-foxtrot-framework.wiki/');
 define('_salidaPhp',_wiki.'phpdoc/');
 define('_salidaJs',_wiki.'/jsdoc/');
 define('_excluir',[
-    realpath(__DIR__.'/../fuente/servidor/modulos/email/src/'),
     realpath(__DIR__.'/../fuente/cliente/expresion-desarrollo.js')
 ]);
 
@@ -53,6 +52,7 @@ function limpiar($ruta) {
 }
 
 function procesarDirectorio($dir) {
+    if(file_exists($dir.'.ignorar')) return;
     $archivos=glob($dir.'*');
     foreach($archivos as $archivo) {
         if(in_array(realpath($archivo),_excluir)) continue;

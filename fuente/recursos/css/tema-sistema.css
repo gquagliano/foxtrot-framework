@@ -243,6 +243,23 @@ textarea.form-control {
     transition: color .2s,border .2s;
 }
 
+/*Tinymce*/
+
+.tox:not(.tox-tinymce-inline) .tox-editor-header {
+    border-bottom: 1px solid #ced4da;
+}
+.tox .tox-tbtn,
+.tox .tox-tbtn--select {
+    height: 26px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    transition: background-color .2s;
+}
+.tox .tox-tbtn svg {
+    transform: scale(.7);
+}
+
 /*Colores*/
 
 a {

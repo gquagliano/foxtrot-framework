@@ -29,7 +29,8 @@ var componenteCampo=function() {
                     texto:"Texto",
                     multilinea:"Texto multilínea",
                     contrasena:"Contraseña",
-                    numero:"Numérico"
+                    numero:"Numérico",
+                    tinymce:"Editor (TinyMce)"
                 },
                 adaptativa:false
             },
@@ -69,6 +70,8 @@ var componenteCampo=function() {
 
         this.campo=this.elemento.querySelector("input,textarea");
         this.elementoEventos=this.campo;
+
+        if(this.propiedad("tipo")=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
 
         this.inicializarComponente();
         return this;
@@ -120,7 +123,7 @@ var componenteCampo=function() {
         }
 
         if(propiedad=="tipo") {
-            if(valor=="multilinea") {
+            if(valor=="multilinea"||valor=="tinymce") {
                 //Reemplazar por textarea
 
                 this.campo.valor("");
@@ -129,7 +132,7 @@ var componenteCampo=function() {
                 //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
                 this.campo=this.elemento.querySelector("textarea");
             } else {
-                if(valorAnterior=="multilinea") {
+                if(valorAnterior=="multilinea"||valor=="tinymce") {
                     //Reemplazar por input
 
                     this.campo.valor("");
@@ -146,6 +149,8 @@ var componenteCampo=function() {
                 };
                 this.campo.atributo("type",tipos[valor]);
             }
+
+            if(valor=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
         
             return this;
         } 
@@ -185,6 +190,31 @@ var componenteCampo=function() {
         }
 
         this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+
+    /**
+     * Carga y configura el editor de texto.
+     * @returns {componente}
+     */
+    this.cargarTinymce=function() {
+        ui.obtenerInstanciaModulo("tinymce").crear({
+            target:this.campo,
+            language:"es",
+            plugins:"table paste pagebreak list advlist link image imagetools contextmenu spellchecker",
+            menubar:false,
+            statusbar:false,
+            toolbar:"undo redo | bold italic | link | bullist numlist"
+        });
+        return this;
+    };
+
+    /**
+     * Remueve el editor de texto.
+     * @returns {componente}
+     */
+    this.removerTinymce=function() {
+        //TODO
         return this;
     };
 };

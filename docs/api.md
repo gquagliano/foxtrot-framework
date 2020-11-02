@@ -4,7 +4,6 @@
 - [Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)
 - [Estructura](estructura.md)
 - [Descripción y documentación del API](api.md)
-- [Componentes](componentes.md)
 - [Desarrollo de componentes](componentes-estructura.md)
 - [Pendientes](pendientes.md)
 
@@ -107,7 +106,7 @@ En las propiedades de componentes que admiten expresiones, como así también al
 - `parametros` Parámetros de la URL (GET)
 - `valor` Valor del componente (solo en expresiones asignadas a eventos)
 - Las instancias de otros controladores también estarán disponibles por nombre
-- Cada componente [puede definir otras variables o fuciones específicas](componentes.md)
+- Cada componente [puede definir otras variables o fuciones específicas](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Listado-de-componentes)
 - Cada propiedad del origen de datos estará definida como una variable
 - `window`
 - `document`

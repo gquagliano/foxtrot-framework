@@ -31,6 +31,16 @@ class email extends \modulo {
 
     /**
      * Envía un mensaje de email.
+     * 
+     * `$parametros` admite las siguientes propiedades o elementos (opcionales):
+     * - `remitente` Dirección del remitente.
+     * - `nombreRemitente` Nombre del remitente.
+     * - `responder` Dirección de respuesta.
+     * - `retorno` Dirección de retorno.
+     * - `plantilla` Plantilla (actualmente sin efecto).
+     * - `depuracion` Habilita la salida de depuración por HTTP.
+     * - `embeber` Listado de imagenes a embeber. Array de objetos [ruta,cid].
+     * - `alternativo` Texto alternativo.
      * @var string|array $destinatarios Destinatario, listado de destinatarios separados por comas, o array de destinatarios.
      * @var string $asunto Asunto.
      * @var string $cuerpo Cuerpo.

@@ -145,10 +145,21 @@ textarea.form-control {
 .custom-switch .custom-control-input:checked~.custom-control-label::after {
     transform: translateX(1.15rem);
 }
+.custom-control.custom-radio,
+.custom-control.custom-checkbox {
+    padding-left: 2.1rem;
+}
+.custom-radio .custom-control-label::before,
+.custom-checkbox .custom-control-label::before {
+    width: 1.4rem;
+    height: 1.4rem;
+    top: 0rem;
+    left: -2.1rem;
+}
 .custom-radio .custom-control-label::after,
 .custom-checkbox .custom-control-label::after {
     top: .2rem;
-    left: -1.55rem;
+    left: -1.9rem;
     background: no-repeat 70%/70% 70%;
 }
 .custom-select {
@@ -343,7 +354,7 @@ body.escritorio .btn-secondary:hover,
     background-color: #337ab7;   
     color: #fff !important;
 }
-.custom-control-input:checked~.custom-control-label::before {
+.custom-switch .custom-control-input:checked~.custom-control-label::before {
     background-color: #aecbe4;
 }
 .custom-switch .custom-control-input:checked~.custom-control-label::after {

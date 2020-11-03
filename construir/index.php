@@ -50,7 +50,7 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','.htaccess'];
     copiar(_fuente,$tipos,_desarrollo,false);
     copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
-    copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/');
+    copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/',true,[realpath(_fuente.'servidor/modulos')]);
     copiar(_fuente.'temp/',null,_desarrollo.'temp/');
     copiar(_fuente.'gestor/',$tipos,_gestor);
     copiar(_fuente.'gestor/img/',null,_gestor.'img/');
@@ -65,8 +65,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _fuente.'recursos/css/foxtrot.css'
     ];
     $archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.css'));
-    //Incorporar css de módulos
-    $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.css'));
+    //Incorporar css de módulos (excluyendo sus subdirectorios)
+    $archivos=array_merge($archivos,buscarArchivos(_fuente.'cliente/modulos/','*.css',null,false));
     foreach($archivos as $arch) {
         //Excluir css de modo de edición
         if(preg_match('/\.edicion\.css$/',$arch)) continue;
@@ -97,7 +97,22 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     ////Módulos (se copian tal cual)
 
     //Si bien los módulos se integrarán en foxtrot.js, deben copiarse a desarrollo ya que se utilizarán durante la construcción para producción
-    copiar(_fuente.'cliente/modulos/',null,_desarrollo.'cliente/modulos/');
+    copiar(_fuente.'servidor/modulos/',null,_desarrollo.'servidor/modulos/',false);
+    copiar(_fuente.'cliente/modulos/',null,_desarrollo.'cliente/modulos/',false);
+
+    //Los subdirectorios de módulos, si presentan .ignorar, no se reemplazan si ya existen
+    function revisarSubdirsModulos($origen,$ruta=''){
+        $subdirs=glob(_fuente.$origen.'modulos/'.$ruta.'*',GLOB_ONLYDIR);
+        foreach($subdirs as $subdir) {
+            //Si tiene .ignorar, solo copiar una vez
+            if(!file_exists($subdir.'/.ignorar')||!file_exists(_desarrollo.$origen.'modulos/'.$ruta.basename($subdir))) {
+                copiar(_fuente.$origen.'modulos/'.$ruta.basename($subdir).'/',null,_desarrollo.$origen.'modulos/'.$ruta.basename($subdir).'/',false);
+                revisarSubdirsModulos($origen,$ruta.basename($subdir).'/');
+            }
+        }
+    }
+    revisarSubdirsModulos('servidor/');
+    revisarSubdirsModulos('cliente/');
 
     ////js cliente (framework + componentes + modulos)
 

@@ -50,9 +50,9 @@ function registroExec($comando,$respuesta) {
     file_put_contents(__DIR__.'/../desarrollo/exec.log','# '.$comando.PHP_EOL.trim($respuesta).PHP_EOL.PHP_EOL,FILE_APPEND);
 }
 
-function copiar($ruta,$filtro,$destino,$rec=true) {
+function copiar($ruta,$filtro,$destino,$rec=true,$excluir=null) {
     if(is_array($filtro)) {
-        foreach($filtro as $f) copiar($ruta,$f,$destino,$rec);
+        foreach($filtro as $f) copiar($ruta,$f,$destino,$rec,$excluir);
         return;
     }
 
@@ -65,17 +65,18 @@ function copiar($ruta,$filtro,$destino,$rec=true) {
     if($rec) $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
 
     foreach($arr as $archivo) {
-        $archivo=basename($archivo);
-        if($archivo=='.'||$archivo=='..') continue;
-        if(is_dir($ruta.$archivo)) {
-            if($rec) copiar($ruta.$archivo.'/',$filtro,$destino.$archivo.'/',true);
+        $nombre=basename($archivo);
+        if($nombre=='.'||$nombre=='..') continue;
+        if($excluir&&in_array(realpath($archivo),$excluir)) continue;
+        if(is_dir($archivo)) {
+            if($rec) copiar($archivo.'/',$filtro,$destino.$nombre.'/',true,$excluir);
         } else {
-            copy($ruta.$archivo,$destino.$archivo);
+            copy($archivo,$destino.$nombre);
         }
     }
 }
 
-function buscarArchivos($ruta,$filtro,$funcion=null) {
+function buscarArchivos($ruta,$filtro,$funcion=null,$rec=true) {
     $res=[];
 
     if(file_exists($ruta.'.ignorar')) return $res;
@@ -86,7 +87,7 @@ function buscarArchivos($ruta,$filtro,$funcion=null) {
         $archivo=basename($archivo);
         if($archivo=='.'||$archivo=='..') continue;
         if(is_dir($ruta.$archivo)) {
-            $res=array_merge($res,buscarArchivos($ruta.$archivo.'/',$filtro,$funcion));
+            if($rec) $res=array_merge($res,buscarArchivos($ruta.$archivo.'/',$filtro,$funcion));
         } else {
             $res[]=$ruta.$archivo;
             if($funcion) call_user_func($funcion,$ruta.$archivo);

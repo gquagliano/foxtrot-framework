@@ -93,8 +93,8 @@ class construirProduccion extends asistente {
 
         ////Copiar framework
         $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
-        copiar(_desarrollo.'cliente/',$tipos,_produccion.'cliente/');
-        copiar(_desarrollo.'servidor/',$tipos,_produccion.'servidor/');
+        copiar(_desarrollo.'cliente/',$tipos,_produccion.'cliente/',true,[realpath(_desarrollo.'cliente/modulos')]);
+        copiar(_desarrollo.'servidor/',$tipos,_produccion.'servidor/',true,[realpath(_desarrollo.'servidor/modulos')]);
 
         //Omitir los íconos
         copiar(_desarrollo.'recursos/css/',$tipos,_produccion.'recursos/css/');
@@ -106,19 +106,31 @@ class construirProduccion extends asistente {
         $archivos=glob(_produccion.'recursos/css/tema-*.css');
         foreach($archivos as $archivo) unlink($archivo);
 
-        //Eliminar módulos innecesarios, ya que copiamos todo servidor en forma recursiva
-        $archivos=glob(_produccion.'servidor/modulos/*');
-        foreach($archivos as $archivo) {
-            if(!in_array(basename($archivo),$modulos))
-                eliminarDir($archivo);
-        }
-
-        //En los módulos de cliente, preservar los archivos que no hayan sido incluidos
-        copiar(_desarrollo.'cliente/modulos/',null,_produccion.'cliente/modulos/');
-        eliminarDir(_produccion.'cliente/modulos/',true);
-
         //Construir foxtrot.js sin módulos
         compilarFoxtrotJs(_produccion.'cliente/foxtrot.js',$param->depuracion,true);
+
+        //En servidor, los módulos se copian completos
+        //En cliente, se copian solo los subdirectorios de módulos
+        function copiarModulos($ruta){
+            $subdirs=glob(_desarrollo.$ruta.'*',GLOB_ONLYDIR);
+            foreach($subdirs as $subdir) {
+                //Si tiene .ignorar, solo copiar una vez
+                $nombre=basename($subdir);
+                if(!file_exists($subdir.'/.ignorar')||!file_exists(_produccion.$ruta.$nombre)) {
+                    copiar($subdir.'/',null,_produccion.$ruta.$nombre.'/');
+                }
+            }
+        }
+        foreach($modulos as $modulo) {
+            if(file_exists(_desarrollo.'cliente/modulos/'.$modulo)) {
+                copiarModulos('cliente/modulos/'.$modulo.'/');
+            }
+            if(file_exists(_desarrollo.'servidor/modulos/'.$modulo)) {
+                copiarModulos('servidor/modulos/'.$modulo.'/');
+                //Agregar los archivos del raíz (no lo hacemos directamente con copiar() recursivo para evitar volver a copiar subdirectorios existentes)
+                copiar(_desarrollo.'servidor/modulos/'.$modulo.'/',null,_produccion.'servidor/modulos/'.$modulo.'/',false);
+            }
+        }
 
         //Intentar copiar y configurar .htaccess y config.php (no reemplazar)
         if(!file_exists(_produccion.'.htaccess')) {
@@ -163,6 +175,7 @@ class construirProduccion extends asistente {
         //Limpiar el css
         $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
         if(file_exists($rutaCssCombinado)) unlink($rutaCssCombinado);
+        if(!is_dir(dirname($rutaCssCombinado))) mkdir(dirname($rutaCssCombinado),0755,true);
 
         //Copiar otros directorios
         $directorios=glob(_desarrollo.$rutaAplicacion.'*',GLOB_ONLYDIR);
@@ -171,17 +184,6 @@ class construirProduccion extends asistente {
                 copiar($dir.'/','*.*',_produccion.$rutaAplicacion.basename($dir).'/');
             }
         }
-        
-        //Combinar los estilos de los módulos en el archivo CSS principal de la aplicación
-        $css='';
-        foreach($modulos as $modulo) {
-            $ruta=_desarrollo.'cliente/modulos/'.$modulo.'/';
-            if(!file_exists($ruta)) continue;
-            $archivos=buscarArchivos($ruta,'*.css');
-            foreach($archivos as $archivo) $css.=file_get_contents($archivo);
-        }
-        if(file_exists($rutaCssCombinado)) $css.=file_get_contents($rutaCssCombinado);
-        file_put_contents($rutaCssCombinado,$css);
 
         //Combinar los controladores en el archivo JS principal de la aplicación
         $archivos=[
@@ -193,10 +195,8 @@ class construirProduccion extends asistente {
         foreach($modulos as $modulo) {
             $ruta=_desarrollo.'cliente/modulos/'.$modulo.'/';
             if(!file_exists($ruta)) continue;
-            $archivos=array_merge($archivos,buscarArchivos($ruta,'*.js'));
+            $archivos=array_merge($archivos,buscarArchivos($ruta,'*.js',null,false));
         }
-
-        $jsonApl=json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'));
 
         $temp=tempnam(__DIR__,'js');
         if($param->embebibles) {
@@ -221,6 +221,20 @@ class construirProduccion extends asistente {
         compilarJs($archivos,_produccion.$rutaAplicacion.'cliente/aplicacion.js',$param->depuracion);
 
         unlink($temp);
+        
+        //Combinar los estilos de los módulos en el archivo CSS principal de la aplicación
+        $css='';
+        foreach($modulos as $modulo) {
+            $ruta=_desarrollo.'cliente/modulos/'.$modulo.'/';
+            if(!file_exists($ruta)) continue;
+            $archivos=buscarArchivos($ruta,'*.css',null,false);
+            foreach($archivos as $archivo) $css.=file_get_contents($archivo);
+        }
+        if(file_exists($rutaCssCombinado)) $css.=file_get_contents($rutaCssCombinado);
+        file_put_contents($rutaCssCombinado,$css);
+
+        //Comprimir JSON
+        $jsonApl=json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'));
 
         //Copiar las vistas tal cual (excepto CSS)
         copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');
@@ -279,7 +293,7 @@ class construirProduccion extends asistente {
                 //Imágenes, etc.
                 copy($archivo,$destino);
             }
-        }
+        }        
 
         //Eliminar directorios vacíos
         eliminarDirectoriosVacios(_produccion);

@@ -25,6 +25,17 @@ var componentePestana=function() {
             etiqueta:{
                 etiqueta:"Etiqueta",
                 adaptativa:false
+            },
+            mover:{
+                etiqueta:"Mover",
+                tipo:"comando",
+                boton:"Mover pestaña",
+                funcion:function(comp) {
+                    var orden=parseInt(prompt("Nueva posición:")); //TODO Usar un diálogo html (¿ui.dialogos debería tener un prompt?)
+                    if(!isNaN(orden))
+                        comp.mover(orden)
+                            .actualizarContenedor();
+                }
             }
         }
     };    

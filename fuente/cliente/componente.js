@@ -1608,7 +1608,7 @@ var componente=new function() {
                     if(retorno) retorno(resultadoLocal);
                 } else if(manejador!="") {
                     //Propiedad del controlador
-                    if(typeof ctl[manejador]==="function") resultadoLocal=ctl[manejador].call(ctl,this,evento);
+                    if(ctl&&typeof ctl[manejador]==="function") resultadoLocal=ctl[manejador].call(ctl,this,evento);
 
                     if(retorno) retorno(resultadoLocal);
                 }
@@ -1939,7 +1939,26 @@ var componente=new function() {
         fn(this.contenedor||this.elemento);       
 
         return hijos;
+    };    
+
+    /**
+     * Mueve el componente a una nueva posición dentro del padre.
+     * @param {number} orden - Nueva posición, comenzando desde `0`.
+     * @returns {componente}
+     */
+    this.mover=function(orden) {
+        var padre=this.elemento.parentNode,
+            hermanos=padre.hijos();
+        this.elemento.desacoplar();
+        if(hermanos.length>orden) {
+            hermanos[orden].insertarAntes(this.elemento);
+        } else {
+            padre.anexar(this.elemento);
+        }
+        return this;
     };
+
+    ////Datos
 
     /**
      * Establece toda la descendencia como oculta.

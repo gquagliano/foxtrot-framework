@@ -198,6 +198,8 @@ class construirProduccion extends asistente {
             $archivos=array_merge($archivos,buscarArchivos($ruta,'*.js',null,false));
         }
 
+        $jsonApl=json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'));
+
         $temp=tempnam(__DIR__,'js');
         if($param->embebibles) {
             //Agregar código de las vistas embebibles dentro del JS
@@ -232,9 +234,6 @@ class construirProduccion extends asistente {
         }
         if(file_exists($rutaCssCombinado)) $css.=file_get_contents($rutaCssCombinado);
         file_put_contents($rutaCssCombinado,$css);
-
-        //Comprimir JSON
-        $jsonApl=json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'));
 
         //Copiar las vistas tal cual (excepto CSS)
         copiar(_desarrollo.$rutaAplicacion.'cliente/vistas/','*.{json,html,php}',_produccion.$rutaAplicacion.'cliente/vistas/');

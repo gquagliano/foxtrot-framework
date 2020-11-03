@@ -120,6 +120,17 @@ var componenteImportar=function() {
      */
     this.eventoExterno=function(valor,evento) {
         this.cargarVista(valor);
+    };    
+
+    /**
+     * Actualiza el componente y la vista que contiene.
+     * @returns {componenteImportar}
+     */
+    this.actualizar=function() {
+        var vista=this.vista();
+        if(vista) vista.actualizar();
+        this.actualizarComponente();
+        return this;
     };
 
     /**

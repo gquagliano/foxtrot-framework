@@ -97,7 +97,7 @@ function expresion(expr) {
         if(objeto&&(typeof nombre==="string"||typeof nombre==="number")) {
             var elem=objeto[nombre];
             //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
-            if(typeof elem==="function") return analizarValor(elem.bind(objeto));
+            if(typeof elem==="function") return elem.bind(objeto);
             return expresion.analizarValor(elem);
         }
 

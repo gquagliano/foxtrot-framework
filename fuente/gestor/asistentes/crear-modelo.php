@@ -57,9 +57,17 @@ class crearModelo extends asistente {
     public function ejecutar($param) {
         if(!$param->nombre||!$param->entidad) gestor::error('Ingresá el nombre del modelo y el nombre de la entidad.');
         
-        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/';
-        $rutaModelo=$ruta.$param->nombre.'.php';
+        $partes=\util::separarRuta($param->nombre);
+        $nombre=$partes->nombre;
+        $ruta=$partes->ruta;
+
+        $partes=\foxtrot::prepararNombreClase($param->nombre);
+        
+        $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/'.$ruta;
+        $rutaModelo=$ruta.$nombre.'.php';
         $rutaEntidad=$ruta.$param->entidad.'.php';
+
+        if(!is_dir($ruta)) mkdir($ruta,0755,true);
 
         if(file_exists($rutaModelo)) gestor::error('La clase del modelo ya existe.');
         if(file_exists($rutaEntidad)) gestor::error('La clase de la entidad ya existe.');
@@ -69,9 +77,10 @@ class crearModelo extends asistente {
 
         $vars=[
             '{nombreApl}'=>$this->aplicacion,
-            '{modelo}'=>$param->nombre,
+            '{modelo}'=>$nombre,
             '{entidad}'=>$param->entidad,
-            '{tabla}'=>$tabla
+            '{tabla}'=>$tabla,
+            '{espacio}'=>$partes->espacio
         ];
 
         file_put_contents(

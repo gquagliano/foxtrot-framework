@@ -182,10 +182,12 @@ class gestor {
     public static function obtenerModelos() {
         //TODO Obtener de Foxtrot
         $resultado=[];
+        $base='aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\';
+        $baseRegexp=str_replace('\\','\\\\',$base);
         foreach(get_declared_classes() as $clase) {
-            if(preg_match('/^aplicaciones\\\\'.gestor::obtenerNombreAplicacion().'\\\\modelo\\\\.+/',$clase)&&is_subclass_of($clase,'\\modelo')) {
-                $nombre=basename($clase);
-                $resultado[]=(object)['nombre'=>$nombre,'clase'=>$clase];
+            if(preg_match('/^'.$baseRegexp.'.+/',$clase)&&is_subclass_of($clase,'\\modelo')) {
+                $partes=\util::separarRuta(substr($clase,strlen($base)));
+                $resultado[]=(object)['nombre'=>$partes->ruta.$partes->nombre,'clase'=>$clase];
             }
         }
         return $resultado;

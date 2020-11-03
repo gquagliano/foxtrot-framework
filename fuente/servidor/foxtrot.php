@@ -221,14 +221,11 @@ class foxtrot {
 	        
 	        include(_servidorAplicacion.'aplicacion.php');
 
-	        //Modelo de datos (importar completo)
-	        $archivos=glob(_modeloAplicacion.'*.php');
-	        foreach($archivos as $archivo) include($archivo);
+            //Modelo de datos (importar completo)
+            self::incluirDirectorio(_modeloAplicacion);
 
 	        //Controladores privados (importar completo)
-	        $archivos=glob(_controladoresServidorAplicacion.'*.php');
-	        foreach($archivos as $archivo)
-                if(!preg_match('/\.pub\.php$/',$archivo)) include($archivo);
+	        self::incluirDirectorio(_controladoresServidorAplicacion);
         }
 
 		if(self::$aplicacion) {
@@ -243,6 +240,20 @@ class foxtrot {
 	            self::$instanciaAplicacionPublico=new $cls;
 	        }
 	    }
+    }
+
+    /**
+     * 
+     */
+    private static function incluirDirectorio($ruta,$excluirPub=true) {
+        $archivos=glob($ruta.'*');
+        foreach($archivos as $archivo) {
+            if(is_dir($archivo)) {
+                self::incluirDirectorio($archivo.'/',$excluirPub);
+            } elseif(preg_match('/\.php$/',$archivo)&&(!$excluirPub||!preg_match('/\.pub\.php$/',$archivo))) {
+                include($archivo);
+            }
+        }
     }
 
     /**
@@ -461,7 +472,13 @@ class foxtrot {
      * @return \modelo
      */
     public static function obtenerInstanciaModelo($nombre) {
-        $clase='\\aplicaciones\\'._apl.'\\modelo\\'.$nombre;
+        //Las clases ya fueron incluidas
+        
+        //Cuando presenten /, cambia su espacio
+        $partes=\foxtrot::prepararNombreClase($nombre);        
+        $clase='\\aplicaciones\\'._apl.'\\modelo'.$partes->espacio.'\\'.$partes->nombre;
+        if(!class_exists($clase)) return null;
+
         return new $clase;
     }
 

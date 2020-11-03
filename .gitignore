@@ -3,3 +3,5 @@
 **/temp/temp-privado/*
 !**/temp/temp-privado/.htaccess
 .vscode
+**/php_errors.log
+**/error_log

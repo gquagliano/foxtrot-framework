@@ -62,6 +62,10 @@ function procesarDirectorio($dir) {
     }
 }
 
+function triml($cadena) {
+    return preg_replace('/^[\s]/','',$cadena);
+}
+
 function procesarComentario($codigo) {
     $bloques=[];
     
@@ -77,21 +81,21 @@ function procesarComentario($codigo) {
         $bloque=trim($bloque);
         preg_match_all('#[ \t]*\*?([^\r\n]*)[\r\n]?#s',$bloque,$lineas);              
         foreach($lineas[1] as $linea) {
-            $linea=trim($linea);
-            if(!$linea) continue;
+            $linea=triml($linea);
+            if(!trim($linea)) continue;
             if(preg_match('#^@(.+?)( (.+))?$#',$linea,$etiqueta)) {
                 if($ultimaEtiqueta) $etiquetas[]=$ultimaEtiqueta;
 
                 $ultimaEtiqueta=(object)[
                     'etiqueta'=>trim($etiqueta[1]),
-                    'comentario'=>trim($etiqueta[3])
+                    'comentario'=>$etiqueta[3]
                 ];
             } elseif($ultimaEtiqueta) {
                 //Una línea sin etiqueta, asumir continuación de la última etiqueta
-                $ultimaEtiqueta->comentario.='||n'.$linea;
+                $ultimaEtiqueta->comentario.="\n".$linea;
             } else {
                 //Líneas antes de la primer etiqueta, anexar a $comentario
-                $comentario.=($comentario?'||n':'').$linea;
+                $comentario.=($comentario?"\n":'').$linea;
             }
         }
         if($ultimaEtiqueta) $etiquetas[]=$ultimaEtiqueta;
@@ -201,32 +205,52 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
     if($etiqueta->etiqueta!='var'&&$etiqueta->etiqueta!='param') return;
 
     if($lenguaje=='php') {
-        if(preg_match('/^(.+?) (\$.+?)( (.+?))$/',$etiqueta->comentario,$coincidencia2)) {
-            $variable=trim($coincidencia2[2]);
-            if($autogenerarParametros) {
-                //Crear parámetro desde el comentario
-                $parametros[]=(object)[
-                    'variable'=>$variable,
+        if(preg_match('/^(.+?) (\$[\w>-]+)( (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
+            $variable=trim($coincidencia2[2]);            
+
+            $miembroDe=null;
+            if(preg_match('/(\w+)->(\w+)/',$variable,$coincidencia3)) {
+                $miembroDe='$'.$coincidencia3[1];
+                $nombre='$'.$coincidencia3[2];
+            }
+
+            if($miembroDe) {
+                //$parametro->propiedad => Agregar a $miembros
+                if(!is_array($miembros[$miembroDe])) $miembros[$miembroDe]=[];
+                $miembros[$miembroDe][]=(object)[
+                    'variable'=>$nombre,
+                    'opcional'=>false,
+                    'predeterminado'=>false,
                     'tipo'=>$coincidencia2[1],
                     'descripcion'=>$coincidencia2[4],
-                    'clase'=>$clase,
-                    //El inconveniente es que en phpdoc lo siguiente no se puede especificar
-                    'opcional'=>false,    
-                    'predeterminado'=>''
+                    'clase'=>$clase
                 ];
             } else {
-                //Actualizar parámetro de la función
-                foreach($parametros as $parametro) {
-                    if($variable==$parametro->variable) {
-                        $parametro->tipo=$coincidencia2[1];
-                        $parametro->descripcion=$coincidencia2[4];
+                if($autogenerarParametros) {
+                    //Crear parámetro desde el comentario
+                    $parametros[]=(object)[
+                        'variable'=>$variable,
+                        'tipo'=>$coincidencia2[1],
+                        'descripcion'=>$coincidencia2[4],
+                        'clase'=>$clase,
+                        //El inconveniente es que en phpdoc lo siguiente no se puede especificar
+                        'opcional'=>false,    
+                        'predeterminado'=>''
+                    ];
+                } else {
+                    //Actualizar parámetro de la función
+                    foreach($parametros as $parametro) {
+                        if($variable==$parametro->variable) {
+                            $parametro->tipo=$coincidencia2[1];
+                            $parametro->descripcion=$coincidencia2[4];
+                        }
                     }
                 }
             }
         }
     } elseif($lenguaje=='js') {
         //En js, la información sobre si es opcional y el valor predeterminado están en los comentarios
-        if(preg_match('/^\{(.+?)\} (\[.+?=.+=\]|\[.+?\]|.+?)( - (.+?))?$/',$etiqueta->comentario,$coincidencia2)) {
+        if(preg_match('/^\{(.+?)\} (\[[\w\.\[\]]+=.+?\]|\[[\w\.\[\]]+\]|[\w\.\[\]]+)( - (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
             $tipo=trim($coincidencia2[1],'{}()');
             $descripcion=$coincidencia2[4];
             $opcional=false;
@@ -293,7 +317,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$nombre) return '**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje).PHP_EOL.PHP_EOL;
+            if($etiqueta->etiqueta==$nombre) return PHP_EOL.'**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje).PHP_EOL.PHP_EOL;
         }
     };
 
@@ -494,7 +518,7 @@ function procesarPhp($archivo,$comentarios) {
 }
 
 function limpiarCelda($cadena) {
-    return str_replace(["\n","\r",'||n','|'],[' ','',' ','\\|'],$cadena);
+    return str_replace(["\n","\r",'|'],[' ','','\\|'],$cadena);
 }
 
 function procesarJs($archivo,$comentarios) {
@@ -673,8 +697,6 @@ function crearPaginas($rutaSalida,$lenguaje) {
         if(count($clase->propiedades)) $salida.='## Propiedades'.PHP_EOL.PHP_EOL.implode('',$clase->propiedades);
         if(count($clase->metodos)) $salida.='## Métodos'.PHP_EOL.PHP_EOL.implode('',$clase->metodos);
         
-        $salida=str_replace('||n',"  \n",$salida);
-
         file_put_contents($rutaSalida.$archivo.'.md',$salida);
     }
 
@@ -689,8 +711,6 @@ function crearPaginas($rutaSalida,$lenguaje) {
     $salida='# Funciones globales ('.strtoupper($lenguaje).')'.PHP_EOL.PHP_EOL;
     foreach($funciones as $funcion) $salida.=$funcion;
         
-    $salida=str_replace('||n',"  \n",$salida);
-
     file_put_contents($rutaSalida.$lenguaje.'doc-funciones.md',$salida);
 
     if($lenguaje=='js') {
@@ -704,8 +724,6 @@ function crearPaginas($rutaSalida,$lenguaje) {
             if($clase->metodos) $salida.='## Métodos'.PHP_EOL.PHP_EOL.implode('',$clase->metodos);
             if($clase->propiedades) $salida.='## Propiedades'.PHP_EOL.PHP_EOL.implode('',$clase->propiedades);
         
-            $salida=str_replace('||n',"  \n",$salida);
-    
             file_put_contents($rutaSalida.$archivo.'.md',$salida);
         }
 
@@ -716,8 +734,6 @@ function crearPaginas($rutaSalida,$lenguaje) {
 
         $salida.=PHP_EOL.'*\* Tipo definido por una clase.*';
         
-        $salida=str_replace('||n',"  \n",$salida);
-
         file_put_contents($rutaSalida.'jsdoc-tipos.md',$salida);
     }
 

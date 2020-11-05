@@ -469,9 +469,10 @@ class foxtrot {
     /**
      * Crea y deuvelve una instancia de un modelo de datos.
      * @param string $nombre Nombre del modelo a crear.
+     * @param \bd $bd Instancia de la base de datos.
      * @return \modelo
      */
-    public static function obtenerInstanciaModelo($nombre) {
+    public static function obtenerInstanciaModelo($nombre,$bd=null) {
         //Las clases ya fueron incluidas
         
         //Cuando presenten /, cambia su espacio

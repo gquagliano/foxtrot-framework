@@ -211,7 +211,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
             $miembroDe=null;
             if(preg_match('/(\w+)->(\w+)/',$variable,$coincidencia3)) {
                 $miembroDe='$'.$coincidencia3[1];
-                $nombre='$'.$coincidencia3[2];
+                $nombre=$coincidencia3[2];
             }
 
             if($miembroDe) {
@@ -219,8 +219,8 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
                 if(!is_array($miembros[$miembroDe])) $miembros[$miembroDe]=[];
                 $miembros[$miembroDe][]=(object)[
                     'variable'=>$nombre,
-                    'opcional'=>false,
-                    'predeterminado'=>false,
+                    'opcional'=>false, //TODO
+                    'predeterminado'=>false, //TODO
                     'tipo'=>$coincidencia2[1],
                     'descripcion'=>$coincidencia2[4],
                     'clase'=>$clase
@@ -377,11 +377,18 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
 
         //Miembros
         foreach($miembros as $parametro=>$parametros) {
-            $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
-            $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+            if($lenguaje=='php') {
+                $salida.='#### Propiedades o elementos de `'.$parametro.'`'.PHP_EOL;
+                $salida.='| Nombre | Tipo | Descripción |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+            } elseif($lenguaje=='js') {
+                $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
+                $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+            }
 
             foreach($parametros as $parametro) {
-                $salida.='| `'.limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion).' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'').' |'.PHP_EOL;
+                $salida.='| `'.limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion);
+                if($lenguaje=='js') $salida.=' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'');
+                $salida.=' |'.PHP_EOL;
             }
         }
         

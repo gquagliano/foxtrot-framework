@@ -425,7 +425,7 @@ class foxtrot {
     /**
      * Valida y corrije un nombre de clase, devolviendo un objeto con las propiedades 'nombre' y 'espacio' con el nombre de la clase y el espacio
      * de nombres relativo respectivamente. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo:
-     * espacio/consulta-producto -> [nombre=>consultaProducto,espacio=>\espacio).
+     * `espacio/consulta-producto` -> `[nombre=>consultaProducto,espacio=>\espacio]`.
      * @param string $nombre Nombre a procesar.
      * @return object
      */
@@ -444,7 +444,7 @@ class foxtrot {
     }
 
     /**
-     * Valida y corrije un nombre de método. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: consulta-producto -> consultaProducto).
+     * Valida y corrije un nombre de método. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: `consulta-producto` -> `consultaProducto`).
      * @param string $nombre Nombre a procesar.
      * @return string
      */

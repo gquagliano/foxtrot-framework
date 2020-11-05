@@ -1064,9 +1064,9 @@ var ui=new function() {
 
     /**
      * Evalúa una expresión utilizando el intérprete configurado con diferentes objetos predefinidos relacionados a la interfaz y la aplicación.
-     * @param {string} cadena Cadena a evaluar.
-     * @param {Object} [variables] Variables adicionales.
-     * @param {Object} [funciones] Funciones adicionales.
+     * @param {string} - cadena Cadena a evaluar.
+     * @param {Object} [variables] - Variables adicionales.
+     * @param {Object} [funciones] - Funciones adicionales.
      */
     this.evaluarExpresion=function(cadena,variables,funciones) {
         //Agregar al intérprete el controlador y otros objetos y funciones útiles
@@ -1339,9 +1339,9 @@ var ui=new function() {
 
     /**
      * Invoca el método correspondiente al evento en todos los componentes.
-     * @param {Object} origen - Repositorio de componentes. Especificar NULL para ejecutar en todos los componentes del sistema.
+     * @param {Object} origen - Repositorio de componentes. Especificar `null` para ejecutar en todos los componentes del sistema.
      * @param {string} nombre - Nombre del evento.
-     * @param {boolean} [soloImplementados=false] - Si es true, solo invocará aquellos métodos implementados en el componente concreto (no invocará métodos heredados).
+     * @param {boolean} [soloImplementados=false] - Si es `true`, solo invocará aquellos métodos implementados en el componente concreto (no invocará métodos heredados).
      * @param {*} [params] - Parámetros a pasar al método.
      * @returns {boolean}
      */

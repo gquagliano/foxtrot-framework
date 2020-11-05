@@ -14,6 +14,8 @@ var util=new function() {
     
     /**
      * Determina si una expresión es indefinida o no.
+     * @param {*} expr - Expresión a evaluar.
+     * @returns {boolean}
      */
     this.esIndefinido=function(expr) {
         return typeof expr==="undefined";
@@ -21,6 +23,8 @@ var util=new function() {
 
     /**
      * Determina si una expresión es una cadena.
+     * @param {*} expr - Expresión a evaluar.
+     * @returns {boolean}
      */
     this.esCadena=function(expr) {
         return typeof expr==="string";
@@ -28,6 +32,8 @@ var util=new function() {
 
     /**
      * Determina si un objeto es un array.
+     * @param {*} obj - Objeto a evaluar.
+     * @returns {boolean}
      */
     this.esArray=function(obj) {
         return Array.isArray(obj);
@@ -35,6 +41,8 @@ var util=new function() {
 
     /**
      * Determina si un objeto es estrictamente un objeto (está definido y no es un array).
+     * @param {*} obj - Objeto a evaluar.
+     * @returns {boolean}
      */
     this.esObjeto=function(obj) {
         return typeof obj==="object"&&!this.esArray(obj);
@@ -42,7 +50,8 @@ var util=new function() {
 
     /**
      * Determina si un objeto es un componente.
-     * @param {Object} obj Objeto a evaluar.
+     * @param {*} obj - Objeto a evaluar.
+     * @returns {boolean}
      */
     this.esComponente=function(obj) {
         return obj instanceof componente.cttr();
@@ -54,22 +63,25 @@ var util=new function() {
     /**
      * Determina si un valor es una expresión regular.
      * @param {*} obj - Valor a evaluar.
+     * @returns {boolean}
      */
     this.esExpresionRegular=function(obj) {
         return obj!==null&&typeof obj==="object"&&(obj instanceof RegExp||typeof obj.test==="function");
     };
     
     /**
-     * Determina si un valor es un elemento del DOM (Node o Element).
+     * Determina si un valor es un elemento del `DOM` (`Node` o `Element`).
      * @param {*} obj - Valor a evaluar.
+     * @returns {boolean}
      */
     this.esElemento=function(obj) {
         return obj!==null&&typeof obj==="object"&&(obj instanceof Node||obj instanceof Element||typeof obj.nodeName==="string");
     };
 
     /**
-     * Determina si un valor es una lista de elementos del DOM (NodeList o HTMLCollection).
+     * Determina si un valor es una lista de elementos del `DOM` (`NodeList` o `HTMLCollection`).
      * @param {*} obj - Valor a evaluar.
+     * @returns {boolean}
      */
     this.esListaDeElementos=function(obj) {
         return obj!==null&&typeof obj==="object"&&(obj instanceof NodeList||obj instanceof HTMLCollection||typeof obj.entries==="function");
@@ -150,7 +162,7 @@ var util=new function() {
     };
 
     /**
-     * Devuelve el directorio donde se encuentra el archivo especificado. Siempre incluye / al final.
+     * Devuelve el directorio donde se encuentra el archivo especificado. Siempre incluye `/` al final.
      * @param {string} ruta - Ruta a analizar.
      * @returns {string}
      */
@@ -166,9 +178,7 @@ var util=new function() {
     };
 
     /**
-     * Dado un color en hexagesimal en this.formato= #RRGGBB, #RRGGBBAA, #RGB o #RGBA, devuelve un objeto con sus componentes RGB y Alpha.
-     * @param {string} hex - Color.
-     * @returns {string}
+     * Dado un color en hexagesimal en formato `#RRGGBB`, `#RRGGBBAA`, `#RGB` o `#RGBA`, devuelve un objeto con sus componentes RGB y Alpha.
      */
     this.hexARgba=function(hex) {
         hex=hex.replace(/[^a-f\d]+/ig,'');
@@ -199,9 +209,7 @@ var util=new function() {
     };
 
     /**
-     * Dado un color en hexagesimal en this.formato= #RRGGBB, #RRGGBBAA, #RGB o #RGBA, devuelve un objeto con sus componentes RGB y Alpha.
-     * @param {string} hex - Color.
-     * @returns {string}
+     * Dado un color en hexagesimal en formato `#RRGGBB`, `#RRGGBBAA`, `#RGB` o `#RGBA`, devuelve un objeto con sus componentes RGB y Alpha.
      */
     this.hexARgb=function(hex) {
         return this.hexARgba(hex);
@@ -209,8 +217,6 @@ var util=new function() {
 
     /**
      * Convierte y devuelve la representación CSS del color.
-     * @param {string} color - Color como cadena u objeto RGBA.
-     * @returns {string}
      */
     this.rgbaAString=function(color) {
         if(typeof color=="string") color=this.hexARgba(color);
@@ -220,9 +226,6 @@ var util=new function() {
 
     /**
      * Separa la cadena por el delimitador solo una vez, aunque el delimitador vuelva a aparecer posteriormente.
-     * @param {string} cadena - Cadena.
-     * @param {string} delimitador - Delimitador.
-     * @returns {string[]}
      */
     this.separarUnaVez=function(cadena,delimitador) {
         return [cadena.substring(0,cadena.indexOf(delimitador)),cadena.substring(cadena.indexOf(delimitador)+1)];
@@ -230,11 +233,6 @@ var util=new function() {
 
     /**
      * Divide una cadena por dos delimitadores (comienzo y fin) siempre y cuando estén emparejados y no estén escapados (no tiene en cuenta la presencia de comillas).
-     * @param {string} delimitadorComienzo - Delimitador de comienzo.
-     * @param {string} delimitadorFinal - Delimitador de final.
-     * @param {string} cadena - Cadena.
-     * @param {string} [escape="\\"] - Caracter de escape.
-     * @returns {string[]}
      */
     this.separarGrupos=function(delimitadorComienzo,delimitadorFinal,cadena,escape) {
         if(typeof escape==="undefined") escape="\\";
@@ -271,8 +269,6 @@ var util=new function() {
 
     /**
      * Procesa una cadena o un array de cadenas y los convierte a sus tipos correspondientes.
-     * @param {*) data - Dato a procesar.
-     * @returns *
      */
     this.procesarValores=function(data) {
         if(typeof data==="undefined"||data===null) return null;
@@ -299,8 +295,6 @@ var util=new function() {
     
     /**
      * Valida una dirección de email.
-     * @param {string} v
-     * @returns {boolean}
      */
     this.validarEmail=function(v) {
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -308,9 +302,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte los saltos de línea en <br>.
-     * @param {string} t 
-     * @returns {string}
+     * Convierte los saltos de línea en `<br>`.
      */
     this.nl2br=function(t) {
         return t.replace(/\n/g,"<br>");
@@ -318,9 +310,6 @@ var util=new function() {
 
     /**
      * Genera la descripción de un período de tiempo.
-     * @param {number} v 
-     * @param {*} format 
-     * @returns {string}
      */
     this.periodo=function(v,format) {
         if(isNaN(v)) v=this.procesarValores(v);
@@ -400,9 +389,6 @@ var util=new function() {
 
     /**
      * Convierte bytes a formato legible.
-     * @param {number} bytes - Tamaño en bytes.
-     * @param {boolean} si - Si es true, devolverá en unidades del sistema métrico. Opcional (predeterminado=true).
-     * @returns {string}
      */
     this.tamanoArchivo=function(bytes,si){
         //Fuente (adaptado): this.http=//en.wikipedia.org/wiki/this.Template=Quantities_of_bytes
@@ -413,6 +399,9 @@ var util=new function() {
             +' '+(d?(si[1]+'MGTPEZY')[--d]+si[2]:'Bytes');
     };
 
+    /**
+     * 
+     */
     this.completarIzquierda=function(str,len,pad) {
         if(typeof pad=="undefined") var pad=" ";
         str=str.toString();
@@ -422,6 +411,9 @@ var util=new function() {
         return str;
     };
 
+    /**
+     * 
+     */
     this.completarDerecha=function(str,len,pad) {
         if(typeof pad=="undefined") var pad=" ";
         str=str.toString();
@@ -432,10 +424,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una cantidad de minutos (entero) a this.horas=minutos.
-     * @param {number} q - Número de minutos.
-     * @param {boolean} str - Si es true, devolverá el valor como string. En caso contrario, devolverá un array [horas,minutos]. Opcional (predeterminado=true).
-     * @returns {number}
+     * Convierte una cantidad de minutos (entero) a `horas:minutos`.
      */
     this.minutosAHoras=function(q,str) {
         var j=Math.floor(q/60);
@@ -448,9 +437,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una hora (string con formato this.horas=minutos) a un entero representando la cantidad de minutos correspondiente.
-     * @param {number} q - String.
-     * @returns {number}
+     * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de minutos correspondiente.
      */
     this.horasAMinutos=function(q) {
         if(!/^[0-9]{1,2}:[0-9]{1,2}$/.test(q)) return null;
@@ -458,6 +445,9 @@ var util=new function() {
         return parseInt(q[0])*60+parseInt(q[1]);
     };
 
+    /**
+     * 
+     */
     this.horasAMinutosUtc=function(q) {
         q=this.horasAMinutos(q);
         if(q===null) return q;
@@ -465,7 +455,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una hora (string con formato this.horas=minutos) a un entero representando la cantidad de segundos correspondientes.
+     * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de segundos correspondientes.
      * @param q String.
      */
     this.horasASegundos=function(q) {
@@ -475,9 +465,8 @@ var util=new function() {
     };
 
     /**
-    * Convierte una hora (string con formato this.horas=minutos) a un entero representando la cantidad de segundos correspondientes. Convierte
+    * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de segundos correspondientes. Convierte
     * la salida a UTC según la zona horaria actual.
-    * @param q String.
     */
     this.horasASegundosUtc=function(q) {
         q=this.horasASegundos(q);
@@ -486,12 +475,18 @@ var util=new function() {
         return q;
     };
 
+    /**
+     * 
+     */
     this.segundosAHoras=function(v) {
         var h=Math.floor(v/60/60),
             m=Math.floor((v-h*60*60)/60);
         return h+":"+(m<10?"0":"")+m;
     };
 
+    /**
+     * 
+     */
     this.segundosAHorasUtc=function(v) {
         v-=new Date().getTimezoneOffset()*60;
         var h=Math.floor(v/60/60),
@@ -501,7 +496,6 @@ var util=new function() {
 
     /**
      * Obtiene la cantidad de minutos desde las 0:00 de la fecha epoch especificada.
-     * @param q Tiempo epoch.
      */
     this.epochAMinutos=function(q) {
         q=this.fechaHora(q,"H:i").split(":");
@@ -518,8 +512,6 @@ var util=new function() {
 
     /**
      * Devuelve la cantidad de días transcurridos entre dos fechas.
-     * @param a Fecha 1 (tipo Date)
-     * @param b Fecha 2 (tipo Date)
      */
     this.diasEntre=function(a,b) {
         return Math.round(Math.abs((+a)-(+b))/8.64e7);
@@ -538,8 +530,6 @@ var util=new function() {
 
     /**
      * Convierte una fecha a string. La salida será UTC.
-     * @param d Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
      */
     this.fecha=function(d,f) {
         if(!(d instanceof Date)) d=this.epochAFecha(d);
@@ -574,9 +564,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una fecha a string, incluyendo horas y minutos. La salida será UTC. Esta función es alias de this.dateToString(v,f) con distinto valor predeterminado para f.
-     * @param v Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, d/m/Y H:i).
+     * Convierte una fecha a cadena, incluyendo horas y minutos. La salida será UTC. Esta función es alias de `this.dateToString(v,f)` con distinto valor predeterminado para `f`.
      */
     this.fechaHora=function(v,f) {
         if(typeof f=="undefined") f="n/j/Y H:i";
@@ -584,9 +572,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una fecha a string. La salida se convertirá a hora local.
-     * @param d Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, n/j/Y).
+     * Convierte una fecha a cadena. La salida se convertirá a hora local.
      */
     this.fechaLocal=function(d,f) {
         if(!(d instanceof Date)) d=this.epochAFecha(d);
@@ -621,9 +607,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte una fecha a string, incluyendo horas y minutos. La salida se convertirá a hora local. Esta función es alias de this.dateToStringLocal(v,f) con distinto valor predeterminado para f.
-     * @param v Fecha en formato Date (zona indistinta) o tiempo epoch (UTC).
-     * @param f Formato de salida. Opcional (predeterminado, n/j/Y H:i).
+     * Convierte una fecha a string, incluyendo horas y minutos. La salida se convertirá a hora local. Esta función es alias de `this.dateToStringLocal(v,f)` con distinto valor predeterminado para `f`.
      */
     this.fechaHoraLocal=function(v,f) {
         if(typeof f=="undefined") f="n/j/Y H:i";
@@ -631,8 +615,7 @@ var util=new function() {
     };
 
     /**
-     * Convierte un string representando una fecha en formato d/m/Y this.H=this.i=s o Y-m-d this.H=this.i=s a un objeto Date.
-     * @param v String (se asume UTC).
+     * Convierte un string representando una fecha en formato `d/m/Y H:i:s` o `Y-m-d H:i:s` a un objeto `Date`.
      */
     this.cadenaAFecha=function(v) {
         if(v=="") return "";
@@ -668,16 +651,14 @@ var util=new function() {
     };
 
     /**
-     * Convierte un string representando una fecha en formato d/m/Y this.H=this.i=s (se asume UTC) a tiempo epoch.
-     * @param v String.
+     * Convierte un string representando una fecha en formato `d/m/Y H:i:s` (se asume UTC) a tiempo epoch.
      */
     this.cadenaAEpoch=function(v) {
         return Math.floor(this.cadenaAFecha(v).getTime()/1000);
     };
 
     /**
-     * Convierte una fecha a un objeto Date, autodetectando su formato.
-     * @param v Fecha como string o tiempo epoch.
+     * Convierte una fecha a un objeto `Date`, autodetectando su formato.
      */
     this.convertirAFecha=function(v) {
         if(!isNaN(v)) {
@@ -689,7 +670,6 @@ var util=new function() {
 
     /**
      * Convierte una fecha a tiempo epoch, autodetectando su formato.
-     * @param v Fecha objeto Date o tiempo epoch.
      */
     this.convertirAEpoch=function(v) {
         if(!isNaN(v)) {
@@ -701,7 +681,6 @@ var util=new function() {
 
     /**
      * Convierte un objeto Date a tiempo epoch (UTC).
-     * @param d Fecha.
      */
     this.fechaAEpoch=function(d) {
         return this.epochAUtc(Math.floor(d.getTime()/1000));
@@ -738,8 +717,7 @@ var util=new function() {
     };
 
     /**
-     * Devuelve un objeto Date a las 0:00 (local) del día de la fecha especificada.
-     * @param d Fecha (objeto Date)
+     * Devuelve un objeto `Date` a las 0:00 (local) del día de la fecha especificada.
      */
     this.medianoche=function(d) {
         if(!(d instanceof Date)) d=this.epochAFecha(d);
@@ -749,8 +727,6 @@ var util=new function() {
 
     /**
      * Trunca y formatea a string un número a la cantidad de decimales.
-     * @param v Número.
-     * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     this.formatoNumero=function(v,decimalPlaces) {
         if(typeof v==="string") v=this.procesarValores(v);
@@ -788,8 +764,6 @@ var util=new function() {
 
     /**
      * Trunca un número a la cantidad de decimales manteniendo el tipo.
-     * @param v Número.
-     * @param decimalPlaces Cantidad de decimales. Opcional.
      */
     this.redondear=function(v,decimalPlaces) {
         if(typeof v==="string") v=this.procesarValores(v);
@@ -799,17 +773,12 @@ var util=new function() {
     };
     
     /**
-     * Valor predeterminado para el parámetro decimalPlaces de this.numberFormat.
+     * Valor predeterminado para el parámetro `decimalPlaces` de `numberFormat()`.
      */
     this.decimalesPredeterminados=null;
 
     /**
      * Recorre un array de objetos multidimensional sin recursión (utilizando una pila) para mayor eficiencia.
-     * @param {*} arr Array
-     * @param prop Nombre de la propiedad que contiene la descendencia
-     * @param {*} fn Función. Paráthis.metros= elemento, índice, parent (opcional)
-     * @param afterFn Función a llamar luego de completar el recorrido de sus hijos. Paráthis.metros= elemento, índice, objeto, parent. (Opcional)
-     * @param par Primer elemento padre (opcional)
      */
     this.recorrerSinRecursion=function(arr,prop,fn,afterFn,par) {
         //Estamos eliminando la recursividad en busca de un mejor rendimiento
@@ -876,10 +845,6 @@ var util=new function() {
     
     /**
      * Permite buscar un elemento de un array de objetos comparando por una propiedad determinada.
-     * @param arr Array.
-     * @param prop Propiedad de búsqueda.
-     * @param val Valor buscado.
-     * @param returnIndex=false Devolver el índice en lugar del elemento.
      */
     this.buscar=function(arr,prop,val,returnIndex) {
         if(typeof returnIndex==="undefined") returnIndex=false;

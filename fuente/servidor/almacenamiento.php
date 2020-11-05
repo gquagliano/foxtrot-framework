@@ -129,11 +129,11 @@ class almacenamiento {
 
     /**
      * Mueve un archivo temporal al almacenamiento local. Devuelve el nombre final, o null.
-     * @var string $temporal Nombre del archivo temporal devuelvo por almacenarTemporal().
+     * @var string $temporal Nombre del archivo temporal devuelvo por `almacenarTemporal()`.
      * @var string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
      * @var string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $mantenerCodificacion Si es true, el archivo permanecerá codificado. En ese caso, será necesario utilizar obtenerArchivoLocal() para leer el mismo, o implementar
-     * un proxy que utilice enviarArchivoLocal() para enviar al cliente.
+     * @var bool $mantenerCodificacion Si es `true`, el archivo permanecerá codificado. En ese caso, será necesario utilizar `obtenerArchivoLocal()` para leer el mismo, o implementar
+     * un proxy que utilice `enviarArchivoLocal()` para enviar al cliente.
      * @return bool
      */
     public static function moverTemporalLocal($temporal,$nombre,$destino=null,$mantenerCodificacion=false) {

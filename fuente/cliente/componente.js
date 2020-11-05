@@ -654,7 +654,7 @@ var componente=new function() {
 
     /**
      * Elimina el componente (método para sobreescribir).
-     * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
+     * @param {boolean} [descendencia] - Si está definido y es `true`, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
      * uso interno; omitir al solicitar eliminar este componente.
      * @returns {componente}
      */
@@ -665,7 +665,7 @@ var componente=new function() {
 
     /**
      * Elimina el componente.
-     * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado.
+     * @param {boolean} [descendencia] - Si está definido y es `true`, indica que se está eliminando el componente por ser descendencia de otro componente eliminado.
      * @returns {componente}
      */
     this.eliminarComponente=function(descendencia) {

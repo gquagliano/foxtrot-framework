@@ -13,8 +13,8 @@ defined('_inc') or exit;
 /**
  * Módulo concreto Recaptcha (privado).
  * 
- * El módulo define dos propiedades en la configuración de Foxtrot (global o de la aplicación):
- *  - recaptchaPublico
+ * El módulo define dos propiedades en la configuración de Foxtrot (global o de la aplicación):  
+ *  - recaptchaPublico  
  *  - recaptchaPrivado
  */
 class recaptcha extends \modulo {

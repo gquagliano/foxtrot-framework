@@ -149,8 +149,7 @@ class modelo {
      * @return \modelo
      */
     public static function fabricarModelo($modelo,$bd=null) {       
-        $modelo='\\aplicaciones\\'._apl.'\\modelo\\'.$modelo;
-        return new $modelo($bd);
+        return \foxtrot::obtenerInstanciaModelo($modelo,$bd);
     }
 
     /**

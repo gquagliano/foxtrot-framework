@@ -379,7 +379,7 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         foreach($miembros as $parametro=>$parametros) {
             if($lenguaje=='php') {
                 $salida.='#### Propiedades o elementos de `'.$parametro.'`'.PHP_EOL;
-                $salida.='| Nombre | Tipo | Descripción |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+                $salida.='| Nombre | Tipo | Descripción |'.PHP_EOL.'|--|--|--|'.PHP_EOL;
             } elseif($lenguaje=='js') {
                 $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
                 $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;

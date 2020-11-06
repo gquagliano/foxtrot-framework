@@ -1543,7 +1543,7 @@ var componente=new function() {
 
             if(retorno) retorno(resultadoLocal);
         } else if(typeof manejador==="string") {
-            if(!isNaN(manejador)) {
+            if(/^[\d\.]+$/.test(manejador)) {
                 resultadoLocal=manejador.indexOf(".")>=0?parseFloat(manejador):parseInt(manejador);
             } else {
                 var comando=null,
@@ -1616,6 +1616,8 @@ var componente=new function() {
                 //Nota: No validamos las propiedades ni tipos antes de invocar las funciones intencionalmente, para que produzcan error. Eventualmente debemos implementar
                 //      un control de errores interno, que valide estos casos y arroje errores de Foxtrot.
             }
+        } else if(typeof manejador==="number") {
+            resultadoLocal=manejador;
         } else {
             procesado=false;
         }

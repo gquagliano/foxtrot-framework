@@ -75,8 +75,12 @@ class modelo {
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
         
         $nombre=get_called_class();
-        $this->nombreModelo=substr($nombre,strrpos($nombre,'\\')+1);
-        if(!$this->nombre) $this->nombre=$this->nombreModelo;
+
+        //aplicaciones\aplicacion\modelo\a\b -> a/b
+        $this->nombreModelo=str_replace('\\','/',substr($nombre,strlen('aplicaciones\\'._apl.'\\modelo\\')));
+
+        //El nombre predeterminado de la tabla es el nombre de la clase (sin subdir)
+        if(!$this->nombre) $this->nombre=substr($nombre,strrpos($nombre,'\\')+1);
 
         $this->cargarEstructura();
     }

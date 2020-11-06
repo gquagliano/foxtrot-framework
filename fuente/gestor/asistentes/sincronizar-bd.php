@@ -89,7 +89,7 @@ class sincronizarBd extends asistente {
         gestor::ok($this->sql);
     }
 
-    protected function obtenerTipo($campo,$parametros) {
+    protected function obtenerTipo($modelo,$campo,$parametros) {
         $tipo=$parametros->tipo;
         $predeterminado=isset($parametros->predeterminado)?'\''.$parametros->predeterminado.'\'':'NULL';
 
@@ -124,7 +124,7 @@ class sincronizarBd extends asistente {
         }
 
         gestor::error([
-            'error'=>'El campo `'.$campo.'` tiene un tipo inválido.',
+            'error'=>'El campo '.$modelo.'::$'.$campo.' tiene un tipo inválido.',
             'sql'=>$this->sql
         ]);
     }
@@ -185,7 +185,7 @@ class sincronizarBd extends asistente {
         foreach($camposEntidad as $campo=>$parametros) {
             if($campo=='id'||$campo=='e'||$parametros->tipo=='relacional') continue;
 
-            $tipo=$this->obtenerTipo($campo,$parametros);
+            $tipo=$this->obtenerTipo($clase->obtenerNombre(),$campo,$parametros);
 
             if($parametros->busqueda) $parametros->indice=true;
 

@@ -15,8 +15,29 @@
 var gestor=new function() {
     "use strict";
 
-    var urlOperaciones="operaciones/gestor.php",
+    var t=this,
+        urlOperaciones="operaciones/gestor.php",
         dialogo=null;
+
+    /**
+     * Devuelve la configuración del gestor.
+     * @returns {Object}
+     */
+    function obtenerConfig() {
+        var obj=window.localStorage.getItem("configGestor");
+        if(!obj) return {
+            vistasDesplegadas:[]
+        };
+        return JSON.parse(obj);
+    }
+
+    /**
+     * Establece la configuración del gestor.
+     * @param {Object} obj - Configuración a establecer (objeto completo).
+     */
+    function establecerConfig(obj) {
+        window.localStorage.setItem("configGestor",JSON.stringify(obj));
+    }
 
     /**
      * Ejecuta una operación.
@@ -73,7 +94,24 @@ var gestor=new function() {
      * @param {Element} etiqueta 
      */
     this.desplegarVistas=function(etiqueta) {
-        etiqueta.padre().alternarClase("abierto");
+        var elem=etiqueta.padre();
+        elem.alternarClase("abierto");
+
+        var abierto=elem.es({clase:"abierto"});
+
+        //Almacenar en la configuración
+        var obj=obtenerConfig(),
+            arr=obj.vistasDesplegadas,
+            ruta=etiqueta.dato("ruta"),
+            i=arr.indexOf(ruta);
+        if(!abierto) {
+            //Cerrado, remover
+            if(i>=0) arr.splice(i,1);
+        } else {
+            //Abierto, agregar
+            if(i<0) arr.push(ruta);
+        }
+        establecerConfig(obj);
     };
 
     /**
@@ -360,6 +398,18 @@ var gestor=new function() {
         }
         return this;
     };
+
+    /**
+     * Constructor.
+     */
+    (function() {
+        //Volver a desplegar subdirectorios
+        obtenerConfig().vistasDesplegadas.forEach(function(ruta) {    
+            document.querySelectorAll(".directorio-etiqueta[data-ruta='"+ruta+"']").forEach(function(elem) {
+                t.desplegarVistas(elem);
+            });
+        });
+    })();
 }();
 
 window["gestor"]=gestor;

@@ -88,7 +88,7 @@ if(!count(gestor::obtenerAplicaciones())) {
 
                 //Si no existe, se agrega
                 if(!$existe) {
-                    $item=(object)['directorio'=>$parte,'hijos'=>[]];
+                    $item=(object)['directorio'=>$parte,'ruta'=>implode('/',$ruta),'hijos'=>[]];
                     $lista[]=$item;
                     //E insertamos dentro de hijos
                     $lista=&$item->hijos;
@@ -131,7 +131,7 @@ if(!count(gestor::obtenerAplicaciones())) {
                 if($item->directorio) {
 ?>
                         <li class="directorio">
-                            <label class="directorio-etiqueta" onclick="gestor.desplegarVistas(this)"><?=$item->directorio?></label>
+                            <label class="directorio-etiqueta" onclick="gestor.desplegarVistas(this)" data-ruta="<?=$item->ruta?>"><?=$item->directorio?></label>
                             <ul>
 <?php
                     mostrarArbol($item->hijos,$nivel+1);

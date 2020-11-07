@@ -69,6 +69,14 @@ var gestor=new function() {
     };
 
     /**
+     * Despliega un subdirectorio de vistas (procesa el evento `onclick` de la etiqueta del subdirectorio).
+     * @param {Element} etiqueta 
+     */
+    this.desplegarVistas=function(etiqueta) {
+        etiqueta.padre().alternarClase("abierto");
+    };
+
+    /**
      * Abre el editor de vistas.
      * @param {string} nombreVista 
      */

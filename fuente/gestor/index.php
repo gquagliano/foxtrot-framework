@@ -130,8 +130,8 @@ if(!count(gestor::obtenerAplicaciones())) {
             foreach($lista as $item) {
                 if($item->directorio) {
 ?>
-                        <li>
-                            <label class="directorio" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->directorio?>/</label>
+                        <li class="directorio">
+                            <label class="directorio-etiqueta" onclick="gestor.desplegarVistas(this)"><?=$item->directorio?></label>
                             <ul>
 <?php
                     mostrarArbol($item->hijos,$nivel+1);
@@ -142,7 +142,7 @@ if(!count(gestor::obtenerAplicaciones())) {
                 } else {
 ?>
                         <li class="clearfix">
-                            <label class="vista" style="padding-left:<?=$nivel*2+.5?>rem"><?=$item->item?></label>
+                            <label class="vista" title="<?=$item->ruta?>"><?=$item->item?></label>
                             <div class="opciones">
                                 <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar"><img src="img/renombrar.png"></button>

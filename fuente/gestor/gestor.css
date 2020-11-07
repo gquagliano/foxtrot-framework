@@ -543,7 +543,6 @@ body.foxtrot-trabajando #foxtrot-cargando {
 }
 .foxtrot-gestor .arbol {
     margin: 0;
-    margin-left: -.5rem;
     padding: 0;
     list-style-type: none;
 }
@@ -566,10 +565,43 @@ body.foxtrot-trabajando #foxtrot-cargando {
     background-color: #e6e6e6;
 }
 .foxtrot-gestor .arbol .directorio {
+    padding-left: 2.4rem;
+    height: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+.foxtrot-gestor .arbol .directorio::before {
+    width: 1px;
+    content: "";
+    position: absolute;
+    background-color: #e6e6e6;
+    left: .65rem;
+    top: 2rem;
+    bottom: .5rem;
+}
+.foxtrot-gestor .arbol .directorio.abierto {
+    height: auto;
+}
+.foxtrot-gestor .arbol .directorio-etiqueta {
+    margin-left: -2.4rem;
     flex: 0 0 100%;
     white-space: nowrap;
     overflow: hidden;
+    cursor: pointer;
     text-overflow: ellipsis;
+}
+.foxtrot-gestor .arbol .directorio-etiqueta::before {
+    content: "";
+    display: inline-block;
+    background-image: url(img/carpeta.png);
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 1.1rem;
+    vertical-align: sub;
+}
+.foxtrot-gestor .arbol .abierto>.directorio-etiqueta::before {
+    background-image: url(img/carpeta-abierta.png);
 }
 .foxtrot-gestor .arbol .vista {
     white-space: nowrap;
@@ -577,9 +609,15 @@ body.foxtrot-trabajando #foxtrot-cargando {
     text-overflow: ellipsis;
     flex: 1;
     margin: 0;
+    margin-left: -.5rem;
+    padding-left: .5rem;
 }
 .foxtrot-gestor .arbol .opciones {
     flex-grow: 0;
+}
+.foxtrot-gestor .arbol .opciones .btn {
+    margin: 0;
+    vertical-align: top;
 }
 .foxtrot-gestor .arbol .opciones img {
     height: 20px;

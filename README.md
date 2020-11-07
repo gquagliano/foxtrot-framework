@@ -1,6 +1,6 @@
 Trabajo en curso y experimentos para el desarrollo de Foxtrot 7. 
 
-**Nota: No todo lo que se establece en la documentación funciona actualmente. ¡Pero estamos camino a la primer versión *MVP*!**
+**Nota: El framework se encuentra en pleno desarrollo. ¡Pero estamos *a nada* de la primer versión *MVP*!**
 
 ### Qué es Foxtrot Framework
 
@@ -50,7 +50,7 @@ Contraseña: admin
 
 #### Pendientes
 
-Ver [Pendientes](docs/pendientes.md).
+Ver [Pendientes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Estado-del-proyecto).
 
 ### Aplicación de ejemplo
 
@@ -98,13 +98,13 @@ El editor también permite configurar visualmente estructuras de control (bucles
 
 [Listado de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Listado-de-componentes).
 
-[Estructura y guía de desarrollo de componentes](docs/componentes-estructura.md).
+[Estructura y guía de desarrollo de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Visi%C3%B3n-general-de-la-estructura-de-los-componentes).
 
 ### Estructura de las aplicaciones
 
 El framework es multi-aplicación, lo que significa que el desarrollador puede trabajar en varias aplicaciones a la vez, y un servidor puede alojar múltiples aplicaciones a la vez, con una única instalación de Foxtrot, simplificando el mantenimiento y las actualizaciones.
 
-[Más información sobre las aplicaciones y su estructura](docs/estructura.md).
+[Más información sobre las aplicaciones y su estructura](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Definici%C3%B3n-y-ciclo-de-vida-de-la-aplicaci%C3%B3n).
 
 ### API
 
@@ -114,7 +114,7 @@ El lado del servidor está compuesto por controladores de servidor y el modelo d
 
 El lado del cliente está compuesto por controladores de cliente y vistas. Cada vista está compuesta por componentes, los cuales guardan relación con los elementos del DOM y permiten la manipulación de la vista mediante sus métodos y propiedades. Existen componentes que representan estructuras de control (condicionales, bucles, inclusión de una vista dentro de otra, etc.) automatizando la presentación de información y la navegación. Incluye un gestor del DOM propio (reemplaza a jQuery).
 
-[Más información sobre el API](docs/api.md).
+[Más información en el Wiki](https://github.com/gquagliano/experimental-foxtrot-framework/wiki).
 
 **Comunicación cliente<->servidor transparente**
 

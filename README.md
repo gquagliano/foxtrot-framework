@@ -32,21 +32,21 @@ Contraseña: admin
 
 ### Estado
 
-![](docs/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
 
-![](docs/img/tick.jpg) Editor de vistas completamente funcional.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Editor de vistas completamente funcional.
 
-![](docs/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
 
-![](docs/img/tick.jpg) Acceso a datos y ORM, completos.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Acceso a datos y ORM, completos.
 
-![](docs/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
 
-![](docs/img/tick.jpg) Integración de múltiples vistas en una sola página.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Integración de múltiples vistas en una sola página.
 
-![](docs/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
 
-![](docs/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
 #### Pendientes
 

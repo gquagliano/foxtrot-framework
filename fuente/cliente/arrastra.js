@@ -365,7 +365,7 @@
             dx=moverX-e.clientX,
             dy=moverY-e.clientY;
 
-        if(dx==0&&dy==0) return;
+        if(e.clientX==0||e.clientY==0||dx==0&&dy==0) return;
 
         moverX=e.clientX;
         moverY=e.clientY;

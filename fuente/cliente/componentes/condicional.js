@@ -38,7 +38,7 @@ var componenteCondicional=function() {
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         this.elemento=document.crear("<div>"); 

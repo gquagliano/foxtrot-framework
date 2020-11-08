@@ -69,7 +69,7 @@ var componenteColumnaTabla=function() {
     };    
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         //Nota: Debe usarse el nombre del tag y no <td>

@@ -53,7 +53,7 @@ var componenteTexto=function() {
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         this.elemento=document.crear("<p class='texto'>Hacé doble click para comenzar a escribir...</p>");
@@ -63,7 +63,7 @@ var componenteTexto=function() {
     };
     
     /**
-     * Actualiza el componente tras la modificación de una propiedad (método para sobreescribir).
+     * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(propiedad=="formato") {

@@ -31,7 +31,7 @@ var componenteMenu=function() {
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         //El menú debe ser compatible con el gestor de menús de ui, para poder aprovechar los métodos existentes

@@ -121,7 +121,7 @@ var controlador=new function() {
     ////Gestión de la instancia
 
     /**
-     * Establece el nombre de la instancia (método para sobreescribir).
+     * Establece el nombre de la instancia.
      */
     this.establecerNombre=function(nombre) {
         this.establecerNombreControlador(nombre);
@@ -173,7 +173,7 @@ var controlador=new function() {
     };    
 
     /**
-     * Inicializa la instancia (método para sobreescribir).
+     * Inicializa la instancia.
      */
     this.inicializar=function() {
         this.inicializarControlador();
@@ -216,33 +216,33 @@ var controlador=new function() {
     ////Eventos
     
     /**
-     * Evento 'Inicializado' (método para sobreescribir).
+     * Evento 'Inicializado'.
      */
     this.inicializado=function() {
     };
     
     /**
-     * Evento 'Listo' (método para sobreescribir).
+     * Evento 'Listo'.
      */
     this.listo=function() {
     };
     
     /**
-     * Evento 'Navegación' (método para sobreescribir).
+     * Evento 'Navegación'.
      * @param {string} nombreVista - Nombre de la vista de destino.
      */
     this.navegacion=function(nombreVista) {
     };
     
     /**
-     * Evento 'Volver' (método para sobreescribir).
+     * Evento 'Volver'.
      * @returns {boolean}
      */
     this.volver=function() {
     };
 
     /**
-     * Evento 'Error Servidor' (método para sobreescribir).
+     * Evento 'Error Servidor'.
      */
     this.errorServidor=function() {
     };

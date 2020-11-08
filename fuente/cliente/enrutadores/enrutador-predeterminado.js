@@ -14,7 +14,7 @@
  */
 var enrutadorPredeterminado=function() {    
     /**
-     * Devuelve la URL de una vista dado su nombre o ruta (método para sobreescribir).
+     * Devuelve la URL de una vista dado su nombre o ruta.
      * @param {string} ruta - Cadena a evaluar.
      */
     this.obtenerUrlVista=function(ruta) {

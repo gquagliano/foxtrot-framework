@@ -59,7 +59,7 @@ var componenteItemMenu=function() {
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         this.elemento=document.crear("<li>");
@@ -277,7 +277,7 @@ var componenteItemMenu=function() {
     };
 
     /**
-     * Elimina el componente (método para sobreescribir).
+     * Elimina el componente.
      * @param {boolean} [descendencia] - Si está definido y es true, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
      * uso interno; omitir al solicitar eliminar este componente.
      * @returns {Componente}

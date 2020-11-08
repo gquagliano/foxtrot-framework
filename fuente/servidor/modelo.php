@@ -1569,7 +1569,7 @@ class modelo {
     }
 
     /**
-     * Instalación de la base de datos. Devuelve el SQL de las consultas ejecutadas (método para sobreescribir).
+     * Instalación de la base de datos. Devuelve el SQL de las consultas ejecutadas.
      * @return string
      */
     public function instalar() {

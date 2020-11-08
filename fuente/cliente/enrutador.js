@@ -44,7 +44,7 @@ var enrutador=new function() {
     };    
 
     /**
-     * Inicializa la instancia (método para sobreescribir).
+     * Inicializa la instancia.
      */
     this.inicializar=function() {
         this.inicializarControlador();
@@ -59,14 +59,14 @@ var enrutador=new function() {
     };
 
     /**
-     * Devuelve la URL de una vista dado su nombre o ruta (método para sobreescribir).
+     * Devuelve la URL de una vista dado su nombre o ruta.
      * @param {string} ruta - Cadena a evaluar.
      */
     this.obtenerUrlVista=function(ruta) {
     };
 
     /**
-     * Devuelve el nombre de una vista dada su URL (método para sobreescribir).
+     * Devuelve el nombre de una vista dada su URL.
      * @param {string} url - URL a evaluar.
      */
     this.obtenerNombreVista=function(url) {

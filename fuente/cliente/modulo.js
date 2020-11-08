@@ -60,7 +60,7 @@ var modulo=new function() {
     };
 
     /**
-     * Inicializa la instancia tras ser creada (método para sobreescribir).
+     * Inicializa la instancia tras ser creada.
      * @returns {modulo}
      */
     this.inicializar=function() {

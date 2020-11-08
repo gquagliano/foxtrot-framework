@@ -76,6 +76,18 @@ var componenteItemMenu=function() {
     };
 
     /**
+     * Devuelve el componente submenú.
+     * @returns {componente}
+     */
+    this.obtenerSubmenu=function() {
+        var hijos=this.obtenerHijos();
+        for(var i=0;i<hijos.length;i++)
+            if(hijos[i].componente==="menu")
+                return hijos[i];
+        return null;
+    };
+
+    /**
      * Establece los eventos.
      */
     this.establecerEventos=function() {
@@ -155,31 +167,31 @@ var componenteItemMenu=function() {
                 arrastre=false;
 
             this.elemento.evento("mouseenter",function(ev) {
-                var submenu=t.obtenerHijos();
-                if(!submenu.length||abrirConClick()) return;
+                var submenu=t.obtenerSubmenu();
+                if(!submenu||abrirConClick()) return;
                 
                 ev.preventDefault();
                 ev.stopPropagation();
 
-                abrir(submenu[0]);
+                abrir(submenu);
             }).evento("mouseleave",function(ev) {
-                var submenu=t.obtenerHijos();
-                if(!submenu.length||abrirConClick()) return;
+                var submenu=t.obtenerSubmenu();
+                if(!submenu||abrirConClick()) return;
                 
                 ev.preventDefault();
                 ev.stopPropagation();
 
-                cerrar(submenu[0]);
+                cerrar(submenu);
             }).evento("mousedown",function(ev) {
                 ev.stopPropagation();
                 
-                var submenu=t.obtenerHijos();
-                if(!submenu.length||!abrirConClick()) return;
+                var submenu=t.obtenerSubmenu();
+                if(!submenu||!abrirConClick()) return;
                 
                 ev.preventDefault();
                 ignorarClick=true;
 
-                alternar(submenu[0]);
+                alternar(submenu);
             }).evento("mouseup",function(ev) {
                 if(ignorarClick) {
                     ev.preventDefault();
@@ -193,8 +205,8 @@ var componenteItemMenu=function() {
 
                 ev.stopPropagation();
 
-                var submenu=t.obtenerHijos();
-                if(!submenu.length) {
+                var submenu=t.obtenerSubmenu();
+                if(!submenu) {
                     t.cerrarContenedor();
                     return;
                 }
@@ -202,7 +214,7 @@ var componenteItemMenu=function() {
                 ev.preventDefault();
 
                 ignorarClick=true;
-                alternar(submenu[0]);
+                alternar(submenu);
             }).evento("touchmove",function(ev) {
                 arrastre=true;
             }).evento("click",function(ev) {

@@ -347,7 +347,7 @@
         moverLeft=pos.left;
         moverTop=pos.top;
 
-        ui.obtenerCuerpo().pausarArrastreArbolDesc(true);
+        if(typeof ui!=="undefined") ui.obtenerCuerpo().pausarArrastreArbolDesc(true);
 
         //Remover el elemento "fantasma"
         e.dataTransfer.setDragImage(new Image,0,0);
@@ -391,7 +391,7 @@
     }
 
     function moverDragend(e) {
-        ui.obtenerCuerpo().pausarArrastreArbolDesc(false);
+        if(typeof ui!=="undefined") ui.obtenerCuerpo().pausarArrastreArbolDesc(false);
         document.removerEvento("dragover",moverDragover);
 
         var elem=this.metadato("arrastra");

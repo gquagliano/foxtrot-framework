@@ -857,14 +857,17 @@ class modelo {
 
     /**
      * Establece los valores a guardar. En una segunda llamada a este método con un objeto o array, se asignarán los valores a la entidad establecida previamente. Especificar
-     * una entidad siempre sobreescribirá la entidad previamente asignada.
+     * una entidad siempre reemplazará la entidad previamente asignada (en caso contrario, solo se actualizarán las propiedades incluidas en el objeto o array).
      * @param object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].
      * @return \modelo
      */
     public function establecerValores($objeto) {
-        if(!$this->consultaValores||$objeto instanceof entidad) {
-            $this->consultaValores=(object)$objeto;
-        } elseif(is_array($objeto)||is_object($objeto)) {
+        if($objeto instanceof entidad) {
+            $this->consultaValores=$objeto;
+        } else {
+            //Siempre crear una entidad
+            if(!$this->consultaValores) $this->consultaValores=$this->fabricarEntidad();
+            //Actualizar propiedades
             foreach($objeto as $clave=>$valor) $this->consultaValores->$clave=$valor;
         }
         return $this;        

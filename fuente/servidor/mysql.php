@@ -130,7 +130,7 @@ class bd {
         $this->e->query('set sql_mode=""');
         //$this->e->query('set names "utf8"');
         $this->e->set_charset('utf8');
-        $this->e->query("set @@session.time_zone='".minutosAHoras(\configuracion::$zonaHorariaMinutos)."'");        
+        $this->e->query("set @@session.time_zone='".\util::minutosAHoras(\configuracion::$zonaHorariaMinutos)."'");        
         
         return $this;
     }

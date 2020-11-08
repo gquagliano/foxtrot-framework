@@ -212,11 +212,11 @@ class modelo {
 
         $this->sql=null;
         $this->alias='t1';
-        $this->consultaProcesarRelaciones=true;
-        $this->consultaProcesarRelaciones1n=true;
-        $this->consultaOmitirRelacionesCampos=[];
-        $this->consultaSeleccionarEliminados=false;
-        $this->consultaIncluirOcultos=false;
+        //$this->consultaProcesarRelaciones=true;
+        //$this->consultaProcesarRelaciones1n=true;
+        //$this->consultaOmitirRelacionesCampos=[];
+        //$this->consultaSeleccionarEliminados=false;
+        //$this->consultaIncluirOcultos=false;
 
         $this->ultimoId=null;
 

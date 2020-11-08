@@ -27,8 +27,8 @@ class recurso extends \tipoSolicitud {
 
         if(!file_exists($ruta)||is_dir($ruta)) return $this->error();
 
-        $mime=\mime($ruta);
-        \solicitud::establecerEncabezado('Content-Type',$mime.'; charset=utf-8');
+        $mime=\almacenamiento::mime($ruta,true);
+        \solicitud::establecerEncabezado('Content-Type',$mime);
         
         $f=fopen($ruta,'r');
         fpassthru($f);

@@ -14,7 +14,7 @@ defined('_inc') or exit;
 class almacenamiento {
     /**
      * Separa un nombre de archivo o ruta en sus componentes, devolviendo un objeto con las propiedades 'nombre', 'extension' y 'ruta'.
-     * @var string $nombre Nombre de archivo a procesar.
+     * @param string $nombre Nombre de archivo a procesar.
      * @return object
      */
     public static function separarNombre($nombre) {
@@ -33,7 +33,7 @@ class almacenamiento {
 
     /**
      * Limpia un nombre de archivos para remover caracteres especiales o riesgosos.
-     * @var string $nombre Nombre a analizar.
+     * @param string $nombre Nombre a analizar.
      * @return string
      */
     public static function limpiarNombre($nombre) {
@@ -56,8 +56,8 @@ class almacenamiento {
 
     /**
      * Reserva y devuelve un nombre de archivo libre.
-     * @var string $directorio Directorio de destino.
-     * @var string $nombre Nombre propuesto.
+     * @param string $directorio Directorio de destino.
+     * @param string $nombre Nombre propuesto.
      * @return string
      */
     public static function obtenerNombreLibre($directorio,$nombre=null) {
@@ -89,7 +89,7 @@ class almacenamiento {
 
     /**
      * Almacena un archivo temporal y devuelve su nombre, o null.
-     * @var mixed $contenido Contenido del archivo.
+     * @param mixed $contenido Contenido del archivo.
      * @return string
      */
     public static function almacenarTemporal($contenido) {
@@ -100,7 +100,7 @@ class almacenamiento {
 
     /**
      * Devuelve el tamaño del archivo en MB.
-     * @var string $ruta Ruta local.
+     * @param string $ruta Ruta local.
      * @return float
      */
     public static function obtenerTamanoArchivo($ruta) {
@@ -110,7 +110,7 @@ class almacenamiento {
 
     /**
      * Devuelve el tamaño de un archivo temporal en MB.
-     * @var string $nombre Nombre del archivo temporal.
+     * @param string $nombre Nombre del archivo temporal.
      * @return float
      */
     public static function obtenerTamanoTemporal($nombre) {
@@ -119,7 +119,7 @@ class almacenamiento {
 
     /**
      * Mueve un archivo subido al directorio temporal y devuelve su nombre, o null.
-     * @var array $archivo Elemento de $__FILES.
+     * @param array $archivo Elemento de $__FILES.
      * @return string
      */
     public static function subirTemporal($archivo) {
@@ -129,10 +129,10 @@ class almacenamiento {
 
     /**
      * Mueve un archivo temporal al almacenamiento local. Devuelve el nombre final, o null.
-     * @var string $temporal Nombre del archivo temporal devuelvo por `almacenarTemporal()`.
-     * @var string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
-     * @var string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $mantenerCodificacion Si es `true`, el archivo permanecerá codificado. En ese caso, será necesario utilizar `obtenerArchivoLocal()` para leer el mismo, o implementar
+     * @param string $temporal Nombre del archivo temporal devuelvo por `almacenarTemporal()`.
+     * @param string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
+     * @param string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
+     * @param bool $mantenerCodificacion Si es `true`, el archivo permanecerá codificado. En ese caso, será necesario utilizar `obtenerArchivoLocal()` para leer el mismo, o implementar
      * un proxy que utilice `enviarArchivoLocal()` para enviar al cliente.
      * @return bool
      */
@@ -157,10 +157,10 @@ class almacenamiento {
 
     /**
      * Mueve un archivo al almacenamiento local. Devuelve el nombre final, o null.
-     * @var string $ruta Ruta de origen.
-     * @var string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
-     * @var string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $codificar Si es true, el archivo será codificado. En ese caso, será necesario utilizar obtenerArchivoLocal() para leer el mismo, o implementar
+     * @param string $ruta Ruta de origen.
+     * @param string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
+     * @param string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
+     * @param bool $codificar Si es true, el archivo será codificado. En ese caso, será necesario utilizar obtenerArchivoLocal() para leer el mismo, o implementar
      * un proxy que utilice enviarArchivoLocal() para enviar al cliente.
      * @return string
      */
@@ -183,10 +183,10 @@ class almacenamiento {
 
     /**
      * Almacena un archivo en el almacenamiento local. Devuelve el nombre final, o null.
-     * @var mixed $contenido Contenido del archivo.
-     * @var string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
-     * @var string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $codificar Si es true, el archivo será codificado. En ese caso, será necesario utilizar obtenerArchivoLocal() para leer el mismo, o implementar
+     * @param mixed $contenido Contenido del archivo.
+     * @param string $nombre Nombre de destino. Será sanitizado y se validará que sea único.
+     * @param string $destino Ruta de destino. Por defecto, será la ruta configurada en `rutaArchivos`.
+     * @param bool $codificar Si es true, el archivo será codificado. En ese caso, será necesario utilizar obtenerArchivoLocal() para leer el mismo, o implementar
      * un proxy que utilice enviarArchivoLocal() para enviar al cliente.
      * @return string
      */
@@ -207,9 +207,9 @@ class almacenamiento {
 
     /**
      * Devuelve el contenido de un archivo en el almacenamiento local, o null.
-     * @var string $nombre Nombre del archivo.
-     * @var string $ruta Ruta de origen. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $decodificar Decodifica un archivo almacenado mediante almacenarLocal(), moverLocal() o moverTemporalLocal().
+     * @param string $nombre Nombre del archivo.
+     * @param string $ruta Ruta de origen. Por defecto, será la ruta configurada en `rutaArchivos`.
+     * @param bool $decodificar Decodifica un archivo almacenado mediante almacenarLocal(), moverLocal() o moverTemporalLocal().
      * @return mixed
      */
     public static function obtenerArchivoLocal($nombre,$ruta=null,$decodificar=false) {
@@ -226,10 +226,10 @@ class almacenamiento {
 
     /**
      * Envía un archivo desde el almacenamiento local al cliente. Devuelve null en caso de error.
-     * @var string $nombre Nombre del archivo.
-     * @var string $ruta Ruta de origen. Por defecto, será la ruta configurada en `rutaArchivos`.
-     * @var bool $descargar Si es true, enviará los encabezados para forzar la descarga del archivo.
-     * @var bool $decodificar Decodifica un archivo almacenado mediante almacenarLocal(), moverLocal() o moverTemporalLocal().
+     * @param string $nombre Nombre del archivo.
+     * @param string $ruta Ruta de origen. Por defecto, será la ruta configurada en `rutaArchivos`.
+     * @param bool $descargar Si es true, enviará los encabezados para forzar la descarga del archivo.
+     * @param bool $decodificar Decodifica un archivo almacenado mediante almacenarLocal(), moverLocal() o moverTemporalLocal().
      * @return mixed
      */
     public static function enviarArchivoLocal($nombre,$ruta=null,$descargar=false,$decodificar=false) {
@@ -238,12 +238,77 @@ class almacenamiento {
         $contenido=self::obtenerArchivoLocal($nombre,$ruta,$decodificar);
         if(!$contenido) return null;
 
-        $mime=\mime($ruta.$nombre);
+        $mime=self::mime($ruta.$nombre);
         \solicitud::establecerEncabezado('Content-Type',$mime.'; charset=utf-8');  
         if($descargar) \solicitud::establecerEncabezado('Content-Disposition','attachment; filename="'.$nombre.'"');
 
         ob_clean();
         echo $contenido;
         exit;
+    }
+
+    /**
+     * Determina y devuelve el tipo MIME de un archivo a partir de su extensión.
+     * @param string $ruta Ruta local.
+     * @param bool $incluirCharset Incluye el juego de caracteres en la salida, si corresponde (tipos de texto plano).
+     * @return string
+     */
+    public static function mime($ruta,$incluirCharset=false) {
+        //Fuente php.net con agregados
+        $tipos=[
+            'txt'=>'text/plain',
+            'htm'=>'text/html',
+            'html'=>'text/html',
+            'php'=>'text/html',
+            'css'=>'text/css',
+            'js'=>'application/javascript',
+            'json'=>'application/json',
+            'xml'=>'application/xml',
+            'swf'=>'application/x-shockwave-flash',
+            'flv'=>'video/x-flv',
+            'png'=>'image/png',
+            'jpe'=>'image/jpeg',
+            'jpeg'=>'image/jpeg',
+            'jpg'=>'image/jpeg',
+            'gif'=>'image/gif',
+            'bmp'=>'image/bmp',
+            'ico'=>'image/vnd.microsoft.icon',
+            'tiff'=>'image/tiff',
+            'tif'=>'image/tiff',
+            'svg'=>'image/svg+xml',
+            'svgz'=>'image/svg+xml',
+            'zip'=>'application/zip',
+            'rar'=>'application/x-rar-compressed',
+            'exe'=>'application/x-msdownload',
+            'msi'=>'application/x-msdownload',
+            'cab'=>'application/vnd.ms-cab-compressed',
+            'mp3'=>'audio/mpeg',
+            'qt'=>'video/quicktime',
+            'mov'=>'video/quicktime',
+            'pdf'=>'application/pdf',
+            'psd'=>'image/vnd.adobe.photoshop',
+            'ai'=>'application/postscript',
+            'eps'=>'application/postscript',
+            'ps'=>'application/postscript',
+            'doc'=>'application/msword',
+            'docx'=>'application/msword',
+            'rtf'=>'application/rtf',
+            'xls'=>'application/vnd.ms-excel',
+            'xlsx'=>'application/vnd.ms-excel',
+            'ppt'=>'application/vnd.ms-powerpoint',
+            'pptx'=>'application/vnd.ms-powerpoint',
+            'odt'=>'application/vnd.oasis.opendocument.text',
+            'ods'=>'application/vnd.oasis.opendocument.spreadsheet'
+        ];
+        $planos=['txt','htm','html','php','css','js','json','xml','svg'];
+
+        $p=strrpos($ruta,'.');
+        $ext=$p?strtolower(substr($ruta,$p+1)):null;
+
+        if(!$ext||!array_key_exists($ext,$tipos)) return 'text/plain; charset=utf-8';
+
+        $plano=in_array($ext,$planos);
+
+        return $tipos[$ext].($plano?'; charset=utf-8':'');
     }
 }

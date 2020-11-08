@@ -72,4 +72,26 @@ class util {
     public static function cadenaAzar($longitud=10) {
         return substr(random_bytes($longitud),0,$longitud);
     }
+
+    /**
+     * Aplica un formato estándar a un valor numérico.
+     * @param int|float $valor Valor a formatear.
+     * @param int $decimales Cantidad de decimales.
+     * @return string
+     */
+    public static function formatoNumero($valor,$decimales=2) {
+        if(!$valor) $valor=0;
+        return number_format($valor,$decimales,',','.');
+    }
+    
+    /**
+     * Convierte el número de minutos en H:i.
+     * @param integer $min Minutos. Admite valores negativos.
+     * @return string
+     */
+    public static function minutosAHoras($min) {
+        $horas=floor($min/60);
+        $minutos=str_pad(round(abs($min)-abs($horas*60)),2,'0',STR_PAD_LEFT);
+        return $horas.':'.$minutos;
+    }
 }

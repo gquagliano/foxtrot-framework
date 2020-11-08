@@ -67,6 +67,10 @@ var componentePestana=function() {
      * Evento 'Insertado' (componente creado o movido en modo de edición).
      */
     this.insertado=function() {
+        //en caso de que se haya copiado y pegado una pestaña activa
+        this.elemento.removerClase("activa");
+        this.activa=false;
+
         this.actualizarContenedor();
     };
     
@@ -96,6 +100,7 @@ var componentePestana=function() {
      */
     this.activar=function() {
         var padre=this.obtenerPadre();
+        if(!padre) return this;
 
         padre.desactivarTodas();
 
@@ -138,6 +143,8 @@ var componentePestana=function() {
         var padre=this.obtenerPadre();
 
         this.eliminarComponente(descendencia);
+        
+        if(!padre) return this;
         
         //Regenerar los encabezados del componente Pestaña
         padre.actualizarEncabezados(true);

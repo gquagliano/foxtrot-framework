@@ -92,6 +92,7 @@ var componentePestanas=function() {
             } else {
                 boton=t.encabezado.querySelector("button:nth-child("+(i+1)+")");
             }
+            if(ui.enModoEdicion()) boton.agregarClase("foxtrot-editor-ignorar");
 
             boton.establecerHtml(etiqueta)
                 .removerEventos()
@@ -99,7 +100,13 @@ var componentePestanas=function() {
                     ev.preventDefault();
                     ev.stopPropagation();
                     t.activarPestana(parseInt(this.dato("indice")));
-                });
+                    
+                    //En el editor, seleccionar pestaña
+                    if(ui.enModoEdicion()) {
+                        if(!ev.shiftKey) editor.limpiarSeleccion();
+                        editor.alternarSeleccion(pestana);
+                    }
+                },true);
 
             if(pestana.esActiva()) {
                 boton.agregarClase("activa");

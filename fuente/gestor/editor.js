@@ -484,6 +484,8 @@ var editor=new function() {
             },function(ev) {
                 ev.preventDefault();
                 //ev.stopPropagation();
+
+                if(ev.target.es({clase:"foxtrot-editor-ignorar"})) return;
                 
                 if(!ev.shiftKey) self.limpiarSeleccion();
 
@@ -1422,7 +1424,7 @@ var editor=new function() {
             elem.removerArrastre()
                 .removerDestino()
             //Remover clases y otras propiedades
-                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo")
+                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editor-ignorar foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");

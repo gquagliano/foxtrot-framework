@@ -317,18 +317,19 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$nombre) return PHP_EOL.'**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje).PHP_EOL.PHP_EOL;
+            if($etiqueta->etiqueta==$nombre) return PHP_EOL.'**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje);
         }
     };
 
     if(!$parametros) {
-        //Sin parámetros, mostrar solo el valor de retorno
+        //Sin parámetros, mostrar solo el título y el valor de retorno
         
         $salida='### `'.$nombre.'()`';
         if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-        $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL;
+        $salida.=$buscarReturn($comentario->bloques[0]).'  '.PHP_EOL;
+        $salida.=$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
 
-        return $salida.$buscarReturn($comentario->bloques[0]);
+        return $salida;
     }
 
     $autogenerarParametros=$parametros===true;
@@ -423,7 +424,7 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
         }
         
         //Buscar @return/@returns de este bloque
-        $salida.=PHP_EOL.$buscarReturn($bloque);
+        $salida.=PHP_EOL.$buscarReturn($bloque).PHP_EOL.PHP_EOL;
     }
 
     return $salida;

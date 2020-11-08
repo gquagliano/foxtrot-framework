@@ -139,12 +139,8 @@ class bd {
      * Cierra la conexión a la base de datos.
      */
     public function desconectar() {
-        if($this->e) {
-            try {           
-                $this->e->close;
-                if($this->stmt) $this->stmt->close();
-            } catch(Exception $x) { }
-        }
+        if($this->e) @$this->e->close();
+        if($this->stmt) @$this->stmt->close();
         return $this;
 	}
 

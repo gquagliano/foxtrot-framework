@@ -150,10 +150,31 @@ class modelo {
      * Crea y devuelve una instancia del modelo especificado.
      * @param string $modelo Nombre del modelo.
      * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
+     * @param bool $replicarConfiguracion Crea el modelo con la misma configuración que esta instancia con respecto al procesamiento de relaciones, campos ocultos, etc.
      * @return \modelo
      */
-    public static function fabricarModelo($modelo,$bd=null) {       
-        return \foxtrot::obtenerInstanciaModelo($modelo,$bd);
+    public function fabricarModelo($modelo,$bd=null,$replicarConfiguracion=true) {   
+        if($bd===null) $bd=$this->bd;    
+        $obj=\foxtrot::obtenerInstanciaModelo($modelo,$bd);
+
+        if($replicarConfiguracion)
+            $obj->configurar([
+                'consultaProcesarRelaciones'=>$this->consultaProcesarRelaciones,
+                'consultaProcesarRelaciones1n'=>$this->consultaProcesarRelaciones1n,
+                'consultaOmitirRelacionesCampos'=>$this->consultaOmitirRelacionesCampos,
+                'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
+                'consultaIncluirOcultos'=>$this->consultaIncluirOcultos
+            ]);
+
+        return $obj;
+    }
+
+    /**
+     * Método de uso interno.
+     * @private
+     */
+    public function configurar($arr) {
+        foreach($arr as $clave=>$valor) $this->$clave=$valor;
     }
 
     /**
@@ -195,7 +216,7 @@ class modelo {
         $this->consultaProcesarRelaciones1n=true;
         $this->consultaOmitirRelacionesCampos=[];
         $this->consultaSeleccionarEliminados=false;
-        //$this->consultaIncluirOcultos=false;
+        $this->consultaIncluirOcultos=false;
 
         $this->ultimoId=null;
 
@@ -305,7 +326,7 @@ class modelo {
      * @return \modelo
      */
     public function relacionar($campo,$tipo,$modelo,$alias,$condicion,$parametros=null) {
-        if(is_string($modelo)) $modelo=self::fabricarModelo($modelo,$this->bd);
+        if(is_string($modelo)) $modelo=$this->fabricarModelo($modelo);
 
         if($alias) $modelo->establecerAlias($alias);
 
@@ -430,7 +451,7 @@ class modelo {
                 if($campo->relacion=='1:n') {
                     if(!$procesar1n) continue;
 
-                    $modelo=modelo::fabricarModelo($campo->modelo,$this->bd);
+                    $modelo=$this->fabricarModelo($campo->modelo);
                     $modelo->donde([
                         $campo->columna=>$item->id
                     ]);
@@ -443,7 +464,7 @@ class modelo {
                     $columna=$campo->columna;
                     if($item->$columna&&!$item->$nombre) {
                         //Hay un valor en la columna pero no en el campo relacional
-                        $modelo=modelo::fabricarModelo($campo->modelo,$this->bd);
+                        $modelo=$this->fabricarModelo($campo->modelo);
                         $relacion=$modelo->obtenerItem($item->$columna);
                         if($relacion) {
                             $item->$nombre=$relacion;
@@ -948,7 +969,7 @@ class modelo {
                     continue;
                 }
 
-                self::fabricarModelo($nombreModelo,$this->db)
+                $this->fabricarModelo($nombreModelo)
                     ->establecerValores($entidad)
                     ->guardar();
 
@@ -974,7 +995,7 @@ class modelo {
                 if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) continue;
 
                 $nombreModelo=$campo->modelo;
-                $modelo=self::fabricarModelo($nombreModelo,$this->db);
+                $modelo=$this->fabricarModelo($nombreModelo);
                 $columna=$campo->columna;
 
                 foreach($listado as $entidad) {
@@ -1252,7 +1273,7 @@ class modelo {
 
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&!$campo->omitir) {
-                $obj=modelo::fabricarModelo($campo->modelo,$this->bd);
+                $obj=$this->fabricarModelo($campo->modelo);
                 
                 $alias++;
                 $obj->alias='t'.$alias;

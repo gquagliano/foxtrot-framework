@@ -89,7 +89,9 @@ var componenteItemMenu=function() {
                 return padre?true:false;
             },
             esPrimerNivel=function() {
-                return t.obtenerPadre().componente=="contenedor-menu";
+                var padre=t.obtenerPadre();
+                if(padre) return padre.componente=="contenedor-menu";
+                return false;
             },
             abrir=function(submenu) {
                 var elem=submenu.obtenerElemento();

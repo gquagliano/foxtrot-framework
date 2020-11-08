@@ -24,7 +24,7 @@ var componenteMenu=function() {
 
         //Agregar una clase al padre si se está utilizando como submenú
         var padre=this.elemento.padre();
-        if(padre.es({etiqueta:"li"})) padre.agregarClase("con-submenu");
+        if(padre&&padre.es({etiqueta:"li"})) padre.agregarClase("con-submenu");
 
         this.inicializarComponente();
         return this;

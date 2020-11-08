@@ -89,20 +89,28 @@ class entidad {
 
     /**
      * Devuelve un objeto estándar con los valores de la instancia.
-     * @param bool $incluirOcultos Si es false, omitirá los campos ocultos (`@oculto`).
+     * @param bool $incluirOcultos Si es false, omitirá los campos ocultos (`@oculto`) y privados (`@privado`).
      * @return object
      */
     public function obtenerObjeto($incluirOcultos=false) {
         $obj=(object)get_object_vars($this);
         
-        //Como estamos invocando get_object_vars() desde un método de la instancia, ha incluido propiedades protegidas y privadas
+        //Como estamos invocando get_object_vars() desde un método de la instancia, se han incluido propiedades protegidas y privadas; Remover
         unset($obj->tipoModelo);
 
-        if(!$incluirOcultos) {
-            //Remover propiedades ocultas
-            foreach($this->obtenerCampos() as $nombre=>$campo)
-                if($campo->oculto)
-                    unset($obj->$nombre);
+        foreach($this->obtenerCampos() as $nombre=>$campo) {
+            //Remover campos ocultos y privados
+            if(!$incluirOcultos&&($campo->oculto||$campo->privado)) unset($obj->$nombre);
+
+            //Reemplazar entidades relacionadas por su objeto
+            if($obj->$nombre instanceof entidad) $obj->$nombre=$obj->$nombre->obtenerObjeto($incluirOcultos);
+
+            //Lo mismo con los listados de entidades
+            //Un nivel es suficiente, no hace falta hacerlo recursivamente
+            if(is_array($obj->$nombre)) {
+                foreach($obj->$nombre as $item)
+                    if($item instanceof entidad) $item=$item->obtenerObjeto($incluirOcultos);
+            }
         }
 
         return $obj;
@@ -153,17 +161,18 @@ class entidad {
         //@busqueda campos
         //@orden campo (asc|desc)
         //@publico
+        //@privado
         //@html
 
         $campos=(object)[
             'id'=>(object)[],
-            'e'=>(object)[]
+            'e'=>(object)['oculto'=>true]
         ];
 
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|indice|modelo|relacion|columna|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=strtolower(trim($etiqueta));

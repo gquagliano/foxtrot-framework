@@ -275,6 +275,14 @@ var componenteContenedorMenu=function() {
         if(this.elemento.es({clase:"menu-abierto"})) return this.cerrar();
         return this.abrir(a,b);
     };
+
+    /**
+     * Evento `navegación`.
+     * @param {string} nombreVista - Nombre de la vista de destino.
+     */
+    this.navegacion=function(nombreVista) {
+        this.cerrar();
+    };
 };
 
 ui.registrarComponente("contenedor-menu",componenteContenedorMenu,configComponente.clonar({

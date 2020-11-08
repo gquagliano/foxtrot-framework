@@ -1184,6 +1184,8 @@ var ui=new function() {
     this.noIrA=function(ruta,nuevaVentana) {
         if(typeof nuevaVentana==="undefined") nuevaVentana=false;
 
+        ui.cerrarMenu();
+
         //Si se solicitó abrir en una nueva ventana, el efecto es el mismo que el de irA()
         if(nuevaVentana) return this.irA(ruta,true);
         

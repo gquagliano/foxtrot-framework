@@ -1238,13 +1238,18 @@ class modelo {
     /**
      * Bloquea las tablas dadas las instancias de los modelos.
      * @param string $modo Modo (`lectura` o `escritura`).
-     * @param string $modelos Nombre de *las tablas* a bloquear.
+     * @param string $modelos Nombres *de los modelos* a bloquear.
      * @return \modelo
      */
     public function bloquear($modo,...$modelos) {
-        if($modo=='lectura') $modo='READ'; else $modo='WRITE';
-        //TODO Consultar el nombre de la tabla a cada modelo, puede no coincidir
-        $this->bd->bloquear($modo,$modelos);
+        $tablas=[];
+
+        foreach($modelos as $modelo) {
+            if(is_string($modelo)) $modelo=$this->fabricarModelo($modelo);
+            $tablas[]=$modelo->obtenerNombreTabla();
+        }
+
+        $this->bd->bloquear($modo,$tablas);
         return $this;
     }
 

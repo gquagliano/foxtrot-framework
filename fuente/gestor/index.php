@@ -142,9 +142,9 @@ if(!count(gestor::obtenerAplicaciones())) {
                 } else {
 ?>
                         <li class="clearfix">
-                            <label class="vista" title="<?=$item->ruta?>"><?=$item->item?></label>
+                            <label class="vista" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="<?=$item->ruta?>"><?=$item->item?></label>
                             <div class="opciones">
-                                <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
+                                <button class="btn btn-sm" title="Abrir editor"><img src="img/editar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar"><img src="img/renombrar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar"><img src="img/copiar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar"><img src="img/eliminar.png"></button>

@@ -48,15 +48,25 @@ var componenteCondicional=function() {
     };
 
     /**
-     * Actualiza el componente.
+     * Muestra u oculta el contenido independientemente de la condición. Este estado *no* se preserva al actualizar el componente y reevaluar la condición.
+     * @param {boolean} estado - Estado a asignar. Establecer a `true` para forzar la visibilidad del componente, `false` para ocultarlo.
+     * @returns {componente}
      */
-    this.actualizar=function() {
-        var condicion=this.procesarEvento("condicion","condicion");
-        if(condicion) {
+    this.establecerVisibilidad=function(estado) {
+        if(estado) {
             this.elemento.agregarClase("visible");
         } else {
             this.elemento.removerClase("visible");
         }
+        return this;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.actualizar=function() {
+        var condicion=this.procesarEvento("condicion","condicion");
+        this.establecerVisibilidad(!!condicion);
         return this.clasePadre.actualizar.call(this);
     };
 

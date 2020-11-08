@@ -313,7 +313,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
     }
 }
 
-function procesarParametros($lenguaje,$parametros,$comentario) {
+function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$comentario) {
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
@@ -322,11 +322,14 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
     };
 
     if(!$parametros) {
-        //Sin parámetros, devolver solo el valor de retorno
-        return $buscarReturn($comentario->bloques[0]);
-    }    
+        //Sin parámetros, mostrar solo el valor de retorno
+        
+        $salida='### `'.$nombre.'()`';
+        if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
+        $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL;
 
-    $salida=PHP_EOL;
+        return $salida.$buscarReturn($comentario->bloques[0]);
+    }
 
     $autogenerarParametros=$parametros===true;
     
@@ -358,16 +361,43 @@ function procesarParametros($lenguaje,$parametros,$comentario) {
         $parametros=[];
     }
 
+    $cadenaParametros=function() use($parametros) {
+        $res='';
+        $opcionales=false;
+        foreach($parametros as $i=>$param) {
+            if(!$opcionales&&$param->opcional) {
+                $res.='[';
+                $opcionales=true;
+            }
+            if($i>0) $res.=',';
+            $res.=$param->variable;
+        }
+        if($opcionales) $res.=']';
+        return $res;
+    };
+
     $miembros=[];
 
-    foreach($comentario->bloques as $i=>$bloque) {
-        if(count($comentario->bloques)>1) $salida.='#### Sobrecarga '.($i+1).PHP_EOL;
-        $salida.='| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+    $salida='';
 
+    foreach($comentario->bloques as $i=>$bloque) {
         //Buscar @var/@param
         foreach($bloque->etiquetas as $etiqueta) {
             procesarVariable($etiqueta,$lenguaje,$parametros,$miembros,$autogenerarParametros);
         }
+
+        if($i==0) {
+            $salida.='### `'.$nombre;
+            if(count($comentario->bloques)<=1) {
+                $salida.='('.$cadenaParametros().')';
+            }
+            $salida.='`';
+            if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
+            $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL.PHP_EOL;
+        } else {
+            $salida.='#### Sobrecarga '.($i+1).PHP_EOL;
+        }
+        $salida.='| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 
         if(!count($parametros)) {
             $salida.='| (Ninguno) |'.PHP_EOL;
@@ -479,14 +509,10 @@ function procesarPhp($archivo,$comentarios) {
         } elseif(preg_match('/(public\s+?|private\s+?|protected\s+?)?(static\s+?)?function\s+?(.+?)\s*?\((.*?)\)\s+?{/',$comentario->sentencia,$coincidencia)) {
             if(trim($coincidencia[1])!='private') { //No documentamos privadas
                 $modificadores=[];
-                $salida='### `'.trim($coincidencia[3]).'`';
                 if(trim($coincidencia[1])=='protected') $modificadores[]='protegido';
                 if(trim($coincidencia[2])=='static') $modificadores[]='estático';
-                if(count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-                $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL;
 
-                //Parámetros y retorno
-                $salida.=procesarParametros('php',trim($coincidencia[4]),$comentario);
+                $salida=procesarParametros('php',trim($coincidencia[3]),$modificadores,trim($coincidencia[4]),$comentario);
 
                 if($clase) {
                     $clasesPhp[$clase]->metodos[]=$salida;
@@ -600,7 +626,7 @@ function procesarJs($archivo,$comentarios) {
             $salida.=$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
             if($extiende) $salida.='Extiende: [`'.$extiende.'`]('.enlace('jsdoc',$extiende).')'.PHP_EOL;
 
-            if($parametros) $salida.='## Parámetros del constructor'.PHP_EOL.procesarParametros('js',$parametros,$comentario).PHP_EOL;
+            if($parametros) $salida.='## Parámetros del constructor'.PHP_EOL.procesarParametros('js',$clase,null,$parametros,$comentario).PHP_EOL;
             
             $clasesJs[$clase]=(object)[
                 'encabezado'=>$salida,
@@ -635,11 +661,7 @@ function procesarJs($archivo,$comentarios) {
                 continue;
             }
 
-            $salida='### `'.trim($nombre).'`';
-            $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL;
-
-            //Parámetros y retorno
-            $salida.=procesarParametros('js',$parametros,$comentario);
+            $salida.=procesarParametros('js',trim($nombre),null,$parametros,$comentario);
 
             if($miembroDe) {
                 if(substr($miembroDe,0,9)=='external:') {
@@ -736,7 +758,7 @@ function crearPaginas($rutaSalida,$lenguaje) {
 
         //Tipos
         
-        $salida='#Tipos (JS)'.PHP_EOL.PHP_EOL;
+        $salida='## Tipos (JS)'.PHP_EOL.PHP_EOL;
         foreach($tiposJs as $tipo) $salida.=$tipo;
 
         $salida.=PHP_EOL.'*\* Tipo definido por una clase.*';

@@ -140,7 +140,7 @@ class bd {
      */
     public function desconectar() {
         if($this->e) @$this->e->close();
-        if($this->stmt) @$this->stmt->close();
+        //if($this->stmt) @$this->stmt->close();
         return $this;
 	}
 
@@ -179,13 +179,33 @@ class bd {
     /**
      * Bloquea las tablas.
      * @param string $modo Modo: 'lectura' o 'escritura'.
-     * @param string[] $tablas Tablas a bloquear.
+     * @param array $tablas Tablas a bloquear. Cada elemento puede ser una cadena (nombre de la tabla) o un arreglo [tabla,alias].
+     * @param null $alias No aplica.
+     *//**
+     * Bloquea las tablas.
+     * @param string $modo Modo: 'lectura' o 'escritura'.
+     * @param string $tablas Nombre de la tabla a bloquear (solo una).
+     * @param string $alias Alias (solo uno).
      */
-	public function bloquear($modo,$tablas) {
-		$modo=$modo=='escritura'?' write':' read';
-
-		foreach($tablas as $i=>$t) $tablas[$i].=$modo;
-		$tablas=join(',',$tablas);
+	public function bloquear($modo,$tablas,$alias=null) {
+        $modo=$modo=='escritura'?' write':' read';
+        
+        if(is_string($tablas)) {
+            if($alias) $tablas.=' as `'.$alias.'`';
+            $tablas.=$modo;
+        } else {
+            $listado=[];
+		    foreach($tablas as $tabla) {
+                if(is_array($tabla)) {
+                    //[[tabla,alias]]
+                    $listado[]=$tabla[0].' as `'.$tabla[1].'`'.$modo;
+                } else {
+                    //[tabla,tabla]
+                    $listado[]=$tabla.$modo;
+                }
+            }
+            $tablas=join(',',$listado);
+        }
 
 		$this->e->query('lock tables '.$tablas);
 

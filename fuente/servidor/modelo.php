@@ -58,6 +58,7 @@ class modelo {
     protected $consultaOmitirRelacionesCampos=[];
     protected $consultaSeleccionarEliminados=false;
     protected $consultaIncluirOcultos=false;
+    protected $consultaBloquear=false;
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -131,6 +132,14 @@ class modelo {
     }
 
     /**
+     * Devuelve el alias.
+     * @return string
+     */
+    public function obtenerAlias() {
+        return $this->alias;
+    }
+
+    /**
      * Devuelve el nombre del modelo.
      * @return string
      */
@@ -165,6 +174,7 @@ class modelo {
                 'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
                 'consultaIncluirOcultos'=>$this->consultaIncluirOcultos
             ]);
+            //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
 
         return $obj;
     }
@@ -212,11 +222,6 @@ class modelo {
 
         $this->sql=null;
         $this->alias='t1';
-        //$this->consultaProcesarRelaciones=true;
-        //$this->consultaProcesarRelaciones1n=true;
-        //$this->consultaOmitirRelacionesCampos=[];
-        //$this->consultaSeleccionarEliminados=false;
-        //$this->consultaIncluirOcultos=false;
 
         $this->ultimoId=null;
 
@@ -909,6 +914,7 @@ class modelo {
      */
     public function prepararConsulta($operacion='seleccionar') {
         $this->construirConsulta($operacion);
+        $this->ejecutarBloqueo();
         $this->bd->preparar($this->sql);
         $this->consultaPreparada=true;
         return $this;
@@ -920,6 +926,32 @@ class modelo {
      */
     public function reutilizarConsulta() {
         $this->reutilizarConsultaPreparada=true;
+        return $this;
+    }
+
+    /**
+     * Busca las tablas involucradas en la próxima consulta y rellena $tablas con elementos [tabla=>alias].
+     */
+    private function buscarTablas($modelo,&$tablas) {
+        if(!$modelo->consultaRelaciones) return;
+        foreach($modelo->consultaRelaciones as $relacion) {
+            $tablas[]=[$relacion->modelo->obtenerNombreTabla(),$relacion->modelo->obtenerAlias()];
+            $this->buscarTablas($relacion->modelo,$tablas);
+        }
+    }
+
+    /**
+     * Ejecuta el bloqueo de tablas, si corresponde.
+     * @return \modelo
+     */
+    public function ejecutarBloqueo() {
+        if(!$this->consultaBloquear) return $this;
+
+        $tablas=[[$this->nombre,$this->alias]];
+        $this->buscarTablas($this,$tablas);
+
+        $this->bd->bloquear($this->consultaBloquear,$tablas);
+
         return $this;
     }
 
@@ -1236,20 +1268,22 @@ class modelo {
     }
 
     /**
-     * Bloquea las tablas dadas las instancias de los modelos.
+     * Bloqueará todas las tablas involucradas en la próxima consulta. Las tablas se mantendrán bloqueadas hasta que se invoque `desbloquear()`. *Nota:* Si
+     * se desea ejecutar un bloqueo inmediatamente, debe realizarse con `\bd::bloquear()`.
      * @param string $modo Modo (`lectura` o `escritura`).
-     * @param string $modelos Nombres *de los modelos* a bloquear.
      * @return \modelo
      */
-    public function bloquear($modo,...$modelos) {
-        $tablas=[];
+    public function bloquear($modo) {
+        $this->consultaBloquear=$modo;
+        return $this;
+    }
 
-        foreach($modelos as $modelo) {
-            if(is_string($modelo)) $modelo=$this->fabricarModelo($modelo);
-            $tablas[]=$modelo->obtenerNombreTabla();
-        }
-
-        $this->bd->bloquear($modo,$tablas);
+    /**
+     * Desactivará el bloqueo de tablas en la próxima consulta.
+     * @return \modelo
+     */
+    public function noBloquear() {
+        $this->consultaBloquear=false;
         return $this;
     }
 

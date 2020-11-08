@@ -39,6 +39,8 @@ picture {
 picture img {
     display: block;
     width: 100%;
+    max-width: inherit;
+    max-height: inherit;
 }
 
 .deshabilitado,

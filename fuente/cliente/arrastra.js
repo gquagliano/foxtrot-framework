@@ -85,7 +85,10 @@
         //Limpiar también todos los destinos
         var a="foxtrot-arrastrable-arrastrando-sobre";
         document.querySelectorAll("."+a).removerClase(a);
-        if(typeof ui!=="undefined") ui.obtenerDocumento().querySelectorAll("."+a).removerClase(a);
+        if(typeof ui!=="undefined") {
+            var doc=ui.obtenerDocumento();
+            if(doc) doc.querySelectorAll("."+a).removerClase(a);
+        }
     }
 
     function dragEnter(e) {
@@ -347,7 +350,10 @@
         moverLeft=pos.left;
         moverTop=pos.top;
 
-        if(typeof ui!=="undefined") ui.obtenerCuerpo().pausarArrastreArbolDesc(true);
+        if(typeof ui!=="undefined") {
+            var cuerpo=ui.obtenerCuerpo();
+            if(cuerpo) cuerpo.pausarArrastreArbolDesc(true);
+        }
 
         //Remover el elemento "fantasma"
         e.dataTransfer.setDragImage(new Image,0,0);
@@ -391,7 +397,10 @@
     }
 
     function moverDragend(e) {
-        if(typeof ui!=="undefined") ui.obtenerCuerpo().pausarArrastreArbolDesc(false);
+        if(typeof ui!=="undefined") {
+            var cuerpo=ui.obtenerCuerpo();
+            if(cuerpo) cuerpo.pausarArrastreArbolDesc(false);
+        }
         document.removerEvento("dragover",moverDragover);
 
         var elem=this.metadato("arrastra");

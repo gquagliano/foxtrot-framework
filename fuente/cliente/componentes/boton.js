@@ -71,7 +71,7 @@ var componenteBoton=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<a href='#'>Botón</a>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -120,7 +120,7 @@ var componenteBoton=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

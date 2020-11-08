@@ -26,7 +26,7 @@ var componenteMenu=function() {
         var padre=this.elemento.padre();
         if(padre&&padre.es({etiqueta:"li"})) padre.agregarClase("con-submenu");
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -37,7 +37,7 @@ var componenteMenu=function() {
         //El menú debe ser compatible con el gestor de menús de ui, para poder aprovechar los métodos existentes
         this.elemento=document.crear("<ul class='menu oculto menu-contextual'>"); 
         this.contenedor=this.elemento;
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 };

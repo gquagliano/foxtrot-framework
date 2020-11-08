@@ -73,7 +73,7 @@ var componenteCampo=function() {
 
         if(this.propiedad("tipo")=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -84,7 +84,7 @@ var componenteCampo=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<input class='form-control' type='text'>"); 
         this.elemento.anexar(this.campo);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -108,7 +108,7 @@ var componenteCampo=function() {
             }
         }
 
-        return this.introComponente(evento);
+        return this.clasePadre.intro.call(this,evento);
     };
 
     /**
@@ -189,7 +189,7 @@ var componenteCampo=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

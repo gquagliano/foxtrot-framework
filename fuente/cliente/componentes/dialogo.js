@@ -42,7 +42,7 @@ var componenteDialogo=function() {
 
         this.contenedor=this.elemento;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
 
         //Remover la clase 'dialogo' (agregada por inicializarComponente) ya que es solo el cuerpo; ui.construirDialogo() va a
         //insertar el elemento dentro de un <div class='dialogo'>
@@ -63,7 +63,7 @@ var componenteDialogo=function() {
             }
         }
             
-        return this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        return this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
     };
 
     /**
@@ -71,7 +71,7 @@ var componenteDialogo=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='contenido-componente-dialogo'>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 

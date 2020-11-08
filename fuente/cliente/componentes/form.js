@@ -23,7 +23,7 @@ var componenteFormulario=function() {
 
         this.contenedor=this.elemento;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -32,7 +32,7 @@ var componenteFormulario=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='formulario'>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 };

@@ -75,7 +75,7 @@ var componenteBuscador=function() {
         this.campo=this.elemento.querySelector("input");
         this.elementoEventos=this.campo;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -86,7 +86,7 @@ var componenteBuscador=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<input class='form-control' autocomplete='off' type='text'>"); 
         this.elemento.anexar(this.campo);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -123,7 +123,6 @@ var componenteBuscador=function() {
             t.cerrarResultados();
         });
 
-        //this.establecerEventosComponente();
         return this;
     };
 
@@ -377,7 +376,7 @@ var componenteBuscador=function() {
         
         if(propiedad=="valor") return this; //No se asigna al campo realmente
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

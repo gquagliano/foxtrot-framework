@@ -20,7 +20,7 @@ var componenteArbol=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -29,7 +29,7 @@ var componenteArbol=function() {
      */
     this.crear=function() {
         this.elemento=document.crear(""); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 };

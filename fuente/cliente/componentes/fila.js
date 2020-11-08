@@ -21,7 +21,7 @@ var componenteFila=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
     
@@ -30,7 +30,7 @@ var componenteFila=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='row contenedor'/>");
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 };

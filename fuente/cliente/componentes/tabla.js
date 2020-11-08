@@ -44,7 +44,7 @@ var componenteTabla=function() {
 
         this.contenedor=this.elemento.querySelector("tbody");
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -53,7 +53,7 @@ var componenteTabla=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-striped table-hover' cellspacing='0'><tbody/></table></div></div>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };    
     
@@ -70,7 +70,7 @@ var componenteTabla=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
     

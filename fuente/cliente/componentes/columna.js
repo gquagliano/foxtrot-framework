@@ -37,7 +37,7 @@ var componenteColumna=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
     
@@ -46,7 +46,7 @@ var componenteColumna=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='col-sm-3 contenedor'/>");
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
     
@@ -65,7 +65,7 @@ var componenteColumna=function() {
             });
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

@@ -49,7 +49,7 @@ var componentePestana=function() {
 
         if(this.elemento.es({ clase:"activa" })) this.activa=true;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -59,7 +59,7 @@ var componentePestana=function() {
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
         this.contenedor=this.elemento;
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -80,7 +80,7 @@ var componentePestana=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(propiedad=="etiqueta") this.actualizarContenedor();
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -142,7 +142,7 @@ var componentePestana=function() {
     this.eliminar=function(descendencia) {
         var padre=this.obtenerPadre();
 
-        this.eliminarComponente(descendencia);
+        this.clasePadre.eliminar.call(this,descendencia);
         
         if(!padre) return this;
         

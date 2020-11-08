@@ -79,7 +79,7 @@ var componenteImportar=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -88,7 +88,7 @@ var componenteImportar=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -129,7 +129,7 @@ var componenteImportar=function() {
     this.actualizar=function() {
         var vista=this.vista();
         if(vista) vista.actualizar();
-        this.actualizarComponente();
+        this.clasePadre.actualizar.call(this);
         return this;
     };
 

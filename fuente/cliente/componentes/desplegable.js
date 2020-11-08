@@ -58,7 +58,7 @@ var componenteDesplegable=function() {
         this.campo=this.elemento.querySelector("select");
         this.elementoEventos=this.campo;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -69,7 +69,7 @@ var componenteDesplegable=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<select class='custom-select'>"); 
         this.elemento.anexar(this.campo);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -116,7 +116,7 @@ var componenteDesplegable=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -178,7 +178,7 @@ var componenteDesplegable=function() {
         //Reconstruir opciones
         this.listo();
 
-        return this.actualizarComponente();
+        return this.clasePadre.actualizar.call(this);
     };
 
     /**

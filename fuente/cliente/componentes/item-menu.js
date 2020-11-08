@@ -54,7 +54,7 @@ var componenteItemMenu=function() {
         this.elementoEventos=this.enlace;
         this.contenedor=this.elemento;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -71,7 +71,7 @@ var componenteItemMenu=function() {
         this.elementoEditable=this.enlace;
         this.elementoEventos=this.enlace;
 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -216,7 +216,7 @@ var componenteItemMenu=function() {
             });
         }
 
-        this.establecerEventosComponente();
+        this.clasePadre.establecerEventos.call(this);
         return this;
     };
 
@@ -250,7 +250,7 @@ var componenteItemMenu=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -277,7 +277,7 @@ var componenteItemMenu=function() {
             if(comp&&comp.componente=="menu") editor.establecerSeleccion(comp);
         }
 
-        return this.eliminarComponente(descendencia);
+        return this.clasePadre.eliminar.call(this,descendencia);
     };
 
     /**

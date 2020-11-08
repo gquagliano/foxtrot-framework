@@ -38,7 +38,7 @@ var componenteEspaciador=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -47,7 +47,7 @@ var componenteEspaciador=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='espaciador horizontal'></div>"); 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -72,7 +72,7 @@ var componenteEspaciador=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

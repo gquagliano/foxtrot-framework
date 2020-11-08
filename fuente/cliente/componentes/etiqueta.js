@@ -33,7 +33,7 @@ var componenteEtiqueta=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<span class='etiqueta'/>");
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -58,7 +58,7 @@ var componenteEtiqueta=function() {
         if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
         this.elemento.establecerHtml(resultado);
 
-        this.actualizarComponente();
+        this.clasePadre.actualizar.call(this);
         return this;
     };
 

@@ -40,7 +40,7 @@ var componentePestanas=function() {
         this.encabezado=this.elemento.childNodes.filtrar({ clase:"encabezados" })[0];
         this.contenedor=this.elemento.childNodes.filtrar({ clase:"contenedor" })[0];
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -56,7 +56,7 @@ var componentePestanas=function() {
         this.contenedor=document.crear("<div class='contenedor'>");
         this.elemento.anexar(this.contenedor);
 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
     

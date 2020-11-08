@@ -64,7 +64,7 @@ var componenteColumnaTabla=function() {
 
         this.contenedor=this.elemento;
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };    
 
@@ -77,7 +77,7 @@ var componenteColumnaTabla=function() {
 
         if(ui.enModoEdicion()) this.editor();
 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -96,7 +96,7 @@ var componenteColumnaTabla=function() {
         var encabezado=this.propiedad("encabezado");
         if(encabezado) this.encabezadoTemporal.establecerHtml(encabezado);
         
-        return this.editorComponente();
+        return this.clasePadre.editor.call(this);
     };
     
     /**
@@ -107,7 +107,7 @@ var componenteColumnaTabla=function() {
         if(propiedad=="encabezado"&&ui.enModoEdicion()) 
             this.encabezadoTemporal.establecerHtml(valor);
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

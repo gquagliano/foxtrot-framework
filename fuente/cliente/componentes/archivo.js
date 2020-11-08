@@ -71,7 +71,7 @@ var componenteArchivo=function() {
         this.campo=this.elemento.querySelector("input");
         this.etiqueta=this.elemento.querySelector("label");
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -87,7 +87,7 @@ var componenteArchivo=function() {
         this.etiqueta=document.crear("<label class='custom-file-label'>");
         this.elemento.anexar(this.etiqueta);
 
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -315,7 +315,7 @@ var componenteArchivo=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

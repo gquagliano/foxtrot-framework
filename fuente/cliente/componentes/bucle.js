@@ -38,7 +38,7 @@ var componenteBucle=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector(".componente-bucle-plantilla");
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -49,7 +49,7 @@ var componenteBucle=function() {
         this.elemento=document.crear("<div></div>");
         this.contenedor=document.crear("<div class='componente-bucle-plantilla'></div></div>")
             .anexarA(this.elemento);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -58,7 +58,7 @@ var componenteBucle=function() {
      */
     this.listo=function() {
         this.actualizar();
-        this.listoComponente();
+        this.clasePadre.listo.call(this);
     };
     
     /**

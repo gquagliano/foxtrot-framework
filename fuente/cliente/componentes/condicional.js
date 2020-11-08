@@ -33,7 +33,7 @@ var componenteCondicional=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -43,7 +43,7 @@ var componenteCondicional=function() {
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
         this.contenedor=this.elemento;
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -57,7 +57,7 @@ var componenteCondicional=function() {
         } else {
             this.elemento.removerClase("visible");
         }
-        return this.actualizarComponente();
+        return this.clasePadre.actualizar.call(this);
     };
 
     /**
@@ -65,7 +65,7 @@ var componenteCondicional=function() {
      */
     this.listo=function() {
         this.actualizar();
-        this.listoComponente();
+        this.clasePadre.listo.call(this);
     };
 
     /**

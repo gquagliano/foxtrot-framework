@@ -51,7 +51,7 @@ var componenteFecha=function() {
             if(v) this.establecerValor(v);
         }
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -62,7 +62,7 @@ var componenteFecha=function() {
         this.elemento=document.crear("<div tabindex='0'>");
         this.campo=document.crear("<input class='form-control' autocomplete='off' type='text'>")
             .anexarA(this.elemento);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -103,7 +103,6 @@ var componenteFecha=function() {
             t.validarValor();
         });
 
-        //this.establecerEventosComponente();
         return this;
     };
 
@@ -123,7 +122,7 @@ var componenteFecha=function() {
             }
         }
 
-        return this.introComponente(evento);
+        return this.clasePadre.intro.call(this,evento);
     };
 
     /**
@@ -147,7 +146,7 @@ var componenteFecha=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

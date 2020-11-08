@@ -16,7 +16,12 @@
 var aplicacion=new function() {
     "use strict";
 
+    /**
+     * @var {servidor} servidor - Acceso al controlador de servidor.
+     * @var {aplicacion} clasePadre - Clase `aplicacion` (equivalente a `parent` en OOP).
+     */
     this.servidor=null;
+    this.clasePadre=this;
     
     /**
      * Devuelve la instancia del gestor de la interfaz con el servidor.

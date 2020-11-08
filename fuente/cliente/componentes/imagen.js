@@ -76,7 +76,7 @@ var componenteImagen=function() {
         //Recuperar origen (no se guarda en el JSON)
         this.recuperarPropiedades();
 
-        this.inicializarComponente();
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 
@@ -110,7 +110,7 @@ var componenteImagen=function() {
     this.crear=function() {
         this.elemento=document.crear("<picture/>");
         this.img=document.crear("<img src='"+icono+"'>").anexarA(this.elemento);
-        this.crearComponente();
+        this.clasePadre.crear.call(this);
         return this;
     };
 
@@ -152,7 +152,7 @@ var componenteImagen=function() {
             return this;
         }
         
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };    
 
@@ -180,7 +180,7 @@ var componenteImagen=function() {
                 });
         }
 
-        this.actualizarComponente();
+        this.clasePadre.actualizar.call(this);
         return this;
     };
 
@@ -192,7 +192,7 @@ var componenteImagen=function() {
         //Mostrar imagen de relleno, si corresponde
         if(!this.img.atributo("src")) this.img.atributo("src",icono);
 
-        return this.editorComponente();
+        return this.clasePadre.editor.call(this);
     };    
 
     /**
@@ -203,7 +203,7 @@ var componenteImagen=function() {
         //Remover imagen de relleno
         if(this.img.atributo("src")==icono) this.img.atributo("src","");
 
-        return this.editorDesactivadoComponente();
+        return this.clasePadre.editorDesactivado.call(this);
     };
 };
 

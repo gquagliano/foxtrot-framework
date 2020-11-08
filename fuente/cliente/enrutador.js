@@ -19,6 +19,11 @@
 var enrutador=new function() {
     //Los enrutadores de cliente permiten traducir URL a nombres de vistas (para implementaciones sin servidor) y traducir nombres de vistas y rutas a recursos a URL
     //que entenderá el enrutador de servidor. Esto significa que debe existir un enrutador de cliente compatible por cada enrutador de servidor.
+    
+    /**
+     * @var {enrutador} clasePadre - Clase `enrutador` (equivalente a `parent` en OOP).
+     */
+    this.clasePadre=this;
 
     /**
     * Fabrica una instancia de un controlador concreto dada su función.

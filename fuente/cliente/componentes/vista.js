@@ -62,7 +62,7 @@ var componenteVista=function() {
 
     this.inicializar=function() {
         this.contenedor=this.elemento;
-        return this.inicializarComponente();
+        return this.clasePadre.inicializar.call(this);
     };
     
     /**
@@ -74,7 +74,7 @@ var componenteVista=function() {
         this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
         if(!this.elemento) this.elemento=body.querySelector("#foxtrot-cuerpo");
 
-        this.restaurarComponente();
+        this.clasePadre.restaurar.call(this);
         return this;
     };
     
@@ -120,7 +120,7 @@ var componenteVista=function() {
             return this;
         }
 
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

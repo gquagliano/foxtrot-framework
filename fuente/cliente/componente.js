@@ -29,6 +29,25 @@ var componente=new function() {
 
     ////Propiedades
 
+    /**
+     * @var {string} id - ID del componente (interno).
+     * @var {string} selector - Selector CSS del componente.
+     * @var {string} componente - Tipo de componente.
+     * @var {string} nombre - Nombre del componente.
+     * @var {(Element|Node)} elemento - Elemento del componente.
+     * @var {(Element|Node)} contenedor - Elemento contenedor de la descendencia del componente (puede diferir de `elemento`).
+     * @var {boolean} contenidoEditable - Indica si presenta contenido editable mediante el editor de texto (doble click).
+     * @var {boolean} elementoEditable - Si `contenidoEditable` es `true`, este es el elemento que admite edición de texto.
+     * @var {(Element|Node)} elementoEventos - Elemento al cual se asignan los manejadores de eventos por defecto.
+     * @var {boolean} arrastrable - Indica si el componente se puede arrastrar y soltar.
+     * @var {boolean} fueInicializado - Indica si la instancia ya fue inicializada.
+     * @var {string} nombreVista - Nombre de la vista a la cual pertenece la instancia.
+     * @var {Object} datos - Origen de datos asignado.
+     * @var {boolean} oculto - Indica si el componente está oculto, lo cual significa que el mismo no se publica en `componentes`, aunque tenga un nombre asignado (es independiente de la visiblidad del elemento del DOM).
+     * @var {(Element|Node)} campo - Elemento campo, si el componente presenta algún tipo de campo de ingreso (`input`, `textarea`, etc.)
+     * @var {componente} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
+     * @var {Object} valoresPropiedades - Almacen de valores de parámetros.
+     */
     this.id=null;
     this.selector=null;
     this.componente=null;
@@ -44,14 +63,12 @@ var componente=new function() {
     this.datos=null;
     this.oculto=false;
     this.campo=null;
-
-    /**
-     * Almacen de valores de parámetros.
-     */
+    this.clasePadre=this;
     this.valoresPropiedades=null;
 
     /**
-     * Propiedades comunes a todos los componentes.
+     * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
+     * @var {Object} propiedadesConcretas - Propiedades del componente concreto (a sobreescribir por el componente concreto).
      */
     this.propiedadesComunes={
         "Estilo":{
@@ -255,16 +272,13 @@ var componente=new function() {
             }
         }
     };
-
-    /**
-     * Propiedades del componente concreto (a sobreescribir).
-     */
     this.propiedadesConcretas=null;
 
     ////Acceso a propiedades    
 
     /**
      * Devuelve el ID de la instancia.
+     * @returns {string}
      */
     this.obtenerId=function() {
         return this.id;
@@ -272,6 +286,7 @@ var componente=new function() {
 
     /**
      * Devuelve el nombre de la vista a la cual pertenece.
+     * @returns {string}
      */
     this.obtenerNombreVista=function() {
         return this.nombreVista;
@@ -288,7 +303,8 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve la instancia de la vista (componente) a la cual pertenece.
+     * Devuelve la instancia de la vista (componente `Vista`) a la cual pertenece.
+     * @returns {componenteVista}
      */
     this.obtenerVista=function() {
         return ui.obtenerInstanciaVista(this.nombreVista);
@@ -296,6 +312,7 @@ var componente=new function() {
 
     /**
      * Devuelve el nombre de la instancia.
+     * @returns {string}
      */
     this.obtenerNombre=function() {
         return this.nombre;
@@ -432,22 +449,12 @@ var componente=new function() {
     };
 
     /**
-     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva (método para sobreescribir).
-     * @param {Object} obj - Objeto a asignar.
-     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @returns Componente
-     */
-    this.establecerDatos=function(obj,actualizar) {
-        return this.establecerDatosComponente(obj,actualizar);
-    };
-
-    /**
      * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @returns Componente
+     * @returns {componente}
      */
-    this.establecerDatosComponente=function(obj,actualizar) {
+    this.establecerDatos=function(obj,actualizar) {
         if(typeof actualizar==="undefined") actualizar=true;
 
         this.datos=obj;
@@ -575,17 +582,11 @@ var componente=new function() {
     };
 
     /**
-     * Inicializa la instancia (método para sobreescribir).
-     */    
-    this.inicializar=function() {
-        return this.inicializarComponente();
-    };
-
-    /**
-     * Inicializa la instancia (método común para todos los componentes).
+     * Inicializa la instancia.
      * @param {boolean} [omitirEventos=false] - Si es true, se omitirá la asignación de los eventos predefinidos.
+     * @returns {componente}
      */ 
-    this.inicializarComponente=function(omitirEventos) {
+    this.inicializar=function(omitirEventos) {
         if(this.fueInicializado) return this;
 
         if(this.elemento) {
@@ -637,7 +638,7 @@ var componente=new function() {
     };
 
     /**
-     * Crea el elemento del DOM para esta instancia (método para sobreescribir).
+     * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
         this.crearComponente();
@@ -653,7 +654,7 @@ var componente=new function() {
     };
 
     /**
-     * Elimina el componente (método para sobreescribir).
+     * Elimina el componente.
      * @param {boolean} [descendencia] - Si está definido y es `true`, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
      * uso interno; omitir al solicitar eliminar este componente.
      * @returns {componente}
@@ -696,17 +697,10 @@ var componente=new function() {
     };
 
     /**
-     * Inicializa la instancia en base a su ID y sus parámetros (método para sobreescribir).
+     * Inicializa la instancia en base a su ID y sus parámetros.
+     * @returns {componente}
      */
     this.restaurar=function() {
-        this.restaurarComponente();
-        return this;
-    };
-
-    /**
-     * Inicializa la instancia en base a su ID y sus parámetros.
-     */
-    this.restaurarComponente=function() {
         if(!this.elemento) {
             //El elemento puede haber sido asignado en restaurar() o durante la creación de la instancia
             var body=ui.obtenerDocumento().body;
@@ -720,40 +714,26 @@ var componente=new function() {
     };
 
     /**
-     * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado (método para sobreescribir).
+     * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado.
+     * @returns {componente}
      */
     this.establecerId=function(id) {
-        this.establecerIdComponente(id);
-        return this;
-    };
-
-    /**
-     * Establece el ID de la instancia. Si se omite id, intentará configurar el DOM de la instancia con un id previamente asignado.
-     */
-    this.establecerIdComponente=function(id) {
         if(typeof id!=="undefined") this.id=id;
         if(this.elemento) this.elemento.dato("fxid",this.id);
         return this;
     };
 
     /**
-     * Establece el nombre de la instancia (método para sobreescribir).
+     * Establece el nombre de la instancia.
      * @param {string} nombre - Nuevo nombre.
      * @param {boolean} [oculto=false] - Si es true, permanecerá oculto, es decir que no se publicará en componentes.
      * @returns {componente}
      */
     this.establecerNombre=function(nombre,oculto) {
-        if(typeof oculto==="undefined") oculto=false;
-        this.oculto=oculto;
-        this.establecerNombreComponente(nombre);
-        return this;
-    };
-
-    /**
-     * Establece el nombre de la instancia.
-     */
-    this.establecerNombreComponente=function(nombre) {
         if(typeof nombre==="undefined") nombre=null;
+        if(typeof oculto==="undefined") oculto=false;
+
+        this.oculto=oculto;
 
         //Eliminar de componentes si cambia el nombre
         if((this.nombre!=nombre||this.oculto)&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
@@ -778,16 +758,9 @@ var componente=new function() {
      * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
      * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
      * forma específica.
+     * @returns {componente}
      */
     this.actualizar=function() {
-        this.actualizarComponente();
-        return this;
-    };
-
-    /**
-     * Actualiza el componente y sus hijos en forma recursiva.
-     */
-    this.actualizarComponente=function() {
         //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedad` y el componente presente un campo,
         //intentar asignar el valor desde el origen de datos (otros usos de la propiedad deben implementarse en actualizar() en el 
         //componente concreto)        
@@ -893,17 +866,14 @@ var componente=new function() {
     };
     
     /**
-     * Actualiza el componente tras la modificación de una propiedad (método para sobreescribir).
+     * Actualiza el componente tras la modificación de una propiedad.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @paran {*} [valor] - Valor asignado.
+     * @param {string} [tamano="g"] - Tamaño de pantalla.
+     * @param {*} [valorAnterior] - Valor anterior.
+     * @returns {componente}
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
-        this.propiedadModificadaComponente(propiedad,valor,tamano,valorAnterior);
-        return this;
-    };
-    
-    /**
-     * Actualiza el componente tras la modificación de una propiedad.
-     */
-    this.propiedadModificadaComponente=function(propiedad,valor,tamano,valorAnterior) {
         if(util.esIndefinido(valor)) valor=this.propiedad(tamano?tamano:"g",propiedad);
         if(util.esIndefinido(tamano)) tamano=null;
         if(util.esIndefinido(valorAnterior)) valorAnterior=null;
@@ -1310,7 +1280,7 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve o establece el valor del componente (método para sobreescribir).
+     * Devuelve o establece el valor del componente.
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
      * @returns {(*|undefined)}
      */
@@ -1361,7 +1331,7 @@ var componente=new function() {
     ////Eventos    
 
     /**
-     * Establece los eventos predeterminados (método para sobreescribir).
+     * Establece los eventos predeterminados.
      */
     this.establecerEventos=function() {
         this.establecerEventosComponente();
@@ -1370,8 +1340,9 @@ var componente=new function() {
     
     /**
      * Establece los eventos predeterminados.
+     * @returns {componente}
      */
-    this.establecerEventosComponente=function() {
+    this.establecerEventos=function() {
         var t=this,
             elemento=this.elementoEventos?this.elementoEventos:this.elemento;
             
@@ -1631,7 +1602,7 @@ var componente=new function() {
     };
 
     /**
-     * Recepción de eventos externos (método para sobreescribir).
+     * Recepción de eventos externos. Los eventos externos son desencadenados por aquellos navegadores con el formato `nombre:...` donde `nombre` es el nombre del componente.
      * @param {*} valor 
      * @param {Object} evento 
      * @returns {*}
@@ -1640,34 +1611,20 @@ var componente=new function() {
     };
 
     /**
-     * Evento Click (método para sobreescribir).
-     * @param {Object} evento - Parámetros del evento.
+     * Evento Click. Devolver `true` suprimirá el evento.
+     * @param {MouseEvent} evento - Parámetros del evento.
+     * @returns {boolean}
      */
     this.click=function(evento) {
-        return this.clickComponente(evento);
-    };
-
-    /**
-     * Evento Click.
-     * @param {Object} evento - Parámetros del evento.
-     */
-    this.clickComponente=function(evento) {
         return false;
     };
 
     /**
-     * Evento Menú contextual (método para sobreescribir).
-     * @param {Object} evento - Parámetros del evento.
+     * Evento Menú contextual. Devolver `true` suprimirá el evento.
+     * @param {MouseEvent} evento - Parámetros del evento.
+     * @returns {boolean}
      */
     this.menuContextual=function(evento) {
-        return this.menuContextualComponente(evento);
-    };
-
-    /**
-     * Evento Menú contextual.
-     * @param {Object} evento - Parámetros del evento.
-     */
-    this.menuContextualComponente=function(evento) {
         var valor=this.procesarCadenaEvento("menuContextual");
         if(valor) {
             var componente=ui.obtenerInstanciaComponente(valor);
@@ -1691,111 +1648,65 @@ var componente=new function() {
     };
 
     /**
-     * Evento intro (método para sobreescribir).
-     * @param {Object} evento - Parámetros del evento.
+     * Evento intro. Devolver `true` suprimirá el evento.
+     * @param {KeyboardEvent} evento - Parámetros del evento.
+     * @returns {boolean}
      */
     this.intro=function(evento) {
-        return this.introComponente(evento);
-    };
-
-    /**
-     * Evento intro.
-     * @param {Object} evento - Parámetros del evento.
-     */
-    this.introComponente=function(evento) {
         return false;
     };
 
     /**
-     * Evento Modificacion (método para sobreescribir).
-     * @param {Object} evento - Parámetros del evento.
+     * Evento keydown. Devolver `true` suprimirá el evento.
+     * @param {KeyboardEvent} evento - Parámetros del evento.
+     * @returns {boolean}
      */
     this.modificacion=function(evento) {
-        return this.modificacionComponente(evento);
-    };
-
-    /**
-     * Evento keydown.
-     * @param {Object} evento - Parámetros del evento.
-     */
-    this.modificacionComponente=function(evento) {
         return false;
     };
 
     ////Eventos de la instancia
     
     /**
-     * Evento 'Inicializado' (método para sobreescribir).
+     * Evento 'Inicializado'.
+     * @returns {componente}
      */
     this.inicializado=function() {
+        return this;
     };
-
-    //TODO Agregar los métodos ...Componente que falten (inicializadoComponente, insertadoComponetne, etc.)
     
     /**
      * Evento 'Insertado'. El evento Insertado es invocado cuando el component es insertado en el DOM, ya sea tras ser creado o al
      * ser movido, únicamente en modo de edición.
-     * @abstract
-     */
-    this.insertado=function() {
-    };
-
-    /**
-     * Evento Listo (método para sobreescribir).
      * @returns {componente}
      */
-    this.listo=function() {
-        return this.listoComponente();
+    this.insertado=function() {
+        return this;
     };
 
     /**
      * Evento Listo.
      * @returns {componente}
      */
-    this.listoComponente=function() {
+    this.listo=function() {
         this.procesarPropiedades();
         return this;
-    };
-
-    /**
-     * Evento `editor` (método para sobreescribir).
-     * @returns {componente}
-     */
-    this.editor=function() {
-        return this.editorComponente();
     };
 
     /**
      * Evento `editor`.
      * @returns {componente}
      */
-    this.editorComponente=function() {
+    this.editor=function() {
         return this;
-    };
-
-    /**
-     * Evento `editorDesactivado` (método para sobreescribir).
-     * @returns {componente}
-     */
-    this.editorDesactivado=function() {
-        return this.editorDesactivadoComponente();
     };
 
     /**
      * Evento `editorDesactivado`.
      * @returns {componente}
      */
-    this.editorDesactivadoComponente=function() {
+    this.editorDesactivado=function() {
         return this;
-    };
-
-    /**
-     * Evento 'Seleccionado' (método para sobreescribir).
-     * @param {boolean} estado
-     * @returns {componente}
-     */
-    this.seleccionado=function(estado) {
-        return this.seleccionadoComponente(estado);
     };
 
     /**
@@ -1803,20 +1714,21 @@ var componente=new function() {
      * @param {boolean} estado
      * @returns {componente}
      */
-    this.seleccionadoComponente=function(estado) {
+    this.seleccionado=function(estado) {
         return this;
     }; 
     
     /**
-     * Evento 'Navegación' (método para sobreescribir).
+     * Evento 'Navegación'. Devolver `true` suspenderá la navegación.
      * @param {string} nombreVista - Nombre de la vista de destino.
+     * @returns {(undefined|boolean)}
      */
     this.navegacion=function(nombreVista) {
     };
     
     /**
-     * Evento 'Volver' (método para sobreescribir).
-     * @returns {boolean}
+     * Evento 'Volver'. Devolver `true` suspenderá la navegación.
+     * @returns {(undefined|boolean)}
      */
     this.volver=function() {
     };

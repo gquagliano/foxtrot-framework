@@ -192,6 +192,10 @@ class foxtrot {
             if(self::$cli) {
                 //Desde CLI, parámetro -apl
                 self::$aplicacion=solicitud::obtenerParametros()->apl;
+                if(!self::$aplicacion) {
+                    echo 'El parámetro -apl es requerido.'.PHP_EOL.PHP_EOL;
+                    exit;
+                }
             } elseif($_REQUEST['__apl']) {
                 //Es posible saltearse el enrutador de aplicación con el parámetro __apl
                 $aplicacion=util::limpiarValor($_REQUEST['__apl']);
@@ -332,7 +336,7 @@ class foxtrot {
         if($aplicacion!==false) self::cargarAplicacion($aplicacion);
         
         //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella
-        sesion::inicializar();
+        if(!self::$cli) sesion::inicializar();
 
         self::inicializarEnrutador();
     }
@@ -341,6 +345,11 @@ class foxtrot {
      * Inicializa el framework desde la línea de comandos.
      */
     public static function inicializarCli() {
+        if(php_sapi_name()!=='cli') {
+            header('Location: error/');
+            exit;
+        }
+
         self::$cli=true;
         self::inicializar();
     }
@@ -349,9 +358,18 @@ class foxtrot {
      * 
      */
     public static function error() {
-        $url=configuracion::$urlError?
-            configuracion::$urlError:
-            configuracion::$rutaBase.configuracion::$rutaEror;
+        if(self::$cli) {
+            echo 'Solicitud inválida.'.PHP_EOL.PHP_EOL;
+            exit;
+        }
+
+        if(!class_exists('configuracion')) {
+            $url='error/';
+        } else {
+            $url=configuracion::$urlError?
+                configuracion::$urlError:
+                configuracion::$rutaBase.configuracion::$rutaEror;
+        }
 
         //Si ya estamos en la página de error, detener
         if($_SERVER['REQUEST_URI']==$url) exit;

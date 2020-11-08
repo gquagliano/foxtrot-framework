@@ -130,16 +130,15 @@ class entidad {
      * @return \entidad
      */
     public function procesarRelaciones() {
-        $modelo=$this->fabricarModelo();
-
-        foreach($modelo->obtenerCampos() as $nombre=>$campo) {
+        foreach($this->obtenerCampos() as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&(!$this->$nombre||is_numeric($this->$nombre))) {
                 $modeloRelacionado=\foxtrot::obtenerInstanciaModelo($campo->modelo);
+                $columna=$campo->columna;
                 if($campo->relacion=='1:n') {
-                    $this->$nombre=$modeloRelacionado->donde([$campo->columna=>$this->id])
+                    $this->$nombre=$modeloRelacionado->donde([$columna=>$this->id])
                         ->obtenerListado();
                 } else {
-                    $this->$nombre=$modeloRelacionado->donde(['id'=>$this->$nombre])
+                    $this->$nombre=$modeloRelacionado->donde(['id'=>$this->$columna])
                         ->obtenerUno();
                 }
             }

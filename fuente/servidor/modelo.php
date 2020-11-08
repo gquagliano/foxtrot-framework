@@ -1511,6 +1511,8 @@ class modelo {
         //Preparar campos relacionales para que se almacene el ID de las entidades relacionadas, cuando hayan sido asignados
         $this->asignarCamposRelacionales();
 
+        if($this->consultaValores instanceof entidad) $this->consultaValores->prepararValores();
+
         foreach($this->campos as $nombre=>$campo) {
             if($nombre=='id'||$campo->tipo=='relacional'||$campo->busqueda) continue;
             

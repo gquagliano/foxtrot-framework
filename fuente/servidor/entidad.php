@@ -79,6 +79,15 @@ class entidad {
     }
 
     /**
+     * Método para sobreescribir a ser invocado previo a almacenarse los valores de la instancia, a fin de realizar cualquier preproceso que requiera
+     * la entidad concreta.
+     * @return \entidad
+     */
+    public function prepararValores() {
+        return $this;
+    }
+
+    /**
      * Fabrica y devuelve una instancia del modelo o repositorio de este tipo de entidades.
      * @param \bd $bd Instancia de la interfaz de la base de datos (por defecto, se utilizará la conexión abierta, no se iniciará una nueva instancia).
      * @return \modelo

@@ -1171,7 +1171,9 @@ var editor=new function() {
                 var comp=ui.crearComponente(obj,nombreVista);
 
                 //Eventos
-                if(comp.hasOwnProperty("editor")) comp.editor();
+                comp.editor();
+                comp.insertado();
+                //TODO ¿Deberían invocarse aunque sean heredados?
             });
 
             //Agregar estilos
@@ -1183,7 +1185,7 @@ var editor=new function() {
         };
 
         this.componentesSeleccionados.forEach(function(comp) {
-            fn(comp.obtenerElemento());
+            fn(comp.obtenerContenedor());
         });
 
         prepararComponentesInsertados();

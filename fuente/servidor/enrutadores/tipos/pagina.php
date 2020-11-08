@@ -64,7 +64,7 @@ class pagina extends \tipoSolicitud {
     public function obtenerRuta() {
         if(!$this->ruta) {
             //Ecluir barras o puntos que representen riesgo de seleccionar un archivo distinto
-            if(preg_match('#^([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia)) {
+            if(preg_match('#^/([a-zA-Z0-9_-]+)/?$#',$this->url,$coincidencia)) {
                 $nombre=_raiz.$coincidencia[1];
                 if(file_exists($nombre.'.html')) {
                     $nombre.='.html';

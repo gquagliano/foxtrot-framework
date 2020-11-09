@@ -354,12 +354,25 @@ body.escritorio .btn-secondary:hover,
     background-color: #337ab7;   
     color: #fff !important;
 }
+.custom-control-input:focus:not(:checked)~.custom-control-label::before {
+    border-color: #ced4da;
+}
 .custom-switch .custom-control-input:checked~.custom-control-label::before {
     background-color: #aecbe4;
 }
 .custom-switch .custom-control-input:checked~.custom-control-label::after {
     border-color: #357ab7;
     background-color: #347ab7;
+}
+.custom-checkbox .custom-control-input:focus~.custom-control-label::before,
+.custom-radio .custom-control-input:focus~.custom-control-label::before,
+.custom-switch .custom-control-input:focus~.custom-control-label::after {
+    border-color: #347ab7;
+}
+.custom-checkbox .custom-control-input:focus:checked~.custom-control-label::before,
+.custom-radio .custom-control-input:focus:checked~.custom-control-label::before,
+.custom-switch .custom-control-input:focus:checked~.custom-control-label::after {
+    border-color: #3b3e40;
 }
 
 /*

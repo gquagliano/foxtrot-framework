@@ -1420,7 +1420,7 @@ class modelo {
 
         if($operacion=='actualizar') {
             $sql.=' SET ';
-            $sql.=$this->construirCamposInsercionActualizacion($parametros,$tipos);
+            $sql.=$this->construirCamposInsercionActualizacion($operacion,$parametros,$tipos);
         }
 
         if(count($this->consultaCondiciones)) {
@@ -1516,7 +1516,7 @@ class modelo {
 
         $sql='INSERT INTO #__'.$this->nombre.' SET ';
 
-        $sql.=$this->construirCamposInsercionActualizacion($parametros,$tipos,false);
+        $sql.=$this->construirCamposInsercionActualizacion('insertar',$parametros,$tipos,false);
         
         $this->sql=$sql;
         $this->parametros=$parametros;
@@ -1545,7 +1545,7 @@ class modelo {
      * Construye la porción SQL que contiene los campos a insertar o actualizar.
      * @return string
      */
-    protected function construirCamposInsercionActualizacion(&$parametros,&$tipos,$alias=true) {
+    protected function construirCamposInsercionActualizacion($operacion,&$parametros,&$tipos,$alias=true) {
         $campos=[];
         $camposAfectados=[];
         $valores=[];
@@ -1553,7 +1553,7 @@ class modelo {
         //Preparar campos relacionales para que se almacene el ID de las entidades relacionadas, cuando hayan sido asignados
         $this->asignarCamposRelacionales();
 
-        if($this->consultaValores instanceof entidad) $this->consultaValores->prepararValores();
+        if($this->consultaValores instanceof entidad) $this->consultaValores->prepararValores($operacion);
 
         foreach($this->campos as $nombre=>$campo) {
             if($nombre=='id'||$campo->tipo=='relacional'||$campo->busqueda) continue;

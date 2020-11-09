@@ -16,12 +16,23 @@ defined('_inc') or exit;
 class entidad {
     /**
      * @var string $tipoModelo Tipo del modelo de datos (asignar `modelo::class`).
-     * @var int $id ID.
-     * @var int $e Baja lógica (`1` = Registro *e*liminado).
+     * @var bool $omitirFechas Establecer a `true` para omitir la creación y el mantenimiento de los campos de fecha.
      */
     protected $tipoModelo;
+    public static $omitirFechas=false;
+
+    /**
+     * @var int $id ID.
+     * @var int $e Baja lógica (`1` = Registro *e*liminado).
+     * @var int $fecha_alta Fecha de alta, en tiempo Epoch.
+     * @var int $fecha_actualizacion Fecha de alta, en tiempo Epoch.
+     * @var int $fecha_baja Fecha de alta, en tiempo Epoch.
+     */
     public $id;
     public $e;
+    public $fecha_alta;
+    public $fecha_actualizacion;
+    public $fecha_baja;
 
     /**
      * Constructor.
@@ -71,7 +82,8 @@ class entidad {
 
     /**
      * Método para sobreescribir a ser invocado tras asignarse las propiedades de la instancia, a fin de realizar cualquier postproceso que requiera
-     * la entidad concreta.
+     * la entidad concreta.  
+     * En caso de sobreescribir el método, generalmente *debe* invocarse `parent::procesarValores()`.
      * @return \entidad
      */
     public function procesarValores() {
@@ -80,10 +92,17 @@ class entidad {
 
     /**
      * Método para sobreescribir a ser invocado previo a almacenarse los valores de la instancia, a fin de realizar cualquier preproceso que requiera
-     * la entidad concreta.
+     * la entidad concreta.  
+     * En caso de sobreescribir el método, generalmente *debe* invocarse `parent::prepararValores($operacion)`.
+     * @param string $operacion Operación en curso: `insertar` o `actualizar`
      * @return \entidad
      */
-    public function prepararValores() {
+    public function prepararValores($operacion) {
+        if(!self::$omitirFechas) {
+            if($operacion=='insertar') $this->fecha_alta=time();
+            if($this->e) $this->fecha_baja=time();
+            $this->fecha_actualizacion=time();
+        }
         return $this;
     }
 
@@ -176,6 +195,21 @@ class entidad {
             'id'=>(object)[],
             'e'=>(object)['oculto'=>true]
         ];
+
+        if(!static::$omitirFechas) {
+            $campos->fecha_alta=(object)[
+                'tipo'=>'entero(6)',
+                'indice'=>true
+            ];
+            $campos->fecha_actualizacion=(object)[
+                'tipo'=>'entero(6)',
+                'indice'=>true
+            ];
+            $campos->fecha_baja=(object)[
+                'tipo'=>'entero(6)',
+                'indice'=>true
+            ];
+        }
 
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {

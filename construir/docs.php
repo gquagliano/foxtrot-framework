@@ -388,11 +388,7 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
         }
 
         if($i==0) {
-            $salida.='### `'.$nombre;
-            if(count($comentario->bloques)<=1) {
-                $salida.='('.$cadenaParametros().')';
-            }
-            $salida.='`';
+            $salida.='### `'.$nombre.='('.$cadenaParametros().')`';
             if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
             $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL.PHP_EOL;
         } else {
@@ -533,10 +529,10 @@ function procesarPhp($archivo,$comentarios) {
     foreach($vars as $var) {
         if(!$var->clase) continue;
 
-        $nombre=trim($var->variable,'$');
+        $nombre=trim(trim($var->variable,'$'));
 
         //Buscar propiedad (asumimos que es la única clase del archivo)
-        if(!preg_match('/(public\s+?|private\s+?|protected\s+?|var\s+?)?(static\s+?)?\$(.+?)\s*?(;|=)/',$codigo,$coincidencia)) continue;
+        if(!preg_match('/(public\s+?|private\s+?|protected\s+?|var\s+?)?(static\s+?)?\$'.$nombre.'\s*?(;|=)/',$codigo,$coincidencia)) continue;
 
         if(trim($coincidencia[1])=='private') continue; //No documentamos privadas        
         

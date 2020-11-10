@@ -130,6 +130,7 @@ var componenteDesplegable=function() {
 
         var propClave=this.propiedad(null,"propiedadClave"),
             propValor=this.propiedad(null,"propiedadEtiqueta"),
+            valor=this.campo.valor(),
             valorInicial=this.propiedad(null,"valor"),
             t=this,
             fn=function(clave,valor) {
@@ -165,8 +166,13 @@ var componenteDesplegable=function() {
             });
         }
 
-        //Establecer valor inicial
-        if(valorInicial) this.valor(valorInicial);
+        if(valor) {
+            //Reesstablecer valor
+            this.valor(valor);
+        } else if(valorInicial) {
+            //O establecer valor inicial
+            this.valor(valorInicial);
+        }
 
         return this;
     };

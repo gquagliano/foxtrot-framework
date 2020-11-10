@@ -105,6 +105,25 @@ var util=new function() {
         return objeto;
     };
 
+    /**
+     * Asigna el valor a una propiedad anidada dada su ruta separada por puntos. Alias de `this.obtenerPropiedad(objeto,ruta,valor)`.
+     * @param {Object} objeto - Objeto.
+     * @param {string} ruta - Ruta a evaluar.
+     * @param {*} valor - Valor a asignar.
+     */
+    this.asignarPropiedad=function(objeto,ruta,valor) {
+        ruta=ruta.split(".");
+        while(ruta.length>1) {
+            var parte=ruta.shift();
+            if(typeof objeto==="object") {
+                objeto=objeto[parte];
+            } else {
+                break;
+            }
+        }
+        if(typeof objeto==="object"&&ruta.length==1) objeto[ruta[0]]=valor;
+    };
+
     /////TODO Los siguientes métodos se están migrando desde Foxtrot 6. Solo se les asignó un nombre en español, que debe ser definitivo. Se deben terminar de
     /////traducir y se debe corregir la documentación.
 

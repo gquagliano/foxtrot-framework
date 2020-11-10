@@ -187,7 +187,14 @@ var componenteBucle=function() {
             return this.obtenerDatosActualizados();            
         } else {
             //Cuando se asigne un valor, establecer como origen de datos
-            this.establecerDatos(valor);
+
+            var obj=valor;
+
+            //Si tiene asignada una propiedad, tomar solo este elemento desde el valor
+            var propiedad=this.propiedad("propiedad");
+            if(propiedad) obj=util.obtenerPropiedad(obj,propiedad);
+
+            this.establecerDatos(obj);
         }
     };
 
@@ -203,7 +210,13 @@ var componenteBucle=function() {
                 var propiedad=hijo.propiedad(null,"propiedad"),
                     nombre=hijo.obtenerNombre(),
                     valor=hijo.valor();
-                if((propiedad||nombre)&&typeof valor!=="undefined") resultado[indice][propiedad||nombre]=valor;
+                if(typeof valor!=="undefined") {
+                    if(propiedad) {
+                        util.asignarPropiedad(resultado[indice],propiedad,valor);
+                    } else if(nombre) {
+                        resultado[indice][nombre]=valor;
+                    }
+                }
                 fn(hijo,indice);
             });
         };

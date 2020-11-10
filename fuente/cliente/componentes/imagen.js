@@ -170,15 +170,13 @@ var componenteImagen=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        if(this.datos) {
-            //Actualizar el origen para todos los tamaños
-            var origen=this.propiedadObj("origen"),
-                t=this;
-            if(origen) origen.porCada(function(tamano,valor) {
-                    var resultado=ui.evaluarExpresion(valor,t.datos);
-                    t.propiedadModificada("origen",resultado,tamano);
-                });
-        }
+        //Actualizar el origen para todos los tamaños
+        var origen=this.propiedadObj("origen"),
+            t=this;
+        if(origen) origen.porCada(function(tamano,valor) {
+                var resultado=ui.evaluarExpresion(valor,t.datos);
+                t.propiedadModificada("origen",resultado,tamano);
+            });
 
         this.clasePadre.actualizar.call(this);
         return this;

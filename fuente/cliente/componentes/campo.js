@@ -203,13 +203,15 @@ var componenteCampo=function() {
         //Sincronizar el editor con el campo, si corresponde
         var sincronizarTinymce=this.campo&&this.tinymce&&typeof tinyMCE!=="undefined";
         if(sincronizarTinymce) {
-            if(typeof valor!=="undefined") {
-                //Tras establecer el valor
-                this.obtenerTinymce().setContent(valor);
-            } else {
-                //También al leer el valor
-                tinyMCE.triggerSave();
-            }
+            try {
+                if(typeof valor!=="undefined") {
+                    //Tras establecer el valor
+                        this.obtenerTinymce().setContent(valor);
+                } else {
+                    //También al leer el valor
+                    tinyMCE.triggerSave();
+                }
+            } catch {}
         }
 
         return this.clasePadre.valor.call(this,valor);
@@ -223,7 +225,7 @@ var componenteCampo=function() {
         ui.obtenerInstanciaModulo("tinymce").crear({
             target:this.campo,
             language:"es",
-            plugins:"table paste pagebreak lists advlist link image imagetools contextmenu spellchecker",
+            plugins:"table paste lists advlist link image imagetools contextmenu spellchecker",
             menubar:false,
             statusbar:false,
             toolbar:"undo redo | bold italic | link | bullist numlist"

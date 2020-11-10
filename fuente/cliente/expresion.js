@@ -94,7 +94,7 @@ function expresion(expr) {
     var buscarPropiedad=function(objeto,nombre) {
         nombre=analizarObjeto(nombre);
 
-        if(objeto&&(typeof nombre==="string"||typeof nombre==="number")) {
+        if(typeof objeto!=="undefined"&&(typeof nombre==="string"||typeof nombre==="number")) {
             var elem=objeto[nombre];
             //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
             if(typeof elem==="function") return elem.bind(objeto);
@@ -117,7 +117,7 @@ function expresion(expr) {
         
         var pila=[],
             uitlimoObjeto=null,
-            objeto=null,
+            objeto,
             bufer="",
             argumentos=[],
             enCadena=false,
@@ -151,7 +151,7 @@ function expresion(expr) {
                 } else if(caracter=="?") {
                     ternarioCondicion=!!buscarPropiedad(objeto,bufer);
                     uitlimoObjeto=objeto;
-                    objeto=null;
+                    objeto=undefined;
                     bufer="";
                 } else if(caracter==":") {
                     if(ternarioCondicion) {
@@ -159,12 +159,12 @@ function expresion(expr) {
                         break;
                     }
                     uitlimoObjeto=objeto;
-                    objeto=null;
+                    objeto=undefined;
                     bufer="";
                 } else if(caracter=="[") {
                     pila.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
-                    objeto=null;
+                    objeto=undefined;
                     bufer="";
                 } else if(caracter=="]") {
                     uitlimoObjeto=objeto;
@@ -175,13 +175,13 @@ function expresion(expr) {
                 } else if(caracter=="(") {
                     pila.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
-                    objeto=null;
+                    objeto=undefined;
                     bufer="";
                     argumentos=[];
                 } else if(caracter==",") {
                     argumentos.push(buscarPropiedad(objeto,bufer));
                     uitlimoObjeto=objeto;
-                    objeto=null;
+                    objeto=undefined;
                     bufer="";
                 } else if(caracter==")") {
                     if(bufer!="") argumentos.push(buscarPropiedad(objeto,bufer));

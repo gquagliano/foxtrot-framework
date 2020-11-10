@@ -30,7 +30,7 @@ class controlador {
         $this->nombre=$nombre;
 
         //Si es una clase pública, asignar instancia de la versión privada en $privado
-        if(preg_match('/\\publico\\'.$nombre.'$/',$clase)) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
+        if(preg_match('/\\\\publico\\\\'.$nombre.'$/',$clase)) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
 
         //Inicializar comunicación con el cliente
         if(!$this->cliente) $this->cliente=new cliente();

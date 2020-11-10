@@ -1516,11 +1516,15 @@ var componente=new function() {
             if(/^[\d\.]+$/.test(manejador)) {
                 resultadoLocal=manejador.indexOf(".")>=0?parseFloat(manejador):parseInt(manejador);
             } else {
+                resultadoLocal=manejador;
                 var comando=null,
-                    p=manejador.indexOf(":");
-                if(p>0) {
-                    comando=manejador.substring(0,p);
-                    manejador=manejador.substring(p+1);
+                    coincidencia=manejador.match(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl):(.+)/);                
+                if(coincidencia) {
+                    comando=coincidencia[1];
+                    manejador=coincidencia[2];
+                } else {
+                    //Corregir \: (ejemplo enviar\:test -> enviar:test, sin tomarlo como comando)
+                    manejador=manejador.replace(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl)\:/,"$1:");
                 }
 
                 var vista=ui.obtenerInstanciaVista(this.nombreVista),

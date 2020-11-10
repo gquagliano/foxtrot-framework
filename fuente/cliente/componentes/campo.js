@@ -16,6 +16,7 @@ var componenteCampo=function() {
     var t=this;
     
     this.componente="campo";
+    this.tinymce=false;
 
     /**
      * Propiedades de Campo.
@@ -194,6 +195,17 @@ var componenteCampo=function() {
     };
 
     /**
+     * Devuelve o establece el valor del campo.
+     * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
+     * @returns {(*|undefined)}
+     */
+    this.valor=function(valor) {
+        //Guardar editor, si corresponde (por algún motivo no se está sincronizando con el campo automáticamente)
+        if(this.campo&&this.tinymce&&typeof tinyMCE!=="undefined") tinyMCE.triggerSave();
+        return this.clasePadre.valor.call(this,valor);
+    };
+
+    /**
      * Carga y configura el editor de texto.
      * @returns {componente}
      */
@@ -201,11 +213,12 @@ var componenteCampo=function() {
         ui.obtenerInstanciaModulo("tinymce").crear({
             target:this.campo,
             language:"es",
-            plugins:"table paste pagebreak list advlist link image imagetools contextmenu spellchecker",
+            plugins:"table paste pagebreak lists advlist link image imagetools contextmenu spellchecker",
             menubar:false,
             statusbar:false,
             toolbar:"undo redo | bold italic | link | bullist numlist"
         });
+        this.tinymce=true;
         return this;
     };
 
@@ -214,7 +227,8 @@ var componenteCampo=function() {
      * @returns {componente}
      */
     this.removerTinymce=function() {
-        //TODO
+        if(this.tinymce&&typeof tinymce!=="undefined") tinymce.get(this.campo.atributo("id")).remove();
+        this.tinymce=false;
         return this;
     };
 };

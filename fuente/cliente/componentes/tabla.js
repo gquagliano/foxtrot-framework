@@ -226,8 +226,9 @@ var componenteTabla=function() {
         var fn=function(comp,indice) {
             comp.obtenerHijos().forEach(function(hijo) {
                 var propiedad=hijo.propiedad(null,"propiedad"),
+                    nombre=hijo.obtenerNombre(),
                     valor=hijo.valor();
-                if(propiedad&&typeof valor!=="undefined") resultado[indice][propiedad]=valor;
+                if((propiedad||nombre)&&typeof valor!=="undefined") resultado[indice][propiedad||nombre]=valor;
                 fn(hijo,indice);
             });
         };

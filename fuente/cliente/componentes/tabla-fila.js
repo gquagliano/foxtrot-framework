@@ -57,7 +57,8 @@ var componenteFilaTabla=function() {
             };
         })(indice);
 
-        nuevo.establecerDatos(obj);
+        nuevo.establecerDatos(obj)
+            .establecerValores(obj,true);
         nuevo.indice=indice;
         nuevo.autogenerado=true;
         nuevo.obtenerElemento().agregarClase("autogenerado");

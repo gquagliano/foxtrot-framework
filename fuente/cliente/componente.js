@@ -1282,17 +1282,16 @@ var componente=new function() {
     /**
      * Devuelve o establece el valor del componente.
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
-     * @returns {(*|undefined)}
+     * @returns {(componente|*)}
      */
     this.valor=function(valor) {
         if(this.campo) {
-            if(typeof valor==="undefined") {
-                return this.campo.valor();
-            } else {
-                this.campo.valor(valor);
-                if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
-            }
+            if(typeof valor==="undefined") return this.campo.valor();
+            
+            this.campo.valor(valor);
+            if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
         }
+        return this;
     };
 
     ////Editor de texto WYSIWYG

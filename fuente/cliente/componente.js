@@ -1280,17 +1280,17 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve o establece el valor del componente.
+     * Devuelve o establece el valor del componente. Si el componente no es un campo, devolverá `null`.
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
-     * @returns {(componente|*)}
+     * @returns {(componente|null|*)}
      */
     this.valor=function(valor) {
-        if(this.campo) {
-            if(typeof valor==="undefined") return this.campo.valor();
+        if(!this.campo) return null;
+
+        if(typeof valor==="undefined") return this.campo.valor();
             
-            this.campo.valor(valor);
-            if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
-        }
+        this.campo.valor(valor);
+        if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
         return this;
     };
 

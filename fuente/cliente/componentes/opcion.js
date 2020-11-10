@@ -67,6 +67,12 @@ var componenteAlternar=function() {
         this.campo=this.elemento.querySelector("input");
         this.elementoEditable=this.elemento.querySelector("label");
 
+        //Regenerar los ID de los elementos cada vez que se inicializa, ya que puede estar duplicado (por ejemplo cuando se lo inserta en un bucle, 
+        //una tabla o si se clona el componente por cualuqier otro motivo)
+        var id=this.id+"-"+ui.generarId();
+        this.campo.atributo("id",id);
+        this.elementoEditable.atributo("for",id);
+
         this.clasePadre.inicializar.call(this);
         return this;
     };

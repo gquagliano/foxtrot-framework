@@ -1917,19 +1917,22 @@ var componente=new function() {
     /**
      * Establece los valores de todos los componentes cuyos nombres coincidan con las propiedades del objeto.
      * @param {Object} valores - Pares nombre/valor a asignar.
-     * @returns {\Componente}
+     * @param {boolean} [inclusoOcultos=false] - Asignar componentes ocultos también.
+     * @returns {componente}
      */
-    this.establecerValores=function(valores) {
+    this.establecerValores=function(valores,inclusoOcultos) {
+        if(typeof inclusoOcultos==="undefined") inclusoOcultos=false;
+
         var hijos=this.obtenerHijos();
 
         hijos.forEach(function(hijo) {   
             var nombre=hijo.obtenerNombre();
-            if(nombre&&valores.hasOwnProperty(nombre)&&!hijo.esComponenteOculto()) {
+            if(nombre&&valores.hasOwnProperty(nombre)&&(inclusoOcultos||!hijo.esComponenteOculto())) {
                 hijo.valor(valores[nombre]);
             }
             
             //Continuar la búsqueda en forma recursiva
-            hijo.establecerValores(valores);
+            hijo.establecerValores(valores,inclusoOcultos);
         });
 
         return this;
@@ -1937,7 +1940,7 @@ var componente=new function() {
 
     /**
      * Limpia los valores de todos los componentes con nombre que desciendan de este componente.
-     * @returns {\Componente}
+     * @returns {componente}
      */
     this.limpiarValores=function() {
         this.obtenerHijos().forEach(function(hijo) {   

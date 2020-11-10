@@ -94,4 +94,24 @@ class util {
         $minutos=str_pad(round(abs($min)-abs($horas*60)),2,'0',STR_PAD_LEFT);
         return $horas.':'.$minutos;
     }
+
+    /**
+     * Dado un listado de objetos (incluso entidades) o arrays asociativos, devuelve un listado conteniendo los valores de la propiedad especificada de cada uno.
+     * @param array|object $listado Listado a procesar.
+     * @param string $propiedad Nombre de la propiedad (o clave, si `$listado` contiene arrays asociativos).
+     * @return array
+     */
+    public static function extraerPropiedad($listado,$propiedad) {
+        $resultado=[];
+        if(is_array($listado)) {
+            foreach($listado as $item) {
+                if(is_object($item)) {
+                    $resultado[]=$item->$propiedad;
+                } elseif(is_array($item)) {
+                    $resultado[]=$item[$propiedad];
+                }
+            }
+        }
+        return $resultado;
+    }
 }

@@ -106,7 +106,7 @@ var util=new function() {
     };
 
     /**
-     * Asigna el valor a una propiedad anidada dada su ruta separada por puntos. Alias de `this.obtenerPropiedad(objeto,ruta,valor)`.
+     * Asigna el valor a una propiedad anidada dada su ruta separada por puntos.
      * @param {Object} objeto - Objeto.
      * @param {string} ruta - Ruta a evaluar.
      * @param {*} valor - Valor a asignar.

@@ -1061,6 +1061,7 @@ class modelo {
                     foreach($listado as $entidad) {
                         //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                         if($entidad===null) continue;
+                        if(is_array($entidad)) $entidad=(object)$entidad;
 
                         $entidad->$columna=$miId;
                         

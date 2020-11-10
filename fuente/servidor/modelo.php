@@ -59,6 +59,7 @@ class modelo {
     protected $consultaSeleccionarEliminados=false;
     protected $consultaIncluirOcultos=false;
     protected $consultaBloquear=false;
+    protected $consultaLimpiarRelacionados=true;
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -172,7 +173,8 @@ class modelo {
                 'consultaProcesarRelaciones1n'=>$this->consultaProcesarRelaciones1n,
                 'consultaOmitirRelacionesCampos'=>$this->consultaOmitirRelacionesCampos,
                 'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
-                'consultaIncluirOcultos'=>$this->consultaIncluirOcultos
+                'consultaIncluirOcultos'=>$this->consultaIncluirOcultos,
+                'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados
             ]);
             //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
 
@@ -181,7 +183,7 @@ class modelo {
 
     /**
      * Método de uso interno.
-     * @private
+     * @ignore
      */
     public function configurar($arr) {
         foreach($arr as $clave=>$valor) $this->$clave=$valor;
@@ -404,6 +406,26 @@ class modelo {
      */
     public function omitirRelacionesUnoAMuchos() {
         $this->consultaProcesarRelaciones1n=false;
+        return $this;
+    }
+
+    /**
+     * Al actualizar una fila, preservará las filas relacionadas en campos 1:N que no se incluyan en el listado. Esto significa que, con cada consulta, solo se actualizarán y
+     * se agregarán las nuevas relaciones, pero nunca se eliminarán. Por defecto, esto está desactivado.
+     * @return \modelo
+     */
+    public function preservarRelacionados() {
+        $this->consultaLimpiarRelacionados=false;
+        return $this;
+    }
+
+    /**
+     * Al actualizar una fila, se eliminarán las filas relacionadas en campos 1:N que no existan en el listado. Esto significa que, con cada consulta, solo se preservarán
+     * las relaciones que estén explícitamente asignadas a la entidad. Este es el comportamiento por defecto.
+     * @return \modelo
+     */
+    public function limpiarRelacionados() {
+        $this->consultaLimpiarRelacionados=true;
         return $this;
     }
 
@@ -986,7 +1008,7 @@ class modelo {
      */
     public function ejecutarConsultasRelacionadas() {
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional'&&($campo->relacion!='1:1'||$campo->relacion!='1:0')) { //Las relaciones uno a muchos se procesarán en otra etapa
+            if($campo->tipo=='relacional'&&($campo->relacion=='1:1'||$campo->relacion=='1:0')) { //Las relaciones uno a muchos se procesarán en otra etapa
                 //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                 $entidad=$this->consultaValores->$nombre;
                 if($entidad===null) continue;
@@ -1023,25 +1045,39 @@ class modelo {
     public function ejecutarConsultasRelacionadasUnoAMuchos() {
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&$campo->relacion=='1:n') {
-                $listado=$this->consultaValores->$nombre;
-                if(!is_array($listado)) continue;
-
                 //Cuando se inserte o actualice con las relaciones desactivadas, ignorar
                 if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) continue;
+
+                $ids=[];
 
                 $nombreModelo=$campo->modelo;
                 $modelo=$this->fabricarModelo($nombreModelo);
                 $columna=$campo->columna;
+                $miId=$this->obtenerId();
 
-                foreach($listado as $entidad) {
-                    //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
-                    if($entidad===null) continue;
+                $listado=$this->consultaValores->$nombre;
+                if(is_array($listado)) {
 
-                    $entidad->$columna=$this->ultimoId;
-                    
-                    $modelo->reiniciar()                
-                        ->establecerValores($entidad)
-                        ->guardar();
+                    foreach($listado as $entidad) {
+                        //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
+                        if($entidad===null) continue;
+
+                        $entidad->$columna=$miId;
+                        
+                        $modelo->reiniciar()                
+                            ->establecerValores($entidad)
+                            ->guardar();
+
+                        $ids[]=$modelo->obtenerId();
+                    }
+                }
+
+                //Remover elementos que no estén en el listado
+                if($this->consultaLimpiarRelacionados) {
+                    $modelo->reiniciar()
+                        ->donde([$columna=>$miId])
+                        ->dondeNoEn('id',$ids)
+                        ->eliminar();
                 }
             }
         }

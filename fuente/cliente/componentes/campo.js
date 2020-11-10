@@ -200,8 +200,18 @@ var componenteCampo=function() {
      * @returns {(*|undefined)}
      */
     this.valor=function(valor) {
-        //Guardar editor, si corresponde (por algún motivo no se está sincronizando con el campo automáticamente)
-        if(this.campo&&this.tinymce&&typeof tinyMCE!=="undefined") tinyMCE.triggerSave();
+        //Sincronizar el editor con el campo, si corresponde
+        var sincronizarTinymce=this.campo&&this.tinymce&&typeof tinyMCE!=="undefined";
+        if(sincronizarTinymce) {
+            if(typeof valor!=="undefined") {
+                //Tras establecer el valor
+                this.obtenerTinymce().setContent(valor);
+            } else {
+                //También al leer el valor
+                tinyMCE.triggerSave();
+            }
+        }
+
         return this.clasePadre.valor.call(this,valor);
     };
 
@@ -227,9 +237,19 @@ var componenteCampo=function() {
      * @returns {componente}
      */
     this.removerTinymce=function() {
-        if(this.tinymce&&typeof tinymce!=="undefined") tinymce.get(this.campo.atributo("id")).remove();
+        var obj=this.obtenerTinymce();
+        if(obj) obj.remove();
         this.tinymce=false;
         return this;
+    };
+
+    /**
+     * Devuelve la instancia de TinyMCE.
+     * @returns {(Object|null)}
+     */
+    this.obtenerTinymce=function() {
+        if(!this.tinymce||typeof tinymce==="undefined") return null;
+        return tinymce.get(this.campo.atributo("id"));
     };
 };
 

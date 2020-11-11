@@ -147,7 +147,7 @@ class abmc extends asistente {
         $this->rutaVistas=_vistasAplicacion.$this->ruta;
         $this->rutaJs=_controladoresClienteAplicacion.$this->ruta;
         $this->rutaPhp=_controladoresServidorAplicacion.$this->nombreControlador.'.pub.php'; //Por defecto, mismo nombre
-        $this->rutaModelo=_modeloAplicacion.$this->nombreModelo.'.php';
+        $this->rutaModelo=_modeloAplicacion.$this->rutaModelo.$this->nombreModelo.'.php';
 
         if(!file_exists($this->rutaVistas)) mkdir($this->rutaVistas,0755,true);
         if(!file_exists($this->rutaJs)) mkdir($this->rutaJs,0755,true);
@@ -169,9 +169,12 @@ class abmc extends asistente {
 
     private function validarOpciones($opc) {
         if(!$opc->modelo) exit; //En el buen uso del sistema, este parámetro nunca debería faltar ya que es un desplegable
-        $this->nombreModelo=$opc->modelo;
+
+        $partes=\util::separarRuta($opc->modelo);
+        $this->rutaModelo=$partes->ruta;
+        $this->nombreModelo=$partes->nombre;
         
-        $this->claseModelo='\\aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\'.$this->nombreModelo;
+        $this->claseModelo='\\aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\'.str_replace('/','\\',$this->rutaModelo).$this->nombreModelo;
         if(!class_exists($this->claseModelo)) exit; //En el buen uso del sistema, esto no debería suceder ya que se toma del desplegable
 
         $c=$this->claseModelo;
@@ -248,7 +251,7 @@ class abmc extends asistente {
         $id=str_replace('/','-',$this->ruta.$nombre).'-';
 
         foreach($this->modelo->obtenerCampos() as $nombreCampo=>$campo) {
-            if($nombreCampo=='e'||$nombreCampo=='id') continue;
+            if($nombreCampo=='e'||$nombreCampo=='id'||$nombreCampo=='fecha_alta'||$nombreCampo=='fecha_actualizacion'||$nombreCampo=='fecha_baja') continue;
 
             $etiqueta=$campo->etiqueta?$campo->etiqueta:ucfirst(str_replace('_',' ',$nombreCampo));
 
@@ -330,7 +333,7 @@ class abmc extends asistente {
         $requeridos=[];
         $sql='';
         foreach($this->modelo->obtenerCampos() as $nombre=>$campo) {
-            if($nombre=='e'||$nombre=='id') continue;
+            if($nombre=='e'||$nombre=='id'||$nombre=='fecha_alta'||$nombre=='fecha_actualizacion'||$nombre=='fecha_baja') continue;
             if($campo->requerido) $requeridos[]='\''.$nombre.'\'';
             if(preg_match('/cadena/',$campo->tipo)) $sql.=' or t.`'.$nombre.'` like @filtroParcial';
         }

@@ -106,9 +106,9 @@ class modelo {
                 }
             }
 
-            if($this->consultaProcesarRelaciones) {
-                //Asignar valores existentes en la consulta
-                foreach($this->consultaRelaciones as $relacion) {
+            //Asignar valores existentes en la consulta
+            foreach($this->consultaRelaciones as $relacion) {
+                if($relacion->campo&&($relacion->siempre||$this->consultaProcesarRelaciones)) {
                     $campo=$relacion->campo;
                     $obj->$campo=$relacion->modelo->fabricarEntidad($fila);
                     //Si no hubo coincidencias, mantener el campo nulo
@@ -324,15 +324,18 @@ class modelo {
 
     /**
      * Establece una relación con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
-     * @param string $campo Campo a relacionar.
+     * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
      * @param string $tipo Tipo de relación (`1:0`, `1:1`, `1:N`)
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
      * @param string $condicion Condición, como SQL.
      * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @param bool $relacionarSiempre Siempre realizar la relación, aunque se haya solicitado omitirlas. Este parámetro en general debe ser `true` para relaciones agregadas
+     * manualmente, desde el código fuente, y será siempre `false` para las relaciones automáticas (estas últimas siempre respetarán las instrucciones de omitir
+     * o procesar relaciones).
      * @return \modelo
      */
-    public function relacionar($campo,$tipo,$modelo,$alias,$condicion,$parametros=null) {
+    public function relacionar($campo,$tipo,$modelo,$alias,$condicion,$parametros=null,$relacionarSiempre=true) {
         if(is_string($modelo)) $modelo=$this->fabricarModelo($modelo);
 
         if($alias) $modelo->establecerAlias($alias);
@@ -342,48 +345,58 @@ class modelo {
             'modelo'=>$modelo,
             'condicion'=>$condicion,
             'parametros'=>$parametros,
-            'campo'=>$campo
+            'campo'=>$campo,
+            'siempre'=>$relacionarSiempre
         ];
         return $this;
     }
 
     /**
      * Establece una relación 1:1 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
-     * @param string $campo Campo a relacionar.
+     * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
      * @param string $condicion Condición, como SQL.
      * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @param bool $relacionarSiempre Siempre realizar la relación, aunque se haya solicitado omitirlas. Este parámetro en general debe ser `true` para relaciones agregadas
+     * manualmente, desde el código fuente, y será siempre `false` para las relaciones automáticas (estas últimas siempre respetarán las instrucciones de omitir
+     * o procesar relaciones).
      * @return \modelo
      */
-    public function relacionarUnoAUno($campo,$modelo,$alias,$condicion,$parametros=null) {
-        return $this->relacionar($campo,'1:1',$modelo,$alias,$condicion,$parametros);
+    public function relacionarUnoAUno($campo,$modelo,$alias,$condicion,$parametros=null,$relacionarSiempre=true) {
+        return $this->relacionar($campo,'1:1',$modelo,$alias,$condicion,$parametros,$relacionarSiempre);
     }
 
     /**
      * Establece una relación 1:0 con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
-     * @param string $campo Campo a relacionar.
+     * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
      * @param string $condicion Condición, como SQL.
      * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @param bool $relacionarSiempre Siempre realizar la relación, aunque se haya solicitado omitirlas. Este parámetro en general debe ser `true` para relaciones agregadas
+     * manualmente, desde el código fuente, y será siempre `false` para las relaciones automáticas (estas últimas siempre respetarán las instrucciones de omitir
+     * o procesar relaciones).
      * @return \modelo
      */
-    public function relacionarUnoAUnoNulo($campo,$modelo,$alias,$condicion,$parametros=null) {
-        return $this->relacionar($campo,'1:0',$modelo,$alias,$condicion,$parametros);
+    public function relacionarUnoAUnoNulo($campo,$modelo,$alias,$condicion,$parametros=null,$relacionarSiempre=true) {
+        return $this->relacionar($campo,'1:0',$modelo,$alias,$condicion,$parametros,$relacionarSiempre);
     }
 
     /**
      * Establece una relación 1:N con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
-     * @param string $campo Campo a relacionar.
+     * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
      * @param string $condicion Condición, como SQL.
      * @param array $parametros Listado de parámetros [nombre=>valor] utilizados en la condición.
+     * @param bool $relacionarSiempre Siempre realizar la relación, aunque se haya solicitado omitirlas. Este parámetro en general debe ser `true` para relaciones agregadas
+     * manualmente, desde el código fuente, y será siempre `false` para las relaciones automáticas (estas últimas siempre respetarán las instrucciones de omitir
+     * o procesar relaciones).
      * @return \modelo
      */
-    public function relacionarUnoAMuchos($campo,$modelo,$alias,$condicion,$parametros=null) {
-        return $this->relacionar($campo,'1:n',$modelo,$alias,$condicion,$parametros);
+    public function relacionarUnoAMuchos($campo,$modelo,$alias,$condicion,$parametros=null,$relacionarSiempre=true) {
+        return $this->relacionar($campo,'1:n',$modelo,$alias,$condicion,$parametros,$relacionarSiempre);
     }
 
     /**
@@ -1403,7 +1416,8 @@ class modelo {
                     $campo->relacion,
                     $obj,
                     $obj->alias,
-                    $condicion
+                    $condicion,
+                    false
                 );
 
                 //Avanzar recursivamente                
@@ -1423,8 +1437,8 @@ class modelo {
      * @return \modelo
      */
     public function construirCamposYRelaciones(&$campos,&$relaciones) {
-        if($this->consultaProcesarRelaciones) {
-            foreach($this->consultaRelaciones as $relacion) {
+        foreach($this->consultaRelaciones as $relacion) {
+            if($relacion->siempre||$this->consultaProcesarRelaciones) {
                 if($relacion->tipo=='1:n') continue; //Las relaciones 1:n no se realizarán con join
 
                 if(in_array($relacion->campo,$this->consultaOmitirRelacionesCampos)) continue;

@@ -88,25 +88,26 @@ function expresion(expr) {
         if(nombre==="falso"||nombre==="f") return false;
         if(nombre==="n"||nombre==="nulo") return null;
         if(typeof nombre==="undefined") return null;
-        return nombre;
     }.bind(this);
 
     var buscarPropiedad=function(objeto,nombre) {
-        nombre=analizarObjeto(nombre);
+        var valor=analizarObjeto(nombre);
 
-        if(typeof objeto!=="undefined"&&(typeof nombre==="string"||typeof nombre==="number")) {
-            var elem=objeto[nombre];
+        //Si nombre era una cadena, un número o un literal no definido, buscar propiedad/elemento de objeto
+        if(typeof objeto!=="undefined"&&(typeof valor==="string"||(typeof valor==="undefined"&&typeof nombre==="string")||typeof nombre==="number")) {
+            var elem=objeto[valor||nombre];
             //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
             if(typeof elem==="function") return elem.bind(objeto);
             return expresion.analizarValor(elem);
         }
 
-        if(typeof nombre==="string") {
-            if(this.variables.hasOwnProperty(nombre)) return expresion.analizarValor(this.variables[nombre]);
-            if(this.funciones.hasOwnProperty(nombre)) return expresion.analizarValor(this.funciones[nombre]);
+        //Si nombre era un literal no definido, buscar función o variable
+        if(typeof valor==="undefined"&&typeof nombre==="string") {
+            if(this.variables.hasOwnProperty(valor||nombre)) return expresion.analizarValor(this.variables[valor||nombre]);
+            if(this.funciones.hasOwnProperty(valor||nombre)) return expresion.analizarValor(this.funciones[valor||nombre]);
         }
 
-        return expresion.analizarValor(nombre);
+        return expresion.analizarValor(valor);
     }.bind(this);
 
     /**

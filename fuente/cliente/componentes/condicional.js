@@ -66,6 +66,8 @@ var componenteCondicional=function() {
      */
     this.actualizar=function() {
         var condicion=this.procesarEvento("condicion","condicion");
+        //Sin condición, utilizar el valor asignado
+        if(!condicion) condicion=this.valor();
         this.establecerVisibilidad(!!condicion);
         return this.clasePadre.actualizar.call(this);
     };
@@ -85,8 +87,17 @@ var componenteCondicional=function() {
      */
     this.valor=function(valor) {
         if(typeof valor==="undefined") return this.datos;
+        
         //Cuando se asigne un valor, establecer como origen de datos
-        this.establecerDatos(valor);
+
+        var obj=valor;
+
+        //Si tiene asignada una propiedad, tomar solo este elemento desde el valor
+        var propiedad=this.propiedad("propiedad");
+        if(propiedad) obj=util.obtenerPropiedad(obj,propiedad);
+
+        this.establecerDatos(obj);
+        
         return this;
     };
 };

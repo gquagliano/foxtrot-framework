@@ -81,6 +81,27 @@ var componenteEtiqueta=function() {
         this.elemento.establecerTexto(texto);
         return this;
     };
+
+    /**
+     * Establece el valor del componente.
+     * @param {*} [valor] - Valor a establecer.
+     * @returns {(null|componente)}
+     */
+    this.valor=function(valor) {
+        if(typeof valor==="undefined") return this.datos;
+        
+        //Cuando se asigne un valor, establecer como origen de datos
+
+        var obj=valor;
+
+        //Si tiene asignada una propiedad, tomar solo este elemento desde el valor
+        var propiedad=this.propiedad("propiedad");
+        if(propiedad) obj=util.obtenerPropiedad(obj,propiedad);
+
+        this.establecerDatos(obj);
+        
+        return this;
+    };
 };
 
 ui.registrarComponente("etiqueta",componenteEtiqueta,configComponente.clonar({

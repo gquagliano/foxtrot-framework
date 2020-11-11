@@ -88,7 +88,7 @@ var componenteEtiqueta=function() {
      * @returns {(null|componente)}
      */
     this.valor=function(valor) {
-        if(typeof valor==="undefined") return this.datos;
+        if(typeof valor==="undefined") return null;
         
         //Cuando se asigne un valor, establecer como origen de datos
 

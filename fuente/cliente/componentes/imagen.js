@@ -73,34 +73,11 @@ var componenteImagen=function() {
 
         this.img=this.elemento.querySelector("img");
 
-        //Recuperar origen (no se guarda en el JSON)
-        this.recuperarPropiedades();
+        this.img.onerror=function() {
+            this.src=icono;
+        };
 
         this.clasePadre.inicializar.call(this);
-        return this;
-    };
-
-    /**
-     * Recupera desde el DOM los valores de las propiedades.
-     * @returns {Componente}
-     */
-    this.recuperarPropiedades=function() {
-        var tamanos=ui.obtenerTamanosPx();
-
-        //Origen
-        var src=this.img.atributo("src");
-        if(src&&src.substr(0,5)!="data:") this.valoresPropiedades.origen={g:src}; //excluir data:...
-        this.elemento.querySelectorAll("source").porCada(function(i,elem) {
-            var media=elem.atributo("media").match(/:([0-9]+)px/);
-            if(media) {
-                var px=media[1];
-                if(tamanos.hasOwnProperty(px)) {
-                    var src=elem.atributo("srcset");
-                    if(src&&src.substr(0,5)!="data:") t.valoresPropiedades.origen[tamanos[px]]=src; //excluir data:...
-                }
-            }
-        });
-
         return this;
     };
     
@@ -160,9 +137,15 @@ var componenteImagen=function() {
      * Devuelve un objeto con todos los parámetros de configuración.
      */
     this.obtenerPropiedades=function() {
-        //Excluir el origen para evitar que se guarde dos veces el contenido de las imágenes, una en el HTML y de nuevo en el JSON
         var obj=this.valoresPropiedades.clonar();
-        delete obj.origen;
+        if(ui.enModoEdicion()) {
+            //Excluir el origen cuando sea data:...
+            var tamanos=ui.obtenerTamanos();
+            for(var tamano in tamanos) {
+                if(!tamanos.hasOwnProperty(tamano)) continue;
+                if(obj.origen&&obj.origen.hasOwnProperty(tamano)&&obj.origen[tamano]&&obj.origen[tamano].substr(0,5)!="data:") delete obj.origen[tamano];
+            }
+        }            
         return obj;
     };
 

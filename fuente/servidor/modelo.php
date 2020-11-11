@@ -115,7 +115,7 @@ class modelo {
                     if(!$obj->$campo->id) $obj->$campo=null;
                 }
                 //Procesar valores adicionales (recursividad, 1:n)
-                $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones1n);
+                $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones&&$this->consultaProcesarRelaciones1n);
             }
 
             $obj->procesarValores();
@@ -165,7 +165,12 @@ class modelo {
      */
     public function fabricarModelo($modelo,$bd=null,$replicarConfiguracion=true) {   
         if($bd===null) $bd=$this->bd;    
-        $obj=\foxtrot::obtenerInstanciaModelo($modelo,$bd);
+
+        if(class_exists($modelo)) { //Nombre completo de la clase (ej. modelo::class)            
+            $obj=new $modelo($bd);
+        } else {
+            $obj=\foxtrot::obtenerInstanciaModelo($modelo,$bd);
+        }
 
         if($replicarConfiguracion)
             $obj->configurar([
@@ -724,6 +729,7 @@ class modelo {
 
     /**
      * Establece el o los campos por los cuales se agruparán los resultados.
+     * @param string $campos Nombres de los campos. Si el nombre no incluye un alias, se asume de la tabla de esta instancia.
      * @return \modelo
      */
     public function agrupadoPor(...$campos) {
@@ -1537,7 +1543,13 @@ class modelo {
                 $sql.=' GROUP BY ';
 
                 $campos=[];
-                foreach($this->consultaAgrupar as $campo) $campos[]=$this->alias.'.`'.$campo.'`';
+                foreach($this->consultaAgrupar as $campo) {
+                    if(preg_match('/^[a-z0-9A-Z_]$/',$campo)) {
+                        $campos[]=$this->alias.'.`'.$campo.'`';
+                    } else {
+                        $campos[]=$campo;
+                    }
+                }
                 $sql.=implode(',',$campos);
             }
 

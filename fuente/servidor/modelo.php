@@ -923,11 +923,21 @@ class modelo {
     }
 
     /**
-     * Devuelve los valores establecidos para guardar, que pueden haber sido actualizados tras la última consulta (por ejemplo, los IDs tras una inserción.)
+     * Devuelve la entidad con la que se está trabajando.
      * @return mixed
      */
     public function obtenerEntidad() {
         return $this->consultaValores;
+    }
+
+    /**
+     * Establece la entidad. Equivalente a `establecerValores($entidad)`.
+     * @param \entidad $entidad Entidad.
+     * @return mixed
+     */
+    public function establecerEntidad($entidad) {
+        $this->consultaValores=$entidad;
+        return $this;
     }
 
     /**
@@ -1211,6 +1221,27 @@ class modelo {
         $this->consultaOrden=$orden;
 
         return $resultado;
+    }
+
+    /**
+     * Crea una copia de la entidad asignada.
+     * @param string[] $clonarRelaciones Nombres de los campos relacionales cuyas entidades relacionales también se deben clonar. Nótese que esto afectará solo un nivel (no
+     * recursivo).
+     * @return \modelo
+     */
+    public function clonar(...$clonarRelaciones) {
+        $this->consultaValores->id=null;
+        foreach($clonarRelaciones as $campo)
+            if($this->consultaValores->$campo) {
+                if($this->consultaValores->$campo instanceof \entidad) {
+                    $this->consultaValores->$campo->id=null;
+                } elseif(is_array($this->consultaValores->$campo)) {
+                    foreach($this->consultaValores->$campo as $item)   
+                        if(is_object($item)) $item->id=null;
+                }
+            }
+        $this->crear();
+        return $this;
     }
 
     /**

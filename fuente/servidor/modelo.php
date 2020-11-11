@@ -114,9 +114,10 @@ class modelo {
                     //Si no hubo coincidencias, mantener el campo nulo
                     if(!$obj->$campo->id) $obj->$campo=null;
                 }
-                //Procesar valores adicionales (recursividad, 1:n)
-                $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones&&$this->consultaProcesarRelaciones1n);
             }
+
+            //Procesar valores adicionales (recursividad, 1:n)
+            $this->procesarRelaciones($obj,false,$this->consultaProcesarRelaciones&&$this->consultaProcesarRelaciones1n);
 
             $obj->procesarValores();
         }
@@ -1423,6 +1424,7 @@ class modelo {
                     $obj,
                     $obj->alias,
                     $condicion,
+                    null,
                     false
                 );
 

@@ -100,7 +100,8 @@ class modelo {
                 $aliasCampo='__'.$this->alias.'_'.$nombre;
 
                 if($campo->tipo=='relacional') {
-                    if($campo->relacion=='1:n') $obj->$nombre=[];
+                    //Mantener null por defecto
+                    //if($campo->relacion=='1:n') $obj->$nombre=null;
                 } else {
                     $obj->$nombre=$fila->$aliasCampo;
                 }
@@ -478,12 +479,14 @@ class modelo {
     /**
      * Procesa los campos relacionados sobre la instancia especificada luego de haber realizado una consulta con las relaciones desactivadas, o cuando la entidad tenga
      * campos con `@omitir`.
-     * @param \entidad $item Item a procesar.
-     * @param bool $procesarOmitidos Procesar los campos con @omitir.
-     * @param bool $procesar1n Procesar las relaciones 1:n.
+     * @param \entidad $item Item (entidad) a procesar. Si se omite, se procesará la entidad actualmente asignada a la instancia.
+     * @param bool $procesarOmitidos Fuerza el procesamiento de los campos con `@omitir`.
+     * @param bool $procesar1n Procesar las relaciones `1:n`.
      * @return \modelo
      */
-    public function procesarRelaciones($item,$procesarOmitidos=true,$procesar1n=true) {
+    public function procesarRelaciones($item=null,$procesarOmitidos=true,$procesar1n=true) {
+        if(!$item) $item=$this->consultaValores;
+
         //TODO Detectar si el item ya apareció en la ascendencia, lo que daría lugar a un bucle infinito
         //Por el momento se limita por nivel de recursividad
         if(count(debug_backtrace(0))>50) return $this; 
@@ -501,10 +504,7 @@ class modelo {
                     $modelo->donde([
                         $campo->columna=>$item->id
                     ]);
-                    if($campo->orden) {
-                        $orden=explode(' ',$campo->orden);
-                        $modelo->ordenadoPor($orden[0],$orden[1]);
-                    }
+                    if($campo->orden) $modelo->ordenadoPor($campo->orden);
                     $item->$nombre=$modelo->obtenerListado();
                 } else {
                     $columna=$campo->columna;
@@ -894,6 +894,16 @@ class modelo {
      * @return \modelo
      */
     public function ordenadoPor($campo,$orden=null) {
+        //Si presenta un solo argumento, se admite una expresión con múltiples campos
+        if(!$orden) {
+            $partes=explode(',',$campo);
+            foreach($partes as $parte) {
+                $parte=explode(' ',$parte);
+                $this->ordenadoPor($parte[0],$parte[1]);
+            }
+            return $this;
+        }
+
         if($orden) $orden=strtoupper($orden);
         $this->consultaOrden[]=(object)[
             'campo'=>$campo,
@@ -1101,14 +1111,14 @@ class modelo {
 
                         $ids[]=$modelo->obtenerId();
                     }
-                }
 
-                //Remover elementos que no estén en el listado
-                if($this->consultaLimpiarRelacionados) {
-                    $modelo->reiniciar()
-                        ->donde([$columna=>$miId])
-                        ->dondeNoEn('id',$ids)
-                        ->eliminar();
+                    //Remover elementos que no estén en el listado
+                    if($this->consultaLimpiarRelacionados) {
+                        $modelo->reiniciar()
+                            ->donde([$columna=>$miId])
+                            ->dondeNoEn('id',$ids)
+                            ->eliminar();
+                    }
                 }
             }
         }
@@ -1224,21 +1234,34 @@ class modelo {
         $limite=$this->consultaLimite;
         $cantidad=$this->consultaCantidad;
         $orden=$this->consultaOrden;
+        $agrupar=$this->consultaAgrupar;
 
-        $this->consultaColumnas=['COUNT(*) `cantidad`'];
+        if(count($agrupar)) {
+            //Con GROUP BY debemos seleccionar todo para poder contar; no traeremos todos los datos del resultado en este caso
+            $this->consultaColumnas=[$this->alias.'.`id`']; 
+        } else {
+            $this->consultaColumnas=['COUNT(*) `cantidad`'];
+        }
+
         $this->consultaLimite=null;
         $this->consultaCantidad=null;
         $this->consultaOrden=[]; //No es necesario perder tiempo en ordenar
+        $this->agrupadoPor=[];
 
         $this->ejecutarConsulta();
 
-        $resultado=$this->resultado->siguiente()->cantidad;
+        if(count($agrupar)) {
+            $resultado=$this->bd->obtenerNumeroFilas();
+        } else {
+            $resultado=$this->resultado->siguiente()->cantidad;
+        }
 
         //Restaurar parámetros
         $this->consultaColumnas=$columnas;
         $this->consultaLimite=$limite;
         $this->consultaCantidad=$cantidad;
         $this->consultaOrden=$orden;
+        $this->agrupadoPor=$agrupar;
 
         return $resultado;
     }
@@ -1722,7 +1745,7 @@ class modelo {
      * @param mixed $valor Valor a analizar.
      * @return string
      */
-    protected function determinarTipo($valor) { //TODO Es muy específico de PDO, ¿debería estar en la clase bd?
+    protected function determinarTipo($valor) { //TODO Es muy específico de mysqli, ¿debería estar en la clase bd?
         if(is_integer($valor)) return 'i';
         if(is_numeric($valor)||preg_match('/^[0-9]*\.[0-9]+$/',$valor)) return 'd';
         return 's';

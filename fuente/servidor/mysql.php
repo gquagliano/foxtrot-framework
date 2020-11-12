@@ -240,8 +240,12 @@ class bd {
 		$res=null;
 		if(!$this->e->errno) $res=(new resultado)->establecer($query);
 
-		$this->id=$this->e->insert_id;
-		$this->filas=$this->e->affected_rows?$this->e->affected_rows:$this->e->num_rows;
+        $this->id=$this->e->insert_id;
+        if($res) {
+            $this->filas=$res->obtenerNumeroFilas();
+        } else {
+            $this->filas=$this->e->affected_rows>0?$this->e->affected_rows:$this->e->num_rows;
+        }
 		$this->error=$this->e->errno;
 		$this->descripcionError=$this->e->error;
 
@@ -280,7 +284,7 @@ class bd {
 		$this->stmt->execute();
 
 		$this->id=$this->stmt->insert_id;
-		$this->filas=$this->stmt->affected_rows?$this->stmt->affected_rows:$this->stmt->num_rows;
+		$this->filas=$this->stmt->affected_rows>0?$this->stmt->affected_rows:$this->stmt->num_rows;
 		
 		if($this->stmt->error) {
 			$this->error=$this->stmt->errno;
@@ -288,8 +292,12 @@ class bd {
 			return $this;
 		}
 
-		return (new resultado)
-			->establecerStmt($this->stmt);
+		$res=(new resultado)
+            ->establecerStmt($this->stmt);
+            
+        if($res) $this->filas=$res->obtenerNumeroFilas();
+
+        return $res;
 	}
 
 	/**

@@ -40,6 +40,7 @@ class modelo {
     
     protected $consultaColumnas=null;
     protected $consultaCondiciones=[];
+    protected $gruposAbiertos=0;
     protected $consultaAgrupar=[];
     protected $consultaTeniendo=[];
     protected $consultaRelaciones=[];
@@ -218,6 +219,7 @@ class modelo {
     public function reiniciar() {
         $this->consultaColumnas=null;
         $this->consultaCondiciones=[];
+        $this->gruposAbiertos=0;
         $this->consultaAgrupar=[];
         $this->consultaTeniendo=[];
         $this->consultaRelaciones=[];
@@ -521,6 +523,27 @@ class modelo {
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * Inicia un grupo de condiciones (agrupará todas las condiciones que se agreguen a continuación hasta que sea invocado `cerrarGrupo()`).
+     * @return \modelo
+     */
+    public function abrirGrupo() {
+        $this->consultaCondiciones[]='(';
+        $this->gruposAbiertos++;
+        return $this;
+    }
+
+    /**
+     * Cierra un grupo de condiciones abierto previamente con `abrirGrupo()`.
+     * @return \modelo
+     */
+    public function cerrarGrupo() {
+        if($this->gruposAbiertos<1) return $this;
+        $this->consultaCondiciones[]=')';
+        $this->gruposAbiertos--;
         return $this;
     }
 
@@ -1498,6 +1521,9 @@ class modelo {
      * @return \modelo
      */
     protected function construirConsulta($operacion='seleccionar') {
+        //Cerrar grupos abiertos
+        while($this->gruposAbiertos) $this->cerrarGrupo();
+
         if($operacion=='insertar') {
             return $this->construirConsultaInsercion();
         } elseif($operacion!='actualizar') {
@@ -1544,14 +1570,30 @@ class modelo {
             }
 
             $condiciones='';
+            $parentesis=null;
             
-            foreach($this->consultaCondiciones as $condicion) {
+            foreach($this->consultaCondiciones as $i=>$condicion) {
+                if(is_string($condicion)&&($condicion==')'||$condicion=='(')) {
+                    if($i==count($this->consultaCondiciones)-1) {
+                        //La última condición es )
+                        $condiciones.=' )';
+                    } else {
+                        //Establecer para la próxima condición
+                        $parentesis=$condicion;
+                    }
+                    continue;
+                }
+                
+                if($parentesis==')') $condiciones.=' ) ';
                 if($condiciones!='') $condiciones.=' '.$condicion->union.' ';
+                if($parentesis=='(') $condiciones.=' ( ';
                 $condiciones.='( '.$condicion->condicion.' )';
                 foreach($condicion->parametros as $parametro) {
                     $parametros[]=$parametro;
                     $tipos[]=$this->determinarTipo($parametro);
                 }
+
+                $parentesis=null;
             }
 
             $sql.=' ( '.$condiciones.' ) ';

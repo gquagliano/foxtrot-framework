@@ -65,9 +65,13 @@ var componenteCondicional=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        var condicion=this.procesarEvento("condicion","condicion");
+        var condicion;
         //Sin condición, utilizar el valor asignado
-        if(!condicion) condicion=this.valor();
+        if(!this.propiedad("condicion")) {
+            condicion=this.valor();
+        } else {
+            condicion=this.procesarEvento("condicion","condicion");
+        }
         this.establecerVisibilidad(!!condicion);
         return this.clasePadre.actualizar.call(this);
     };

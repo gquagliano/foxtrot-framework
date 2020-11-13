@@ -167,8 +167,77 @@ class entidad {
     }
 
     /**
+     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma ascendente. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
+     * compartan el mismo nombre de campo para la relación padre-hijo.
+     * @param string $campo Nombre del campo relacional.
+     * @return \entidad
+     */
+    public function procesarAscendencia($nombreCampo='superior') {
+        $campos=$this->obtenerCampos();
+        $campo=$campos->$nombreCampo;
+
+        $columna=$campo->columna;
+        $nombreModelo=$campo->modelo;
+
+        if(!$this->$columna) {
+            $this->$nombreCampo=null;
+            return $this;
+        }
+
+        if(!$this->$nombreCampo) {
+            $modelo=\foxtrot::obtenerInstanciaModelo($nombreModelo);
+            $this->$nombreCampo=$modelo->obtenerItem($this->$columna);
+        }
+
+        //Avanzar recursivamente
+        if($this->$nombreCampo) $this->$nombreCampo->procesarAscendencia($nombreCampo);
+
+        return $this;
+    }
+
+    /**
+     * Devuelve la ruta ascendente de relaciones hacia la instancia actual. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
+     * compartan el mismo nombre de campo para la relación padre-hijo.
+     * @param string $campo Nombre del campo relacional.
+     * @param string $asignar Nombre de la propiedad donde asignar el resultado.
+     * @param bool $comoCadena Si es `true` devolverá una cadena; en caso contrario, un array de entidades.
+     * @param callable|string $titulo Si `$comoCadena` es `true`, propiedad a utilizar como título de cada parte de la ruta o función que devuelva el mismo dados la entidad
+     * y el nivel como parámetros.
+     * @param string $union Si `$comoCadena` es `true`, especifica el caracter a utilizar como separador de títulos.
+     * @return string|array
+     */
+    public function obtenerRuta($campo='superior',$asignar=null,$comoCadena=false,$titulo='titulo',$union=' › ') {
+        $this->procesarAscendencia($campo);
+
+        $ruta=[$this];
+        $obj=$this->$campo;
+        while($obj) {
+            $ruta[]=$obj;
+            $obj=$obj->$campo;
+        }
+
+        $ruta=array_reverse($ruta);
+
+        if($comoCadena) {
+            foreach($ruta as $i=>$parte) {
+                if(is_callable($titulo)) {
+                     $tituloParte=call_user_func($titulo,$parte,$i);
+                } else {
+                    $tituloParte=$parte->$titulo;
+                }
+                $ruta[$i]=$tituloParte;
+            }
+            $ruta=implode($union,$ruta);
+        }
+
+        if($asignar) $this->$asignar=$ruta;
+
+        return $ruta;
+    }
+
+    /**
      * Devuelve el listado de campos con la configuración de cada uno.
-     * @return object[] Objeto nombre->parametros.
+     * @return object Objeto nombre->parametros.
      */
     public static function obtenerCampos() {
         //Posibles valores de las etiquetas en los comentarios de las propiedades:

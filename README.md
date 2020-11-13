@@ -38,15 +38,9 @@ Contraseña: admin
 
 ![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Acceso a datos y ORM, completos.
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Ciclo de ejecución de la aplicación y la vista, completos.
+![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Integración de múltiples vistas en una sola página.
-
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación para producción, funcionando (las aplicaciones ya se pueden ejecutar e implementar).
-
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
-
-Ver [Pendientes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Estado-del-proyecto).
+Ver [Estado del proyecto - Pendientes - Funcionalidad futura](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Estado-del-proyecto).
 
 ## Aplicación de ejemplo
 

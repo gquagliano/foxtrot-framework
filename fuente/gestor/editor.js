@@ -487,9 +487,7 @@ var editor=new function() {
 
                 if(ev.target.es({clase:"foxtrot-editor-ignorar"})) return;
                 
-                if(!ev.shiftKey) self.limpiarSeleccion();
-
-                self.alternarSeleccion(this);
+                self.alternarSeleccion(this,ev);
             })
             .eventoFiltrado("contextmenu",{
                 clase:"componente"
@@ -876,16 +874,42 @@ var editor=new function() {
     /**
      * Selecciona el componente, o lo deselecciona si ya se encuentra seleccionado.
      * @param {(Componente|Node|Element)} obj - Objeto a seleccionar.
+     * @param {[MouseEvent]} ev - Evento.
      * @returns {editor}
      */
-    this.alternarSeleccion=function(obj) {
-        var elem=obj;        
-        if(util.esComponente(obj)) elem=obj.obtenerElemento();
+    this.alternarSeleccion=function(obj,ev) {
+        var comp=obj,
+            elem;
+        if(!util.esComponente(obj)) comp=ui.obtenerInstanciaComponente(obj);
+
+        //Seleccionar ascendencia con Ctrl
+        if(typeof ev==="object"&&ev.ctrlKey) {
+            //Cada vez que se ejecuta, seleccionar un nivel más arriba en la ascendencia
+            //Buscar el primer componente seleccionado en el árbol (hacia arriba)
+            var padre=comp;
+            while(!padre.obtenerElemento().es({clase:"foxtrot-seleccionado"})) {
+                padre=padre.obtenerPadre();
+                if(!padre) break;
+            }
+            if(!padre) {
+                //Llegamos hasta el comienzo del árbol sin ninguna selección, seleccionar el padre del componente clickeado
+                padre=comp.obtenerPadre();
+            } else {
+                //Seleccionar el padre del actualmente seleccionado
+                padre=padre.obtenerPadre();
+            }
+            if(padre) comp=padre;
+        }
+        if(typeof ev==="undefined"||!ev.shiftKey) {
+            self.limpiarSeleccion();
+        }
+        
+        var elem=comp.obtenerElemento();
         
         if(elem.es({clase:"foxtrot-seleccionado"})) {
-            this.removerSeleccion(obj);
+            this.removerSeleccion(elem);
         } else {
-            this.establecerSeleccion(obj);
+            this.establecerSeleccion(elem);
         }
 
         return this;
@@ -958,7 +982,9 @@ var editor=new function() {
         } else {
             comp=ui.obtenerInstanciaComponente(obj);
             elem=obj;
-        }       
+        }
+
+        if(!elem.es({clase:"foxtrot-seleccionado"})) return this;
 
         //Evento
         comp.seleccionado(false);

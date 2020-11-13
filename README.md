@@ -1,8 +1,6 @@
-Trabajo en curso y experimentos para el desarrollo de Foxtrot 7. 
-
 **Nota: El framework se encuentra en pleno desarrollo. ¡Pero estamos *a nada* de la primer versión *MVP*!**
 
-### Qué es Foxtrot Framework
+## Qué es Foxtrot Framework
 
 ![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/editor.jpg)
 
@@ -30,7 +28,7 @@ Contraseña: admin
 [![](https://static.twitchcdn.net/assets/favicon-16-2d5d1f5ddd489ee10398.png)](https://www.twitch.tv/gquagliano) *Desarrollo en vivo*  
 [![](https://www.youtube.com/favicon.ico)](https://www.youtube.com/channel/UCd8V_YL-kL-BbqB_koAbfBg/) *Podcast, tutoriales y más*
 
-### Estado
+## Estado
 
 ![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
 
@@ -48,17 +46,19 @@ Contraseña: admin
 
 ![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación para embeber en Cordova, funcionando (las aplicaciones ya se pueden compilar con Cordova y ejecutar en dispositivos).
 
-#### Pendientes
-
 Ver [Pendientes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Estado-del-proyecto).
 
-### Aplicación de ejemplo
+## Aplicación de ejemplo
 
 Se incluye una aplicación de ejemplo demostrando las funciones principales del framework.
 
 [Más información](desarrollo/aplicaciones/ejemplo/README.md).
 
-### Documentación del código fuente
+## Documentación
+
+#### Wiki
+
+https://github.com/gquagliano/experimental-foxtrot-framework/wiki
 
 #### PHP
 
@@ -68,7 +68,7 @@ https://github.com/gquagliano/experimental-foxtrot-framework/wiki/phpdoc-indice
 
 https://github.com/gquagliano/experimental-foxtrot-framework/wiki/jsdoc-indice
 
-### Estructura del proyecto
+#### Estructura del proyecto
 
 `/fuente/` Código fuente del framework.
 
@@ -82,9 +82,9 @@ https://github.com/gquagliano/experimental-foxtrot-framework/wiki/jsdoc-indice
 
 `/construir/` Asistente de construcción o compilación del framework.
 
-### Qué estamos desarrollando
+## Qué estamos desarrollando
 
-### Gestor de aplicaciones y editor visual
+#### Gestor de aplicaciones y editor visual
 
 Un gestor de aplicaciones permite crear vistas, crear controladores, ejecutar los distintos asistentes, gestionar el modelo de datos y acceder al editor en forma interactiva.
 
@@ -100,13 +100,13 @@ El editor también permite configurar visualmente estructuras de control (bucles
 
 [Estructura y guía de desarrollo de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Visi%C3%B3n-general-de-la-estructura-de-los-componentes).
 
-### Estructura de las aplicaciones
+#### Estructura de las aplicaciones
 
 El framework es multi-aplicación, lo que significa que el desarrollador puede trabajar en varias aplicaciones a la vez, y un servidor puede alojar múltiples aplicaciones a la vez, con una única instalación de Foxtrot, simplificando el mantenimiento y las actualizaciones.
 
 [Más información sobre las aplicaciones y su estructura](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Definici%C3%B3n-y-ciclo-de-vida-de-la-aplicaci%C3%B3n).
 
-### API
+#### API
 
 El framework está dividido en cliente y servidor, pero desacoplados: Ambos pueden residir en la misma ubicación (el cliente se descarga desde el mismo servidor web) o separados (por ejemplo, cliente local en una aplicación móvil o de escritorio).
 
@@ -119,10 +119,6 @@ El lado del cliente está compuesto por controladores de cliente y vistas. Cada 
 **Comunicación cliente<->servidor transparente**
 
 El framework permite una comunicación transparente entre controladores del lado del cliente y controladores del lado del servidor. El desarrollador puede invocar un método desde uno hacia el otro como si se tratara de una misma plataforma.
-
-**Automatización**
-
-(Idea/TODO) Posibilidad de construir controladores vinculados al origen de datos automáticamente mediante programación visual o un lenguaje imperativo simple, incluyendo validaciones y llamados a funciones PHP/JS para procesos específicos más complejos.
 
 **Compilación**
 
@@ -146,11 +142,11 @@ Existen diferentes utilidades que se pueden incluir del lado del cliente y/o del
 
 [Más información sobre los módulos y listado de módulos existentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Módulos).
 
-### Colaboraciones
+## Colaboraciones
 
 Toda colaboración es bienvenida. Podés ponerte en contacto con nosotros en contacto@foxtrot.ar para conversar y aclarar todas las dudas acerca del proyecto.
 
-### Más información
+## Más información
 
 contacto@foxtrot.ar  
 www.foxtrot.ar

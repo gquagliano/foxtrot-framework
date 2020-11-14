@@ -169,7 +169,7 @@ class entidad {
     /**
      * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma ascendente. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
      * compartan el mismo nombre de campo para la relación padre-hijo.
-     * @param string $campo Nombre del campo relacional.
+     * @param string $nombreCampo Nombre del campo relacional.
      * @return \entidad
      */
     public function procesarAscendencia($nombreCampo='superior') {
@@ -193,6 +193,36 @@ class entidad {
         if($this->$nombreCampo) $this->$nombreCampo->procesarAscendencia($nombreCampo);
 
         return $this;
+    }
+    
+    /**
+     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma descendente. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
+     * compartan el mismo nombre de campo para la relación padre-hijo.
+     * @param string $nombreCampo Nombre del campo relacional.
+     * @param string $orden Ordenamiento del listado.
+     * @param string $destino Nombre de una propiedad donde almacenar el resultado. No es necesario que sea un campo.
+     * @return array
+     */
+    public function procesarDescendencia($nombreCampo,$orden='`id` asc',$destino=null) {
+        $campos=$this->obtenerCampos();
+        $campo=$campos->$nombreCampo;
+
+        $columna=$campo->columna;
+        $nombreModelo=$campo->modelo;
+
+        $modelo=\foxtrot::obtenerInstanciaModelo($nombreModelo);
+
+        $listado=$modelo
+            ->donde([$columna=>$this->id])
+            ->ordenadoPor($orden)
+            ->obtenerListado();
+
+        if($destino) $this->$destino=$listado;
+
+        //Avanzar recursivamente
+        foreach($listado as $hijo) $hijo->procesarDescendencia($nombreCampo,$orden,$destino);
+
+        return $listado;
     }
 
     /**

@@ -62,24 +62,14 @@ var componenteBucle=function() {
     };
     
     /**
-     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
+     * Establece el origen de datos.
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
      * @returns Componente
      */
     this.establecerDatos=function(obj,actualizar) {
-        if(typeof actualizar==="undefined") actualizar=true;
-
-        var propiedad=this.propiedad(null,"propiedad");
-        if(propiedad) {
-            //Tomar listado de una propiedad específica
-            this.datos=util.obtenerPropiedad(obj,propiedad);
-        } else {
-            this.datos=obj;
-        }
-
-        if(actualizar) this.actualizar();
-
+        //No recursivo, ya que los componentes que contiene se usan solo como plantilla
+        this.clasePadre.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
 
@@ -187,14 +177,7 @@ var componenteBucle=function() {
             return this.obtenerDatosActualizados();            
         } else {
             //Cuando se asigne un valor, establecer como origen de datos
-
-            var obj=valor;
-
-            //Si tiene asignada una propiedad, tomar solo este elemento desde el valor
-            var propiedad=this.propiedad("propiedad");
-            if(propiedad) obj=util.obtenerPropiedad(obj,propiedad);
-
-            this.establecerDatos(obj);
+            this.establecerDatos(valor);
         }
     };
 

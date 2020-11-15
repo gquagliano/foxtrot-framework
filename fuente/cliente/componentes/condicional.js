@@ -83,6 +83,18 @@ var componenteCondicional=function() {
         this.actualizar();
         this.clasePadre.listo.call(this);
     };
+    
+    /**
+     * Establece el origen de datos.
+     * @param {Object} obj - Objeto a asignar.
+     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
+     * @returns Componente
+     */
+    this.establecerDatos=function(obj,actualizar) {
+        //Ignorar propiedad
+        this.clasePadre.establecerDatos.call(this,obj,actualizar,false,true);
+        return this;
+    };
 
     /**
      * Establece el valor del componente.
@@ -93,14 +105,7 @@ var componenteCondicional=function() {
         if(typeof valor==="undefined") return this.datos;
         
         //Cuando se asigne un valor, establecer como origen de datos
-
-        var obj=valor;
-
-        //Si tiene asignada una propiedad, tomar solo este elemento desde el valor
-        var propiedad=this.propiedad("propiedad");
-        if(propiedad) obj=util.obtenerPropiedad(obj,propiedad);
-
-        this.establecerDatos(obj);
+        this.establecerDatos(valor);
         
         return this;
     };

@@ -449,15 +449,25 @@ var componente=new function() {
     };
 
     /**
-     * Establece el origen de datos. El mismo será aplicado a toda la descendencia en forma recursiva.
+     * Establece el origen de datos.
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
+     * @param {boolean} [dispersar=true] - Si es `true`, los datos serán aplicados a toda la descendencia en forma recursiva.
+     * @param {boolean} [ignorarPropiedad=false] - Si es `true` no tendrá en cuenta el valor de la propiedad *Propiedad* (`propiedad`) del componente.
      * @returns {componente}
      */
-    this.establecerDatos=function(obj,actualizar) {
+    this.establecerDatos=function(obj,actualizar,dispersar,ignorarPropiedad) {
         if(typeof actualizar==="undefined") actualizar=true;
+        if(typeof dispersar==="undefined") dispersar=true;
 
-        this.datos=obj;
+        var propiedad=null;
+        if(!ignorarPropiedad) propiedad=this.propiedad(null,"propiedad");
+        if(propiedad) {
+            //Tomar listado de una propiedad específica
+            this.datos=util.obtenerPropiedad(obj,propiedad);
+        } else {
+            this.datos=obj;
+        }
 
         this.obtenerHijos().forEach(function(hijo) {
             hijo.establecerDatos(obj,actualizar);

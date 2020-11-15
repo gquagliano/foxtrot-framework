@@ -31,9 +31,13 @@ var componenteArbol=function() {
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",
                 adaptativa:false
             },
-            expandido:{
-                etiqueta:"Expandido",
-                tipo:"logico",
+            estadoInicial:{
+                etiqueta:"Estado inicial",
+                tipo:"opciones",
+                opciones:{
+                    "normal":"Normal",
+                    "expandido":"Todo expandido"
+                },
                 ayuda:"Esta propiedad afecta solo al estado inicial del componente.",
                 adaptativa:false
             },
@@ -41,6 +45,18 @@ var componenteArbol=function() {
                 etiqueta:"Propiedad",
                 adaptativa:false,
                 ayuda:"Nombre de la propiedad que contiene la descendencia."
+            }
+        },
+        "Eventos":{
+            expandido:{
+                etiqueta:"Item expandido",
+                adaptativa:false,
+                evento:true
+            },
+            contraido:{
+                etiqueta:"Item contraído",
+                adaptativa:false,
+                evento:true
             }
         }
     };
@@ -90,10 +106,37 @@ var componenteArbol=function() {
     };
 
     /**
+     * Devuelve un listado de las rutas de los items abiertos.
+     * @returns string[]
+     */
+    this.obtenerItemsAbiertos=function() {
+        var resultado=[];
+        if(!this.listado) return resultado;
+        this.listado.querySelectorAll(".arbol-item.expandido").porCada(function(i,elem) {
+            resultado.push(elem.dato("ruta"));
+        });
+        return resultado;
+    };
+
+    /**
+     * Abre los ítems especificados dadas sus rutas.
+     * @param {string[]} rutas 
+     * @returns {componenteArbol}
+     */
+    this.abrirItems=function(rutas) {
+        rutas.porCada(function(i,ruta) {
+            t.expandir(ruta);
+        });
+        return this;
+    };
+
+    /**
      * Actualiza el componente.
      * @returns {Componente}
      */
     this.actualizar=function() {
+        var rutasAbiertas=this.obtenerItemsAbiertos();        
+
         //Limpiar filas autogeneradas
         if(this.listado) {
             this.listado.remover();
@@ -115,6 +158,8 @@ var componenteArbol=function() {
             this.mostrarMensajeSinDatos();
         } else {
             this.generarItems();
+            //Volver a abrir los items
+            this.abrirItems(rutasAbiertas);
         }
 
         return this;
@@ -190,7 +235,7 @@ var componenteArbol=function() {
      * @param {number} [nivel=0] - Nivel actual.
      * @param {string[]} [ruta] - Ruta actual.
      * @param {string} [propiedad] - Nombre de la propiedad que contiene la descendencia. Por defecto, utilizará el valor de *Propiedad* (`propiedad`).
-     * @param {boolean} [expandido] - Crear expandido. Por defecto, utilizará el valor de *Expandido* (`expandido`).
+     * @param {boolean} [expandido] - Crear expandido. Por defecto, utilizará el valor de *Estado inicial* (`estadoInicial`).
      * @returns {Componente}
      */
     this.generarItems=function(listado,elementoPadre,nivel,ruta,propiedad,expandido) {
@@ -199,7 +244,7 @@ var componenteArbol=function() {
         if(typeof nivel==="undefined") nivel=0;
         if(typeof ruta==="undefined") ruta=[];
         if(typeof propiedad==="undefined") propiedad=this.propiedad("propiedad");
-        if(typeof expandido==="undefined") expandido=this.propiedad("expandido");
+        if(typeof expandido==="undefined") expandido=this.propiedad("estadoInicial")=="expandido";
 
         var ul=documento.crear("<ul class='arbol-listado'>")
             .anexarA(elementoPadre);
@@ -341,6 +386,11 @@ var componenteArbol=function() {
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.agregarClase("expandido");
+
+        var evento=document.createEvent("Event");
+            evento.ruta=ruta;
+        this.procesarEvento("expandido","expandido",null,evento);
+
         return this;
     };
 
@@ -366,6 +416,11 @@ var componenteArbol=function() {
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.removerClase("expandido");
+
+        var evento=document.createEvent("Event");
+            evento.ruta=ruta;
+        this.procesarEvento("contraido","contraido",null,evento);
+
         return this;
     };
 
@@ -391,6 +446,13 @@ var componenteArbol=function() {
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.alternarClase("expandido");
+
+        var tipo="expandido",
+            evento=document.createEvent("Event");
+            evento.ruta=ruta;
+        if(!elem.es({clase:"expandido"})) tipo="contraido";
+        this.procesarEvento(tipo,tipo,null,evento);
+
         return this;
     };
 
@@ -490,10 +552,15 @@ var componenteArbol=function() {
         //Ejecutar evento
         evento.ruta=t.obtenerRuta(li);
         var retorno=t.procesarEvento("click","click",null,evento);
-        console.log(retorno)
-
+        
         //Si no hubo un manejador definido, alternar
-        if(retorno!==true) li.alternarClase("expandido");
+        if(retorno!==true) {
+            li.alternarClase("expandido");
+
+            var tipo="expandido";
+            if(!li.es({clase:"expandido"})) tipo="contraido";
+            this.procesarEvento(tipo,tipo,null,evento);
+        }
 
         return true;
     };

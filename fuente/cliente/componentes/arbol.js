@@ -326,6 +326,18 @@ var componenteArbol=function() {
      * @returns {componenteArbol}
      */
     this.expandir=function(ruta) {
+        if(typeof ruta==="undefined") {
+            this.listado.querySelectorAll("li").agregarClase("expandido");
+            return this;
+        }
+        
+        if(ruta==="-1") {
+            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+                elem.agregarClase("expandido");
+            });
+            return this;
+        }
+
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.agregarClase("expandido");
@@ -339,6 +351,18 @@ var componenteArbol=function() {
      * @returns {componenteArbol}
      */
     this.contraer=function(ruta) {
+        if(typeof ruta==="undefined") {
+            this.listado.querySelectorAll("li").removerClase("expandido");
+            return this;
+        }
+        
+        if(ruta==="-1") {
+            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+                elem.removerClase("expandido");
+            });
+            return this;
+        }
+
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.removerClase("expandido");
@@ -352,6 +376,18 @@ var componenteArbol=function() {
      * @returns {componenteArbol}
      */
     this.alternar=function(ruta) {
+        if(typeof ruta==="undefined") {
+            this.listado.querySelectorAll("li").alternarClase("expandido");
+            return this;
+        }
+        
+        if(ruta==="-1") {
+            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+                elem.alternarClase("expandido");
+            });
+            return this;
+        }
+
         var elem=this.obtenerItem(ruta);
         if(!elem) return this;
         elem.alternarClase("expandido");

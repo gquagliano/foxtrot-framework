@@ -566,8 +566,6 @@ body.foxtrot-trabajando #foxtrot-cargando {
 }
 .foxtrot-gestor .arbol .directorio {
     padding-left: 2.4rem;
-    height: 2rem;
-    overflow: hidden;
     position: relative;
 }
 .foxtrot-gestor .arbol .directorio::before {
@@ -578,9 +576,6 @@ body.foxtrot-trabajando #foxtrot-cargando {
     left: .65rem;
     top: 2rem;
     bottom: .5rem;
-}
-.foxtrot-gestor .arbol .directorio.abierto {
-    height: auto;
 }
 .foxtrot-gestor .arbol .directorio-etiqueta {
     margin-left: -2.4rem;
@@ -600,7 +595,7 @@ body.foxtrot-trabajando #foxtrot-cargando {
     margin-right: 1.1rem;
     vertical-align: sub;
 }
-.foxtrot-gestor .arbol .abierto>.directorio-etiqueta::before {
+.foxtrot-gestor .arbol .expandido>.directorio-etiqueta::before {
     background-image: url(img/carpeta-abierta.png);
 }
 .foxtrot-gestor .arbol .vista {

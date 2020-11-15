@@ -95,9 +95,9 @@ var gestor=new function() {
      */
     this.desplegarVistas=function(etiqueta) {
         var elem=etiqueta.padre();
-        elem.alternarClase("abierto");
+        elem.alternarClase("expandido");
 
-        var abierto=elem.es({clase:"abierto"});
+        var abierto=elem.es({clase:"expandido"});
 
         //Almacenar en la configuración
         var obj=obtenerConfig(),

@@ -1,0 +1,27 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+.arbol .componente-arbol-plantilla {
+    display: none !important;
+}
+.arbol ul {
+    margin: 0;
+    position: relative;
+}
+.arbol li {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+}
+/* TODO: Animaciones de expansión/cierre */
+.arbol li>ul {
+    display: none;
+}
+.arbol li.expandido>ul {
+    display: block;
+}

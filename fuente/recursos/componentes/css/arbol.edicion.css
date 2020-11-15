@@ -1,0 +1,14 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+.foxtrot-bordes .arbol>.componente-arbol-plantilla {
+    min-height: 1em;
+    outline: dashed 1px rgba(255,0,0,0.2);
+}
+.foxtrot-mostrar-invisibles .arbol>.componente-arbol-plantilla {
+    display: block !important;
+}

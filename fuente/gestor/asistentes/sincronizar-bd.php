@@ -76,7 +76,7 @@ class sincronizarBd extends asistente {
 
         $clasesCreadas=[];
         foreach(gestor::obtenerModelos() as $modelo) {
-            if(!$filtrar||$filtrar==$modelo->nombre);
+            if($filtrar&&$filtrar!=$modelo->nombre) continue;
             $clase=$modelo->clase;
             $obj=new $clase;
             $creada=$this->procesar($obj);
@@ -91,7 +91,17 @@ class sincronizarBd extends asistente {
 
     protected function obtenerTipo($modelo,$campo,$parametros) {
         $tipo=$parametros->tipo;
-        $predeterminado=isset($parametros->predeterminado)?'\''.$parametros->predeterminado.'\'':'NULL';
+
+        $predeterminado=null;
+        if(isset($parametros->predeterminado)) $predeterminado=$parametros->predeterminado;
+        if($predeterminado===true) {
+            //Etiqueta presente sin valor
+            $predeterminado='\'\'';
+        } elseif($predeterminado===null) {
+            $predeterminado='NULL';
+        } elseif(preg_match('/[^0-9\.]/',$predeterminado)) {
+            $predeterminado='\''.$predeterminado.'\'';
+        }
 
         if($tipo=='texto') return 'TEXT';
 
@@ -108,7 +118,7 @@ class sincronizarBd extends asistente {
         }
         
         if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
-            $long=$coincidencias[2]?$coincidencias[2]:3;
+            $long=$coincidencias[2]?$coincidencias[2]:4;
             $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',5=>'INT',6=>'INT',7=>'INT',8=>'BIGINT'];
             return $tipos[$long].'('.$long.')'.
                 (trim($coincidencias[3])=='sin signo'?' UNSIGNED':'').
@@ -132,17 +142,23 @@ class sincronizarBd extends asistente {
     protected function compararCampo($parametros,$campoBd) {
         $tipo=$parametros->tipo;
 
-        //Cambió el valor predeterminado
-        if($parametros->predeterminado!=$campoBd->Default&&floatval($parametros->predeterminado)!=floatval($campoBd->Default)) return false;
+        $predeterminado=null;
+        if(isset($parametros->predeterminado)) $predeterminado=$parametros->predeterminado;
+        if($predeterminado===true) $predeterminado=''; //Etiqueta presente sin valor = cadena vacía
+        
+        if($parametros->busqueda) {
+            if(!preg_match('/varchar\(255\)/i',$campoBd->Type)) return false;
+            $predeterminado='';
+        }
 
         if($tipo=='texto'&&!preg_match('/text/i',$campoBd->Type)) return false;
         
         if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)&&!preg_match('/varchar\('.$coincidencias[1].'\)/i',$campoBd->Type)) return false;
         
         if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
-            $long=$coincidencias[2]?$coincidencias[2]:3;
+            $long=$coincidencias[2]?$coincidencias[2]:4;
             $tipos=[1=>'tinyint',2=>'smallint',3=>'mediumint',4=>'int',8=>'bigint'];
-            if(!preg_match('/'.$tipos[$long].'/i',$campoBd->Type)||
+            if(!preg_match('/^'.$tipos[$long].'/i',$campoBd->Type)||
                 ($coincidencias[2]&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
                 (trim($coincidencias[3])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
         }
@@ -152,11 +168,16 @@ class sincronizarBd extends asistente {
             (trim($coincidencias[2])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))
         )) return false;
 
-        if(preg_match('/logico/',$tipo,$coincidencias)&&!preg_match('/tinyint/i',$campoBd->Type)) return false;
+        if(preg_match('/logico/',$tipo,$coincidencias)) {
+            if(!preg_match('/tinyint/i',$campoBd->Type)) return false;
+            $predeterminado=$predeterminado!='1'&&$predeterminado!='true'?'0':'1';
+        }
 
         if(preg_match('/fecha/',$tipo,$coincidencias)&&!preg_match('/datetime/i',$campoBd->Type)) return false;
 
         if(preg_match('/busqueda/',$tipo,$coincidencias)&&!preg_match('/varchar/i',$campoBd->Type)) return false;
+        
+        if($predeterminado!==$campoBd->Default) return false;
 
         return true;
     }

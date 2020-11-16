@@ -57,8 +57,8 @@ class entidad {
 
     /**
      * Asigna los elementos o propiedades provistos en las propiedades de esta instancia que cuenten con la etiqueta @publico. Cuando se reciban datos desde el cliente,
-     * debe utilizarse este método en lugar de establecerValores().
-     * @param object|array $valores Valores a asignar en las propiedades de la instancia.
+     * debe utilizarse este método en lugar de `establecerValores()`.
+     * @param object|array $valores Valores a asignar en las propiedades de esta instancia.
      * @return \entidad
      */
     public function establecerValoresPublicos($valores) {
@@ -167,7 +167,8 @@ class entidad {
     }
 
     /**
-     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma ascendente. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
+     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma ascendente. Este método sirve para procesar explícitamente relaciones
+     * recursivas, las cuales son omitidas por el modelo ante el riesgo de una relación cíclica infinita, o relaciones no recursivas pero donde todos los modelos
      * compartan el mismo nombre de campo para la relación padre-hijo.
      * @param string $nombreCampo Nombre del campo relacional.
      * @return \entidad
@@ -196,7 +197,8 @@ class entidad {
     }
     
     /**
-     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma descendente. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
+     * Procesa una cadena de relaciones recursivamente desde la instancia actual en forma descendente. Este método sirve para procesar explícitamente relaciones
+     * recursivas, las cuales son omitidas por el modelo ante el riesgo de una relación cíclica infinita, o relaciones no recursivas pero donde todos los modelos
      * compartan el mismo nombre de campo para la relación padre-hijo.
      * @param string $nombreCampo Nombre del campo relacional.
      * @param string $orden Ordenamiento del listado.
@@ -204,6 +206,11 @@ class entidad {
      * @return array
      */
     public function procesarDescendencia($nombreCampo,$orden='`id` asc',$destino=null) {
+        if(!$this->id) {
+            if($destino) $this->$destino=null;
+            return null;
+        }
+
         $campos=$this->obtenerCampos();
         $campo=$campos->$nombreCampo;
 
@@ -226,8 +233,9 @@ class entidad {
     }
 
     /**
-     * Devuelve la ruta ascendente de relaciones hacia la instancia actual. Este método sirve para relaciones recursivas, o no recursivas pero donde todos los modelos
-     * compartan el mismo nombre de campo para la relación padre-hijo.
+     * Devuelve la ruta ascendente de relaciones hacia la instancia actual.Este método sirve para procesar explícitamente relaciones recursivas, las cuales son
+     * omitidas por el modelo ante el riesgo de una relación cíclica infinita, o relaciones no recursivas pero donde todos los modelos compartan el mismo nombre de
+     * campo para la relación padre-hijo.
      * @param string $campo Nombre del campo relacional.
      * @param string $asignar Nombre de la propiedad donde asignar el resultado.
      * @param bool $comoCadena Si es `true` devolverá una cadena; en caso contrario, un array de entidades.

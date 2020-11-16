@@ -1642,8 +1642,8 @@ class modelo {
                 $campos=[];
                 foreach($this->consultaOrden as $orden) {
                     if($orden->orden) {
-                        $campo=$orden->campo;
-                        if(strpos($campo,'.')===false) $campo=$this->alias.'.`'.$orden->campo.'`';
+                        $campo=trim($orden->campo,'\'` ');
+                        if(strpos($campo,'.')===false) $campo=$this->alias.'.`'.$campo.'`';
                         $campos[]=$campo.' '.$orden->orden;
                     } else {
                         $campos[]=$orden->campo;

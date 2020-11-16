@@ -177,7 +177,7 @@ var componenteArbol=function() {
 
         this.itemSinDatos=document.crear("div")
             .agregarClase("autogenerado item-sin-datos")
-            .anexarA(this.elementoPadre)
+            .anexarA(this.elemento)
             .establecerHtml(texto);
 
         return this;

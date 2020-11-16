@@ -254,14 +254,16 @@ var componenteArbol=function() {
 
         listado.forEach(function(obj,indice) {
             var li=documento.crear("<li class='arbol-item'>")
-                .anexarA(ul);
+                    .anexarA(ul),
+                contenedor=documento.crear("<div class='contenedor arbol-componentes-item'>")
+                    .anexarA(li);
             if(expandido) li.agregarClase("expandido");
 
             var rutaItem=ruta.concat(indice).join(".");
             li.dato("ruta",rutaItem);
 
             t.obtenerHijos().forEach(function(hijo) {
-                if(!t.autogenerado) t.generarItem(hijo,li,obj,nivel,rutaItem,indice);
+                if(!t.autogenerado) t.generarItem(hijo,contenedor,obj,nivel,rutaItem,indice);
             });
 
             //Si tienen la propiedad con la descendencia, avanzar recursivamente

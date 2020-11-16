@@ -23,7 +23,7 @@ var controlador=new function() {
      * @var {string} controladorServidor - Nombre del controlador de servidor. Por defecto, coincide con el nombre propio.
      * @var {Object} componentes - Componentes por nombre.
      * @var {componente[]} instanciasComponentes - Listado de todos los componentes.
-     * @var {Object} datos - Valores a informar por `obtenerValores()`. Estos valores serán recuperados automáticamente por `ui.obtenerValores()`, por lo que,
+     * @var {Object} valores - Valores a informar por `obtenerValores()`. Estos valores serán recuperados automáticamente por `ui.obtenerValores()`, por lo que,
      * entre otros casos, serán enviados automáticamente al servidor en eventos con prefijo `enviar:`.
      * @var {aplicacion} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
      */

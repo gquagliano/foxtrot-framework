@@ -380,6 +380,9 @@ body.foxtrot-trabajando #foxtrot-cargando {
 .foxtrot-propiedad .form-control,.foxtrot-propiedad .custom-select {
     flex: 1;
 }
+.foxtrot-evento input {
+    flex: 12 !important;
+}
 
 /* Menú contextual (sobreescribir todos los estilos para intentar evitar que los modifique el CSS de la aplicación) */
 

@@ -290,6 +290,8 @@ var editor=new function() {
                         <option>apl:</option>\
                         </select>");
                     fila.anexar(campoComandos);
+
+                    fila.agregarClase("foxtrot-evento");
                     
                     campoComandos.evento("change",function(ev) {
                         fn2();

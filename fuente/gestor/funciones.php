@@ -131,6 +131,16 @@ function reemplazarVarJson($codigo,$json) {
         '\\'=>'\\\\\\',
         '\''=>'\\\''
     ],$json);
+
+    //Romper en múltiples líneas si es muy largo
+    $resto=$json;
+    $json='';
+    while(strlen($resto)>5000) {
+        $json.=substr($resto,0,5000).'\\'.PHP_EOL;
+        $resto=substr($resto,5000);
+    }
+    if($resto) $json.=$resto;
+
     return preg_replace('/var jsonFoxtrot\s*?=\s*?\'(.+?)\'\s*?;/s','var jsonFoxtrot=\''.$json.'\';',$codigo);
 }
 

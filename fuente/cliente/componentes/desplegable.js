@@ -81,10 +81,7 @@ var componenteDesplegable=function() {
         
         //Establecer opciones a partir de la propiedad opciones, si está asignada
         var valor=this.propiedad(null,"opciones");
-        if(valor) {
-            valor=ui.evaluarExpresion(valor);
-            if(typeof valor==="object") this.establecerOpciones(valor);
-        }
+        if(typeof valor==="object"&&valor!==null) this.establecerOpciones(valor);
     };
 
     /**

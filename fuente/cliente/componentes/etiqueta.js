@@ -41,8 +41,8 @@ var componenteEtiqueta=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        var propiedad=this.propiedad(null,"propiedad"),
-            contenido=this.propiedad(null,"contenido"),
+        var propiedad=this.propiedad(false,"propiedad"),
+            contenido=this.propiedad(false,"contenido"),
             resultado="";
 
         if(this.datos) {

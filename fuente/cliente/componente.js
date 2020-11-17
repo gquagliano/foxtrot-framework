@@ -629,7 +629,7 @@ var componente=new function() {
 
         var t=this;
 
-        this.valoresPropiedades.porCada(function(clave,valor) {
+        /*this.valoresPropiedades.porCada(function(clave,valor) {
             //Únicamente para valores no adaptativos
             if(typeof valor!=="string"||!valor.trim()||!/[\{\}]+/.test(valor)) return;
 
@@ -642,7 +642,7 @@ var componente=new function() {
 
             //Aplicar el nuevo valor
             t.propiedadModificada(clave,resultado,null,valor);
-        });
+        });*/
 
         return this;
     };
@@ -1176,26 +1176,45 @@ var componente=new function() {
      * @param {string} tamano - Tamaño de pantalla (xl, lg, md, sm, xs). Especificar xs, g o NULL trabajará con el valor global.
      * @param {string} nombre - Nombre de la propiedad.
      * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
-     */
-    /**
+     *//**
      * Establece o devuelve el valor de una propiedad en forma global.
      * @param {string} nombre - Nombre de la propiedad.
      * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
+     *//**
+     * Establece o devuelve el valor de una propiedad.
+     * @param {boolean} evaluarExpresiones - Determina si se deben evaluar, o no, las expresiones.
+     * @param {string} tamano - Tamaño de pantalla (xl, lg, md, sm, xs). Especificar xs, g o NULL trabajará con el valor global.
+     * @param {string} nombre - Nombre de la propiedad.
+     * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
+     *//**
+     * Establece o devuelve el valor de una propiedad en forma global.
+     * @param {boolean} evaluarExpresiones - Determina si se deben evaluar, o no, las expresiones.
+     * @param {string} nombre - Nombre de la propiedad.
+     * @param {*} [valor] - Valor a asignar. Si se omite, devolverá el valor de `nombre`.
      */
-    this.propiedad=function(a,b,c) {
-        var tamano=null,nombre,valor;
+    this.propiedad=function(a,b,c,d) {
+        var evaluar=true,
+            tamano=null,
+            nombre,
+            valor;
+        if(typeof a==="boolean") {
+            evaluar=a;
+            a=b;
+            b=c;
+            c=d;
+        }
         if(typeof c!=="undefined") {
             //Tres argumentos
             tamano=a;
             nombre=b;
             valor=c;
         } else {
-            //Dos argumentos
             if(a===null||a=="g"||a=="xl"||a=="lg"||a=="md"||a=="sm"||a=="xs") {
-                //Pero el primero es el tamaño
+                //Dos argumentos pero el primero es el tamaño
                 tamano=a;
                 nombre=b;
             } else {
+                //Uno o dos argumentos
                 nombre=a;
                 valor=b;
             }
@@ -1214,19 +1233,26 @@ var componente=new function() {
         if(util.esIndefinido(valor)) {
             if(!this.valoresPropiedades.hasOwnProperty(nombre)) return null;
 
-            var obj=this.valoresPropiedades[nombre];
+            var obj=this.valoresPropiedades[nombre],
+                resultado=null;
 
-            if(!adaptativa) return obj;
-
-            if(obj.hasOwnProperty(tamano)) return obj[tamano];
-
-            var tamanos=["g","sm","md","lg","xl"],
-                i=tamanos.indexOf(tamano)+1; //ya sabemos que el tamaño actual no existe, probamos el siguiente
-            if(i<0) return null;
-            for(;i<tamanos.length;i++) 
-                if(obj.hasOwnProperty(tamano)) return obj[tamano];
+            if(!adaptativa) {
+                resultado=obj;
+            } else if(obj.hasOwnProperty(tamano)) {
+                resultado=obj[tamano];
+            } else {
+                var tamanos=["g","sm","md","lg","xl"],
+                    i=tamanos.indexOf(tamano)+1; //ya sabemos que el tamaño actual no existe, probamos el siguiente
+                if(i<0) return null;
+                for(;i<tamanos.length;i++) 
+                    if(obj.hasOwnProperty(tamano)) {
+                        resultado=obj[tamano];
+                        break;
+                    }
+            }
             
-            return null;
+            if(typeof resultado==="string") resultado=evaluar?ui.evaluarExpresion(resultado):resultado;
+            return resultado;
         }
 
         var anterior;
@@ -1273,7 +1299,7 @@ var componente=new function() {
 
         propiedadesCombinadas.porCada(function(grupo,propiedades) {
             propiedades.porCada(function(nombre,propiedad) {
-                propiedad.valor=t.propiedad(tamano,nombre);
+                propiedad.valor=t.propiedad(false,tamano,nombre);
             });
         });
 
@@ -1423,7 +1449,7 @@ var componente=new function() {
     this.procesarCadenaEvento=function(nombre,evento) {
         if(typeof evento==="undefined") evento=null;
 
-        var valor=this.propiedad(null,nombre);
+        var valor=this.propiedad(false,nombre);
         if(!valor) return null;
         if(typeof valor!=="string") return valor;
 

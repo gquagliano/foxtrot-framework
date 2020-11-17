@@ -103,7 +103,7 @@ var componenteBuscador=function() {
                 t.cerrarResultados();
             } else if(ev.which==13) { //Intro
                 t.procesarIntro(ev);
-            } else if(t.resultados.length&&(ev.which==38||ev.which==40)) { //Arriba/Abajo
+            } else if(t.resultados&&t.resultados.length&&(ev.which==38||ev.which==40)) { //Arriba/Abajo
                 t.moverSeleccion(ev);
             }
         });
@@ -152,7 +152,7 @@ var componenteBuscador=function() {
                 t.resultados=resultado;
 
                 if(t.seleccionarPrimerElemento||valor) { //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
-                    if(resultado.length) t.establecerValor(0);
+                    if(resultado&&resultado.length) t.establecerValor(0);
                     return;
                 }
 
@@ -200,7 +200,7 @@ var componenteBuscador=function() {
      * @returns {string|null}
      */
     var obtenerValorItem=function(propiedad,obj) {
-        var valor=this.propiedad(propiedad);
+        var valor=this.propiedad(false,propiedad);
 
         //Predeterminados
         if(!valor) valor={propiedadValor:"id",propiedadEtiqueta:"titulo"}[propiedad];
@@ -387,7 +387,7 @@ var componenteBuscador=function() {
     this.listo=function() {
         if(ui.enModoEdicion()) return;
         
-        var valor=ui.evaluarExpresion(this.propiedad("valor"));
+        var valor=this.propiedad("valor");
         if(valor) this.valor(valor);
         return this;
     };

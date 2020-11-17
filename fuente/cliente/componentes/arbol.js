@@ -428,8 +428,8 @@ var componenteArbol=function() {
 
     /**
      * Alterna el estado de un nivel dada su ruta.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol completo. Para alternar todo
-     * el primer nivel, especificar `-1`.
+     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá/contraerá el árbol
+     * completo. Para alternar todo el primer nivel, especificar `-1`.
      * @returns {componenteArbol}
      */
     this.alternar=function(ruta) {
@@ -470,8 +470,7 @@ var componenteArbol=function() {
 
     /**
      * Devuelve un objeto correspondiente a un nivel e índice.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol completo. Para expandir solo
-     * el primer nivel, especificar `0`.
+     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
      * @returns {(object|null)}
      */
     this.obtenerObjeto=function(ruta) {
@@ -497,8 +496,7 @@ var componenteArbol=function() {
 
     /**
      * Devuelve el elemento (`<li>`) correspondiente a un nivel.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol completo. Para expandir solo
-     * el primer nivel, especificar `0`.
+     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
      * @returns {Node}
      */
     this.obtenerItem=function(ruta) {
@@ -507,6 +505,8 @@ var componenteArbol=function() {
 
         for(var i=0;i<ruta.length;i++) {
             var indice=parseInt(ruta[i]);
+
+            if(typeof elemento==="undefined") return null;
 
             if(elemento.nodeName=="LI") {
                 //Si estamos en un <li>, tomar el <ul>

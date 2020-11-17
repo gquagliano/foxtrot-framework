@@ -1078,6 +1078,9 @@ var ui=new function() {
      * @param {Object} [funciones] - Funciones adicionales.
      */
     this.evaluarExpresion=function(cadena,variables,funciones) {
+        if(typeof cadena==="undefined") return null;
+        if(typeof cadena!=="string") return cadena;
+        
         //Agregar al intérprete el controlador y otros objetos y funciones útiles
         var vars={
             ui:ui,

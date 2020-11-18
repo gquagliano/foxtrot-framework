@@ -509,6 +509,8 @@ body.foxtrot-trabajando #foxtrot-cargando {
     filter: brightness(5);
     height: 14px !important;
     width: auto !important;
+    max-height: none !important;
+    max-width: none !important;
     cursor: grab !important;
     display: block;
 }

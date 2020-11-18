@@ -127,10 +127,36 @@ var componenteBuscador=function() {
     };
 
     /**
+     * Establece el listado de resultados.
+     * @param {object[]} resultados - Listado.
+     * @param {boolean} [buscandoUnico=false] - Indica si se está buscando un valor único (para mostrar el valor del campo) o, si es `false`, un listado.
+     * @returns {componente}
+     */
+    this.establecerResultados=function(resultados,buscandoUnico) {
+        if(typeof buscandoUnico==="undefined") buscandoUnico=false;
+
+        if(!this.buscando) return this;
+
+        this.buscando=false;
+
+        this.resultados=resultados;
+
+        //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
+        if(this.seleccionarPrimerElemento||buscandoUnico) {
+            if(resultados&&resultados.length) this.establecerValor(0);
+            return;
+        }
+
+        this.mostrarResultados();
+
+        return this;
+    };
+
+    /**
      * Inicia una nueva búsqueda.
      * @param {string} texto - Búsqueda por texto.
      * @param {string} [valor] - Busca un elemento específico.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.buscar=function(texto,valor) {
         this.abortarBusqueda();
@@ -145,19 +171,14 @@ var componenteBuscador=function() {
         else if(valor) obj.valor=valor;
         else return this;
         
-        this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(resultado) {
-                t.buscando=false;
-                ui.ocultarPrecarga("barra");
+        this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(res) {
+            ui.ocultarPrecarga("barra");
 
-                t.resultados=resultado;
+            //Si el manejador no devolvió un listado, esperar a que invoque establecerResultados()
+            if(!util.esArray(res)) return;
 
-                if(t.seleccionarPrimerElemento||valor) { //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
-                    if(resultado&&resultado.length) t.establecerValor(0);
-                    return;
-                }
-
-                t.mostrarResultados();
-            },true);
+            t.establecerResultados(res,!!valor);
+        },true);
 
         return this;
     };
@@ -173,7 +194,7 @@ var componenteBuscador=function() {
         if(!this.buscando) return this;
 
         this.buscando=false;
-        if(typeof this.ajax!=="undefined"&&this.ajax!==null) this.ajax.abortar();
+        if(typeof this.ajax==="object"&&this.ajax!==null&&this.ajax instanceof ajax) this.ajax.abortar();
         ui.ocultarPrecarga("barra");
 
         return this;
@@ -395,7 +416,7 @@ var componenteBuscador=function() {
     /**
      * Devuelve o establece el valor del componente.
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
-     * @returns {(*|undefined)}
+     * @returns {(*|componente)}
      */
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
@@ -405,6 +426,7 @@ var componenteBuscador=function() {
         } else {
             this.buscar(null,valor);
         }
+        return this;
     };
 
     /**

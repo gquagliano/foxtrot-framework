@@ -878,7 +878,7 @@ var componente=new function() {
     /**
      * Actualiza el componente tras la modificación de una propiedad.
      * @param {string} propiedad - Nombre de la propiedad.
-     * @paran {*} [valor] - Valor asignado.
+     * @param {*} [valor] - Valor asignado.
      * @param {string} [tamano="g"] - Tamaño de pantalla.
      * @param {*} [valorAnterior] - Valor anterior.
      * @returns {componente}

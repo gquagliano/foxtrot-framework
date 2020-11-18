@@ -18,7 +18,6 @@ class tipoSolicitud {
 
     /**
      * Constructor.
-     * @var object $parametros Parámetros de la solicitud.
      */
     function __construct($enrutador,$url,$parametros) {
         $this->enrutador=$enrutador;

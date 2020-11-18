@@ -1178,7 +1178,7 @@ class modelo {
     /**
      * Ejecuta la consulta y devuelve un array de elementos.
      * @param boolean $objetoEstandar Si es `true`, devolverá un listado de objetos anónimos (`stdClass`) en lugar de instancias de la entidad.
-     * @param string ...$campos Campos a asignar a la entidad. Si se omite, se asignarán todos los campos disponibles en la consulta. Esto es útil cuando se desee
+     * @param string $campos Campos a asignar a la entidad. Si se omite, se asignarán todos los campos disponibles en la consulta. Esto es útil cuando se desee
      * obtener un listado con menos campos que los que se han seleccionado con `seleccionar()`.
      * @return array
      */

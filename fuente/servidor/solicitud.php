@@ -62,7 +62,7 @@ class solicitud {
     
     /**
      * Obtiene todos los parámetros disponibles en la solicitud.
-     * @var object $destino
+     * @var object &$destino
      * @var array $nombres
      * @var int $tipo
      */

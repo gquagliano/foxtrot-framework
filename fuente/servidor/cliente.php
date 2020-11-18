@@ -110,8 +110,8 @@ class cliente {
 
     /**
      * Redirige los llamados a métodos no definidos hacia el cliente.
-     * @param string nombre - Nombre del método.
-     * @param array $args - Argumentos.
+     * @param string $nombre Nombre del método.
+     * @param array $args Argumentos.
      */
     public function __call($nombre,$args) {
         if($this->esAplicacion) {

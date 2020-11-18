@@ -630,7 +630,7 @@
     /**
      * Prepara un valor arbitrario para que pueda ser asignado como valor de un estilo css.
      * @param {string} propiedad - Nombre de la propiedad CSS.
-     * @paran {*} valor - Valor a analizar.
+     * @param {*} valor - Valor a analizar.
      * @returns {string}
      * @private
      */

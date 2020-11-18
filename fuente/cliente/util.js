@@ -794,7 +794,7 @@ var util=new function() {
     /**
      * Valor predeterminado para el parámetro `decimalPlaces` de `numberFormat()`.
      */
-    this.decimalesPredeterminados=null;
+    this.decimalesPredeterminados=2;
 
     /**
      * Recorre un array de objetos multidimensional sin recursión (utilizando una pila) para mayor eficiencia.

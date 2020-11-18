@@ -146,10 +146,13 @@ class entidad {
 
     /**
      * Procesa los campos relacionales que no hayan sido asignados.
+     * @param array $campos Nombres de los campos a procesar. Si se omite, se procesarán todos aquellos campos relacionales sin asignar.
      * @return \entidad
      */
-    public function procesarRelaciones() {
+    public function procesarRelaciones(...$campos) {
         foreach($this->obtenerCampos() as $nombre=>$campo) {
+            if(count($campos)&&!in_array($nombre,$campos)) continue;
+            
             if($campo->tipo=='relacional'&&(!$this->$nombre||is_numeric($this->$nombre))) {
                 $modeloRelacionado=\foxtrot::obtenerInstanciaModelo($campo->modelo);
                 $columna=$campo->columna;

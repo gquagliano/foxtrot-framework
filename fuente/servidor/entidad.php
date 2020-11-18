@@ -87,6 +87,14 @@ class entidad {
      * @return \entidad
      */
     public function procesarValores() {
+        foreach($this->obtenerCampos() as $nombre=>$campo) {
+            if($this->$nombre===null) continue;
+            if(preg_match('/^entero/',$campo->tipo)) {
+                $this->$nombre=intval($this->$nombre);
+            } elseif(preg_match('/^decimal/',$campo->tipo)) {
+                $this->$nombre=floatval($this->$nombre);
+            }
+        }
         return $this;
     }
 

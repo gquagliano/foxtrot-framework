@@ -161,6 +161,11 @@ var componente=new function() {
             opacidad:{
                 etiqueta:"Opacidad",
                 tipo:"numero"
+            },
+            ordenZ:{
+                etiqueta:"Orden Z",
+                tipo:"numero",
+                adaptativa:false
             }
         },
         "Dimensiones":{
@@ -888,9 +893,12 @@ var componente=new function() {
         if(util.esIndefinido(tamano)) tamano=null;
         if(util.esIndefinido(valorAnterior)) valorAnterior=null;
 
+        var parametrosPropiedad=this.obtenerParametrosPropiedad(propiedad),
+            adaptativa=!parametrosPropiedad.hasOwnProperty("adaptativa")||parametrosPropiedad.adaptativa!==false; //Por defecto, si
+
         var claseTamano=(tamano!="g"&&tamano!="xs"?"-"+tamano:"");
 
-        var estilos=this.obtenerEstilos(tamano);
+        var estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
 
         if(propiedad=="color") {
             estilos.color=this.normalizarValorCss(valor,"color");
@@ -1107,6 +1115,11 @@ var componente=new function() {
                 this.elemento.removerClase("deshabilitado")
                     .removerAtributo("disabled");
             }
+            return this;
+        }
+
+        if(propiedad=="ordenZ") {
+            estilos.zIndex=valor;
             return this;
         }
 

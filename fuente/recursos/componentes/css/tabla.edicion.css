@@ -12,7 +12,7 @@
 .table-responsive {
     overflow: visible;
 }
-.foxtrot-modo-edicion .ocultar-contenidos tr {
+.foxtrot-modo-edicion tr {
     /* Debe ser block/flex, no table-row, a fin de que se pueda seleccionar cuando no tiene celdas */
     display: flex !important;
 }

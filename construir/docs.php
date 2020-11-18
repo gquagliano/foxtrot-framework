@@ -37,8 +37,8 @@ $procesarDespues=[];
 
 limpiar(_salidaJs);
 limpiar(_salidaPhp);
-procesarDirectorio(__DIR__.'/../fuente/servidor/');
 procesarDirectorio(__DIR__.'/../fuente/cliente/');
+procesarDirectorio(__DIR__.'/../fuente/servidor/');
 
 //Archivos pospuestos (contenían una referencia que requería esperar hasta el final)
 foreach($procesarDespues as $archivo) procesarArchivo($archivo);
@@ -205,7 +205,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
     if($etiqueta->etiqueta!='var'&&$etiqueta->etiqueta!='param') return;
 
     if($lenguaje=='php') {
-        if(preg_match('/^(.+?) (\$[\w>-]+)( (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
+        if(preg_match('/^(.+?) (&?\$[\w>-]+)( (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
             $variable=trim($coincidencia2[2]);            
 
             $miembroDe=null;
@@ -233,7 +233,6 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
                         'tipo'=>$coincidencia2[1],
                         'descripcion'=>$coincidencia2[4],
                         'clase'=>$clase,
-                        //El inconveniente es que en phpdoc lo siguiente no se puede especificar
                         'opcional'=>false,    
                         'predeterminado'=>''
                     ];
@@ -313,7 +312,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
     }
 }
 
-function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$comentario) {
+function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$comentario) {
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
@@ -321,7 +320,7 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
         }
     };
 
-    if(!$parametros) {
+    if(!$codigoParametros) {
         //Sin parámetros, mostrar solo el título y el valor de retorno
         
         $salida='### `'.$nombre.'()`';
@@ -332,37 +331,7 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
         return $salida;
     }
 
-    $autogenerarParametros=$parametros===true;
-    
-    if(is_string($parametros)) {
-        $parametros=explode(',',$parametros);
-
-        //Analizar (solo php)
-        foreach($parametros as $i=>$parametro) {
-            $parametros[$i]=(object)[
-                'variable'=>trim(trim($parametro),'.'),
-                'opcional'=>false,
-                'predeterminado'=>'',
-                'tipo'=>false,
-                'descripcion'=>'',
-                'multiple'=>false
-            ];
-            
-            if($lenguaje=='php') {
-                $p=strpos($parametro,'=');
-                if($p!==false) {
-                    $parametros[$i]->variable=trim(substr($parametro,0,$p));
-                    $parametros[$i]->opcional=true;
-                    $parametros[$i]->predeterminado=trim(substr($parametro,$p+1));
-                }
-                if(substr($parametro,0,3)=='...') $parametros[$i]->multiple=true;
-            }
-        }
-    } else {
-        $parametros=[];
-    }
-
-    $cadenaParametros=function() use($parametros) {
+    $cadenaParametros=function() use(&$parametros) {
         $res='';
         $opcionales=false;
         foreach($parametros as $i=>$param) {
@@ -377,22 +346,56 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$parametros,$coment
         return $res;
     };
 
-    $miembros=[];
-
     $salida='';
+    if($nombre=='crearDesplegable')
+    $i=1;
 
     foreach($comentario->bloques as $i=>$bloque) {
+        $parametros=[];
+        $miembros=[];
+
         //Buscar @var/@param
         foreach($bloque->etiquetas as $etiqueta) {
-            procesarVariable($etiqueta,$lenguaje,$parametros,$miembros,$autogenerarParametros);
+            procesarVariable($etiqueta,$lenguaje,$parametros,$miembros,true);
+        }        
+
+        if(is_string($codigoParametros)) {
+            $partes=explode(',',$codigoParametros);
+            //Si no hubo parámetros documentados, verificar si es que falta la documentación o realmente no tiene parámetros
+            if(!count($parametros)) {
+                foreach($partes as $j=>$parametro) {            
+                    $parametros[$j]=(object)[
+                        'variable'=>trim(trim($parametro),'.'),
+                        'opcional'=>false,
+                        'predeterminado'=>'',
+                        'tipo'=>false,
+                        'descripcion'=>'',
+                        'multiple'=>false
+                    ];
+                }
+            }
+            //En php, buscar opcionales y valores predeterminados en la definición de la función
+            if($lenguaje=='php') {
+                foreach($partes as $j=>$parametro) {  
+                    if(count($parametros)<=$j) break;
+                    $p=strpos($parametro,'=');
+                    if($p!==false) {
+                        $parametros[$j]->variable=trim(substr($parametro,0,$p));
+                        $parametros[$j]->opcional=true;
+                        $parametros[$j]->predeterminado=trim(substr($parametro,$p+1));
+                    }
+                    if(substr($parametro,0,3)=='...') $parametros[$j]->multiple=true;
+                }
+            }
         }
 
         if($i==0) {
-            $salida.='### `'.$nombre.='('.$cadenaParametros().')`';
+            $salida.='### `'.$nombre.'('.$cadenaParametros().')`';
             if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-            $salida.=PHP_EOL.$comentario->bloques[0]->comentario.'  '.PHP_EOL.PHP_EOL;
+            $salida.=PHP_EOL.$bloque->comentario.'  '.PHP_EOL.PHP_EOL;
         } else {
-            $salida.='#### Sobrecarga '.($i+1).PHP_EOL;
+            $salida.='#### Sobrecarga '.($i+1).': `'.$nombre.'('.$cadenaParametros().')`';
+            $salida.=PHP_EOL.$bloque->comentario.'  '.PHP_EOL.PHP_EOL;
         }
         $salida.='| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
 

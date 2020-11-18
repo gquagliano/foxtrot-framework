@@ -590,7 +590,7 @@
 
         var doc=ui.obtenerDocumento(),
             elem=doc.crear("<div tabindex='-1' class='foxtrot-desplegable"+(opciones.clase?" "+opciones.clase:"")+(opciones.adaptativo?" foxtrot-desplegable-adaptativo":"")+"'>")
-                .anexarA(componente.obtenerElemento());
+                .anexarA(ui.obtenerCuerpo());
 
         doc.crear("<a href='#' class='foxtrot-desplegable-x'>")
             .evento("mousedown",function(ev) {

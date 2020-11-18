@@ -1224,7 +1224,7 @@ class modelo {
      * @param callable $valor Función que devuelve el valor dada la entidad. Si se omite, se asignará la entidad completa.
      * @return array
      */
-    public function obtenerListadoAsociativo($clave,$valor=null) {
+    public function obtenerListadoAsociativo($clave='id',$valor=null) {
         $items=$this->obtenerListado();
         $resultado=[];
         foreach($items as $item) {

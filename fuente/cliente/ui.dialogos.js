@@ -248,12 +248,13 @@
         },parametros);
 
         var cuerpo=elem.querySelector(".dialogo-contenido");
-        if(typeof parametros.cuerpo==="string") {
-            cuerpo.establecerHtml(parametros.cuerpo);
-        } else {
+        if(typeof parametros.cuerpo==="object"&&(parametros.cuerpo instanceof Node)) {
             //Almacenar la ubicación anterior del contenido para poder restaurarlo
             parametros.padreAnterior=parametros.cuerpo.parentNode;
+
             cuerpo.anexar(parametros.cuerpo);
+        } else {
+            cuerpo.establecerHtml(parametros.cuerpo);
         }
 
         var obj={

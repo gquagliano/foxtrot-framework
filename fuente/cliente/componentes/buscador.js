@@ -118,7 +118,10 @@ var componenteBuscador=function() {
             }
         });
 
-        this.campo.evento("focusout",function(ev) {
+        this.elemento.evento("focusout",function(ev) {
+            //Ignorar si el foco permanece dentro del div (el focusout se está propagando desde alguno de los hijos)
+            if(ev.relatedTarget&&(ev.relatedTarget.es({elemento:this})||ev.relatedTarget.padre({elemento:this}))) return;
+
             t.abortarBusqueda(true);
             t.cerrarResultados();
         });

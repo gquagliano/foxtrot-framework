@@ -45,6 +45,11 @@ var componenteDesplegable=function() {
                 tipo:"logico",
                 adaptativa:false,
                 ayuda:"Agrega una opción en blanco al comienzo del listado."
+            },
+            etiquetaOpcional:{
+                etiqueta:"Etiqueta opcional",
+                adaptativa:false,
+                ayuda:"Etiqueta de la primer opción cuando el despletable se establece como opcional."
             }
         }
     };
@@ -139,7 +144,7 @@ var componenteDesplegable=function() {
 
         this.campo.querySelectorAll("option").remover();
 
-        if(this.propiedad("opcional")) fn("","");
+        if(this.propiedad("opcional")) fn("",this.propiedad("etiquetaOpcional"));
 
         if(util.esArray(obj)) {
             obj.forEach(function(valor,indice) {

@@ -8,3 +8,12 @@
 .campo textarea {
     height: 100%;
 }
+.ocultar-control::-webkit-outer-spin-button,
+.ocultar-control::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.ocultar-control {
+  -moz-appearance: textfield;
+}

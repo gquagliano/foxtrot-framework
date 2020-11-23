@@ -63,6 +63,7 @@ class modelo {
     protected $consultaLimpiarRelacionados=true;
     protected $consultaForzarRelaciones=false;
     protected $consultaForzarRelacionesCampos=[];
+    protected $usarValoresPublicos=false;
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -184,7 +185,10 @@ class modelo {
                 'consultaOmitirRelacionesCampos'=>$this->consultaOmitirRelacionesCampos,
                 'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
                 'consultaIncluirOcultos'=>$this->consultaIncluirOcultos,
-                'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados
+                'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados,
+                'consultaForzarRelaciones'=>$this->consultaForzarRelaciones,
+                'consultaForzarRelacionesCampos'=>$this->consultaForzarRelacionesCampos,
+                'usarValoresPublicos'=>$this->usarValoresPublicos
             ]);
             //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
 
@@ -233,6 +237,7 @@ class modelo {
 
         $this->consultaPreparada=false;
         $this->reutilizarConsultaPreparada=false;
+        $this->usarValoresPublicos=false;
 
         if(!$preservarConfiguracion) {
             $this->consultaProcesarRelaciones=true;
@@ -986,6 +991,7 @@ class modelo {
             //Actualizar propiedades
             foreach($objeto as $clave=>$valor) $this->consultaValores->$clave=$valor;
         }
+        $this->usarValoresPublicos=false;
         return $this;        
     }
 
@@ -1005,10 +1011,12 @@ class modelo {
      * @return \modelo
      */
     public function establecerValoresPublicos($valores) {
-        return $this->establecerValores(
+        $this->establecerValores(
             $this->fabricarEntidad()
                 ->establecerValoresPublicos($valores)
         );
+        $this->usarValoresPublicos=true;
+        return $this;
     }
 
     /**
@@ -1026,6 +1034,7 @@ class modelo {
      */
     public function establecerEntidad($entidad) {
         $this->consultaValores=$entidad;
+        $this->usarValoresPublicos=false;
         return $this;
     }
 
@@ -1115,11 +1124,7 @@ class modelo {
                 $nombreModelo=$campo->modelo;
                 $columna=$campo->columna;
 
-                $omitir=false;
-                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) $omitir=true;     //si, podría ser un solo if, pero por legibilidad...
-                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
-
-                if($omitir) {
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) {
                     //Cuando se inserte o actualice con las relaciones desactivadas, solo debemos copiar el ID a la columna correspondiente
                     if(is_object($entidad)) {
                         $this->consultaValores->$columna=$entidad->id;
@@ -1129,9 +1134,13 @@ class modelo {
                     continue;
                 }
 
-                $this->fabricarModelo($nombreModelo)
-                    ->establecerValores($entidad)
-                    ->guardar();
+                $modelo=$this->fabricarModelo($nombreModelo);
+                if($this->usarValoresPublicos) {
+                    $modelo->establecerValoresPublicos($entidad);
+                } else {
+                    $modelo->establecerValores($entidad);
+                }
+                $modelo->guardar();
 
                 $idInsertado=$entidad->id;
 
@@ -1149,10 +1158,7 @@ class modelo {
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&$campo->relacion=='1:n') {
                 //Cuando se inserte o actualice con las relaciones desactivadas, ignorar
-                $omitir=false;
-                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) $omitir=true;     //si, podría ser un solo if, pero por legibilidad...
-                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
-                if($omitir) continue;
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) continue;
 
                 $ids=[];
 
@@ -1168,11 +1174,14 @@ class modelo {
                         //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                         if($entidad===null) continue;
                         if(is_array($entidad)) $entidad=(object)$entidad;
-
-                        $entidad->$columna=$miId;
                         
-                        $modelo->reiniciar()                
-                            ->establecerValores($entidad)
+                        $modelo->reiniciar();
+                        if($this->usarValoresPublicos) {       
+                            $modelo->establecerValoresPublicos($entidad);   
+                        } else {    
+                            $modelo->establecerValores($entidad);
+                        }
+                        $modelo->establecerValor($columna,$miId)
                             ->guardar();
 
                         $ids[]=$modelo->obtenerId();

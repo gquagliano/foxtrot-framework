@@ -47,6 +47,7 @@ var componente=new function() {
      * @var {(Element|Node)} campo - Elemento campo, si el componente presenta algún tipo de campo de ingreso (`input`, `textarea`, etc.)
      * @var {componente} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
      * @var {Object} valoresPropiedades - Almacen de valores de parámetros.
+     * @var {boolean} listoEjecutado - Indica si ya fue ejecutado el evento *Listo*.
      */
     this.id=null;
     this.selector=null;
@@ -65,6 +66,7 @@ var componente=new function() {
     this.campo=null;
     this.clasePadre=this;
     this.valoresPropiedades=null;
+    this.listoEjecutado=false;
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -740,24 +742,23 @@ var componente=new function() {
 
     /**
      * Establece el nombre de la instancia.
-     * @param {string} nombre - Nuevo nombre.
-     * @param {boolean} [oculto=false] - Si es true, permanecerá oculto, es decir que no se publicará en componentes.
+     * @param {string} [nombre] - Nuevo nombre. Si se omite, se mantendrá el valor actual (especificar `null` o `""` para remover el nombre).
+     * @param {boolean} [oculto] - Si es `true`, permanecerá oculto, es decir que no se publicará en componentes. Si se omite, se mantendrá el valor actual.
      * @returns {componente}
      */
     this.establecerNombre=function(nombre,oculto) {
-        if(typeof nombre==="undefined") nombre=null;
-        if(typeof oculto==="undefined") oculto=false;
+        if(typeof nombre==="undefined") nombre=this.nombre;
+        if(typeof oculto==="undefined") oculto=this.oculto;
 
         this.oculto=oculto;
 
         //Eliminar de componentes si cambia el nombre
         if((this.nombre!=nombre||this.oculto)&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
-
+        
         this.nombre=nombre;
-
+        
+        //Registrar acceso rápido (esperar al evento Listo)
         if(nombre&&!this.oculto) {
-            //Registrar acceso rápido
-            
             //Si pertenece a la vista principal, en window.componentes
             if(this.nombreVista==ui.obtenerNombreVistaPrincipal()) componentes[nombre]=this;
 
@@ -783,7 +784,7 @@ var componente=new function() {
             var propiedad=this.propiedad(null,"propiedad");
             if(!propiedad) return this;
 
-            var valor=this.datos[propiedad];
+            var valor=util.obtenerPropiedad(this.datos,propiedad);
             if(typeof valor!=="undefined") this.valor(valor);
         }
 
@@ -1721,66 +1722,62 @@ var componente=new function() {
     
     /**
      * Evento 'Inicializado'.
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.inicializado=function() {
-        return this;
     };
     
     /**
      * Evento 'Insertado'. El evento Insertado es invocado cuando el component es insertado en el DOM, ya sea tras ser creado o al
      * ser movido, únicamente en modo de edición.
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.insertado=function() {
-        return this;
     };
 
     /**
      * Evento Listo.
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.listo=function() {
+        this.listoEjecutado=true;
+        if(!ui.enModoEdicion()) this.establecerNombre(); //Registrar nombre (ya ha sido establecido por ui)
         this.procesarPropiedades();
-        return this;
     };
 
     /**
      * Evento `editor`.
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.editor=function() {
-        return this;
     };
 
     /**
      * Evento `editorDesactivado`.
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.editorDesactivado=function() {
-        return this;
     };
 
     /**
      * Evento 'Seleccionado'.
      * @param {boolean} estado
-     * @returns {componente}
+     * @returns {(boolean|undefined)}
      */
     this.seleccionado=function(estado) {
-        return this;
     }; 
     
     /**
      * Evento 'Navegación'. Devolver `true` suspenderá la navegación.
      * @param {string} nombreVista - Nombre de la vista de destino.
-     * @returns {(undefined|boolean)}
+     * @returns {(boolean|undefined)}
      */
     this.navegacion=function(nombreVista) {
     };
     
     /**
      * Evento 'Volver'. Devolver `true` suspenderá la navegación.
-     * @returns {(undefined|boolean)}
+     * @returns {(boolean|undefined)}
      */
     this.volver=function() {
     };
@@ -1867,24 +1864,47 @@ var componente=new function() {
     
     //La jerarquía estará definida exclusivamente por el DOM, no almacenaremos información de las relaciones entre los componentes en el JSON
 
+    var coincideFiltroComponente=function(comp,filtro) {
+        if(filtro.hasOwnProperty("componente")&&comp.componente==filtro.componente) return true;
+        if(filtro.hasOwnProperty("nombre")&&comp.nombre==filtro.nombre) return true;
+        if(filtro.hasOwnProperty("elemento")&&comp.elemento.es(filtro.elemento)) return true;
+        return false;
+    };
+
     /**
-     * Devuelve el componente padre.
+     * Devuelve el componente padre o un componente de su ascendencia que coincida con el filtro.
+     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre del componente.
+     * @param {string} [filtro.componente] - Tipo de componente.
+     * @param {string} [filtro.nombre] - Nombre del componente.
+     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
      * @returns {componente}
      */
-    this.obtenerPadre=function() {
+    this.obtenerPadre=function(filtro) {
         var elem=this.elemento.padre({
             clase:"componente"
         });
         if(!elem) return null;
         var comp=ui.obtenerInstanciaComponente(elem);
+
+        if(typeof filtro!=="undefined") {
+            //Continuar subiendo hasta que coincida o se llegue al comienzo del árbol
+            if(!comp) return null;
+            if(coincideFiltroComponente(comp,filtro)) return comp;
+            comp=comp.obtenerPadre(filtro);
+        }
+
         return comp;
     };
 
     /**
-     * Devuelve un array de componentes hijos.
+     * Devuelve un array de componentes hijos o un listado de componentes de su descendencia que coincidan con el filtro.
+     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre del componente.
+     * @param {string} [filtro.componente] - Tipo de componente.
+     * @param {string} [filtro.nombre] - Nombre del componente.
+     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
      * @returns {Componente[]}
      */
-    this.obtenerHijos=function() {
+    this.obtenerHijos=function(filtro) {
         var hijos=[];
         
         //Los componentes no serán necesariamente hijos directos, por lo tanto debemos profundizar en la descendencia hasta en contrar un componente (no puede utilizarse
@@ -1895,7 +1915,16 @@ var componente=new function() {
             for(var i=0;i<elementos.length;i++) {
                 if(elementos[i].es({clase:"componente"})) {
                     var comp=ui.obtenerInstanciaComponente(elementos[i]);
-                    if(comp) hijos.push(comp);
+                    if(comp) {
+                        if(typeof filtro!=="undefined") {
+                            //Agregar solo si coincide
+                            if(coincideFiltroComponente(comp,filtro)) hijos.push(comp);
+                            //Con su descendencia
+                            hijos=hijos.concat(comp.obtenerHijos(filtro));
+                        } else {                        
+                            hijos.push(comp);
+                        }
+                    }
                 } else {
                     fn(elementos[i]);
                 }
@@ -1975,9 +2004,14 @@ var componente=new function() {
         var hijos=this.obtenerHijos();
 
         hijos.forEach(function(hijo) {   
-            var nombre=hijo.obtenerNombre();
-            if(nombre&&valores.hasOwnProperty(nombre)&&(inclusoOcultos||!hijo.esComponenteOculto())) {
-                hijo.valor(valores[nombre]);
+            var nombre=hijo.obtenerNombre(),
+                propiedad=hijo.propiedad("propiedad");
+            if(inclusoOcultos||!hijo.esComponenteOculto()) {
+                if(nombre&&valores.hasOwnProperty(nombre)) {
+                    hijo.valor(valores[nombre]);
+                } else if(propiedad) {
+                    hijo.valor(util.obtenerPropiedad(valores,propiedad));
+                }
             }
             
             //Continuar la búsqueda en forma recursiva

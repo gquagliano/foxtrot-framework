@@ -476,7 +476,7 @@ body.foxtrot-trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible {
     display: block !important;
     visibility: visible !important;
-    outline: dashed 1px rgba(250, 226, 90, 0.2);
+    opacity: .5;
 }
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {

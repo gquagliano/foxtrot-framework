@@ -1,0 +1,10 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+ 
+ .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .fila.d-none, .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .fila.invisible {
+     display: flex !important;
+ }

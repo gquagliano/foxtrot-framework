@@ -20,6 +20,7 @@ class entidad {
      */
     protected $tipoModelo;
     public static $omitirFechas=false;
+    
 
     /**
      * @var int $id ID.
@@ -161,18 +162,26 @@ class entidad {
         foreach($this->obtenerCampos() as $nombre=>$campo) {
             if(count($campos)&&!in_array($nombre,$campos)) continue;
             
-            if($campo->tipo=='relacional'&&(!$this->$nombre||is_numeric($this->$nombre))) {
+            if($campo->tipo=='relacional'&&!is_object($this->$nombre)) {
                 $modeloRelacionado=\foxtrot::obtenerInstanciaModelo($campo->modelo);
                 $columna=$campo->columna;
                 if($campo->relacion=='1:n') {
                     $this->$nombre=$modeloRelacionado->donde([$columna=>$this->id])
                         ->obtenerListado();
+
+                    if($this->$nombre)
+                        foreach($this->$nombre as $obj)
+                            if($obj) $obj->procesarRelaciones();
                 } else {
                     $this->$nombre=$modeloRelacionado->donde(['id'=>$this->$columna])
                         ->obtenerUno();
+
+                    if($this->$nombre) $this->$nombre->procesarRelaciones();
                 }
             }
         }
+
+        $this->procesarValores();
 
         return $this;
     }

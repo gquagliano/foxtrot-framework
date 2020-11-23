@@ -522,14 +522,19 @@ class modelo {
      * @param \entidad $item Item (entidad) a procesar. Si se omite, se procesará la entidad actualmente asignada a la instancia.
      * @param bool $procesarOmitidos Fuerza el procesamiento de los campos con `@omitir`.
      * @param bool $procesar1n Procesar las relaciones `1:n`.
+     * @param string[] $cadenaRelaciones Relaciones procesadas previamente p
      * @return \modelo
      */
-    public function procesarRelaciones($item=null,$procesarOmitidos=true,$procesar1n=true) {
+    public function procesarRelaciones($item=null,$procesarOmitidos=true,$procesar1n=true,&$cadenaRelaciones=null) {
         if(!$item) $item=$this->consultaValores;
-
-        //TODO Detectar si el item ya apareció en la ascendencia, lo que daría lugar a un bucle infinito
-        //Por el momento se limita por nivel de recursividad
+        
+        //En el peor de los casos...
         if(count(debug_backtrace(0))>50) return $this; 
+
+        if(is_array($cadenaRelaciones)) {
+            if(in_array($this->nombreModelo,$cadenaRelaciones)) return $this;
+            $cadenaRelaciones[]=$this->nombreModelo;
+        }
 
         //-Caminar el árbol de relaciones en busca de campos que no hayan sido relacionados (por ejemplo, relacionados con el mismo modelo)
         //-Generar los listados de relaciones 1:n
@@ -557,7 +562,7 @@ class modelo {
                         $relacion=$modelo->obtenerItem($item->$columna);
                         if($relacion) {
                             $item->$nombre=$relacion;
-                            $modelo->procesarRelaciones($relacion,$procesarOmitidos,$procesar1n);
+                            $modelo->procesarRelaciones($relacion,$procesarOmitidos,$cadenaRelaciones?$cadenaRelaciones:[]);
                         }
                     } 
                 }

@@ -199,6 +199,16 @@ class entidad {
      * @return \entidad
      */
     public function procesarRelaciones(...$campos) {
+        if(count(debug_backtrace(0))>50) return;
+
+        //Si el primer argumento es un array, asumir que es la cadena de relaciones
+        $cadenaRelaciones=null;
+        if(is_array($campos[0])) $cadenaRelaciones=$campos[0];
+        if($cadenaRelaciones) {
+            if(in_array($this->tipoModelo,$cadenaRelaciones)) return $this;
+            $cadenaRelaciones[]=$this->tipoModelo;
+        }
+
         foreach($this->obtenerCampos() as $nombre=>$campo) {
             if(count($campos)&&!in_array($nombre,$campos)) continue;
             
@@ -211,12 +221,12 @@ class entidad {
 
                     if($this->$nombre)
                         foreach($this->$nombre as $obj)
-                            if($obj) $obj->procesarRelaciones();
+                            if($obj) $obj->procesarRelaciones($cadenaRelaciones?$cadenaRelaciones:[]);
                 } else {
                     $this->$nombre=$modeloRelacionado->donde(['id'=>$this->$columna])
                         ->obtenerUno();
 
-                    if($this->$nombre) $this->$nombre->procesarRelaciones();
+                    if($this->$nombre) $this->$nombre->procesarRelaciones($cadenaRelaciones?$cadenaRelaciones:[]);
                 }
             }
         }

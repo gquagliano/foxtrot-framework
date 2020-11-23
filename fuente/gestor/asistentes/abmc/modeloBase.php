@@ -15,30 +15,35 @@ class modeloBase extends \modelo {
     /**
      * Busca un registro a partir del objeto especificado.
      * @param object|array|string $filtro Filtro (objeto, arreglo asociativo o condición como cadena).
-     * @param object|array $parametros (optional) Parámetros en caso de filtro como cadena.
+     * @param object|array $parametros Parámetros en caso de filtro como cadena.
+     * @param bool $incluirRelaciones Si es `true`, forzará las relaciones, incluso aquellas omitidas.
      * @return \entidad
      */
-    public function buscarItem($filtro,$parametros=[]) {
-        $item=$this
-            ->reiniciar()
-            ->donde($filtro,$parametros)
+    public function buscarItem($filtro,$parametros=[],$incluirRelaciones=true) {
+        $this->reiniciar();
+        if($incluirRelaciones) $this->incluirRelaciones();
+        $item=$this->donde($filtro,$parametros)
             ->obtenerUno();
         return $item;
     }
 
     /**
      * Devuelve el listado de registros del repositorio.
-     * @param object|array|string $filtro (opcional) Filtro (objeto, arreglo asociativo o condición como cadena).
-     * @param object|array $parametros (opcional) Parámetros en caso de filtro como cadena.
-     * @param int $cantidadPorPag (opcional) Cantidad de ítems por página.
-     * @param int $pagina (opcional) Número de página.
+     * @param object|array|string $filtro Filtro (objeto, arreglo asociativo o condición como cadena).
+     * @param object|array $parametros Parámetros en caso de filtro como cadena.
+     * @param int $pagina Número de página. Establecer `null` para desactivar la paginación.
+     * @param int $cantidadPorPag Cantidad de ítems por página.
+     * @param bool $incluirRelaciones Si es `true`, forzará las relaciones, incluso aquellas omitidas.
      * @return object
      */
-    public function listarItems($filtro=null,$parametros=[],$pagina=1,$cantidadPorPag=50) {
+    public function listarItems($filtro=null,$parametros=[],$pagina=1,$cantidadPorPag=50,$incluirRelaciones=false) {
         if(!$pagina) $pagina=1;
 
-        $this->reiniciar()
-            ->paginacion($cantidadPorPag,$pagina);
+        $this->reiniciar();
+
+        if($pagina) $this->paginacion($cantidadPorPag,$pagina);
+
+        if($incluirRelaciones) $this->incluirRelaciones();
 
         if($filtro) $this->donde($filtro,$parametros);
 
@@ -71,6 +76,7 @@ class modeloBase extends \modelo {
      */
     public function crearOModificarItem($campos) {
         $this->reiniciar()
+            ->incluirRelaciones()
             ->establecerValoresPublicos($campos);
         if($campos->id) $this->establecerValor('id',$campos->id);
         $this->guardar();

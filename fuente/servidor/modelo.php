@@ -991,7 +991,6 @@ class modelo {
             //Actualizar propiedades
             foreach($objeto as $clave=>$valor) $this->consultaValores->$clave=$valor;
         }
-        $this->usarValoresPublicos=false;
         return $this;        
     }
 
@@ -1006,7 +1005,9 @@ class modelo {
     }
 
     /**
-     * Crea una nueva entidad, asignando los valores provistos mediante `entidad::establecerValoresPublicos()`, y la asigna a los valores para la próxima consulta.
+     * Crea una nueva entidad, asignando los valores provistos mediante `entidad::establecerValoresPublicos()`, y la asigna a los valores para la próxima consulta. Nótese que
+     * tras invocar este método, las próximas entidades generadas, por ejemplo al procesar campos relacionales, también utilizarán `establecerValoresPublicos()` hasta que 
+     * el modelo sea reiniciado.
      * @param object|array $valores Valores a asignar.
      * @return \modelo
      */
@@ -1034,7 +1035,6 @@ class modelo {
      */
     public function establecerEntidad($entidad) {
         $this->consultaValores=$entidad;
-        $this->usarValoresPublicos=false;
         return $this;
     }
 
@@ -1169,7 +1169,6 @@ class modelo {
 
                 $listado=$this->consultaValores->$nombre;
                 if(is_array($listado)) {
-
                     foreach($listado as $entidad) {
                         //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                         if($entidad===null) continue;

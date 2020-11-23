@@ -1140,9 +1140,10 @@ class modelo {
                 } else {
                     $modelo->establecerValores($entidad);
                 }
-                $modelo->guardar();
+                $modelo->establecerValor('id',$entidad->id)
+                    ->guardar();
 
-                $idInsertado=$entidad->id;
+                $idInsertado=$modelo->obtenerId();
 
                 $this->consultaValores->$columna=$idInsertado;
             }
@@ -1181,6 +1182,7 @@ class modelo {
                             $modelo->establecerValores($entidad);
                         }
                         $modelo->establecerValor($columna,$miId)
+                            ->establecerValor('id',$entidad->id)                        
                             ->guardar();
 
                         $ids[]=$modelo->obtenerId();

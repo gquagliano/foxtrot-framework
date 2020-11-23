@@ -508,7 +508,7 @@ var editor=new function() {
                         accion:function(comp) {
                             return function() {
                                 if(!seleccionMultiple) self.limpiarSeleccion();
-                                self.alternarSeleccion(comp);
+                                self.alternarSeleccion(comp,true);
                             };
                         }(comp)
                     });
@@ -876,7 +876,7 @@ var editor=new function() {
     /**
      * Selecciona el componente, o lo deselecciona si ya se encuentra seleccionado.
      * @param {(Componente|Node|Element)} obj - Objeto a seleccionar.
-     * @param {[MouseEvent]} ev - Evento.
+     * @param {(MouseEvent|boolean|undefined)} ev - Evento o `true` si el evento ya fue procesado.
      * @returns {editor}
      */
     this.alternarSeleccion=function(obj,ev) {
@@ -902,7 +902,7 @@ var editor=new function() {
             }
             if(padre) comp=padre;
         }
-        if(typeof ev==="undefined"||!ev.shiftKey) {
+        if(typeof ev==="undefined"||typeof ev!=="boolean"&&!ev.shiftKey) {
             self.limpiarSeleccion();
         }
         

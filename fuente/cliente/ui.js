@@ -1519,7 +1519,7 @@ var ui=new function() {
             } else {
                 //Al cargar una vista secundaria, solo en la misma
                 obj.listo();
-                this.eventoComponentes(obj.obtenerComponentes(),"listo",true);
+                this.eventoComponentes(obj.obtenerComponentes(),"listo");
             }
         }
 
@@ -1585,7 +1585,7 @@ var ui=new function() {
         }
 
         //El evento Listo en los componentes se ejecuta incluso en modo edición
-        this.eventoComponentes(null,"listo",true);
+        this.eventoComponentes(null,"listo");
 
         if(esCordova) {
             doc.querySelector("#contenedor-cordova").agregarClase("listo");

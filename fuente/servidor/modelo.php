@@ -61,6 +61,8 @@ class modelo {
     protected $consultaIncluirOcultos=false;
     protected $consultaBloquear=false;
     protected $consultaLimpiarRelacionados=true;
+    protected $consultaForzarRelaciones=false;
+    protected $consultaForzarRelacionesCampos=[];
 
     protected $consultaPreparada=false;
     protected $reutilizarConsultaPreparada=false;
@@ -214,9 +216,10 @@ class modelo {
 
     /**
      * Reinicia el repositorio.
+     * @param bool $preservarConfiguracion Mantener la configuración relacionada al procesamiento de relaciones, campos ocultos, bloqueos, y registros eliminados.
      * @return \modelo
      */
-    public function reiniciar() {
+    public function reiniciar($preservarConfiguracion=true) {
         $this->consultaColumnas=null;
         $this->consultaCondiciones=[];
         $this->gruposAbiertos=0;
@@ -230,6 +233,18 @@ class modelo {
 
         $this->consultaPreparada=false;
         $this->reutilizarConsultaPreparada=false;
+
+        if(!$preservarConfiguracion) {
+            $this->consultaProcesarRelaciones=true;
+            $this->consultaProcesarRelaciones1n=true;
+            $this->consultaOmitirRelacionesCampos=[];
+            $this->consultaSeleccionarEliminados=false;
+            $this->consultaIncluirOcultos=false;
+            $this->consultaBloquear=false;
+            $this->consultaLimpiarRelacionados=true;
+            $this->consultaForzarRelaciones=false;
+            $this->consultaForzarRelacionesCampos=[];
+        }
 
         $this->sql=null;
         $this->alias='t1';
@@ -429,6 +444,24 @@ class modelo {
     public function omitirRelacionesUnoAMuchos() {
         $this->consultaProcesarRelaciones1n=false;
         return $this;
+    }    
+
+    /**
+     * Fuerza el procesamiento de campos relacionales aún cuando estén desactivados o excluídos mediante `@omitir`. Este método puede utilizarse para incluir campos específicos
+     * cuando todos los demás se hayan desactivado mediante `omitirReleaciones()` o `omitirRelacionesUnoAMuchos()`, o en casos en los que explícitamente se requiera procesar
+     * relaciones que normalmente se deben omitir.
+     * @param string $campos Si se especifica al menos un argumento, forzará únicamente el procesamiento de estos campos. En caso contrario, se forzará el procesamiento de
+     * todos los campos relacionales.
+     * @return \modelo
+     */
+    public function incluirRelaciones(...$campos) {
+        if(count($campos)) {
+            foreach($campos as $campo) $this->consultaForzarRelacionesCampos[]=$campo;
+        } else {
+            //La diferencia con consultaProcesarRelaciones1n o consultaProcesarRelaciones es que solo con consultaForzarRelaciones se ignora @omitir
+            $this->consultaForzarRelaciones=true;
+        }
+        return $this;
     }
 
     /**
@@ -497,7 +530,10 @@ class modelo {
         //-Generar los listados de relaciones 1:n
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional') {
-                if(!$procesarOmitidos&&($campo->omitir||in_array($nombre,$this->consultaOmitirRelacionesCampos))) continue;
+                $omitir=false;
+                if(!$procesarOmitidos&&($campo->omitir||in_array($nombre,$this->consultaOmitirRelacionesCampos))) $omitir=true;      //si, podría ser un solo if, pero por legibilidad...
+                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
+                if($omitir) continue;
 
                 if($campo->relacion=='1:n') {
                     if(!$procesar1n) continue;
@@ -1079,7 +1115,11 @@ class modelo {
                 $nombreModelo=$campo->modelo;
                 $columna=$campo->columna;
 
-                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) {
+                $omitir=false;
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) $omitir=true;     //si, podría ser un solo if, pero por legibilidad...
+                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
+
+                if($omitir) {
                     //Cuando se inserte o actualice con las relaciones desactivadas, solo debemos copiar el ID a la columna correspondiente
                     if(is_object($entidad)) {
                         $this->consultaValores->$columna=$entidad->id;
@@ -1109,7 +1149,10 @@ class modelo {
         foreach($this->campos as $nombre=>$campo) {
             if($campo->tipo=='relacional'&&$campo->relacion=='1:n') {
                 //Cuando se inserte o actualice con las relaciones desactivadas, ignorar
-                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) continue;
+                $omitir=false;
+                if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) $omitir=true;     //si, podría ser un solo if, pero por legibilidad...
+                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
+                if($omitir) continue;
 
                 $ids=[];
 
@@ -1291,7 +1334,7 @@ class modelo {
 
     /**
      * Crea una copia de la entidad asignada.
-     * @param string[] $clonarRelaciones Nombres de los campos relacionales cuyas entidades relacionales también se deben clonar. Nótese que esto afectará solo un nivel (no
+     * @param string $clonarRelaciones Nombres de los campos relacionales cuyas entidades relacionales también se deben clonar. Nótese que esto afectará solo un nivel (no
      * recursivo).
      * @return \modelo
      */
@@ -1443,12 +1486,17 @@ class modelo {
      * @return \modelo
      */
     public function prepararRelaciones(&$alias,$recursivo,&$cadenaRelaciones) {
-        //Detectar una relación cíclica (se relaciona con un modelo que ya fue relacionado previamente, derivando en un bucle infinito)
+        //Detectar una relación cíclica (se relaciona con un modelo que ya fue relacionado previamente, potencialmente derivando en un bucle infinito)
         $relacionadoPreviamente=in_array($this->nombreModelo,$cadenaRelaciones);
         $cadenaRelaciones[]=$this->nombreModelo;
 
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional'&&!$campo->omitir) {
+            if($campo->tipo=='relacional') {
+                $omitir=false;
+                if($campo->omitir) $omitir=true;                                                                                //si, podría ser un solo if, pero por legibilidad...
+                if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
+                if($omitir) continue;
+
                 $obj=$this->fabricarModelo($campo->modelo);
                 
                 $alias++;
@@ -1492,10 +1540,11 @@ class modelo {
      */
     public function construirCamposYRelaciones(&$campos,&$relaciones) {
         foreach($this->consultaRelaciones as $relacion) {
-            if($relacion->siempre||$this->consultaProcesarRelaciones) {
+            $forzar=$this->consultaForzarRelaciones||in_array($relacion->campo,$this->consultaForzarRelacionesCampos);
+            if($relacion->siempre||$this->consultaProcesarRelaciones||$forzar) {
                 if($relacion->tipo=='1:n') continue; //Las relaciones 1:n no se realizarán con join
 
-                if(in_array($relacion->campo,$this->consultaOmitirRelacionesCampos)) continue;
+                if(!$forzar&&in_array($relacion->campo,$this->consultaOmitirRelacionesCampos)) continue;
                 
                 $join='JOIN';
                 if($relacion->tipo=='1:0') $join='LEFT JOIN';

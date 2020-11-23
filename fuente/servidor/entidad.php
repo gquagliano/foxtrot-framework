@@ -126,7 +126,7 @@ class entidad {
 
     /**
      * Devuelve un objeto estándar con los valores de la instancia.
-     * @param bool $incluirOcultos Si es false, omitirá los campos ocultos (`@oculto`) y privados (`@privado`).
+     * @param bool $incluirOcultos Si es `false`, se omitirán los campos ocultos (`@oculto`) y privados (`@privado`).
      * @return object
      */
     public function obtenerObjeto($incluirOcultos=false) {
@@ -147,6 +147,46 @@ class entidad {
             if(is_array($obj->$nombre)) {
                 foreach($obj->$nombre as $item)
                     if($item instanceof entidad) $item=$item->obtenerObjeto($incluirOcultos);
+            }
+        }
+
+        return $obj;
+    }
+
+    /**
+     * Similar a `obtenerObjeto()`, devuelve un objeto estándar con los valores de la instancia pero incluyendo únicamente con las propiedades especificadas, sin tener en cuenta
+     * si los campos son ocultos o privados.
+     * @param mixed[] $campos Listado de campos a incluir. Pueden utilizarse elementos asociativos para campos relacionales, por ejemplo: `['nombre','apellido','ciudad'=>['nombre','provincia']]`.
+     * @param mixed[] $excluir Listado de campos a excluir. Para utilizar esta opción, `$campos` debe ser `null` (se incluirán todos los campos *excepto* los
+     * especificados). Pueden utilizarse elementos asociativos para campos relacionales.
+     * @return object
+     */
+    public function filtrarObjeto($campos=null,$excluir=null) {
+        $obj=(object)get_object_vars($this);
+        
+        //Como estamos invocando get_object_vars() desde un método de la instancia, se han incluido propiedades protegidas y privadas; Remover
+        unset($obj->tipoModelo);
+
+        foreach($this->obtenerCampos() as $nombre=>$campo) {
+            //Remover si se especificó $campos y no está en el array ni es una clave del array (elemento asociativo)
+            if($campos!=null&&!in_array($nombre,$campos)&&!array_key_exists($nombre,$campos)) unset($obj->$nombre);
+
+            //En campos relacionales, utilizar los listados de campos relacionados, si se especificaron
+            $relacionCampos=null;
+            $relacionExcluir=null;
+            if($campos&&array_key_exists($nombre,$campos)) $relacionCampos=$campos[$nombre];
+            if($excluir&&array_key_exists($nombre,$excluir)) $relacionExcluir=$excluir[$nombre];
+
+            //Reemplazar entidades relacionadas por su objeto
+            if($obj->$nombre instanceof entidad) {
+                $obj->$nombre=$obj->$nombre->filtrarObjeto($relacionCampos,$relacionExcluir);
+            }
+
+            //Lo mismo con los listados de entidades
+            //Un nivel es suficiente, no hace falta hacerlo recursivamente
+            if(is_array($obj->$nombre)) {
+                foreach($obj->$nombre as $item)
+                    if($item instanceof entidad) $item=$item->obtenerObjeto($relacionCampos,$relacionExcluir);
             }
         }
 

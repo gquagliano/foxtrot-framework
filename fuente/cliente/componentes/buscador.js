@@ -406,14 +406,14 @@ var componenteBuscador=function() {
 
     /**
      * Evento Listo.
-     * @returns {componente}
      */
     this.listo=function() {
+        this.clasePadre.listo.call(this);
+
         if(ui.enModoEdicion()) return;
         
         var valor=this.propiedad("valor");
         if(valor) this.valor(valor);
-        return this;
     };
 
     /**

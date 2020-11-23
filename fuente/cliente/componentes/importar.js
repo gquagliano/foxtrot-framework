@@ -96,6 +96,8 @@ var componenteImportar=function() {
      * Evento Listo.
      */
     this.listo=function() {
+        this.clasePadre.listo.call(this);
+
         if(ui.enModoEdicion()) return;
         
         //Si está habilitado para escuchar navegación, intentar cargar la vista correspondiente a la URL actual

@@ -56,7 +56,10 @@ var componenteBucle=function() {
     /**
      * Evento Listo.
      */
-    this.listo=function() {
+    this.listo=function() {        
+        //Ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
+        this.ocultarDescendencia();
+
         this.actualizar();
         this.clasePadre.listo.call(this);
     };
@@ -85,9 +88,6 @@ var componenteBucle=function() {
         this.itemsAutogenerados=[];
 
         if(!this.datos||!util.esArray(this.datos)) return this;
-
-        //Ocultamos toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
-        this.ocultarDescendencia();
 
         if(this.itemSinDatos) {
             this.itemSinDatos.remover();
@@ -145,6 +145,7 @@ var componenteBucle=function() {
             .establecerValores(obj,true);
         nuevo.indice=indice;
         nuevo.autogenerado=true;
+        nuevo.ocultarDescendencia();
         nuevo.obtenerElemento().agregarClase("autogenerado");
 
         return nuevo;

@@ -65,6 +65,7 @@ var componentePestanas=function() {
      */
     this.listo=function() {
         this.actualizarEncabezados(false);
+        this.clasePadre.listo.call(this);
     };   
 
     /**

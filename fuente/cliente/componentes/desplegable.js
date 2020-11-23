@@ -82,6 +82,8 @@ var componenteDesplegable=function() {
      * Evento Listo.
      */
     this.listo=function() {
+        this.clasePadre.listo.call(this);
+
         if(ui.enModoEdicion()) return;
         
         //Establecer opciones a partir de la propiedad opciones, si está asignada

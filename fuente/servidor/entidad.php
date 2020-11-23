@@ -231,8 +231,6 @@ class entidad {
             }
         }
 
-        $this->procesarValores();
-
         return $this;
     }
 

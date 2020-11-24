@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 defined('_inc') or exit;
 
-include_once('vendor/autoload.php');
+include_once(__DIR__.'/vendor/autoload.php');
 
 /**
  * Módulo concreto phpspreadsheet. Implementa PhpOffice/PhpSpreadsheet versión 1.15.0.  

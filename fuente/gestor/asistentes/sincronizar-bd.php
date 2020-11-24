@@ -139,6 +139,19 @@ class sincronizarBd extends asistente {
         ]);
     }
 
+    protected function obtenerIndice($modelo,$campo,$parametros) {
+        if(!$parametros->indice) return false;
+        
+        $long='';
+        if($parametros->tipo=='texto') $long='(255)'; //TODO Configurable
+
+        $indice='';
+        if($parametros->indice==='unico') $indice.='UNIQUE ';
+        $indice.='INDEX `'.$campo.'` (`'.$campo.'`'.$long.')';
+
+        return $indice;
+    }
+
     protected function compararCampo($parametros,$campoBd) {
         $tipo=$parametros->tipo;
 
@@ -183,17 +196,34 @@ class sincronizarBd extends asistente {
     }
 
     protected function procesar($clase) {
-        $creada=false;
-
         $tabla=configuracion::$prefijoBd.$clase->obtenerNombreTabla();
+
+        $camposEntidad=$clase->obtenerCampos();
+        
+        ////Crear
         
         if(!in_array($tabla,$this->tablas)) {
-            //Crear
-            $this->consulta('CREATE TABLE `'.$tabla.'` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`e` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\',PRIMARY KEY (`id`),INDEX `e` (`e`))  COLLATE=\'utf8_general_ci\' ENGINE=InnoDB');
-            $creada=true;
+            $sql='CREATE TABLE `'.$tabla.'` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`e` TINYINT(1) UNSIGNED NOT NULL DEFAULT \'0\',';
+            $indices='';        
+
+            foreach($camposEntidad as $campo=>$parametros) {
+                if($campo=='id'||$campo=='e'||$parametros->tipo=='relacional') continue;
+
+                $tipo=$this->obtenerTipo($clase->obtenerNombre(),$campo,$parametros);
+                $indice=$this->obtenerIndice($clase->obtenerNombre(),$campo,$parametros);
+
+                $sql.='`'.$campo.'` '.$tipo.',';
+                if($indice) $indices.=','.$indice;
+            }
+                
+            $sql.='PRIMARY KEY (`id`),INDEX `e` (`e`)'.$indices.')  COLLATE=\'utf8_general_ci\' ENGINE=InnoDB';
+
+            $this->consulta($sql);
+
+            return true;
         }
         
-        //Buscar diferencias
+        ////Buscar diferencias
         
         $campos=[];
         
@@ -201,12 +231,11 @@ class sincronizarBd extends asistente {
         $this->verificarError();
         while($fila=$resultado->aObjeto()) $campos[$fila->Field]=$fila;
 
-        $camposEntidad=$clase->obtenerCampos();
-
         foreach($camposEntidad as $campo=>$parametros) {
             if($campo=='id'||$campo=='e'||$parametros->tipo=='relacional') continue;
 
             $tipo=$this->obtenerTipo($clase->obtenerNombre(),$campo,$parametros);
+            $indice=$this->obtenerIndice($clase->obtenerNombre(),$campo,$parametros);
 
             if($parametros->busqueda) $parametros->indice=true;
 
@@ -219,7 +248,7 @@ class sincronizarBd extends asistente {
                 }
 
                 //Índice
-                if($parametros->indice) {
+                if($indice) {
                     if(($parametros->indice===true&&$campoBd->Key!='MUL')||($parametros->indice==='unico'&&$campoBd->Key!='UNI')) {
                         if($campoBd->Key) {
                             //Cambio de índice, remover el existente
@@ -227,20 +256,21 @@ class sincronizarBd extends asistente {
                             $this->consulta('ALTER TABLE `'.$tabla.'` DROP INDEX `'.$campo.'`');
                         }
                         //Agregar
-                        $this->consulta('ALTER TABLE `'.$tabla.'` ADD '.($parametros->indice==='unico'?'UNIQUE ':'').'INDEX `'.$campo.'` (`'.$campo.'`)');
+                        $this->consulta('ALTER TABLE `'.$tabla.'` ADD '.$indice);
                     }
-                } else {
-                    //TODO Eliminar índice si se remueve @indice
+                } elseif($campoBd->Key) {
+                    //Eliminar índice si se remueve @indice
+                    $this->consulta('ALTER TABLE `'.$tabla.'` DROP INDEX `'.$campo.'`');
                 }
             } else {
                 //Agregar columna
                 $consulta='ALTER TABLE `'.$tabla.'` ADD COLUMN `'.$campo.'` '.$tipo;
-                if($parametros->indice) $consulta.=',ADD '.($parametros->indice==='unico'?'UNIQUE ':'').'INDEX `'.$campo.'` (`'.$campo.'`)';
+                if($indice) $consulta.=',ADD '.$indice;
                 $this->consulta($consulta);
             }
         } 
 
-        return $creada;
+        return false;
     }
 
     protected function consulta($sql) {

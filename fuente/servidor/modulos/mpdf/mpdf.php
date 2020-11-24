@@ -21,7 +21,7 @@ class mpdf extends \modulo {
     protected $mpdf;
 
     /**
-     * Crea un nuevo libro.
+     * Crea un nuevo archivo PDF.
      * @param string $formato Formato de página.
      * @param array $config Parámetros de configuración adicionales.
      * @return \modulos\mpdf

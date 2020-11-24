@@ -24,7 +24,7 @@ var modulo=new function() {
     /**
      * @var {servidor} servidor - Acceso al controlador de servidor.
      * @var {string} nombre - Nombre del módulo.
-     * @var {aplicacion} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
+     * @var {aplicacion} clasePadre - Clase `modulo` (equivalente a `parent` en OOP).
      */
     this.servidor=null;
     this.nombre=null;
@@ -64,14 +64,6 @@ var modulo=new function() {
      * @returns {modulo}
      */
     this.inicializar=function() {
-        return this.inicializarModulo();
-    };
-
-    /**
-     * Inicializa la instancia tras ser creada.
-     * @returns {modulo}
-     */
-    this.inicializarModulo=function() {
         this.servidor=servidor.fabricar();
         this.servidor.establecerPredeterminados({
             modulo:this.nombre

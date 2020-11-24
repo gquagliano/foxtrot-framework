@@ -468,7 +468,7 @@ var componente=new function() {
         if(typeof dispersar==="undefined") dispersar=true;
 
         var propiedad=null;
-        if(!ignorarPropiedad) propiedad=this.propiedad(null,"propiedad");
+        if(!ignorarPropiedad) propiedad=this.propiedad(false,"propiedad");
         if(propiedad) {
             //Tomar listado de una propiedad específica
             this.datos=util.obtenerPropiedad(obj,propiedad);
@@ -476,9 +476,9 @@ var componente=new function() {
             this.datos=obj;
         }
 
-        this.obtenerHijos().forEach(function(hijo) {
-            hijo.establecerDatos(obj,actualizar);
-        });
+        if(dispersar) this.obtenerHijos().forEach(function(hijo) {
+                hijo.establecerDatos(obj,actualizar);
+            });
 
         if(actualizar) this.actualizar();
 

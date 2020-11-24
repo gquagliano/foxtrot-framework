@@ -67,7 +67,7 @@ var componenteCondicional=function() {
     this.actualizar=function() {
         var condicion;
         //Sin condición, utilizar el valor asignado
-        if(!this.propiedad("condicion")) {
+        if(!this.propiedad(false,"condicion")) {
             condicion=this.valor();
         } else {
             condicion=this.procesarEvento("condicion","condicion");
@@ -92,7 +92,7 @@ var componenteCondicional=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //Ignorar propiedad
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,false,true);
+        this.clasePadre.establecerDatos.call(this,obj,actualizar,true,true);
         return this;
     };
 

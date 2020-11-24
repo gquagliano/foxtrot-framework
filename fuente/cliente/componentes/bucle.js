@@ -108,7 +108,7 @@ var componenteBucle=function() {
      * @returns {Componente}
      */
     this.mostrarMensajeSinDatos=function() {
-        var texto=this.propiedad(null,"mensajeVacio");
+        var texto=this.propiedad("mensajeVacio");
         if(!texto||this.itemSinDatos) return this;
 
         if(!this.elementoPadre) this.elementoPadre=this.elemento.padre();
@@ -141,8 +141,7 @@ var componenteBucle=function() {
             };
         })(indice);
 
-        nuevo.establecerDatos(obj)
-            .establecerValores(obj,true);
+        nuevo.establecerDatos(obj);
         nuevo.indice=indice;
         nuevo.autogenerado=true;
         nuevo.ocultarDescendencia();
@@ -191,7 +190,7 @@ var componenteBucle=function() {
 
         var fn=function(comp,indice) {
             comp.obtenerHijos().forEach(function(hijo) {
-                var propiedad=hijo.propiedad(null,"propiedad"),
+                var propiedad=hijo.propiedad(false,"propiedad"),
                     nombre=hijo.obtenerNombre(),
                     valor=hijo.valor();
                 if(typeof valor!=="undefined") {

@@ -23,7 +23,7 @@ namespace Complex;
  * @see    rho
  *
  */
-function abs($complex): float
+function abs($complex)
 {
     return rho($complex);
 }

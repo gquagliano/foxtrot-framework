@@ -17,7 +17,7 @@ namespace Complex;
  * @return    Complex          The complex argument raised to the real power.
  * @throws    Exception        If the power argument isn't a valid real
  */
-function pow($complex, $power): Complex
+function pow($complex, $power)
 {
     $complex = Complex::validateComplexArgument($complex);
 

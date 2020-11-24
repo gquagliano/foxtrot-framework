@@ -17,12 +17,12 @@ namespace Complex;
  * @throws    Exception        If argument isn't a valid real or complex number.
  * @throws    \InvalidArgumentException    If function would result in a division by zero
  */
-function asech($complex): Complex
+function asech($complex)
 {
     $complex = Complex::validateComplexArgument($complex);
 
     if ($complex->getReal() == 0.0 && $complex->getImaginary() == 0.0) {
-        return new Complex(INF);
+        return INF;
     }
 
     return acosh(inverse($complex));

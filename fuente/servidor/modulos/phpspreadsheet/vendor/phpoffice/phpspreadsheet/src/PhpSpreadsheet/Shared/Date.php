@@ -7,7 +7,6 @@ use DateTimeZone;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
 use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class Date
@@ -58,7 +57,7 @@ class Date
     /**
      * Default timezone to use for DateTime objects.
      *
-     * @var null|DateTimeZone
+     * @var null|\DateTimeZone
      */
     protected static $defaultTimeZone;
 
@@ -71,10 +70,8 @@ class Date
      */
     public static function setExcelCalendar($baseDate)
     {
-        if (
-            ($baseDate == self::CALENDAR_WINDOWS_1900) ||
-            ($baseDate == self::CALENDAR_MAC_1904)
-        ) {
+        if (($baseDate == self::CALENDAR_WINDOWS_1900) ||
+            ($baseDate == self::CALENDAR_MAC_1904)) {
             self::$excelCalendar = $baseDate;
 
             return true;
@@ -98,19 +95,20 @@ class Date
      *
      * @param DateTimeZone|string $timeZone The timezone to set for all Excel datetimestamp to PHP DateTime Object conversions
      *
+     * @throws \Exception
+     *
+     * @return bool Success or failure
      * @return bool Success or failure
      */
     public static function setDefaultTimezone($timeZone)
     {
-        try {
-            $timeZone = self::validateTimeZone($timeZone);
+        if ($timeZone = self::validateTimeZone($timeZone)) {
             self::$defaultTimeZone = $timeZone;
-            $retval = true;
-        } catch (PhpSpreadsheetException $e) {
-            $retval = false;
+
+            return true;
         }
 
-        return $retval;
+        return false;
     }
 
     /**
@@ -132,18 +130,20 @@ class Date
      *
      * @param DateTimeZone|string $timeZone The timezone to validate, either as a timezone string or object
      *
+     * @throws \Exception
+     *
+     * @return DateTimeZone The timezone as a timezone object
      * @return DateTimeZone The timezone as a timezone object
      */
-    private static function validateTimeZone($timeZone)
+    protected static function validateTimeZone($timeZone)
     {
-        if ($timeZone instanceof DateTimeZone) {
+        if (is_object($timeZone) && $timeZone instanceof DateTimeZone) {
             return $timeZone;
-        }
-        if (in_array($timeZone, DateTimeZone::listIdentifiers(DateTimeZone::ALL_WITH_BC))) {
+        } elseif (is_string($timeZone)) {
             return new DateTimeZone($timeZone);
         }
 
-        throw new PhpSpreadsheetException('Invalid timezone');
+        throw new \Exception('Invalid timezone');
     }
 
     /**
@@ -153,6 +153,8 @@ class Date
      * @param null|DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
      *                                                                        if you don't want to treat it as a UTC value
      *                                                                    Use the default (UST) unless you absolutely need a conversion
+     *
+     * @throws \Exception
      *
      * @return \DateTime PHP date/time object
      */
@@ -200,6 +202,8 @@ class Date
      * @param null|DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
      *                                                                        if you don't want to treat it as a UTC value
      *                                                                    Use the default (UST) unless you absolutely need a conversion
+     *
+     * @throws \Exception
      *
      * @return int Unix timetamp for this date/time
      */
@@ -315,11 +319,13 @@ class Date
     /**
      * Is a given cell a date/time?
      *
+     * @param Cell $pCell
+     *
      * @return bool
      */
     public static function isDateTime(Cell $pCell)
     {
-        return is_numeric($pCell->getCalculatedValue()) &&
+        return is_numeric($pCell->getValue()) &&
             self::isDateTimeFormat(
                 $pCell->getWorksheet()->getStyle(
                     $pCell->getCoordinate()
@@ -329,6 +335,8 @@ class Date
 
     /**
      * Is a given number format a date/time?
+     *
+     * @param NumberFormat $pFormat
      *
      * @return bool
      */
@@ -389,11 +397,6 @@ class Date
         if ((substr($pFormatCode, 0, 1) == '_') || (substr($pFormatCode, 0, 2) == '0 ')) {
             return false;
         }
-        // Some "special formats" provided in German Excel versions were detected as date time value,
-        // so filter them out here - "\C\H\-00000" (Switzerland) and "\D-00000" (Germany).
-        if (\strpos($pFormatCode, '-00000') !== false) {
-            return false;
-        }
         // Try checking for any of the date formatting characters that don't appear within square braces
         if (preg_match('/(^|\])[^\[]*[' . self::$possibleDateFormatCharacters . ']/i', $pFormatCode)) {
             //    We might also have a format mask containing quoted strings...
@@ -402,10 +405,8 @@ class Date
                 $segMatcher = false;
                 foreach (explode('"', $pFormatCode) as $subVal) {
                     //    Only test in alternate array entries (the non-quoted blocks)
-                    if (
-                        ($segMatcher = !$segMatcher) &&
-                        (preg_match('/(^|\])[^\[]*[' . self::$possibleDateFormatCharacters . ']/i', $subVal))
-                    ) {
+                    if (($segMatcher = !$segMatcher) &&
+                        (preg_match('/(^|\])[^\[]*[' . self::$possibleDateFormatCharacters . ']/i', $subVal))) {
                         return true;
                     }
                 }

@@ -17,6 +17,7 @@ use SimpleXMLElement;
 class Chart
 {
     /**
+     * @param SimpleXMLElement $component
      * @param string $name
      * @param string $format
      *
@@ -50,6 +51,7 @@ class Chart
     }
 
     /**
+     * @param SimpleXMLElement $chartElements
      * @param string $chartName
      *
      * @return \PhpOffice\PhpSpreadsheet\Chart\Chart
@@ -527,9 +529,10 @@ class Chart
     }
 
     /**
+     * @param Layout $plotArea
      * @param mixed $plotAttributes
      */
-    private static function setChartAttributes(Layout $plotArea, $plotAttributes): void
+    private static function setChartAttributes(Layout $plotArea, $plotAttributes)
     {
         foreach ($plotAttributes as $plotAttributeKey => $plotAttributeValue) {
             switch ($plotAttributeKey) {

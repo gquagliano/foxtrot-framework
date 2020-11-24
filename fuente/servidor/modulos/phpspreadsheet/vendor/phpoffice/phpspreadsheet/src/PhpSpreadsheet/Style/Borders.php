@@ -195,7 +195,9 @@ class Borders extends Supervisor
      *
      * @param array $pStyles Array containing style information
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return Borders
      */
     public function applyFromArray(array $pStyles)
     {
@@ -284,6 +286,8 @@ class Borders extends Supervisor
     /**
      * Get AllBorders (pseudo-border). Only applies to supervisor.
      *
+     * @throws PhpSpreadsheetException
+     *
      * @return Border
      */
     public function getAllBorders()
@@ -297,6 +301,8 @@ class Borders extends Supervisor
 
     /**
      * Get Outline (pseudo-border). Only applies to supervisor.
+     *
+     * @throws PhpSpreadsheetException
      *
      * @return Border
      */
@@ -312,6 +318,8 @@ class Borders extends Supervisor
     /**
      * Get Inside (pseudo-border). Only applies to supervisor.
      *
+     * @throws PhpSpreadsheetException
+     *
      * @return Border
      */
     public function getInside()
@@ -326,6 +334,8 @@ class Borders extends Supervisor
     /**
      * Get Vertical (pseudo-border). Only applies to supervisor.
      *
+     * @throws PhpSpreadsheetException
+     *
      * @return Border
      */
     public function getVertical()
@@ -339,6 +349,8 @@ class Borders extends Supervisor
 
     /**
      * Get Horizontal (pseudo-border). Only applies to supervisor.
+     *
+     * @throws PhpSpreadsheetException
      *
      * @return Border
      */
@@ -370,7 +382,7 @@ class Borders extends Supervisor
      *
      * @param int $pValue see self::DIAGONAL_*
      *
-     * @return $this
+     * @return Borders
      */
     public function setDiagonalDirection($pValue)
     {

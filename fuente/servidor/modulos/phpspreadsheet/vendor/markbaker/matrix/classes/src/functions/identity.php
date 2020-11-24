@@ -17,7 +17,7 @@ namespace Matrix;
  * @return Matrix The identity matrix
  * @throws Exception If argument isn't a valid matrix or array.
  */
-function identity($matrix): Matrix
+function identity($matrix)
 {
     if (is_array($matrix)) {
         $matrix = new Matrix($matrix);

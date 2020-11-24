@@ -118,6 +118,8 @@ interface IReader
     /**
      * Set read filter.
      *
+     * @param IReadFilter $pValue
+     *
      * @return IReader
      */
     public function setReadFilter(IReadFilter $pValue);
@@ -126,6 +128,8 @@ interface IReader
      * Loads PhpSpreadsheet from file.
      *
      * @param string $pFilename
+     *
+     * @throws Exception
      *
      * @return \PhpOffice\PhpSpreadsheet\Spreadsheet
      */

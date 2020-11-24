@@ -21,8 +21,10 @@ class Dompdf extends Pdf
      * Save Spreadsheet to file.
      *
      * @param string $pFilename Name of the file to save as
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function save($pFilename): void
+    public function save($pFilename)
     {
         $fileHandle = parent::prepareForSave($pFilename);
 
@@ -61,12 +63,16 @@ class Dompdf extends Pdf
         $pdf = $this->createExternalWriterInstance();
         $pdf->setPaper(strtolower($paperSize), $orientation);
 
-        $pdf->loadHtml($this->generateHTMLAll());
+        $pdf->loadHtml(
+            $this->generateHTMLHeader(false) .
+            $this->generateSheetData() .
+            $this->generateHTMLFooter()
+        );
         $pdf->render();
 
         //  Write to file
         fwrite($fileHandle, $pdf->output());
 
-        parent::restoreStateAfterSave();
+        parent::restoreStateAfterSave($fileHandle);
     }
 }

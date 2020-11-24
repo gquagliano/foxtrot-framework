@@ -33,7 +33,7 @@ class Blip
      *
      * @param string $data
      */
-    public function setData($data): void
+    public function setData($data)
     {
         $this->data = $data;
     }
@@ -43,7 +43,7 @@ class Blip
      *
      * @param \PhpOffice\PhpSpreadsheet\Shared\Escher\DggContainer\BstoreContainer\BSE $parent
      */
-    public function setParent($parent): void
+    public function setParent($parent)
     {
         $this->parent = $parent;
     }

@@ -14,7 +14,10 @@ class Drawing extends WriterPart
     /**
      * Write drawings to XML format.
      *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
      * @param bool $includeCharts Flag indicating if we should include drawing details for charts
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -79,9 +82,10 @@ class Drawing extends WriterPart
      * Write drawings to XML format.
      *
      * @param XMLWriter $objWriter XML Writer
+     * @param \PhpOffice\PhpSpreadsheet\Chart\Chart $pChart
      * @param int $pRelationId
      */
-    public function writeChart(XMLWriter $objWriter, \PhpOffice\PhpSpreadsheet\Chart\Chart $pChart, $pRelationId = -1): void
+    public function writeChart(XMLWriter $objWriter, \PhpOffice\PhpSpreadsheet\Chart\Chart $pChart, $pRelationId = -1)
     {
         $tl = $pChart->getTopLeftPosition();
         $tl['colRow'] = Coordinate::coordinateFromString($tl['cell']);
@@ -149,10 +153,13 @@ class Drawing extends WriterPart
      * Write drawings to XML format.
      *
      * @param XMLWriter $objWriter XML Writer
+     * @param BaseDrawing $pDrawing
      * @param int $pRelationId
      * @param null|int $hlinkClickId
+     *
+     * @throws WriterException
      */
-    public function writeDrawing(XMLWriter $objWriter, BaseDrawing $pDrawing, $pRelationId = -1, $hlinkClickId = null): void
+    public function writeDrawing(XMLWriter $objWriter, BaseDrawing $pDrawing, $pRelationId = -1, $hlinkClickId = null)
     {
         if ($pRelationId >= 0) {
             // xdr:oneCellAnchor
@@ -279,6 +286,10 @@ class Drawing extends WriterPart
 
     /**
      * Write VML header/footer images to XML format.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -429,7 +440,7 @@ class Drawing extends WriterPart
      * @param string $pReference Reference
      * @param HeaderFooterDrawing $pImage Image
      */
-    private function writeVMLHeaderFooterImage(XMLWriter $objWriter, $pReference, HeaderFooterDrawing $pImage): void
+    private function writeVMLHeaderFooterImage(XMLWriter $objWriter, $pReference, HeaderFooterDrawing $pImage)
     {
         // Calculate object id
         preg_match('{(\d+)}', md5($pReference), $m);
@@ -466,6 +477,8 @@ class Drawing extends WriterPart
     /**
      * Get an array of all drawings.
      *
+     * @param Spreadsheet $spreadsheet
+     *
      * @return \PhpOffice\PhpSpreadsheet\Worksheet\Drawing[] All drawings in PhpSpreadsheet
      */
     public function allDrawings(Spreadsheet $spreadsheet)
@@ -489,9 +502,10 @@ class Drawing extends WriterPart
     }
 
     /**
+     * @param XMLWriter $objWriter
      * @param null|int $hlinkClickId
      */
-    private function writeHyperLinkDrawing(XMLWriter $objWriter, $hlinkClickId): void
+    private function writeHyperLinkDrawing(XMLWriter $objWriter, $hlinkClickId)
     {
         if ($hlinkClickId === null) {
             return;

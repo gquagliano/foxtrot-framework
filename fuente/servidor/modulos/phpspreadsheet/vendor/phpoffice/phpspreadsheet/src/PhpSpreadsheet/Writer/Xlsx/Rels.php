@@ -12,6 +12,10 @@ class Rels extends WriterPart
     /**
      * Write relationships to XML format.
      *
+     * @param Spreadsheet $spreadsheet
+     *
+     * @throws WriterException
+     *
      * @return string XML Output
      */
     public function writeRelationships(Spreadsheet $spreadsheet)
@@ -82,6 +86,10 @@ class Rels extends WriterPart
 
     /**
      * Write workbook relationships to XML format.
+     *
+     * @param Spreadsheet $spreadsheet
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -160,8 +168,11 @@ class Rels extends WriterPart
      *     rId1                 - Drawings
      *  rId_hyperlink_x     - Hyperlinks
      *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
      * @param int $pWorksheetId
      * @param bool $includeCharts Flag indicating if we should write charts
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -183,6 +194,7 @@ class Rels extends WriterPart
         $objWriter->writeAttribute('xmlns', 'http://schemas.openxmlformats.org/package/2006/relationships');
 
         // Write drawing relationships?
+        $d = 0;
         $drawingOriginalIds = [];
         $unparsedLoadedData = $pWorksheet->getParent()->getUnparsedLoadedData();
         if (isset($unparsedLoadedData['sheets'][$pWorksheet->getCodeName()]['drawingOriginalIds'])) {
@@ -196,19 +208,13 @@ class Rels extends WriterPart
         }
 
         if (($pWorksheet->getDrawingCollection()->count() > 0) || (count($charts) > 0) || $drawingOriginalIds) {
-            $rId = 1;
+            $relPath = '../drawings/drawing' . $pWorksheetId . '.xml';
+            $rId = ++$d;
 
-            // Use original $relPath to get original $rId.
-            // Take first. In future can be overwritten.
-            // (! synchronize with \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet::writeDrawings)
-            reset($drawingOriginalIds);
-            $relPath = key($drawingOriginalIds);
             if (isset($drawingOriginalIds[$relPath])) {
                 $rId = (int) (substr($drawingOriginalIds[$relPath], 3));
             }
 
-            // Generate new $relPath to write drawing relationship
-            $relPath = '../drawings/drawing' . $pWorksheetId . '.xml';
             $this->writeRelationship(
                 $objWriter,
                 $rId,
@@ -271,7 +277,7 @@ class Rels extends WriterPart
         return $objWriter->getData();
     }
 
-    private function writeUnparsedRelationship(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet, XMLWriter $objWriter, $relationship, $type): void
+    private function writeUnparsedRelationship(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet, XMLWriter $objWriter, $relationship, $type)
     {
         $unparsedLoadedData = $pWorksheet->getParent()->getUnparsedLoadedData();
         if (!isset($unparsedLoadedData['sheets'][$pWorksheet->getCodeName()][$relationship])) {
@@ -291,8 +297,11 @@ class Rels extends WriterPart
     /**
      * Write drawing relationships to XML format.
      *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
      * @param int &$chartRef Chart ID
      * @param bool $includeCharts Flag indicating if we should write charts
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -317,10 +326,8 @@ class Rels extends WriterPart
         $i = 1;
         $iterator = $pWorksheet->getDrawingCollection()->getIterator();
         while ($iterator->valid()) {
-            if (
-                $iterator->current() instanceof \PhpOffice\PhpSpreadsheet\Worksheet\Drawing
-                || $iterator->current() instanceof MemoryDrawing
-            ) {
+            if ($iterator->current() instanceof \PhpOffice\PhpSpreadsheet\Worksheet\Drawing
+                || $iterator->current() instanceof MemoryDrawing) {
                 // Write relationship for image drawing
                 /** @var \PhpOffice\PhpSpreadsheet\Worksheet\Drawing $drawing */
                 $drawing = $iterator->current();
@@ -360,6 +367,10 @@ class Rels extends WriterPart
 
     /**
      * Write header/footer drawing relationships to XML format.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
+     *
+     * @throws WriterException
      *
      * @return string XML Output
      */
@@ -404,8 +415,10 @@ class Rels extends WriterPart
      * @param string $pType Relationship type
      * @param string $pTarget Relationship target
      * @param string $pTargetMode Relationship target mode
+     *
+     * @throws WriterException
      */
-    private function writeRelationship(XMLWriter $objWriter, $pId, $pType, $pTarget, $pTargetMode = ''): void
+    private function writeRelationship(XMLWriter $objWriter, $pId, $pType, $pTarget, $pTargetMode = '')
     {
         if ($pType != '' && $pTarget != '') {
             // Write relationship
@@ -428,6 +441,8 @@ class Rels extends WriterPart
      * @param $objWriter
      * @param \PhpOffice\PhpSpreadsheet\Worksheet\Drawing $drawing
      * @param $i
+     *
+     * @throws WriterException
      *
      * @return int
      */

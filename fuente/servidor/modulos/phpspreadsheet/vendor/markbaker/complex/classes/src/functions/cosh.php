@@ -16,7 +16,7 @@ namespace Complex;
  * @return    Complex          The hyperbolic cosine of the complex argument.
  * @throws    Exception        If argument isn't a valid real or complex number.
  */
-function cosh($complex): Complex
+function cosh($complex)
 {
     $complex = Complex::validateComplexArgument($complex);
 

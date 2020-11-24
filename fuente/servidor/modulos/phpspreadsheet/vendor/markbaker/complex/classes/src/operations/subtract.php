@@ -15,7 +15,7 @@ namespace Complex;
  * @param     array of string|integer|float|Complex    $complexValues   The numbers to subtract
  * @return    Complex
  */
-function subtract(...$complexValues): Complex
+function subtract(...$complexValues)
 {
     if (count($complexValues) < 2) {
         throw new \Exception('This function requires at least 2 arguments');

@@ -178,7 +178,7 @@ class Escher
     /**
      * Read a generic record.
      */
-    private function readDefault(): void
+    private function readDefault()
     {
         // offset 0; size: 2; recVer and recInstance
         $verInstance = Xls::getUInt2d($this->data, $this->pos);
@@ -199,7 +199,7 @@ class Escher
     /**
      * Read DggContainer record (Drawing Group Container).
      */
-    private function readDggContainer(): void
+    private function readDggContainer()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -217,7 +217,7 @@ class Escher
     /**
      * Read Dgg record (Drawing Group).
      */
-    private function readDgg(): void
+    private function readDgg()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -229,7 +229,7 @@ class Escher
     /**
      * Read BstoreContainer record (Blip Store Container).
      */
-    private function readBstoreContainer(): void
+    private function readBstoreContainer()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -247,7 +247,7 @@ class Escher
     /**
      * Read BSE record.
      */
-    private function readBSE(): void
+    private function readBSE()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -313,7 +313,7 @@ class Escher
     /**
      * Read BlipJPEG record. Holds raw JPEG image data.
      */
-    private function readBlipJPEG(): void
+    private function readBlipJPEG()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -340,7 +340,7 @@ class Escher
 
         // offset: var; size: 1; tag
         $tag = ord($recordData[$pos]);
-        ++$pos;
+        $pos += 1;
 
         // offset: var; size: var; the raw image data
         $data = substr($recordData, $pos);
@@ -354,7 +354,7 @@ class Escher
     /**
      * Read BlipPNG record. Holds raw PNG image data.
      */
-    private function readBlipPNG(): void
+    private function readBlipPNG()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -381,7 +381,7 @@ class Escher
 
         // offset: var; size: 1; tag
         $tag = ord($recordData[$pos]);
-        ++$pos;
+        $pos += 1;
 
         // offset: var; size: var; the raw image data
         $data = substr($recordData, $pos);
@@ -395,7 +395,7 @@ class Escher
     /**
      * Read OPT record. This record may occur within DggContainer record or SpContainer.
      */
-    private function readOPT(): void
+    private function readOPT()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -414,7 +414,7 @@ class Escher
     /**
      * Read TertiaryOPT record.
      */
-    private function readTertiaryOPT(): void
+    private function readTertiaryOPT()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -431,7 +431,7 @@ class Escher
     /**
      * Read SplitMenuColors record.
      */
-    private function readSplitMenuColors(): void
+    private function readSplitMenuColors()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -443,7 +443,7 @@ class Escher
     /**
      * Read DgContainer record (Drawing Container).
      */
-    private function readDgContainer(): void
+    private function readDgContainer()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -461,7 +461,7 @@ class Escher
     /**
      * Read Dg record (Drawing).
      */
-    private function readDg(): void
+    private function readDg()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -473,7 +473,7 @@ class Escher
     /**
      * Read SpgrContainer record (Shape Group Container).
      */
-    private function readSpgrContainer(): void
+    private function readSpgrContainer()
     {
         // context is either context DgContainer or SpgrContainer
 
@@ -501,7 +501,7 @@ class Escher
     /**
      * Read SpContainer record (Shape Container).
      */
-    private function readSpContainer(): void
+    private function readSpContainer()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -521,7 +521,7 @@ class Escher
     /**
      * Read Spgr record (Shape Group).
      */
-    private function readSpgr(): void
+    private function readSpgr()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -533,7 +533,7 @@ class Escher
     /**
      * Read Sp record (Shape).
      */
-    private function readSp(): void
+    private function readSp()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -550,7 +550,7 @@ class Escher
     /**
      * Read ClientTextbox record.
      */
-    private function readClientTextbox(): void
+    private function readClientTextbox()
     {
         // offset: 0; size: 2; recVer and recInstance
 
@@ -567,7 +567,7 @@ class Escher
     /**
      * Read ClientAnchor record. This record holds information about where the shape is anchored in worksheet.
      */
-    private function readClientAnchor(): void
+    private function readClientAnchor()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -621,7 +621,7 @@ class Escher
     /**
      * Read ClientData record.
      */
-    private function readClientData(): void
+    private function readClientData()
     {
         $length = Xls::getInt4d($this->data, $this->pos + 4);
         $recordData = substr($this->data, $this->pos + 8, $length);
@@ -636,7 +636,7 @@ class Escher
      * @param string $data Binary data
      * @param int $n Number of properties
      */
-    private function readOfficeArtRGFOPTE($data, $n): void
+    private function readOfficeArtRGFOPTE($data, $n)
     {
         $splicedComplexData = substr($data, 6 * $n);
 

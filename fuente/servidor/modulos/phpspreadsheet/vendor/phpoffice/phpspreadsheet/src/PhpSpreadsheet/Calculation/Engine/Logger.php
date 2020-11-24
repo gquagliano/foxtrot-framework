@@ -39,6 +39,8 @@ class Logger
 
     /**
      * Instantiate a Calculation engine logger.
+     *
+     * @param CyclicReferenceStack $stack
      */
     public function __construct(CyclicReferenceStack $stack)
     {
@@ -50,7 +52,7 @@ class Logger
      *
      * @param bool $pValue
      */
-    public function setWriteDebugLog($pValue): void
+    public function setWriteDebugLog($pValue)
     {
         $this->writeDebugLog = $pValue;
     }
@@ -70,7 +72,7 @@ class Logger
      *
      * @param bool $pValue
      */
-    public function setEchoDebugLog($pValue): void
+    public function setEchoDebugLog($pValue)
     {
         $this->echoDebugLog = $pValue;
     }
@@ -88,11 +90,11 @@ class Logger
     /**
      * Write an entry to the calculation engine debug log.
      */
-    public function writeDebugLog(...$args): void
+    public function writeDebugLog(...$args)
     {
         //    Only write the debug log if logging is enabled
         if ($this->writeDebugLog) {
-            $message = implode('', $args);
+            $message = implode($args);
             $cellReference = implode(' -> ', $this->cellStack->showStack());
             if ($this->echoDebugLog) {
                 echo $cellReference,
@@ -107,23 +109,9 @@ class Logger
     }
 
     /**
-     * Write a series of entries to the calculation engine debug log.
-     *
-     * @param string[] $args
-     */
-    public function mergeDebugLog(array $args): void
-    {
-        if ($this->writeDebugLog) {
-            foreach ($args as $entry) {
-                $this->writeDebugLog($entry);
-            }
-        }
-    }
-
-    /**
      * Clear the calculation engine debug log.
      */
-    public function clearLog(): void
+    public function clearLog()
     {
         $this->debugLog = [];
     }

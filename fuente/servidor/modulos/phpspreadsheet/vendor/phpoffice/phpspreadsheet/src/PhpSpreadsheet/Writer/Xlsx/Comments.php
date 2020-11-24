@@ -11,6 +11,10 @@ class Comments extends WriterPart
     /**
      * Write comments to XML format.
      *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     *
      * @return string XML Output
      */
     public function writeComments(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet)
@@ -69,8 +73,10 @@ class Comments extends WriterPart
      * @param string $pCellReference Cell reference
      * @param Comment $pComment Comment
      * @param array $pAuthors Array of authors
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    private function writeComment(XMLWriter $objWriter, $pCellReference, Comment $pComment, array $pAuthors): void
+    private function writeComment(XMLWriter $objWriter, $pCellReference, Comment $pComment, array $pAuthors)
     {
         // comment
         $objWriter->startElement('comment');
@@ -87,6 +93,10 @@ class Comments extends WriterPart
 
     /**
      * Write VML comments to XML format.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $pWorksheet
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      *
      * @return string XML Output
      */
@@ -162,10 +172,10 @@ class Comments extends WriterPart
      * @param string $pCellReference Cell reference, eg: 'A1'
      * @param Comment $pComment Comment
      */
-    private function writeVMLComment(XMLWriter $objWriter, $pCellReference, Comment $pComment): void
+    private function writeVMLComment(XMLWriter $objWriter, $pCellReference, Comment $pComment)
     {
         // Metadata
-        [$column, $row] = Coordinate::coordinateFromString($pCellReference);
+        list($column, $row) = Coordinate::coordinateFromString($pCellReference);
         $column = Coordinate::columnIndexFromString($column);
         $id = 1024 + $column + $row;
         $id = substr($id, 0, 4);

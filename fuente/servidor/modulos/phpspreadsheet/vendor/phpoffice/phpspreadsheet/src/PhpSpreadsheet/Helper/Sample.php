@@ -11,7 +11,6 @@ use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use ReflectionClass;
 use RegexIterator;
-use RuntimeException;
 
 /**
  * Helper class to be used in sample code.
@@ -107,10 +106,11 @@ class Sample
     /**
      * Write documents.
      *
+     * @param Spreadsheet $spreadsheet
      * @param string $filename
      * @param string[] $writers
      */
-    public function write(Spreadsheet $spreadsheet, $filename, array $writers = ['Xlsx', 'Xls']): void
+    public function write(Spreadsheet $spreadsheet, $filename, array $writers = ['Xlsx', 'Xls'])
     {
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $spreadsheet->setActiveSheetIndex(0);
@@ -142,7 +142,7 @@ class Sample
         $tempFolder = sys_get_temp_dir() . '/phpspreadsheet';
         if (!is_dir($tempFolder)) {
             if (!mkdir($tempFolder) && !is_dir($tempFolder)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $tempFolder));
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $tempFolder));
             }
         }
 
@@ -179,7 +179,7 @@ class Sample
         return $temporaryFilename . '.' . $extension;
     }
 
-    public function log($message): void
+    public function log($message)
     {
         $eol = $this->isCli() ? PHP_EOL : '<br />';
         echo date('H:i:s ') . $message . $eol;
@@ -188,7 +188,7 @@ class Sample
     /**
      * Log ending notes.
      */
-    public function logEndingNotes(): void
+    public function logEndingNotes()
     {
         // Do not show execution time for index
         $this->log('Peak memory usage: ' . (memory_get_peak_usage(true) / 1024 / 1024) . 'MB');
@@ -197,10 +197,11 @@ class Sample
     /**
      * Log a line about the write operation.
      *
+     * @param IWriter $writer
      * @param string $path
      * @param float $callStartTime
      */
-    public function logWrite(IWriter $writer, $path, $callStartTime): void
+    public function logWrite(IWriter $writer, $path, $callStartTime)
     {
         $callEndTime = microtime(true);
         $callTime = $callEndTime - $callStartTime;
@@ -218,7 +219,7 @@ class Sample
      * @param string $path
      * @param float $callStartTime
      */
-    public function logRead($format, $path, $callStartTime): void
+    public function logRead($format, $path, $callStartTime)
     {
         $callEndTime = microtime(true);
         $callTime = $callEndTime - $callStartTime;

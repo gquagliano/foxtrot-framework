@@ -159,6 +159,11 @@ class Matrix
      *
      *    Get a submatrix
      *
+     * @param int $i0 Initial row index
+     * @param int $iF Final row index
+     * @param int $j0 Initial column index
+     * @param int $jF Final column index
+     *
      * @return Matrix Submatrix
      */
     public function getMatrix(...$args)
@@ -169,7 +174,7 @@ class Matrix
             switch ($match) {
                 //A($i0...; $j0...)
                 case 'integer,integer':
-                    [$i0, $j0] = $args;
+                    list($i0, $j0) = $args;
                     if ($i0 >= 0) {
                         $m = $this->m - $i0;
                     } else {
@@ -192,7 +197,7 @@ class Matrix
                     break;
                 //A($i0...$iF; $j0...$jF)
                 case 'integer,integer,integer,integer':
-                    [$i0, $iF, $j0, $jF] = $args;
+                    list($i0, $iF, $j0, $jF) = $args;
                     if (($iF > $i0) && ($this->m >= $iF) && ($i0 >= 0)) {
                         $m = $iF - $i0;
                     } else {
@@ -215,7 +220,7 @@ class Matrix
                     break;
                 //$R = array of row indices; $C = array of column indices
                 case 'array,array':
-                    [$RL, $CL] = $args;
+                    list($RL, $CL) = $args;
                     if (count($RL) > 0) {
                         $m = count($RL);
                     } else {
@@ -238,7 +243,7 @@ class Matrix
                     break;
                 //A($i0...$iF); $CL = array of column indices
                 case 'integer,integer,array':
-                    [$i0, $iF, $CL] = $args;
+                    list($i0, $iF, $CL) = $args;
                     if (($iF > $i0) && ($this->m >= $iF) && ($i0 >= 0)) {
                         $m = $iF - $i0;
                     } else {
@@ -261,7 +266,7 @@ class Matrix
                     break;
                 //$RL = array of row indices
                 case 'array,integer,integer':
-                    [$RL, $j0, $jF] = $args;
+                    list($RL, $j0, $jF) = $args;
                     if (count($RL) > 0) {
                         $m = count($RL);
                     } else {
@@ -472,6 +477,8 @@ class Matrix
      *
      *    A + B
      *
+     * @param mixed $B Matrix/Array
+     *
      * @return Matrix Sum
      */
     public function plus(...$args)
@@ -515,7 +522,9 @@ class Matrix
      *
      *    A = A + B
      *
-     * @return $this
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix Sum
      */
     public function plusEquals(...$args)
     {
@@ -572,6 +581,8 @@ class Matrix
      *
      *    A - B
      *
+     * @param mixed $B Matrix/Array
+     *
      * @return Matrix Sum
      */
     public function minus(...$args)
@@ -615,7 +626,9 @@ class Matrix
      *
      *    A = A - B
      *
-     * @return $this
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix Sum
      */
     public function minusEquals(...$args)
     {
@@ -673,6 +686,8 @@ class Matrix
      *    Element-by-element multiplication
      *    Cij = Aij * Bij
      *
+     * @param mixed $B Matrix/Array
+     *
      * @return Matrix Matrix Cij
      */
     public function arrayTimes(...$args)
@@ -717,7 +732,9 @@ class Matrix
      *    Element-by-element multiplication
      *    Aij = Aij * Bij
      *
-     * @return $this
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix Matrix Aij
      */
     public function arrayTimesEquals(...$args)
     {
@@ -774,6 +791,8 @@ class Matrix
      *
      *    Element-by-element right division
      *    A / B
+     *
+     * @param Matrix $B Matrix B
      *
      * @return Matrix Division result
      */
@@ -838,6 +857,8 @@ class Matrix
      *    Element-by-element right division
      *    Aij = Aij / Bij
      *
+     * @param mixed $B Matrix/Array
+     *
      * @return Matrix Matrix Aij
      */
     public function arrayRightDivideEquals(...$args)
@@ -881,6 +902,8 @@ class Matrix
      *
      *    Element-by-element Left division
      *    A / B
+     *
+     * @param Matrix $B Matrix B
      *
      * @return Matrix Division result
      */
@@ -926,6 +949,8 @@ class Matrix
      *    Element-by-element Left division
      *    Aij = Aij / Bij
      *
+     * @param mixed $B Matrix/Array
+     *
      * @return Matrix Matrix Aij
      */
     public function arrayLeftDivideEquals(...$args)
@@ -968,6 +993,8 @@ class Matrix
      * times.
      *
      *    Matrix multiplication
+     *
+     * @param mixed $n Matrix/Array/Scalar
      *
      * @return Matrix Product
      */
@@ -1062,7 +1089,9 @@ class Matrix
      *
      *    A = A ^ B
      *
-     * @return $this
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix Sum
      */
     public function power(...$args)
     {
@@ -1101,7 +1130,7 @@ class Matrix
                         $validValues &= StringHelper::convertToNumberIfFraction($value);
                     }
                     if ($validValues) {
-                        $this->A[$i][$j] = $this->A[$i][$j] ** $value;
+                        $this->A[$i][$j] = pow($this->A[$i][$j], $value);
                     } else {
                         $this->A[$i][$j] = Functions::NAN();
                     }
@@ -1119,7 +1148,9 @@ class Matrix
      *
      *    A = A & B
      *
-     * @return $this
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix Sum
      */
     public function concat(...$args)
     {

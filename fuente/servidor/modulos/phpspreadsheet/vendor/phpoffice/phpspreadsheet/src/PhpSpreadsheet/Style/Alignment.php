@@ -138,7 +138,9 @@ class Alignment extends Supervisor
      *
      * @param array $pStyles Array containing style information
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return Alignment
      */
     public function applyFromArray(array $pStyles)
     {
@@ -191,7 +193,7 @@ class Alignment extends Supervisor
      *
      * @param string $pValue see self::HORIZONTAL_*
      *
-     * @return $this
+     * @return Alignment
      */
     public function setHorizontal($pValue)
     {
@@ -228,7 +230,7 @@ class Alignment extends Supervisor
      *
      * @param string $pValue see self::VERTICAL_*
      *
-     * @return $this
+     * @return Alignment
      */
     public function setVertical($pValue)
     {
@@ -265,7 +267,9 @@ class Alignment extends Supervisor
      *
      * @param int $pValue
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return Alignment
      */
     public function setTextRotation($pValue)
     {
@@ -308,7 +312,7 @@ class Alignment extends Supervisor
      *
      * @param bool $pValue
      *
-     * @return $this
+     * @return Alignment
      */
     public function setWrapText($pValue)
     {
@@ -344,7 +348,7 @@ class Alignment extends Supervisor
      *
      * @param bool $pValue
      *
-     * @return $this
+     * @return Alignment
      */
     public function setShrinkToFit($pValue)
     {
@@ -380,16 +384,14 @@ class Alignment extends Supervisor
      *
      * @param int $pValue
      *
-     * @return $this
+     * @return Alignment
      */
     public function setIndent($pValue)
     {
         if ($pValue > 0) {
-            if (
-                $this->getHorizontal() != self::HORIZONTAL_GENERAL &&
+            if ($this->getHorizontal() != self::HORIZONTAL_GENERAL &&
                 $this->getHorizontal() != self::HORIZONTAL_LEFT &&
-                $this->getHorizontal() != self::HORIZONTAL_RIGHT
-            ) {
+                $this->getHorizontal() != self::HORIZONTAL_RIGHT) {
                 $pValue = 0; // indent not supported
             }
         }
@@ -422,7 +424,7 @@ class Alignment extends Supervisor
      *
      * @param int $pValue
      *
-     * @return $this
+     * @return Alignment
      */
     public function setReadOrder($pValue)
     {

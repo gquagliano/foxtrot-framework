@@ -16,7 +16,7 @@ namespace Complex;
  * @return    Complex          The inverse hyperbolic sine of the complex argument.
  * @throws    Exception        If argument isn't a valid real or complex number.
  */
-function asinh($complex): Complex
+function asinh($complex)
 {
     $complex = Complex::validateComplexArgument($complex);
 

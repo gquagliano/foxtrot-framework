@@ -4,6 +4,7 @@ namespace PhpOffice\PhpSpreadsheet\RichText;
 
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\IComparable;
 
 class RichText implements IComparable
@@ -19,8 +20,10 @@ class RichText implements IComparable
      * Create a new RichText instance.
      *
      * @param Cell $pCell
+     *
+     * @throws Exception
      */
-    public function __construct(?Cell $pCell = null)
+    public function __construct(Cell $pCell = null)
     {
         // Initialise variables
         $this->richTextElements = [];
@@ -44,7 +47,7 @@ class RichText implements IComparable
      *
      * @param ITextElement $pText Rich text element
      *
-     * @return $this
+     * @return RichText
      */
     public function addText(ITextElement $pText)
     {
@@ -57,6 +60,8 @@ class RichText implements IComparable
      * Create text.
      *
      * @param string $pText Text
+     *
+     * @throws Exception
      *
      * @return TextElement
      */
@@ -72,6 +77,8 @@ class RichText implements IComparable
      * Create text run.
      *
      * @param string $pText Text
+     *
+     * @throws Exception
      *
      * @return Run
      */
@@ -126,7 +133,7 @@ class RichText implements IComparable
      *
      * @param ITextElement[] $textElements Array of elements
      *
-     * @return $this
+     * @return RichText
      */
     public function setRichTextElements(array $textElements)
     {

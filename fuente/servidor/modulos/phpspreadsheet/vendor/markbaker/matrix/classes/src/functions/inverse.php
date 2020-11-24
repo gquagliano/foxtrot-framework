@@ -17,7 +17,7 @@ namespace Matrix;
  * @return Matrix The new matrix
  * @throws Exception If argument isn't a valid matrix or array.
  */
-function inverse($matrix): Matrix
+function inverse($matrix)
 {
     if (is_array($matrix)) {
         $matrix = new Matrix($matrix);

@@ -55,7 +55,7 @@ class Matrix
      *
      * @param array $grid
      */
-    protected function buildFromArray(array $grid): void
+    protected function buildFromArray(array $grid)
     {
         $this->rows = count($grid);
         $columns = array_reduce(
@@ -86,7 +86,7 @@ class Matrix
      * @return int
      * @throws Exception
      */
-    public static function validateRow(int $row): int
+    public static function validateRow($row)
     {
         if ((!is_numeric($row)) || (intval($row) < 1)) {
             throw new Exception('Invalid Row');
@@ -102,7 +102,7 @@ class Matrix
      * @return int
      * @throws Exception
      */
-    public static function validateColumn(int $column): int
+    public static function validateColumn($column)
     {
         if ((!is_numeric($column)) || (intval($column) < 1)) {
             throw new Exception('Invalid Column');
@@ -118,7 +118,7 @@ class Matrix
      * @return int
      * @throws Exception
      */
-    protected function validateRowInRange(int $row): int
+    protected function validateRowInRange($row)
     {
         $row = static::validateRow($row);
         if ($row > $this->rows) {
@@ -135,7 +135,7 @@ class Matrix
      * @return int
      * @throws Exception
      */
-    protected function validateColumnInRange(int $column): int
+    protected function validateColumnInRange($column)
     {
         $column = static::validateColumn($column);
         if ($column > $this->columns) {
@@ -157,7 +157,7 @@ class Matrix
      * @return static
      * @throws Exception
      */
-    public function getRows(int $row, int $rowCount = 1): Matrix
+    public function getRows($row, $rowCount = 1)
     {
         $row = $this->validateRowInRange($row);
         if ($rowCount === 0) {
@@ -179,7 +179,7 @@ class Matrix
      * @return Matrix
      * @throws Exception
      */
-    public function getColumns(int $column, int $columnCount = 1): Matrix
+    public function getColumns($column, $columnCount = 1)
     {
         $column = $this->validateColumnInRange($column);
         if ($columnCount < 1) {
@@ -207,7 +207,7 @@ class Matrix
      * @return static
      * @throws Exception
      */
-    public function dropRows(int $row, int $rowCount = 1): Matrix
+    public function dropRows($row, $rowCount = 1)
     {
         $this->validateRowInRange($row);
         if ($rowCount === 0) {
@@ -233,7 +233,7 @@ class Matrix
      * @return static
      * @throws Exception
      */
-    public function dropColumns(int $column, int $columnCount = 1): Matrix
+    public function dropColumns($column, $columnCount = 1)
     {
         $this->validateColumnInRange($column);
         if ($columnCount < 1) {
@@ -260,7 +260,7 @@ class Matrix
      * @return mixed
      * @throws Exception
      */
-    public function getValue(int $row, int $column)
+    public function getValue($row, $column)
     {
         $row = $this->validateRowInRange($row);
         $column = $this->validateColumnInRange($column);
@@ -274,7 +274,7 @@ class Matrix
      *
      * @return \Generator|Matrix[]|mixed[]
      */
-    public function rows(): \Generator
+    public function rows()
     {
         foreach ($this->grid as $i => $row) {
             yield $i + 1 => ($this->columns == 1)
@@ -289,7 +289,7 @@ class Matrix
      *
      * @return \Generator|Matrix[]|mixed[]
      */
-    public function columns(): \Generator
+    public function columns()
     {
         for ($i = 0; $i < $this->columns; ++$i) {
             yield $i + 1 => ($this->rows == 1)
@@ -304,7 +304,7 @@ class Matrix
      *
      * @return bool
      */
-    public function isSquare(): bool
+    public function isSquare()
     {
         return $this->rows == $this->columns;
     }
@@ -315,7 +315,7 @@ class Matrix
      *
      * @return bool
      */
-    public function isVector(): bool
+    public function isVector()
     {
         return $this->rows == 1 || $this->columns == 1;
     }
@@ -325,7 +325,7 @@ class Matrix
      *
      * @return array
      */
-    public function toArray(): array
+    public function toArray()
     {
         return $this->grid;
     }
@@ -342,7 +342,7 @@ class Matrix
      * @return mixed
      * @throws Exception
      */
-    public function __get(string $propertyName)
+    public function __get($propertyName)
     {
         $propertyName = strtolower($propertyName);
 
@@ -384,7 +384,7 @@ class Matrix
      * @return Matrix|float
      * @throws Exception
      */
-    public function __call(string $functionName, $arguments)
+    public function __call($functionName, $arguments)
     {
         $functionName = strtolower(str_replace('_', '', $functionName));
 

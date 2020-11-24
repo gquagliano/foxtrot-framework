@@ -15,7 +15,7 @@ class Multiplication extends Operator
      * @throws Exception If the provided argument is not appropriate for the operation
      * @return $this The operation object, allowing multiple multiplications to be chained
      **/
-    public function execute($value): Operator
+    public function execute($value)
     {
         if (is_array($value)) {
             $value = new Matrix($value);
@@ -36,7 +36,7 @@ class Multiplication extends Operator
      * @param mixed $value The numeric value to multiply with the current base value
      * @return $this The operation object, allowing multiple mutiplications to be chained
      **/
-    protected function multiplyScalar($value): Operator
+    protected function multiplyScalar($value)
     {
         for ($row = 0; $row < $this->rows; ++$row) {
             for ($column = 0; $column < $this->columns; ++$column) {
@@ -54,7 +54,7 @@ class Multiplication extends Operator
      * @return $this The operation object, allowing multiple mutiplications to be chained
      * @throws Exception If the provided argument is not appropriate for the operation
      **/
-    protected function multiplyMatrix(Matrix $value): Operator
+    protected function multiplyMatrix(Matrix $value)
     {
         $this->validateReflectingDimensions($value);
 

@@ -17,7 +17,7 @@ namespace Complex;
  * @throws    Exception        If argument isn't a valid real or complex number.
  * @throws    \InvalidArgumentException    If function would result in a division by zero
  */
-function cot($complex): Complex
+function cot($complex)
 {
     $complex = Complex::validateComplexArgument($complex);
 

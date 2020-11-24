@@ -76,7 +76,9 @@ class Drawing extends BaseDrawing
      * @param string $pValue File path
      * @param bool $pVerifyFile Verify file
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return Drawing
      */
     public function setPath($pValue, $pVerifyFile = true)
     {
@@ -86,7 +88,7 @@ class Drawing extends BaseDrawing
 
                 if ($this->width == 0 && $this->height == 0) {
                     // Get width/height
-                    [$this->width, $this->height] = getimagesize($pValue);
+                    list($this->width, $this->height) = getimagesize($pValue);
                 }
             } else {
                 throw new PhpSpreadsheetException("File $pValue not found!");

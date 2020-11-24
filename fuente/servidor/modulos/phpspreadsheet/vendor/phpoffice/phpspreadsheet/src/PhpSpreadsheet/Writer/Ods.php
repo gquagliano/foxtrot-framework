@@ -12,9 +12,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Ods\Mimetype;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Styles;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Thumbnails;
-use ZipStream\Exception\OverflowException;
-use ZipStream\Option\Archive;
-use ZipStream\ZipStream;
+use ZipArchive;
 
 class Ods extends BaseWriter
 {
@@ -34,6 +32,8 @@ class Ods extends BaseWriter
 
     /**
      * Create a new Ods.
+     *
+     * @param Spreadsheet $spreadsheet
      */
     public function __construct(Spreadsheet $spreadsheet)
     {
@@ -73,9 +73,11 @@ class Ods extends BaseWriter
     /**
      * Save PhpSpreadsheet to file.
      *
-     * @param resource|string $pFilename
+     * @param string $pFilename
+     *
+     * @throws WriterException
      */
-    public function save($pFilename): void
+    public function save($pFilename)
     {
         if (!$this->spreadSheet) {
             throw new WriterException('PhpSpreadsheet object unassigned.');
@@ -84,50 +86,70 @@ class Ods extends BaseWriter
         // garbage collect
         $this->spreadSheet->garbageCollect();
 
-        $this->openFileHandle($pFilename);
-
-        $zip = $this->createZip();
-
-        $zip->addFile('META-INF/manifest.xml', $this->getWriterPart('meta_inf')->writeManifest());
-        $zip->addFile('Thumbnails/thumbnail.png', $this->getWriterPart('thumbnails')->writeThumbnail());
-        $zip->addFile('content.xml', $this->getWriterPart('content')->write());
-        $zip->addFile('meta.xml', $this->getWriterPart('meta')->write());
-        $zip->addFile('mimetype', $this->getWriterPart('mimetype')->write());
-        $zip->addFile('settings.xml', $this->getWriterPart('settings')->write());
-        $zip->addFile('styles.xml', $this->getWriterPart('styles')->write());
-
-        // Close file
-        try {
-            $zip->finish();
-        } catch (OverflowException $e) {
-            throw new WriterException('Could not close resource.');
+        // If $pFilename is php://output or php://stdout, make it a temporary file...
+        $originalFilename = $pFilename;
+        if (strtolower($pFilename) == 'php://output' || strtolower($pFilename) == 'php://stdout') {
+            $pFilename = @tempnam(File::sysGetTempDir(), 'phpxltmp');
+            if ($pFilename == '') {
+                $pFilename = $originalFilename;
+            }
         }
 
-        $this->maybeCloseFileHandle();
+        $zip = $this->createZip($pFilename);
+
+        $zip->addFromString('META-INF/manifest.xml', $this->getWriterPart('meta_inf')->writeManifest());
+        $zip->addFromString('Thumbnails/thumbnail.png', $this->getWriterPart('thumbnails')->writeThumbnail());
+        $zip->addFromString('content.xml', $this->getWriterPart('content')->write());
+        $zip->addFromString('meta.xml', $this->getWriterPart('meta')->write());
+        $zip->addFromString('mimetype', $this->getWriterPart('mimetype')->write());
+        $zip->addFromString('settings.xml', $this->getWriterPart('settings')->write());
+        $zip->addFromString('styles.xml', $this->getWriterPart('styles')->write());
+
+        // Close file
+        if ($zip->close() === false) {
+            throw new WriterException("Could not close zip file $pFilename.");
+        }
+
+        // If a temporary file was used, copy it to the correct file stream
+        if ($originalFilename != $pFilename) {
+            if (copy($pFilename, $originalFilename) === false) {
+                throw new WriterException("Could not copy temporary zip file $pFilename to $originalFilename.");
+            }
+            @unlink($pFilename);
+        }
     }
 
     /**
      * Create zip object.
      *
-     * @return ZipStream
+     * @param string $pFilename
+     *
+     * @throws WriterException
+     *
+     * @return ZipArchive
      */
-    private function createZip()
+    private function createZip($pFilename)
     {
+        // Create new ZIP file and open it for writing
+        $zip = new ZipArchive();
+
+        if (file_exists($pFilename)) {
+            unlink($pFilename);
+        }
         // Try opening the ZIP file
-        if (!is_resource($this->fileHandle)) {
-            throw new WriterException('Could not open resource for writing.');
+        if ($zip->open($pFilename, ZipArchive::OVERWRITE) !== true) {
+            if ($zip->open($pFilename, ZipArchive::CREATE) !== true) {
+                throw new WriterException("Could not open $pFilename for writing.");
+            }
         }
 
-        // Create new ZIP stream
-        $options = new Archive();
-        $options->setEnableZip64(false);
-        $options->setOutputStream($this->fileHandle);
-
-        return new ZipStream(null, $options);
+        return $zip;
     }
 
     /**
      * Get Spreadsheet object.
+     *
+     * @throws WriterException
      *
      * @return Spreadsheet
      */
@@ -145,7 +167,7 @@ class Ods extends BaseWriter
      *
      * @param Spreadsheet $spreadsheet PhpSpreadsheet object
      *
-     * @return $this
+     * @return self
      */
     public function setSpreadsheet(Spreadsheet $spreadsheet)
     {

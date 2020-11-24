@@ -2,12 +2,11 @@
 
 namespace PhpOffice\PhpSpreadsheet\Worksheet;
 
-use Iterator;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 
-class ColumnIterator implements Iterator
+class ColumnIterator implements \Iterator
 {
     /**
      * Worksheet to iterate.
@@ -57,7 +56,7 @@ class ColumnIterator implements Iterator
      */
     public function __destruct()
     {
-        $this->worksheet = null;
+        unset($this->worksheet);
     }
 
     /**
@@ -65,7 +64,9 @@ class ColumnIterator implements Iterator
      *
      * @param string $startColumn The column address at which to start iterating
      *
-     * @return $this
+     * @throws Exception
+     *
+     * @return ColumnIterator
      */
     public function resetStart($startColumn = 'A')
     {
@@ -88,7 +89,7 @@ class ColumnIterator implements Iterator
      *
      * @param string $endColumn The column address at which to stop iterating
      *
-     * @return $this
+     * @return ColumnIterator
      */
     public function resetEnd($endColumn = null)
     {
@@ -103,7 +104,9 @@ class ColumnIterator implements Iterator
      *
      * @param string $column The column address to set the current pointer at
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return ColumnIterator
      */
     public function seek($column = 'A')
     {
@@ -119,7 +122,7 @@ class ColumnIterator implements Iterator
     /**
      * Rewind the iterator to the starting column.
      */
-    public function rewind(): void
+    public function rewind()
     {
         $this->currentColumnIndex = $this->startColumnIndex;
     }
@@ -147,7 +150,7 @@ class ColumnIterator implements Iterator
     /**
      * Set the iterator to its next value.
      */
-    public function next(): void
+    public function next()
     {
         ++$this->currentColumnIndex;
     }
@@ -155,7 +158,7 @@ class ColumnIterator implements Iterator
     /**
      * Set the iterator to its previous value.
      */
-    public function prev(): void
+    public function prev()
     {
         --$this->currentColumnIndex;
     }

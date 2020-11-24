@@ -2,6 +2,8 @@
 
 namespace PhpOffice\PhpSpreadsheet\Style;
 
+use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
+
 class Font extends Supervisor
 {
     // Underline types
@@ -157,7 +159,9 @@ class Font extends Supervisor
      *
      * @param array $pStyles Array containing style information
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return Font
      */
     public function applyFromArray(array $pStyles)
     {
@@ -215,7 +219,7 @@ class Font extends Supervisor
      *
      * @param string $pValue
      *
-     * @return $this
+     * @return Font
      */
     public function setName($pValue)
     {
@@ -251,7 +255,7 @@ class Font extends Supervisor
      *
      * @param float $pValue
      *
-     * @return $this
+     * @return Font
      */
     public function setSize($pValue)
     {
@@ -287,7 +291,7 @@ class Font extends Supervisor
      *
      * @param bool $pValue
      *
-     * @return $this
+     * @return Font
      */
     public function setBold($pValue)
     {
@@ -323,7 +327,7 @@ class Font extends Supervisor
      *
      * @param bool $pValue
      *
-     * @return $this
+     * @return Font
      */
     public function setItalic($pValue)
     {
@@ -357,18 +361,21 @@ class Font extends Supervisor
     /**
      * Set Superscript.
      *
-     * @return $this
+     * @param bool $pValue
+     *
+     * @return Font
      */
-    public function setSuperscript(bool $pValue)
+    public function setSuperscript($pValue)
     {
+        if ($pValue == '') {
+            $pValue = false;
+        }
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(['superscript' => $pValue]);
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
         } else {
             $this->superscript = $pValue;
-            if ($this->superscript) {
-                $this->subscript = false;
-            }
+            $this->subscript = !$pValue;
         }
 
         return $this;
@@ -391,18 +398,21 @@ class Font extends Supervisor
     /**
      * Set Subscript.
      *
-     * @return $this
+     * @param bool $pValue
+     *
+     * @return Font
      */
-    public function setSubscript(bool $pValue)
+    public function setSubscript($pValue)
     {
+        if ($pValue == '') {
+            $pValue = false;
+        }
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(['subscript' => $pValue]);
             $this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
         } else {
             $this->subscript = $pValue;
-            if ($this->subscript) {
-                $this->superscript = false;
-            }
+            $this->superscript = !$pValue;
         }
 
         return $this;
@@ -429,7 +439,7 @@ class Font extends Supervisor
      *                                    If a boolean is passed, then TRUE equates to UNDERLINE_SINGLE,
      *                                        false equates to UNDERLINE_NONE
      *
-     * @return $this
+     * @return Font
      */
     public function setUnderline($pValue)
     {
@@ -467,7 +477,7 @@ class Font extends Supervisor
      *
      * @param bool $pValue
      *
-     * @return $this
+     * @return Font
      */
     public function setStrikethrough($pValue)
     {
@@ -498,7 +508,11 @@ class Font extends Supervisor
     /**
      * Set Color.
      *
-     * @return $this
+     * @param Color $pValue
+     *
+     * @throws PhpSpreadsheetException
+     *
+     * @return Font
      */
     public function setColor(Color $pValue)
     {

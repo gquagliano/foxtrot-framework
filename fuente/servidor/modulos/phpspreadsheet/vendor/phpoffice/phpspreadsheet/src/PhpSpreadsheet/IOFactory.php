@@ -37,7 +37,10 @@ abstract class IOFactory
     /**
      * Create Writer\IWriter.
      *
+     * @param Spreadsheet $spreadsheet
      * @param string $writerType Example: Xlsx
+     *
+     * @throws Writer\Exception
      *
      * @return Writer\IWriter
      */
@@ -49,14 +52,17 @@ abstract class IOFactory
 
         // Instantiate writer
         $className = self::$writers[$writerType];
+        $writer = new $className($spreadsheet);
 
-        return new $className($spreadsheet);
+        return $writer;
     }
 
     /**
      * Create Reader\IReader.
      *
      * @param string $readerType Example: Xlsx
+     *
+     * @throws Reader\Exception
      *
      * @return Reader\IReader
      */
@@ -68,14 +74,17 @@ abstract class IOFactory
 
         // Instantiate reader
         $className = self::$readers[$readerType];
+        $reader = new $className();
 
-        return new $className();
+        return $reader;
     }
 
     /**
      * Loads Spreadsheet from file using automatic Reader\IReader resolution.
      *
      * @param string $pFilename The name of the spreadsheet file
+     *
+     * @throws Reader\Exception
      *
      * @return Spreadsheet
      */
@@ -90,6 +99,8 @@ abstract class IOFactory
      * Identify file type using automatic Reader\IReader resolution.
      *
      * @param string $pFilename The name of the spreadsheet file to identify
+     *
+     * @throws Reader\Exception
      *
      * @return string
      */
@@ -107,6 +118,8 @@ abstract class IOFactory
      * Create Reader\IReader for file using automatic Reader\IReader resolution.
      *
      * @param string $filename The name of the spreadsheet file
+     *
+     * @throws Reader\Exception
      *
      * @return Reader\IReader
      */
@@ -191,7 +204,7 @@ abstract class IOFactory
      * @param string $writerType
      * @param string $writerClass
      */
-    public static function registerWriter($writerType, $writerClass): void
+    public static function registerWriter($writerType, $writerClass)
     {
         if (!is_a($writerClass, Writer\IWriter::class, true)) {
             throw new Writer\Exception('Registered writers must implement ' . Writer\IWriter::class);
@@ -206,7 +219,7 @@ abstract class IOFactory
      * @param string $readerType
      * @param string $readerClass
      */
-    public static function registerReader($readerType, $readerClass): void
+    public static function registerReader($readerType, $readerClass)
     {
         if (!is_a($readerClass, Reader\IReader::class, true)) {
             throw new Reader\Exception('Registered readers must implement ' . Reader\IReader::class);

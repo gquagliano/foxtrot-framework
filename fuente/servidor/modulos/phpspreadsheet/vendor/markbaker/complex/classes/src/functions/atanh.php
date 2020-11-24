@@ -16,7 +16,7 @@ namespace Complex;
  * @return    Complex          The inverse hyperbolic tangent of the complex argument.
  * @throws    Exception        If argument isn't a valid real or complex number.
  */
-function atanh($complex): Complex
+function atanh($complex)
 {
     $complex = Complex::validateComplexArgument($complex);
 

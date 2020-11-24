@@ -19,7 +19,7 @@ use Matrix\Operators\Multiplication;
  * @return Matrix
  * @throws Exception
  */
-function multiply(...$matrixValues): Matrix
+function multiply(...$matrixValues)
 {
     if (count($matrixValues) < 2) {
         throw new Exception('Multiplication operation requires at least 2 arguments');

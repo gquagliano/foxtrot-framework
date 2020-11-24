@@ -12,9 +12,11 @@ class Meta extends WriterPart
      *
      * @param Spreadsheet $spreadsheet
      *
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     *
      * @return string XML Output
      */
-    public function write(?Spreadsheet $spreadsheet = null)
+    public function write(Spreadsheet $spreadsheet = null)
     {
         if (!$spreadsheet) {
             $spreadsheet = $this->getParentWriter()->getSpreadsheet();

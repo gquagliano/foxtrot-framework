@@ -41,7 +41,7 @@ class BSE
      *
      * @param \PhpOffice\PhpSpreadsheet\Shared\Escher\DggContainer\BstoreContainer $parent
      */
-    public function setParent($parent): void
+    public function setParent($parent)
     {
         $this->parent = $parent;
     }
@@ -61,7 +61,7 @@ class BSE
      *
      * @param BSE\Blip $blip
      */
-    public function setBlip($blip): void
+    public function setBlip($blip)
     {
         $this->blip = $blip;
         $blip->setParent($this);
@@ -82,7 +82,7 @@ class BSE
      *
      * @param int $blipType
      */
-    public function setBlipType($blipType): void
+    public function setBlipType($blipType)
     {
         $this->blipType = $blipType;
     }

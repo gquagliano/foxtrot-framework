@@ -24,7 +24,7 @@ class MD5
     /**
      * Reset the MD5 stream context.
      */
-    public function reset(): void
+    public function reset()
     {
         $this->a = 0x67452301;
         $this->b = 0xEFCDAB89;
@@ -56,7 +56,7 @@ class MD5
      *
      * @param string $data Data to add
      */
-    public function add($data): void
+    public function add($data)
     {
         $words = array_values(unpack('V16', $data));
 
@@ -168,7 +168,7 @@ class MD5
         return $Y ^ ($X | (~$Z)); // Y XOR (X OR NOT Z)
     }
 
-    private static function step($func, &$A, $B, $C, $D, $M, $s, $t): void
+    private static function step($func, &$A, $B, $C, $D, $M, $s, $t)
     {
         $A = ($A + call_user_func($func, $B, $C, $D) + $M + $t) & 0xffffffff;
         $A = self::rotate($A, $s);

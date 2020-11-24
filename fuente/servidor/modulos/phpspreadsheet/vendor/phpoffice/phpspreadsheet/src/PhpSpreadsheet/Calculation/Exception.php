@@ -15,7 +15,7 @@ class Exception extends PhpSpreadsheetException
      * @param mixed $line
      * @param mixed $context
      */
-    public static function errorHandlerCallback($code, $string, $file, $line, $context): void
+    public static function errorHandlerCallback($code, $string, $file, $line, $context)
     {
         $e = new self($string, $code);
         $e->line = $line;

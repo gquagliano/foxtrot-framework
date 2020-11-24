@@ -115,7 +115,9 @@ class DataSeriesValues
      *                                    DataSeriesValues::DATASERIES_TYPE_NUMBER
      *                                        Normally used for chart data values
      *
-     * @return $this
+     * @throws Exception
+     *
+     * @return DataSeriesValues
      */
     public function setDataType($dataType)
     {
@@ -142,7 +144,7 @@ class DataSeriesValues
      *
      * @param string $dataSource
      *
-     * @return $this
+     * @return DataSeriesValues
      */
     public function setDataSource($dataSource)
     {
@@ -166,7 +168,7 @@ class DataSeriesValues
      *
      * @param string $marker
      *
-     * @return $this
+     * @return DataSeriesValues
      */
     public function setPointMarker($marker)
     {
@@ -190,7 +192,7 @@ class DataSeriesValues
      *
      * @param string $formatCode
      *
-     * @return $this
+     * @return DataSeriesValues
      */
     public function setFormatCode($formatCode)
     {
@@ -245,6 +247,8 @@ class DataSeriesValues
      *
      * @param string $color value for color
      *
+     * @throws \Exception thrown if color is invalid
+     *
      * @return bool true if validation was successful
      */
     private function validateColor($color)
@@ -271,7 +275,7 @@ class DataSeriesValues
      *
      * @param int $width
      *
-     * @return $this
+     * @return DataSeriesValues
      */
     public function setLineWidth($width)
     {
@@ -342,7 +346,7 @@ class DataSeriesValues
      *
      * @param array $dataValues
      *
-     * @return $this
+     * @return DataSeriesValues
      */
     public function setDataValues($dataValues)
     {
@@ -352,7 +356,7 @@ class DataSeriesValues
         return $this;
     }
 
-    public function refresh(Worksheet $worksheet, $flatten = true): void
+    public function refresh(Worksheet $worksheet, $flatten = true)
     {
         if ($this->dataSource !== null) {
             $calcEngine = Calculation::getInstance($worksheet->getParent());
@@ -366,13 +370,13 @@ class DataSeriesValues
             if ($flatten) {
                 $this->dataValues = Functions::flattenArray($newDataValues);
                 foreach ($this->dataValues as &$dataValue) {
-                    if (is_string($dataValue) && !empty($dataValue) && $dataValue[0] == '#') {
+                    if ((!empty($dataValue)) && ($dataValue[0] == '#')) {
                         $dataValue = 0.0;
                     }
                 }
                 unset($dataValue);
             } else {
-                [$worksheet, $cellRange] = Worksheet::extractSheetTitle($this->dataSource, true);
+                list($worksheet, $cellRange) = Worksheet::extractSheetTitle($this->dataSource, true);
                 $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
                 if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
                     $this->dataValues = Functions::flattenArray($newDataValues);

@@ -5,7 +5,6 @@ namespace PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter\Column;
 use PhpOffice\PhpSpreadsheet\Worksheet\AutoFilter\Column\Rule;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use SimpleXMLElement;
 
 class AutoFilter
 {
@@ -13,22 +12,21 @@ class AutoFilter
 
     private $worksheetXml;
 
-    public function __construct(Worksheet $workSheet, SimpleXMLElement $worksheetXml)
+    public function __construct(Worksheet $workSheet, \SimpleXMLElement $worksheetXml)
     {
         $this->worksheet = $workSheet;
         $this->worksheetXml = $worksheetXml;
     }
 
-    public function load(): void
+    public function load()
     {
-        // Remove all "$" in the auto filter range
-        $autoFilterRange = preg_replace('/\$/', '', $this->worksheetXml->autoFilter['ref']);
+        $autoFilterRange = (string) $this->worksheetXml->autoFilter['ref'];
         if (strpos($autoFilterRange, ':') !== false) {
             $this->readAutoFilter($autoFilterRange, $this->worksheetXml);
         }
     }
 
-    private function readAutoFilter($autoFilterRange, $xmlSheet): void
+    private function readAutoFilter($autoFilterRange, $xmlSheet)
     {
         $autoFilter = $this->worksheet->getAutoFilter();
         $autoFilter->setRange($autoFilterRange);
@@ -63,7 +61,7 @@ class AutoFilter
         }
     }
 
-    private function readDateRangeAutoFilter(SimpleXMLElement $filters, Column $column): void
+    private function readDateRangeAutoFilter(\SimpleXMLElement $filters, Column $column)
     {
         foreach ($filters->dateGroupItem as $dateGroupItem) {
             //    Operator is undefined, but always treated as EQUAL
@@ -82,7 +80,7 @@ class AutoFilter
         }
     }
 
-    private function readCustomAutoFilter(SimpleXMLElement $filterColumn, Column $column): void
+    private function readCustomAutoFilter(\SimpleXMLElement $filterColumn, Column $column)
     {
         if ($filterColumn->customFilters) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_CUSTOMFILTER);
@@ -101,7 +99,7 @@ class AutoFilter
         }
     }
 
-    private function readDynamicAutoFilter(SimpleXMLElement $filterColumn, Column $column): void
+    private function readDynamicAutoFilter(\SimpleXMLElement $filterColumn, Column $column)
     {
         if ($filterColumn->dynamicFilter) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_DYNAMICFILTER);
@@ -123,7 +121,7 @@ class AutoFilter
         }
     }
 
-    private function readTopTenAutoFilter(SimpleXMLElement $filterColumn, Column $column): void
+    private function readTopTenAutoFilter(\SimpleXMLElement $filterColumn, Column $column)
     {
         if ($filterColumn->top10) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_TOPTENFILTER);

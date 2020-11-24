@@ -77,9 +77,11 @@ class Csv extends BaseWriter
     /**
      * Save PhpSpreadsheet to file.
      *
-     * @param resource|string $pFilename
+     * @param string $pFilename
+     *
+     * @throws Exception
      */
-    public function save($pFilename): void
+    public function save($pFilename)
     {
         // Fetch sheet
         $sheet = $this->spreadsheet->getSheet($this->sheetIndex);
@@ -90,7 +92,10 @@ class Csv extends BaseWriter
         Calculation::setArrayReturnType(Calculation::RETURN_ARRAY_AS_VALUE);
 
         // Open file
-        $this->openFileHandle($pFilename);
+        $fileHandle = fopen($pFilename, 'wb+');
+        if ($fileHandle === false) {
+            throw new Exception("Could not open file $pFilename for writing.");
+        }
 
         if ($this->excelCompatibility) {
             $this->setUseBOM(true); //  Enforce UTF-8 BOM Header
@@ -99,15 +104,13 @@ class Csv extends BaseWriter
             $this->setDelimiter(';'); //  Set delimiter to a semi-colon
             $this->setLineEnding("\r\n");
         }
-
         if ($this->useBOM) {
             // Write the UTF-8 BOM code if required
-            fwrite($this->fileHandle, "\xEF\xBB\xBF");
+            fwrite($fileHandle, "\xEF\xBB\xBF");
         }
-
         if ($this->includeSeparatorLine) {
             // Write the separator line if required
-            fwrite($this->fileHandle, 'sep=' . $this->getDelimiter() . $this->lineEnding);
+            fwrite($fileHandle, 'sep=' . $this->getDelimiter() . $this->lineEnding);
         }
 
         //    Identify the range that we need to extract from the worksheet
@@ -119,10 +122,12 @@ class Csv extends BaseWriter
             // Convert the row to an array...
             $cellsArray = $sheet->rangeToArray('A' . $row . ':' . $maxCol . $row, '', $this->preCalculateFormulas);
             // ... and write to the file
-            $this->writeLine($this->fileHandle, $cellsArray[0]);
+            $this->writeLine($fileHandle, $cellsArray[0]);
         }
 
-        $this->maybeCloseFileHandle();
+        // Close file
+        fclose($fileHandle);
+
         Calculation::setArrayReturnType($saveArrayReturnType);
         Calculation::getInstance($this->spreadsheet)->getDebugLog()->setWriteDebugLog($saveDebugLog);
     }
@@ -142,7 +147,7 @@ class Csv extends BaseWriter
      *
      * @param string $pValue Delimiter, defaults to ','
      *
-     * @return $this
+     * @return CSV
      */
     public function setDelimiter($pValue)
     {
@@ -166,10 +171,13 @@ class Csv extends BaseWriter
      *
      * @param string $pValue Enclosure, defaults to "
      *
-     * @return $this
+     * @return CSV
      */
-    public function setEnclosure($pValue = '"')
+    public function setEnclosure($pValue)
     {
+        if ($pValue == '') {
+            $pValue = null;
+        }
         $this->enclosure = $pValue;
 
         return $this;
@@ -190,7 +198,7 @@ class Csv extends BaseWriter
      *
      * @param string $pValue Line ending, defaults to OS line ending (PHP_EOL)
      *
-     * @return $this
+     * @return CSV
      */
     public function setLineEnding($pValue)
     {
@@ -214,7 +222,7 @@ class Csv extends BaseWriter
      *
      * @param bool $pValue Use UTF-8 byte-order mark? Defaults to false
      *
-     * @return $this
+     * @return CSV
      */
     public function setUseBOM($pValue)
     {
@@ -238,7 +246,7 @@ class Csv extends BaseWriter
      *
      * @param bool $pValue Use separator line? Defaults to false
      *
-     * @return $this
+     * @return CSV
      */
     public function setIncludeSeparatorLine($pValue)
     {
@@ -263,7 +271,7 @@ class Csv extends BaseWriter
      * @param bool $pValue Set the file to be written as a fully Excel compatible csv file
      *                                Note that this overrides other settings such as useBOM, enclosure and delimiter
      *
-     * @return $this
+     * @return CSV
      */
     public function setExcelCompatibility($pValue)
     {
@@ -287,7 +295,7 @@ class Csv extends BaseWriter
      *
      * @param int $pValue Sheet index
      *
-     * @return $this
+     * @return CSV
      */
     public function setSheetIndex($pValue)
     {
@@ -296,51 +304,33 @@ class Csv extends BaseWriter
         return $this;
     }
 
-    private $enclosureRequired = true;
-
-    public function setEnclosureRequired(bool $value): self
-    {
-        $this->enclosureRequired = $value;
-
-        return $this;
-    }
-
-    public function getEnclosureRequired(): bool
-    {
-        return $this->enclosureRequired;
-    }
-
     /**
      * Write line to CSV file.
      *
      * @param resource $pFileHandle PHP filehandle
      * @param array $pValues Array containing values in a row
      */
-    private function writeLine($pFileHandle, array $pValues): void
+    private function writeLine($pFileHandle, array $pValues)
     {
         // No leading delimiter
-        $delimiter = '';
+        $writeDelimiter = false;
 
         // Build the line
         $line = '';
 
         foreach ($pValues as $element) {
-            // Add delimiter
-            $line .= $delimiter;
-            $delimiter = $this->delimiter;
             // Escape enclosures
-            $enclosure = $this->enclosure;
-            if ($enclosure) {
-                // If enclosure is not required, use enclosure only if
-                // element contains newline, delimiter, or enclosure.
-                if (!$this->enclosureRequired && strpbrk($element, "$delimiter$enclosure\n") === false) {
-                    $enclosure = '';
-                } else {
-                    $element = str_replace($enclosure, $enclosure . $enclosure, $element);
-                }
+            $element = str_replace($this->enclosure, $this->enclosure . $this->enclosure, $element);
+
+            // Add delimiter
+            if ($writeDelimiter) {
+                $line .= $this->delimiter;
+            } else {
+                $writeDelimiter = true;
             }
+
             // Add enclosed string
-            $line .= $enclosure . $element . $enclosure;
+            $line .= $this->enclosure . $element . $this->enclosure;
         }
 
         // Add line ending

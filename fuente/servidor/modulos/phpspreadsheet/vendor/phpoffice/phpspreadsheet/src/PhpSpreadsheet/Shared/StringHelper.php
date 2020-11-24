@@ -63,7 +63,7 @@ class StringHelper
     /**
      * Build control characters array.
      */
-    private static function buildControlCharacters(): void
+    private static function buildControlCharacters()
     {
         for ($i = 0; $i <= 31; ++$i) {
             if ($i != 9 && $i != 10 && $i != 13) {
@@ -77,7 +77,7 @@ class StringHelper
     /**
      * Build SYLK characters array.
      */
-    private static function buildSYLKCharacters(): void
+    private static function buildSYLKCharacters()
     {
         self::$SYLKCharacters = [
             "\x1B 0" => chr(0),
@@ -272,7 +272,7 @@ class StringHelper
         return self::$isIconvEnabled;
     }
 
-    private static function buildCharacterSets(): void
+    private static function buildCharacterSets()
     {
         if (empty(self::$controlCharacters)) {
             self::buildControlCharacters();
@@ -430,7 +430,9 @@ class StringHelper
         // characters
         $chars = self::convertEncoding($value, 'UTF-16LE', 'UTF-8');
 
-        return pack('vC', $ln, 0x0001) . $chars;
+        $data = pack('vC', $ln, 0x0001) . $chars;
+
+        return $data;
     }
 
     /**
@@ -603,7 +605,7 @@ class StringHelper
      *
      * @param string $pValue Character for decimal separator
      */
-    public static function setDecimalSeparator($pValue): void
+    public static function setDecimalSeparator($pValue)
     {
         self::$decimalSeparator = $pValue;
     }
@@ -636,7 +638,7 @@ class StringHelper
      *
      * @param string $pValue Character for thousands separator
      */
-    public static function setThousandsSeparator($pValue): void
+    public static function setThousandsSeparator($pValue)
     {
         self::$thousandsSeparator = $pValue;
     }
@@ -674,7 +676,7 @@ class StringHelper
      *
      * @param string $pValue Character for currency code
      */
-    public static function setCurrencyCode($pValue): void
+    public static function setCurrencyCode($pValue)
     {
         self::$currencyCode = $pValue;
     }

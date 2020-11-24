@@ -2,10 +2,9 @@
 
 namespace PhpOffice\PhpSpreadsheet\Worksheet;
 
-use Iterator;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 
-class RowIterator implements Iterator
+class RowIterator implements \Iterator
 {
     /**
      * Worksheet to iterate.
@@ -55,7 +54,7 @@ class RowIterator implements Iterator
      */
     public function __destruct()
     {
-        $this->subject = null;
+        unset($this->subject);
     }
 
     /**
@@ -63,7 +62,9 @@ class RowIterator implements Iterator
      *
      * @param int $startRow The row number at which to start iterating
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return RowIterator
      */
     public function resetStart($startRow = 1)
     {
@@ -85,7 +86,7 @@ class RowIterator implements Iterator
      *
      * @param int $endRow The row number at which to stop iterating
      *
-     * @return $this
+     * @return RowIterator
      */
     public function resetEnd($endRow = null)
     {
@@ -99,7 +100,9 @@ class RowIterator implements Iterator
      *
      * @param int $row The row number to set the current pointer at
      *
-     * @return $this
+     * @throws PhpSpreadsheetException
+     *
+     * @return RowIterator
      */
     public function seek($row = 1)
     {
@@ -114,7 +117,7 @@ class RowIterator implements Iterator
     /**
      * Rewind the iterator to the starting row.
      */
-    public function rewind(): void
+    public function rewind()
     {
         $this->position = $this->startRow;
     }
@@ -142,7 +145,7 @@ class RowIterator implements Iterator
     /**
      * Set the iterator to its next value.
      */
-    public function next(): void
+    public function next()
     {
         ++$this->position;
     }
@@ -150,7 +153,7 @@ class RowIterator implements Iterator
     /**
      * Set the iterator to its previous value.
      */
-    public function prev(): void
+    public function prev()
     {
         --$this->position;
     }

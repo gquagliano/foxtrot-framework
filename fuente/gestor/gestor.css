@@ -478,6 +478,9 @@ body.foxtrot-trabajando #foxtrot-cargando {
     visibility: visible !important;
     opacity: .5;
 }
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-inline-block {
+    min-width: 1em;
+}
 .foxtrot-modo-edicion .componente,
 .foxtrot-modo-edicion .componente * {
     cursor: pointer;
@@ -531,6 +534,7 @@ body.foxtrot-trabajando #foxtrot-cargando {
 .foxtrot-modo-edicion .foxtrot-seleccionado.foxtrot-editando-texto {
     outline: 1px solid rgb(213, 229, 126)!important;
 }
+
 
 /* Gestor */
 

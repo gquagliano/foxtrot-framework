@@ -92,6 +92,11 @@ var componente=new function() {
                 tipo:"color",
                 evaluable:true
             },
+            fondo:{
+                etiqueta:"Fondo",
+                tipo:"color",
+                evaluable:true
+            },
             clase:{
                 etiqueta:"Clase CSS",
                 //TODO En el futuro, sería bueno tener clases adaptativas. Ello puede servir para muchas clases de Bootstrap, donde no tiene sentido reescribirlas con
@@ -963,6 +968,11 @@ var componente=new function() {
 
         if(propiedad=="color") {
             estilos.color=this.normalizarValorCss(valor,"color");
+            return this;
+        }
+
+        if(propiedad=="fondo") {
+            estilos.background=this.normalizarValorCss(valor,"fondo");
             return this;
         }
         

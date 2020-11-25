@@ -923,18 +923,21 @@ var componente=new function() {
         this.valoresPropiedades.porCada(function(propiedad,valor) {
             //Solo si la propiedad es evaluable=true
             var config=t.obtenerParametrosPropiedad(propiedad);
-            if(!config.hasOwnProperty("evaluable")||!config.evaluable) return;
+            if(!config) return this;
+            if(!config.hasOwnProperty("evaluable")||!config.evaluable) return this;
 
             //Obtener el valor correspondiente al tamaño actual
             valor=t.propiedadAdaptada(tamano,propiedad);
 
             //Evaluar expresión
-            if(!expresion.contieneExpresion(valor)) return;
+            if(!expresion.contieneExpresion(valor)) return this;
             var resultado=t.evaluarExpresion(valor);
 
             //Asignar el resultado
             t.propiedadModificada(propiedad,resultado,tamano);
         });
+        
+        return this;
     };
     
     /**

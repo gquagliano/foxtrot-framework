@@ -85,10 +85,12 @@ var componente=new function() {
             //    ayuda
             //    evento Indica si es un evento (predeterminado false)
             //    boton (texto del botón en caso de tipo=comando)
+            //    evaluable (predeterminado false) Indica si se deben evaluar las expresiones en forma automática (método actualizarPropiedadesExpresiones)
             //}
             color:{
                 etiqueta:"Color de texto",
-                tipo:"color"
+                tipo:"color",
+                evaluable:true
             },
             clase:{
                 etiqueta:"Clase CSS",
@@ -107,10 +109,12 @@ var componente=new function() {
                     izquierda:"Izquierda",
                     derecha:"Derecha"
                     //TODO centro (establece margen izq y der = auto)
-                }
+                },
+                evaluable:true
             },
             margen:{
-                etiqueta:"Margen"
+                etiqueta:"Margen",
+                evaluable:true
                 //TODO Tipo de campo personalizado que permita, por ejemplo, crear los 4 campos para los márgenes
             },
             estructura:{
@@ -124,10 +128,12 @@ var componente=new function() {
                     flexInverso:"Flex inverso",
                     flexVertical:"Flex vertical",
                     flexVerticalInverso:"Flex vertical inverso"
-                }
+                },
+                evaluable:true
             },
             flex:{
-                etiqueta:"Flex"
+                etiqueta:"Flex",
+                evaluable:true
             },
             alineacionItems:{
                 etiqueta:"Alineación de items (Flex)",
@@ -138,7 +144,8 @@ var componente=new function() {
                     centro:"Centro",
                     entre:"Entre items",
                     envolver:"Envolver"
-                }
+                },
+                evaluable:true
             },
             justificacionItems:{
                 etiqueta:"Justificación de items (Flex)",
@@ -149,7 +156,8 @@ var componente=new function() {
                     centro:"Centro",
                     base:"Línea base",
                     estirar:"Estirar"
-                }
+                },
+                evaluable:true
             },
             visibilidad:{
                 etiqueta:"Visibilidad",
@@ -158,36 +166,45 @@ var componente=new function() {
                     visible:"Visible",
                     invisible:"Invisible",
                     oculto:"Oculto"
-                }
+                },
+                evaluable:true
             },
             opacidad:{
                 etiqueta:"Opacidad",
-                tipo:"numero"
+                tipo:"numero",
+                evaluable:true
             },
             ordenZ:{
                 etiqueta:"Orden Z",
                 tipo:"numero",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Dimensiones":{
             ancho:{
-                etiqueta:"Ancho"
+                etiqueta:"Ancho",
+                evaluable:true
             },
             anchoMaximo:{
-                etiqueta:"Ancho máximo"
+                etiqueta:"Ancho máximo",
+                evaluable:true
             }, 
             anchoMinimo:{
-                etiqueta:"Ancho mínimo"
+                etiqueta:"Ancho mínimo",
+                evaluable:true
             },            
             alto:{
-                etiqueta:"Alto"
+                etiqueta:"Alto",
+                evaluable:true
             },
             altoMaximo:{
-                etiqueta:"Alto máximo"
+                etiqueta:"Alto máximo",
+                evaluable:true
             },
             altoMinimo:{
-                etiqueta:"Alto mínimo"
+                etiqueta:"Alto mínimo",
+                evaluable:true
             }
         },
         "Texto":{
@@ -203,7 +220,8 @@ var componente=new function() {
                     //TODO
                     //justificadoCentro:"Justificado al centro",
                     //justificadoDerecha:"Justificado a la derecha"
-                }
+                },
+                evaluable:true
             },
             //TODO Barra de formato
             peso:{
@@ -215,26 +233,31 @@ var componente=new function() {
                     medio:"Medio",
                     negrita:"Negrita"
                 },
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             cursiva:{
                 etiqueta:"Cursiva",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             subrayado:{
                 etiqueta:"Subrayado",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             tachado:{
                 etiqueta:"Tachado",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             tamano:{
                 etiqueta:"Tamaño de texto",
-                tipo:"numero"
+                tipo:"numero",
+                evaluable:true
             }
         },
         "Eventos":{
@@ -275,7 +298,8 @@ var componente=new function() {
             deshabilitado:{
                 etiqueta:"Deshabilitado",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
     };
@@ -777,11 +801,13 @@ var componente=new function() {
      * @returns {componente}
      */
     this.actualizar=function() {
+        this.actualizarPropiedadesExpresiones();
+
         //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedad` y el componente presente un campo,
         //intentar asignar el valor desde el origen de datos (otros usos de la propiedad deben implementarse en actualizar() en el 
         //componente concreto)        
         if(this.datos&&this.campo) {
-            var propiedad=this.propiedad(null,"propiedad");
+            var propiedad=this.propiedad("propiedad");
             if(!propiedad) return this;
 
             var valor=util.obtenerPropiedad(this.datos,propiedad);
@@ -880,6 +906,31 @@ var componente=new function() {
         }
         return tieneValores;            
     };
+
+    /**
+     * Busca las propiedades que tengan asignado un valor con expresiones y aplica los valores resultantes.
+     * @returns {componente}
+     */
+    this.actualizarPropiedadesExpresiones=function() {
+        var tamano=ui.obtenerTamano(),
+            t=this;
+
+        this.valoresPropiedades.porCada(function(propiedad,valor) {
+            //Solo si la propiedad es evaluable=true
+            var config=t.obtenerParametrosPropiedad(propiedad);
+            if(!config.hasOwnProperty("evaluable")||!config.evaluable) return;
+
+            //Obtener el valor correspondiente al tamaño actual
+            valor=t.propiedadAdaptada(tamano,propiedad);
+
+            //Evaluar expresión
+            if(!expresion.contieneExpresion(valor)) return;
+            var resultado=t.evaluarExpresion(valor);
+
+            //Asignar el resultado
+            t.propiedadModificada(propiedad,resultado,tamano);
+        });
+    };
     
     /**
      * Actualiza el componente tras la modificación de una propiedad.
@@ -897,9 +948,18 @@ var componente=new function() {
         var parametrosPropiedad=this.obtenerParametrosPropiedad(propiedad),
             adaptativa=!parametrosPropiedad.hasOwnProperty("adaptativa")||parametrosPropiedad.adaptativa!==false; //Por defecto, si
 
-        var claseTamano=(tamano!="g"&&tamano!="xs"?"-"+tamano:"");
+        var claseTamano=(tamano!="g"&&tamano!="xs"?"-"+tamano:""),
+            estilos;
 
-        var estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
+        //Las propiedades con expresiones:
+        //- Se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        //- Si son estilos, se establecen en línea, sin afectar la hoja de estilos
+        if(expresion.contieneExpresion(valor)) {
+            if(ui.enModoEdicion()) return this;
+            estilos=this.elemento.style;
+        } else {
+            estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
+        }
 
         if(propiedad=="color") {
             estilos.color=this.normalizarValorCss(valor,"color");
@@ -1142,13 +1202,14 @@ var componente=new function() {
 
         if(typeof valores!=="object") return valores;
 
+        if(tamano=="xs") tamano="g";
+
         if(valores.hasOwnProperty(tamano)) return valores[tamano];
 
-        for(var i=0;i<tamanos.length;i++)
-            if(valores.hasOwnProperty(tamanos[i])) {
+        var iActual=tamanos.indexOf(tamano);
+        for(var i=0;i<=iActual;i++)
+            if(valores.hasOwnProperty(tamanos[i]))
                 valor=valores[tamanos[i]];
-                break;
-            }
 
         return valor;
     };
@@ -1455,6 +1516,23 @@ var componente=new function() {
     };
 
     /**
+     * Evalúa una expresión incluyendo las variables relacionadas al componente.
+     * @param {string} cadena - Cadena a evaluar.
+     * @returns {*}
+     */
+    this.evaluarExpresion=function(cadena) {
+        var ctl=ui.obtenerInstanciaControladorVista(this.nombreVista),
+        vars=Object.assign({
+            evento:evento,
+            valor:this.valor(),
+            //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
+            controlador:ctl,
+            componentes:ctl?ctl.componentes:componentes
+        },this.datos);    
+        return ui.evaluarExpresion(cadena,vars);
+    };
+
+    /**
      * Procesa una cadena que representa el manejador de un evento, almacenada en las propiedades del componente.
      * @param {string} nombre - Nombre de la propiedad a leer.
      * @param {Object} [evento] - Objeto del evento.
@@ -1467,17 +1545,8 @@ var componente=new function() {
         if(!valor) return null;
         if(typeof valor!=="string") return valor;
 
-        var ctl=ui.obtenerInstanciaControladorVista(this.nombreVista),
-            vars=Object.assign({
-                evento:evento,
-                valor:this.valor(),
-                //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
-                controlador:ctl,
-                componentes:ctl?ctl.componentes:componentes
-            },this.datos);
-        
         //Evaluar expresiones, si las contiene
-        return ui.evaluarExpresion(valor,vars);
+        return this.evaluarExpresion(valor);
     };
 
     /**
@@ -1751,7 +1820,7 @@ var componente=new function() {
      * @param {(string|null)} tamanoAnterior - Tamaño anterior (`'xl'`,`'lg'`,`'md'`,`'sm'`,`'xs'` o `null` si es la primer invocación al cargar la vista).
      */
     this.tamano=function(tamano,tamanoAnterior) {
-        //TODO
+        this.actualizarPropiedadesExpresiones();
     };
 
     /**

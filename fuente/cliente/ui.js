@@ -1283,9 +1283,13 @@ var ui=new function() {
     var procesarResize=function(evento) {
         //El evento se transmite a la visa y a los componentes solo cuando cambie el tamaño de pantalla
         var tamano=ui.obtenerTamano();
-        if(tamanoActual&&tamano!=tamanoActual) {
-            if(!ui.evento("tamano",[tamano,tamanoActual]))
-                ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
+        if(tamano!=tamanoActual) {
+            body.removerClase(/^tamano-.+/)
+                .agregarClase("tamano-"+tamano);
+            if(tamanoActual) {
+                if(!ui.evento("tamano",[tamano,tamanoActual]))
+                    ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
+            }
         }
         tamanoActual=tamano;
     };
@@ -1586,6 +1590,7 @@ var ui=new function() {
             } else {                
                 body.agregarClase("escritorio");
             }
+            body.agregarClase("tamano-"+this.obtenerTamano());
 
             if(esCordova) body.agregarClase("cordova");
 

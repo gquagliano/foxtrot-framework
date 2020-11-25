@@ -1244,7 +1244,7 @@ class modelo {
         $this->ejecutarConsulta();
         if(!$this->resultado) return [];
 
-        if($objetoEstandar&&!count($campos)) $campos=$this->campos;
+        if($objetoEstandar&&!count($campos)) $campos=array_keys(get_object_vars($this->campos));
 
         $resultado=[];
         while($fila=$this->resultado->siguiente()) {

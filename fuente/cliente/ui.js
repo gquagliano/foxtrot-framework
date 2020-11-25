@@ -33,6 +33,7 @@ var ui=new function() {
             xs:0
         },
         tamanosPx=tamanos.intercambiar(),
+        tamanoActual=null,
         urlBase=null,
         esCordova=false,
         instanciasVistas={},
@@ -1253,7 +1254,7 @@ var ui=new function() {
     ////Eventos
 
     /**
-     * Procesa el evento 'popstate'.
+     * Procesa el evento `popstate`.
      * @param {PopStateEvent} [evento] 
      */
     var procesarOnPopState=function(evento) {
@@ -1273,6 +1274,20 @@ var ui=new function() {
         if(ui.eventoComponentes(null,"navegacion",true,[vista])) return;
 
         //El cambio de URL no tiene otro efecto
+    };
+
+    /**
+     * Procesa el evento `resize`.
+     * @param {Event} [evento] 
+     */
+    var procesarResize=function(evento) {
+        //El evento se transmite a la visa y a los componentes solo cuando cambie el tamaño de pantalla
+        var tamano=ui.obtenerTamano();
+        if(tamanoActual&&tamano!=tamanoActual) {
+            if(!ui.evento("tamano",[tamano,tamanoActual]))
+                ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
+        }
+        tamanoActual=tamano;
     };
 
     /**
@@ -1310,6 +1325,8 @@ var ui=new function() {
                 },false);
             },false);
         }
+
+        win.addEventListener("resize",procesarResize);
         
         win.addEventListener("popstate",procesarOnPopState);
     };
@@ -1328,6 +1345,7 @@ var ui=new function() {
             var obj=instanciasControladores[control],
                 metodo=obj[nombre],
                 retorno;
+            if(typeof metodo!=="function") continue;
             if(params) {
                 retorno=metodo.apply(obj,params);
             } else {
@@ -1340,6 +1358,7 @@ var ui=new function() {
 
         var metodo=instanciaAplicacion[nombre],
             retorno;
+        if(typeof metodo!=="function") return false;
         if(params) {
             retorno=metodo.apply(instanciaAplicacion,params);
         } else {
@@ -1520,6 +1539,16 @@ var ui=new function() {
                 //Al cargar una vista secundaria, solo en la misma
                 obj.listo();
                 this.eventoComponentes(obj.obtenerComponentes(),"listo");
+            }            
+            //Ejecutar un evento 'tamaño' para que, en caso de que la vista requiera realizar un ajuste inicial en base al tamaño de pantalla, no deba realizarlo
+            //necesariamente en 'listo'
+            var tamano=ui.obtenerTamano();
+            if(principal) {
+                this.evento("tamano",[tamano,null]);
+                this.eventoComponentes(null,"tamano",false,[tamano,null]);
+            } else {
+                obj.tamano(tamano,tamano);
+                this.eventoComponentes(obj.obtenerComponentes(),"tamano",false,[tamano,null]);
             }
         }
 

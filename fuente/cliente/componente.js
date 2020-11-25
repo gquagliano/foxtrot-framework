@@ -289,6 +289,11 @@ var componente=new function() {
             }
         },
         "Datos":{
+            origen:{
+                etiqueta:"Origen",
+                adaptativa:false,
+                ayuda:"Permite establecer el origen de datos utilizando una expresión, equivalente a componente.establecerDatos(). Modificar esta propiedad en tiempo de ejecución no tendrá efecto."
+            },
             propiedad:{
                 etiqueta:"Propiedad",
                 adaptativa:false,
@@ -496,6 +501,10 @@ var componente=new function() {
         if(typeof actualizar==="undefined") actualizar=true;
         if(typeof dispersar==="undefined") dispersar=true;
 
+        //Si se omite obj, obtener de la propiedad Origen
+        if(typeof obj==="undefined") obj=this.propiedad(true,"origen");
+        if(!obj) return this;
+
         var propiedad=null;
         if(!ignorarPropiedad) propiedad=this.propiedad(false,"propiedad");
         if(propiedad) {
@@ -651,6 +660,8 @@ var componente=new function() {
         this.establecerId();
 
         if(typeof omitirEventos==="undefined"||!omitirEventos) this.establecerEventos();
+
+        if(!ui.enModoEdicion()) this.establecerDatos();
         
         return this;
     };
@@ -806,6 +817,8 @@ var componente=new function() {
      * @returns {componente}
      */
     this.actualizar=function() {
+        if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
+
         this.actualizarPropiedadesExpresiones();
 
         //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedad` y el componente presente un campo,

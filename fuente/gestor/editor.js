@@ -171,13 +171,46 @@ var editor=new function() {
                 placeholder=prop.hasOwnProperty("placeholder")?prop.placeholder:null,
                 ayuda=prop.hasOwnProperty("ayuda")?prop.ayuda:null,
                 evento=prop.hasOwnProperty("evento")?prop.evento:null,
+                evaluable=prop.hasOwnProperty("evaluable")?prop.evaluable:false,
                 timeout=0;
+
+            //Si es tipo opciones o lógico y el valor no se corresponde con una de las opciones disponibles, convertir en campo de texto libre
+            if(!seleccionMultiple&&
+                (tipo=="opciones"&&prop.valor&&!prop.opciones.hasOwnProperty(prop.valor))||
+                ((tipo=="bool"||tipo=="logico")&&prop.valor&&typeof prop.valor!=="boolean"))
+                    tipo="texto";
 
             if(ayuda) {
                 document.crear("<img src='"+editor.urlBase+"../gestor/img/ayuda.png'>")
                     .atributo("title",ayuda)
                     .anexarA(label);
             }
+
+            var reemplazarDesplegable=function(valor,campo,fn) {
+                if(valor=="foxtrot-ingresar-expresion") {
+                    //Reemplazar el desplegable por un campo de texto
+                    var nuevoCampo=document.crear("<input type='text' class='form-control'>")
+                        .atributo("placeholder","Ingresar expresión...")
+                        .valor(prop.valor)
+                        .evento("input",function(ev) {
+                            var valor=this.valor();
+                            clearTimeout(timeout);
+                            timeout=setTimeout(function() {
+                                fn(valor);
+                            },200);
+                        }).evento("blur",function(ev) {
+                            fn(this.valor());
+                        });
+
+                    campo.insertarDespues(nuevoCampo)
+                        .remover();
+
+                    nuevoCampo.focus();
+
+                    return true;
+                }
+                return false;
+            };
 
             if(tipo=="bool"||tipo=="logico") { //TODO Reemplazar 'bool'
                 //Para las propiedades booleanas utilizaremos un desplegable en lugar de un checkbox
@@ -186,22 +219,33 @@ var editor=new function() {
                 fila.anexar(campo);
 
                 campo.anexar("<option value=''></option>");
+                
+                //Opción de convertir en un campo de texto
+                if(evaluable) campo.anexar("<option value='foxtrot-ingresar-expresion'>Expresión...</option>");
+
                 campo.anexar("<option value='s'>Si</option>");
                 campo.anexar("<option value='n'>No</option>");
 
                 if(!seleccionMultiple&&(prop.valor===true||prop.valor===false)) campo.valor(prop.valor?"s":"n");
 
-                campo.evento("change",function(ev) {
-                    var v=this.valor();
-                    if(v=="s") v=true;
-                    else if(v=="n") v=false;
-                    else v=null;
+                var fn2=function(v) {                    
                     if(fn) {
                         self.componentesSeleccionados.forEach(function(componente) {
                             fn.call(editor,componente,tamanoActual,nombre,v);
                         });
                     }
                     cambiosSinGuardar=true;
+                };
+
+                campo.evento("change",function(ev) {
+                    var v=this.valor();
+
+                    if(reemplazarDesplegable(v,campo,fn2)) return;
+                    
+                    if(v=="s") v=true;
+                    else if(v=="n") v=false;
+                    else v=null;
+                    fn2(v);
                 });
             } else if(tipo=="opciones") {
                 var campo=document.crear("<select class='custom-select'>");
@@ -209,6 +253,9 @@ var editor=new function() {
                 
                 //Opción en blanco para revertir al valor predeterminado
                 campo.anexar("<option value=''></option>");
+
+                //Opción de convertir en un campo de texto
+                if(evaluable) campo.anexar("<option value='foxtrot-ingresar-expresion'>Expresión...</option>");
 
                 //Costruir opciones
                 prop.opciones.porCada(function(clave,etiqueta) {
@@ -221,14 +268,22 @@ var editor=new function() {
 
                 if(!seleccionMultiple) campo.valor(prop.valor);
 
+                var timeout,
+                    fn2=function(v) {
+                        if(fn)  {
+                            self.componentesSeleccionados.forEach(function(componente) {
+                                fn.call(editor,componente,tamanoActual,nombre,v);
+                            });
+                        }
+                        cambiosSinGuardar=true;
+                    };
+
                 campo.evento("change",function(ev) {
-                    if(fn)  {
-                        var v=this.valor();
-                        self.componentesSeleccionados.forEach(function(componente) {
-                            fn.call(editor,componente,tamanoActual,nombre,v);
-                        });
-                    }
-                    cambiosSinGuardar=true;
+                    var v=this.valor();
+
+                    if(reemplazarDesplegable(v,campo,fn2)) return;
+
+                    fn2(v);
                 });
             } else if(tipo=="archivo") {
                 //TODO Por el momento, simplemente mostramos un campo de archivo, eventualmente debe ser un gestor de archivos incluyendo subida y recorte de imagenes

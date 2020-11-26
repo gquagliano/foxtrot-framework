@@ -103,6 +103,9 @@ var componenteColumnaTabla=function() {
      * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         //Actualizar encabezados en el editor
         if(propiedad=="encabezado"&&ui.enModoEdicion()) 
             this.encabezadoTemporal.establecerHtml(valor);

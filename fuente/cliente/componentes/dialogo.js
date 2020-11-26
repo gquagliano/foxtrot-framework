@@ -55,6 +55,9 @@ var componenteDialogo=function() {
      * Actualiza el componente tras modificarse el valor de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="modal"||propiedad=="ocultarIconoCerrar") {
             //Destruir para que se reconstruya con los nuevos valores al abrir
             if(dialogo) {

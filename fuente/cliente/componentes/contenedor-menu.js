@@ -103,6 +103,9 @@ var componenteContenedorMenu=function() {
      * Actualiza el componente. propiedad puede estar definido tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="comportamiento") {
             if(valor=="click") {
                 this.elemento.agregarClase("menu-click");

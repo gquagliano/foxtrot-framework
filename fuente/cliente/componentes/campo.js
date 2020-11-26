@@ -118,6 +118,9 @@ var componenteCampo=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="relleno") {
             this.campo.atributo("placeholder",valor);
             return this;
@@ -161,18 +164,18 @@ var componenteCampo=function() {
             return this;
         }
         
-        if(propiedad=="longitud") {
+        if(propiedad=="longitud"&&!isNaN(valor)) {
             this.campo.propiedad("maxlength",valor);
             return this;
         }
 
-        if(propiedad=="paso") {
+        if(propiedad=="paso"&&/^[0-9\.]$/.test(valor)) {
             this.campo.propiedad("step",valor);
             return this;
         }
 
         if(propiedad=="ocultarControl") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.campo.agregarClase("ocultar-control");
             } else {
                 this.campo.removerClase("ocultar-control");
@@ -182,7 +185,7 @@ var componenteCampo=function() {
 
         if(propiedad=="deshabilitado") {
             //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.campo.propiedad("disabled",true);
             } else {
                 this.campo.removerAtributo("disabled");

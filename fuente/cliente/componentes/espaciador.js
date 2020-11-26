@@ -57,6 +57,9 @@ var componenteEspaciador=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="tipo") {
             this.elemento.removerClase("horizontal vertical");
             if(valor) this.elemento.agregarClase(valor);
@@ -64,7 +67,7 @@ var componenteEspaciador=function() {
         }
 
         if(propiedad=="borde") {
-            if(!valor) {
+            if(valor!==true&&valor!==1) {
                 this.elemento.removerClase("con-borde");
             } else {
                 this.elemento.agregarClase("con-borde");

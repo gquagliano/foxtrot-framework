@@ -81,6 +81,9 @@ var componenteBoton=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="estilo") {
             this.elemento.removerClase(/btn-(primary|secondary|success|danger|warning|info|light|dark)/);
             if(valor) this.elemento.agregarClase("btn-"+valor);
@@ -112,7 +115,7 @@ var componenteBoton=function() {
         }
 
         if(propiedad=="predeterminado") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("predeterminado");
             } else {
                 this.elemento.removerClase("predeterminado");

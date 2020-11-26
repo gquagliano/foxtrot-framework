@@ -82,6 +82,9 @@ var componenteVista=function() {
      * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         //TODO Estas propiedades deberían aceptar expresiones, las cuales se actualizarían al cargar la página o modificarse el origen de datos, puede quedar como algo configurable en cada propiedad (que el usario elija si debe o no aceptar expresiones para evitar procesar todo cada vez)
 
         if(propiedad=="titulo") {
@@ -111,7 +114,7 @@ var componenteVista=function() {
         
         if(propiedad=="precarga") {
             var doc=ui.obtenerDocumento();
-            if(valor) {
+            if(valor===true||valor===1) {
                 ui.obtenerCuerpo().insertarDespues(doc.crear("<div id='foxtrot-precarga' class='visible'>"));
             } else {
                 var elem=doc.querySelector("#foxtrot-precarga");

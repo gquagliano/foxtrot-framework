@@ -976,7 +976,7 @@ var componente=new function() {
         //- Se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
         //- Si son estilos, se establecen en línea, sin afectar la hoja de estilos
         if(expresion.contieneExpresion(valor)) {
-            if(ui.enModoEdicion()) return this;
+            if(ui.enModoEdicion()) valor=null;
             estilos=this.elemento.style;
         } else {
             estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
@@ -1154,7 +1154,7 @@ var componente=new function() {
         }
 
         if(propiedad=="cursiva") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("font-italic");
             } else {
                 this.elemento.removerClase("font-italic");
@@ -1163,7 +1163,7 @@ var componente=new function() {
         }
 
         if(propiedad=="subrayado") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("subrayado");
             } else {
                 this.elemento.removerClase("subrayado");
@@ -1172,7 +1172,7 @@ var componente=new function() {
         }
 
         if(propiedad=="tachado") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("tachado");
             } else {
                 this.elemento.removerClase("tachado");
@@ -1181,7 +1181,7 @@ var componente=new function() {
         }
 
         if(propiedad=="autofoco") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("autofoco");
             } else {
                 this.elemento.removerClase("autofoco");
@@ -1195,7 +1195,7 @@ var componente=new function() {
         }
 
         if(propiedad=="deshabilitado") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.elemento.agregarClase("deshabilitado")
                     .propiedad("disabled",true);
             } else {

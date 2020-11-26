@@ -56,12 +56,15 @@ var componenteColumna=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         var e=this.elemento;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="columna") {
             //Debemos remover todos los col-* y volver a generarlos en el orden correcto, no podemos simplemente desactivar y activar las clases de a una
             e.removerClase(/col-.+/);
             var tamanos=this.propiedadObj(propiedad);
             ["g","sm","md","lg","xl"].forEach(function(p) {
-                if(tamanos.hasOwnProperty(p)) e.agregarClase("col-"+(p=="g"?"":p+"-")+tamanos[p]);
+                if(tamanos.hasOwnProperty(p)&&!isNaN(tamanos[p])) e.agregarClase("col-"+(p=="g"?"":p+"-")+tamanos[p]);
             });
         }
 

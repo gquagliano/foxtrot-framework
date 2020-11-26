@@ -177,9 +177,12 @@ var componenteAlternar=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
+
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
         
         if(propiedad=="valorInicial") {
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.campo.atributo("checked",true);
             } else {
                 this.campo.removerAtributo("checked");

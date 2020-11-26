@@ -95,11 +95,14 @@ var componenteImagen=function() {
      * Actualiza el componente.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="origen") {
             //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
             
             if(tamano=="g") {
-                this.img.atributo("src",valor.trim()!=""?valor:icono);
+                this.img.atributo("src",typeof valor==="string"&&valor.trim()!=""?valor:icono);
             } else {
                 //Construir <source>s
 
@@ -116,15 +119,19 @@ var componenteImagen=function() {
                         var src=origenes[tam],
                             px=anchosPantalla[tam];
 
-                        var tag=document.crear("<source media='(min-width:"+px+"px)'>")
-                            .atributo("srcset",src);
-                        elem.insertBefore(tag,img); //TODO Agregar a dom
+                        if(typeof src==="string"&&src.trim()!="") {
+                            var tag=document.crear("<source media='(min-width:"+px+"px)'>")
+                                .atributo("srcset",src);
+                            elem.insertBefore(tag,img);
+                        }
                     });
                 }
             }
 
             return this;
-        } else if(propiedad=="alt") {
+        }
+        
+        if(propiedad=="alt") {
             this.img.atributo("alt",valor);
             return this;
         }

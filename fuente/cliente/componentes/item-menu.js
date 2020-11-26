@@ -238,6 +238,9 @@ var componenteItemMenu=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="enlace") {
             if(!valor) valor="#";
             this.enlace.atributo("href",valor);
@@ -245,7 +248,7 @@ var componenteItemMenu=function() {
         }
 
         if(propiedad=="nuevaVentana") {
-            if(!valor) {
+            if(valor!==true&&valor!==1) {
                 this.enlace.removerAtributo("target");
             } else {
                 this.enlace.atributo("target","_blank");

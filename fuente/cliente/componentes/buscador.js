@@ -383,6 +383,9 @@ var componenteBuscador=function() {
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
 
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
         if(propiedad=="relleno") {
             this.campo.atributo("placeholder",valor);
             return this;
@@ -390,7 +393,7 @@ var componenteBuscador=function() {
 
         if(propiedad=="deshabilitado") {
             //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor) {
+            if(valor===true||valor===1) {
                 this.campo.propiedad("disabled",true);
             } else {
                 this.campo.removerAtributo("disabled");

@@ -26,11 +26,18 @@ class controlador {
      */
     function __construct() {
         $clase=get_called_class();
-        $nombre=substr($clase,strrpos($clase,'\\')+1);
-        $this->nombre=$nombre;
+        $partes=\util::separarRuta($clase);
 
-        //Si es una clase pública, asignar instancia de la versión privada en $privado
-        if(preg_match('/\\\\publico\\\\'.$nombre.'$/',$clase)) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
+        preg_match('#^aplicaciones/'._apl.'/(.*?)(/publico/)?$#',$partes->ruta,$coincidencia);
+
+        $ruta=$coincidencia[1];
+		if(substr($ruta,-1)!='/') $ruta.='/';
+
+		$nombre=$ruta.$partes->nombre;
+		$this->nombre=$nombre;
+
+		//Si es una clase pública, asignar instancia de la versión privada en $privado
+    	if($coincidencia[2]=='/publico/') $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
 
         //Inicializar comunicación con el cliente
         if(!$this->cliente) $this->cliente=new cliente();

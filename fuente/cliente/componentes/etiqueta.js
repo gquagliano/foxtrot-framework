@@ -53,10 +53,10 @@ var componenteEtiqueta=function() {
                 //Como expresion
                 resultado=ui.evaluarExpresion(contenido,this.datos);
             }
-        }
 
-        if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
-        this.elemento.establecerHtml(resultado);
+            if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
+            this.elemento.establecerHtml(resultado);
+        }
 
         this.clasePadre.actualizar.call(this);
         return this;

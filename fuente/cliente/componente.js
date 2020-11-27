@@ -647,6 +647,8 @@ var componente=new function() {
         if(this.elemento) {
             //Las clases css que se mantengan al salir del modo de edición deben ser breves
             this.elemento.agregarClase("componente "+this.componente);
+
+            if(!this.contenidoEditable) this.elemento.propiedad("contenteditable",false);
         }
 
         if(this.contenedor) {
@@ -654,8 +656,6 @@ var componente=new function() {
                                                         //.container que es la clase de Bootstrap.
             //if(!this.hijos.length) this.contenedor.agregarClase("vacio");
         }
-
-        if(!this.contenidoEditable) this.elemento.propiedad("contenteditable",false);
 
         this.establecerId();
 

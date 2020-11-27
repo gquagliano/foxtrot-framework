@@ -289,8 +289,8 @@ var componente=new function() {
             }
         },
         "Datos":{
-            origen:{
-                etiqueta:"Origen",
+            datos:{
+                etiqueta:"Origen de datos",
                 adaptativa:false,
                 ayuda:"Permite establecer el origen de datos utilizando una expresión, equivalente a componente.establecerDatos(). Modificar esta propiedad en tiempo de ejecución no tendrá efecto."
             },
@@ -502,7 +502,7 @@ var componente=new function() {
         if(typeof dispersar==="undefined") dispersar=true;
 
         //Si se omite obj, obtener de la propiedad Origen
-        if(typeof obj==="undefined") obj=this.propiedad(true,"origen");
+        if(typeof obj==="undefined") obj=this.propiedad(true,"datos");
         if(!obj) return this;
 
         var propiedad=null;

@@ -15,10 +15,12 @@ class controlador {
     /**
      * @var string $nombre Nombre del controlador.
      * @var \cliente $cliente Instancia de la interfaz con el cliente.
+     * @var bool $publica Indica si es la versión pública del controlador.
      * @var \controlador $privado Si es una clase pública, instancia de la versión privada del controlador.
      */
     protected $nombre;
     protected $cliente;
+    protected $publica=false;
     protected $privado=null;
 
     /**
@@ -28,16 +30,18 @@ class controlador {
         $clase=get_called_class();
         $partes=\util::separarRuta($clase);
 
-        preg_match('#^aplicaciones/'._apl.'/(.*?)(/publico/)?$#',$partes->ruta,$coincidencia);
+        $this->publica=preg_match('#/publico/$#',$partes->ruta);
 
-        $ruta=$coincidencia[1];
-		if(substr($ruta,-1)!='/') $ruta.='/';
+        //Extraer ruta (clase en subdirectorio)
+        $ruta=substr($partes->ruta,strlen('aplicaciones/'._apl.'/'));
+        if($this->publica) $ruta=substr($ruta,0,-strlen('publico/'));
+		if($ruta!=''&&substr($ruta,-1)!='/') $ruta.='/';
 
 		$nombre=$ruta.$partes->nombre;
 		$this->nombre=$nombre;
 
 		//Si es una clase pública, asignar instancia de la versión privada en $privado
-    	if($coincidencia[2]=='/publico/') $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
+    	if($this->publica) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
 
         //Inicializar comunicación con el cliente
         if(!$this->cliente) $this->cliente=new cliente();

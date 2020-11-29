@@ -1559,8 +1559,8 @@ var componente=new function() {
     this.evaluarExpresion=function(cadena) {
         var ctl=ui.obtenerInstanciaControladorVista(this.nombreVista),
         vars=Object.assign({
-            evento:evento,
-            valor:this.valor(),
+            //evento:evento,
+            //valor:this.valor(),
             //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
             controlador:ctl,
             componentes:ctl?ctl.componentes:componentes

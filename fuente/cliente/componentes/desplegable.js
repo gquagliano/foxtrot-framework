@@ -17,6 +17,8 @@ var componenteDesplegable=function() {
     
     this.componente="desplegable";
     this.opciones=null;
+    this.opcionesAsignadas=null;
+    this.gruposAsignados=null;
 
     /**
      * Propiedades de Campo.
@@ -90,12 +92,8 @@ var componenteDesplegable=function() {
         this.clasePadre.listo.call(this);
 
         if(ui.enModoEdicion()) return;
-        
-        //Establecer opciones a partir de las propiedades grupos u opciones, si están asignadas
-        var grupos=this.propiedad("grupos"),
-            opciones=this.propiedad("opciones");
-        if(typeof grupos==="object"&&grupos!==null) this.establecerGrupos(grupos);
-        else if(typeof opciones==="object"&&opciones!==null) this.establecerOpciones(opciones);
+
+        this.actualizar();
     };
 
     /**
@@ -119,7 +117,7 @@ var componenteDesplegable=function() {
 
             if(propiedad=="propiedadClave"||propiedad=="propiedadEtiqueta") {
                 //Actualizar opciones
-                this.establecerOpciones(this.opciones);
+                this.actualizar();
                 return this;
             }
         }
@@ -197,6 +195,8 @@ var componenteDesplegable=function() {
      * @returns {componente}
      */
     this.establecerGrupos=function(grupos) {
+        this.gruposAsignados=grupos;
+        this.opcionesAsignadas=null;
         this.opciones={};
 
         var valor=this.campo.valor(),
@@ -229,6 +229,8 @@ var componenteDesplegable=function() {
      * @returns {Componente}
      */
     this.establecerOpciones=function(obj) {
+        this.gruposAsignados=null;
+        this.opcionesAsignadas=obj;
         this.opciones={};
 
         var valor=this.campo.valor(),
@@ -253,8 +255,21 @@ var componenteDesplegable=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        //Reconstruir opciones
-        this.listo();
+        //Regenerar opciones asignadas mediante establecerOpciones() / establecerGrupos()
+        if(this.gruposAsignados) {
+            this.establecerGrupos(this.gruposAsignados);
+        } else if(this.opcionesAsignadas) {
+            this.establecerOpciones(this.opcionesAsignadas);
+        } else {        
+            //O establecer opciones a partir de las propiedades grupos u opciones, si están asignadas
+            var grupos=this.propiedad("grupos"),
+                opciones=this.propiedad("opciones");
+            if(typeof grupos==="object"&&grupos!==null) {
+                this.establecerGrupos(grupos);
+            } else if(typeof opciones==="object"&&opciones!==null) {
+                this.establecerOpciones(opciones);
+            }
+        }
 
         return this.clasePadre.actualizar.call(this);
     };

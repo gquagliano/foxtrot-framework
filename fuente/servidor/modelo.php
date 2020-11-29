@@ -1661,12 +1661,12 @@ class modelo {
             }
 
             $sql.=' ( '.$condiciones.' ) ';
-        } elseif($operacion=='actualizar') {
+        } elseif($operacion=='actualizar'&&$this->consultaValores->id) {
             $sql.=' WHERE '.$this->alias.'.`id`=? ';
             $parametros[]=$this->consultaValores->id;
             $tipos[]='d';
         } elseif(!$this->consultaSeleccionarEliminados) {
-            $sql.='WHERE '.$this->alias.'.`e`=0 ';
+            $sql.=' WHERE '.$this->alias.'.`e`=0 ';
         }
 
         if($operacion=='seleccionar') {

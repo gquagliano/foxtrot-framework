@@ -1,3 +1,6 @@
+> ### 👋 ¡Hola!
+> Si clonás Foxtrot, queremos conocer tu opinión. Escribinos sin compromiso a contacto@foxtrot.ar. ¡Gracias por tu visita!
+
 **Nota: El framework se encuentra en pleno desarrollo. ¡Pero estamos *a nada* de la primer versión *MVP*!**
 
 ## Qué es Foxtrot Framework

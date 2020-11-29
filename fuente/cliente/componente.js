@@ -298,6 +298,11 @@ var componente=new function() {
                 etiqueta:"Propiedad",
                 adaptativa:false,
                 ayuda:"Propiedad del origen de datos. Admite rutas para acceder a propiedades anidadas, separadas por punto."
+            },
+            propiedadValor:{
+                etiqueta:"Propiedad Valor",
+                adaptativa:false,
+                ayuda:"Propiedad del origen de datos de donde se obtendrá y donde se asignará el valor. A diferencia de Propiedad, no filtrará el origen de datos cuando sea asignado. Admite rutas para acceder a propiedades anidadas, separadas por punto."
             }
         },
         "Comportamiento":{
@@ -825,10 +830,15 @@ var componente=new function() {
         //intentar asignar el valor desde el origen de datos (otros usos de la propiedad deben implementarse en actualizar() en el 
         //componente concreto)        
         if(this.datos&&this.campo) {
-            var propiedad=this.propiedad("propiedad");
-            if(!propiedad) return this;
+            var propiedad=this.propiedad("propiedadValor")||this.propiedad("propiedad"),
+                valor;
 
-            var valor=util.obtenerPropiedad(this.datos,propiedad);
+            if(propiedad) {
+                valor=util.obtenerPropiedad(this.datos,propiedad);
+            } else {
+                return this;
+            }
+
             if(typeof valor!=="undefined") this.valor(valor);
         }
 
@@ -1352,7 +1362,7 @@ var componente=new function() {
                     }
             }
             
-            if(typeof resultado==="string") resultado=evaluar?ui.evaluarExpresion(resultado):resultado;
+            if(typeof resultado==="string") resultado=evaluar?this.evaluarExpresion(resultado):resultado;
             return resultado;
         }
 
@@ -2109,7 +2119,7 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {   
             var nombre=hijo.obtenerNombre(),
-                propiedad=hijo.propiedad("propiedad");
+                propiedad=hijo.propiedad("propiedadValor")||hijo.propiedad("propiedad");
             if(inclusoOcultos||!hijo.esComponenteOculto()) {
                 if(nombre&&valores.hasOwnProperty(nombre)) {
                     hijo.valor(valores[nombre]);

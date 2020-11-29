@@ -190,7 +190,7 @@ var componenteBucle=function() {
 
         var fn=function(comp,indice) {
             comp.obtenerHijos().forEach(function(hijo) {
-                var propiedad=hijo.propiedad(false,"propiedad"),
+                var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
                     nombre=hijo.obtenerNombre(),
                     valor=hijo.valor();
                 if(typeof valor!=="undefined") {

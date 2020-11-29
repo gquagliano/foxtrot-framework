@@ -28,6 +28,11 @@ var componenteDesplegable=function() {
                 adaptativa:false,
                 ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de opciones."
             },
+            grupos:{
+                etiqueta:"Grupos",
+                adaptativa:false,
+                ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de grupos de opciones. Cada grupo debe tener las propiedades 'etiqueta' y 'opciones' con el listado de opciones."
+            },
             valor:{
                 etiqueta:"Valor inicial",
                 adaptativa:false
@@ -86,9 +91,11 @@ var componenteDesplegable=function() {
 
         if(ui.enModoEdicion()) return;
         
-        //Establecer opciones a partir de la propiedad opciones, si está asignada
-        var valor=this.propiedad(null,"opciones");
-        if(typeof valor==="object"&&valor!==null) this.establecerOpciones(valor);
+        //Establecer opciones a partir de las propiedades grupos u opciones, si están asignadas
+        var grupos=this.propiedad("grupos"),
+            opciones=this.propiedad("opciones");
+        if(typeof grupos==="object"&&grupos!==null) this.establecerGrupos(grupos);
+        else if(typeof opciones==="object"&&opciones!==null) this.establecerOpciones(opciones);
     };
 
     /**
@@ -103,6 +110,10 @@ var componenteDesplegable=function() {
         if(!ui.enModoEdicion()) {
             if(propiedad=="opciones"&&typeof valor==="object"&&valor!==null) {
                 this.establecerOpciones(valor);
+                return this;
+            }
+            if(propiedad=="grupos"&&typeof valor==="object"&&valor!==null) {
+                this.establecerGrupos(valor);
                 return this;
             }
 
@@ -128,50 +139,104 @@ var componenteDesplegable=function() {
     };
 
     /**
+     * Devuelve un listado de `<option>`s dado el listado de opciones u objeto.
+     * @param {*} listado 
+     * @param {(Node|Element)} destino
+     * @param {string} prefijo
+     */
+    var generarOpciones=function(listado,destino,prefijo) {
+        if(typeof prefijo==="undefined") prefijo="";
+
+        var propClave=t.propiedad("propiedadClave"),
+            propValor=t.propiedad("propiedadEtiqueta"),
+            fn=function(clave,valor) {
+                document.crear("option")
+                    .valor(clave)
+                    .establecerTexto(valor)
+                    .anexarA(destino);
+            };
+
+        if(t.propiedad("opcional")) fn("",t.propiedad("etiquetaOpcional"));
+
+        if(util.esArray(listado)) {
+            listado.porCada(function(indice,obj) {
+                //Por defecto, usar el índice como clave y el elemento como valor
+                var clave=prefijo+indice,
+                    valor=obj;
+
+                if(util.esObjeto(obj)) {
+                    //Si valor es un objeto, se admite el uso de propiedadClave y propiedadValor
+                    if(propClave) clave=obj[propClave];
+                    if(propValor) valor=obj[propValor];
+                }
+
+                fn(clave,valor);
+                t.opciones[clave]=obj;
+            });
+        } else if(util.esObjeto(listado)) {
+            listado.porCada(function(clave,obj) {
+                var valor=obj;
+
+                //Si valor es un objeto, se admite el uso de propiedadValor para determinar qué propiedad mostrar
+                if(util.esObjeto(obj)&&propValor) valor=obj[propValor];
+
+                fn(clave,valor);
+                t.opciones[clave]=obj;
+            });
+        }
+    };
+
+    /**
+     * Establece las opciones del desplegable agrupadas (en `<optgroup>`s).
+     * @param {Object[])} grupos - Listado de objetos, cada un representando un grupo de opciones.
+     * @param {string} grupos.etiqueta - Etiqueta del grupo.
+     * @param {Object|Object[]} grupos.opciones - Listado de opciones (objeto o array, compatible con `establecerOpciones()`). El tipo de listado (objeto o array) debe ser el
+     * mismo en todos los grupos.
+     * @param {string} [grupos.nombre] - Nombre del grupo. Si `opciones` es un array, el nombre se utilizará como prefijo en los valores (`nombre_0`, `nombre_1`, etc.). Si se
+     * omite, en lugar del nombre, se utilizará el índice del grupo (comenzando desde `0`).
+     * @returns {componente}
+     */
+    this.establecerGrupos=function(grupos) {
+        this.opciones={};
+
+        var valor=this.campo.valor(),
+            valorInicial=this.propiedad("valor");
+
+        this.campo.querySelectorAll("option,optgroup").remover();
+
+        grupos.porCada(function(i,grupo) {
+            var elem=document.crear("optgroup")
+                    .atributo("label",grupo.etiqueta)
+                    .anexarA(t.campo);
+            var prefijo=(grupo.hasOwnProperty("nombre")?grupo.nombre:i)+"_";
+            generarOpciones(grupo.opciones,elem,prefijo);
+        });
+
+        if(valor) {
+            //Reesstablecer valor
+            this.valor(valor);
+        } else if(valorInicial) {
+            //O establecer valor inicial
+            this.valor(valorInicial);
+        }
+
+        return this;
+    };
+
+    /**
      * Establece las opciones del desplegable.
      * @param {(Object|Object[])} obj - Listado u objeto.
      * @returns {Componente}
      */
     this.establecerOpciones=function(obj) {
-        this.opciones=obj;
+        this.opciones={};
 
-        var propClave=this.propiedad(null,"propiedadClave"),
-            propValor=this.propiedad(null,"propiedadEtiqueta"),
-            valor=this.campo.valor(),
-            valorInicial=this.propiedad(null,"valor"),
-            t=this,
-            fn=function(clave,valor) {
-                var opcion=document.crear("option");
-                opcion.valor(clave)
-                    .establecerTexto(valor)
-                    .anexarA(t.campo);
-            };
+        var valor=this.campo.valor(),
+            valorInicial=this.propiedad("valor");
 
-        this.campo.querySelectorAll("option").remover();
+        this.campo.querySelectorAll("option,optgroup").remover();
 
-        if(this.propiedad("opcional")) fn("",this.propiedad("etiquetaOpcional"));
-
-        if(util.esArray(obj)) {
-            obj.forEach(function(valor,indice) {
-                //Por defecto, usar el índice como clave
-                var clave=indice;
-
-                if(util.esObjeto(valor)) {
-                    //Si valor es un objeto, se admite el uso de propiedadClave y propiedadValor
-                    if(propClave) clave=valor[propClave];
-                    if(propValor) valor=valor[propValor];
-                }
-
-                fn(clave,valor);
-            });
-        } else if(util.esObjeto(obj)) {
-            obj.porCada(function(clave,valor) {
-                //Si valor es un objeto, se admite el uso de propiedadValor para determinar qué propiedad mostrar
-                if(util.esObjeto(valor)&&propValor) valor=valor[propValor];
-
-                fn(clave,valor);
-            });
-        }
+        generarOpciones(obj,this.campo);
 
         if(valor) {
             //Reesstablecer valor
@@ -199,25 +264,9 @@ var componenteDesplegable=function() {
      * @returns {(Object|null)}
      */
     this.obtenerItem=function() {
-        var valor=this.campo.valor(),
-            propClave=this.propiedad("propiedadClave");
-
-        if(util.esArray(this.opciones)) {
-            for(var i=0;i<this.opciones.length;i++) {
-                if(util.esObjeto(this.opciones[i])) {
-                    if(this.opciones[i].hasOwnProperty(propClave)&&this.opciones[i][propClave]==valor) return this.opciones[i];
-                } else if(i==valor) {
-                    return this.opciones[i];
-                }
-            }
-        } else if(util.esObjeto(this.opciones)) {
-            for(var clave in this.opciones) {
-                if(!this.opciones.hasOwnProperty(clave)||!this.opciones[clave].hasOwnProperty(propClave)) continue;
-                if(this.opciones[clave][propClave]==valor) return this.opciones[clave];
-            }
-        }
-
-        return null;
+        var valor=this.campo.valor();
+        if(!this.opciones.hasOwnProperty(valor)) return null;
+        return this.opciones[valor];
     };
 };
 

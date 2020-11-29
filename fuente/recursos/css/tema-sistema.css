@@ -76,11 +76,11 @@ h6,.h6 {
 .formulario-arbol {
     box-shadow: 0 1px 14px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05);
 }
-.cuerpo-formulario>.row {
+.cuerpo-formulario .row {
     margin-bottom: 1rem;
 }
 .cuerpo-formulario>:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 label,.label {
     margin-top: .3rem;

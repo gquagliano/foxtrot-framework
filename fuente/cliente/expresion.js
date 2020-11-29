@@ -125,7 +125,8 @@ function expresion(expr) {
             ternarioCondicion=null;
 
         for(var i=0;i<this.cadena.length;i++) {
-            var caracter=this.cadena[i];
+            var caracter=this.cadena[i],
+                anterior=i==0?null:this.cadena[i-1];
 
             if(!enCadena) {
                 if(caracter=="'") {
@@ -137,13 +138,13 @@ function expresion(expr) {
                     ternarioCondicion=null;
                     bufer="";
                 } else if(caracter==".") {
-                    if(bufer=="") {
+                    if(bufer==""&&(!anterior||(anterior!="]"&&anterior!=")"))) {
                         //Punto decimal (.123)
                         bufer="0";
                     } else if(/^[0-9+]$/.test(bufer)) {
                         //Punto decimal (12.345)
                         bufer+=".";
-                    } else {
+                    } else if(bufer!="") {
                         //Acceso a propiedad
                         uitlimoObjeto=objeto;
                         objeto=buscarPropiedad(objeto,bufer);

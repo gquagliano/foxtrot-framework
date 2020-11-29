@@ -120,7 +120,7 @@ class sesion {
 	public static function cerrarSesion() {
         self::$usuario=null;
         self::$datosPublicos=null;
-		unset($_SESSION[self::sv.'usuario'],$_SESSION[self::sv.'usuarioPub']);
+		unset($_SESSION[self::su],$_SESSION[self::sp]);
 	}
 
     /**
@@ -128,6 +128,7 @@ class sesion {
      * @return mixed
      */
 	public static function obtenerUsuario() {
+        self::verificarUsuario();
 		return self::$usuario;
 	}
 
@@ -136,6 +137,7 @@ class sesion {
      * @return mixed
      */
 	public static function obtenerDatosPublicos() {
+        self::verificarUsuario();
 		return self::$datosPublicos;
 	}
 
@@ -144,8 +146,8 @@ class sesion {
      * @return bool
      */
 	public static function verificarUsuario() {
-        self::$usuario=$_SESSION[self::sv.'usuario'];
-        self::$datosPublicos=$_SESSION[self::sv.'usuarioPub'];
+        self::$usuario=$_SESSION[self::su];
+        self::$datosPublicos=$_SESSION[self::sp];
         return self::$usuario?true:false;
     }
     

@@ -154,8 +154,6 @@ var componenteDesplegable=function() {
                     .anexarA(destino);
             };
 
-        if(t.propiedad("opcional")) fn("",t.propiedad("etiquetaOpcional"));
-
         if(util.esArray(listado)) {
             listado.porCada(function(indice,obj) {
                 //Por defecto, usar el índice como clave y el elemento como valor
@@ -204,6 +202,10 @@ var componenteDesplegable=function() {
 
         this.campo.querySelectorAll("option,optgroup").remover();
 
+        if(this.propiedad("opcional")) document.crear("<option value=''>")
+                                        .establecerTexto(this.propiedad("etiquetaOpcional"))
+                                        .anexarA(this.campo);
+
         grupos.porCada(function(i,grupo) {
             var elem=document.crear("optgroup")
                     .atributo("label",grupo.etiqueta)
@@ -237,6 +239,10 @@ var componenteDesplegable=function() {
             valorInicial=this.propiedad("valor");
 
         this.campo.querySelectorAll("option,optgroup").remover();
+
+        if(this.propiedad("opcional")) document.crear("<option value=''>")
+                                        .establecerTexto(this.propiedad("etiquetaOpcional"))
+                                        .anexarA(this.campo);
 
         generarOpciones(obj,this.campo);
 

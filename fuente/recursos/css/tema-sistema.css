@@ -79,7 +79,7 @@ h6,.h6 {
 .cuerpo-formulario .row {
     margin-bottom: 1rem;
 }
-.cuerpo-formulario :last-child {
+.cuerpo-formulario .row:last-child {
     margin-bottom: 0 !important;
 }
 label,.label {

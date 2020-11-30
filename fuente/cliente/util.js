@@ -871,7 +871,26 @@ var util=new function() {
         for(var i=0;i<arr.length;i++)
             if(arr[i].hasOwnProperty(prop)&&arr[i][prop]==val) return returnIndex?this.i:arr[i];
         return null;
-    }
+    };
+
+    /**
+     * Dado un listado de objetos, devuelve un objeto `{propiedad:objeto,...}` (donde `propiedad` es el valor de la propiedad especificada de cada elemento). Nótese que si
+     * un objeto no presenta la propiedad, no está asignada o es nula, será omitido.
+     * @param {Object[]} listado - Listado de objetos a procesar.
+     * @param {string} propiedad - Nombre de la propiedad a utilizar como claves del nuevo objeto.
+     */
+    this.extraerObjetos=function(listado,propiedad) {
+        if(!this.esArray(listado)) return {};
+
+        var res={};
+
+        listado.porCada(function(i,obj) {
+            if(!obj.hasOwnProperty(propiedad)||typeof obj[propiedad]==="undefined"||obj[propiedad]===null) return;
+            res[obj[propiedad]]=obj;
+        });
+
+        return res;
+    };
 };
 
 window["util"]=util;

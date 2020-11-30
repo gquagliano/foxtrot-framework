@@ -97,10 +97,10 @@ var componenteEtiqueta=function() {
     /**
      * Establece el valor del componente.
      * @param {*} [valor] - Valor a establecer.
-     * @returns {(null|componente)}
+     * @returns {(undefined|componente)}
      */
     this.valor=function(valor) {
-        if(typeof valor==="undefined") return null;
+        if(typeof valor==="undefined") return;
         
         //Cuando se asigne un valor, establecer como origen de datos
         this.establecerDatos(valor);

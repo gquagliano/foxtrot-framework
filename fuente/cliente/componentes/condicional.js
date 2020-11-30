@@ -100,10 +100,10 @@ var componenteCondicional=function() {
      * Establece el valor del componente. Nótese que este componente no tiene valor propio, solo se ofrece este método como sinónimo de `establecerDatos()`; invocarlo sin
      * especificar `valor` devolverá `null`.
      * @param {*} [valor] - Valor a establecer.
-     * @returns {(null|componente)}
+     * @returns {(undefined|componente)}
      */
     this.valor=function(valor) {
-        if(typeof valor==="undefined") return null;
+        if(typeof valor==="undefined") return;
         
         //Cuando se asigne un valor, establecer como origen de datos
         this.establecerDatos(valor);

@@ -114,7 +114,7 @@ var componenteVista=function() {
         
         if(propiedad=="precarga") {
             var doc=ui.obtenerDocumento();
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 ui.obtenerCuerpo().insertarDespues(doc.crear("<div id='foxtrot-precarga' class='visible'>"));
             } else {
                 var elem=doc.querySelector("#foxtrot-precarga");

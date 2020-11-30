@@ -182,7 +182,7 @@ var componenteAlternar=function() {
         if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
         
         if(propiedad=="valorInicial") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.campo.atributo("checked",true);
             } else {
                 this.campo.removerAtributo("checked");

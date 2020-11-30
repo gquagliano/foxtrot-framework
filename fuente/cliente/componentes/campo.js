@@ -175,7 +175,7 @@ var componenteCampo=function() {
         }
 
         if(propiedad=="ocultarControl") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.campo.agregarClase("ocultar-control");
             } else {
                 this.campo.removerClase("ocultar-control");
@@ -185,7 +185,7 @@ var componenteCampo=function() {
 
         if(propiedad=="deshabilitado") {
             //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.campo.propiedad("disabled",true);
             } else {
                 this.campo.removerAtributo("disabled");

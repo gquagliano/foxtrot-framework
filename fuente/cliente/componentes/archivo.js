@@ -284,7 +284,7 @@ var componenteArchivo=function() {
         if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
 
         if(propiedad=="multiple") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.campo.atributo("multiple",true);
             } else {
                 this.campo.removerAtributo("multiple");

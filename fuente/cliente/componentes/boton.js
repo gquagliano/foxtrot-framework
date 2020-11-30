@@ -115,7 +115,7 @@ var componenteBoton=function() {
         }
 
         if(propiedad=="predeterminado") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("predeterminado");
             } else {
                 this.elemento.removerClase("predeterminado");

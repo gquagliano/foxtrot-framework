@@ -65,7 +65,7 @@ var componenteTabla=function() {
         if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
 
         if(propiedad=="ocultarContenidos") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("ocultar-contenidos");
             } else {
                 this.elemento.removerClase("ocultar-contenidos");

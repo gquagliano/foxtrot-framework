@@ -141,7 +141,7 @@ var componenteFecha=function() {
 
         if(propiedad=="deshabilitado") {
             //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.campo.propiedad("disabled",true);
             } else {
                 this.campo.removerAtributo("disabled");

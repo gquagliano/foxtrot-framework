@@ -1164,7 +1164,7 @@ var componente=new function() {
         }
 
         if(propiedad=="cursiva") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("font-italic");
             } else {
                 this.elemento.removerClase("font-italic");
@@ -1173,7 +1173,7 @@ var componente=new function() {
         }
 
         if(propiedad=="subrayado") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("subrayado");
             } else {
                 this.elemento.removerClase("subrayado");
@@ -1182,7 +1182,7 @@ var componente=new function() {
         }
 
         if(propiedad=="tachado") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("tachado");
             } else {
                 this.elemento.removerClase("tachado");
@@ -1191,7 +1191,7 @@ var componente=new function() {
         }
 
         if(propiedad=="autofoco") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("autofoco");
             } else {
                 this.elemento.removerClase("autofoco");
@@ -1205,7 +1205,7 @@ var componente=new function() {
         }
 
         if(propiedad=="deshabilitado") {
-            if(valor===true||valor===1) {
+            if(valor===true||valor===1||valor==="1") {
                 this.elemento.agregarClase("deshabilitado")
                     .propiedad("disabled",true);
             } else {

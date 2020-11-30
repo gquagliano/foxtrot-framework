@@ -332,6 +332,9 @@ var componenteBuscador=function() {
         if(e) e.removerClase("activo");
         e=elem.querySelector("a:nth-child("+(this.indiceSeleccionado+1)+")"); //nth-child es base 1
         if(e) e.agregarClase("activo");
+
+        //Scroll
+        if(e) e.scrollIntoView();
     };
 
     /**

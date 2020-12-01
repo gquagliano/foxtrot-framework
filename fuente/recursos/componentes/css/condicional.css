@@ -11,3 +11,6 @@
 .condicional.visible {
     display: block !important;
 }
+.condicional.d-inline-block.visible {
+    display: inline-block !important;
+}

@@ -219,7 +219,7 @@ textarea.form-control {
     margin-right: 1rem;
     height: auto;
 }
-.formulario-tabla .btn:last-child {
+.formulario-tabla td>.btn:last-child {
     margin-right: 0;
 }
 .formulario-tabla .table {

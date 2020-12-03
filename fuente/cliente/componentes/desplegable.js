@@ -262,7 +262,7 @@ var componenteDesplegable=function() {
      * `{valor:etiqueta,...}`. Si se utilizaron grupos, sus opciones estarán combinadas en este objeto (en un solo nivel, sin las etiquetas originales).
      * @returns {Object}
      */
-    this.obtenerOpciones=function(obj) {
+    this.obtenerOpciones=function() {
         return this.opciones;
     };
 

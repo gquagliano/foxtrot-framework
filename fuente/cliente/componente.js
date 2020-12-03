@@ -1429,10 +1429,10 @@ var componente=new function() {
     /**
      * Devuelve o establece el valor del componente. Si el componente no es un campo, devolverá `null`.
      * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
-     * @returns {(componente|null|*)}
+     * @returns {(componente|undefined|*)}
      */
     this.valor=function(valor) {
-        if(!this.campo) return null;
+        if(!this.campo) return;
 
         if(typeof valor==="undefined") return this.campo.valor();
             

@@ -258,6 +258,15 @@ var componenteDesplegable=function() {
     };
 
     /**
+     * Devuelve las opciones del desplegable. Nótese que no devuelve el objeto original, sino las opciones efectivas del desplegable, siempre como objeto
+     * `{valor:etiqueta,...}`. Si se utilizaron grupos, sus opciones estarán combinadas en este objeto (en un solo nivel, sin las etiquetas originales).
+     * @returns {Object}
+     */
+    this.obtenerOpciones=function(obj) {
+        return this.opciones;
+    };
+
+    /**
      * Actualiza el componente.
      */
     this.actualizar=function() {

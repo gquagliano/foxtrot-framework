@@ -108,14 +108,19 @@ var componenteBuscador=function() {
             }
         });
 
+        var temporizador;
+
         this.campo.evento("paste input",function(ev) {
-            var valor=t.campo.valor();
-            if(valor=="") {
-                //Al borrar todo el texto, reestablecer
-                t.establecerValor(null);
-            } else {
-                t.buscar(valor);
-            }
+            clearTimeout(temporizador);
+            temporizador=setTimeout(function() {
+                var valor=t.campo.valor();
+                if(valor=="") {
+                    //Al borrar todo el texto, reestablecer
+                    t.establecerValor(null);
+                } else {
+                    t.buscar(valor);
+                }
+            },500);
         });
 
         this.elemento.evento("focusout",function(ev) {

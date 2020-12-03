@@ -112,15 +112,17 @@ var componenteBuscador=function() {
 
         this.campo.evento("paste input",function(ev) {
             clearTimeout(temporizador);
-            temporizador=setTimeout(function() {
-                var valor=t.campo.valor();
-                if(valor=="") {
-                    //Al borrar todo el texto, reestablecer
-                    t.establecerValor(null);
-                } else {
+            var valor=t.campo.valor();
+            if(valor=="") {
+                //Al borrar todo el texto, reestablecer
+                t.buscando=false;
+                t.establecerValor(null);
+            } else {
+                t.buscando=true;
+                temporizador=setTimeout(function() {
                     t.buscar(valor);
-                }
-            },500);
+                },500);
+            }
         });
 
         this.elemento.evento("focusout",function(ev) {
@@ -170,7 +172,7 @@ var componenteBuscador=function() {
         this.abortarBusqueda();
 
         this.buscando=true;
-        this.seleccionarPrimerElemento=false;
+        //this.seleccionarPrimerElemento=false;
         ui.mostrarPrecarga("barra");
 
         var obj={campo:this.nombre};
@@ -219,6 +221,7 @@ var componenteBuscador=function() {
         }
         this.resultados=[];
         this.indiceSeleccionado=-1;
+        this.seleccionarPrimerElemento=false;
         return this;
     };
 

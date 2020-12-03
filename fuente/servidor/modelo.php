@@ -93,12 +93,15 @@ class modelo {
 
     /**
      * Crea y devuelve una instancia de la entidad de este modelo.
-     * @param mixed $fila Datos a asignar (objeto, array asociativo o instancia de la entidad).
+     * @param mixed $fila Datos a asignar (resultado de la consulta, *no* un objeto arbitrario u otra instancia de la entidad).
      * @return \entidad
      */
-    public function fabricarEntidad($fila=null) {
-        $obj=new $this->tipoEntidad;
+    public function fabricarEntidad($fila=null,$nombreModelo=null) {
+        //Si se solicita una entidad de otro modelo, pedir al mismo
+        if($nombreModelo) return $this->fabricarModelo($nombreModelo)->fabricarEntidad($fila);
 
+        $obj=new $this->tipoEntidad;
+        
         if($fila) {
             foreach($this->campos as $nombre=>$campo) {
                 $aliasCampo='__'.$this->alias.'_'.$nombre;

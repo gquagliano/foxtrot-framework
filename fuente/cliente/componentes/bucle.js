@@ -81,6 +81,11 @@ var componenteBucle=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
+        //Almacenar dónde está el foco
+        var enfocables=this.elemento.buscarEnfocables(),    
+            foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target),
+            indiceFoco=enfocables.indexOf(foco);
+
         //Limpiar filas autogeneradas
         this.itemsAutogenerados.forEach(function(item) {
             item.eliminar();
@@ -98,6 +103,12 @@ var componenteBucle=function() {
             this.mostrarMensajeSinDatos();
         } else {
             this.generarItems();
+
+            //Intentar reestablecer el foco
+            if(indiceFoco>=0) {
+                enfocables=this.elemento.buscarEnfocables();
+                if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
+            }
         }
 
         return this;

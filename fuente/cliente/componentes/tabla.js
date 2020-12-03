@@ -94,6 +94,11 @@ var componenteTabla=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
+        //Almacenar dónde está el foco
+        var enfocables=this.elemento.buscarEnfocables(),    
+            foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target),
+            indiceFoco=enfocables.indexOf(foco);
+            
         //Limpiar filas autogeneradas
         this.elemento.querySelectorAll(".autogenerado").remover();
 
@@ -108,6 +113,12 @@ var componenteTabla=function() {
             this.mostrarMensajeSinDatos();
         } else {
             t.generarFilas();
+
+            //Intentar reestablecer el foco
+            if(indiceFoco>=0) {
+                enfocables=this.elemento.buscarEnfocables();
+                if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
+            }
         }
 
         return this;

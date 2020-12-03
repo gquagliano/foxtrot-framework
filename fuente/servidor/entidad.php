@@ -37,7 +37,8 @@ class entidad {
 
     /**
      * Constructor.
-     * @param object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @param object|array $valores Valores a asignar en las propiedades de la instancia. **Importante:** Los valores son asignados mediante `establecerValores()`. Utilizá
+     * `(new entidad)->establecerValoresPublicos($valores)` si el objeto proviene del cliente.
      */
     function __construct($valores=null) {
         if($valores) $this->establecerValores($valores);
@@ -46,12 +47,44 @@ class entidad {
     /**
      * Asigna los elementos o propiedades en las propiedades de esta instancia.
      * @param object|array $valores Valores a asignar en las propiedades de la instancia.
+     * @param boolean $publicos Filtrar el objeto manteniendo solo los valores públicos.
      * @return \entidad
      */
-    public function establecerValores($valores) {
+    public function establecerValores($valores,$publicos=false) {
+        if(!is_object($valores)) return $this;
+
+        $campos=$this->obtenerCampos();
+
         foreach($valores as $clave=>$valor) {
-            if(property_exists($this,$clave)) $this->$clave=$valor;
+            if(!property_exists($this,$clave)) continue;
+            
+            $campo=$campos->$clave;
+            if($publicos&&!$campo->publico) continue;
+
+            $this->$clave=$valor;
+
+            //Convertir relacionales en entidades
+            if($campo->tipo=='relacional') {
+                $modelo=\foxtrot::obtenerInstanciaModelo($campo->modelo);
+
+                if($campo->relacion=='1:n') {
+                    if(is_array($valor)) {
+                        $this->$clave=[];
+                        foreach($valor as $item)
+                            if(is_object($item)) {
+                                $obj=$modelo->fabricarEntidad();
+                                $obj->establecerValores($item,$publicos);
+                                $this->$clave[]=$obj;
+                            }
+                    }
+                } elseif(is_object($valor)) {
+                    $obj=$modelo->fabricarEntidad();
+                    $obj->establecerValores($valor,$publicos);
+                    $this->$clave=$obj;
+                }
+            }
         }
+
         $this->procesarValores();
         return $this;
     }
@@ -63,22 +96,7 @@ class entidad {
      * @return \entidad
      */
     public function establecerValoresPublicos($valores) {
-        if(!is_object($valores)&&!is_array($valores)) return $this;
-
-        //Crear un nuevo objeto que tome de $valores solo los elementos válidos y establecer
-
-        $esObj=is_object($valores);
-        $nuevosValores=(object)[];
-        $campos=$this->obtenerCampos();
-
-        foreach($campos as $nombre=>$campo) {
-            if(!$campo->publico) continue;
-
-            $valor=$esObj?$valores->$nombre:$valores[$nombre];
-            if($valor!==null) $nuevosValores->$nombre=$valor;
-        }
-
-        return $this->establecerValores($nuevosValores);
+        return $this->establecerValores($valores,true);
     }
 
     /**

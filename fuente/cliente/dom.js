@@ -116,6 +116,22 @@
     };
 
     /**
+     * Devuelve los elementos que puedan recibir foco. Nótese que devuelve un array (*no NodeList*).
+     * @returns {Node[]}
+     * @memberof external:Node
+     */
+    Node.prototype.buscarEnfocables=function() {
+        var lista=this
+            .querySelectorAll("a,button,input,textarea,select,details,[tabindex]:not([tabindex='-1'])")
+            .aArray();
+        lista.filter(function(elem) {
+            return elem.hasAttribute("disabled");
+            //TODO Clase .disabled en el elemento o en su ascendencia
+        });
+        return lista;
+    };
+
+    /**
      * Devuelve los hijos directos del elemento.
      * @memberof external:Node
      * @param {Object} [filtro] - Filtra los elementos resultantes.
@@ -1032,6 +1048,21 @@
             var coincide=elem.es(filtro);
             if(negado) coincide=!coincide;
             if(coincide) resultado.push(elem);
+        });
+        return resultado;
+    };
+
+    /**
+     * Busca en el listado todos los elementos que puedan recibir foco y devuelve un nuevo listado como array (*no NodeList*). Nótese que
+     * no se evalúan los elementos del listado, *solo la descendencia*  de cada uno.
+     * @memberof external:NodeList
+     * @returns {Node[]}
+     */
+    NodeList.prototype.buscarEnfocables=function() {
+        var resultado=[];
+        this.forEach(function(elem) {
+            var arr=elem.buscarEnfocables();
+            resultado=resultado.concat(arr);
         });
         return resultado;
     };

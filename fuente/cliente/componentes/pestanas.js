@@ -25,10 +25,19 @@ var componentePestanas=function() {
                 evento:true,
                 adaptativa:false
             }
+        },
+        "Pestañas":{
+            predeterminada:{
+                etiqueta:"Pestaña predeterminada",
+                adaptativa:false,
+                ayuda:"Número de pestaña, comenzando desde 0. Al guardar, siempre volverá a esta pestaña."
+            }
         }
     };
 
     this.encabezado=null;
+
+    var editandoPestana=null;
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
@@ -67,6 +76,40 @@ var componentePestanas=function() {
         this.actualizarEncabezados(false);
         this.clasePadre.listo.call(this);
     };   
+
+    /**
+     * Evento `editorDesactivado`.
+     * @returns {(boolean|undefined)}
+     */
+    this.editorDesactivado=function() {
+        editandoPestana=this.obtenerPestanaActiva();
+
+        //Volver a la pestaña predeterminada (de otro modo, al guardar, queda activa la pestaña que está activa actualmente en el editor)
+        var indice=this.propiedad("predeterminada");
+        if(typeof indice==="string"||typeof indice==="number") this.activarPestana(indice);
+    };    
+
+    /**
+     * Evento `editor`.
+     * @returns {(boolean|undefined)}
+     */
+    this.editor=function() {
+        //Volver a la pestaña en la que se estaba trabajando
+        if(editandoPestana) this.activarPestana(editandoPestana);
+    };
+
+    /**
+     * Devuelve *el índice* de la pestaña activa.
+     * @returns {number}
+     */
+    this.obtenerPestanaActiva=function() {
+        var hijos=this.obtenerHijos();
+        for(var i=0;i<hijos.length;i++) {
+            var pestana=hijos[i];
+            if(pestana.esActiva()) return i;
+        }
+        return 0;
+    };
 
     /**
      * Regenera los botones del encabezado.

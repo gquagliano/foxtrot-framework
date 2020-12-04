@@ -110,7 +110,7 @@ class sesion {
      * @return mixed
      */
     public static function obtener($clave) {
-        if(!array_key_exists($clave,$_SESSION)) return null;
+        //if(!array_key_exists($clave,$_SESSION)) return null;
         return $_SESSION[$clave];
     }
 

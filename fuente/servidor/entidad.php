@@ -51,7 +51,7 @@ class entidad {
      * @return \entidad
      */
     public function establecerValores($valores,$publicos=false) {
-        if(!is_object($valores)) return $this;
+        if(!is_object($valores)&&!is_array($valores)) return $this;
 
         $campos=$this->obtenerCampos();
 

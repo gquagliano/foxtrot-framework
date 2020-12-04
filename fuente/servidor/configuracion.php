@@ -29,6 +29,7 @@ class configuracion {
     public static $autenticacionSmtp=true;
     public static $puertoSmtp=25;
     public static $usuarioSmtp='';
+    public static $seguridadSmtp='';
     public static $contrasenaSmtp='';
     public static $rutaArchivos='temp/';
 

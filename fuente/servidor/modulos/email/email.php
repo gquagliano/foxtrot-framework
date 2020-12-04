@@ -39,7 +39,8 @@ class email extends \modulo {
      * @var string $parametros->nombreRemitente Nombre del remitente.
      * @var string $parametros->responder Dirección de respuesta.
      * @var string $parametros->retorno Dirección de retorno.
-     * @var string $parametros->plantilla Plantilla (actualmente sin efecto).
+     * @var string $parametros->plantilla Plantilla (actualmente el único valor que acepta es `falso` para enviar el uso de la plantilla HTML básica y enviar el cuerpo tal cual
+     * fue provisto).
      * @var bool $parametros->depuracion Habilita la salida de depuración por HTTP.
      * @var array $parametros->embeber Listado de imagenes a embeber. Array de objetos [ruta,cid].
      * @var string $parametros->alternativo Texto alternativo.
@@ -56,7 +57,7 @@ class email extends \modulo {
 
         //Predeterminados
         $parametros=(object)array_merge([
-            'remitente'=>'no-responder@foxtrotcloud.com',
+            'remitente'=>\configuracion::$usuarioSmtp?\configuracion::$usuarioSmtp:'no-responder@foxtrotcloud.com',
             'nombreRemitente'=>null,
             'responder'=>null,
             'retorno'=>null,
@@ -66,10 +67,14 @@ class email extends \modulo {
             'alternativo'=>null
         ],$parametros);
             
-        $html=file_get_contents(__DIR__.'/email.html');
-        $cuerpo=str_replace_array([
-            '{cuerpo}'=>$cuerpo
-        ],$html);
+        if($parametros->plantilla===false) {
+            $html=$cuerpo;
+        } else {
+            $html=file_get_contents(__DIR__.'/email.html');
+            $cuerpo=str_replace_array([
+                '{cuerpo}'=>$cuerpo
+            ],$html);
+        }
 
         $mail=new PHPMailer($parametros->depuracion);
 
@@ -108,6 +113,8 @@ class email extends \modulo {
             $mail->isSMTP();
             $mail->Host=\configuracion::$servidorSmtp;
             $mail->SMTPAuth=\configuracion::$autenticacionSmtp;
+            $mail->SMTPSecure=\configuracion::$seguridadSmtp;
+            $mail->SMTPAutoTLS=false; //TODO Configurable
             $mail->Port=\configuracion::$puertoSmtp;
             $mail->Username=\configuracion::$usuarioSmtp;
             $mail->Password=\configuracion::$contrasenaSmtp;

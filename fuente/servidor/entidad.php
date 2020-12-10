@@ -385,7 +385,7 @@ class entidad {
         //@html
 
         $campos=(object)[
-            'id'=>(object)[],
+            'id'=>(object)['publico'=>true],
             'e'=>(object)['oculto'=>true]
         ];
 

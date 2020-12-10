@@ -106,6 +106,9 @@ var componentePestanas=function() {
         var hijos=this.obtenerHijos();
         for(var i=0;i<hijos.length;i++) {
             var pestana=hijos[i];
+            //Validar si por error el hijo no es un componente pestaña
+            //TODO Buscar otras necesidades de validaciones de este tipo (en todos los componentes)
+            if(!pestana.componente!="pestana") continue;
             if(pestana.esActiva()) return i;
         }
         return 0;
@@ -124,7 +127,9 @@ var componentePestanas=function() {
         var pestanaActiva=null;
 
         var t=this;
-        this.obtenerHijos().forEach(function(pestana,i) {
+        this.obtenerHijos().forEach(function(pestana,i) {            
+            if(!pestana.componente!="pestana") return;
+
             var etiqueta=pestana.propiedad("etiqueta");
             if(!etiqueta) etiqueta="Pestaña "+(i+1);
 
@@ -172,6 +177,7 @@ var componentePestanas=function() {
      */
     this.desactivarTodas=function() {
         this.obtenerHijos().forEach(function(pestana) {
+            if(!pestana.componente!="pestana") return;
             pestana.desactivar();
         });
         return this;
@@ -188,7 +194,7 @@ var componentePestanas=function() {
             if(pestana<0) pestana=hijos.length+pestana;
             if(hijos.length>pestana) pestana=hijos[pestana];
         }
-        if(typeof pestana==="object") pestana.activar();
+        if(typeof pestana==="object"&&pestana.componente=="pestana") pestana.activar();
         return this;
     };
 

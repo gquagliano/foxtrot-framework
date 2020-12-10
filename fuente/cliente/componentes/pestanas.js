@@ -108,7 +108,7 @@ var componentePestanas=function() {
             var pestana=hijos[i];
             //Validar si por error el hijo no es un componente pestaña
             //TODO Buscar otras necesidades de validaciones de este tipo (en todos los componentes)
-            if(!pestana.componente!="pestana") continue;
+            if(pestana.componente!="pestana") continue;
             if(pestana.esActiva()) return i;
         }
         return 0;
@@ -128,7 +128,7 @@ var componentePestanas=function() {
 
         var t=this;
         this.obtenerHijos().forEach(function(pestana,i) {            
-            if(!pestana.componente!="pestana") return;
+            if(pestana.componente!="pestana") return;
 
             var etiqueta=pestana.propiedad("etiqueta");
             if(!etiqueta) etiqueta="Pestaña "+(i+1);
@@ -177,7 +177,7 @@ var componentePestanas=function() {
      */
     this.desactivarTodas=function() {
         this.obtenerHijos().forEach(function(pestana) {
-            if(!pestana.componente!="pestana") return;
+            if(pestana.componente!="pestana") return;
             pestana.desactivar();
         });
         return this;

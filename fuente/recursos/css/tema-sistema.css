@@ -161,7 +161,7 @@ textarea.form-control {
 .custom-radio .custom-control-label::after,
 .custom-checkbox .custom-control-label::after {
     top: .2rem;
-    left: -1.9rem;
+    left: -1.97rem;
     background: no-repeat 70%/70% 70%;
 }
 .custom-select {

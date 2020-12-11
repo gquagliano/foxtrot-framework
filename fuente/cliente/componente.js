@@ -819,9 +819,11 @@ var componente=new function() {
      * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
      * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
      * forma específica.
+     * @param {boolean} [actualizarHijos=true] - Determina si se debe desencadenar la actualización de la descendencia del componente.
      * @returns {componente}
      */
-    this.actualizar=function() {
+    this.actualizar=function(actualizarHijos) {
+        if(typeof actualizarHijos==="undefined") actualizarHijos=true;
         if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
 
         this.actualizarPropiedadesExpresiones();
@@ -842,9 +844,9 @@ var componente=new function() {
             if(typeof valor!=="undefined") this.valor(valor);
         }
 
-        this.obtenerHijos().forEach(function(hijo) {
-            hijo.actualizar();
-        });
+        if(actualizarHijos) this.obtenerHijos().forEach(function(hijo) {
+                hijo.actualizar();
+            });
 
         return this;
     };

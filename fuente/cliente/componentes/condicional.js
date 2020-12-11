@@ -65,6 +65,8 @@ var componenteCondicional=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
+        this.clasePadre.actualizar.call(this,false);
+
         var condicion;
         //Sin condición, utilizar el valor asignado
         if(!this.propiedad(false,"condicion")) {

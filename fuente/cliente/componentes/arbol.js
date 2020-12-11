@@ -135,6 +135,8 @@ var componenteArbol=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
+        this.clasePadre.actualizar.call(this,false);
+
         var rutasAbiertas=this.obtenerItemsAbiertos();        
 
         //Limpiar filas autogeneradas

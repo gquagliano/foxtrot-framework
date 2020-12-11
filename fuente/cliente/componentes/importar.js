@@ -129,6 +129,8 @@ var componenteImportar=function() {
      * @returns {componenteImportar}
      */
     this.actualizar=function() {
+        //this.clasePadre.actualizar.call(this,false);
+
         var vista=this.vista();
         if(vista) vista.actualizar();
         this.clasePadre.actualizar.call(this);

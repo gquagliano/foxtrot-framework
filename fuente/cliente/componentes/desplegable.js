@@ -270,6 +270,8 @@ var componenteDesplegable=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
+        this.clasePadre.actualizar.call(this,false);
+
         //Regenerar opciones asignadas mediante establecerOpciones() / establecerGrupos()
         if(this.gruposAsignados) {
             this.establecerGrupos(this.gruposAsignados);

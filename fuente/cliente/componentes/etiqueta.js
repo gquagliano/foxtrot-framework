@@ -41,6 +41,8 @@ var componenteEtiqueta=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
+        this.clasePadre.actualizar.call(this,false);
+
         var propiedad=this.propiedad(false,"propiedad"),
             contenido=this.propiedad(false,"contenido"),
             resultado="";

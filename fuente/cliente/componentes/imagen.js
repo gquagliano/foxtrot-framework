@@ -160,6 +160,8 @@ var componenteImagen=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
+        this.clasePadre.actualizar.call(this,false);
+
         //Actualizar el origen para todos los tamaños
         var origen=this.propiedadObj("origen"),
             t=this;

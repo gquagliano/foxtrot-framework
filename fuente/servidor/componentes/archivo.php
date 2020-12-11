@@ -48,11 +48,11 @@ class archivo extends \componente {
                 if($retornoError) $retornoError($archivo);
                 continue;
             }
-            $destino=$this->almacenarArchivo($archivo,$destino,null,$codificar);
-            if($destino) {
+            $ruta=$this->almacenarArchivo($archivo,$destino,null,$codificar);
+            if($ruta) {
                 $resultado[]=(object)[
                     'nombre'=>$archivo->nombre,
-                    'archivo'=>$destino
+                    'archivo'=>$ruta
                 ];
             }
         }

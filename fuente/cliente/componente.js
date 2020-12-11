@@ -984,13 +984,12 @@ var componente=new function() {
         var claseTamano=(tamano!="g"&&tamano!="xs"?"-"+tamano:""),
             estilos;
 
-        //Las propiedades con expresiones:
-        //- Se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        //- Si son estilos, se establecen en línea, sin afectar la hoja de estilos
-        if(expresion.contieneExpresion(valor)) {
-            if(ui.enModoEdicion()) valor=null;
+        //Las propiedades que afecten estilos en el editor se guardan en la hoja de estilos, pero en tiempo de ejecución se establecen en línea
+        if(!ui.enModoEdicion()) {
             estilos=this.elemento.style;
         } else {
+            //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+            if(expresion.contieneExpresion(valor)) valor=null;
             estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
         }
 

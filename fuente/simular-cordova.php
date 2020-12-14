@@ -17,8 +17,8 @@ foxtrot::cargarAplicacion();
 $html=file_get_contents(__DIR__.'/index-cordova.html');
 
 echo preg_replace([
-    '/_nombreApl=".+?"/',
-    '/_vistaInicial=".+?"/',
+    '/_nombreApl=".*?"/',
+    '/_vistaInicial=".*?"/',
 ],[
     '_nombreApl="'.foxtrot::obtenerNombreAplicacion().'"',
     '_vistaInicial="'.$_GET['vista'].'.html"'

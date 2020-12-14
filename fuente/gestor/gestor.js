@@ -123,6 +123,14 @@ var gestor=new function() {
     };
 
     /**
+     * Abre la vista en una nueva pestaña.
+     * @param {string} url 
+     */
+    this.ejecutarVista=function(url) {
+        window.open(url);
+    };
+
+    /**
      * Duplica una vista.
      * @param {string} nombreVista 
      */

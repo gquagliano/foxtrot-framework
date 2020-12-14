@@ -61,45 +61,7 @@ if(!count(gestor::obtenerAplicaciones())) {
                     <h1>Vistas</h1>
 
 <?php
-    //Construir árbol por subdirectorios
-    $arbol=[];
-    foreach(gestor::obtenerJsonAplicacion()->vistas as $nombre=>$vista) {
-        if(strpos($nombre,'/')===false) {
-            //Agregar directamente en la raíz
-            $arbol[]=(object)['item'=>$nombre,'ruta'=>$nombre,'vista'=>$vista];
-        } else {
-            $ruta=explode('/',$nombre);
-            $vista=array_pop($ruta);
-
-            //Buscar o crear la ruta, comenzando por la raíz del árbol
-            $lista=&$arbol;
-            foreach($ruta as $parte) {
-                $existe=false;
-
-                //Buscar item [directorio=parte]
-                foreach($lista as $item) {
-                    if($item->directorio==$parte) {
-                        //Si lo encontramos, buscaremos la siguiente parte dentro de los hijos
-                        $lista=&$item->hijos;
-                        $existe=true;
-                        break;
-                    }
-                }
-
-                //Si no existe, se agrega
-                if(!$existe) {
-                    $item=(object)['directorio'=>$parte,'ruta'=>implode('/',$ruta),'hijos'=>[]];
-                    $lista[]=$item;
-                    //E insertamos dentro de hijos
-                    $lista=&$item->hijos;
-                }
-            }
-
-            //Agregar la vista en los hijos
-            $lista[]=(object)['item'=>$vista,'ruta'=>$nombre,'vista'=>$vista];
-        }
-    }
-
+    $arbol=gestor::obtenerArbolVistas();
     if(!count($arbol)) {
 ?>
 <p>No hay vistas.</p>
@@ -145,6 +107,9 @@ if(!count(gestor::obtenerAplicaciones())) {
                             <label class="vista" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="<?=$item->ruta?>"><?=$item->item?></label>
                             <div class="opciones">
                                 <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
+                                <?php if($item->url) { ?>
+                                <button class="btn btn-sm" onclick="gestor.ejecutarVista('<?=$item->url?>')" title="Ejecutar"><img src="img/ejecutar.png"></button>
+                                <?php } ?>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar"><img src="img/renombrar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar"><img src="img/copiar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar"><img src="img/eliminar.png"></button>

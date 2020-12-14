@@ -192,4 +192,62 @@ class gestor {
         }
         return $resultado;
     }
+    
+    /**
+     * Devuelve la URL de la vista dado su nombre.
+     * @param string $nombre
+     * @return string
+     */
+    protected static function obtenerUrlVista($nombre) {
+        $vistas=gestor::obtenerJsonAplicacion()->vistas;
+        if($vistas->$nombre->tipo=='embebible') return null;
+        if($vistas->$nombre->cliente=='cordova') return '../desarrollo/simular-cordova.php?vista='.$nombre;
+        return '../desarrollo/'.$nombre;
+    }
+
+    /**
+     * Construye y devuelve el árbol de vistas.
+     * @return object[]
+     */
+    public static function obtenerArbolVistas() {
+        //Construir árbol por subdirectorios
+        $arbol=[];
+        foreach(gestor::obtenerJsonAplicacion()->vistas as $nombre=>$vista) {
+            if(strpos($nombre,'/')===false) {
+                //Agregar directamente en la raíz
+                $arbol[]=(object)['item'=>$nombre,'ruta'=>$nombre,'vista'=>$vista,'url'=>self::obtenerUrlVista($nombre)];
+            } else {
+                $ruta=explode('/',$nombre);
+                $vista=array_pop($ruta);
+
+                //Buscar o crear la ruta, comenzando por la raíz del árbol
+                $lista=&$arbol;
+                foreach($ruta as $parte) {
+                    $existe=false;
+
+                    //Buscar item [directorio=parte]
+                    foreach($lista as $item) {
+                        if($item->directorio==$parte) {
+                            //Si lo encontramos, buscaremos la siguiente parte dentro de los hijos
+                            $lista=&$item->hijos;
+                            $existe=true;
+                            break;
+                        }
+                    }
+
+                    //Si no existe, se agrega
+                    if(!$existe) {
+                        $item=(object)['directorio'=>$parte,'ruta'=>implode('/',$ruta),'hijos'=>[]];
+                        $lista[]=$item;
+                        //E insertamos dentro de hijos
+                        $lista=&$item->hijos;
+                    }
+                }
+
+                //Agregar la vista en los hijos
+                $lista[]=(object)['item'=>$vista,'ruta'=>$nombre,'vista'=>$vista,'url'=>self::obtenerUrlVista($nombre)];
+            }
+        }
+        return $arbol;
+    }
 }

@@ -172,11 +172,18 @@ var componenteContenedorMenu=function() {
 
         var modos=this.propiedadObj("modo"),
             tamanos=["g","sm","md","lg","xl"];
-        for(var i=0;i<tamanos.length;i++) {
-            var tamano=tamanos[i],
-                v="none";
-            if(modos.hasOwnProperty(tamano)&&(modos[tamano]=="flotante"||modos[tamano]=="deslizarIzquierda")) v="block";
-            this.ancla.agregarClase("d-"+(tamano=="g"?"":tamano+"-")+v);
+        if(!modos) {
+            this.ancla.agregarClase("d-none");
+        } else {
+            this.ancla.removerClase(/d-.+/);
+            var modo="bloque";
+            for(var i=0;i<tamanos.length;i++) {
+                var tamano=tamanos[i],
+                    v="none";
+                if(modos.hasOwnProperty(tamano)) modo=modos[tamano];
+                if(modo=="flotante"||modo=="deslizarIzquierda") v="block";
+                this.ancla.agregarClase("d-"+(tamano=="g"?"":tamano+"-")+v);
+            }
         }
 
         return this;

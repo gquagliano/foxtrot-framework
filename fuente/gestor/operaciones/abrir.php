@@ -29,6 +29,8 @@ if(!file_exists($rutaHtml)) {
 
 if($modo=='embebible') {
     $url='operaciones/marco.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
+} elseif($cliente=='cordova') {
+	$url='operaciones/marco-cordova.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
 } else {
     $url=foxtrot::obtenerEnrutador()->obtenerUrlVista($nombreVista);
     //Forzar aplicación

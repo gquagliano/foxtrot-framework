@@ -31,8 +31,8 @@ class util {
      * Limpia un valor para ser utilizado como ruta, nombre de aplicación, nombre de clase, nombre de método y afines, removiendo caracteres no seguros, como caracteres
      * de control, ASCII extendido, unicode, caracteres codificados, entre otros.
      * @var string $cadena Cadena a procesar.
-     * @var bool $admiteBarra Determina si debe admitir barras (/) en la cadena.
-     * @var bool $admitePunto Determina si debe admitir puntos (.) en la cadena.
+     * @var bool $admiteBarra Determina si debe admitir barras (`/`, `\`) en la cadena.
+     * @var bool $admitePunto Determina si debe admitir puntos (`.`) en la cadena.
      * @var string $otrosAdmitidos Otros caracteres admitidos. Escapar de acuerdo a expresiones regulares.
      * @return string
      */
@@ -40,10 +40,10 @@ class util {
         $cadena=urldecode($cadena);
         $cadena=html_entity_decode($cadena);
         $cadena=filter_var($cadena,FILTER_UNSAFE_RAW,FILTER_FLAG_STRIP_LOW|FILTER_FLAG_STRIP_HIGH);
-        if(strlen($cadena)>255) $cadena=substr($cadena,0,255);
         
         //Removiendo caracteres especiales y limitando la longitud, podemos usar expresiones regulares de forma más segura
-        $cadena=preg_replace('#[^a-z0-9_'.($admiteBarra?'/':'').($admitePunto?'\\.':'').$otrosAdmitidos.'-]+#i','',$cadena);
+        if(strlen($cadena)>255) $cadena=substr($cadena,0,255);
+        $cadena=preg_replace('#[^a-z0-9_'.($admiteBarra?'/\\\\':'').($admitePunto?'\\.':'').$otrosAdmitidos.'-]+#i','',$cadena);
 
         //Remover caracteres repetidos (//, ..)
         if($admiteBarra) $cadena=preg_replace('#/{2,}#','/',$cadena);
@@ -58,7 +58,7 @@ class util {
      * @return string
      */
     public static function convertirGuiones($cadena) {
-        $partes=explode('-',strtolower(trim($cadena)));
+        $partes=explode('-',trim($cadena));
         $resultado=array_shift($partes);
         foreach($partes as $parte) $resultado.=ucfirst($parte);
         return $resultado;

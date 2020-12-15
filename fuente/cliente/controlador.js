@@ -234,6 +234,12 @@ var controlador=new function() {
      */
     this.listo=function() {
     };
+
+    /**
+     * Evento `fin`.
+     */
+    this.fin=function() {
+    };
     
     /**
      * Evento 'Navegación'.

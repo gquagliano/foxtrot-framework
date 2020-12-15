@@ -76,6 +76,12 @@ var aplicacion=new function() {
      */
     this.listo=function() {
     };
+
+    /**
+     * Evento `fin`.
+     */
+    this.fin=function() {
+    };
     
     /**
      * Evento 'Tamaño'.

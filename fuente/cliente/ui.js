@@ -1336,15 +1336,18 @@ var ui=new function() {
     };
 
     /**
-     * Invoca el método correspondiente al evento en todos los controladores.
+     * Invoca el método correspondiente al evento en todos los controladores. Devuelve `true` si la propagación del evento fue detenida.
      * @param {string} nombre - Nombre del evento.
      * @param {*} [params] - Parámetros a pasar al método.
+     * @param {controlador} [obj] - Ejecutar solo en un controlador en particular, dada su instancia.
      * @returns {boolean}
      */
-    this.evento=function(nombre,params) {
+    this.evento=function(nombre,params,obj) {
+        if(typeof obj==="undefined") obj=null;
+
         //Controladores de vistas
         for(var control in instanciasControladores) {
-            if(!instanciasControladores.hasOwnProperty(control)) continue;
+            if(!instanciasControladores.hasOwnProperty(control)||(obj&&obj!=control)) continue;
 
             var obj=instanciasControladores[control],
                 metodo=obj[nombre],
@@ -1548,8 +1551,8 @@ var ui=new function() {
             //necesariamente en 'listo'
             var tamano=ui.obtenerTamano();
             if(principal) {
-                this.evento("tamano",[tamano,null]);
-                this.eventoComponentes(null,"tamano",false,[tamano,null]);
+                if(!this.evento("tamano",[tamano,null]))
+                    this.eventoComponentes(null,"tamano",false,[tamano,null]);
             } else {
                 obj.tamano(tamano,tamano);
                 this.eventoComponentes(obj.obtenerComponentes(),"tamano",false,[tamano,null]);
@@ -1560,6 +1563,20 @@ var ui=new function() {
 
         return this;
     };
+
+    /**
+     * Finaliza la ejecución de la vista e invoca el evento `fin` en su controlador y sus componentes.
+     * @param {string} nombre - Nombre de la vista.
+     * @returns {ui}
+     */
+    this.finalizarVista=function(nombre) {
+        var ctl=this.obtenerInstanciaControladorVista(nombre);
+        if(ctl) {
+            if(!this.evento("fin",null,ctl)) 
+                this.eventoComponentes(ctl.obtenerComponentes(),"fin");
+        }
+        return this;
+    };    
 
     /**
      * Inicia la ejecución del sistema.

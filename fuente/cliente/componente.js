@@ -1850,6 +1850,12 @@ var componente=new function() {
         if(!ui.enModoEdicion()) this.establecerNombre(); //Registrar nombre (ya ha sido establecido por ui)
         this.procesarPropiedades();
     };
+
+    /**
+     * Evento `fin`.
+     */
+    this.fin=function() {
+    };
     
     /**
      * Evento 'Tamaño'.

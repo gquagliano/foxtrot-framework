@@ -35,6 +35,8 @@ $html=file_get_contents($rutaHtml);
     <?=$html?>
     <script src="cliente/foxtrot.js"></script>
     <script>
+    //Parámetros para vistas embebibles
+    localStorage.setItem("_urlBase","<?=\foxtrot::obtenerUrl()?>");
     var jsonFoxtrot='<?=str_replace('\'','\\\'',$json)?>';
     ui.inicializar("<?=$nombreVista?>")
         .establecerJson(jsonFoxtrot)

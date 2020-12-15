@@ -38,6 +38,14 @@ class gestor {
     }
 
     /**
+     * Devuelve el espacio de nombres de la aplicación activa.
+     * @return string
+     */
+    public static function obtenerEspacioAplicacion() {
+        return 'aplicaciones\\'.\foxtrot::prepararNombreClase(self::$aplicacion,true).'\\';
+    }
+
+    /**
      * Devuelve el listado de nombres de aplicaciones.
      * @return string[]
      */
@@ -180,17 +188,7 @@ class gestor {
      * @return object[] Devuelve un array de objetos [nombre,clase], donde 'clase' es el nombre completo de la misma (no la instancia).
      */
     public static function obtenerModelos() {
-        //TODO Obtener de Foxtrot
-        $resultado=[];
-        $base='aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\';
-        $baseRegexp=str_replace('\\','\\\\',$base);
-        foreach(get_declared_classes() as $clase) {
-            if(preg_match('/^'.$baseRegexp.'.+/',$clase)&&is_subclass_of($clase,'\\modelo')) {
-                $partes=\util::separarRuta(substr($clase,strlen($base)));
-                $resultado[]=(object)['nombre'=>$partes->ruta.$partes->nombre,'clase'=>$clase];
-            }
-        }
-        return $resultado;
+        return \foxtrot::obtenerModelos();
     }
     
     /**

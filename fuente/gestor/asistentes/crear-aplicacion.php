@@ -99,7 +99,9 @@ class crearAplicacion extends asistente {
         file_put_contents($ruta.'aplicacion.json',json_encode($json));
 
         $reemplazar=[
-            '{nombre}'=>$parametros->nombre
+            '{nombre}'=>$parametros->nombre,
+            '{espacio}'=>'aplicaciones\\'.\foxtrot::prepararComponenteEspacio($parametros->nombre),
+            '{espacioPub}'=>'aplicaciones\\'.\foxtrot::prepararComponenteEspacio($parametros->nombre).'\\publico'
         ];
         
         $codigo=file_get_contents($dir.'aplicacion.php');

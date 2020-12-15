@@ -56,12 +56,14 @@ class crearModelo extends asistente {
      */
     public function ejecutar($param) {
         if(!$param->nombre||!$param->entidad) gestor::error('Ingresá el nombre del modelo y el nombre de la entidad.');
-        
+
         $partes=\util::separarRuta($param->nombre);
         $nombre=$partes->nombre;
         $ruta=$partes->ruta;
 
-        $partes=\foxtrot::prepararNombreClase($param->nombre);
+        $clase=\foxtrot::prepararNombreClase($param->nombre)->nombre;
+        $entidad=\foxtrot::prepararNombreClase($param->entidad)->nombre;
+        $espacio=\foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().'modelo\\'.$ruta,true,true);
         
         $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/'.$ruta;
         $rutaModelo=$ruta.$nombre.'.php';
@@ -76,11 +78,10 @@ class crearModelo extends asistente {
         if($param->tabla) $tabla='protected $nombre=\''.$param->tabla.'\';'.PHP_EOL;
 
         $vars=[
-            '{nombreApl}'=>$this->aplicacion,
-            '{modelo}'=>$nombre,
-            '{entidad}'=>$param->entidad,
+            '{modelo}'=>$clase,
+            '{entidad}'=>$entidad,
             '{tabla}'=>$tabla,
-            '{espacio}'=>$partes->espacio
+            '{espacio}'=>$espacio
         ];
 
         file_put_contents(

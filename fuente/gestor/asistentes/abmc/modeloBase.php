@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\{nombreApl};
+namespace {espacio};
 
 defined('_inc') or exit;
 
@@ -39,7 +39,8 @@ class modeloBase extends \modelo {
     public function listarItems($filtro=null,$parametros=[],$pagina=1,$cantidadPorPag=50,$incluirRelaciones=false) {
         if(!$pagina) $pagina=1;
 
-        $this->reiniciar();
+        $this->reiniciar()
+            ->establecerAlias('t');
 
         if($pagina) $this->paginacion($cantidadPorPag,$pagina);
 

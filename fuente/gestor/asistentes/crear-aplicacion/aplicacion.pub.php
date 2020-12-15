@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\{nombre}\publico;
+namespace {espacioPub};
 
 defined('_inc') or exit;
 

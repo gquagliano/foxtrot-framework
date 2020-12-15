@@ -4,7 +4,7 @@
  * @version 1.0
  */
 
-namespace aplicaciones\{nombreApl}{espacio};
+namespace {espacio};
 
 defined('_inc') or exit;
 

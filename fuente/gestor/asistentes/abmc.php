@@ -168,14 +168,14 @@ class abmc extends asistente {
     }
 
     private function validarOpciones($opc) {
-        if(!$opc->modelo) exit; //En el buen uso del sistema, este parámetro nunca debería faltar ya que es un desplegable
+        if(!$opc->modelo) exit;
 
         $partes=\util::separarRuta($opc->modelo);
         $this->rutaModelo=$partes->ruta;
         $this->nombreModelo=$partes->nombre;
         
-        $this->claseModelo='\\aplicaciones\\'.gestor::obtenerNombreAplicacion().'\\modelo\\'.str_replace('/','\\',$this->rutaModelo).$this->nombreModelo;
-        if(!class_exists($this->claseModelo)) exit; //En el buen uso del sistema, esto no debería suceder ya que se toma del desplegable
+        $this->claseModelo=\foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().'modelo\\'.$this->rutaModelo.$this->nombreModelo,true);
+        if(!class_exists($this->claseModelo)) exit;
 
         $c=$this->claseModelo;
         $this->modelo=new $c;
@@ -289,8 +289,7 @@ class abmc extends asistente {
 
         file_put_contents($archivo,$html);
 
-        //Css
-
+        //CSS
         if(!file_exists($archivoCss)) {
             $css=file_get_contents(__DIR__.'/abmc/'.$plantilla.'.css');
 
@@ -327,6 +326,11 @@ class abmc extends asistente {
         file_put_contents($archivo,$js);
     }
 
+    private function generarEspacioControlador($nombre,$publico) {
+        $partes=\util::separarRuta($nombre);
+        return \foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().$partes->ruta.($publico?'publico\\':''),true,true);        
+    }
+
     private function generarControladorServidor() {
         $php=file_get_contents(__DIR__.'/abmc/controlador.php');
 
@@ -338,15 +342,16 @@ class abmc extends asistente {
             if(preg_match('/cadena/',$campo->tipo)) $sql.=' or t.`'.$nombre.'` like @filtroParcial';
         }
 
-        $partes=\foxtrot::prepararNombreClase($this->nombreControlador);
+        $clase=\foxtrot::prepararNombreClase($this->nombreControlador)->nombre;
+        $espacio=$this->generarEspacioControlador($this->nombreControlador,true);
 
         $php=$this->reemplazarVariables($php,[
             'claseModelo'=>$this->claseModelo,
             'aliasModelo'=>'modelo'.ucfirst(basename($this->claseModelo)),
             'requeridos'=>implode(',',$requeridos),
             'sqlFiltros'=>$sql,
-            'espacio'=>$partes->espacio,
-            'nombre'=>$partes->nombre
+            'espacio'=>$espacio,
+            'nombre'=>$clase
         ]);
 
         file_put_contents($this->rutaPhp,$php);
@@ -359,13 +364,13 @@ class abmc extends asistente {
         $namespace=$coincidencias[0];
 
         //Hacemos que el modelo extienda modeloBase
-        if(preg_match('/^(\s*)class '.$this->nombreModelo.' extends \\\\modelo/m',$php,$coincidencias)) {
-            $php=str_replace($coincidencias[0],$coincidencias[1].'class '.$this->nombreModelo.' extends modeloBase',$php);
+        if(preg_match('/ extends \\\\modelo/m',$php,$coincidencias)) {
+            $php=str_replace($coincidencias[0],' extends modeloBase',$php);
         }
 
         //Agregar use
-        if(!preg_match('/use aplicaciones\\\\'.$this->aplicacion.'\\\\modeloBase;/m',$php)) {            
-            $php=str_replace($namespace,$namespace.PHP_EOL.PHP_EOL.'use aplicaciones\\'.$this->aplicacion.'\\modeloBase;',$php);
+        if(!preg_match('/use '.str_replace('\\','\\\\',gestor::obtenerEspacioAplicacion()).'modeloBase;/m',$php)) {            
+            $php=str_replace($namespace,$namespace.PHP_EOL.PHP_EOL.'use '.gestor::obtenerEspacioAplicacion().'modeloBase;',$php);
         }
 
         //Si no lo incluye, agregar include() debajo de namespace
@@ -391,7 +396,7 @@ class abmc extends asistente {
             'controlador'=>$this->nombreControlador,
             'singular'=>$this->singular,
             'plural'=>$this->plural,
-            'nombreApl'=>$this->aplicacion,
+            'espacio'=>trim(gestor::obtenerEspacioAplicacion(),'\\'),
             'tema'=>$this->json->tema?$this->json->tema:'en-blanco',
             'nombreSingular'=>$this->ruta.$this->singular,
             'nombrePlural'=>$this->ruta.$this->plural,

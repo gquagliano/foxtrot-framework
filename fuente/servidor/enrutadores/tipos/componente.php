@@ -27,10 +27,8 @@ class componente extends \tipoSolicitud {
         $ruta=_componentes.$componente.'.pub.php';
         if(!file_exists($ruta)) return $this->error();
 
-        $partes=\foxtrot::prepararNombreClase($componente);
-
         include_once($ruta);
-        $cls='\\componentes\\publico'.$partes->espacio.'\\'.$partes->nombre;
+        $cls=\foxtrot::prepararNombreClase('\\componentes\\publico\\'.$componente,true);
         $obj=new $cls;
 
         $this->ejecutarMetodo($obj,$this->obtenerMetodo());

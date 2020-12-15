@@ -24,18 +24,8 @@ class controlador extends \tipoSolicitud {
     public function ejecutar() {
         $controlador=$this->obtenerControlador();
 
-        $partes=\foxtrot::prepararNombreClase($controlador);
-
-        //Los controladores que presenten /, se buscan en el subdirectorio
-        $ruta=_controladoresServidorAplicacion.$controlador.'.pub.php';
-        if(!file_exists($ruta)) return $this->error();
-
-        include_once($ruta);
-
-        $clase='\\aplicaciones\\'._apl.$partes->espacio.'\\publico\\'.$partes->nombre;
-        if(!class_exists($clase)) return $this->error();
-
-        $obj=new $clase;
+        $obj=\foxtrot::obtenerInstanciaControlador($controlador,true);        
+        if(!$obj) return $this->error();
 
         $this->ejecutarMetodo($obj,$this->obtenerMetodo());        
 

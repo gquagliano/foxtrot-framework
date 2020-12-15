@@ -82,11 +82,20 @@ class modelo {
         
         $nombre=get_called_class();
 
-        //aplicaciones\aplicacion\modelo\a\b -> a/b
-        $this->nombreModelo=str_replace('\\','/',substr($nombre,strlen('aplicaciones\\'._apl.'\\modelo\\')));
+        //Recuperar el nombre del modelo a partir del archivo
+        $ruta=(new ReflectionClass($this))->getFileName();
+        $ruta=substr(realpath($ruta),strlen(realpath(_modeloAplicacion)));
+        $partes=\util::separarRuta($ruta);
+        $ruta=trim($partes->ruta,'/');
+        if($ruta) $ruta.='/';
+        $nombre=preg_replace('/\.php$/','',$partes->nombre);                
+        $this->nombreModelo=$ruta.$nombre;
 
         //El nombre predeterminado de la tabla es el nombre de la clase (sin subdir)
-        if(!$this->nombre) $this->nombre=substr($nombre,strrpos($nombre,'\\')+1);
+        if(!$this->nombre) {
+            $p=strrpos($nombre,'\\');
+            $this->nombre=$p===false?$nombre:substr($nombre,$p+1);
+        }
 
         $this->cargarEstructura();
     }

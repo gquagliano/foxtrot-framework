@@ -27,18 +27,17 @@ class controlador {
      * Constructor.
      */
     function __construct() {
-        $clase=get_called_class();
-        $partes=\util::separarRuta($clase);
-
-        $this->publica=preg_match('#/publico/$#',$partes->ruta);
-
-        //Extraer ruta (clase en subdirectorio)
-        $ruta=substr($partes->ruta,strlen('aplicaciones/'._apl.'/'));
-        if($this->publica) $ruta=substr($ruta,0,-strlen('publico/'));
-		if($ruta!=''&&substr($ruta,-1)!='/') $ruta.='/';
-
-		$nombre=$ruta.$partes->nombre;
-		$this->nombre=$nombre;
+        //Extraer ruta al archivo
+        $ruta=(new ReflectionClass($this))->getFileName();
+        $ruta=substr(realpath($ruta),strlen(realpath(_controladoresServidorAplicacion)));
+        $partes=\util::separarRuta($ruta);
+        
+        $ruta=trim($partes->ruta,'/');
+        if($ruta) $ruta.='/';
+        $this->publica=preg_match('/\.pub\.php$/',$partes->nombre)?true:false;
+        $nombre=preg_replace('/(\.pub)?\.php$/','',$partes->nombre);
+                
+        $nombre=$ruta.$nombre;
 
 		//Si es una clase pública, asignar instancia de la versión privada en $privado
     	if($this->publica) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);

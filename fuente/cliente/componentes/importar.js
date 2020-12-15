@@ -196,6 +196,9 @@ var componenteImportar=function() {
      */
     this.cerrarVistaActual=function(retorno) {
         if(typeof retorno!=="function") retorno=null;
+
+        ui.finalizarVista(this.nombreVista);
+
         if(this.elementoVista) {
             var elem=this.elementoVista;
             ui.animarDesaparecer(elem,function() {

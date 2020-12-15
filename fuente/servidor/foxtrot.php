@@ -22,6 +22,7 @@ class foxtrot {
     protected static $instanciaAplicacionPublico=null;
     protected static $bd=null;
     protected static $cli=false;
+    protected static $listadoModelos=[];
 
     /**
      * 
@@ -141,6 +142,7 @@ class foxtrot {
     protected static function definirConstantesAplicacion() {
         //TODO Las rutas deberían consultarse con métodos, en lugar de usar constantes
         define('_apl',self::$aplicacion);
+        define('_espacioApl','\\aplicaciones\\'.self::prepararComponenteEspacio(_apl).'\\');
         define('_raizAplicacion',_aplicaciones._apl.'/');
         define('_servidorAplicacion',_raizAplicacion.'servidor/');
         define('_controladoresServidorAplicacion',_raizAplicacion.'servidor/controladores/');
@@ -226,7 +228,20 @@ class foxtrot {
 	        include(_servidorAplicacion.'aplicacion.php');
 
             //Modelo de datos (importar completo)
-            self::incluirDirectorio(_modeloAplicacion);
+            $archivos=self::incluirDirectorio(_modeloAplicacion);
+
+            //Extraer los modelos de entre los archivos incluidos
+            self::$listadoModelos=[];
+            foreach($archivos as $archivo) {
+                $ruta=substr($archivo,strlen(_modeloAplicacion)); //Ruta relativa
+                $ruta=substr($ruta,0,-4); //Sin extensión
+                $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$ruta,true);
+                if(class_exists($clase)&&is_subclass_of($clase,'\\modelo'))
+                    self::$listadoModelos[]=(object)[
+                        'nombre'=>$ruta,
+                        'clase'=>$clase
+                    ];
+            }
 
 	        //Controladores privados (importar completo)
 	        self::incluirDirectorio(_controladoresServidorAplicacion);
@@ -234,13 +249,13 @@ class foxtrot {
 
 		if(self::$aplicacion) {
 	        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
-	            $cls='\\aplicaciones\\'._apl.'\\aplicacion';
+	            $cls=_espacioApl.'aplicacion';
 	            self::$instanciaAplicacion=new $cls;
 	        }
 
 	        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) {
 	            include(_servidorAplicacion.'aplicacion.pub.php');
-	            $cls='\\aplicaciones\\'._apl.'\\publico\\aplicacion';
+	            $cls=_espacioApl.'publico\\aplicacion';
 	            self::$instanciaAplicacionPublico=new $cls;
 	        }
 	    }
@@ -250,14 +265,17 @@ class foxtrot {
      * 
      */
     private static function incluirDirectorio($ruta,$excluirPub=true) {
+        $incluidos=[];
         $archivos=glob($ruta.'*');
         foreach($archivos as $archivo) {
             if(is_dir($archivo)) {
-                self::incluirDirectorio($archivo.'/',$excluirPub);
+                $incluidos=array_merge($incluidos,self::incluirDirectorio($archivo.'/',$excluirPub));
             } elseif(preg_match('/\.php$/',$archivo)&&(!$excluirPub||!preg_match('/\.pub\.php$/',$archivo))) {
                 include($archivo);
+                $incluidos[]=$archivo;
             }
         }
+        return $incluidos;
     }
 
     /**
@@ -273,7 +291,7 @@ class foxtrot {
             if(file_exists($ruta)) {
                 //Enrutador personalizado
                 include(_servidorAplicacion.$enrutador.'.php');            
-                $cls='\\aplicaciones\\'._apl.'\\enrutadores\\'.$enrutador;
+                $cls=_espacioApl.'enrutadores\\'.$enrutador;
             } else {
                 //Enrutador del sistema
                 $cls='\\'.$enrutador;
@@ -442,21 +460,36 @@ class foxtrot {
 
     /**
      * Valida y corrije un nombre de clase, devolviendo un objeto con las propiedades 'nombre' y 'espacio' con el nombre de la clase y el espacio
-     * de nombres relativo respectivamente. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo:
-     * `espacio/consulta-producto` -> `[nombre=>consultaProducto,espacio=>\espacio]`.
+     * de nombres relativo respectivamente. Removerá caracteres inválidos y convertirá las barras y los nombres con guión (ejemplo:
+     * `espacio/sub-espacio/consulta-producto` -> `[nombre=>consultaProducto,espacio=>\espacio\subEspacio\]`.
      * @param string $nombre Nombre a procesar.
-     * @return object
+     * @param boolean $comoCadena Por defecto, el método devuelve un objeto `[nombre,espacio]`. Si `$comoCadena` es `true`, devolverá el espacio de nombre como cadena, sanitizado. 
+     * @param boolean $namespace Su es `true`, devolverá una cadena compatible con la sentencia `namespace` (sin `\` inicial ni final).
+     * @return object|string
      */
-    public static function prepararNombreClase($nombre) {
+    public static function prepararNombreClase($nombre,$comoCadena=false,$namespace=false) {
         $nombre=\util::limpiarValor($nombre,true);
-        $nombre=trim($nombre,'/');
-        $partes=\util::separarRuta($nombre);
+        $nombre=trim($nombre,'/\\');
 
-        $espacio=trim($partes->ruta,'/');
-        if($espacio!='') $espacio='\\'.str_replace('/','\\',$espacio);
+        $partes=\util::separarRuta($nombre);
+        
+        $clase=\util::convertirGuiones($partes->nombre);
+
+        $espacio=trim(str_replace('/','\\',$partes->ruta),'\\');
+        if($espacio!='') {
+            $partes=preg_split('#[/\\\\]#',$espacio);
+            $espacio='\\';
+            foreach($partes as $parte) $espacio.=\util::convertirGuiones($parte).'\\';
+        }
+
+        if($comoCadena||$namespace) {
+            $res=$espacio.$clase;
+            if($namespace) $res=trim($res,'\\');
+            return $res;
+        }
 
         return (object)[
-            'nombre'=>$partes->nombre,
+            'nombre'=>$clase,
             'espacio'=>$espacio
         ];
     }
@@ -467,7 +500,16 @@ class foxtrot {
      * @return string
      */
     public static function prepararNombreMetodo($nombre) {
-        return \util::limpiarValor($nombre);
+        return \util::convertirGuiones(\util::limpiarValor($nombre));
+    }
+
+    /**
+     * Valida y corrije una cadena a utilizar en un espacio de nombres. Removerá caracteres inválidos y convertirá los nombres con guión (ejemplo: `consulta-producto` -> `consultaProducto`).
+     * @param string $parte Nombre a procesar.
+     * @return string
+     */
+    public static function prepararComponenteEspacio($parte) {
+        return \util::convertirGuiones(\util::limpiarValor($parte));
     }
 
     ////Base de datos y modelo de datos
@@ -485,6 +527,14 @@ class foxtrot {
     }
 
     /**
+     * Devuelve el listado de las clases de modelo de datos cargadas. Cada elemento del listado es un objeto `[nombre,clase]`.
+     * @return object[]
+     */
+    public static function obtenerModelos() {
+        return self::$listadoModelos;
+    }
+
+    /**
      * Crea y deuvelve una instancia de un modelo de datos.
      * @param string $nombre Nombre del modelo a crear.
      * @param \bd $bd Instancia de la base de datos.
@@ -494,8 +544,7 @@ class foxtrot {
         //Las clases ya fueron incluidas
         
         //Cuando presenten /, cambia su espacio
-        $partes=\foxtrot::prepararNombreClase($nombre);        
-        $clase='\\aplicaciones\\'._apl.'\\modelo'.$partes->espacio.'\\'.$partes->nombre;
+        $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
         if(!class_exists($clase)) return null;
 
         return new $clase;
@@ -546,7 +595,7 @@ class foxtrot {
      * @return \controlador
      */
     public static function obtenerInstanciaControlador($nombre,$publico=false) {
-        $partes=\foxtrot::prepararNombreClase($nombre);
+        $partes=\util::separarRuta($nombre);
 
         //Los controladores que presenten /, se buscan en el subdirectorio
         $ruta=_controladoresServidorAplicacion.$nombre.($publico?'.pub':'').'.php';
@@ -554,7 +603,7 @@ class foxtrot {
         include_once($ruta);
 
         //Cuando presenten /, además, cambia su espacio
-        $clase='\\aplicaciones\\'._apl.$partes->espacio.($publico?'\\publico':'').'\\'.$partes->nombre;
+        $clase=self::prepararNombreClase(_espacioApl.$partes->ruta.($publico?'publico\\':'').$partes->nombre,true);
         if(!class_exists($clase)) return null;
 
         return new $clase;

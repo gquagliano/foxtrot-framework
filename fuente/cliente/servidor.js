@@ -128,10 +128,11 @@ var servidor=new function() {
             
             if(util.esObjeto(opciones.parametros)) {
                 //Extraer los archivos
-                opciones.parametros.porCada(function(campo,valor) {
+                var lista=opciones.parametros.clonar();
+                lista.porCada(function(campo,valor) {
                     if(valor instanceof File) {
                         param.append(campo,valor);
-                        delete opciones[campo];
+                        delete opciones.parametros[campo];
                     }
                 });
             }

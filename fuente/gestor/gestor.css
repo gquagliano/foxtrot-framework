@@ -473,12 +473,24 @@ body.foxtrot-trabajando #foxtrot-cargando {
     min-height: 1em;
 }
 .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-none,
-.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible {
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-sm-none,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-md-none,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-lg-none,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-xl-none,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible-sm,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible-md,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible-lg,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .invisible-xl {
     display: block !important;
     visibility: visible !important;
     opacity: .5;
 }
-.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-inline-block {
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-inline-block,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-sm-inline-block,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-md-inline-block,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-lg-inline-block,
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-xl-inline-block {
     min-width: 1em;
 }
 .foxtrot-modo-edicion .componente,

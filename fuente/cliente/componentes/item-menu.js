@@ -76,6 +76,14 @@ var componenteItemMenu=function() {
     };
 
     /**
+     * Evento `editorDesactivado`.
+     */
+    this.editorDesactivado=function() {
+        //Limpiar clase con-submenu si se ha eliminado el submenú
+        if(!this.obtenerHijos().length) this.elemento.removerClase("con-submenu");
+    };
+
+    /**
      * Devuelve el componente submenú.
      * @returns {componente}
      */

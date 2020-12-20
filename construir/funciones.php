@@ -76,18 +76,25 @@ function copiar($ruta,$filtro,$destino,$rec=true,$excluir=null) {
     }
 }
 
-function buscarArchivos($ruta,$filtro,$funcion=null,$rec=true) {
+function buscarArchivos($ruta,$filtro,$funcion=null,$rec=true,$incluirIgnorados=false,$incluirDirectorios=false) {
+    clearstatcache();
     $res=[];
 
-    if(file_exists($ruta.'.ignorar')) return $res;
+    if(!$incluirIgnorados&&file_exists($ruta.'.ignorar')) return $res;
 
     $arr=glob($ruta.$filtro,GLOB_BRACE);
-    $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
+    //$arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
     foreach($arr as $archivo) {
         $archivo=basename($archivo);
         if($archivo=='.'||$archivo=='..') continue;
         if(is_dir($ruta.$archivo)) {
-            if($rec) $res=array_merge($res,buscarArchivos($ruta.$archivo.'/',$filtro,$funcion));
+            $dir=$ruta.$archivo.'/';
+            if($rec) $res=array_merge($res,buscarArchivos($dir,$filtro,$funcion,true,$incluirIgnorados,$incluirDirectorios));
+            //Incluir el directorio en sí, no solo su contenido
+            if($incluirDirectorios) {
+                $res[]=$dir;
+                if($funcion) call_user_func($funcion,$dir);
+            }
         } else {
             $res[]=$ruta.$archivo;
             if($funcion) call_user_func($funcion,$ruta.$archivo);
@@ -95,6 +102,19 @@ function buscarArchivos($ruta,$filtro,$funcion=null,$rec=true) {
     }
 
     return $res;
+}
+
+function eliminarTodo($lista) {
+    clearstatcache();
+    foreach($lista as $ruta) {
+        //Mantener .gitignore
+        if(preg_match('/\.gitignore$/',$ruta)) continue;
+        if(is_file($ruta)) unlink($ruta);
+    }
+    rsort($lista);
+    foreach($lista as $ruta) {
+        if(is_dir($ruta)) rmdir($ruta);
+    }
 }
 
 function limpiarNombreReglaCss($regla) {

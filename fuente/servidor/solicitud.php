@@ -23,9 +23,28 @@ class solicitud {
      * Inicializa la clase.
      */
     public static function incializar() {
+        self::procesarOptions();
+
+        //TODO Configurable        
+        header('Access-Control-Allow-Origin: *');
+
         self::procesarParametros();
         //TODO Implementar esta clase en todos los lugares donde se utilicen las variables globales y luego:
         //unset($_REQUEST,$_GET,$_POST,$_FILES,$_COOKIE);
+    }
+
+    /**
+     * Procesa una solicitud OPTIONS (verbo HTTP), si corresponde.
+     */
+    public static function procesarOptions() {
+        if($_SERVER['REQUEST_METHOD']!=='OPTIONS') return;
+        //TODO Configurable
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=UTF-8');    
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Max-Age: 3600');    
+        header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+        \foxtrot::detener();
     }
 
     /**

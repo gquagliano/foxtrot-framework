@@ -113,11 +113,33 @@ textarea.form-control {
     cursor: pointer;
 }
 .custom-file-label::after {
-    height: calc(1.1rem + .75rem + 2px);
+    display: none;
+}
+.custom-file-command {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    z-index: 1;
+    display: block;
+    padding: .375rem .75rem;
+    color: #495057;
+    content: "Browse";
+    background-color: #e9ecef;
+    border-left: inherit;
+    border-radius: 0 .25rem .25rem 0;
+    height: calc(1.1rem + .75rem);
     line-height: 1.1;
-    content: "Seleccionar";
     font-weight: 600;
     text-transform: uppercase;
+    text-align: center;
+}
+.custom-file.ocultar-nombre .custom-file-label {
+    display: none;
+}
+.custom-file.ocultar-nombre .custom-file-command {
+    left: 0;
+    width: 100%;
+    border-radius: .25rem;
 }
 .custom-switch {
     padding: .28rem;
@@ -379,11 +401,11 @@ body.escritorio .btn-secondary:hover,
 .custom-file-input:focus~.custom-file-label {
     border-color: #337ab7;
 }
-.custom-file-label::after {
+.custom-file-command {
     transition: background-color .2s;
     background-color: #e1e4eb;
 }
-.custom-file:hover .custom-file-label::after {
+.custom-file:hover .custom-file-command {
     background-color: #cdd3e0;
 }
 .pestanas>.encabezados .btn.activa {

@@ -17,6 +17,7 @@ var componenteArchivo=function() {
 
     this.etiqueta=null;
     this.barra=null;
+    this.boton=null;
     this.archivos=[];
     this.ajax=null;
     this.subidaEnCurso=false;
@@ -51,6 +52,15 @@ var componenteArchivo=function() {
                 etiqueta:"Subir inmediatamente",
                 tipo:"bool",
                 adaptativa:false
+            },
+            etiqueta:{
+                etiqueta:"Etiqueta",
+                adaptativa:false
+            },
+            ocultarNombre:{
+                etiqueta:"Ocultar nombre de archivo",
+                tipo:"bool",
+                adaptativa:false
             }
         },
         "Eventos":{
@@ -70,6 +80,7 @@ var componenteArchivo=function() {
 
         this.campo=this.elemento.querySelector("input");
         this.etiqueta=this.elemento.querySelector("label");
+        this.boton=this.elemento.querySelector(".custom-file-command");
 
         this.clasePadre.inicializar.call(this);
         return this;
@@ -86,6 +97,9 @@ var componenteArchivo=function() {
 
         this.etiqueta=document.crear("<label class='custom-file-label'>");
         this.elemento.anexar(this.etiqueta);
+
+        this.boton=document.crear("<span class='custom-file-command'>Seleccionar</span>");
+        this.elemento.anexar(this.boton);
 
         this.clasePadre.crear.call(this);
         return this;
@@ -316,6 +330,19 @@ var componenteArchivo=function() {
                 }
             }
             return this;
+        }
+
+        if(propiedad=="etiqueta") {
+            this.boton.establecerHtml(valor);
+            return this;
+        }
+
+        if(propiedad=="ocultarNombre") {
+            if(!valor) {
+                this.elemento.removerClase("ocultar-nombre");
+            } else {
+                this.elemento.agregarClase("ocultar-nombre");
+            }
         }
 
         this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);

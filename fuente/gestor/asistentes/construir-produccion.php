@@ -85,8 +85,8 @@ class construirProduccion extends asistente {
 
         //Limpiar/crear directorios
         if($param->limpiar) {
-            $archivos=buscarArchivos(_produccion,'*.*');
-            foreach($archivos as $archivo) unlink($archivo);
+            $archivos=buscarArchivos(_produccion,'{*,.[!.]*,..?*}',null,true,true,true);
+            eliminarTodo($archivos);
         }
         //Crear el árbol completo hasta vistas/
         if(!is_dir(_produccion.$rutaAplicacion.'cliente/vistas/')) mkdir(_produccion.$rutaAplicacion.'cliente/vistas/',0755,true);
@@ -102,9 +102,9 @@ class construirProduccion extends asistente {
         copiar(_desarrollo.'recursos/componentes/img/',$tipos,_produccion.'recursos/componentes/img/');
 
         //Omitir temas (serán procesados junto con los estilos de las vistas)
-        unlink(_produccion.'recursos/css/foxtrot.css');
+        if(is_file(_produccion.'recursos/css/foxtrot.css')) unlink(_produccion.'recursos/css/foxtrot.css');
         $archivos=glob(_produccion.'recursos/css/tema-*.css');
-        foreach($archivos as $archivo) unlink($archivo);
+        foreach($archivos as $archivo) if(is_file($archivo)) unlink($archivo);
 
         //Construir foxtrot.js sin módulos
         compilarFoxtrotJs(_produccion.'cliente/foxtrot.js',$param->depuracion,true);
@@ -112,7 +112,7 @@ class construirProduccion extends asistente {
         //En servidor, los módulos se copian completos
         //En cliente, se copian solo los subdirectorios de módulos
         function copiarModulos($ruta){
-            $subdirs=glob(_desarrollo.$ruta.'*',GLOB_ONLYDIR);
+            $subdirs=glob(_desarrollo.$ruta.'{*,.[!.]*,..?*}',GLOB_ONLYDIR);
             foreach($subdirs as $subdir) {
                 //Si tiene .ignorar, solo copiar una vez
                 $nombre=basename($subdir);
@@ -122,6 +122,7 @@ class construirProduccion extends asistente {
             }
         }
         foreach($modulos as $modulo) {
+            if(!trim($modulo)) continue;
             if(file_exists(_desarrollo.'cliente/modulos/'.$modulo)) {
                 copiarModulos('cliente/modulos/'.$modulo.'/');
             }
@@ -167,7 +168,7 @@ class construirProduccion extends asistente {
         //Copiar archivos PHP tal cual
         copy(_desarrollo.$rutaAplicacion.'config.php',_produccion.$rutaAplicacion.'config.php');
         copy(_desarrollo.$rutaAplicacion.'config.php',_produccion.$rutaAplicacion.'config.php');
-        copiar(_desarrollo.$rutaAplicacion.'servidor/','*.*',_produccion.$rutaAplicacion.'servidor/');
+        copiar(_desarrollo.$rutaAplicacion.'servidor/','{*,.[!.]*,..?*}',_produccion.$rutaAplicacion.'servidor/');
 
         //Copiar metadatos comprimido
         file_put_contents(_produccion.$rutaAplicacion.'aplicacion.json',json_encode(json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'))));
@@ -178,10 +179,10 @@ class construirProduccion extends asistente {
         if(!is_dir(dirname($rutaCssCombinado))) mkdir(dirname($rutaCssCombinado),0755,true);
 
         //Copiar otros directorios
-        $directorios=glob(_desarrollo.$rutaAplicacion.'*',GLOB_ONLYDIR);
+        $directorios=glob(_desarrollo.$rutaAplicacion.'{*,.[!.]*,..?*}',GLOB_ONLYDIR);
         foreach($directorios as $dir) {
             if(!in_array(basename($dir),['cliente','servidor','recursos'])) {
-                copiar($dir.'/','*.*',_produccion.$rutaAplicacion.basename($dir).'/');
+                copiar($dir.'/','{*,.[!.]*,..?*}',_produccion.$rutaAplicacion.basename($dir).'/');
             }
         }
 
@@ -272,7 +273,7 @@ class construirProduccion extends asistente {
         
         //Copiar directorio recursos
         //Los archivos del directorio recursos no deben combinarse; comprimir individualmente
-        $archivos=buscarArchivos(_desarrollo.$rutaAplicacion.'recursos/','*.*');
+        $archivos=buscarArchivos(_desarrollo.$rutaAplicacion.'recursos/','{*,.[!.]*,..?*}');
         foreach($archivos as $archivo) {
             $destino=str_replace(_desarrollo,_produccion,$archivo);
             $dir=dirname($destino);

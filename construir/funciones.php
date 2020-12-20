@@ -83,7 +83,8 @@ function buscarArchivos($ruta,$filtro,$funcion=null,$rec=true,$incluirIgnorados=
     if(!$incluirIgnorados&&file_exists($ruta.'.ignorar')) return $res;
 
     $arr=glob($ruta.$filtro,GLOB_BRACE);
-    //$arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
+    $arr=array_merge($arr,glob($ruta.'*',GLOB_ONLYDIR));
+    $arr=array_unique($arr);
     foreach($arr as $archivo) {
         $archivo=basename($archivo);
         if($archivo=='.'||$archivo=='..') continue;

@@ -54,7 +54,13 @@ class tipoSolicitud {
         if($params===null) $params=$this->enrutador->obtenerParametros();
 
         if(!$metodo||!$obj||!method_exists($obj,$metodo)) $this->enrutador->establecerError();
-        if(!is_array($params)) $params=[];
+        if(!is_array($params)) {
+            if($params!==null) {
+                $params=[$params];
+            } else {
+                $params=[];
+            }
+        }
 
         $res=call_user_func_array([$obj,$metodo],$params);
 

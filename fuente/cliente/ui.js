@@ -1609,7 +1609,10 @@ var ui=new function() {
             }
             body.agregarClase("tamano-"+this.obtenerTamano());
 
-            if(esCordova) body.agregarClase("cordova");
+            if(esCordova) {
+                doc.documentElement.agregarClase("cordova");
+                body.agregarClase("cordova");
+            }
 
             this.establecerEventos();
 

@@ -21,6 +21,7 @@ var componenteArchivo=function() {
     this.archivos=[];
     this.ajax=null;
     this.subidaEnCurso=false;
+    this.datosCordova=null;
 
     /**
      * Propiedades de Campo.
@@ -112,16 +113,45 @@ var componenteArchivo=function() {
         var t=this;
 
         this.campo.removerEventos();
-        
-        this.campo.evento("change",function(ev) {
+
+        var fn=function(ev) {
+            if(typeof ev==="undefined") ev=null;
+
             t.archivos=[];
             t.abortar(false)
                 .procesarArchivos()
                 .procesarEvento("change","modificacion","modificacion",ev,null);
 
-            var subir=this.propiedad("subirInmediatamente"); //por defecto, true
+            var subir=t.propiedad("subirInmediatamente"); //por defecto, true
             if(typeof subir==="undefined"||subir===null||subir) t.subirArchivos();
-        });
+        };
+        
+        this.campo.evento("change",fn);
+
+        //Integración con cordova-plugin-camera
+        if(ui.esCordova()) {
+            this.elemento.removerEventos("click").evento("click",function(ev) {
+                var multimedia=t.propiedad("multimedia");
+                if(multimedia=="video"||multimedia=="videoFrontal"||multimedia=="foto"||multimedia=="fotoFrontal") {
+                    ev.preventDefault();
+                    navigator.camera.getPicture(function(datos) {
+                        //Listo
+                        t.datosCordova="data:image/jpeg;base64,"+datos;
+                        fn();
+                    },function() {
+                        //Error, deseleccionar
+                        t.datosCordova=null;
+                        fn();
+                    },{
+                        quality:"50",
+                        destinationType:0, //DATA_URL
+                        encodingType:0, //JPEG
+                        mediaType:multimedia=="video"||multimedia=="videoFrontal"?1:0, //VIDEO:PICTURE
+                        cameraDirection:multimedia=="videoFrontal"||multimedia=="fotoFrontal"?1:0 //FRONT:BACK
+                    });
+                }                
+            });
+        }
 
         return this;
     };
@@ -145,6 +175,7 @@ var componenteArchivo=function() {
 
         if(typeof limpiar==="undefined"||limpiar) {
             this.archivos=[];
+            this.datosCordova=null;
             this.campo.value=null;
             this.etiqueta.establecerHtml("");
         }
@@ -165,7 +196,11 @@ var componenteArchivo=function() {
 
         var params={};
         this.archivos.forEach(function(archivo,i) {
-            params["archivo-"+i]=archivo.nativo;
+            if(archivo.nativo) {
+                params["archivo-"+i]=archivo.nativo;
+            } else if(archivo.datos) {
+                params["archivo-"+i]=archivo.datos;
+            }
         });
 
         this.barra=document.crear("<span class='progreso'><span class='progreso-barra'></span></span>");
@@ -222,6 +257,23 @@ var componenteArchivo=function() {
         this.archivos=[];
         var nombres=[];
 
+        if(this.datosCordova) {
+            this.archivos=[
+                {
+                    nativo:null,
+                    nombre:"fotografia.jpg",
+                    tamano:null,
+                    tipo:"image/jpeg",
+                    archivo:null,
+                    datos:this.datosCordova
+                }
+            ];
+
+            this.etiqueta.establecerHtml("(Fotografía)");
+
+            return this;
+        }
+
         var t=this,
             archivos=this.campo.files;
         if(archivos) archivos.porCada(function(i,archivo) {
@@ -270,6 +322,16 @@ var componenteArchivo=function() {
 
             this.archivos.forEach(function(archivo) {
                 promesas.push(new Promise(function(resolver,rechazar) {
+                    if(archivo.datos) {
+                        resolver();
+                        return;
+                    }
+
+                    if(!archivo.nativo) {
+                        resolver();
+                        return;
+                    }
+
                     var lector=new FileReader();
                     lector.onload=(function(l,a) {
                         return function() {

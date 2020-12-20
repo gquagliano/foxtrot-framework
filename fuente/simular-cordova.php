@@ -6,20 +6,12 @@
  * @version 1.0
  */
 
-define('_inc',1);
-
-include(__DIR__.'/servidor/foxtrot.php');
-foxtrot::inicializar(false);
-foxtrot::cargarAplicacion();
-
 //Intentar configurar index-cordova.html
-
 $html=file_get_contents(__DIR__.'/index-cordova.html');
-
 echo preg_replace([
     '/_nombreApl=".*?"/',
     '/_vistaInicial=".*?"/',
 ],[
-    '_nombreApl="'.foxtrot::obtenerNombreAplicacion().'"',
+    '_nombreApl="'.$_REQUEST['aplicacion'].'"',
     '_vistaInicial="'.$_GET['vista'].'.html"'
 ],$html);

@@ -199,7 +199,7 @@ class gestor {
     protected static function obtenerUrlVista($nombre) {
         $vistas=gestor::obtenerJsonAplicacion()->vistas;
         if($vistas->$nombre->tipo=='embebible') return null;
-        if($vistas->$nombre->cliente=='cordova') return '../desarrollo/simular-cordova.php?vista='.$nombre;
+        if($vistas->$nombre->cliente=='cordova') return '../desarrollo/simular-cordova.php?vista='.$nombre.'&aplicacion='.self::$aplicacion;
         return '../desarrollo/'.$nombre;
     }
 

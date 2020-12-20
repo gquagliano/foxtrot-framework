@@ -63,6 +63,10 @@ class construirCordova extends asistente {
             </div>
         </div>
         <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="ejecutar" checked id="ce-ejecutar" checked>
+            <label class="custom-control-label" for="ce-ejecutar">Ejecutar en el dispositivo conectado</label>
+        </div>
+        <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="depuracion" checked id="ce-depuracion">
             <label class="custom-control-label" for="ce-depuracion">Depuración</label>
         </div>
@@ -72,7 +76,7 @@ class construirCordova extends asistente {
         </div>
         <div class="custom-control custom-checkbox mb-3">
             <input type="checkbox" class="custom-control-input" name="limpiar" id="ce-limpiar">
-            <label class="custom-control-label" for="ce-limpiar">Limpiar directorios de salida</label>
+            <label class="custom-control-label" for="ce-limpiar">Limpiar directorios de salida (<em>&iexcl;Incluso <code>www</code>!</em>)</label>
         </div>
 <?php
         if(!function_exists('shell_exec')) {
@@ -103,8 +107,8 @@ class construirCordova extends asistente {
 
         //Limpiar directorio
         if($param->limpiar) {
-            $archivos=buscarArchivos(_embeber,'*.*');
-            foreach($archivos as $archivo) unlink($archivo);
+            $archivos=buscarArchivos(_embeber,'{*,.[!.]*,..?*}',null,true,true,true);            
+            eliminarTodo($archivos);
         }
         
         //Copiar todo excepto archivos PHP
@@ -119,12 +123,9 @@ class construirCordova extends asistente {
 
         $html=file_get_contents(_fuente.'index-cordova.html');
 
-        file_put_contents(_embeber.'index-cordova.html',preg_replace([
-            '/_nombreApl=".+?"/',
-            '/_vistaInicial=".+?"/',
-        ],[
-            '_nombreApl="'.gestor::obtenerNombreAplicacion().'"',
-            '_vistaInicial="'.$inicio.'"'
+        file_put_contents(_embeber.'index-cordova.html',preg_replace_array([
+            '/_nombreApl=".*?"/'=>'_nombreApl="'.gestor::obtenerNombreAplicacion().'"',
+            '/_vistaInicial=".*?"/'=>'_vistaInicial="'.$inicio.'"'
         ],$html));
 
         if($param->www) {
@@ -141,27 +142,28 @@ class construirCordova extends asistente {
 
             //Limpiar directorio
             if($param->limpiar) {
-                $archivos=buscarArchivos($dir,'*.*');
-                foreach($archivos as $archivo) unlink($archivo);
+                $archivos=buscarArchivos($dir,'{*,.[!.]*,..?*}',null,true,true,true);
+                eliminarTodo($archivos);
             }
 
             //Copiar
-            copiar(_embeber,'*.*',$dir);
+            copiar(_embeber,'{*,.[!.]*,..?*}',$dir);
             
-            //Ejecutar        
-              
-            chdir($dir);
-            
-            $pl=$param->plataforma;
-            if(!$pl) $pl='android';
+            //Ejecutar
+            if($param->ejecutar) {
+                chdir($dir);
+                
+                $pl=$param->plataforma;
+                if(!$pl) $pl='android';
 
-            $comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
-            $o=shell_exec($comando);
-            registroExec($comando,$o);
+                $comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
+                $o=shell_exec($comando);
+                registroExec($comando,$o);
 
-            $comando='cordova run '.escapeshellarg($pl).' 2>&1';
-            $o=shell_exec($comando);
-            registroExec($comando,$o);
+                $comando='cordova run '.escapeshellarg($pl).' 2>&1';
+                $o=shell_exec($comando);
+                registroExec($comando,$o);
+            }
         }
     }
     

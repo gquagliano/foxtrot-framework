@@ -59,3 +59,17 @@ function str_replace_array($arr,$cadena) {
     return str_replace($a,$b,$cadena);
 }
 
+
+/**
+ * Equivalente a `preg_replace()` utilizando un array asociativo.
+ * @var array $arr Array [expresión=>reemplazar].
+ * @var string $cadena Cadena de origen.
+ * @return string
+ */
+function preg_replace_array($arr,$cadena) {
+    foreach($arr as $c=>$v) {
+    	$cadena=preg_replace($c,$v,$cadena);
+    }
+    return $cadena;
+}
+

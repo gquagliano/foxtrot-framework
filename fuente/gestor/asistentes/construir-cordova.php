@@ -100,7 +100,7 @@ class construirCordova extends asistente {
 
         //Primero, construir aplicación
         asistentes::obtenerAsistente('construir-produccion')
-            ->ejecutar($param,false);
+            ->ejecutar($param,false,true);
 
         $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
         if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe o no es una vista Cordova.');

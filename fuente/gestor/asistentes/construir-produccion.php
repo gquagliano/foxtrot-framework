@@ -66,10 +66,11 @@ class construirProduccion extends asistente {
 
     /**
      * Ejecuta el asistente.
-     * @var object $param Parámetros recibidos desde el formulario.
-     * @var bool $formulario Estalecer a false si se está invocando el método desde el código, en lugar desde el formulario del asistente.
+     * @param object $param Parámetros recibidos desde el formulario.
+     * @param bool $formulario Estalecer a false si se está invocando el método desde el código, en lugar desde el formulario del asistente.
+     * @param bool $cordova Especifica si la construcción está siendo realizada previo a construir Cordova.
      */
-    public function ejecutar($param,$formulario=true) {
+    public function ejecutar($param,$formulario=true,$cordova=false) {
         global $archivosCssCombinados,$archivosCssCombinadosCordova;
 
         if($formulario) {
@@ -256,9 +257,9 @@ class construirProduccion extends asistente {
                     if(file_exists(_produccion.$ruta.'.js')) unlink(_produccion.$ruta.'.js');
                     if(file_exists(_produccion.$ruta.'.json')) unlink(_produccion.$ruta.'.json');
 
-                    //E incorporar los archivos CSS en aplicacion.css o cordova.css
+                    //Incorporar los archivos CSS en aplicacion.css o cordova.css
                     $rutaCss=_desarrollo.$ruta.'.css';
-                    $destino=_produccion.$rutaAplicacion.'recursos/css/'.($vista->cliente=='cordova'?'cordova':'aplicacion').'.css';
+                    $destino=_produccion.$rutaAplicacion.'recursos/css/'.(($cordova||$vista->cliente=='cordova')?'cordova':'aplicacion').'.css';
                     if(file_exists($rutaCss)) file_put_contents($destino,file_get_contents($rutaCss),FILE_APPEND);
                 }
             }

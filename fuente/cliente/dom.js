@@ -655,8 +655,7 @@
         
         //TODO Otras propiedades
 
-        if(typeof valor==="number"||!isNaN(valor)) return valor.toString()+"px";
-
+        if(typeof valor==="number") return valor.toString()+"px";
         if(typeof valor==="string"&&/^[0-9]+$/.test(valor)) return valor+"px";
 
         return valor;

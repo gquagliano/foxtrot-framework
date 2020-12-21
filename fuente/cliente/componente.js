@@ -25,7 +25,8 @@ var componente=new function() {
 
     ////Privado
     
-    var propiedadesCombinadas=null;
+    var propiedadesCombinadas=null,
+        ultimaClase=null;
 
     ////Propiedades
 
@@ -102,7 +103,8 @@ var componente=new function() {
                 //TODO En el futuro, sería bueno tener clases adaptativas. Ello puede servir para muchas clases de Bootstrap, donde no tiene sentido reescribirlas con
                 //sufijos (-md, -lg, etc.), pero por el momento es preferible evitar la carga de JS que implicaría verificar las clases de todos los componentes cada
                 //vez que se redimensiona la pantalla.
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Posicionamiento":{
@@ -1067,7 +1069,11 @@ var componente=new function() {
 
         if(propiedad=="clase") {
             if(valorAnterior) this.elemento.removerClase(valorAnterior)
-            if(valor.trim()!="") this.elemento.agregarClase(valor);
+            if(ultimaClase) this.elemento.removerClase(ultimaClase);
+            if(valor&&valor.trim()!="") {
+                ultimaClase=valor;
+                this.elemento.agregarClase(valor);
+            }
             return this;
         }
 

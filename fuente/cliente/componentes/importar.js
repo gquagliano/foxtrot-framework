@@ -14,8 +14,8 @@ var componenteImportar=function() {
     "use strict";
 
     this.componente="importar";
-    this.elementoVista=null;
-    this.nombreVista=null;
+    this.elementoVistaInterior=null;
+    this.nombreVistaInterior=null;
     this.instanciaControlador=null;
 
     this.propiedadesConcretas={
@@ -62,7 +62,7 @@ var componenteImportar=function() {
      * @returns {componente|null}
      */
     this.vista=function() {
-        if(this.nombreVista) return ui.obtenerInstanciaVista(this.nombreVista);
+        if(this.nombreVistaInterior) return ui.obtenerInstanciaVista(this.nombreVistaInterior);
         return null;
     };
 
@@ -71,7 +71,7 @@ var componenteImportar=function() {
      * @returns {string}
      */
     this.obtenerNombreVista=function() {
-        return this.nombreVista;
+        return this.nombreVistaInterior;
     };
 
     /**
@@ -129,8 +129,6 @@ var componenteImportar=function() {
      * @returns {componenteImportar}
      */
     this.actualizar=function() {
-        //this.clasePadre.actualizar.call(this,false);
-
         var vista=this.vista();
         if(vista) vista.actualizar();
         this.clasePadre.actualizar.call(this);
@@ -170,16 +168,16 @@ var componenteImportar=function() {
             doc=ui.obtenerDocumento(),
             precarga=this.propiedad(null,"precarga");
 
-        this.nombreVista=nombre;
+        this.nombreVistaInterior=nombre;
 
         var fn=function() {
             ui.obtenerVistaEmbebible(nombre,function(obj) {
-                t.elementoVista=doc.crear("<div class='contenedor-vista-importada oculto'>");
-                t.elementoVista.anexarA(t.elemento);
+                t.elementoVistaInterior=doc.crear("<div class='contenedor-vista-importada oculto'>");
+                t.elementoVistaInterior.anexarA(t.elemento);
 
-                ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVista,function() {
+                ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVistaInterior,function() {
                     t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
-                    ui.animarAparecer(t.elementoVista);
+                    ui.animarAparecer(t.elementoVistaInterior);
                 });
             },precarga);
         };
@@ -197,10 +195,10 @@ var componenteImportar=function() {
     this.cerrarVistaActual=function(retorno) {
         if(typeof retorno!=="function") retorno=null;
 
-        ui.finalizarVista(this.nombreVista);
+        ui.finalizarVista(this.nombreVistaInterior);
 
-        if(this.elementoVista) {
-            var elem=this.elementoVista;
+        if(this.elementoVistaInterior) {
+            var elem=this.elementoVistaInterior;
             ui.animarDesaparecer(elem,function() {
                 elem.remover();
                 if(retorno) retorno();

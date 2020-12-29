@@ -1822,7 +1822,7 @@ class modelo {
                 $valor=null;
             }
 
-            if(!$campo->html&&preg_match('/^(cadena|texto)/',$campo->tipo)) $valor=htmlspecialchars($valor,ENT_COMPAT,'utf-8');
+            //if(!$campo->html&&preg_match('/^(cadena|texto)/',$campo->tipo)) $valor=htmlspecialchars($valor,ENT_COMPAT,'utf-8');
 
             $valores[$nombre]=$valor;
 

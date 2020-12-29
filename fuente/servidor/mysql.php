@@ -28,7 +28,16 @@ class bd {
 	protected $id=null;
 	protected $filas=0;
 	protected $error=0;
-	protected $descripcionError=null;
+    protected $descripcionError=null;
+        
+    /**
+     * @var soloLectura Inicia la transacción como `START TRANSACTION READ ONLY`.
+     * @var lecturaEscritura Inicia la transacción como `START TRANSACTION READ WRITE`.
+     * @var instantaneaConsistente Inicia la transacción como `START TRANSACTION WITH CONSISTENT SNAPSHOT`.
+     */
+    const soloLectura=MYSQLI_TRANS_START_READ_ONLY;
+    const lecturaEscritura=MYSQLI_TRANS_START_READ_WRITE;
+    const instantaneaConsistente=MYSQLI_TRANS_START_WITH_CONSISTENT_SNAPSHOT;
 
     /**
      * Constructor. Los parámetros omitidos o nulos serán recuperados desde \configuracion.
@@ -46,7 +55,7 @@ class bd {
 	}
 
     /**
-     * 
+     * Destructor.
      */
 	function __destruct() {
         $this->desconectar();
@@ -54,6 +63,7 @@ class bd {
 
     /**
      * Devuelve el último ID insertado.
+     * @return int
      */
     public function obtenerId() {
         return $this->id;
@@ -61,6 +71,7 @@ class bd {
 
     /**
      * Devuelve el número de filas afectadas por la última consulta, ya sea una selección (cantidad de filas seleccionadas) como una actualización (cantidad de filas afectadas.)
+     * @return int
      */
     public function obtenerNumeroFilas() {
         return $this->filas;
@@ -68,6 +79,7 @@ class bd {
 
     /**
      * Devuelve la descripción del último error.
+     * @return string
      */
     public function obtenerError() {
         return $this->descripcionError;
@@ -75,6 +87,7 @@ class bd {
 
     /**
      * Devuelve el número o código del último error.
+     * @return int
      */
     public function obtenerNumeroError() {
         return $this->error;
@@ -112,6 +125,7 @@ class bd {
 
     /**
      * Abre la conexión a la base de datos.
+     * @return \bd
      */
     public function conectar() {
 		$this->e=new mysqli(
@@ -139,6 +153,7 @@ class bd {
 
     /**
      * Cierra la conexión a la base de datos.
+     * @return \bd
      */
     public function desconectar() {
         if($this->e) @$this->e->close();
@@ -148,6 +163,8 @@ class bd {
 
     /**
      * Reemplaza el prefijo `#__` antes de los nombres de tabla por el prefijo real de las mismas.
+     * @param string $q Consulta.
+     * @return string
      */
 	public function reemplazarPrefijo($q) {
 		return preg_replace("/#__(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)/sim",$this->credenciales->prefijo,$q);
@@ -155,23 +172,28 @@ class bd {
 
     /**
      * Abre una transacción.
+     * @param $modo Modo (`soloLectura`, `lecturaEscritura` o `instantaneaConsistente`).
+     * @return \bd
      */
-	public function comenzarTransaccion() {
-		$this->e->autocommit(false);
+	public function comenzarTransaccion($modo=null) {
+        //$this->e->autocommit(false);
+        $this->e->begin_transaction($modo);
 		return $this;
 	}
 
     /**
      * Finaliza la transacción.
+     * @return \bd
      */
 	public function finalizarTransaccion() {
 		$this->e->commit();
-		$this->e->autocommit(true);
+		//$this->e->autocommit(true);
 		return $this;
 	}
 
     /**
-     * Descarta la transacción, revirtiendo sus efectos.
+     * Revierte y descarta la transacción.
+     * @return \bd
      */
 	public function descartarTransaccion() {
 		$this->e->rollback();
@@ -183,11 +205,13 @@ class bd {
      * @param string $modo Modo: 'lectura' o 'escritura'.
      * @param array $tablas Tablas a bloquear. Cada elemento puede ser una cadena (nombre de la tabla) o un arreglo [tabla,alias].
      * @param null $alias No aplica.
+     * @return \bd
      *//**
      * Bloquea las tablas.
      * @param string $modo Modo: 'lectura' o 'escritura'.
      * @param string $tablas Nombre de la tabla a bloquear (solo una).
      * @param string $alias Alias (solo uno).
+     * @return \bd
      */
 	public function bloquear($modo,$tablas,$alias=null) {
         $modo=$modo=='escritura'?' write':' read';
@@ -216,6 +240,7 @@ class bd {
 
     /**
      * Desbloquea las tablas.
+     * @return \bd
      */
 	public function desbloquear() {
 		$this->e->query('unlock tables');
@@ -225,9 +250,10 @@ class bd {
 	/**
 	 * Ejecuta una consulta MySQL y devuelve una instancia de resultado. La cadena `#__` previo a un nombre de tabla se reemplazará
 	 * por el prefijo.
-	 * @var $q Consulta.
-	 * @var $parametros Array de parámetros. Opcional, si se incluye, se preparará y ejecutará la sentencia preparada en una sola operación.
-	 * @var $tipos String de tipos en caso de usar parámetros (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 * @param $q Consulta.
+	 * @param $parametros Array de parámetros. Opcional, si se incluye, se preparará y ejecutará la sentencia preparada en una sola operación.
+	 * @param $tipos String de tipos en caso de usar parámetros (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+     * @return \resultado
 	 */
 	public function consulta($q,$parametros=null,$tipos=null) {
 		if($parametros) {
@@ -257,9 +283,10 @@ class bd {
 	/**
 	 * Comienza una consulta preparada. La cadena `#__` previo a un nombre de tabla se reemplazará
 	 * por el prefijo.
-	 * @var $q Consulta.
-	 * @var $parametros Array de parámetros.
-	 * @var $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 * @param $q Consulta.
+	 * @param $parametros Array de parámetros.
+	 * @param $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+     * @return \bd
 	 */
 	public function preparar($q,$parametros=null,$tipos=null) {
 		$this->liberar();
@@ -279,6 +306,7 @@ class bd {
 
 	/**
 	 * Ejecuta una sentencia preparada y devuelve una instancia de resultado.
+     * @return \resultado
 	 */
 	public function ejecutar() {
 		if(!$this->stmt) return null;
@@ -304,8 +332,9 @@ class bd {
 
 	/**
 	 * Asigna nuevos parámetros a una sentencia preparada.
-	 * @var $parametros Array de parámetros.
-	 * @var $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+	 * @param $parametros Array de parámetros.
+	 * @param $tipos String de tipos (i, d, s, b). Opcional, si se omite, se autodetectarán los tipos.
+     * @return \bd
 	 */
 	public function asignar($parametros,$tipos=null) {
         if(!count($parametros)||!$this->stmt) return $this;
@@ -334,6 +363,7 @@ class bd {
 
 	/**
 	 * Destruye la sentencia preparada.
+     * @return \bd
 	 */
 	public function liberar() {
 		if($this->stmt) {
@@ -346,7 +376,7 @@ class bd {
     
     /**
      * Escapa los caracteres especiales de una cadena para usarla en una sentencia SQL, tomando en cuenta el conjunto de caracteres actual de la conexión.
-     * @var string $cadena
+     * @param string $cadena
      * @return string
      */
     public function escape($cadena) {

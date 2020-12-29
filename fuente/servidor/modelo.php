@@ -74,6 +74,15 @@ class modelo {
     protected $ultimoId=null;
 
     /**
+     * @var soloLectura Inicia la transacción como `START TRANSACTION READ ONLY`.
+     * @var lecturaEscritura Inicia la transacción como `START TRANSACTION READ WRITE`.
+     * @var instantaneaConsistente Inicia la transacción como `START TRANSACTION WITH CONSISTENT SNAPSHOT`.
+     */
+    const soloLectura=\bd::soloLectura;
+    const lecturaEscritura=\bd::lecturaEscritura;
+    const instantaneaConsistente=\bd::instantaneaConsistente;
+
+    /**
      * Constructor.
      * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
      */
@@ -1445,11 +1454,13 @@ class modelo {
     }    
 
     /**
-     * Comienza una transacción.
+     * Comienza una transacción. La transacción puede comenzarse, finalizarse o descartarse desde cualquier modelo en uso (aún cuando se esté
+     * trabajando con múltiples modelos a la vez, debe solicitarse solo a uno de ellos).
+     * @param $modo Modo (`soloLectura`, `lecturaEscritura` o `instantaneaConsistente`).
      * @return \modelo
      */
-    public function comenzarTransaccion() {
-        $this->bd->comenzarTransaccion();
+    public function comenzarTransaccion($modo=self::lecturaEscritura) {
+        $this->bd->comenzarTransaccion($modo);
         return $this;
     }
 
@@ -1463,7 +1474,7 @@ class modelo {
     }
 
     /**
-     * Descarta y revierte la transacción.
+     * Revierte y descarta la transacción.
      * @return \modelo
      */
     public function descartarTransaccion() {

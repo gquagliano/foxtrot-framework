@@ -114,7 +114,7 @@ function eliminarTodo($lista) {
     }
     rsort($lista);
     foreach($lista as $ruta) {
-        if(is_dir($ruta)) rmdir($ruta);
+        if(is_dir($ruta)&&!count(array_diff(scandir($ruta),['..', '.']))) rmdir($ruta);
     }
 }
 

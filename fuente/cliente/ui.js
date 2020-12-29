@@ -1252,6 +1252,20 @@ var ui=new function() {
         return window.open(this.procesarUrl(ruta).url,util.cadenaAzar(),"height="+alto+",width="+ancho+",toolbar=no,menubar=no,location=no");
     };
 
+    /**
+     * Inicia la descarga de la URL especificada.
+     * @param {string} url - URL.
+     * @returns {ui}
+     */
+    this.descargar=function(url) {
+        var a=doc.crear("<a download>")
+            .atributo("href",url)
+            .anexarA(body);
+        a.click();
+        a.remover();
+        return this;
+    };
+
     ////Eventos
 
     /**

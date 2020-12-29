@@ -96,7 +96,7 @@ var util=new function() {
     this.obtenerPropiedad=function(objeto,ruta) {
         ruta=ruta.split(".");
         for(var i=0;i<ruta.length;i++) {
-            if(typeof objeto==="object") {
+            if(typeof objeto==="object"&&objeto!==null) {
                 objeto=objeto[ruta[i]];
             } else {
                 break;

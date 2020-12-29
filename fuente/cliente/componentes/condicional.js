@@ -78,8 +78,7 @@ var componenteCondicional=function() {
             //Obtener valor procesado
             condicion=this.propiedad("condicion");
         }
-        var visible=typeof condicion!=="undefined"&&condicion!==false&&condicion!==null&&condicion!==0;
-        this.establecerVisibilidad(visible);
+        this.establecerVisibilidad(!!condicion);
         return this.clasePadre.actualizar.call(this);
     };
 

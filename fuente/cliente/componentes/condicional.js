@@ -65,16 +65,21 @@ var componenteCondicional=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
-
         var condicion;
-        //Sin condición, utilizar el valor asignado
         if(!this.propiedad(false,"condicion")) {
-            condicion=this.valor();
+            //Sin condición, utilizar el origen de datos
+            if(typeof this.datos==="object") {
+                var propiedad=this.propiedad(false,"propiedadValor");
+                condicion=propiedad?util.obtenerPropiedad(this.datos,propiedad):this.datos;
+            } else {
+                condicion=this.datos;
+            }
         } else {
-            condicion=this.procesarEvento("condicion","condicion");
+            //Obtener valor procesado
+            condicion=this.propiedad("condicion");
         }
-        this.establecerVisibilidad(!!condicion);
+        var visible=typeof condicion!=="undefined"&&condicion!==false&&condicion!==null&&condicion!==0;
+        this.establecerVisibilidad(visible);
         return this.clasePadre.actualizar.call(this);
     };
 

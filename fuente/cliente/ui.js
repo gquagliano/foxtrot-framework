@@ -1244,6 +1244,7 @@ var ui=new function() {
     /**
      * Abre una ventana emergente con la vista o URL especificada.
      * @param {string} ruta - URL o nombre de vista de destino.
+     * @returns {Window}
      */
     this.abrirVentana=function(ruta) {
         var ancho=window.ancho()*.75,

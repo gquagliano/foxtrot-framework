@@ -109,6 +109,17 @@ class cliente {
     }
 
     /**
+     * Inicia la descarga de la URL especificada en el cliente.
+     * @param string $url URL a descargar.
+     */
+    public static function descargar($url) {
+        if(!\foxtrot::esCli()) echo json_encode([
+            'd'=>$url
+        ]);
+        \foxtrot::detener();
+    }
+
+    /**
      * Redirige los llamados a métodos no definidos hacia el cliente.
      * @param string $nombre Nombre del método.
      * @param array $args Argumentos.

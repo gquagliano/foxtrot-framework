@@ -197,6 +197,7 @@ var servidor=new function() {
         //resp.a    Invocar el método en el controlador de la aplicación, con los parámetros resp.p
         //resp.e    Evaluar código arbitrario (TODO ¿es seguro? ¿tiene sentido?)
         //resp.n    Navegar a resp.n
+        //resp.d    Descargar la URL resp.d
 
         if(resp.hasOwnProperty("r")) {
             if(opciones.retorno) opciones.retorno(resp.r); //TODO usar call()
@@ -224,6 +225,8 @@ var servidor=new function() {
             procesado=true;
         } else if(resp.hasOwnProperty("n")) {
             ui.irA(resp.n);
+        } else if(resp.hasOwnProperty("d")) {
+            ui.descargar(resp.d);
         } else{
             if(opciones.error) opciones.error.call(resp.m);
             return;

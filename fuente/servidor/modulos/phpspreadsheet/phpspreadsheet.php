@@ -114,16 +114,26 @@ class phpspreadsheet extends \modulo {
     }
 
     /**
-     * Escribe una fila, tomando cada elemento de un array como una celda.
+     * Lee una fila y devuelve el contenido de sus celdas como un array.
      * @param int $numero Número de fila, comenzando desde `1`.
-     * @param array $datos Datos a escribir.
-     * @param string $columna Columna inicial.
      * @return array
      */
     public function leerFila($numero) {
         $hoja=$this->xls->getActiveSheet();
         $ultima=$hoja->getHighestColumn();
         return $hoja->rangeToArray('A'.$numero.':'.$ultima.$numero);
+    }
+
+    /**
+     * Devuelve un objeto `[fila,columna]` con los *índices* (base `1`) de la última celda de la hoja.
+     * @return object
+     */
+    public function obtenerDimensionesHoja() {
+        $hoja=$this->xls->getActiveSheet();
+        return (object)[
+            'fila'=>$hoja->getHighestRow(),
+            'columna'=>$this->obtenerIndice($hoja->getHighestColumn())
+        ];
     }
 
     /**
@@ -177,23 +187,176 @@ class phpspreadsheet extends \modulo {
         return $celda->getValue();
     }
 
+    /**
+     * Combina un rango de celdas.
+     * @param string $rango Rango como coordenadas Excel.
+     * @return \modulos\phpspreadsheet
+     */
     public function combinar($rango) {
-        //TODO
+        $this->xls->getActiveSheet()->mergeCells($rango);
         return $this;
     }
 
-    public function negrita($rango) {
-        //TODO
+    /**
+     * Aplica formato negritaa  un rango de celdas.
+     * @param string $rango Rango como coordenadas Excel.
+     * @param bool $desactivar Especificar `true` para *desactivar* la negrita.
+     * @return \modulos\phpspreadsheet
+     */
+    public function negrita($rango,$desactivar=false) {
+        $this->xls->getActiveSheet()
+            ->getStyle($rango)
+            ->getFont()
+            ->setBold(!$desactivar);
         return $this;
     }
 
+    /**
+     * Aplica un color de texto a un rango de celdas.
+     * @param string $rango Rango como coordenadas Excel.
+     * @param string $color Color en RGB hexagesimal.
+     * @return \modulos\phpspreadsheet
+     */
+    public function color($rango,$color) {
+        if(substr($color,0,1)=='#') $color=substr($color,1);
+        $this->xls->getActiveSheet()
+            ->getStyle($rango)
+            ->getFont()
+            ->getColor()
+            ->setARGB($color);
+        return $this;
+    }
+
+    /**
+     * Aplica un color de fondo a un rango de celdas.
+     * @param string $rango Rango como coordenadas Excel.
+     * @param string $color Color en RGB hexagesimal.
+     * @return \modulos\phpspreadsheet
+     */
     public function fondo($rango,$color) {
-        //TODO
+        if(substr($color,0,1)=='#') $color=substr($color,1);
+        $this->xls->getActiveSheet()
+            ->getStyle($rango)
+            ->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setARGB($color);
         return $this;
     }
 
+    /**
+     * Ajusta el tamaño de las columnas al contenido.
+     * @param string $rango Nombre de la columna o rango de columnas como coordenadas Excel (ejemplo: `A:Z`).
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Ajusta el tamaño de las columnas al contenido.
+     * @param string $rango Número de columna, comenzando desde `1`.
+     * @return \modulos\phpspreadsheet
+     */
     public function ajustarTamano($rango) {
-        //TODO
+        $rango=$this->obtenerRango($rango);
+        $hoja=$this->xls->getActiveSheet();
+        foreach($rango as $columna)
+            $hoja->getColumnDimension($this->obtenerColumna($columna))->setAutoSize(true);
+        
+        return $this;
+    }
+
+    /**
+     * Establece el ancho de la columna.
+     * @param string $columna Nombre de la columna o rango de columnas como coordenadas Excel (ejemplo: `A:Z`).
+     * @param int $ancho Ancho a establecer.
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Establece el ancho de la columna.
+     * @param string $columna Número de columna, comenzando desde `1`.
+     * @param int $ancho Ancho a establecer.
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Establece el ancho de la columna.
+     * @param string $columna Nombre de la columna inicial.
+     * @param array $ancho Lista de tamaños a establecer desde la columna inicial hacia la derecha.
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Establece el ancho de la columna.
+     * @param string $columna Número de columna inicial, comenzando desde `1`.
+     * @param array $ancho Lista de tamaños a establecer desde la columna inicial hacia la derecha.
+     * @return \modulos\phpspreadsheet
+     */
+    public function anchoColumna($columna,$ancho) {
+        $hoja=$this->xls->getActiveSheet();
+
+        if(is_array($ancho)) {
+            if(is_string($columna)) $columna=$this->obtenerIndice($columna);
+            foreach($ancho as $medida) {
+                $dimension=$hoja->getColumnDimension($this->obtenerColumna($columna));
+                $dimension->setAutoSize(false);
+                $dimension->setWidth($medida);
+                $columna++;
+            }
+        } else {
+            $rango=$this->obtenerRango($columna);
+            foreach($rango as $columna) {
+                $dimension=$hoja->getColumnDimension($this->obtenerColumna($columna));
+                $dimension->setAutoSize(false);
+                $dimension->setWidth($ancho);                
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Congela las filas hasta la fila especificada *inclusive*.
+     * @param int $numero Número de fila a congelar, comenzando desde `1`.
+     * @return \modulos\phpspreadsheet
+     */
+    public function congelarFilas($numero) {
+        return $this->congelarFilasColumnas($numero,1);
+    }
+
+    /**
+     * Congela las columnas hasta la columna especificada *inclusive*.
+     * @param string $columna Nombre de la columna.
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Congela las columnas hasta la columna especificada *inclusive*.
+     * @param int $columna Número de la columna, comenzando desde `1`.
+     * @return \modulos\phpspreadsheet
+     */
+    public function congelarColumnas($columna) {
+        return $this->congelarFilasColumnas(1,$columna);
+    }
+
+    /**
+     * Congela las filas y columnas hasta la coordenada especificada *inclusive*.
+     * @param int $fila Número de fila, comenzando desde `1`.
+     * @param string $columna Nombre de la columna.
+     * @return \modulos\phpspreadsheet
+     *//**
+     * Congela las filas y columnas hasta la coordenada especificada *inclusive*.
+     * @param int $fila Número de fila, comenzando desde `1`.
+     * @param int $columna Número de fila, comenzando desde `1`.
+     * @return \modulos\phpspreadsheet
+     */
+    public function congelarFilasColumnas($fila,$columna) {
+        $fila++;
+        if(is_string($columna)) $columna=$this->obtenerIndice($columna);
+        $letra=$this->obtenerColumna($columna);
+        $this->xls->getActiveSheet()->freezePane($letra.$fila);
+        return $this;
+    }
+
+    //TODO Otros métodos de formato útiles
+
+    /**
+     * Aplica el formato al rango de celdas.
+     * @param string $rango Rango como coordenadas Excel.
+     * @param array $formato Array de formato. Ver: https://phpspreadsheet.readthedocs.io/en/latest/topics/recipes/#styles
+     * @return \modulos\phpspreadsheet
+     */
+    public function aplicarFormato($rango,$formato) {
+        $this->xls->getActiveSheet()->getStyle($rango)->applyFromArray($formato);
         return $this;
     }
 
@@ -234,5 +397,25 @@ class phpspreadsheet extends \modulo {
      */
     public function obtenerIndice($columna) {
         return Coordinate::columnIndexFromString($columna);
+    }
+
+    /**
+     * Dado un rango, devuelve un array de *índices* de columna.
+     * @param string $rango Rango a procesar. Puede ser un índice de columna (comenzando desde `1`), una letra o un rango con formato `A:Z`.
+     * @return array
+     */
+    public function obtenerRango($rango) {
+        if(is_numeric($rango)) {
+            $rango=[$this->obtenerColumna($rango)];
+        } elseif(strpos($rango,':')>0) {
+            $rango=explode(':',$rango);
+            $rango=range(
+                $this->obtenerIndice($rango[0]),
+                $this->obtenerIndice($rango[1])
+            );
+        } else {
+            $rango=[$this->obtenerIndice($rango)];
+        }
+        return $rango;
     }
 }

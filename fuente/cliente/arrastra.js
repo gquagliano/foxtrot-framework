@@ -345,8 +345,8 @@
         var elem=this.metadato("arrastra"),
             pos=elem.posicionEstilos();
 
-        moverX=e.clientX;
-        moverY=e.clientY;
+        moverX=e.screenX;
+        moverY=e.screenY;
         moverLeft=pos.left;
         moverTop=pos.top;
 
@@ -368,13 +368,13 @@
         e=e||event;
         
         var elem=this.metadato("arrastra"),
-            dx=moverX-e.clientX,
-            dy=moverY-e.clientY;
+            dx=moverX-e.screenX,
+            dy=moverY-e.screenY;
 
-        if(e.clientX==0||e.clientY==0||dx==0&&dy==0) return;
+        if(e.screenX==0||e.screenY==0||dx==0&&dy==0) return;
 
-        moverX=e.clientX;
-        moverY=e.clientY;
+        moverX=e.screenX;
+        moverY=e.screenY;
 
         //var ancho=elem.ancho(),
         //    alto=elem.alto(),

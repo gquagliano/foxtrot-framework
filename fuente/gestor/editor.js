@@ -669,8 +669,11 @@ var editor=new function() {
 
     this.eliminarComponente=function(id) {
         this.limpiarSeleccion();
-        var obj=ui.obtenerInstanciaComponente(id);
+        var obj=ui.obtenerInstanciaComponente(id),
+            padre=obj.obtenerPadre();
         obj.eliminar();
+        //Actualizar padre
+        if(padre) padre.actualizar();
         cambiosSinGuardar=true;
         return this;
     };
@@ -684,7 +687,8 @@ var editor=new function() {
     this.moverComponente=function(destino,id,ubicacion) {
         if(typeof ubicacion==="undefined") ubicacion="dentro";
 
-        var obj=ui.obtenerInstanciaComponente(id);
+        var obj=ui.obtenerInstanciaComponente(id),
+            padreAnterior=obj.obtenerPadre();
         if(!obj||destino===obj.elemento) return this;
 
         if(ubicacion=="dentro") {
@@ -694,6 +698,11 @@ var editor=new function() {
         } else if(ubicacion=="despues") {
             destino.insertarDespues(obj.elemento);            
         }
+
+        //Actualizar origen y destino
+        var padre=obj.obtenerPadre();
+        if(padre) padre.actualizar();
+        if(padreAnterior) padreAnterior.actualizar();
 
         cambiosSinGuardar=true;
 
@@ -922,6 +931,10 @@ var editor=new function() {
         obj.insertado();
 
         this.prepararComponenteInsertado(obj);
+
+        //Actualizar destino
+        var padre=obj.obtenerPadre();
+        if(padre) padre.actualizar();
         
         cambiosSinGuardar=true;
 
@@ -1200,8 +1213,9 @@ var editor=new function() {
         ev.preventDefault();
         ev.stopPropagation();
 
-        var fn=function(elem) {
-            var nuevoSelector={},
+        var fn=function(comp) {
+            var elem=comp.obtenerContenedor(),
+                nuevoSelector={},
                 nombreVista=ui.obtenerNombreVistaPrincipal();    
             nombreVista=nombreVista.replace(/[^a-z0-9]/g,"-");
 
@@ -1259,6 +1273,9 @@ var editor=new function() {
                 //TODO ¿Deberían invocarse aunque sean heredados?
             });
 
+            //Actualizar destino
+            comp.actualizar();
+
             //Agregar estilos
             datos.css.forEach(function(estilo) {
                 var tamano=null;
@@ -1268,7 +1285,7 @@ var editor=new function() {
         };
 
         this.componentesSeleccionados.forEach(function(comp) {
-            fn(comp.obtenerContenedor());
+            fn(comp);
         });
 
         prepararComponentesInsertados();

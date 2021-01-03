@@ -76,14 +76,6 @@ var componenteItemMenu=function() {
     };
 
     /**
-     * Evento `editorDesactivado`.
-     */
-    this.editorDesactivado=function() {
-        //Limpiar clase con-submenu si se ha eliminado el submenú
-        if(!this.obtenerHijos().length) this.elemento.removerClase("con-submenu");
-    };
-
-    /**
      * Devuelve el componente submenú.
      * @returns {componente}
      */
@@ -93,6 +85,26 @@ var componenteItemMenu=function() {
             if(hijos[i].componente==="menu")
                 return hijos[i];
         return null;
+    };
+
+    /**
+     * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
+     * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
+     * forma específica.
+     * @param {boolean} [actualizarHijos=true] - Determina si se debe desencadenar la actualización de la descendencia del componente.
+     * @returns {componente}
+     */
+    this.actualizar=function(actualizarHijos) {
+        this.clasePadre.actualizar.call(this,actualizarHijos);
+        
+        //Agregar/limpiar clase .con-submenu
+        if(!this.obtenerHijos().length) {
+            this.elemento.removerClase("con-submenu");
+        } else {
+            this.elemento.agregarClase("con-submenu");
+        }
+
+        return this;
     };
 
     /**

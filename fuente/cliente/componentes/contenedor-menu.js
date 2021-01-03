@@ -293,6 +293,18 @@ var componenteContenedorMenu=function() {
     this.navegacion=function(nombreVista) {
         this.cerrar();
     };
+
+    /**
+     * Elimina el componente.
+     * @param {boolean} [descendencia] - Si está definido y es `true`, indica que se está eliminando el componente por ser descendencia de otro componente eliminado. Parámetro de
+     * uso interno; omitir al solicitar eliminar este componente.
+     * @returns {componente}
+     */
+    this.eliminar=function(descendencia) {
+        this.eliminarComponente(descendencia);
+        if(ui.enModoEdicion()&&this.ancla) this.ancla.remover();
+        return this;
+    };
 };
 
 ui.registrarComponente("contenedor-menu",componenteContenedorMenu,configComponente.clonar({

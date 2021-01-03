@@ -63,3 +63,38 @@
     border-style: solid;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAA5SURBVHjaYvz//z8DLQETA43BqAUEAQsSm9qxzUh3HzCORvJoKhpNRaOpaDQVjVpAKwAAAAD//wMA8YkGPNoo3k0AAAAASUVORK5CYII=');
 }
+.foxtrot-mostrar-invisibles .menu-ancla.d-none {
+    display: none !important;
+}
+@media(min-width:576px) {
+    .foxtrot-mostrar-invisibles .menu-ancla.d-sm-block {
+        display: block !important;
+    }
+    .foxtrot-mostrar-invisibles .menu-ancla.d-sm-none {
+        display: none !important;
+    }
+}
+@media(min-width:768px) {    
+    .foxtrot-mostrar-invisibles .menu-ancla.d-md-block {
+        display: block !important;
+    }
+    .foxtrot-mostrar-invisibles .menu-ancla.d-md-none {
+        display: none !important;
+    }
+}
+@media(min-width:992px) {    
+    .foxtrot-mostrar-invisibles .menu-ancla.d-lg-block {
+        display: block !important;
+    }  
+    .foxtrot-mostrar-invisibles .menu-ancla.d-lg-none {
+        display: none !important;
+    }
+}
+@media(min-width:1200px) {
+    .foxtrot-mostrar-invisibles .menu-ancla.d-xl-block {
+        display: block !important;
+    }
+    .foxtrot-mostrar-invisibles .menu-ancla.d-xl-none {
+        display: none !important;
+    }
+}

@@ -97,6 +97,16 @@ var componenteContenedorMenu=function() {
      */
     this.editor=function() {
         this.gestionarAncla();
+        this.clasePadre.editor.call(this);
+    };
+
+    /**
+     * Evento `editorDesactivado`.
+     * @returns {(boolean|undefined)}
+     */
+    this.editorDesactivado=function() {
+        this.gestionarAncla();
+        return this.clasePadre.editorDesactivado.call(this);
     };
     
     /**
@@ -151,13 +161,9 @@ var componenteContenedorMenu=function() {
      * @returns {Componente}
      */
     this.gestionarAncla=function() {
-        if(!ui.enModoEdicion()) return this;
+        if(this.ancla) this.ancla.remover();
 
-        if(this.ancla) {
-            try {
-                this.ancla.remover();
-            } catch {}
-        }
+        if(!ui.enModoEdicion()) return this;
 
         var t=this;
         this.ancla=ui.obtenerDocumento()

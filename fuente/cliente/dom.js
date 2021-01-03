@@ -612,8 +612,8 @@
     Node.prototype.posicion=function() {
         //TODO
         return {
-            x: null,
-            y: null
+            x: parseFloat(this.offsetLeft),
+            y: parseFloat(this.offsetTop)
         };
     };
 

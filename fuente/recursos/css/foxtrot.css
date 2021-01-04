@@ -67,30 +67,37 @@ picture img {
 
 /* Menú y menú contextual */
 
-.menu, .submenu {
+.menu {
     position: fixed;
-    background: #fff;
+    margin: 0;
+    padding: 0;
     z-index: 999999;
+    background: #fff;
+    border: 1px solid #e8ebf1;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15);
+}
+.menu .menu {
+    position: absolute;
+    left: 100%;
+    margin-left: 0;
+    margin-top: -11px;
+}
+.menu ul {
+    width: auto;
     list-style-type: none;
     margin: 0;
     padding: 10px 0;
-    border: 1px solid #e8ebf1;
-    width: auto;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: static;
 }
 .menu li, .menu a, .item-menu li, .item-menu a {
     display: block;
     margin: 0;
     padding: 0;
     width: 100%;
-    position: relative;
-}
-.submenu {
-    position: absolute;
-    left: 100%;
-    margin-left: -5px;
-    top: -11px;
+    position: static;
 }
 .menu a, .item-menu a {
     color: inherit !important;
@@ -138,16 +145,12 @@ li.menu-separador::after {
     bottom: 100% !important;
 }
 .menu .menu.desplegar-izquierda,
-.menu .menu.siempre-desplegar-izquierda,
-.submenu.desplegar-izquierda,
-.submenu.siempre-desplegar-izquierda {
+.menu .menu.siempre-desplegar-izquierda {
     left: auto !important;
     right: 100% !important;
 }
 .menu .menu.desplegar-arriba,
-.menu .menu.siempre-desplegar-arriba,
-.submenu.desplegar-arriba,
-.submenu.siempre-desplegar-arriba {
+.menu .menu.siempre-desplegar-arriba {
     top: auto !important;
     bottom: -10px !important;
 }

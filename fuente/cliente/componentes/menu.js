@@ -20,12 +20,7 @@ var componenteMenu=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.contenedor=this.elemento;
-
-        //Agregar una clase al padre si se está utilizando como submenú
-        var padre=this.elemento.padre();
-        if(padre&&padre.es({etiqueta:"li"})) padre.agregarClase("con-submenu");
-
+        this.contenedor=this.elemento.querySelector("ul");
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -35,9 +30,12 @@ var componenteMenu=function() {
      */
     this.crear=function() {
         //El menú debe ser compatible con el gestor de menús de ui, para poder aprovechar los métodos existentes
-        this.elemento=document.crear("<ul class='menu oculto menu-contextual'>"); 
-        this.contenedor=this.elemento;
+        this.elemento=document.crear("<div class='menu oculto menu-contextual'>");
+        this.contenedor=document.crear("<ul>")
+            .anexarA(this.elemento);
+
         this.clasePadre.crear.call(this);
+
         return this;
     };
 };

@@ -208,6 +208,10 @@ var componenteItemMenu=function() {
                 var submenu=t.obtenerSubmenu();
                 if(!submenu||!abrirConClick()) return;
                 
+                //Mantener si el click fue dentro del submenú (ej. barra de desplazamiento)
+                var elemSubmenu=submenu.obtenerElemento();
+                if(ev.target==elemSubmenu||ev.target.padre({elemento:elemSubmenu})) return;
+
                 ev.preventDefault();
                 ignorarClick=true;
 

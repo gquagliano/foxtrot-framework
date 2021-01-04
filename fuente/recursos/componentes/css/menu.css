@@ -29,7 +29,7 @@
 }
 .nav .menu .menu {
     position: absolute;
-    top: -10px;
+    margin-top: -11px;
     left: 100%;
     width: auto;
     min-width: 80px;
@@ -113,19 +113,32 @@
     border: none;
     box-shadow: none;
     position: relative;
-    top: auto;
     bottom: auto;
     left: auto;
     right: auto;
-    padding: 1rem 0;
+    top: 0;
+    padding: 0;
+    margin-left: 0;
+    margin-top: 0;
+}
+.menu-flotante .menu ul,
+.menu-deslizable .menu ul {
+    padding: 0;
 }
 .menu-bloque .menu {
-    @copiar .menu,.submenu
+    @copiar .menu
     @copiar .nav .menu
 }
 .menu-bloque .menu .menu {
-    @copiar .menu,.submenu
+    @copiar .menu
     @copiar .nav .menu .menu
+}
+.menu-bloque .menu ul {
+    @copiar .menu ul
+}
+.menu-bloque>.item-menu>.menu {
+    margin-top: 0 !important;
+    top: 100% !important;
 }
 @media (min-width: 576px) {
     .menu-sm-flotante {
@@ -148,14 +161,24 @@
     .menu-sm-deslizable .menu,
     .menu-sm-deslizable .menu .menu {
         @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
+    }    
+    .menu-sm-flotante .menu ul,
+    .menu-sm-deslizable .menu ul {
+        @copiar .menu-flotante .menu ul,.menu-deslizable .menu ul
     }
     .menu-sm-bloque .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu
     }
+    .menu-sm-bloque .menu ul {
+        @copiar .menu ul
+    }
     .menu-sm-bloque .menu .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu .menu
+    }
+    .menu-sm-bloque>.item-menu>.menu {
+        @copiar .menu-bloque>.item-menu>.menu
     }
 }
 @media (min-width: 768px) {
@@ -180,13 +203,23 @@
     .menu-md-deslizable .menu .menu {
         @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
     }
+    .menu-md-flotante .menu ul,
+    .menu-md-deslizable .menu ul {
+        @copiar .menu-flotante .menu ul,.menu-deslizable .menu ul
+    }
     .menu-md-bloque .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu
     }
+    .menu-md-bloque .menu ul {
+        @copiar .menu ul
+    }
     .menu-md-bloque .menu .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu .menu
+    }
+    .menu-md-bloque>.item-menu>.menu {
+        @copiar .menu-bloque>.item-menu>.menu
     }
 }
 @media (min-width: 992px) {
@@ -211,13 +244,23 @@
     .menu-lg-deslizable .menu .menu {
         @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
     }
+    .menu-lg-flotante .menu ul,
+    .menu-lg-deslizable .menu ul {
+        @copiar .menu-flotante .menu ul,.menu-deslizable .menu ul
+    }
     .menu-lg-bloque .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu
     }
+    .menu-lg-bloque .menu ul {
+        @copiar .menu ul
+    }
     .menu-lg-bloque .menu .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu .menu
+    }
+    .menu-lg-bloque>.item-menu>.menu {
+        @copiar .menu-bloque>.item-menu>.menu
     }
 }
 @media (min-width: 1200px) {
@@ -242,12 +285,22 @@
     .menu-xl-deslizable .menu .menu {
         @copiar .menu-flotante .menu,.menu-flotante .menu .menu,.menu-deslizable .menu,.menu-deslizable .menu .menu
     }
+    .menu-xl-flotante .menu ul,
+    .menu-xl-deslizable .menu ul {
+        @copiar .menu-flotante .menu ul,.menu-deslizable .menu ul
+    }
     .menu-xl-bloque .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu
     }
+    .menu-xl-bloque .menu ul {
+        @copiar .menu ul
+    }
     .menu-xl-bloque .menu .menu {
-        @copiar .menu,.submenu
+        @copiar .menu
         @copiar .nav .menu .menu
+    }
+    .menu-xl-bloque>.item-menu>.menu {
+        @copiar .menu-bloque>.item-menu>.menu
     }
 }

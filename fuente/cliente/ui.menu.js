@@ -18,13 +18,32 @@
         elem.ejecutarEvento("menu-abierto");
 
         ui.animarAparecer(elem);
-                
-        //Reposicionar si se sale de pantalla
 
-        elem.removerClase(/^desplegar-(izquierda|arriba)/);
+        //TODO Barras de desplazamiento estilizadas
+
+        var ul=elem.querySelector("ul"),
+            posicionamiento=elem.estilo("position"),
+            padre=elem.padre();
+
+        elem.removerClase(/^desplegar-(izquierda|arriba)/);        
+        ul.estilos({
+            maxHeight:"none"
+        });
+
+        //Asumimos que se ubicará dentro del padre (ej. un menú mobile tipo acordión)
+        if(posicionamiento=="relative") return;
+
+        //Posicionar relativo al menú superior, si corresponde        
+        if(padre&&padre.nodeName=="LI") {
+            var posPadre=padre.posicion();
+            elem.estilos({
+                top:posPadre.y-padre.padre().scrollTop
+            });
+        }
+                
+        //Reposicionar si no entra en pantalla
 
         var margen=15,
-            posicionamiento=elem.estilo("position"),
             pos=elem.posicionAbsoluta(),
             ancho=elem.ancho(),
             alto=elem.alto(),
@@ -32,17 +51,28 @@
             altoVentana=elem.ownerDocument.defaultView.alto(),   //Puede estar dentro de un marco (no usar window)
             excedeX=pos.x+ancho>anchoVentana-margen,
             excedeY=pos.y+alto>altoVentana-margen;
-        
-        if(excedeX||excedeY) {
-            if(posicionamiento=="absolute"||posicionamiento=="relative") {
+
+        //Horizontalmente, desplegar hacia el otro lado
+        if(excedeX) {
+            if(posicionamiento=="absolute") {
                 //En este caso utilizaremos clases CSS para que se pueda reposicionar de acuerdo a los estilos específicos del padre
-                if(excedeX) elem.agregarClase("desplegar-izquierda");
-                if(excedeY) elem.agregarClase("desplegar-arriba");
+                elem.agregarClase("desplegar-izquierda");
             } else {
                 //Por defecto, se comporta como fixed
-                if(excedeX) elem.estilos({ left:anchoVentana-ancho-margen });
-                if(excedeY) elem.estilos({ top:altoVentana-alto-margen });
-            } 
+                elem.estilos({ left:anchoVentana-ancho-margen*2 });
+            }
+        }
+
+        //Verticalmente, intentar alinearlo con el pie de la ventana
+        if(excedeY) {
+            if(posicionamiento=="absolute") {
+                var nuevoAlto=altoVentana-margen-pos.y;
+                //TODO También mover hacia arriba para que nunca quede demasiado pequeño
+                ul.estilos({ maxHeight:nuevoAlto });
+                //elem.agregarClase("desplegar-arriba");
+            } else {
+                elem.estilos({ top:altoVentana-alto-margen });
+            }
         }
     };
     
@@ -118,7 +148,8 @@
             cerrarElementoMenu(item.elemSubmenu);
         };
 
-        var fn=function(ul,items) {
+        var fn=function(elem,items) {
+            var ul=elem.querySelector("ul");
             for(var i=0;i<items.length;i++) {
                 var li=document.crear("<li>"),
                     a=document.crear("<a href='#'>");
@@ -126,12 +157,12 @@
                 a.establecerHtml(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
-                    var ulSubmenu=document.crear("<ul class='submenu oculto'>");
-                    fn(ulSubmenu,items[i].submenu);
+                    var submenu=document.crear("<div class='menu oculto'><ul></ul></div>");
+                    fn(submenu,items[i].submenu);
 
                     li.agregarClase("con-submenu");
-                    li.anexar(ulSubmenu);
-                    items[i].elemSubmenu=ulSubmenu;
+                    li.anexar(submenu);
+                    items[i].elemSubmenu=submenu;
                 }
 
                 if(items[i].hasOwnProperty("separador")&&items[i].separador) li.agregarClase("menu-separador");
@@ -169,7 +200,7 @@
         };
 
         var menu={
-            elem:document.crear("<ul class='menu oculto'>"),
+            elem:document.crear("<div class='menu oculto'><ul></ul></div>"),
             items:items.clonar(),
             eliminar:false
         };
@@ -231,7 +262,27 @@
         }
     };
 
+    /**
+     * Determina si un elemento o nodo es parte del DOM de un menú que se encuentra abierto.
+     * @memberof ui
+     * @param {Node} elem - Elemento a evaluar.
+     * @returns {boolean}
+     */
+    ui.esMenu=function(elem) {
+        for(var i=0;i<menuAbierto.length;i++) {
+            var elemMenu=menuAbierto[i];
+            if(!(elemMenu instanceof Node)) elemMenu=elemMenu.elem; //menuAbierto puede contener objetos o elementos
+            if(elem===elemMenu||elem.padre({elemento:elemMenu})) return true;
+        }
+        return false;
+    };
+
     var menuMouseUp=function(ev) {
+        //Mantener si el click fue dentro del menú (ej. barra de desplazamiento)
+        if(ui.esMenu(ev.target)) {
+            ev.stopPropagation();
+            return;
+        }
         ui.cerrarMenu();
     };
 
@@ -239,8 +290,22 @@
         ui.cerrarMenu();
     };
 
+    var menuMousewheel=function(ev) {
+        var menu=ev.target.padre({clase:"menu"});
+        if(menu) {
+            //Si el evento se produjo dentro de un menú, cerrar su descendencia
+            var submenus=menu.querySelectorAll(".menu");
+            for(var i=0;i<submenus.length;i++)
+                cerrarElementoMenu(submenus[i],true);
+        } else {       
+            //Fueda del menú, cerrar todo
+            ui.cerrarMenu();
+        }
+    };
+
     var removerEventosMenu=function() {
         ui.obtenerDocumento().removerEvento("keydown",menuKeyDn)
+            .removerEvento("wheel",menuMousewheel)
             .removerEvento("mouseup",menuMouseUp);
         window.removerEvento("blur",menuBlur);
 
@@ -311,7 +376,9 @@
 
         //Eventos
 
-        ui.obtenerDocumento().evento("keydown",menuKeyDn)
+        ui.obtenerDocumento()
+            .evento("keydown",menuKeyDn)
+            .evento("wheel",menuMousewheel)
             .evento("mouseup",menuMouseUp);
             
         window.evento("blur",menuBlur);

@@ -18,7 +18,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes {
     margin-bottom: 22px !important;
     overflow: visible !important;
 }
-body.foxtrot-modo-edicion.foxtrot-bordes * {
+body.foxtrot-modo-edicion.foxtrot-bordes #foxtrot-cuerpo * {
     overflow: visible !important;
 }
 body.foxtrot-editor,

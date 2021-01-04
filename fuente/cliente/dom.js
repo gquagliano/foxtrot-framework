@@ -610,7 +610,8 @@
      * @memberof external:Node
      */
     Node.prototype.posicion=function() {
-        //TODO
+        var posicionamiento=this.estilo("position");
+        if(posicionamiento=="fixed") return this.posicionAbsoluta();
         return {
             x: parseFloat(this.offsetLeft),
             y: parseFloat(this.offsetTop)

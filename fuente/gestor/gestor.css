@@ -475,6 +475,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
 .foxtrot-modo-edicion.foxtrot-bordes .contenedor {
     outline: dashed 1px rgba(0, 0, 0, 0.2);
     min-height: 1em;
+    min-width: 1em;
 }
 .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-none,
 .foxtrot-modo-edicion.foxtrot-mostrar-invisibles .d-sm-none,

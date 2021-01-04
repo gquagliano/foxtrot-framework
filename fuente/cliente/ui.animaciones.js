@@ -33,6 +33,7 @@
         elem.evento("animationend",function() {
             if(elem._eventoCompleto) return;
             elem._eventoCompleto=true;
+            removerEvento(elem);
             funcion();
         });
     };
@@ -83,8 +84,6 @@
 
             elem.removerClase("desaparece")
                 .agregarClase("oculto");
-
-            removerEvento(elem);
         });
     };
 

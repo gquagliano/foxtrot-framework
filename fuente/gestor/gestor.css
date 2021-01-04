@@ -18,7 +18,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes {
     margin-bottom: 22px !important;
     overflow: visible !important;
 }
-body.foxtrot-modo-edicion.foxtrot-bordes #foxtrot-cuerpo * {
+body.foxtrot-modo-edicion.foxtrot-bordes * {
     overflow: visible !important;
 }
 body.foxtrot-editor,
@@ -392,7 +392,7 @@ body.foxtrot-trabajando #foxtrot-cargando {
     z-index: 999999;
     list-style-type: none;
     margin: 0;
-    padding: 10px 0;
+    padding: 0;
     border: 1px solid #e8ebf1;
     font-weight: normal;
     font-family: Montserrat, sans-serif;
@@ -403,6 +403,10 @@ body.foxtrot-trabajando #foxtrot-cargando {
     font-size: 13px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 10px 15px rgba(0,0,0,.15)
+}
+body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
 }
 
 /* Arrastrar y soltar */

@@ -89,9 +89,7 @@ var componenteBucle=function() {
             indiceFoco=enfocables.indexOf(foco);
 
         //Limpiar filas autogeneradas
-        this.itemsAutogenerados.forEach(function(item) {
-            item.eliminar();
-        });
+        ui.eliminarComponentes(this.itemsAutogenerados);
         this.itemsAutogenerados=[];
 
         if(!this.datos||!util.esArray(this.datos)) return this;

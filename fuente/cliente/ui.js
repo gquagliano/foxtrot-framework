@@ -505,6 +505,55 @@ var ui=new function() {
     };
 
     /**
+     * Busca y elimina apropiadamente los componentes descendientes del elemento especificado.
+     * @param {Node} elemento - Elemento a analizar. `elemento` *puede ser un componente*.
+     * @param {boolean} [eliminarElemento=true] - Si es `true`, luego de eliminar los componentes que pueda contener, también removerá del DOM el nodo
+     * especificado en `elemento`.
+     * @returns {ui}
+     *//**
+     * Busca y elimina apropiadamente los componentes descendientes del elemento especificado.
+     * @param {NodeList} elemento - Listado de elementos a analizar.
+     * @param {boolean} [eliminarElemento=true] - Si es `true`, luego de eliminar los componentes que puedan existir en el listado, también
+     * removerá del DOM todos los nodos contenidos en `elemento`.
+     * @returns {ui}
+     *//**
+     * Busca y elimina apropiadamente los componentes descendientes del elemento especificado.
+     * @param {Node[]} elemento - Listado de elementos a analizar.
+     * @param {boolean} [eliminarElemento=true] - Si es `true`, luego de eliminar los componentes que puedan existir en el listado, también
+     * removerá del DOM todos los nodos contenidos en `elemento`.
+     * @returns {ui}
+     */
+    this.eliminarComponentes=function(elemento,eliminarElemento) {
+        if(elemento instanceof NodeList||util.esArray(elemento)) {
+            Array.from(elemento).forEach(function(item) {
+                ui.eliminarComponentes(item,eliminarElemento);
+            });
+            return this;
+        }
+
+        if(elemento.esComponente()) {
+            elemento.eliminar(true);
+            return this;
+        }
+        
+        //Debemos realizar la búsqueda recursiva un nivel a la vez (en oposición a utilizar directamente querySelectorAll(".componente")), ya
+        //que donde se encuentre un componente, componente.eliminar() se encargará de su descendencia, con lo cual no tendría sentido
+        //continuar la búsqueda
+        if(!elemento.hasChildNodes()) elemento.childNodes.forEach(function(hijo) {
+                var id=identificarComponente(hijo);
+                if(id) {
+                    ui.obtenerInstanciaComponente(id).eliminar(true);
+                } else {
+                    //Nodo común, descender
+                    ui.eliminarComponentes(hijo,eliminarElemento);
+                }
+            });
+        if(typeof eliminarElemento==="undefined"||eliminarElemento) elemento.remover();
+
+        return this;
+    };
+
+    /**
      * Finaliza las tareas de limpieza tras la eliminación de un componente. Método de uso interno.
      * @param {componente} componente 
      * @returns {ui}

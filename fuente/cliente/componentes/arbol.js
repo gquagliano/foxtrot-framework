@@ -141,7 +141,7 @@ var componenteArbol=function() {
 
         //Limpiar filas autogeneradas
         if(this.listado) {
-            this.listado.remover();
+            ui.eliminarComponentes(this.listado);
             this.listado=null;
         }
         this.itemsAutogenerados=[];

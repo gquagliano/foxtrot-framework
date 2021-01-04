@@ -102,7 +102,7 @@ var componenteTabla=function() {
             indiceFoco=enfocables.indexOf(foco);
             
         //Limpiar filas autogeneradas
-        this.elemento.querySelectorAll(".autogenerado").remover();
+        ui.eliminarComponentes(this.elemento.querySelectorAll(".autogenerado"));
 
         if(!this.datos) return this;
 

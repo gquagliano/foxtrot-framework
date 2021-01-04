@@ -239,7 +239,7 @@ var componenteImportar=function() {
         if(this.elementoVistaInterior) {
             var elem=this.elementoVistaInterior;
             ui.animarDesaparecer(elem,function() {
-                elem.remover();
+                ui.eliminarComponentes(elem);
                 if(retorno) retorno();
             });
         } else {

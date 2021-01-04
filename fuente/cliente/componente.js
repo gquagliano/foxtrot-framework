@@ -741,7 +741,7 @@ var componente=new function() {
         if(typeof descendencia==="undefined") descendencia=false;
 
         this.elemento.remover();
-        
+
         //Eliminar todas las referencias
         delete this.elemento;
         delete this.contenedor;
@@ -2068,7 +2068,8 @@ var componente=new function() {
             }
         };
 
-        fn(this.contenedor||this.elemento);       
+        var elem=this.contenedor||this.elemento;
+        if(elem) fn(elem);
 
         return hijos;
     };    

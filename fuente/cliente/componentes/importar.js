@@ -17,6 +17,10 @@ var componenteImportar=function() {
     this.elementoVistaInterior=null;
     this.nombreVistaInterior=null;
     this.instanciaControlador=null;
+    
+    var trabajando=false,
+        numeroOperacion=0,
+        enCurso=[];
 
     this.propiedadesConcretas={
         "Importar":{
@@ -46,6 +50,7 @@ var componenteImportar=function() {
                 tipo:"numero",
                 ayuda:"Permite establecer un tiempo de demora entre la navegación y la carga de la vista (segundos)."
             }
+            //TODO Eventos
         }
     };
 
@@ -72,6 +77,14 @@ var componenteImportar=function() {
      */
     this.obtenerNombreVista=function() {
         return this.nombreVistaInterior;
+    };
+
+    /**
+     * Devuelve `true` si se encuentra en curso la carga de una vista.
+     * @returns {boolean}
+     */
+    this.cargando=function() {
+        return trabajando;
     };
 
     /**
@@ -159,6 +172,16 @@ var componenteImportar=function() {
     };
 
     /**
+     * Aborta la carga en curso.
+     * @returns {componente}
+     */
+    this.abortar=function() {
+        enCurso=[];
+        trabajando=false;
+        return this;
+    };
+
+    /**
      * Inicia la carga de una vista.
      * @param {string} nombre 
      * @returns {Componente}
@@ -167,17 +190,33 @@ var componenteImportar=function() {
         var t=this, 
             doc=ui.obtenerDocumento(),
             precarga=this.propiedad(null,"precarga");
+        
+        this.abortar();
+
+        trabajando=true;
+        var op=++numeroOperacion;
+        //Por el momento no hay posibilidad de abortar ui.obtenerVistaEmbebible, por lo que vamos a utilizar una bandera local
+        //para mantener/abortar la función de retorno
+        enCurso.push(op);   
 
         this.nombreVistaInterior=nombre;
 
         var fn=function() {
+            if(enCurso.indexOf(op)<0) return;
+
             ui.obtenerVistaEmbebible(nombre,function(obj) {
+                if(enCurso.indexOf(op)<0) return;
+
                 t.elementoVistaInterior=doc.crear("<div class='contenedor-vista-importada oculto'>");
                 t.elementoVistaInterior.anexarA(t.elemento);
 
                 ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVistaInterior,function() {
+                    if(enCurso.indexOf(op)<0) return;
+
                     t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
                     ui.animarAparecer(t.elementoVistaInterior);
+
+                    trabajando=false;
                 });
             },precarga);
         };

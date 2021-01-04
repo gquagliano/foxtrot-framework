@@ -98,7 +98,7 @@ var componenteItemMenu=function() {
         this.clasePadre.actualizar.call(this,actualizarHijos);
         
         //Agregar/limpiar clase .con-submenu
-        if(!this.obtenerHijos().length) {
+        if(!this.elemento.querySelector(".menu")) {
             this.elemento.removerClase("con-submenu");
         } else {
             this.elemento.agregarClase("con-submenu");
@@ -329,7 +329,7 @@ var componenteItemMenu=function() {
             if(elem) ui.obtenerInstanciaComponente(elem).cerrar();
         });
         return this;
-    };
+    };   
 };
 
 ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({

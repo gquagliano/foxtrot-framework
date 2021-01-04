@@ -1362,7 +1362,7 @@ var ui=new function() {
 
         //Controladores de vistas
         for(var control in instanciasControladores) {
-            if(!instanciasControladores.hasOwnProperty(control)||(obj&&obj!=control)) continue;
+            if(!instanciasControladores.hasOwnProperty(control)||(obj&&obj!=instanciasControladores[control])) continue;
 
             var obj=instanciasControladores[control],
                 metodo=obj[nombre],

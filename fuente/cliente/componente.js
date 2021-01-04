@@ -85,6 +85,7 @@ var componente=new function() {
             //    clase
             //    ayuda
             //    evento Indica si es un evento (predeterminado false)
+            //    eventoCampo Indica si es un evento que debe aplicarse solo a campos (predeterminado false)
             //    boton (texto del botón en caso de tipo=comando)
             //    evaluable (predeterminado false) Indica si se deben evaluar las expresiones en forma automática (método actualizarPropiedadesExpresiones)
             //}
@@ -271,13 +272,15 @@ var componente=new function() {
             click:{
                 etiqueta:"Click",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                eventoCampo:true
             },
             menuContextual:{
                 etiqueta:"Menú contextual",
                 adaptativa:false,
                 ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú.",
-                evento:true
+                evento:true,
+                eventoCampo:true
             },
             intro:{
                 etiqueta:"Intro",
@@ -287,7 +290,8 @@ var componente=new function() {
             modificacion:{
                 etiqueta:"Modificación",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                eventoCampo:true
             }
         },
         "Datos":{
@@ -1505,31 +1509,26 @@ var componente=new function() {
             elemento.removerEventos();
 
             //Eventos estándar
-            var asignaciones={
-                click:{},
-                contextmenu:{
-                    metodo:"menuContextual",
-                    propiedad:"menuContextual"
-                },
-                change:{
-                    metodo:"modificacion",
-                    propiedad:"modificacion"
-                }
-            };
 
-            asignaciones.porCada(function(evento,config) {
-                var metodo=config.hasOwnProperty("metodo")?config.metodo:evento,
-                    propiedad=config.hasOwnProperty("propiedad")?config.propiedad:evento;
+            //Click
+            elemento.evento("click",function(ev) {
+                t.procesarEvento("click","click","click",ev);
+            });
 
-                elemento.evento(evento,function(ev) {
-                    t.procesarEvento(evento,propiedad,metodo,ev);
+            //Menú contextual
+            elemento.evento("contextmenu",function(ev) {
+                t.procesarEvento("contextmenu","menuContextual","menuContextual",ev);
+            });
+
+            //Modificación (solo campos)
+            if(this.campo) elemento.evento("change",function(ev) {
+                    t.procesarEvento("change","modificacion","modificacion",ev);
                 });
-            });
 
-            //Intro
-            elemento.evento("keydown",function(ev) {
-                if(ev.which==13) t.procesarEvento("intro","intro","intro",ev);
-            });
+            //Intro (solo campos)
+            if(this.campo) elemento.evento("keydown",function(ev) {
+                    if(ev.which==13) t.procesarEvento("intro","intro","intro",ev);
+                });
 
             //Click con botón medio
             elemento.evento("mousedown",function(ev) {

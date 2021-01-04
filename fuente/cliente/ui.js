@@ -495,6 +495,27 @@ var ui=new function() {
     };
 
     /**
+     * Elimina un componente dada su instancia. Equivalente a `componente.eliminar()`.
+     * @param {componente} componente - Componente a eliminar.
+     * @returns {ui}
+     */
+    this.eliminarComponente=function(componente) {
+        componente.eliminar(true);
+        return this;
+    };
+
+    /**
+     * Finaliza las tareas de limpieza tras la eliminación de un componente. Método de uso interno.
+     * @param {componente} componente 
+     * @returns {ui}
+     */
+    this.componenteEliminado=function(componente) {
+        var i=instanciasComponentes.indexOf(componente);
+        if(i>=0) delete instanciasComponentes[i];
+        return this;
+    };
+
+    /**
      * Devuelve las instancias de los componentes existentes.
      */
     this.obtenerInstanciasComponentes=function(vista) {

@@ -741,6 +741,14 @@ var componente=new function() {
         if(typeof descendencia==="undefined") descendencia=false;
 
         this.elemento.remover();
+        
+        //Eliminar todas las referencias
+        delete this.elemento;
+        delete this.contenedor;
+        delete this.elementoEditable;
+        delete this.elementoEventos;
+        delete this.campo;
+
         if(this.nombre) delete componentes[this.nombre];
         ui.eliminarInstanciaComponente(this.id);
 
@@ -751,6 +759,9 @@ var componente=new function() {
         this.obtenerHijos().forEach(function(hijo) {
             hijo.eliminar(true);
         });
+
+        //Avisar a UI
+        ui.componenteEliminado(this);
         
         return this;
     };

@@ -216,17 +216,19 @@
      * Construye un cuadro de diálogo.
      * @memberof ui
      * @param {Object} parametros - Parámetros.
-     * @param {(string|Node|Element)} [parametros[].cuerpo] - Elemento o HTML a incluir en el cuerpo.
-     * @param {Object[]} [parametros[].opciones] - Botones de acción a generar.
-     * @param {string} [parametros[].opciones[].etiqueta] - Etiqueta del botón.
-     * @param {string} [parametros[].opciones[].clase] - Clase CSS del botón.
-     * @param {boolean} [parametros[].opciones[].predeterminado] - Determina si es la acción predeterminada.
-     * @param {function} [parametros[].retorno] - Función de retorno al cerrar el diálogo (Resultado). Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
-     * @param {function} [parametros[].retornoAbierto] - Función de retorno al abrir el diálogo.
-     * @param {boolean} [parametros[].mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
-     * @param {boolean} [parametros[].eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
-     * @param {boolean} [parametros[].modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
-     * @param {boolean} [parametros[].sobreponer=false] - Si es true, se forzará que quede por encima de todo, incluso de la precarga.
+     * @param {(string|Node|Element)} [parametros.cuerpo] - Elemento o HTML a incluir en el cuerpo.
+     * @param {Object[]} [parametros.opciones] - Botones de acción a generar.
+     * @param {string} [parametros.opciones.etiqueta] - Etiqueta del botón.
+     * @param {string} [parametros.opciones.clase] - Clase CSS del botón.
+     * @param {boolean} [parametros.opciones.predeterminado] - Determina si es la acción predeterminada.
+     * @param {function} [parametros.retorno] - Función de retorno al cerrar el diálogo (Resultado). Recibirá como parámetro el índice del botón, o NULL si fue cancelado.
+     * @param {function} [parametros.retornoAbierto] - Función de retorno al abrir el diálogo.
+     * @param {boolean} [parametros.mostrarCerrar=false] - Determina si se debe mostrar la X para cancelar el diálogo.
+     * @param {boolean} [parametros.eliminar=false] - Determina si el diálogo se debe eliminar luego de cerrado.
+     * @param {boolean} [parametros.modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
+     * @param {boolean} [parametros.sobreponer=false] - Si es true, se forzará que quede por encima de todo, incluso de la precarga.
+     * @param {string} [parametros.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
@@ -244,7 +246,8 @@
             padreAnterior:null,
             abierto:false,
             modal:false,
-            sobreponer:false
+            sobreponer:false,
+            icono:null
         },parametros);
 
         var cuerpo=elem.querySelector(".dialogo-contenido");
@@ -255,6 +258,20 @@
             cuerpo.anexar(parametros.cuerpo);
         } else {
             cuerpo.establecerHtml(parametros.cuerpo);
+        }
+
+        if(parametros.icono) {
+            var src;
+            if(/^https?:\/\//.test(parametros.icono)||parametros.icono.substring(0,1)=="/") {
+                src=parametros.icono;
+            } else if(["pregunta","exclamacion","error","seguridad","informacion","ubicacion","audio","camara","notificacion"].indexOf(parametros.icono)>=0) {
+                src="recursos/img/"+parametros.icono+".png";
+            } else {
+                src="aplicacion/recursos/"+parametros.icono;
+            }
+            elem.querySelector(".dialogo-contenido")
+                .agregarClase("con-icono")
+                .anexar("<div class='dialogo-icono'><img src='"+src+"'></div>");
         }
 
         var obj={
@@ -679,12 +696,20 @@
      * Muestra un diálogo de alerta o información (equivalente a alert()).
      * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
-     * @param {function} [funcion] - Función de retorno.
-     * @param {string} [etiquetaBoton="Aceptar"] - Etiqueta del botón.
+     * @param {function} [funcion] - Función de retorno al cerrar el diálogo.
+     * @param {Object} [opciones] - Opciones adicionales.
+     * @param {string} [opciones.etiquetaBoton="Aceptar"] - Etiqueta del botón.
+     * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
      */
-    ui.alerta=function(mensaje,funcion,etiquetaBoton) {
+    ui.alerta=function(mensaje,funcion,opciones) {
         if(typeof funcion==="undefined") funcion=null;
-        if(typeof etiquetaBoton==="undefined") etiquetaBoton="Aceptar";
+        if(typeof opciones==="undefined") opciones={};
+
+        opciones=Object.assign({
+            etiquetaBoton:"Aceptar",
+            icono:null
+        },opciones);
 
         //TODO Integración con el plugin de Cordova de Foxtrot
         //TODO Integración con el cliente de escritorio
@@ -695,12 +720,13 @@
                 if(funcion) funcion();
             },
             opciones:[{
-                etiqueta:etiquetaBoton,
+                etiqueta:opciones.etiquetaBoton,
                 clase:"btn-primary",
                 predeterminado:true
             }],
             eliminar:true,
-            sobreponer:true
+            sobreponer:true,
+            icono:opciones.icono
         }));
 
         return ui;
@@ -710,35 +736,47 @@
      * Muestra un diálogo de confirmación.
      * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
-     * @param {function} [funcion] - Función de retorno. Recibirá un parámetro con la respuesta (true, false o null si fue cancelado).
-     * @param {boolean} [cancelar=false] - Mostrar opción "Cancelar".
-     * @param {string} [etiquetaSi="Si"] - Etiqueta del botón afirmativo.
-     * @param {string} [etiquetaNo="No"] - Etiqueta del botón negativo.
-     * @param {string} [etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
+     * @param {function} [funcion] - Función de retorno. Recibirá un parámetro con la respuesta (`true`, `false` o `null` si fue cancelado).
+     * @param {Object} [opciones] - Opciones adicionales.
+     * @param {boolean} [opciones.cancelar=false] - Mostrar opción "Cancelar".
+     * @param {string} [opciones.etiquetaSi="Si"] - Etiqueta del botón afirmativo.
+     * @param {string} [opciones.etiquetaNo="No"] - Etiqueta del botón negativo.
+     * @param {string} [opciones.etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
+     * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
+     * @param {number} [opciones.predeterminado=0] - Índice del botón predeterminado (`0` Si, `1` No, `2` Cancelar).
      */
-    ui.confirmar=function(mensaje,funcion,cancelar,etiquetaSi,etiquetaNo,etiquetaCancelar) {
+    ui.confirmar=function(mensaje,funcion,opciones) {
         if(typeof funcion==="undefined") funcion=null;
-        if(typeof cancelar==="undefined") cancelar=false;
-        if(typeof etiquetaSi==="undefined") etiquetaSi="Si";
-        if(typeof etiquetaNo==="undefined") etiquetaNo="No";
-        if(typeof etiquetaCancelar==="undefined") etiquetaCancelar="Cancelar";
+        if(typeof opciones==="undefined") opciones={};
+
+        opciones=Object.assign({
+            cancelar:false,
+            etiquetaSi:"Si",
+            etiquetaNo:"No",
+            etiquetaCancelar:"Cancelar",
+            icono:null,
+            predeterminado:0
+        },opciones);
 
         //TODO Integración con el plugin de Cordova de Foxtrot
         //TODO Integración con el cliente de escritorio
 
         var botones=[
             {
-                etiqueta:etiquetaSi,
+                etiqueta:opciones.etiquetaSi,
                 clase:"btn-primary",
-                predeterminado:true
+                predeterminado:opciones.predeterminado==0
             },
             {
-                etiqueta:etiquetaNo
+                etiqueta:opciones.etiquetaNo,
+                predeterminado:opciones.predeterminado==1
             }
         ];
         
-        if(cancelar) botones.push({
-                etiqueta:etiquetaCancelar
+        if(opciones.cancelar) botones.push({
+                etiqueta:opciones.etiquetaCancelar,
+                predeterminado:opciones.predeterminado==2
             });
 
         ui.abrirDialogo(ui.construirDialogo({
@@ -752,7 +790,8 @@
             },
             opciones:botones,
             eliminar:true,
-            sobreponer:true
+            sobreponer:true,
+            icono:opciones.icono
         }));
 
         return ui;

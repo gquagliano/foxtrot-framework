@@ -288,6 +288,25 @@ li.menu-separador::after {
     max-height: 75vh;
     word-break: break-word;
 }
+.dialogo .dialogo-contenido.con-icono {
+    position: relative;
+    padding-left: 3rem;
+}
+.dialogo .dialogo-contenido .dialogo-icono {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+    width: 3rem;
+    line-height: 0;
+    margin-top: 2px;
+}
+.dialogo .dialogo-contenido .dialogo-icono img {
+    display: inline-block;
+    max-width: 2rem;
+    margin: 0;
+}
 .dialogo .dialogo-opciones {
     margin-top: 21px;
     display: flex;

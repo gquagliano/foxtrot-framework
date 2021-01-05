@@ -118,6 +118,15 @@ class gestor {
      */
     public static function seleccionarAplicacion($nombre) {
         $_SESSION['_gestorAplicacion']=$nombre;
+
+        //Intentar actualizar la configuración para el dominio actual; esto solo funcionaría con la configuración por defecto
+        $config=file_get_contents(_raiz.'config.php');
+        $dominio=$_SERVER['HTTP_HOST'];
+        $dominio=str_replace('.','\.',$dominio);
+        if(preg_match('/(\'|")('.$dominio.')\1\s*?=>\s*?(\'|").+?\3/m',$config,$coincidencias)) {
+            $config=str_replace($coincidencias[0],'\''.$coincidencias[2].'\'=>\''.$nombre.'\'',$config);
+            file_put_contents(_raiz.'config.php',$config);
+        }
     }
 
     /**

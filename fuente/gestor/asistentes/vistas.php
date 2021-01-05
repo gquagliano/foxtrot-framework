@@ -105,7 +105,7 @@ class vistas extends asistente {
 
         $html=str_replace('/'.$nombre.'.css','/'.$nuevoNombre.'.css',$html);
         $html=str_replace('/'.$nombre.'.js','/'.$nuevoNombre.'.js',$html);
-        $html=str_replace('inicializar("'.$nombre.'")','inicializar("'.$nuevoNombre.'")',$html);
+        $html=str_replace('ui.inicializar("'.$nombre.'"','ui.inicializar("'.$nuevoNombre.'"',$html);
         $html=preg_replace('/class="([a-z0-9_\s-]+ )?'.$id.'-([a-z0-9_\s-]+)"/mi','class="$1'.$nuevoId.'-$2"',$html);
         $html=preg_replace('/data-fxid="'.$id.'-([a-z0-9-]+)"/mi','data-fxid="'.$nuevoId.'-$1"',$html);
         $html=procesarJson($html,$id,$nuevoId,$nombre,$nuevoNombre);

@@ -439,6 +439,9 @@
             ui.cerrarDesplegable(desplegableAbierto,false);
         }
     },
+    elemMousewheel=function(ev) {
+        ev.stopPropagation();
+    },
     docBackbuttonDesplegable=function(ev) {
         cerrarDesplegableAbierto();
         ev.preventDefault();
@@ -451,20 +454,22 @@
     /**
      * Remueve los manejadores de eventos relacionados con los desplegables.
      */
-    removerEventosDesplegable=function() {
-        window.removerEvento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
+    removerEventosDesplegable=function(elem) {
+        window.removerEvento("resize scroll wheel blur",cerrarDesplegableAbierto);
         document.removerEvento("backbutton",docBackbuttonDesplegable);
+        elem.removerEvento("wheel",elemMousewheel);
         ui.obtenerElementoSombra()
             .removerEvento("click",clickElemSombraDesplegable);
     },
     /**
      * Asigna los manejadores de eventos relacionados con los desplegables.
      */
-    establecerEventosDesplegable=function() {
-        removerEventosDesplegable();
+    establecerEventosDesplegable=function(elem) {
+        removerEventosDesplegable(elem);
 
-        window.evento("resize scroll mousewheel blur",cerrarDesplegableAbierto);
+        window.evento("resize scroll wheel blur",cerrarDesplegableAbierto);
         document.evento("backbutton",docBackbuttonDesplegable);
+        elem.evento("wheel",elemMousewheel);
             
         //Click en la sombra
         ui.obtenerElementoSombra()
@@ -633,7 +638,7 @@
             ui.mostrarSombra();
         }
 
-        establecerEventosDesplegable();
+        establecerEventosDesplegable(elem);
 
         desplegableAbierto=desplegable;
 
@@ -661,7 +666,7 @@
             fn();
         }
 
-        removerEventosDesplegable();
+        removerEventosDesplegable(elem);
 
         desplegableAbierto=null;
 

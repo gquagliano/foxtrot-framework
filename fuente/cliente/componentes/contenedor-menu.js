@@ -255,7 +255,7 @@ var componenteContenedorMenu=function() {
 
         this.elemento.agregarClase("menu-abierto");
 
-        document.evento("click mousewheel",clickDocumento,true);
+        document.evento("click wheel",clickDocumento,true);
         window.evento("blur",blur);
 
         return this;
@@ -267,7 +267,7 @@ var componenteContenedorMenu=function() {
      */
     this.cerrar=function() {
         t.elemento.removerClase("menu-abierto");
-        document.removerEvento("click mousewheel",clickDocumento,true);
+        document.removerEvento("click wheel",clickDocumento,true);
         window.removerEvento("blur",blur);
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();

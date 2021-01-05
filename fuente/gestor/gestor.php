@@ -66,7 +66,7 @@ class gestor {
      * @var object $json Objeto a almacenar.
      */
     public static function actualizarJsonAplicacion($json) {
-        file_put_contents(_raizAplicacion.'aplicacion.json',json_encode($json));
+        file_put_contents(_raizAplicacion.'aplicacion.json',formato::formatearJson($json));
     }
 
     /**

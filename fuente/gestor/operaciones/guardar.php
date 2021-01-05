@@ -21,6 +21,8 @@ $css=$_POST['css'];
 $html=$_POST['html'];
 $json=$_POST['json'];
 
+$json=formato::formatearJson($json);
+
 if($modo=='embebible') {
     //Si la vista es embebible, se guardan el JSON y el HTML por separado
     file_put_contents($rutaJson,$json);

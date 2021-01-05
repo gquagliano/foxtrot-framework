@@ -20,6 +20,7 @@ define('_produccion',_raizGlobal.'produccion/');
 define('_desarrollo',_raizGlobal.'desarrollo/');
 define('_embeber',_raizGlobal.'embeber/');
 
+include(__DIR__.'/../construir/formato.php');
 include(__DIR__.'/../construir/funciones.php');
 
 function prepararVariables() {
@@ -85,7 +86,7 @@ function crearVista() {
         'nombre'=>$nombreVista
     ]);
     //Solo si la vista es embebible, el JSON se guarda por separado
-    if($modo=='embebible') file_put_contents($rutaJson,$json);
+    if($modo=='embebible') file_put_contents($rutaJson,formato::formatearJson($json));
 
     //Crear HTML
     $codigo=file_get_contents(__DIR__.'/plantillas/'.$plantilla);
@@ -107,7 +108,7 @@ function crearVista() {
         'tipo'=>$modo,
         'cliente'=>$cliente
     ];
-    file_put_contents($rutaJsonApl,json_encode($aplicacion));
+    file_put_contents($rutaJsonApl,formato::formatearJson($aplicacion));
 }
 
 function crearControlador() {    
@@ -126,10 +127,12 @@ function crearControlador() {
     file_put_contents($rutaJs,$codigo);
 }
 
-function reemplazarVarJson($codigo,$json) {
+function reemplazarVarJson($codigo,$json,$formato=true) {
+    if($formato) $json=formato::formatearJson($json);
     $json=str_replace_array([
         '\\'=>'\\\\\\',
-        '\''=>'\\\''
+        '\''=>'\\\'',
+        "\n"=>"\\\n"
     ],$json);
 
     //Romper en múltiples líneas si es muy largo
@@ -187,8 +190,8 @@ function procesarVista($ruta,$vista,$version) {
             foreach($nombres as $nombre) {
                 $css.=file_get_contents(_desarrollo.$nombre);
             }
+            $css=formato::compilarCss($css);
             file_put_contents($rutaCssFoxtrot,$css);
-            comprimirCss($rutaCssFoxtrot);
         }
 
         //Reemplazar primer coincidencia y remover las demás
@@ -224,7 +227,9 @@ function procesarVista($ruta,$vista,$version) {
         }
 
         //Comprimir todo
-        comprimirCss($destino);
+        $css=file_get_contents($destino);
+        $css=formato::compilarCss($css);
+        file_put_contents($destino,$css);
 
         $nombre=basename($destino);
 
@@ -250,24 +255,7 @@ function procesarVista($ruta,$vista,$version) {
         $html=str_replace($tag,$tagNuevo,$html);
     }
 
-    file_put_contents($ruta,comprimirHtml($html));
-}
-
-function comprimirHtml($html) {
-    return $html;
-    //Compresión básica
-    $html=preg_replace([
-        '/\>[^\S ]+/s',
-        '/[^\S ]+\</s',
-        '/(\s)+/s',
-        '/<!--(.|\s)*?-->/'
-    ],[
-        '>',
-        '<',
-        '\\1',
-        ''
-    ],$html);
-    return $html;
+    file_put_contents($ruta,formato::comprimirHtml($html));
 }
 
 function eliminarDirectoriosVacios($ruta) {

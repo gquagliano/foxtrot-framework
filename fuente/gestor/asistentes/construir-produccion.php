@@ -172,7 +172,7 @@ class construirProduccion extends asistente {
         copiar(_desarrollo.$rutaAplicacion.'servidor/','{*,.[!.]*,..?*}',_produccion.$rutaAplicacion.'servidor/');
 
         //Copiar metadatos comprimido
-        file_put_contents(_produccion.$rutaAplicacion.'aplicacion.json',json_encode(json_decode(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json'))));
+        file_put_contents(_produccion.$rutaAplicacion.'aplicacion.json',formato::comprimirJson(file_get_contents(_desarrollo.$rutaAplicacion.'aplicacion.json')));
 
         //Limpiar el css
         $rutaCssCombinado=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
@@ -211,9 +211,9 @@ class construirProduccion extends asistente {
                     $ruta=_desarrollo.$rutaAplicacion.'cliente/vistas/'.$nombre.'.';
                     
                     $rutaHtml=$ruta.(file_exists($ruta.'php')?'php':'html');
-                    $html=str_replace(["\r","\n",'"'],['',' ','\\"'],comprimirHtml(file_get_contents($rutaHtml)));
+                    $html=str_replace(["\r","\n",'"'],['',' ','\\"'],formato::comprimirHtml(file_get_contents($rutaHtml)));
 
-                    $json=str_replace('"','\\"',file_get_contents($ruta.'json'));
+                    $json=str_replace('"','\\"',formato::comprimirJson(file_get_contents($ruta.'json')));
 
                     $js.=PHP_EOL.'_vistasEmbebibles["'.$nombre.'"]={"html":"'.$html.'","json":"'.$json.'"};';
                 }
@@ -222,7 +222,7 @@ class construirProduccion extends asistente {
             $archivos[]=$temp;
         }
 
-        compilarJs($archivos,_produccion.$rutaAplicacion.'cliente/aplicacion.js',$param->depuracion);
+        formato::compilarJs($archivos,_produccion.$rutaAplicacion.'cliente/aplicacion.js',!$param->depuracion);
 
         unlink($temp);
         
@@ -245,6 +245,8 @@ class construirProduccion extends asistente {
             $archivo=_produccion.$rutaAplicacion.'cliente/vistas/'.$nombre.'.';
             $archivo.=file_exists($archivo.'php')?'php':'html';
             procesarVista($archivo,$vista,$param->version);
+            //Comprimir json
+            if(file_exists($archivo.'.json')) file_put_contents($archivo.'.json',formato::comprimirJson(file_get_contents($archivo,'.json')));
         }
 
         if($param->embebibles) {
@@ -267,9 +269,17 @@ class construirProduccion extends asistente {
             //Volver a comprimir el CSS
             //TODO Comprimir CSS solo una vez
             $ruta=_produccion.$rutaAplicacion.'recursos/css/aplicacion.css';
-            if(file_exists(_produccion.$rutaAplicacion.'recursos/css/cordova.css')) comprimirCss($ruta);
+            if(file_exists($ruta)) {
+                $css=file_get_contents($ruta);
+                $css=formato::compilarCss($css);
+                file_put_contents($ruta,$css);
+            }
             $ruta=_produccion.$rutaAplicacion.'recursos/css/cordova.css';
-            if(file_exists(_produccion.$rutaAplicacion.'recursos/css/cordova.css')) comprimirCss($ruta);
+            if(file_exists($ruta)) {
+                $css=file_get_contents($ruta);
+                $css=formato::compilarCss($css);
+                file_put_contents($ruta,$css);
+            }
         }
         
         //Copiar directorio recursos
@@ -287,9 +297,11 @@ class construirProduccion extends asistente {
                 $rutaFinal=preg_replace('#^'.str_replace('\\','\\\\',_desarrollo).'#','',$archivo);
                 if(in_array($rutaFinal,$archivosCssCombinados)||in_array($rutaFinal,$archivosCssCombinadosCordova)||!file_exists($destino)) continue;
                 copy($archivo,$destino);
-                comprimirCss($destino);
+                $css=file_get_contents($destino);
+                $css=formato::compilarCss($css);
+                file_put_contents($destino,$css);
             } elseif($ext=='.js') {
-                compilarJs($archivo,$destino,$param->depuracion);
+                formato::compilarJs($archivo,$destino,!$param->depuracion);
             } else {
                 //Imágenes, etc.
                 copy($archivo,$destino);

@@ -43,7 +43,7 @@ class vistas extends asistente {
             if($clave==$nombre)
                 unset($json->vistas->$clave);
 
-        file_put_contents($rutaJson,json_encode($json));
+        file_put_contents($rutaJson,formato::formatearJson($json));
 
         //Eliminar el controlador
         $archivo=$ruta.'cliente/controladores/'.$nombre.'.js';
@@ -183,6 +183,6 @@ class vistas extends asistente {
         if($json) file_put_contents($nuevaRutaJson,$json);
 
         $jsonApl->vistas->$nuevoNombre=clone $jsonApl->vistas->$nombre;
-        file_put_contents($rutaJsonApl,json_encode($jsonApl));
+        file_put_contents($rutaJsonApl,formato::formatearJson($jsonApl));
     }
 }

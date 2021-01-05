@@ -96,7 +96,7 @@ class crearAplicacion extends asistente {
         //Json
         $json=json_decode(file_get_contents($dir.'aplicacion.json'));
         $json->tema=$parametros->tema;
-        file_put_contents($ruta.'aplicacion.json',json_encode($json));
+        file_put_contents($ruta.'aplicacion.json',formato::formatearJson($json));
 
         $reemplazar=[
             '{nombre}'=>$parametros->nombre,

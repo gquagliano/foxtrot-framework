@@ -13,6 +13,7 @@ define('_gestor',_raiz.'gestor/');
 define('_fuente',_raiz.'fuente/');
 define('_desarrollo',_raiz.'desarrollo/');
 
+include(__DIR__.'/formato.php');
 include(__DIR__.'/funciones.php');
 
 set_time_limit(3600);
@@ -73,8 +74,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         $css.=file_get_contents($arch);
     }
     $ruta=_desarrollo.'recursos/css/foxtrot.css';
+    $css=formato::compilarCss($css);
     file_put_contents($ruta,$css);
-    comprimirCss($ruta);
 
     //Temas (no se combinan hasta pasar a producción/embebible)
     $archivos=glob(_fuente.'recursos/css/tema-*');
@@ -91,8 +92,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     $archivos=array_merge($archivos,buscarArchivos(_fuente.'recursos/componentes/css/','*.edicion.css'));
     foreach($archivos as $arch) $css.=file_get_contents($arch);
     $ruta=_gestor.'gestor.css';
+    $css=formato::compilarCss($css);
     file_put_contents($ruta,$css);
-    comprimirCss($ruta);
 
     ////Módulos (se copian tal cual)
 
@@ -120,8 +121,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     compilarFoxtrotJs(_desarrollo.'cliente/foxtrot.js',_depuracion);
     
     //Gestor
-    compilarJs(_fuente.'gestor/editor.js',_gestor.'editor.js',_depuracion);
-    compilarJs(_fuente.'gestor/gestor.js',_gestor.'gestor.js',_depuracion);
+    formato::compilarJs(_fuente.'gestor/editor.js',_gestor.'editor.js',!_depuracion);
+    formato::compilarJs(_fuente.'gestor/gestor.js',_gestor.'gestor.js',!_depuracion);
 
     //Config.php y .htaccess
     $ruta=$_REQUEST['ruta'];

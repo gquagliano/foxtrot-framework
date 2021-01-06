@@ -22,7 +22,7 @@ Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
         window.onload=function() {
             var h=window.location.href,
                 urlBase;
-            if(h.indexOf("?")) h=h.substring(0,h.indexOf("?"));
+            if(h.indexOf("?")>0) h=h.substring(0,h.indexOf("?"));
             urlBase=h.substr(0,h.lastIndexOf("/")+1);
             localStorage.setItem("_urlBase",urlBase);
             window.location.href="aplicaciones/"+_nombreApl+"/cliente/vistas/"+_vistaInicial;

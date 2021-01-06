@@ -244,20 +244,23 @@ class foxtrot {
             }
 
 	        //Controladores privados (importar completo)
-	        self::incluirDirectorio(_controladoresServidorAplicacion);
-        }
-
-		if(self::$aplicacion) {
-	        if(file_exists(_servidorAplicacion.'aplicacion.php')) {
-	            $cls=_espacioApl.'aplicacion';
-	            self::$instanciaAplicacion=new $cls;
-	        }
-
-	        if(file_exists(_servidorAplicacion.'aplicacion.pub.php')) {
+            self::incluirDirectorio(_controladoresServidorAplicacion);
+            
+	        if(file_exists(_servidorAplicacion.'aplicacion.pub.php'))
 	            include(_servidorAplicacion.'aplicacion.pub.php');
-	            $cls=_espacioApl.'publico\\aplicacion';
-	            self::$instanciaAplicacionPublico=new $cls;
-	        }
+        }
+    }
+
+    /**
+     * 
+     */
+    protected static function instanciarAplicacion() {
+		if(self::$aplicacion) {
+            $cls=_espacioApl.'aplicacion';
+            if(class_exists($cls)) self::$instanciaAplicacion=new $cls;
+
+	        $cls=_espacioApl.'publico\\aplicacion';
+	        if(class_exists($cls)) self::$instanciaAplicacionPublico=new $cls;
 	    }
     }
 
@@ -329,8 +332,6 @@ class foxtrot {
         self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
 	    //Si no quedó definido, utilizar el predeterminado
         if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
-
-        self::$enrutador->establecerSolicitud($uri,$params);
     }
 
     /**
@@ -353,10 +354,12 @@ class foxtrot {
         //foxtrot::inicializar() carga la aplicación utilizando el enrutador, o el parámetro -apl si es CLI
         if($aplicacion!==false) self::cargarAplicacion($aplicacion);
         
-        //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella
+        //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella 
         if(!self::$cli) sesion::inicializar();
 
         self::inicializarEnrutador();
+
+        if($aplicacion!==false) self::instanciarAplicacion();
     }
 
     /**
@@ -399,6 +402,8 @@ class foxtrot {
      * 
      */
     public static function ejecutar() {
+        self::$enrutador->establecerSolicitud($uri,$params);
+
         if(self::$enrutador->obtenerError()) self::error();
 
         $redir=self::$enrutador->obtenerRedireccionamiento();

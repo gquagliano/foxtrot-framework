@@ -74,9 +74,13 @@ class construirCordova extends asistente {
             <input type="checkbox" class="custom-control-input" name="embebibles" checked id="ce-embebibles">
             <label class="custom-control-label" for="ce-embebibles">Integrar vistas embebibles</label>
         </div>
-        <div class="custom-control custom-checkbox mb-3">
+        <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="limpiar" id="ce-limpiar">
             <label class="custom-control-label" for="ce-limpiar">Limpiar directorios de salida (<em>&iexcl;Incluso <code>www</code>!</em>)</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" name="clean" id="ce-clean">
+            <label class="custom-control-label" for="ce-clean">Ejecutar <code>cordova clean</code></label>
         </div>
 <?php
         if(!function_exists('shell_exec')) {
@@ -155,6 +159,12 @@ class construirCordova extends asistente {
                 
                 $pl=$param->plataforma;
                 if(!$pl) $pl='android';
+
+                if($param->clean) {
+                    $comando='cordova clean '.escapeshellarg($pl).' 2>&1';
+                    $o=shell_exec($comando);
+                    registroExec($comando,$o);
+                }
 
                 $comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
                 $o=shell_exec($comando);

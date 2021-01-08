@@ -94,12 +94,10 @@ class vistas extends asistente {
         $nuevoId=str_replace('/','-',$nuevoNombre);
 
         function procesarJson($codigo,$id,$nuevoId,$nombre,$nuevoNombre) {    
-            $codigo=preg_replace('/"id":"'.$id.'-([a-z0-9-]+)"/mi','"id":"'.$nuevoId.'-$1"',$codigo);
-            $codigo=preg_replace('/"selector":".'.$id.'-([a-z0-9-]+)"/i','"selector":".'.$nuevoId.'-$1"',$codigo);
+            $codigo=preg_replace('/"id":\s*"'.$id.'-([a-z0-9-]+)"/msi','"id":"'.$nuevoId.'-$1"',$codigo);
+            $codigo=preg_replace('/"selector":\s*".'.$id.'-([a-z0-9-]+)"/si','"selector":".'.$nuevoId.'-$1"',$codigo);
             //En el JSON, el nombre puede encontrarse con las barras escapadas (\/) como sin escapar (/)
-            //TODO Corregir. Esto reemplaza también los componentes cuyos nombres coincidan con el nombre de la vista...
-            $codigo=str_replace('"nombre":"'.$nombre.'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
-            $codigo=str_replace('"nombre":"'.str_replace('/','\\/',$nombre).'"','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
+            $codigo=preg_replace('/"nombre":\s*"('.$nombre.'|'.str_replace('/','\\/',$nombre).')"/sm','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
             return $codigo;
         }
 

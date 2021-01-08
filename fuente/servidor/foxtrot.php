@@ -321,15 +321,28 @@ class foxtrot {
     }
 
     /**
+     * Devuelve un objeto `[uri,parametros]` con la URI actual y los parámetros de la solicitud, respectivamente.
+     * @return object
+     */
+    protected static function obtenerSolicitud() {
+        $res=(object)[];
+
+        $res->uri=null;
+        if(!self::$cli) $res->uri=self::prepararUri($_SERVER['REQUEST_URI']);
+
+        $res->params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+
+        return $res;
+    }
+
+    /**
      * Prepara de enrutador para la ejecución.
      */
     protected static function inicializarEnrutador() {
-        $uri=null;
-        if(!self::$cli) $uri=self::prepararUri($_SERVER['REQUEST_URI']);
-        $params=self::$cli?solicitud::obtenerParametros():solicitud::obtenerCuerpo();
+        $sol=self::obtenerSolicitud();
         
         //Crear el enrutador
-        self::fabricarEnrutador(configuracion::$enrutador,$uri,$params);
+        self::fabricarEnrutador(configuracion::$enrutador,$sol->uri,$sol->params);
 	    //Si no quedó definido, utilizar el predeterminado
         if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
     }
@@ -402,7 +415,8 @@ class foxtrot {
      * 
      */
     public static function ejecutar() {
-        self::$enrutador->establecerSolicitud($uri,$params);
+        $sol=self::obtenerSolicitud();
+        self::$enrutador->establecerSolicitud($sol->uri,$sol->params);
 
         if(self::$enrutador->obtenerError()) self::error();
 

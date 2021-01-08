@@ -132,6 +132,7 @@ function reemplazarVarJson($codigo,$json,$formato=true) {
     $json=str_replace_array([
         '\\'=>'\\\\\\',
         '\''=>'\\\'',
+        "\r"=>'',
         "\n"=>"\\\n"
     ],$json);
 

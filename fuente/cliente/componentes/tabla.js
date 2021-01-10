@@ -96,6 +96,8 @@ var componenteTabla=function() {
     this.actualizar=function() {
         this.clasePadre.actualizar.call(this,false);
 
+        if(ui.enModoEdicion()) return;
+
         //Almacenar dónde está el foco
         var enfocables=this.elemento.buscarEnfocables(),    
             foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target),

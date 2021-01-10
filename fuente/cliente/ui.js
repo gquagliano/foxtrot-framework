@@ -343,9 +343,9 @@ var ui=new function() {
     this.registrarAplicacion=function(funcion) {
         //En este caso no puede haber más de una clase, por lo que no tiene sentido llevar un almacén de funciones, instanciamos directamente
         instanciaAplicacion=aplicacion.fabricarAplicacion(funcion);
-        instanciaAplicacion.inicializar()
-            //Evento
-            .inicializado();
+        instanciaAplicacion.inicializar();
+        //Evento
+        instanciaAplicacion.inicializado();
         return this;
     };
 
@@ -488,8 +488,8 @@ var ui=new function() {
         if(controlador) controlador.agregarComponente(obj); //el controlador puede no existir, por ejemplo en el editor
 
         //Evento
-        obj.inicializar()
-            .inicializado();
+        obj.inicializar();
+        obj.inicializado();
 
         return obj;
     };
@@ -1013,9 +1013,9 @@ var ui=new function() {
         instanciasControladores[nombre]=obj;
         if(principal) instanciaControladorPrincipal=obj;
         
-        obj.inicializar()
-            //Evento
-            .inicializado();
+        obj.inicializar();
+        //Evento
+        obj.inicializado();
         
         return obj;
     };

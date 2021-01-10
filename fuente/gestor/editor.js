@@ -851,12 +851,15 @@ var editor=new function() {
         doc.querySelectorAll(".foxtrot-arrastrable-arrastrando-sobre-hijo").removerClase("foxtrot-arrastrable-arrastrando-sobre-hijo");
     };
 
-    this.prepararComponenteInsertado=function(obj) {      
+    this.prepararComponenteInsertado=function(obj,actualizar) {
         var elem=obj.obtenerElemento(),
             cont=obj.obtenerContenedor(),
             nombre=obj.componente,
             id=obj.obtenerId(),
-            arrastrable=obj.esArrastrable();
+            arrastrable=obj.esArrastrable(),
+            padre=obj.obtenerPadre();
+       
+        obj.insertado();
 
         //Creamos el destino en todos los elementos (no solo los contenedores) para poder mostrar las zonas de
         //soltado alrededor del componente (componenteSoltado validará si puede recibir hijos.)
@@ -894,6 +897,9 @@ var editor=new function() {
             });
         }
 
+        //Actualizar destino
+        if(typeof actualizar!=="undefined"&&actualizar&&padre) padre.actualizar();
+
         return this;
     };
 
@@ -927,14 +933,8 @@ var editor=new function() {
         } else if(ubicacion=="despues") {
             destino.insertarDespues(elem);            
         }
-        
-        obj.insertado();
 
-        this.prepararComponenteInsertado(obj);
-
-        //Actualizar destino
-        var padre=obj.obtenerPadre();
-        if(padre) padre.actualizar();
+        this.prepararComponenteInsertado(obj,true);
         
         cambiosSinGuardar=true;
 
@@ -1266,11 +1266,7 @@ var editor=new function() {
             //Crear componentes
             datos.componentes.forEach(function(obj) {
                 var comp=ui.crearComponente(obj,nombreVista);
-
-                //Eventos
-                comp.editor();
-                comp.insertado();
-                //TODO ¿Deberían invocarse aunque sean heredados?
+                self.prepararComponenteInsertado(comp,true);
             });
 
             //Actualizar destino

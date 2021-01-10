@@ -295,7 +295,7 @@ class construirProduccion extends asistente {
             if($ext=='.css') {
                 //Omitir archivos que se hayan integrado a aplicacion.css
                 $rutaFinal=preg_replace('#^'.str_replace('\\','\\\\',_desarrollo).'#','',$archivo);
-                if(in_array($rutaFinal,$archivosCssCombinados)||in_array($rutaFinal,$archivosCssCombinadosCordova)||!file_exists($destino)) continue;
+                if(in_array($rutaFinal,$archivosCssCombinados)||in_array($rutaFinal,$archivosCssCombinadosCordova)) continue;
                 copy($archivo,$destino);
                 $css=file_get_contents($destino);
                 $css=formato::compilarCss($css);

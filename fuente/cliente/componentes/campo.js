@@ -42,6 +42,10 @@ var componenteCampo=function() {
             relleno:{
                 etiqueta:"Texto de relleno",
                 adaptativa:false
+            },
+            largoMaximo:{
+                etiqueta:"Largo máximo",
+                adaptativa:false
             }
         },
         "Formato":{
@@ -189,6 +193,15 @@ var componenteCampo=function() {
                 this.campo.propiedad("disabled",true);
             } else {
                 this.campo.removerAtributo("disabled");
+            }
+            return this;
+        }
+
+        if(propiedad=="largoMaximo") {
+            if(valor) {
+                this.campo.atributo("maxlength",valor);
+            } else {
+                this.campo.removerAtributo("maxlength");
             }
             return this;
         }

@@ -18,6 +18,9 @@ class resultado {
 
 	var $filas=0;
 
+	protected $indice=0;
+	protected $filasIgnoradas=[];
+
     /**
      * 
      */
@@ -28,6 +31,8 @@ class resultado {
 
     /**
      * Establece el objeto resultado con el que se va a trabajar.
+	 * @param mysqli_result $r
+	 * @return resultado
      */
 	public function establecer($r) {
 		$this->stmt=null;
@@ -40,6 +45,8 @@ class resultado {
 
     /**
      * Establece el objeto STMT con el que se va a trabajar.
+	 * @param mysqli_stmt $r
+	 * @return resultado
      */
 	public function establecerStmt($r) {
 		$this->stmt=true;
@@ -61,62 +68,100 @@ class resultado {
 
     /**
      * Devuelve la fila actual como objeto y avanza el resultado.
+	 * @return object|null
      */
-	public function aObjeto() {
+	public function aObjeto() {		
 		if(!$this->r) return null;
-
-		if(!$this->stmt) return $this->r->fetch_object();
 		
-		if(!$this->r->fetch()) return null;
+		$obj=null;
 
-		$obj=(object)[];
-		foreach($this->columnas as $c=>$v) $obj->$c=$v;
+		while(1) {
+			if(!$this->stmt) {
+				$obj=$this->r->fetch_object();
+				if(!$obj) return null;
+			} else {
+				if(!$this->r->fetch()) return null;
+				$obj=(object)[];
+				foreach($this->columnas as $c=>$v) $obj->$c=$v;
+			}
+
+			$this->indice++;
+
+			if(!in_array($this->indice-1,$this->filasIgnoradas)) break;
+		}
+
 		return $obj;
 	}
 
     /**
      * Devuelve la fila actual como arreglo asociativo y avanza el resultado.
+	 * @return array|null
      */
 	public function aArray() {
-		if(!$this->r) return null;
-
-		if(!$this->stmt) return $this->r->fetch_assoc();
-
-		if(!$this->r->fetch()) return null;
-		return $this->columnas;
+		$obj=$this->aObjeto();
+		if(!$obj) return null;
+		return (array)$obj;
 	}
 
     /**
      * Devuelve el valor de un campo de la fila actual.
+	 * @return mixed
      */
 	public function campo($nombre) {
-		return $this->aArray()[$nombre];
+		$arr=$this->aArray();
+		if(!$arr) return null;
+		return $arr[$nombre];
 	}
 
     /**
      * Mueve el puntero al número de fila especificado.
+	 * @param int $numero Número de fila de destino.
+	 * @return resultado
      */
 	public function irA($numero) {
+		$this->indice=$numero;
 		$this->r->data_seek($numero);
 		return $this;
 	}
 
     /**
-     * Mueve el puntero al primer resultado.
+     * Devuelve el primer resultado, moviendo el puntero (vuelve al comienzo y avanza la posición al segundo resultado).
+	 * @return object|null
      */
 	public function primero() {
+		$this->irA(0);
+		return $this->siguiente();
+	}
+
+    /**
+     * Mueve el puntero al primer resultado (alias de `irA(0)`).
+	 * @return resultado
+     */
+	public function rebobinar() {
 		return $this->irA(0);
 	}
 
     /**
-     * Devuelve la fila actual como objeto y avanza el resultado (alias de aObjeto().)
+     * Devuelve la fila actual como objeto y avanza el resultado (alias de `aObjeto()`.)
+	 * @return resultado
      */
 	function siguiente() {
 		return $this->aObjeto();
-    }
+	}
+	
+	/**
+	 * Remueve la última fila recuperada del set de resultados actual.
+	 * @return resultado
+	 */
+	function remover() {
+		//En realidad utilizamos una bandera para ignorar la fila la próxima vez que se solicite
+		$this->filasIgnoradas[]=$this->indice-1;
+		return $this;
+	}
     
     /**
      * Devuelve el número de filas en el resultado actual.
+	 * @return int
      */
     public function obtenerNumeroFilas() {
         if(!$this->r) return 0;

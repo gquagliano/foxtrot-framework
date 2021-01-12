@@ -569,15 +569,17 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
 }
 .foxtrot-gestor .arbol {
     margin: 0;
+    margin-left: -.45rem;
     padding: 0;
     list-style-type: none;
+    overflow-x: auto;
 }
 .foxtrot-gestor .arbol li {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
     width: 100%;
+    cursor: default;
 }
 .foxtrot-gestor .arbol li>label,
 .foxtrot-gestor .arbol li>div {
@@ -593,6 +595,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
 .foxtrot-gestor .arbol .directorio {
     padding-left: 2.4rem;
     position: relative;
+    flex-wrap: wrap;
 }
 .foxtrot-gestor .arbol .directorio::before {
     width: 1px;
@@ -605,7 +608,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
 }
 .foxtrot-gestor .arbol .directorio-etiqueta {
     margin-left: -2.4rem;
-    flex: 0 0 100%;
+    flex: 0 0 auto;
     white-space: nowrap;
     overflow: hidden;
     cursor: pointer;
@@ -618,6 +621,7 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
     background-size: 20px;
     width: 20px;
     height: 20px;
+    margin-left: .45rem;
     margin-right: 1.1rem;
     vertical-align: sub;
 }
@@ -630,12 +634,13 @@ body.foxtrot-modo-edicion.foxtrot-bordes .foxtrot-menu-editor ul {
     text-overflow: ellipsis;
     flex: 1;
     margin: 0;
-    margin-left: -.5rem;
     padding-left: .5rem;
     cursor: pointer;
+    min-width: 50px;
 }
 .foxtrot-gestor .arbol .opciones {
     flex-grow: 0;
+    white-space: nowrap;
 }
 .foxtrot-gestor .arbol .opciones .btn {
     margin: 0;

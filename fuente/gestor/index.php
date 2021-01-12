@@ -48,7 +48,7 @@ foreach(gestor::obtenerAplicaciones() as $apl) echo '<option value="'.$apl.'" '.
     <main>
         <div class="container">
             <div class="row">
-                <div class="col-12 pb-5">
+                <div class="col-6 pb-5">
 
 <?php
 if(!count(gestor::obtenerAplicaciones())) {
@@ -106,10 +106,10 @@ if(!count(gestor::obtenerAplicaciones())) {
                         <li class="clearfix">
                             <label class="vista" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="<?=$item->ruta?>"><?=$item->item?></label>
                             <div class="opciones">
-                                <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
                                 <?php if($item->url) { ?>
                                 <button class="btn btn-sm" onclick="gestor.ejecutarVista('<?=$item->url?>')" title="Ejecutar"><img src="img/ejecutar.png"></button>
                                 <?php } ?>
+                                <button class="btn btn-sm" onclick="gestor.abrirEditor('<?=$item->ruta?>')" title="Abrir editor"><img src="img/editar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.renombrarVista('<?=$item->ruta?>')" title="Renombrar"><img src="img/renombrar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.duplicarVista('<?=$item->ruta?>')" title="Duplicar"><img src="img/copiar.png"></button>
                                 <button class="btn btn-sm" onclick="gestor.eliminarVista('<?=$item->ruta?>')" title="Eliminar"><img src="img/eliminar.png"></button>

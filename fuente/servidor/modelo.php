@@ -63,6 +63,7 @@ class modelo {
     protected $consultaLimpiarRelacionados=true;
     protected $consultaForzarRelaciones=false;
     protected $consultaForzarRelacionesCampos=[];
+    protected $consultaContrasena=[];
     protected $usarValoresPublicos=false;
 
     protected $consultaPreparada=false;
@@ -127,6 +128,8 @@ class modelo {
                 if($campo->tipo=='relacional') {
                     //Mantener null por defecto
                     //if($campo->relacion=='1:n') $obj->$nombre=null;
+                } elseif($campo->contrasena) {
+                    //Omitir
                 } else {
                     $obj->$nombre=$fila->$aliasCampo;
                 }
@@ -209,6 +212,7 @@ class modelo {
                 'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados,
                 'consultaForzarRelaciones'=>$this->consultaForzarRelaciones,
                 'consultaForzarRelacionesCampos'=>$this->consultaForzarRelacionesCampos,
+                'consultaContrasena'=>$this->consultaContrasena,
                 'usarValoresPublicos'=>$this->usarValoresPublicos
             ]);
             //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
@@ -255,6 +259,7 @@ class modelo {
         $this->consultaCantidad=null;
         $this->consultaOrden=[];
         $this->consultaValores=null;
+        $this->consultaContrasena=[];
 
         $this->consultaPreparada=false;
         $this->reutilizarConsultaPreparada=false;
@@ -905,6 +910,12 @@ class modelo {
                     $busqueda=$this->generarConsultaBusquedaFonetica($nombre,$valor);
                     $sql[]=$busqueda->sql;
                     foreach($busqueda->parametros as $param) $parametros[]=$param;
+                } elseif($campo&&$campo->contrasena) {
+                    //Omitir en el SQL
+                    $this->consultaContrasena[]=(object)[
+                        'campo'=>'__'.$this->alias.'_'.$clave,
+                        'valor'=>$valor
+                    ];
                 } else {
                     $sql[]=$nombre.$operador.'?';
                     $parametros[]=$valor;
@@ -1127,6 +1138,16 @@ class modelo {
         }
         if(count($this->parametros)) $this->bd->asignar($this->parametros,implode('',$this->tipos));
         $this->resultado=$this->bd->ejecutar();
+
+        //Validar contraseñas
+        if($this->resultado&&count($this->consultaContrasena)) {
+            while($fila=$this->resultado->siguiente()) {
+                foreach($this->consultaContrasena as $contrasena) {
+                    if(!password_verify($contrasena->valor,$fila->{$contrasena->campo})) $this->resultado->remover();
+                }
+            }
+            $this->resultado->rebobinar();
+        }
 
         $this->ultimoId=$this->bd->obtenerId();
         if($operacion=='insertar') $this->consultaValores->id=$this->ultimoId;
@@ -1823,6 +1844,8 @@ class modelo {
             }
 
             //if(!$campo->html&&preg_match('/^(cadena|texto)/',$campo->tipo)) $valor=htmlspecialchars($valor,ENT_COMPAT,'utf-8');
+
+            if($campo->contrasena) $valor=password_hash($valor,PASSWORD_DEFAULT);
 
             $valores[$nombre]=$valor;
 

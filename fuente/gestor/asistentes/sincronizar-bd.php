@@ -108,6 +108,8 @@ class sincronizarBd extends asistente {
         if($tipo=='fecha') return 'DATETIME';
 
         if($parametros->busqueda) return 'VARCHAR(255) NOT NULL DEFAULT \'\'';
+
+        if($parametros->contrasena) return 'TEXT';
         
         if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)) {
             return 'VARCHAR('.$coincidencias[1].') NULL DEFAULT '.$predeterminado;
@@ -164,6 +166,11 @@ class sincronizarBd extends asistente {
             $predeterminado='';
         }
 
+        if($parametros->contrasena) {
+            if(!preg_match('/text/i',$campoBd->Type)) return false;
+            $predeterminado='';
+        }
+
         if($tipo=='texto'&&!preg_match('/text/i',$campoBd->Type)) return false;
         
         if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)&&!preg_match('/varchar\('.$coincidencias[1].'\)/i',$campoBd->Type)) return false;
@@ -187,8 +194,6 @@ class sincronizarBd extends asistente {
         }
 
         if(preg_match('/fecha/',$tipo,$coincidencias)&&!preg_match('/datetime/i',$campoBd->Type)) return false;
-
-        if(preg_match('/busqueda/',$tipo,$coincidencias)&&!preg_match('/varchar/i',$campoBd->Type)) return false;
         
         if($predeterminado!==$campoBd->Default) return false;
 

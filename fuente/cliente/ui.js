@@ -42,7 +42,9 @@ var ui=new function() {
         instanciaEnrutador=null,
         instanciaAplicacion=null,
         urlModificada=0,
-        jsonVistaPrincipal=null;
+        jsonVistaPrincipal=null,
+        confirmarSalidaActivado=false,
+        confirmarSalidaMensaje;
 
     ////Elementos del dom
 
@@ -1271,9 +1273,20 @@ var ui=new function() {
 
         //Si se solicitó abrir en una nueva ventana, el efecto es el mismo que el de irA()
         if(nuevaVentana) return this.irA(ruta,true);
-        
-        var destino=this.procesarUrl(ruta);
-        this.cambiarUrl(destino.url,{vista:destino.vista});
+
+        var fn=function() {        
+            var destino=ui.procesarUrl(ruta);
+            ui.cambiarUrl(destino.url,{vista:destino.vista});
+        };
+
+        if(confirmarSalidaActivado) {
+            //Confirmar navegación (onbeforeunload no tiene efecto al cambiar la URL)
+            ui.confirmar(confirmarSalidaMensaje,function(r) {
+                if(r) fn();
+            },{icono:"pregunta"});
+        } else {
+            fn();
+        }     
         
         return this;
     };
@@ -1283,12 +1296,23 @@ var ui=new function() {
      * @returns {ui}
      */
     this.volver=function() {
-        history.go(-1);
+        var fn=function() {
+            history.go(-1);
 
-        urlModificada--;
-        if(urlModificada<0) urlModificada=0;
+            urlModificada--;
+            if(urlModificada<0) urlModificada=0;
 
-        procesarOnPopState();
+            procesarOnPopState();
+        };
+
+        if(urlModificada>0&&confirmarSalidaActivado) {
+            //Confirmar navegación (onbeforeunload no tiene efecto si ha cambiado la URL)
+            ui.confirmar(confirmarSalidaMensaje,function(r) {
+                if(r) fn();
+            },{icono:"pregunta"});
+        } else {
+            fn();
+        }        
 
         return this;
     };
@@ -1333,6 +1357,24 @@ var ui=new function() {
             .anexarA(body);
         a.click();
         a.remover();
+        return this;
+    };
+
+    /**
+     * Activa o desactiva el diálogo de confirmación antes de navegar a otra URL o salir de la vista actual.
+     * @param {boolean} [activar=true] - Activa (`true`) o desactiva (`false`) este comportamiento.
+     * @param {string} [mensaje="¿Estás seguro de querer continuar?"] - Mensaje. Nótese que cuando se utiliza el diálogo nativo, la mayoría de los
+     * navegadores actualmente ignora este texto.
+     * @returns {ui}
+     */
+    this.confirmarSalida=function(activar,mensaje) {
+        if(typeof activar==="undefined") activar=true;
+        if(typeof mensaje==="undefined") mensaje="¿Estás seguro de querer continuar?";
+        window.onbeforeunload=activar?function() {
+            return mensaje;
+        }:null;
+        confirmarSalidaActivado=activar;
+        confirmarSalidaMensaje=mensaje;
         return this;
     };
 

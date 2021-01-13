@@ -129,10 +129,11 @@ class bd {
      */
     public function conectar() {
 		$this->e=new mysqli(
-            $this->credenciales->servidor.':'.$this->credenciales->puerto,
+            $this->credenciales->servidor,
             $this->credenciales->usuario,
             $this->credenciales->contrasena,
-            $this->credenciales->nombre
+            $this->credenciales->nombre,
+            $this->credenciales->puerto
         );
 
 		if($this->e->connect_errno) {

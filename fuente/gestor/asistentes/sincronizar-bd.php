@@ -168,7 +168,7 @@ class sincronizarBd extends asistente {
 
         if($parametros->contrasena) {
             if(!preg_match('/text/i',$campoBd->Type)) return false;
-            $predeterminado='';
+            $predeterminado=null;
         }
 
         if($tipo=='texto'&&!preg_match('/text/i',$campoBd->Type)) return false;

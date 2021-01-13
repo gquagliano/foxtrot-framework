@@ -156,6 +156,6 @@ class sesion {
      * @return mixed
      */
     public static function responderSolicitud() {
-        cliente::responder(self::$datosPublicos);
+        cliente::responder(self::obtenerDatosPublicos());
     }
 }

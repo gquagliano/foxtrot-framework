@@ -977,6 +977,7 @@ var componente=new function() {
 
             //Asignar el resultado
             t.propiedadModificada(propiedad,resultado,tamano);
+            t.postPropiedadModificada();
         });
         
         return this;
@@ -1245,6 +1246,39 @@ var componente=new function() {
         return this;
     };
 
+    /**
+     * Realiza tareas de mantenimiento tras modificarse una propiedad (método de uso interno). Este método se implementa porque en los componentes
+     * concretos no es obligatorio invocar `propiedadModificada()` en el padre (es decir, en esta clase), por lo que buscamos hacer la limpieza en
+     * un paso posterior.
+     * @returns {componente}
+     */
+    this.postPropiedadModificada=function() {
+        //Ordenar clases adaptativas
+        var clases=Array.from(this.elemento.classList),
+            ordenadas=[];
+
+        if(!clases.length) return this;
+
+        ["","sm","md","lg","xl"].porCada(function(i,tamano) {
+            var regexp1=new RegExp("-"+tamano+"$"),
+                regexp2=new RegExp("-"+tamano+"-");
+
+            clases.porCada(function(j,clase) {
+                //Remover clases inválidas
+                if(clase.substr(0,1)=="-"||clase.substr(-1)=="-") return;
+
+                if(
+                    (!tamano&&!/-(sm|md|lg|xl)-/.test(clase)&&!/-(sm|md|lg|xl)$/.test(clase))||
+                    (regexp1.test(clase)||regexp2.test(clase))
+                ) ordenadas.push(clase);
+            });
+        });
+
+        this.elemento.atributo("class",ordenadas.join(" "));
+
+        return this;
+    };
+
     ////Propiedades y parámetros
 
     /**
@@ -1284,6 +1318,8 @@ var componente=new function() {
         var anterior=this.valoresPropiedades[nombre];
         this.valoresPropiedades[nombre]=valor;
         this.propiedadModificada(nombre,valor,null,anterior);
+        this.postPropiedadModificada();
+
         return this;
     };
 
@@ -1400,6 +1436,7 @@ var componente=new function() {
         }
 
         this.propiedadModificada(nombre,valor,tamano,anterior);
+        this.postPropiedadModificada();
 
         return this;
     };

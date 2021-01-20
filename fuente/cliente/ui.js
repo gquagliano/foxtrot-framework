@@ -1413,10 +1413,8 @@ var ui=new function() {
         if(tamano!=tamanoActual) {
             body.removerClase(/^tamano-.+/)
                 .agregarClase("tamano-"+tamano);
-            if(tamanoActual) {
-                if(!ui.evento("tamano",[tamano,tamanoActual]))
-                    ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
-            }
+            if(!ui.evento("tamano",[tamano,tamanoActual]))
+                ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
         }
         tamanoActual=tamano;
     };
@@ -1426,40 +1424,42 @@ var ui=new function() {
      * @returns {ui}
      */
     this.establecerEventos=function() {
-        if(esCordova) {
-            document.addEventListener("deviceready",function() {
-                document.addEventListener("backbutton",function() {
-                    //Cerrar todos los menú y diálogos
+        if(!modoEdicion) {
+            if(esCordova) {
+                document.addEventListener("deviceready",function() {
+                    document.addEventListener("backbutton",function() {
+                        //Cerrar todos los menú y diálogos
 
-                    if(self.obtenerMenuAbierto().length) {
-                        ui.cerrarMenus();
-                        return;
-                    }
+                        if(self.obtenerMenuAbierto().length) {
+                            ui.cerrarMenus();
+                            return;
+                        }
 
-                    if(self.obtenerDialogoAbierto()) {
-                        ui.cerrarDialogo();
-                        return;
-                    }
+                        if(self.obtenerDialogoAbierto()) {
+                            ui.cerrarDialogo();
+                            return;
+                        }
 
-                    //Pasar el evento a los controladores y componentes
-                    //Si un método devolvió true, detener
-                    if(ui.evento("volver")||ui.eventoComponentes(null,"volver",true)) return;
+                        //Pasar el evento a los controladores y componentes
+                        //Si un método devolvió true, detener
+                        if(ui.evento("volver")||ui.eventoComponentes(null,"volver",true)) return;
 
-                    //Si la URL cambió, volver
-                    if(urlModificada>0) {
-                        self.volver();
-                        return;
-                    }
+                        //Si la URL cambió, volver
+                        if(urlModificada>0) {
+                            self.volver();
+                            return;
+                        }
 
-                    //Por último, cerrar la aplicación
-                    ui.salir();
+                        //Por último, cerrar la aplicación
+                        ui.salir();
+                    },false);
                 },false);
-            },false);
+            }
+
+            win.addEventListener("popstate",procesarOnPopState);
         }
 
-        win.addEventListener("resize",procesarResize);
-        
-        win.addEventListener("popstate",procesarOnPopState);
+        win.addEventListener("resize",procesarResize);        
     };
 
     /**
@@ -1727,6 +1727,8 @@ var ui=new function() {
             //En modo de edición, procesar el JSON y pasar el control al editor
             this.procesarJson(jsonVistaPrincipal);
             editor.ejecutar();
+
+            body.agregarClase("escritorio");
         } else {
             var esMovil=this.esMovil();
             if(esMovil) {
@@ -1734,14 +1736,11 @@ var ui=new function() {
             } else {                
                 body.agregarClase("escritorio");
             }
-            body.agregarClase("tamano-"+this.obtenerTamano());
 
             if(esCordova) {
                 doc.documentElement.agregarClase("cordova");
                 body.agregarClase("cordova");
             }
-
-            this.establecerEventos();
 
             this.ejecutarVista(nombreVistaPrincipal,true);
 
@@ -1764,6 +1763,11 @@ var ui=new function() {
                 }
             }
         }
+
+        this.establecerEventos();
+
+        tamanoActual=ui.obtenerTamano();
+        body.agregarClase("tamano-"+this.obtenerTamano());
 
         //El evento Listo en los componentes se ejecuta incluso en modo edición
         this.eventoComponentes(null,"listo");

@@ -1541,15 +1541,7 @@ var componente=new function() {
         return this;
     };
 
-    ////Eventos    
-
-    /**
-     * Establece los eventos predeterminados.
-     */
-    this.establecerEventos=function() {
-        this.establecerEventosComponente();
-        return this;
-    };
+    ////Eventos
     
     /**
      * Establece los eventos predeterminados.

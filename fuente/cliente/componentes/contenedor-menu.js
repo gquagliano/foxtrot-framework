@@ -15,6 +15,8 @@ var componenteContenedorMenu=function() {
 
     this.componente="contenedor-menu";
     this.ancla=null;
+
+    var menuAbierto=false;
     
     var t=this;
 
@@ -95,7 +97,7 @@ var componenteContenedorMenu=function() {
         this.contenedor=this.elemento;
         this.clasePadre.inicializar.call(this);
         return this;
-    };
+    };    
 
     /**
      * Crea el elemento del DOM para esta instancia.
@@ -160,6 +162,18 @@ var componenteContenedorMenu=function() {
             .removerAtributo("style"); //TODO Deshacer solo los estilos asignados por abrir()
 
         this.clasePadre.tamano.call(this,tamano,tamanoAnterior);
+    };
+    
+    /**
+     * Evento `volver`
+     * @returns {(boolean|undefined)}
+     */
+    this.volver=function() {
+        if(!ui.enModoEdicion()&&ui.esCordova()&&menuAbierto) {
+            t.cerrar();
+            return true;
+        }
+        return this.clasePadre.establecerEventos.call(this);
     };
     
     /**
@@ -324,6 +338,8 @@ var componenteContenedorMenu=function() {
         document.evento("click wheel",clickDocumento,true);
         window.evento("blur",blur);
 
+        menuAbierto=true;
+
         return this;
     };
 
@@ -338,6 +354,7 @@ var componenteContenedorMenu=function() {
         
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();
+        menuAbierto=false;
 
         t.elemento.removerClase("menu-abierto");
 

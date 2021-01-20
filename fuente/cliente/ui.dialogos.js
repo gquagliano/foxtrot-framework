@@ -494,66 +494,118 @@
     };
 
     /**
-     * Posiciona el desplegable relativo al elemento elemento.
-     * @param {Desplegable} desplegable
+     * @memberof ui
+     * Posiciona un elemento del DOM relativo a otro elemento o a coordenadas de posición absoluta.
+     * @param {Node} elemento - Elemento a posicionar.
+     * @param {(Node|null)} elementoRelativo - Elemento relativo al cual se debe posicionar `elemento`. Especificar `null` para trabajar con
+     * posición absoluta.
+     * @param {Object} [posicion] - Posición absoluta, relativa al marco de la ventana.
+     * @param {int} [posicion.izquierda] - Posición lateral izquierda.
+     * @param {int} [posicion.derecha] - Posición lateral derecha.
+     * @param {int} [posicion.superior] - Posición superior.
+     * @param {int} [posicion.inferior] - Posición inferior.
+     * @param {Object} [opciones] - Opciones.
+     * @param {bool} [opciones.reposicionar=true] - Si admite reposicionar el elemento si es necesario (por ejemplo, abrir hacia arriba en lugar
+     * de hacia abajo).
+     * @param {bool} [opciones.redimensionar=true] - Si admite redimensionar el elemento si es necesario.
+     * @param {bool} [opciones.anchoComponente=true] - Ajustar al ancho del componente relativo.
+     * @returns {ui}
      */
-    var posicionarDesplegable=function(desplegable) {
-        var elem=desplegable.elem,
-            elemComponente=desplegable.componente.obtenerElemento();
+    ui.posicionarElemento=function(elemento,elementoRelativo,posicion,opciones) {
+        if(typeof opciones==="undefined") opciones={};
+        opciones=Object.assign({
+            reposicionar:true,
+            redimensionar:true,
+            anchoComponente:true
+        },opciones);
 
-        var posicionComponente=elemComponente.posicionAbsoluta(),
-            altoComponente=elemComponente.alto(),
-            anchoComponente=elemComponente.ancho();
+        var altoElemRelativo=0,
+            anchoElemRelativo=0;
 
-        elem.estilos({
-            left:posicionComponente.x,
-            top:posicionComponente.y+altoComponente,
-            right:"auto",
-            bottom:"auto",
-            width:anchoComponente
-        });
+        if(elementoRelativo) {
+            var posicionElemento=elementoRelativo.posicionAbsoluta();
+            altoElemRelativo=elementoRelativo.alto();
+            anchoElemRelativo=elementoRelativo.ancho();
+            elemento.estilos({
+                left:posicionElemento.x,
+                top:posicionElemento.y+altoElemRelativo,
+                right:"auto",
+                bottom:"auto"                
+            });
+            if(opciones.anchoComponente) {
+                elemento.estilos({
+                    width:anchoElemRelativo
+                });
+            }
+            if(opciones.redimensionar) {
+                elemento.estilos({
+                    height:"auto"
+                });
+            }
+        } else {
+            elemento.estilos({
+                left:posicion.hasOwnProperty("izquierda")?posicion.izquierda:"auto",
+                top:posicion.hasOwnProperty("arriba")?posicion.arriba:"auto",
+                right:posicion.hasOwnProperty("derecha")?posicion.derecha:"auto",
+                bottom:posicion.hasOwnProperty("abajo")?posicion.abajo:"auto"
+            });
+            if(opciones.redimensionar) {
+                elemento.estilos({
+                    width:"auto",
+                    height:"auto"
+                });
+            }
+        }
 
-        //TODO Desplegar hacia arriba / hacia los costados
-        
         //Verificar si entra en pantalla
-        var posicionDesplegable=elem.posicionAbsoluta(),
-            altoDesplegable=elem.alto(),
-            anchoDesplegable=elem.ancho(),
+        var posicion=elemento.posicionAbsoluta(),
+            alto=elemento.alto(),
+            ancho=elemento.ancho(),
             altoVentana=window.alto(),
             anchoVentana=document.body.ancho(), //Usar el ancho del body, que no incluye el ancho de la barra de desplazamiento
             margen=15;
 
-        if(posicionDesplegable.y+altoDesplegable+margen>altoVentana) {
-            if(desplegable.opciones.reposicionar) {
-                //Abrir hacia arriba
-                elem.estilos({
+        if(posicion.y+alto+margen>altoVentana) {
+            var bottom=altoVentana-posicion.y;
+            if(opciones.reposicionar&&altoVentana-bottom>=alto+margen) {
+                //Abrir hacia arriba (si hay más espacio)
+                elemento.estilos({
                     top:"auto",
-                    bottom:altoVentana-posicionComponente.y
+                    bottom:bottom
                 });
-            } else {
+            } else if(opciones.redimensionar) {
                 //Redimensionar
-                elem.estilos({
-                    height:altoVentana-margen-posicionComponente.y-altoComponente
+                elemento.estilos({
+                    height:altoVentana-margen-posicion.y-altoElemRelativo
                 });
             }
         }
 
         //Posición lateral (si el ancho es superior al ancho del componente, por ejemplo si tiene min-width, puede excederse)
-        if(posicionDesplegable.x+anchoDesplegable+margen>anchoVentana) {
-            if(desplegable.opciones.reposicionar) {
-                //Abrir hacia la izquierda
-                elem.estilos({
+        if(posicion.x+ancho+margen>anchoVentana) {
+            var right=anchoVentana-(posicion.x+anchoElemRelativo);
+            if(opciones.reposicionar&&anchoVentana-right>=ancho+margen) {
+                //Abrir hacia la izquierda (si hay más espacio)
+                elemento.estilos({
                     left:"auto",
-                    right:anchoVentana-(posicionComponente.x+anchoComponente)
+                    right:right
                 });
-            } else {
+            } else if(opciones.redimensionar) {
                 //Redimensionar
-                elem.estilos({
+                elemento.estilos({
                     minWidth:"0",
-                    width:anchoVentana-margen-posicionComponente.x
+                    width:anchoVentana-margen-posicion.x
                 });
             }
         }
+    };
+
+    /**
+     * Posiciona el desplegable relativo al elemento elemento.
+     * @param {Desplegable} desplegable
+     */
+    var posicionarDesplegable=function(desplegable) {
+        ui.posicionarElemento(desplegable.elem,desplegable.componente.obtenerElemento());
     };
 
     /**

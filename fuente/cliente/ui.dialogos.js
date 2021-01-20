@@ -228,7 +228,8 @@
      * @param {boolean} [parametros.modal=false] - Si es true, deshabilitará las posibilidades de cancelar el diálogo.
      * @param {boolean} [parametros.sobreponer=false] - Si es true, se forzará que quede por encima de todo, incluso de la precarga.
      * @param {string} [parametros.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
-     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
+     * `notificacion`, `seguridad`.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
@@ -264,7 +265,7 @@
             var src;
             if(/^https?:\/\//.test(parametros.icono)||parametros.icono.substring(0,1)=="/") {
                 src=parametros.icono;
-            } else if(["pregunta","exclamacion","error","seguridad","informacion","ubicacion","audio","camara","notificacion"].indexOf(parametros.icono)>=0) {
+            } else if(["pregunta","exclamacion","alerta","error","seguridad","informacion","ubicacion","audio","camara","notificacion"].indexOf(parametros.icono)>=0) {
                 src="recursos/img/"+parametros.icono+".png";
             } else {
                 src="aplicacion/recursos/"+parametros.icono;
@@ -748,15 +749,32 @@
      * Muestra un diálogo de alerta o información (equivalente a alert()).
      * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
+     * @param {Object} [opciones] - Opciones adicionales.
+     * @param {string} [opciones.etiquetaBoton="Aceptar"] - Etiqueta del botón.
+     * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
+     * `notificacion`, `seguridad`.
+     *//**
+     * Muestra un diálogo de alerta o información (equivalente a alert()).
+     * @memberof ui
+     * @param {string} mensaje - Mensaje. Admite HTML.
      * @param {function} [funcion] - Función de retorno al cerrar el diálogo.
      * @param {Object} [opciones] - Opciones adicionales.
      * @param {string} [opciones.etiquetaBoton="Aceptar"] - Etiqueta del botón.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
-     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
+     * `notificacion`, `seguridad`.
      */
-    ui.alerta=function(mensaje,funcion,opciones) {
-        if(typeof funcion==="undefined") funcion=null;
-        if(typeof opciones==="undefined") opciones={};
+    ui.alerta=function(mensaje,b,c) {
+        var funcion=null,opciones={};
+        if(typeof b==="function") {
+            //alerta(mensaje,funcion[,opciones])
+            funcion=b;
+            if(typeof c!=="undefined") opciones=c;
+        } else if(typeof b==="object") {
+            //alerta(mensaje,opciones)
+            opciones=b;
+        }
 
         opciones=Object.assign({
             etiquetaBoton:"Aceptar",
@@ -788,6 +806,19 @@
      * Muestra un diálogo de confirmación.
      * @memberof ui
      * @param {string} mensaje - Mensaje. Admite HTML.
+     * @param {Object} [opciones] - Opciones adicionales.
+     * @param {boolean} [opciones.cancelar=false] - Mostrar opción "Cancelar".
+     * @param {string} [opciones.etiquetaSi="Si"] - Etiqueta del botón afirmativo.
+     * @param {string} [opciones.etiquetaNo="No"] - Etiqueta del botón negativo.
+     * @param {string} [opciones.etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
+     * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
+     * `notificacion`, `seguridad`.
+     * @param {number} [opciones.predeterminado=0] - Índice del botón predeterminado (`0` Si, `1` No, `2` Cancelar).
+     *//**
+     * Muestra un diálogo de confirmación.
+     * @memberof ui
+     * @param {string} mensaje - Mensaje. Admite HTML.
      * @param {function} [funcion] - Función de retorno. Recibirá un parámetro con la respuesta (`true`, `false` o `null` si fue cancelado).
      * @param {Object} [opciones] - Opciones adicionales.
      * @param {boolean} [opciones.cancelar=false] - Mostrar opción "Cancelar".
@@ -795,12 +826,20 @@
      * @param {string} [opciones.etiquetaNo="No"] - Etiqueta del botón negativo.
      * @param {string} [opciones.etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
-     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `error`, `informacion`, `ubicacion`, `audio`, `camara`, `notificacion`, `seguridad`.
+     * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
+     * `notificacion`, `seguridad`.
      * @param {number} [opciones.predeterminado=0] - Índice del botón predeterminado (`0` Si, `1` No, `2` Cancelar).
      */
-    ui.confirmar=function(mensaje,funcion,opciones) {
-        if(typeof funcion==="undefined") funcion=null;
-        if(typeof opciones==="undefined") opciones={};
+    ui.confirmar=function(mensaje,b,c) {
+        var funcion=null,opciones={};
+        if(typeof b==="function") {
+            //confirmar(mensaje,funcion[,opciones])
+            funcion=b;
+            if(typeof c!=="undefined") opciones=c;
+        } else if(typeof b==="object") {
+            //confirmar(mensaje,opciones)
+            opciones=b;
+        }
 
         opciones=Object.assign({
             cancelar:false,

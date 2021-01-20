@@ -363,6 +363,14 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve la instancia del controlador de la vista a la cual pertenece.
+     * @returns {controlador}
+     */
+    this.obtenerControlador=function() {
+        return ui.obtenerInstanciaControladorVista(this.nombreVista);
+    };
+
+    /**
      * Devuelve el nombre de la instancia.
      * @returns {string}
      */

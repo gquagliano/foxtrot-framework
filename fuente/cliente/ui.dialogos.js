@@ -263,8 +263,10 @@
 
         if(parametros.icono) {
             var src;
-            if(/^https?:\/\//.test(parametros.icono)||parametros.icono.substring(0,1)=="/") {
+            if(/^https?:\/\//.test(parametros.icono)) {
                 src=parametros.icono;
+            } else if(parametros.icono.substring(0,1)=="/") {
+                src=ui.obtenerUrlBase()+parametros.icono.substring(1);
             } else if(["pregunta","exclamacion","alerta","error","seguridad","informacion","ubicacion","audio","camara","notificacion"].indexOf(parametros.icono)>=0) {
                 src="recursos/img/"+parametros.icono+".png";
             } else {

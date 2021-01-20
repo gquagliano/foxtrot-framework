@@ -34,6 +34,7 @@ foxtrot::inicializar(false);
             <img src="img/cargando.svg" id="foxtrot-cargando">
             <button class="btn btn-sm activo" onclick="editor.alternarBordes()" id="foxtrot-btn-alternar-bordes" title="Activar / desactivar bordes"><img src="img/bordes.png"></button>
             <button class="btn btn-sm" onclick="editor.alternarInvisibles()" id="foxtrot-btn-alternar-invisibles" title="Mostrar / ocultar elementos invisibles"><img src="img/ver.png"></button>
+            <button class="btn btn-sm" onclick="editor.alternarMovil()" id="foxtrot-btn-alternar-movil" title="Activar / desactivar estilos para dispositivos móviles"><img src="img/movil.png"></button>
             <select class="custom-select" title="Tamaño de pantalla" onchange="editor.tamanoMarco(this.valor())">
                 <option value="g">Global</option>
                 <option value="xl">Extra grande</option>

@@ -26,6 +26,7 @@ var editor=new function() {
         eventosPausados=false,
         bordesVisibles=true,
         invisiblesVisibles=true,
+        claseMovil=false,
         tamanoActual="g",
         cambiosSinGuardar=false;
 
@@ -1457,6 +1458,22 @@ var editor=new function() {
         return this;
     };
 
+    this.alternarMovil=function() {
+        claseMovil=!claseMovil;
+        var b=ui.obtenerDocumento().body,
+            btn=document.querySelector("#foxtrot-btn-alternar-movil");
+        if(!claseMovil) {
+            b.removerClase("movil")
+                .agregarClase("escritorio");
+            btn.removerClase("activo");
+        } else {
+            b.removerClase("escritorio")
+                .agregarClase("movil");
+            btn.agregarClase("activo");
+        }
+        return this;
+    };
+
     this.pausarEventos=function(valor) {
         if(util.esIndefinido(valor)) valor=true;
         eventosPausados=valor;
@@ -1522,7 +1539,9 @@ var editor=new function() {
             elem.removerArrastre()
                 .removerDestino()
             //Remover clases y otras propiedades
-                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editor-ignorar foxtrot-editando-texto foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo")
+                .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editor-ignorar foxtrot-editando-texto \
+                    foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion \
+                    foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo movil escritorio")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");

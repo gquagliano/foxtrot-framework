@@ -32,7 +32,9 @@ var servidor=new function() {
             clase:null, //Por el momento, no se usa
             modulo:null,
             retorno:null,
-            error:null,
+            error:function() {
+                ui.evento("errorServidor");
+            },
             listo:null,
             parametros:null,
             progreso:null,
@@ -78,7 +80,7 @@ var servidor=new function() {
      * @param {Object} [opciones.componente] - Nombre del componente.
      * @param {Object} [opciones.controladorOrigen] - Nombre del controlador que origina la solicitud.
      * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro el valor recibido del servidor. No será invocada si el método no tuvo un valor de retorno.
-     * @param {function} [opciones.error] - Función de error.
+     * @param {function} [opciones.error=function] - Función de error. Por defecto, será invocado el evento `errorServidor`.
      * @param {function} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno, excepto en caso de error).
      * @param {function} [opciones.siempre] - Función a invocar tras la solicitud (siempre será invocada, incluso en caso de error).
      * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.

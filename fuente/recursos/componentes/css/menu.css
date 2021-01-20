@@ -51,10 +51,10 @@
     transition: opacity .2s;
     pointer-events: none;
     background-color: #fff;
-    padding: 1.3rem 0;    
-    box-shadow: 0 2px 15px rgba(0,0,0,.1), 0 2px 3px rgba(0,0,0,.15);
-    font-size: 1.12rem;
-    line-height: 2rem;
+    padding: .7rem 0;    
+    box-shadow: 0 2px 3px rgba(0,0,0,.15), 0 1px 15px rgba(0,0,0,.1);
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 .menu-deslizable-activo { 
     display: block;   

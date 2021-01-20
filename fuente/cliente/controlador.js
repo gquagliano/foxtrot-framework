@@ -88,6 +88,16 @@ var controlador=new function() {
     };
 
     /**
+     * Devuelve la instancia de un componente.
+     * @param {string} nombre - Nombre del componente.
+     * @returns {(componente|null)}
+     */
+    this.obtenerComponente=function(nombre) {
+        if(this.componentes.hasOwnProperty(nombre)) return this.componentes[nombre];
+        return null;
+    };
+
+    /**
      * Agrega la instancia del componente al repositorio.
      * @param {componente} componente - Componente.
      * @param {string} [nombre] - Si se especifica el nombre, será agregado a componentes en lugar de instanciasComponentes.

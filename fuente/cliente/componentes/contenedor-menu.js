@@ -55,12 +55,27 @@ var componenteContenedorMenu=function() {
             posicionLateral:{
                 etiqueta:"Posición lateral (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen izquierdo a utilizar como valor predeterminado, si el menú es de modo Flotante"
+                ayuda:"Distancia en píxeles desde el márgen izquierdo a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
             },
             posicionSuperior:{
                 etiqueta:"Posición superior (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen superior a utilizar como valor predeterminado, si el menú es de modo Flotante"
+                ayuda:"Distancia en píxeles desde el márgen superior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+            },
+            posicionInferior:{
+                etiqueta:"Posición inferior (flotante)",
+                tipo:"numero",
+                ayuda:"Distancia en píxeles desde el márgen inferior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+            },
+            posicionDerecha:{
+                etiqueta:"Posición derecha (flotante)",
+                tipo:"numero",
+                ayuda:"Distancia en píxeles desde el márgen derecho a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+            },
+            componenteRelativo:{
+                etiqueta:"Componente relativo (flotante)",
+                ayuda:"Nombre de un componente de la misma vista relativo al cual se abrirá el menú flotante.",
+                adaptativa:false
             },
             editarMenu:{
                 etiqueta:"Editar menú",
@@ -97,6 +112,13 @@ var componenteContenedorMenu=function() {
      */
     this.editor=function() {
         this.gestionarAncla();
+
+        //En modo edición no hay eventos
+        window.evento("resize",function() {
+            t.tamano();
+        });
+        this.tamano();
+        
         this.clasePadre.editor.call(this);
     };
 
@@ -107,6 +129,37 @@ var componenteContenedorMenu=function() {
     this.editorDesactivado=function() {
         this.gestionarAncla();
         return this.clasePadre.editorDesactivado.call(this);
+    };
+    
+    /**
+     * Evento *Tamaño*.
+     * @param {string} tamano - Tamaño actual (`'xl'`,`'lg'`,`'md'`,`'sm'`,`'xs'`).
+     * @param {(string|null)} tamanoAnterior - Tamaño anterior (`'xl'`,`'lg'`,`'md'`,`'sm'`,`'xs'` o `null` si es la primer invocación al cargar la vista).
+     */
+    this.tamano=function(tamano,tamanoAnterior) {
+        //Ajustar modo según corresponda
+
+        var modoActual="bloque",
+            tamanos=["xs","sm","md","lg","xl"];
+        for(var i=0;i<tamanos.length;i++) {
+            var clase="menu-"+(tamanos[i]=="xs"?"":tamanos[i]+"-");            
+            if(this.elemento.es({clase:clase+"flotante"})) {
+                modoActual="flotante";
+            } else if(this.elemento.es({clase:clase+"deslizable"})) {
+                modoActual="deslizable";
+            } else if(this.elemento.es({clase:clase+"bloque"})) {
+                modoActual="bloque";
+            } else {
+                //Si no tiene clase para este tamaño, se mantiene el último modo establecido
+            }
+            if(tamanos[i]==tamano) break;
+        }
+
+        this.elemento.removerClase(/menu-.+?-activo/)
+            .agregarClase("menu-"+modoActual+"-activo")
+            .removerAtributo("style"); //TODO Deshacer solo los estilos asignados por abrir()
+
+        this.clasePadre.tamano.call(this,tamano,tamanoAnterior);
     };
     
     /**
@@ -194,66 +247,79 @@ var componenteContenedorMenu=function() {
 
         return this;
     };
+    
+    /**
+     * 
+     */
+    var modoActual=(function() {
+        if(this.elemento.es({clase:"menu-flotante-activo"})) return "flotante";
+        if(this.elemento.es({clase:"menu-deslizable-activo"})) return "deslizable";
+        return "bloque";
+    }).bind(this);
 
     /**
-     * Abre el menú flotante o deslizable de acuerdo a su configuración.
+     * Abre el menú flotante o deslizable de acuerdo a su configuración. Si el menú se encuentra en modo bloque, no tiene fecto.
      * @returns {Componente}
      *//**
-     * Abre el menú flotante o deslizable de acuerdo a su configuración.
-     * @param {Componente} a - Componente relativo al cual se posicionará el menú.
+     * Abre el menú flotante o deslizable de acuerdo a su configuración. Si el menú se encuentra en modo bloque, no tiene fecto.
+     * @param {Componente} a - Componente relativo al cual se posicionará el menú. En este caso el posicionamiento será automático según el espacio
+     * disponible en pantalla.
      * @returns {Componente}
      *//**
-     * Abre el menú flotante o deslizable de acuerdo a su configuración.
-     * @param {number} a - Posición lateral izquierda, en píxeles.
-     * @param {number} b - Posición lateral superior, en píxeles.
+     * Abre el menú flotante o deslizable de acuerdo a su configuración. Si el menú se encuentra en modo bloque, no tiene fecto.
+     * @param {(number|null)} a - Posición lateral izquierda, en píxeles, o `null`si se desea especificar posición derecha.
+     * @param {(number|null)} b - Posición superior, en píxeles, o `null` si se desea especificar posición inferior.
+     * @param {(number|null)} [c=null] - Posición lateral derecha, en píxeles.
+     * @param {(number|null)} [d=null] - Posición inferior, en píxeles.
      * @returns {Componente}
      */
-    this.abrir=function(a,b) {
-        var tamano=ui.obtenerTamano(),
-            modo=this.propiedadAdaptada(tamano,"modo"),
+    this.abrir=function(a,b,c,d) {
+        var modo=modoActual(),
+            elementoRelativo=null,
             izquierda=null,
-            arriba=null;
-        
-        if(modo=="flotante") {
-            if(typeof a!=="undefined") {
-                if(typeof b==="undefined") {
-                    //a = componente
-                    var elem=a.obtenerElemento(),
-                        posicion=elem.posicionAbsoluta(),
-                        alto=elem.alto();
-                    izquierda=posicion.x;
-                    arriba=posicion.y+alto;
-                } else {
-                    //2 parámetros
-                    izquierda=a;
-                    arriba=b;
-                }
-            } else {
-                izquierda=this.propiedad(tamano,"posicionLateral");
-                arriba=this.propiedad(tamano,"posicionSuperior");
-            }
+            derecha=null,
+            arriba=null,
+            abajo=null;                   
 
-            if(!isNaN(izquierda)) {
-                //¿Abrir hacia la izquierda?
-                //TODO
-
-                this.elemento.estilos("left",izquierda);
-            }
-
-            if(!isNaN(arriba)) {
-                //¿Abrir hacia arriba?
-                //TODO
-                
-                this.elemento.estilos("top",arriba);
-            }
-        } else {
-            this.elemento.estilos({
-                left:null,
-                top:null
-            });
-        }
+        if(modo=="bloque") return this;
 
         this.elemento.agregarClase("menu-abierto");
+
+        if(typeof a==="undefined") {
+            var nombre=this.propiedad("componenteRelativo");
+            if(nombre) {
+                var ctl=this.obtenerControlador(),
+                    comp=ctl.obtenerComponente(nombre);
+                if(comp) elementoRelativo=comp.obtenerElemento();
+            }
+            if(!elementoRelativo) {
+                izquierda=this.propiedad("posicionLateral");
+                arriba=this.propiedad("posicionSuperior");
+                abajo=this.propiedad("posicionInferior");
+                derecha=this.propiedad("posicionDerecha");
+            }
+        } else if(typeof a==="object"&&a!==null) {
+            elementoRelativo=a.obtenerElemento();
+        } else {
+            izquierda=a;
+            arriba=b;
+            derecha=c;
+            abajo=d;
+        }
+
+        ui.posicionarElemento(
+            this.elemento,
+            elementoRelativo,
+            {
+                izquierda:izquierda,
+                derecha:derecha,
+                superior:arriba,
+                inferior:abajo
+            },
+            {
+                anchoComponente:false
+            }
+        );
 
         document.evento("click wheel",clickDocumento,true);
         window.evento("blur",blur);
@@ -262,15 +328,19 @@ var componenteContenedorMenu=function() {
     };
 
     /**
-     * Cierra el menú flotante o deslizable.
+     * Cierra el menú flotante o deslizable. Si el menú se encuentra en modo bloque, no tiene fecto.
      * @returns {Componente}
      */
     this.cerrar=function() {
-        t.elemento.removerClase("menu-abierto");
+        //Remover siempre los eventos en caso de que hayan sido establecidos en un modo diferente
         document.removerEvento("click wheel",clickDocumento,true);
         window.removerEvento("blur",blur);
+        
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();
+
+        t.elemento.removerClase("menu-abierto");
+
         return this;
     };
 

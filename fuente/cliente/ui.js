@@ -1250,9 +1250,7 @@ var ui=new function() {
             window.open(destino.url);
         } else {
             //Evento
-            //Pasar a los controladores y componentes
-            //Si un método devolvió true, detener
-            if(ui.evento("navegacion",[destino.vista])||ui.eventoComponentes(null,"navegacion",true,[destino.vista])) return;
+            if(ejecutarEvento("navegacion",null,[destino.vista])) return;
 
             window.location.href=destino.url;
         }
@@ -1396,9 +1394,7 @@ var ui=new function() {
         }
 
         //Evento
-        //Pasar a los controladores y componentes
-        if(ui.evento("navegacion",[vista])) return;
-        if(ui.eventoComponentes(null,"navegacion",true,[vista])) return;
+        if(ejecutarEvento("navegacion",null,[vista])) return;
 
         //El cambio de URL no tiene otro efecto
     };
@@ -1413,8 +1409,8 @@ var ui=new function() {
         if(tamano!=tamanoActual) {
             body.removerClase(/^tamano-.+/)
                 .agregarClase("tamano-"+tamano);
-            if(!ui.evento("tamano",[tamano,tamanoActual]))
-                ui.eventoComponentes(null,"tamano",false,[tamano,tamanoActual]);
+                      
+            if(ejecutarEvento("tamano",null,[tamano,tamanoActual])) return;
         }
         tamanoActual=tamano;
     };
@@ -1440,9 +1436,8 @@ var ui=new function() {
                             return;
                         }
 
-                        //Pasar el evento a los controladores y componentes
-                        //Si un método devolvió true, detener
-                        if(ui.evento("volver")||ui.eventoComponentes(null,"volver",true)) return;
+                        //Pasar el evento a los controladores y componentes                        
+                        if(ejecutarEvento("volver")) return;
 
                         //Si la URL cambió, volver
                         if(urlModificada>0) {
@@ -1471,6 +1466,7 @@ var ui=new function() {
      */
     this.evento=function(nombre,params,obj) {
         if(typeof obj==="undefined") obj=null;
+        if(typeof params==="undefined") params=null;
 
         //Controladores de vistas
         for(var control in instanciasControladores) {
@@ -1514,6 +1510,7 @@ var ui=new function() {
      */
     this.eventoComponentes=function(origen,nombre,soloImplementados,params) {
         if(typeof soloImplementados==="undefined") soloImplementados=false;
+        if(typeof params==="undefined") params=null;
 
         var listado=origen?origen:instanciasComponentes;
 
@@ -1535,6 +1532,17 @@ var ui=new function() {
             if(typeof retorno==="boolean"&&retorno) return true;
         }
         
+        return false;
+    };
+
+    /**
+     * Función útil de uso interno para los casos en que se invocan `eventoComponentes()` y `evento()` en cadena. Devuelve `true` si el evento
+     * se debe detener.
+     */
+    var ejecutarEvento=function(nombre,origenComponentes,params) {
+        if(typeof origenComponentes==="undefined") origenComponentes=null;
+        if(ui.eventoComponentes(origenComponentes,nombre,true,params)) return true;
+        if(ui.evento(nombre,params)) return true;
         return false;
     };
 

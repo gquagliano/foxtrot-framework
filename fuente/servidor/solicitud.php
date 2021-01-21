@@ -26,7 +26,7 @@ class solicitud {
         self::procesarOptions();
 
         //TODO Configurable        
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: *',true);
 
         self::procesarParametros();
         //TODO Implementar esta clase en todos los lugares donde se utilicen las variables globales y luego:
@@ -39,7 +39,7 @@ class solicitud {
     public static function procesarOptions() {
         if($_SERVER['REQUEST_METHOD']!=='OPTIONS') return;
         //TODO Configurable
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: *',true);
         header('Content-Type: application/json; charset=UTF-8');    
         header('Access-Control-Allow-Methods: POST, OPTIONS');
         header('Access-Control-Max-Age: 3600');    

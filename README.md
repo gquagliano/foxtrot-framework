@@ -9,6 +9,8 @@
 
 Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* **más fácil** de aprender y de usar.
 
+Tenemos el compromiso de crear **un framework que no sea como todos los demás**, uno que **no sobrecargue** ni al sistema, ni al equipo del usuario, ni la cabeza del programador. Uno que prácticamente **no requiera configuración**, sea **super-fácil** de usar y que esté escrito en **lenguaje casi-humano**.
+
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](https://github.com/gquagliano/experimental-foxtrot-framework/wiki)** (en redacción).
 
 **[Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)**
@@ -29,7 +31,7 @@ Contraseña: admin
 
 [![](https://c5.patreon.com/external/favicon/favicon-16x16.png?v=69kMELnXkB)](https://www.patreon.com/gquagliano) *Apoyá el desarrollo*  
 [![](https://static.twitchcdn.net/assets/favicon-16-2d5d1f5ddd489ee10398.png)](https://www.twitch.tv/gquagliano) *Desarrollo en vivo*  
-[![](https://www.youtube.com/favicon.ico)](https://www.youtube.com/channel/UCd8V_YL-kL-BbqB_koAbfBg/) *Podcast, tutoriales y más*
+[![](https://www.youtube.com/favicon.ico)](https://www.youtube.com/channel/UCd8V_YL-kL-BbqB_koAbfBg/) *Podcast, tutoriales y más* (en producción)
 
 ## Estado
 

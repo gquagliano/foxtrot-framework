@@ -137,7 +137,7 @@ class almacenamiento {
      * @return bool
      */
     public static function moverTemporalLocal($temporal,$nombre,$destino=null,$mantenerCodificacion=false) {
-        if(!$destino) $destino=_servidor.\configuracion::$rutaArchivos;
+        if(!$destino) $destino=_raiz.\configuracion::$rutaArchivos;
 
         $nombre=\almacenamiento::limpiarNombre($nombre);
         $nombre=\almacenamiento::obtenerNombreLibre($destino,$nombre);
@@ -165,7 +165,7 @@ class almacenamiento {
      * @return string
      */
     public static function moverLocal($ruta,$nombre,$destino=null,$codificar=false) {
-        if(!$destino) $destino=_servidor.\configuracion::$rutaArchivos;
+        if(!$destino) $destino=_raiz.\configuracion::$rutaArchivos;
         
         $nombre=\almacenamiento::limpiarNombre($nombre);
         $nombre=\almacenamiento::obtenerNombreLibre($destino,$nombre);
@@ -191,7 +191,7 @@ class almacenamiento {
      * @return string
      */
     public static function almacenarLocal($contenido,$nombre,$destino=null,$codificar=false) {
-        if(!$destino) $destino=_servidor.\configuracion::$rutaArchivos;
+        if(!$destino) $destino=_raiz.\configuracion::$rutaArchivos;
         
         $nombre=\almacenamiento::limpiarNombre($nombre);
         $nombre=\almacenamiento::obtenerNombreLibre($destino,$nombre);
@@ -213,7 +213,7 @@ class almacenamiento {
      * @return mixed
      */
     public static function obtenerArchivoLocal($nombre,$ruta=null,$decodificar=false) {
-        if(!$ruta) $ruta=_servidor.\configuracion::$rutaArchivos;
+        if(!$ruta) $ruta=_raiz.\configuracion::$rutaArchivos;
         
         if(!file_exists($ruta.$nombre)||is_dir($ruta.$nombre)) return null;
 
@@ -233,7 +233,7 @@ class almacenamiento {
      * @return mixed
      */
     public static function enviarArchivoLocal($nombre,$ruta=null,$descargar=false,$decodificar=false) {
-        if(!$ruta) $ruta=_servidor.\configuracion::$rutaArchivos;
+        if(!$ruta) $ruta=_raiz.\configuracion::$rutaArchivos;
 
         $contenido=self::obtenerArchivoLocal($nombre,$ruta,$decodificar);
         if(!$contenido) return null;

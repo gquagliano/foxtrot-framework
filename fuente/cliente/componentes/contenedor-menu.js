@@ -22,7 +22,7 @@ var componenteContenedorMenu=function() {
 
     var clickDocumento=function(ev) {
         if(ev.target.es({elemento:t.elemento})||ev.target.padre({elemento:t.elemento})) return;
-        ev.preventDefault();
+        //ev.preventDefault();
         ev.stopPropagation();
         ev.stopImmediatePropagation();
         t.cerrar();
@@ -335,7 +335,7 @@ var componenteContenedorMenu=function() {
             }
         );
 
-        document.evento("click wheel",clickDocumento,true);
+        document.evento("mousedown touchstart wheel",clickDocumento);
         window.evento("blur",blur);
 
         menuAbierto=true;
@@ -349,7 +349,7 @@ var componenteContenedorMenu=function() {
      */
     this.cerrar=function() {
         //Remover siempre los eventos en caso de que hayan sido establecidos en un modo diferente
-        document.removerEvento("click wheel",clickDocumento,true);
+        document.removerEvento("mousedown touchstart wheel",clickDocumento);
         window.removerEvento("blur",blur);
         
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)

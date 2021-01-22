@@ -214,7 +214,9 @@ var componenteImportar=function() {
                     if(enCurso.indexOf(op)<0) return;
 
                     t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
-                    ui.animarAparecer(t.elementoVistaInterior);
+                    ui.animarAparecer(t.elementoVistaInterior,function() {
+                        ui.autofoco(t.elementoVistaInterior);
+                    });
 
                     trabajando=false;
                 });

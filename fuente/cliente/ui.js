@@ -833,6 +833,35 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * Busca el primer componente o elemento con autofoco y da foco al mismo.
+     * @param {Node} [elem] - Limitar a la descendencia del elemento especificado.
+     * @returns {ui}
+     */
+    this.autofoco=function(elem) {
+        if(typeof elem==="undefined") elem=doc;
+        if(!this.esMovil()) {
+            setTimeout(function() {
+                var elems=elem.querySelectorAll(".autofoco");
+                for(var i=0;i<elems.length;i++) {
+                    if(elems[i].es({visible:true})) {
+                        var comp=ui.obtenerInstanciaComponente(elems[i]);
+                        if(comp) {
+                            //Componente
+                            comp.foco();
+                        } else {
+                            //Cualquier otro elemento del DOM puede usar la clase .autofoco
+                            elems[i].focus();
+                            if(typeof elems[i].select==="function") elems[i].select();
+                        }
+                        break;
+                    }
+                }
+            });
+        }
+        return this;
+    };
+
     ////Vistas
 
     //Cuando hablamos de vistas nos referimos al componente "padre" que es la representación lógica de la maquetación de la misma
@@ -1694,6 +1723,8 @@ var ui=new function() {
             }
         }
 
+        this.autofoco();
+
         if(typeof retorno==="function") retorno();
 
         return this;
@@ -1754,21 +1785,6 @@ var ui=new function() {
 
             if(!esCordova) {
                 this.ocultarPrecarga("barra");
-            }            
-
-            if(!esMovil) {
-                var elem=doc.querySelector(".autofoco");
-                if(elem&&elem.es({visible:true})) {
-                    var comp=this.obtenerInstanciaComponente(elem);
-                    if(comp) {
-                        //Componente
-                        comp.foco();
-                    } else {
-                        //Cualquier otro elemento del DOM puede usar la clase .autofoco
-                        elem.focus();
-                        if(typeof elem.select==="function") elem.select();
-                    }
-                }
             }
         }
 

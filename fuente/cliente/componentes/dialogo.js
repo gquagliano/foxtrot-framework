@@ -90,20 +90,8 @@ var componenteDialogo=function() {
                 cuerpo:this.elemento,
                 mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
                 modal:this.propiedad("modal"),
-                retornoAbierto:function() {                         
-                    //Buscar componente con autofoco
-                    var elem=t.elemento.querySelector(".autofoco");
-                    if(elem&&elem.es({visible:true})) {
-                        var comp=ui.obtenerInstanciaComponente(elem);
-                        if(comp) {
-                            //Componente
-                            comp.foco();
-                        } else {
-                            //Cualquier otro elemento del DOM puede usar la clase .autofoco
-                            elem.focus();
-                        }
-                    }
-
+                retornoAbierto:function() {
+                    ui.autofoco(t.elemento);
                     if(retorno) retorno();
                 }
             });

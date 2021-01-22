@@ -20,7 +20,7 @@ $json=file_get_contents($rutaJson);
 $html=file_get_contents($rutaHtml);
 ?>
 <!doctype html>
-<html lang="es">
+<html lang="es" class="<?=$cliente=='cordova'?'cordova':''?>">
   <head>
     <base href="<?=\foxtrot::obtenerUrl()?>">
     <meta charset="utf-8">
@@ -31,7 +31,7 @@ $html=file_get_contents($rutaHtml);
     <link rel="stylesheet" href="<?=$urlCss?>">
     <title>Marco del editor de vistas</title>
   </head>
-  <body>
+  <body class="<?=$cliente=='cordova'?'cordova':''?>">
     <?=$html?>
     <script src="cliente/foxtrot.js"></script>
     <script>

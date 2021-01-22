@@ -31,6 +31,7 @@
 
 /**
  * Extiende los prototipos del DOM.
+ * @deprecated
  */
 (function() {
     "use strict";
@@ -149,9 +150,15 @@
     Node.prototype.valor=function(valor) {
         var tipo=this.type;
         
-        if(tipo=="checkbox") {
+        if(tipo=="checkbox"||(tipo=="radio"&&!this.name)) { //Tratar botón de opción sin nombre como un checkbox
             if(util.esIndefinido(valor)) return this.checked;
             this.checked=valor;
+            //También asignar/remover atributo para que se refleje en el DOM (necesario, por ejemplo, para el editor)
+            if(valor) {
+                this.atributo("checked",true);
+            } else {
+                this.removerAtributo("checked");
+            }
             return this;
         }
         

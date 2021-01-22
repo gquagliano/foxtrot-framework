@@ -182,9 +182,17 @@ textarea.form-control {
 }
 .custom-radio .custom-control-label::after,
 .custom-checkbox .custom-control-label::after {
-    top: .2rem;
-    left: -1.97rem;
-    background: no-repeat 70%/70% 70%;
+    top: .44rem;
+    left: -1.64rem;
+    border-radius: 100%;
+    width: .5rem;
+    height: .5rem;
+    background-image: none !important;
+    background-color: transparent;
+    transition: background-color .2s;
+}
+.custom-radio .custom-control-input:checked~.custom-control-label::after {
+    background-color: #fff;
 }
 .custom-select {
     padding: 0 2.1rem 0 .5rem;

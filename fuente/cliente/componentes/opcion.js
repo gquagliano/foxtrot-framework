@@ -53,7 +53,8 @@ var componenteAlternar=function() {
                 opciones:{
                     bloque:"Bloque",
                     enLinea:"En línea"
-                }
+                },
+                adaptativa:false
             }
         }
     };
@@ -182,10 +183,13 @@ var componenteAlternar=function() {
         if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
         
         if(propiedad=="valorInicial") {
-            if(valor===true||valor===1||valor==="1") {
+            if(valor!==true&&this.propiedad("grupo")) {
+                //Si es parte de un grupo, interpretar el valor
+                this.valor(valor);
+            } else if(valor===true||valor===1||valor==="1") {
                 this.campo.atributo("checked",true);
             } else {
-                this.campo.removerAtributo("checked");
+                this.campo.removerAtributo("checked");                
             }
             return this;
         }

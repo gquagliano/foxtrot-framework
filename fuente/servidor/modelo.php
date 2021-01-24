@@ -1017,14 +1017,16 @@ class modelo {
      * Establece los valores a guardar. En una segunda llamada a este método con un objeto o array, se asignarán los valores a la entidad establecida previamente. Especificar
      * una entidad siempre reemplazará la entidad previamente asignada (en caso contrario, solo se actualizarán las propiedades incluidas en el objeto o array).
      * @param object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].
+     * @param bool $reestablecer Si es `true`, reemplazará los valores asignado previamente. En caso contrario, solo los reemplazará si se asigna una
+     * instancia de \entidad; asignando un objeto o array asociativo solo actualizará las propiedades presentes en el mismo.
      * @return \modelo
      */
-    public function establecerValores($objeto) {
+    public function establecerValores($objeto,$reestablecer=false) {
         if($objeto instanceof entidad) {
             $this->consultaValores=$objeto;
         } else {
             //Siempre crear una entidad
-            if(!$this->consultaValores) $this->consultaValores=$this->fabricarEntidad();
+            if(!$this->consultaValores||$reestablecer) $this->consultaValores=$this->fabricarEntidad();
             //Actualizar propiedades
             foreach($objeto as $clave=>$valor) $this->consultaValores->$clave=$valor;
         }
@@ -1132,8 +1134,7 @@ class modelo {
         if(!$this->consultaPreparada||!$this->reutilizarConsultaPreparada) {
             $this->prepararConsulta($operacion);
         } else {
-            //Reconstruir para tener los nuevos parámetros
-            //TODO Definir cómo pueden ser reemplazados los parámetros. Por el momento, solo los valores a insertar/actualizar se pueden modificar entre consultas.
+            //$this->actualizarParametros();
             $this->construirConsulta($operacion);
         }
         if(count($this->parametros)) $this->bd->asignar($this->parametros,implode('',$this->tipos));
@@ -1622,6 +1623,14 @@ class modelo {
         }
         
         return $this;
+    }
+
+    /**
+     * Regenera los parámetros para la próxima consulta.
+     * @return \modelo
+     */
+    protected function actualizarParametros() {
+        //TODO
     }
 
     /**

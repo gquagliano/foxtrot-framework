@@ -1559,8 +1559,12 @@ class modelo {
 
                 $obj=$this->fabricarModelo($campo->modelo);
                 
-                $alias++;
-                $obj->alias='t'.$alias;
+                if($campo->alias) {
+                    $obj->alias=$campo->alias;
+                } else {
+                    $alias++;
+                    $obj->alias='t'.$alias;
+                }
 
                 $condicion='';
 

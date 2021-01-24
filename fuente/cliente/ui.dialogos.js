@@ -262,19 +262,21 @@
         }
 
         if(parametros.icono) {
-            var src;
+            var src="",
+                clase="";
             if(/^https?:\/\//.test(parametros.icono)) {
                 src=parametros.icono;
             } else if(parametros.icono.substring(0,1)=="/") {
                 src=ui.obtenerUrlBase()+parametros.icono.substring(1);
             } else if(["pregunta","exclamacion","alerta","error","seguridad","informacion","ubicacion","audio","camara","notificacion","ok"].indexOf(parametros.icono)>=0) {
-                src="recursos/img/"+parametros.icono+".png";
+                //src="recursos/img/"+parametros.icono+".png";
+                clase="icono-"+parametros.icono;
             } else {
                 src="aplicacion/recursos/"+parametros.icono;
             }
             elem.querySelector(".dialogo-contenido")
                 .agregarClase("con-icono")
-                .anexar("<div class='dialogo-icono'><img src='"+src+"'></div>");
+                .anexar("<div class='dialogo-icono"+(clase?" "+clase:"")+"'>"+(src?"<img src='"+src+"'>":"")+"</div>");
         }
 
         var obj={

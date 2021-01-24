@@ -37,7 +37,8 @@ var componenteBoton=function() {
                     light:"Claro",
                     dark:"Oscuro"
                 },
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
         },
         "Comportamiento":{
@@ -52,11 +53,13 @@ var componenteBoton=function() {
             },
             enlace:{
                 etiqueta:"Enlace",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             nuevaVentana:{
                 etiqueta:"Abrir en nueva ventana",
-                tipo:"bool"
+                tipo:"bool",
+                adaptativa:false
             },
             predeterminado:{
                 etiqueta:"Acción predeterminada",

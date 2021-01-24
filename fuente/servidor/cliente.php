@@ -51,13 +51,15 @@ class cliente {
             //Web
             if(self::$responderCrudo) {
                 //Crudo (raw)
-                echo json_encode($data);
+                $salida=json_encode($data);
             } else {
                 //Cliente de Foxtrot
-                echo json_encode([
+                $salida=json_encode([
                     'r'=>$data
                 ]);
-            }
+            }            
+            header('Content-length: '.strlen($salida),true);
+            echo $salida;
         } else {
             //Línea de comandos
             if(is_array($data)||is_object($data)) {

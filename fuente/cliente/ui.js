@@ -245,7 +245,8 @@ var ui=new function() {
             hoja=estilos,
             reglas=hoja.cssRules,
             indicesMedia=[],
-            indicePrimerMedia=0;
+            indicePrimerRegla=null,
+            indicePrimerMedia=null;
   
         if(tamano!="xs"&&tamano!="g") {
             //Los tamaños xs y g (global) son sinónimos
@@ -256,8 +257,9 @@ var ui=new function() {
                 //regla instanceof CSSMediaRule falla por algún motivo que estoy investigando
                 //Por el momento verificamos tipo por propiedad type
                 //TODO Verificar compatibilidad de este método (probado solo en Opera)
+                if(regla.type==CSSRule.STYLE_RULE&&indicePrimerRegla===null) indicePrimerRegla=i;
                 if(regla.type==CSSRule.MEDIA_RULE) {
-                    if(indicePrimerMedia==0) indicePrimerMedia=i;
+                    if(indicePrimerMedia===null) indicePrimerMedia=i;
                     
                     var coincidencia=regla.conditionText.match(/min-width:.*?([0-9]+)/i);
                     if(!coincidencia) continue;
@@ -290,6 +292,13 @@ var ui=new function() {
                 //Insertar/reemplazar dentro del media nuevo
                 hoja=hoja.cssRules[i];
             }
+        } else {
+            for(var i=0;i<reglas.length;i++) { 
+                var regla=reglas[i];               
+                if(regla.type==CSSRule.STYLE_RULE&&indicePrimerRegla===null) indicePrimerRegla=i;
+                if(regla.type==CSSRule.MEDIA_RULE&&indicePrimerMedia===null) indicePrimerMedia=i;
+                if(indicePrimerMedia!==null&indicePrimerRegla!==null) break;
+            }
         }
 
         reglas=hoja.cssRules;
@@ -301,13 +310,18 @@ var ui=new function() {
                 hoja.deleteRule(i);
                 break;
             }
-        };
+        }
+
+        //No deben insertarse reglas antes de @import
+        if(indicePrimerRegla===null) indicePrimerRegla=0;
+        if(indicePrimerMedia===null) indicePrimerMedia=0;
+        var indice=Math.max(indicePrimerRegla,indicePrimerMedia);
        
         if(!css) css="";
         hoja.insertRule(
                 selector+"{"+css+"}",
                 //Insertar las reglas globales antes del primer mediaquery
-                tamano=="xs"||tamano=="g"?indicePrimerMedia:reglas.length
+                tamano=="xs"||tamano=="g"?indice:reglas.length
             );
 
         return this;

@@ -1916,6 +1916,7 @@ var componente=new function() {
      * @param {(string|null)} tamanoAnterior - Tamaño anterior (`'xl'`,`'lg'`,`'md'`,`'sm'`,`'xs'` o `null` si es la primer invocación al cargar la vista).
      */
     this.tamano=function(tamano,tamanoAnterior) {
+        if(!this.elemento) return;
         this.actualizarPropiedadesExpresiones();
     };
 

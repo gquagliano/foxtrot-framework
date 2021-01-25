@@ -82,9 +82,28 @@ var ui=new function() {
     };
 
     /**
+     * Busca una hoja de estilos por nombre.
+     * @param {string} nombre - Nombre como expresión regular.
+     * @returns {(StyleSheet|null)}
+     */
+    this.buscarHojaEstilos=function(nombre) {
+        for(var i=0;i<doc.styleSheets.length;i++) {
+            var hoja=doc.styleSheets[i];
+            if(new RegExp(nombre).test(hoja.href)) return hoja;
+        }
+        return null;
+    };
+
+    /**
      * 
      */
     this.obtenerElementoEstilos=function() {
+        if(!estilos) {
+            //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
+            estilos=this.buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+"(-.+?)?\.css");
+            //Si no se encuentra, buscar hoja de estilos combinada (aplicacion.css o cordova.css)
+            if(!estilos) estilos=this.buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+"(-.+?)?\.css");
+        }
         return estilos;
     };
 
@@ -116,7 +135,7 @@ var ui=new function() {
         var raiz=false;
         if(util.esIndefinido(origen)) {
             raiz=true;
-            origen=estilos.cssRules;
+            origen=this.obtenerElementoEstilos().cssRules;
         }
 
         var reglas=[];
@@ -242,7 +261,7 @@ var ui=new function() {
         if(util.esArray(css)) return this.procesarObjetoEstilos(selector,css);
 
         var tamanoPx=tamanos[tamano],
-            hoja=estilos,
+            hoja=this.obtenerElementoEstilos(),
             reglas=hoja.cssRules,
             indicesMedia=[],
             indicePrimerRegla=null,
@@ -1763,19 +1782,6 @@ var ui=new function() {
      * @returns {ui}
      */
     this.ejecutar=function() {
-        var buscarHojaEstilos=function(nombre) {
-            for(var i=0;i<doc.styleSheets.length;i++) {
-                var hoja=doc.styleSheets[i];
-                if(new RegExp(nombre).test(hoja.href)) return hoja;
-            }
-            return null;
-        };
-
-        //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
-        estilos=buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+"(-.+?)?\.css");
-        //Si no se encuentra, buscar hoja de estilos combinada (aplicacion.css o cordova.css)
-        if(!estilos) estilos=buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+"(-.+?)?\.css");
-
         if(modoEdicion) {
             //En modo de edición, procesar el JSON y pasar el control al editor
             this.procesarJson(jsonVistaPrincipal);

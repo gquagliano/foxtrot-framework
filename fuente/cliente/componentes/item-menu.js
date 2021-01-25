@@ -183,10 +183,17 @@ var componenteItemMenu=function() {
                 }
             };
 
-            var ignorarClick=false,
+            var eventoTactil=false,
+                ignorarClick=false,
                 arrastre=false;
 
-            this.elemento.evento("mouseenter",function(ev) {
+            this.elemento.evento("touchstart",function(ev) {
+                eventoTactil=true;
+                ignorarClick=false;
+                arrastre=false;
+            }).evento("mouseenter",function(ev) {
+                if(eventoTactil) return;
+
                 var submenu=t.obtenerSubmenu();
                 if(!submenu||abrirConClick()) return;
                 
@@ -195,6 +202,8 @@ var componenteItemMenu=function() {
 
                 abrir(submenu);
             }).evento("mouseleave",function(ev) {
+                if(eventoTactil) return;
+
                 var submenu=t.obtenerSubmenu();
                 if(!submenu||abrirConClick()) return;
                 
@@ -203,6 +212,10 @@ var componenteItemMenu=function() {
 
                 cerrar(submenu);
             }).evento("mousedown",function(ev) {
+                if(eventoTactil) return;
+
+                ignorarClick=false;
+
                 ev.stopPropagation();
                 
                 var submenu=t.obtenerSubmenu();
@@ -217,16 +230,21 @@ var componenteItemMenu=function() {
 
                 alternar(submenu);
             }).evento("mouseup",function(ev) {
+                if(eventoTactil) return;
+
                 if(ignorarClick) {
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
             }).evento("touchend",function(ev) {
+                eventoTactil=false;
+
                 if(arrastre) {
                     arrastre=false;
                     return;
                 }
 
+                //La propagación debe detenerse siempre para que no escale al padre
                 ev.stopPropagation();
 
                 var submenu=t.obtenerSubmenu();
@@ -241,6 +259,7 @@ var componenteItemMenu=function() {
                 alternar(submenu);
             }).evento("touchmove",function(ev) {
                 arrastre=true;
+                ignorarClick=true;
             }).evento("click",function(ev) {
                 if(ignorarClick) {
                     ev.preventDefault();

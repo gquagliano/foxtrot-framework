@@ -130,6 +130,10 @@ a:active {
     border: 1px solid #ced4da;
     border-radius: 2px;
 }
+.foxtrot-gestor .form-inline .form-control,
+.foxtrot-gestor .form-inline .custom-select {
+    width: auto;
+}
 .foxtrot-editor textarea.form-control,
 .foxtrot-gestor textarea.form-control {
     height: auto;

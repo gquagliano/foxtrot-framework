@@ -62,9 +62,13 @@ class construirCordova extends asistente {
                 <textarea class="form-control" name="modulos" rows="4" placeholder="Uno por línea."><?=$json->embebible->modulos?></textarea>
             </div>
         </div>
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" name="ejecutar" checked id="ce-ejecutar" checked>
-            <label class="custom-control-label" for="ce-ejecutar">Ejecutar en el dispositivo conectado</label>
+        <div class="form-inline">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="ejecutar" checked id="ce-ejecutar" checked>
+                <label class="custom-control-label" for="ce-ejecutar">Ejecutar en </label>
+            </div>
+            <input type="text" class="form-control ml-2 form-control-sm" name="destino" value="<?=$json->embebible->cordova->destino?>">
+            <em class="d-inline-block ml-2">(Opcional si hay solo un dispositivo conectado)</em>
         </div>
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="depuracion" checked id="ce-depuracion">
@@ -78,9 +82,13 @@ class construirCordova extends asistente {
             <input type="checkbox" class="custom-control-input" name="limpiar" id="ce-limpiar">
             <label class="custom-control-label" for="ce-limpiar">Limpiar directorios de salida (<em>&iexcl;Incluso <code>www</code>!</em>)</label>
         </div>
-        <div class="custom-control custom-checkbox mb-3">
+        <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" name="clean" id="ce-clean">
             <label class="custom-control-label" for="ce-clean">Ejecutar <code>cordova clean</code></label>
+        </div>
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" name="noconstruir" id="noconstruir">
+            <label class="custom-control-label" for="noconstruir">Solo ejecutar, no volver a construir</label>
         </div>
 <?php
         if(!function_exists('shell_exec')) {
@@ -99,6 +107,23 @@ class construirCordova extends asistente {
 
         //Almacenar parámetros en el JSON para la próxima ejecución
         $this->actualizarJson($param);
+
+        //Solo ejecutar (no construir)
+        if($param->noconstruir) { 
+            chdir($param->www);
+
+            $pl=$param->plataforma;
+            if(!$pl) $pl='android';
+
+            $destino='';
+            if($param->destino) $destino='--target='.escapeshellarg($param->destino);
+
+            $comando='cordova run '.escapeshellarg($pl).' '.$destino.' --nobuild 2>&1';
+            $o=shell_exec($comando);
+            registroExec($comando,$o);    
+            
+            return;
+        }
 
         if(!$param->inicio) gestor::error('Ingresá el nombre de la vista inicial.');
 
@@ -170,7 +195,10 @@ class construirCordova extends asistente {
                 $o=shell_exec($comando);
                 registroExec($comando,$o);
 
-                $comando='cordova run '.escapeshellarg($pl).' 2>&1';
+                $destino='';
+                if($param->destino) $destino='--target='.escapeshellarg($param->destino);
+
+                $comando='cordova run '.escapeshellarg($pl).' '.$destino.' 2>&1';
                 $o=shell_exec($comando);
                 registroExec($comando,$o);
             }
@@ -183,7 +211,8 @@ class construirCordova extends asistente {
             'inicio'=>$param->inicio,
             'cordova'=>[
                 'www'=>$param->www,
-                'plataforma'=>$param->plataforma
+                'plataforma'=>$param->plataforma,
+                'destino'=>$param->destino
             ]
         ];
         gestor::actualizarJsonAplicacion($json);  

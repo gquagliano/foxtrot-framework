@@ -21,14 +21,13 @@
 
         //TODO Barras de desplazamiento estilizadas
 
-        var ul=elem.querySelector("ul"),
-            posicionamiento=elem.estilo("position"),
+        var posicionamiento=elem.estilo("position"),
             padre=elem.padre();
 
-        elem.removerClase(/^desplegar-(izquierda|arriba)/);        
-        ul.estilos({
-            maxHeight:"none"
-        });
+        elem.removerClase(/^desplegar-(izquierda|arriba)/)
+            .estilos({
+                maxHeight:"none"
+            });
 
         //Asumimos que se ubicará dentro del padre (ej. un menú mobile tipo acordión)
         if(posicionamiento=="relative") return;
@@ -68,7 +67,7 @@
             if(posicionamiento=="absolute") {
                 var nuevoAlto=altoVentana-margen-pos.y;
                 //TODO También mover hacia arriba para que nunca quede demasiado pequeño
-                ul.estilos({ maxHeight:nuevoAlto });
+                elem.estilos({ maxHeight:nuevoAlto });
                 //elem.agregarClase("desplegar-arriba");
             } else {
                 elem.estilos({ top:altoVentana-alto-margen });

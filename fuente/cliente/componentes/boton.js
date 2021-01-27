@@ -14,8 +14,7 @@ var componenteBoton=function() {
     "use strict";
 
     this.componente="boton"; 
-    this.contenidoEditable=true;
-
+    
     /**
      * Propiedades de Botón.
      */
@@ -73,8 +72,18 @@ var componenteBoton=function() {
      * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
-        this.elemento=document.crear("<a href='#'>Botón</a>"); 
+        this.elemento=document.crear("<a href='#'></a>");
         this.clasePadre.crear.call(this);
+        return this;
+    };
+
+    /**
+     * Inicializa la instancia tras ser creada o restaurada.
+     */
+    this.inicializar=function() {
+        if(this.fueInicializado) return this;
+        this.contenedor=this.elemento;
+        this.clasePadre.inicializar.call(this);
         return this;
     };
 

@@ -736,19 +736,15 @@ var componente=new function() {
      * @returns {componente}
      */
     this.eliminar=function(descendencia) {
-        this.eliminarComponente(descendencia);
-        return this;
-    };
-
-    /**
-     * Elimina el componente.
-     * @param {boolean} [descendencia] - Si está definido y es `true`, indica que se está eliminando el componente por ser descendencia de otro componente eliminado.
-     * @returns {componente}
-     */
-    this.eliminarComponente=function(descendencia) {
         if(typeof descendencia==="undefined") descendencia=false;
 
-        if(this.nombre) delete componentes[this.nombre];
+        var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista); //Nota: el controlador puede no existir, por ejemplo en el editor
+        
+        if(this.nombre) {
+            componentes[this.nombre]=null;
+            if(controlador) controlador.removerComponente(this.nombre);
+        }
+
         ui.eliminarInstanciaComponente(this.id);
 
         //Eliminar estilos
@@ -822,8 +818,13 @@ var componente=new function() {
 
         this.oculto=oculto;
 
+        var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista); //Nota: el controlador puede no existir, por ejemplo en el editor
+        
         //Eliminar de componentes si cambia el nombre
-        if((this.nombre!=nombre||this.oculto)&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
+        if(this.nombre&&(this.nombre!=nombre||this.oculto)) {
+            if(componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
+            if(controlador) controlador.removerComponente(this.nombre);
+        }
         
         this.nombre=nombre;
         
@@ -831,10 +832,8 @@ var componente=new function() {
         if(nombre&&!this.oculto) {
             //Si pertenece a la vista principal, en window.componentes
             if(this.nombreVista==ui.obtenerNombreVistaPrincipal()) componentes[nombre]=this;
-
             //Y siempre en el controlador
-            var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista);
-            if(controlador) controlador.agregarComponente(this,nombre); //el controlador puede no existir, por ejemplo en el editor
+            if(controlador) controlador.agregarComponente(this,nombre); 
         }
 
         return this;

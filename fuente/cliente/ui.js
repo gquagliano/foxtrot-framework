@@ -1741,8 +1741,8 @@ var ui=new function() {
                 this.evento("listo");
             } else {
                 //Al cargar una vista secundaria, solo en la misma
-                obj.listo();
                 this.eventoComponentes(obj.obtenerComponentes(),"listo");
+                obj.listo();
             }            
             //Ejecutar un evento 'tamaño' para que, en caso de que la vista requiera realizar un ajuste inicial en base al tamaño de pantalla, no deba realizarlo
             //necesariamente en 'listo'

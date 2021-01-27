@@ -114,17 +114,32 @@ var controlador=new function() {
     
     /**
      * Elimina las referencias a la instancia del componente.
-     * @param {componente} componente - Componente.
+     * @param {(componente|string)} componente - Componente, instancia o nombre.
      * @returns {controlador}
      */
     this.removerComponente=function(componente) {
+        var nombre=null,
+            cadena=typeof componente==="string";
+        
+        if(cadena) nombre=componente;
+
         for(var i=0;i<this.instanciasComponentes.length;i++) {
-            if(this.instanciasComponentes[i]==componente) {
-                delete this.instanciasComponentes[i];
-                break;
+            if(cadena) {
+                if(this.instanciasComponentes[i]&&this.instanciasComponentes[i].obtenerNombre()==componente) {
+                    delete this.instanciasComponentes[i];
+                    break;
+                }
+            } else {
+                if(this.instanciasComponentes[i]===componente) {
+                    nombre=this.instanciasComponentes[i].obtenerNombre();
+                    delete this.instanciasComponentes[i];
+                    break;
+                }
             }
         }
-        if(this.componentes.hasOwnProperty(componente.nombre)) delete this.componentes[componente.obtenerNombre()];
+
+        if(nombre&&this.componentes.hasOwnProperty(nombre)) this.componentes[nombre]=null;
+
         return this;
     };    
 

@@ -394,7 +394,7 @@ var componenteContenedorMenu=function() {
      * @returns {componente}
      */
     this.eliminar=function(descendencia) {
-        this.eliminarComponente(descendencia);
+        this.clasePadre.call(this,descendencia);
         if(ui.enModoEdicion()&&this.ancla) this.ancla.remover();
         return this;
     };

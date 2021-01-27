@@ -97,7 +97,7 @@ class vistas extends asistente {
             $codigo=preg_replace('/"id":\s*"'.$id.'-([a-z0-9-]+)"/msi','"id":"'.$nuevoId.'-$1"',$codigo);
             $codigo=preg_replace('/"selector":\s*".'.$id.'-([a-z0-9-]+)"/si','"selector":".'.$nuevoId.'-$1"',$codigo);
             //En el JSON, el nombre puede encontrarse con las barras escapadas (\/) como sin escapar (/)
-            $codigo=preg_replace('/"nombre":\s*"('.$nombre.'|'.str_replace('/','\\/',$nombre).')"/sm','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
+            $codigo=preg_replace('#"nombre":\s*"('.$nombre.'|'.str_replace('/','\\/',$nombre).')"#sm','"nombre":"'.str_replace('/','\\/',$nuevoNombre).'"',$codigo);
             return $codigo;
         }
 

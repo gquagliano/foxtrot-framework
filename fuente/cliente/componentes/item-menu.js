@@ -248,10 +248,7 @@ var componenteItemMenu=function() {
                 ev.stopPropagation();
 
                 var submenu=t.obtenerSubmenu();
-                if(!submenu) {
-                    t.cerrarContenedor();
-                    return;
-                }
+                if(!submenu) return;
                 
                 ev.preventDefault();
 

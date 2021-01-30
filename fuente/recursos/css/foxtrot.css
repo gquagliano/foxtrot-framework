@@ -510,7 +510,6 @@ li.menu-separador::after {
     animation: desaparece .2s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
-    pointer-events: none;
 }
 @keyframes aparece {
     0% {

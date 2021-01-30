@@ -21,10 +21,10 @@ var componenteContenedorMenu=function() {
     var t=this;
 
     var clickDocumento=function(ev) {
-        if(ev.target.es({elemento:t.elemento})||ev.target.padre({elemento:t.elemento})) return;
         //ev.preventDefault();
         ev.stopPropagation();
         ev.stopImmediatePropagation();
+        if(ev.target.es({elemento:t.elemento})||ev.target.padre({elemento:t.elemento})) return;
         t.cerrar();
     },
     blur=function() {
@@ -298,6 +298,7 @@ var componenteContenedorMenu=function() {
         if(modo=="bloque") return this;
 
         this.elemento.agregarClase("menu-abierto");
+        ui.animarAparecer(this.elemento);
 
         if(typeof a==="undefined") {
             var nombre=this.propiedad("componenteRelativo");
@@ -335,7 +336,7 @@ var componenteContenedorMenu=function() {
             }
         );
 
-        document.evento("mousedown touchstart wheel",clickDocumento);
+        document.evento("mousedown touchstart wheel click",clickDocumento);
         window.evento("blur",blur);
 
         menuAbierto=true;
@@ -349,14 +350,15 @@ var componenteContenedorMenu=function() {
      */
     this.cerrar=function() {
         //Remover siempre los eventos en caso de que hayan sido establecidos en un modo diferente
-        document.removerEvento("mousedown touchstart wheel",clickDocumento);
+        document.removerEvento("mousedown touchstart wheel click",clickDocumento);
         window.removerEvento("blur",blur);
         
         //Cerrar submenú al ocultar el contenedor (no debería haber otro menú contextual abierto, cerramos todo)
         ui.cerrarMenu();
         menuAbierto=false;
 
-        t.elemento.removerClase("menu-abierto");
+        this.elemento.removerClase("menu-abierto");
+        ui.animarDesaparecer(this.elemento);
 
         return this;
     };

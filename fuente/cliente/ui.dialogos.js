@@ -229,7 +229,7 @@
      * @param {boolean} [parametros.sobreponer=false] - Si es true, se forzará que quede por encima de todo, incluso de la precarga.
      * @param {string} [parametros.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
-     * `notificacion`, `seguridad`, `ok`.
+     * `notificacion`, `seguridad`, `ok`, `problema-red`.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
@@ -268,7 +268,7 @@
                 src=parametros.icono;
             } else if(parametros.icono.substring(0,1)=="/") {
                 src=ui.obtenerUrlBase()+parametros.icono.substring(1);
-            } else if(["pregunta","exclamacion","alerta","error","seguridad","informacion","ubicacion","audio","camara","notificacion","ok"].indexOf(parametros.icono)>=0) {
+            } else if(["pregunta","exclamacion","alerta","error","seguridad","informacion","ubicacion","audio","camara","notificacion","ok","problema-red"].indexOf(parametros.icono)>=0) {
                 //src="recursos/img/"+parametros.icono+".png";
                 clase="icono-"+parametros.icono;
             } else {
@@ -757,7 +757,7 @@
      * @param {string} [opciones.etiquetaBoton="Aceptar"] - Etiqueta del botón.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
-     * `notificacion`, `seguridad`, `ok`.
+     * `notificacion`, `seguridad`, `ok`, `problema-red`.
      *//**
      * Muestra un diálogo de alerta o información (equivalente a alert()).
      * @memberof ui
@@ -767,7 +767,7 @@
      * @param {string} [opciones.etiquetaBoton="Aceptar"] - Etiqueta del botón.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
-     * `notificacion`, `seguridad`, `ok`.
+     * `notificacion`, `seguridad`, `ok`, `problema-red`.
      */
     ui.alerta=function(mensaje,b,c) {
         var funcion=null,opciones={};
@@ -817,7 +817,7 @@
      * @param {string} [opciones.etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
-     * `notificacion`, `seguridad`, `ok`.
+     * `notificacion`, `seguridad`, `ok`, `problema-red`.
      * @param {number} [opciones.predeterminado=0] - Índice del botón predeterminado (`0` Si, `1` No, `2` Cancelar).
      *//**
      * Muestra un diálogo de confirmación.
@@ -831,7 +831,7 @@
      * @param {string} [opciones.etiquetaCancelar="Cancelar"] - Etiqueta del botón de cancelar.
      * @param {string} [opciones.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
-     * `notificacion`, `seguridad`, `ok`.
+     * `notificacion`, `seguridad`, `ok`, `problema-red`.
      * @param {number} [opciones.predeterminado=0] - Índice del botón predeterminado (`0` Si, `1` No, `2` Cancelar).
      */
     ui.confirmar=function(mensaje,b,c) {

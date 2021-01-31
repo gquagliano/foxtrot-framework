@@ -10,9 +10,7 @@ defined('_inc') or exit;
 
 configuracion::establecer([
     'enrutador'=>'miEnrutador',
-    'usuarioBd'=>'root',
-    'contrasenaBd'=>'toor',
-    'nombreBd'=>'test',
-    //'recaptchaPublico'=>'',
-    //'recaptchaPrivado'=>''
+    //'usuarioBd'=>'root',
+    //'contrasenaBd'=>'toor',
+    'nombreBd'=>'ejemplo'
 ]);

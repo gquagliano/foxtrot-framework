@@ -1994,7 +1994,7 @@ var componente=new function() {
      * @returns {boolean}
      */
     this.habilitado=function() {
-        var deshabilitado=this.propiedad(null,"deshabilitado");
+        var deshabilitado=this.propiedad("deshabilitado");
         return !deshabilitado;
     };
 
@@ -2017,11 +2017,21 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve si el componente se encuentra visible *de acuerdo a su propiedad `visibilidad`* (no tiene en cuentra otros
+     * posibles estilos que puedan mantenerlo oculto).
+     * @returns {boolean}
+     */
+    this.visible=function() {
+        var valor=this.propiedad("visibilidad");
+        return !valor||valor==="visible";
+    };
+
+    /**
      * Oculta el componente (acceso directo a establecer la propiedad visibilidad=oculto).
      * @returns {componente}
      */
     this.ocultar=function() {
-        this.propiedad(null,"visibilidad","oculto");
+        this.propiedad("visibilidad","oculto");
         return this;
     };
 
@@ -2030,7 +2040,7 @@ var componente=new function() {
      * @returns {componente}
      */
     this.mostrar=function() {
-        this.propiedad(null,"visibilidad","visible");
+        this.propiedad("visibilidad","visible");
         return this;
     };
 

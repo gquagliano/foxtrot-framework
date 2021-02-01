@@ -861,6 +861,7 @@ var editor=new function() {
             padre=obj.obtenerPadre();
        
         obj.insertado();
+        obj.editor();
 
         //Creamos el destino en todos los elementos (no solo los contenedores) para poder mostrar las zonas de
         //soltado alrededor del componente (componenteSoltado validará si puede recibir hijos.)

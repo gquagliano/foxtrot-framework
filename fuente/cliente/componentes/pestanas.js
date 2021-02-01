@@ -148,6 +148,9 @@ var componentePestanas=function() {
                 .evento("click",function(ev) {
                     ev.preventDefault();
                     ev.stopPropagation();
+
+                    if(this.es({clase:"deshabilitado"})) return;
+
                     t.activarPestana(parseInt(this.dato("indice")));
                     
                     //En el editor, seleccionar pestaña
@@ -157,7 +160,21 @@ var componentePestanas=function() {
                     }
                 },true);
 
-            if(pestana.esActiva()) {
+            var habilitado=pestana.habilitado();
+            if(!habilitado) {
+                boton.agregarClase("deshabilitado");
+            } else {
+                boton.removerClase("deshabilitado");
+            }
+
+            var visible=pestana.visible();
+            if(!visible) {
+                boton.agregarClase("d-none");
+            } else {
+                boton.removerClase("d-none");
+            }
+
+            if(pestana.esActiva()&&visible&&habilitado) {
                 boton.agregarClase("activa");
                 pestanaActiva=i;
             } else {

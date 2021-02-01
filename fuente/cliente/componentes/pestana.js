@@ -83,7 +83,12 @@ var componentePestana=function() {
 
         if(propiedad=="etiqueta") this.actualizarContenedor();
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);           
+        
+        //Regenerar los encabezados del componente Pestañas
+        var padre=this.obtenerPadre();
+        if(padre) padre.actualizarEncabezados(true);
+
         return this;
     };
 
@@ -143,17 +148,32 @@ var componentePestana=function() {
      * @returns {Componente}
      */
     this.eliminar=function(descendencia) {
+        this.clasePadre.eliminar.call(this,descendencia);        
+        
+        //Regenerar los encabezados del componente Pestañas
         var padre=this.obtenerPadre();
+        if(padre) padre.actualizarEncabezados(true);
 
-        this.clasePadre.eliminar.call(this,descendencia);
-        
-        if(!padre) return this;
-        
-        //Regenerar los encabezados del componente Pestaña
-        padre.actualizarEncabezados(true);
-        //Activar la ultima pestaña
-        padre.activarPestana(-1);
+        return this;
+    };
 
+    /**
+     * Oculta el componente (acceso directo a establecer la propiedad visibilidad=oculto).
+     * @returns {componente}
+     */
+    this.ocultar=function() {
+        this.desactivar();
+        this.propiedad("visibilidad","oculto");
+        return this;
+    };
+
+    /**
+     * Muestra el componente (acceso directo a establecer la propiedad visibilidad=visible).
+     * @returns {componente}
+     */
+    this.mostrar=function() {
+        //Reestablecer propiedad en lugar de asignar "visible", ya que la visibilidad en realidad depende de si está activa o no
+        this.propiedad("visibilidad",null);
         return this;
     };
 };

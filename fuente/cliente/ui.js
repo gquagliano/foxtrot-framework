@@ -1482,41 +1482,42 @@ var ui=new function() {
      * @returns {ui}
      */
     this.establecerEventos=function() {
-        if(!modoEdicion) {
-            if(esCordova) {
-                document.addEventListener("deviceready",function() {
-                    document.addEventListener("backbutton",function() {
-                        //Cerrar todos los menú y diálogos
+        if(modoEdicion) return this;
 
-                        if(self.obtenerMenuAbierto().length) {
-                            ui.cerrarMenus();
-                            return;
-                        }
+        if(esCordova) {
+            document.addEventListener("deviceready",function() {
+                document.addEventListener("backbutton",function() {
+                    //Cerrar todos los menú y diálogos
 
-                        if(self.obtenerDialogoAbierto()) {
-                            ui.cerrarDialogo();
-                            return;
-                        }
+                    if(self.obtenerMenuAbierto().length) {
+                        ui.cerrarMenus();
+                        return;
+                    }
 
-                        //Pasar el evento a los controladores y componentes                        
-                        if(ejecutarEvento("volver")) return;
+                    if(self.obtenerDialogoAbierto()) {
+                        ui.cerrarDialogo();
+                        return;
+                    }
 
-                        //Si la URL cambió, volver
-                        if(urlModificada>0) {
-                            self.volver();
-                            return;
-                        }
+                    //Pasar el evento a los controladores y componentes                        
+                    if(ejecutarEvento("volver")) return;
 
-                        //Por último, cerrar la aplicación
-                        ui.salir();
-                    },false);
+                    //Si la URL cambió, volver
+                    if(urlModificada>0) {
+                        self.volver();
+                        return;
+                    }
+
+                    //Por último, cerrar la aplicación
+                    ui.salir();
                 },false);
-            }
-
-            win.addEventListener("popstate",procesarOnPopState);
+            },false);
         }
 
-        win.addEventListener("resize",procesarResize);        
+        win.addEventListener("popstate",procesarOnPopState);
+        win.addEventListener("resize",procesarResize);   
+        
+        return this;
     };
 
     /**

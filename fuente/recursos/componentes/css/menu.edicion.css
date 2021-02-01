@@ -26,20 +26,18 @@
     display: block;
     opacity: 1;
 }
+.item-menu {
+    position: relative !important;
+}
+.item-menu .menu-contextual {
+    top: 0;
+}
 
-.menu-flotante.menu-edicion,
-.menu-sm-flotante.menu-edicion,
-.menu-md-flotante.menu-edicion,
-.menu-lg-flotante.menu-edicion
-.menu-xl-flotante.menu-edicion {
+.menu-flotante.menu-edicion {
     opacity: 1 !important;
     pointer-events: all !important;
 }
-.menu-deslizable.menu-edicion,
-.menu-sm-deslizable.menu-edicion,
-.menu-md-deslizable.menu-edicion,
-.menu-lg-deslizable.menu-edicion
-.menu-xl-deslizable.menu-edicion {
+.menu-deslizable.menu-edicion {
     opacity: 1 !important;
     left: 0 !important;
     pointer-events: all !important;

@@ -397,7 +397,7 @@ var componenteContenedorMenu=function() {
      */
     this.eliminar=function(descendencia) {
         this.clasePadre.call(this,descendencia);
-        if(ui.enModoEdicion()&&this.ancla) this.ancla.remover();
+        if(this.ancla) this.ancla.remover();
         return this;
     };
 };

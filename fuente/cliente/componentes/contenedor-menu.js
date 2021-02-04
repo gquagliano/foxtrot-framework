@@ -358,7 +358,17 @@ var componenteContenedorMenu=function() {
         menuAbierto=false;
 
         this.elemento.removerClase("menu-abierto");
-        ui.animarDesaparecer(this.elemento);
+
+        //Reestablecemos todas las propiedades anteriores para realizar limpieza en caso de que se haya producido un cambio de
+        //formato (flotante o deslizable <-> bloque) entre la apertura y cierre del menú, pero la animación no se debe realizar
+        //la animación si estamos en modo bloque
+
+        var modo=modoActual();
+        if(modo=="flotante") {
+            ui.animarDesaparecer(this.elemento);
+        } else if(modo=="deslizable") {
+            //TODO
+        }
 
         return this;
     };

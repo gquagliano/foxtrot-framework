@@ -17,7 +17,7 @@ class configuracion {
     public static $urlError=null;
     public static $enrutador=null;
     public static $rutaBase='/';
-    public static $zonaHoraria='America/Argentina/Buenos_Aires';
+    public static $zonaHoraria='UTC';
     public static $zonaHorariaMinutos=0;
     public static $servidorBd='127.0.0.1';
     public static $puertoBd=3306;

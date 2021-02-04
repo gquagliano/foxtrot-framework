@@ -366,6 +366,8 @@ class foxtrot {
         //foxtrot::inicializar(false) saltea la carga de una aplicación
         //foxtrot::inicializar() carga la aplicación utilizando el enrutador, o el parámetro -apl si es CLI
         if($aplicacion!==false) self::cargarAplicacion($aplicacion);
+
+        self::procesarConfiguracion();
         
         //Inicializar sesión luego de cargar la aplicación en caso de que haya objetos almacenados en ella 
         if(!self::$cli) sesion::inicializar();
@@ -409,6 +411,13 @@ class foxtrot {
         if($_SERVER['REQUEST_URI']==$url) exit;
         
         redir($url);
+    }
+
+    /**
+     * Procesa los valores de configuración establecidos.
+     */
+    protected static function procesarConfiguracion() {
+        date_default_timezone_set(configuracion::obtener('zonaHoraria'));
     }
 
     /**

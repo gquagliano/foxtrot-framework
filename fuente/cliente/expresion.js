@@ -81,8 +81,8 @@ function expresion(expr) {
 
     var analizarObjeto=function(nombre) {
         if(nombre==="") return "";
-        if(/^[0-9]$/.test(nombre)) return parseInt(nombre);
-        if(/^[0-9\.]$/.test(nombre)) return parseFloat(nombre);
+        if(/^[0-9]$/.test(nombre)&&!isNaN(nombre)) return parseInt(nombre);
+        if(/^[0-9\.]$/.test(nombre)&&!isNaN(nombre)) return parseFloat(nombre);
         if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
         if(nombre==="verdadero"||nombre==="v") return true;
         if(nombre==="falso"||nombre==="f") return false;
@@ -257,8 +257,8 @@ expresion.establecerFuncionesGlobales=function(obj) {
 expresion.analizarValor=function(valor) {
     if(typeof valor==="undefined") return null;
     if(typeof valor!=="string") return valor;
-    if(/^[0-9]$/.test(valor)) return parseInt(valor);
-    if(/^[0-9\.]$/.test(valor)) return parseFloat(valor);
+    if(/^[0-9]$/.test(valor)&&!isNaN(valor)) return parseInt(valor);
+    if(/^[0-9\.]$/.test(valor)&&!isNaN(valor)) return parseFloat(valor);
     if(valor==="false") return false;
     if(valor==="true") return true;
     if(valor==="null") return null;

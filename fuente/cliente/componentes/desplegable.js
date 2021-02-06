@@ -37,7 +37,8 @@ var componenteDesplegable=function() {
             },
             valor:{
                 etiqueta:"Valor inicial",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             propiedadClave:{
                 etiqueta:"Propiedad clave",
@@ -145,8 +146,8 @@ var componenteDesplegable=function() {
     var generarOpciones=function(listado,destino,prefijo) {
         if(typeof prefijo==="undefined") prefijo="";
 
-        var propClave=t.propiedad("propiedadClave"),
-            propValor=t.propiedad("propiedadEtiqueta"),
+        var propClave=t.propiedad(false,"propiedadClave"),
+            propValor=t.propiedad(false,"propiedadEtiqueta"),
             fn=function(clave,valor) {
                 document.crear("option")
                     .valor(clave)
@@ -162,8 +163,18 @@ var componenteDesplegable=function() {
 
                 if(util.esObjeto(obj)) {
                     //Si valor es un objeto, se admite el uso de propiedadClave y propiedadValor
-                    if(propClave) clave=obj[propClave];
-                    if(propValor) valor=obj[propValor];
+
+                    //Pueden ser expresiones
+                    if(expresion.esExpresion(propClave)) {
+                        clave=ui.evaluarExpresion(propClave,obj);
+                    } else if(propClave) {
+                        clave=obj[propClave];
+                    }
+                    if(expresion.esExpresion(propValor)) {
+                        valor=ui.evaluarExpresion(propValor,obj);
+                    } else if(propValor) {
+                        valor=obj[propValor];
+                    }
                 }
 
                 fn(clave,valor);
@@ -174,7 +185,14 @@ var componenteDesplegable=function() {
                 var valor=obj;
 
                 //Si valor es un objeto, se admite el uso de propiedadValor para determinar qué propiedad mostrar
-                if(util.esObjeto(obj)&&propValor) valor=obj[propValor];
+                if(util.esObjeto(obj)&&propValor) {    
+                    //Además puede ser una expresión
+                    if(expresion.esExpresion(propValor)) {
+                        valor=ui.evaluarExpresion(propValor,obj);
+                    } else {
+                        valor=obj[propValor];
+                    }
+                }
 
                 fn(clave,valor);
                 t.opciones[clave]=obj;
@@ -286,6 +304,9 @@ var componenteDesplegable=function() {
             } else if(typeof opciones==="object"&&opciones!==null) {
                 this.establecerOpciones(opciones);
             }
+            //En estos casos no almacenar en caché para que las expresiones vuelvan a evaluarse al actualizar
+            this.gruposAsignados=null;
+            this.opcionesAsignadas=null;
         }
 
         return this.clasePadre.actualizar.call(this);

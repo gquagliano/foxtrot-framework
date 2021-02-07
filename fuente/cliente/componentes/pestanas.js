@@ -87,6 +87,8 @@ var componentePestanas=function() {
         //Volver a la pestaña predeterminada (de otro modo, al guardar, queda activa la pestaña que está activa actualmente en el editor)
         var indice=this.propiedad("predeterminada");
         if(typeof indice==="string"||typeof indice==="number") this.activarPestana(indice);
+
+        return this.clasePadre.editorDesactivado.call(this);
     };    
 
     /**
@@ -96,6 +98,8 @@ var componentePestanas=function() {
     this.editor=function() {
         //Volver a la pestaña en la que se estaba trabajando
         if(editandoPestana) this.activarPestana(editandoPestana);
+
+        return this.clasePadre.editor.call(this);
     };
 
     /**

@@ -912,6 +912,7 @@ var editor=new function() {
         var vista=self.vistaArchivoAbierto,
             componentes=ui.obtenerInstanciasComponentes(vista);
         componentes.forEach(function(comp) {
+            if(comp.editando()) return;
             editor.prepararComponenteInsertado(comp);
         });
     }

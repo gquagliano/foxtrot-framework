@@ -42,6 +42,7 @@ var componente=new function() {
      * @var {(Element|Node)} elementoEventos - Elemento al cual se asignan los manejadores de eventos por defecto.
      * @var {boolean} arrastrable - Indica si el componente se puede arrastrar y soltar.
      * @var {boolean} fueInicializado - Indica si la instancia ya fue inicializada.
+     * @var {boolean} modoEdicionListo - Indica si la instancia ya fue preparado para editar el componente en el editor de vistas.
      * @var {string} nombreVista - Nombre de la vista a la cual pertenece la instancia.
      * @var {Object} datos - Origen de datos asignado.
      * @var {boolean} oculto - Indica si el componente está oculto, lo cual significa que el mismo no se publica en `componentes`, aunque tenga un nombre asignado (es independiente de la visiblidad del elemento del DOM).
@@ -61,6 +62,7 @@ var componente=new function() {
     this.elementoEventos=null;
     this.arrastrable=true;
     this.fueInicializado=false;
+    this.modoEdicionListo=false;
     this.nombreVista=null;
     this.datos=null;
     this.oculto=false;
@@ -1924,6 +1926,7 @@ var componente=new function() {
      * @returns {(boolean|undefined)}
      */
     this.editor=function() {
+        this.modoEdicionListo=true;
     };
 
     /**
@@ -1931,6 +1934,15 @@ var componente=new function() {
      * @returns {(boolean|undefined)}
      */
     this.editorDesactivado=function() {
+        this.modoEdicionListo=true;
+    };
+
+    /**
+     * Devuelve si ya fue preparado para editar.
+     * @returns {boolean}
+     */
+    this.editando=function() {
+        return this.modoEdicionListo;
     };
 
     /**

@@ -65,9 +65,19 @@
         //Verticalmente, intentar alinearlo con el pie de la ventana
         if(excedeY) {
             if(posicionamiento=="absolute") {
-                var nuevoAlto=altoVentana-margen-pos.y;
-                //TODO También mover hacia arriba para que nunca quede demasiado pequeño
-                elem.estilos({ maxHeight:nuevoAlto });
+                var nuevoAlto=altoVentana-margen-pos.y,
+                    desplazar=0;
+
+                //Mover hacia arriba para que nunca quede demasiado pequeño
+                var desplazar=nuevoAlto-alto-margen;
+                nuevoAlto="none";
+
+                elem.estilos({
+                    maxHeight:nuevoAlto,
+                    marginTop:desplazar
+                });
+                
+                //Opción de desplegar hacia arriba
                 //elem.agregarClase("desplegar-arriba");
             } else {
                 elem.estilos({ top:altoVentana-alto-margen });

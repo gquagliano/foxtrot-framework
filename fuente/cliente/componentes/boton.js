@@ -13,7 +13,8 @@
 var componenteBoton=function() {    
     "use strict";
 
-    this.componente="boton"; 
+    this.componente="boton";
+    this.contenidoEditable=true;   
     
     /**
      * Propiedades de Botón.

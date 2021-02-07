@@ -18,14 +18,9 @@ Tenemos el compromiso de crear **un framework que no sea como todos los demás**
 **[Video de introducción](https://youtu.be/j0hDNhlKW3Q)**  
 Instalación, descripción del gestor, el editor y la estructura del sistema, y vistazo general a las principales funciones.
 
-**[Aplicación de ejemplo](https://demo.foxtrotcloud.com)**  
-Usuario: admin  
-Contraseña: admin  
-*Nota: La aplicación de ejemplo publicada es de código cerrado y solo se incluye en este repositorio una pequeña parte suficiente para demostrar la funcionalidad de Foxtrot y servir de guía para comenzar tu desarrollo.*
-
 ☝ ¿Comentarios?  
 🤷‍♂️ ¿Dudas?  
-🤓 ¿Querés aprender a usar el framework? (cursos y soporte personalizado *sin cargo*)  
+🤓 ¿Querés aprender a usar el framework?
 ⌨ ¿Te gustaría contribuir?  
 **Escribinos:** contacto@foxtrot.ar
 

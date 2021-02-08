@@ -20,6 +20,7 @@ var controlador=new function() {
      * @var {string} nombre - Nombre del controlador.
      * @var {servidor} servidor - Acceso al controlador de servidor.
      * @var {componente} vista - Componente vista.
+     * @var {aplicacion} aplicacion - Acceso a la clase de la aplicación.
      * @var {string} controladorServidor - Nombre del controlador de servidor. Por defecto, coincide con el nombre propio.
      * @var {Object} componentes - Componentes por nombre.
      * @var {componente[]} instanciasComponentes - Listado de todos los componentes.
@@ -30,6 +31,7 @@ var controlador=new function() {
     this.nombre=null;
     this.servidor=null;
     this.vista=null;
+    this.aplicacion=null;
     this.controladorServidor=null;
     this.componentes={};
     this.instanciasComponentes=[];
@@ -65,9 +67,20 @@ var controlador=new function() {
     /**
      * Establece la instancia de la vista que está controlando actualmente.
      * @param {Componente} vista 
+     * @returns {controlador}
      */
     this.establecerVista=function(vista) {
         this.vista=vista;
+        return this;
+    };
+
+    /**
+     * Establece la propiedad `aplicacion`.
+     * @param {aplicacion} aplicacion 
+     * @returns {controlador}
+     */
+    this.establecerAplicacion=function(aplicacion) {
+        this.aplicacion=aplicacion;
         return this;
     };
 

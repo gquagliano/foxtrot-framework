@@ -1731,6 +1731,7 @@ var ui=new function() {
         //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
         if(obj) {
             obj.establecerVista(instanciasVistas[nombre]);
+            obj.establecerAplicacion(instanciaAplicacion);
             instanciasVistas[nombre].establecerControlador(nombre);
 
             //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores

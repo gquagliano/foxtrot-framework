@@ -34,8 +34,8 @@
                 </div>
                 <div class="componente contenedor {idVista}contenedor-17" data-fxid="{idVista}16">
                     <a href="#" data-fxid="{idVista}63" class="componente btn btn-primary boton {idVista}boton-64 mr-2 predeterminado">Guardar</a>
-                    <a href="#" data-fxid="{idVista}65" class="componente boton {idVista}boton-66">Guardar y nuevo</a>
-                    <a href="#" data-fxid="{idVista}67" class="componente boton {idVista}boton-68">Volver</a></div>
+                    <a href="#" data-fxid="{idVista}65" class="componente btn boton {idVista}boton-66">Guardar y nuevo</a>
+                    <a href="#" data-fxid="{idVista}67" class="componente btn boton {idVista}boton-68">Volver</a></div>
             </div>
         </div>
     </div>

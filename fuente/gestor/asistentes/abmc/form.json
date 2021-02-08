@@ -91,9 +91,7 @@
                 "estilo": "primary",
                 "click": "guardar",
                 "clase": "mr-2",
-                "predeterminado": {
-                    "g": true
-                }
+                "predeterminado": true
             }
         },
         {

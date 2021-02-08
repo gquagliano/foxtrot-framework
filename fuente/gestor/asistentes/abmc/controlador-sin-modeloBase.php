@@ -6,7 +6,7 @@
 
 namespace {espacio};
 
-use {claseModelo} as {aliasModelo};
+use {claseModelo} as modelo;
 
 defined('_inc') or exit;
 
@@ -23,30 +23,37 @@ class {nombre} extends \controlador {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         //$this->aplicacion->verificarLogin();
 
-        $modelo=new {aliasModelo};
-        
-        $donde=null;
-        $parametros=null;
+        $modelo=(new modelo)
+            ->establecerAlias('t');
 
         if($filtro->texto) {
-            $donde='t.`id`=@filtro{sqlFiltros}';
-            $parametros=[
+            $modelo->donde('t.`id`=@filtro{sqlFiltros}',[
                 'filtro'=>$filtro->texto,
                 'filtroParcial'=>'%'.$filtro->texto.'%'
-            ];
+            ]);
         }
 <!superior-multinivel
 
         $modelo->donde('{plural}.`{relacion}`=@{relacion}',['{relacion}'=>$filtro->{relacion}]);
 !>
 
-        $listado=$modelo->listarItems($donde,$parametros,$filtro->pagina);
+        if(!$filtro->pagina) $filtro->pagina=1;
+        $modelo->paginacion(50,$filtro->pagina);
+
+        $cantidad=$modelo->estimarCantidad();
+
+        $listado=$modelo->obtenerListado(true);        
 <!superior-multinivel
 
-        $listado->titulo='{plural} '.implode(' › ',$this->obtenerRuta($filtro->{relacion}));
+        $titulo='{plural} '.implode(' › ',$this->obtenerRuta($filtro->{relacion}));
 !>
 
-        return $listado;
+        return [
+            'cantidad'=>$cantidad,
+            'filas'=>$listado,
+            'paginas'=>ceil($cantidad/50),
+            'titulo'=>$titulo
+        ];
     }
 <!multinivel
 
@@ -69,7 +76,9 @@ class {nombre} extends \controlador {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         //$this->aplicacion->verificarLogin();
 
-        (new {aliasModelo})->eliminarItem($id);
+        (new modelo)
+            ->donde(['id'=>$id])
+            ->eliminar();
     }
 
     /**
@@ -87,10 +96,13 @@ class {nombre} extends \controlador {
 
         $datos->id=$id;
 
-        $nuevoId=(new {aliasModelo})->crearOModificarItem($datos);
+        $nuevoId=(new modelo)
+            ->establecerValores($datos)
+            ->guardar()
+            ->obtenerId();
 
         return [
-            'id'=>$nuevoId?$nuevoId:$id
+            'id'=>$nuevoId
         ];
     }
 
@@ -102,6 +114,9 @@ class {nombre} extends \controlador {
         //TODO Implementar el método verificarLogin() que evite que este método sea invocado por un usuario no autorizado.
         //$this->aplicacion->verificarLogin();
         
-        return (new {aliasModelo})->obtenerItem($id);
+        $item=(new modelo)
+            ->donde(['id'=>$id])
+            ->obtenerUno();
+        if($item) return $item->obtenerObjeto(true);
     }
 }

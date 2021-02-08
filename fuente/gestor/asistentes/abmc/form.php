@@ -15,7 +15,7 @@
 <body>
     <div id="foxtrot-cuerpo" class="componente vista contenedor" data-fxid="{idVista}2">
         <div class="componente contenedor container-fluid {idVista}contenedor-4 pb-4" data-fxid="{idVista}3">
-            <h1 class="componente texto" data-fxid="{idVista}4">...&nbsp;</h1>
+            <h1 class="componente texto m-0 py-5" data-fxid="{idVista}4">...&nbsp;</h1>
             <div class="formulario componente contenedor form {idVista}form-8" data-fxid="{idVista}7">
                 <div class="componente contenedor {idVista}contenedor-23 cuerpo-formulario" data-fxid="{idVista}22">
 
@@ -32,7 +32,10 @@
 !>
 
                 </div>
-                <div class="componente contenedor {idVista}contenedor-17" data-fxid="{idVista}16"><a href="#" data-fxid="{idVista}63" class="componente btn btn-primary boton {idVista}boton-64 mr-2 predeterminado">Guardar</a><a href="#" data-fxid="{idVista}65" class="componente btn btn-secondary boton {idVista}boton-66 mr-2">Nuevo</a><a href="#" data-fxid="{idVista}67" class="componente btn btn-secondary boton {idVista}boton-68">Volver</a></div>
+                <div class="componente contenedor {idVista}contenedor-17" data-fxid="{idVista}16">
+                    <a href="#" data-fxid="{idVista}63" class="componente btn btn-primary boton {idVista}boton-64 mr-2 predeterminado">Guardar</a>
+                    <a href="#" data-fxid="{idVista}65" class="componente boton {idVista}boton-66">Guardar y nuevo</a>
+                    <a href="#" data-fxid="{idVista}67" class="componente boton {idVista}boton-68">Volver</a></div>
             </div>
         </div>
     </div>

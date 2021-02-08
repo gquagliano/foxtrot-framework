@@ -6,6 +6,7 @@
             "nombre": null,
             "componente": "vista",
             "propiedades": {
+                "clase": "m-0 py-5",
                 "titulo": "{titulo}"
             }
         },
@@ -144,7 +145,8 @@
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "click": "ir:{nombreSingular}/?id={id}&{relacion}={parametros.{relacion}}"
+                "click": "ir:{nombreSingular}/?id={id}&{relacion}={parametros.{relacion}}",
+                "predeterminado": true
             }
         },
 !>

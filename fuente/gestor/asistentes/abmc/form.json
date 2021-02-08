@@ -6,6 +6,7 @@
             "nombre": null,
             "componente": "vista",
             "propiedades": {
+                "clase": "m-0 py-5",
                 "titulo": "{titulo}"
             }
         },
@@ -103,9 +104,7 @@
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "estilo": "secondary",
-                "click": "nuevo",
-                "clase": "mr-2"
+                "click": "guardarNuevo"
             }
         },
         {
@@ -115,7 +114,6 @@
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "estilo": "secondary",
                 "click": "volver"
             }
         },

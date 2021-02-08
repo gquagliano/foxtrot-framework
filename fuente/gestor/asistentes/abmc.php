@@ -159,7 +159,7 @@ class abmc extends asistente {
 
         if($this->opcionGenerarConsulta) $this->generarConsulta();
 
-        if(!file_exists($this->rutaPhp)) $this->generarControladorServidor();
+        if(!file_exists($this->rutaPhp)) $this->generarControladorServidor($this->opcionActualizarModelo);
 
         if($this->opcionActualizarModelo) $this->actualizarModelo();
         
@@ -331,8 +331,8 @@ class abmc extends asistente {
         return \foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().$partes->ruta.($publico?'publico\\':''),true,true);        
     }
 
-    private function generarControladorServidor() {
-        $php=file_get_contents(__DIR__.'/abmc/controlador.php');
+    private function generarControladorServidor($usaModeloBase) {
+        $php=file_get_contents(__DIR__.'/abmc/'.($usaModeloBase?'controlador':'controlador-sin-modeloBase').'.php');
 
         $requeridos=[];
         $sql='';

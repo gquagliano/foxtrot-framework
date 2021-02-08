@@ -16,7 +16,7 @@
 <body>
     <div id="foxtrot-cuerpo" class="componente contenedor vista" data-fxid="{idVista}2">
         <div class="componente contenedor {idVista}contenedor-33 container-fluid d-flex flex-column" data-fxid="{idVista}4">
-            <h1 class="componente texto" data-fxid="{idVista}34">{titulo}</h1>
+            <h1 class="componente texto m-0 py-5" data-fxid="{idVista}34">{titulo}</h1>
             <div class="row contenedor componente fila" data-fxid="{idVista}56">
                 <div class="contenedor componente {idVista}columna-58 col- col-12 col-lg-6 col-xl-8 columna" data-fxid="{idVista}57">
 <!superior-multinivel
@@ -44,7 +44,7 @@
                                     <td data-fxid="{idVista}46-{n}" class="componente contenedor {idVista}tabla-columna-47 tabla-columna"><span class="etiqueta componente {idVista}etiqueta-49" data-fxid="{idVista}48-{n}"></span></td>
 !>
                                     <td data-fxid="{idVista}50" class="componente contenedor {idVista}tabla-columna-51 tabla-columna">
-                                        <a href="#" data-fxid="{idVista}52" class="componente btn {idVista}boton-54 boton">Modificar</a>
+                                        <a href="#" data-fxid="{idVista}52" class="componente btn {idVista}boton-54 boton predeterminado">Modificar</a>
                                         <a href="#" data-fxid="{idVista}53" class="componente btn {idVista}boton-55 boton">Eliminar</a>
 <!siguiente-multinivel
                                         <a href="#" data-fxid="{idVista}60" class="componente btn {idVista}boton-60 ml-3 boton">{siguiente} 🡒</a>

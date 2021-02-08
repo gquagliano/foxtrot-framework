@@ -45,28 +45,35 @@ ui.registrarControlador("{nombreVista}",function() {
     /**
      * Guarda el formulario.
      */
-    this.guardar=function() {
+    this.guardar=function(volver) {
+        if(typeof volver!=="boolean") volver=true;
+
         this.servidor.guardar(function(obj) {
             t.id=obj.id;
-            componentes.encabezado.obtenerElemento().establecerHtml("Modificar {singular}");
-            ui.alerta("Guardado correctamente.");
+            ui.alerta("Guardado correctamente.",function() {
+                if(volver) {
+                    t.volver(false);
+                } else {
+                    ui.irA("{nombreSingular}");
+                }
+            },{icono:"ok"});
         },ui.obtenerValores(),this.id);
     };
 
     /**
-     * Click en Nuevo.
+     * Click en Guradar y nuevo.
      */
-    this.nuevo=function() {
-        ui.confirmar("¿Estás seguro de querer continuar?",function(r) {
-            if(r) ui.irA("{nombreSingular}");
-        });
+    this.guardarNuevo=function() {
+        this.guardar(false);
     };
 
     /**
      * Click en Volver.
      */
-    this.volver=function() {
-        ui.confirmar("¿Estás seguro de querer continuar?",function(r) {
+    this.volver=function(confirmar) {
+        if(typeof confirmar!=="boolean") confirmar=true;
+
+        var fn=function(r) {
 <!superior-multinivel
             if(r) ui.irA("{nombrePlural}/?{relacion}="+t.{relacion});
 !>
@@ -76,7 +83,13 @@ ui.registrarControlador("{nombreVista}",function() {
 <!no-superior-multinivel
             if(r) ui.irA("{nombrePlural}");
 !>
-        });
+        };
+
+        if(confirmar) {
+            ui.confirmar("¿Estás seguro de querer continuar?",fn,{icono:"pregunta"});
+        } else {
+            fn(true);
+        }
     };
 
     /**
@@ -90,6 +103,6 @@ ui.registrarControlador("{nombreVista}",function() {
         }[numero];
         ui.alerta(mensaje,function() {
             componentes.nombre.foco();
-        });
+        },{icono:"informacion"});
     };
 });

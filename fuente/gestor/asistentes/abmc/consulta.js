@@ -65,7 +65,7 @@ ui.registrarControlador("{nombreVista}",function() {
             if(resp) t.servidor.eliminar(function() {
                 t.cargarDatos();
             },id);
-        });
+        },{icono:"pregunta"});
     };
 
     /**

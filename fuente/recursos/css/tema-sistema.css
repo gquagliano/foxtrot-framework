@@ -180,16 +180,22 @@ textarea.form-control {
     top: 0rem;
     left: -2.1rem;
 }
-.custom-radio .custom-control-label::after,
-.custom-checkbox .custom-control-label::after {
-    top: .44rem;
-    left: -1.64rem;
+.custom-radio .custom-control-label::after {
+    top: .5rem;
+    left: -1.65rem;
     border-radius: 100%;
-    width: .5rem;
-    height: .5rem;
+    width: .45rem;
+    height: .45rem;
     background-image: none !important;
     background-color: transparent;
     transition: background-color .2s;
+}
+.custom-checkbox .custom-control-label::after {
+    top: -.2rem;
+    left: -2.3rem;
+    display: block;
+    width: 1.8rem;
+    height: 1.8rem;
 }
 .custom-radio .custom-control-input:checked~.custom-control-label::after {
     background-color: #fff;

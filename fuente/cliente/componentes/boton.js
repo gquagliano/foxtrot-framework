@@ -64,7 +64,8 @@ var componenteBoton=function() {
             predeterminado:{
                 etiqueta:"Acción predeterminada",
                 tipo:"bool",
-                ayuda:"Si se activa esta propiedad, se invocará el evento Click de este botón cuando se ejecute la acción predeterminada del formulario (por ejemplo, al presionar Enter en un campo)."
+                ayuda:"Si se activa esta propiedad, se invocará el evento Click de este botón cuando se ejecute la acción predeterminada del formulario (por ejemplo, al presionar Enter en un campo).",
+                adaptativa:false
             }
         }
     };

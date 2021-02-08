@@ -1591,7 +1591,7 @@ var editor=new function() {
         });
         
         //Notificar a los componentes que el editor ha sido desactivado mediante el evento `editorDesactivado`
-        ui.eventoComponentes(null,"editorDesactivado",true);
+        ui.eventoComponentes(null,"editorDesactivado");
 
         return this;
     };
@@ -1622,7 +1622,7 @@ var editor=new function() {
         document.body.removerClase("foxtrot-trabajando");
         
         //Notificar a los componentes que el editor ha sido activado mediante el evento `editor`
-        ui.eventoComponentes(null,"editor",true);
+        ui.eventoComponentes(null,"editor");
         
         return this;
     };

@@ -74,6 +74,8 @@ var componenteAlternar=function() {
         this.campo.atributo("id",id);
         this.elementoEditable.atributo("for",id);
 
+        if(!ui.enModoEdicion()) this.valor(null);
+
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -137,11 +139,13 @@ var componenteAlternar=function() {
             elems=doc.querySelectorAll(".componente.opcion"),
             componentesGrupo={},
             valorActivo=null,
+            valorInicial=null,
             componenteActivo=null;
     
         elems.forEach(function(elem) {
-            var componente=ui.obtenerInstanciaComponente(elem),
-                campo=componente.obtenerCampo(),
+            var componente=ui.obtenerInstanciaComponente(elem);
+            if(!componente) return;
+            var campo=componente.obtenerCampo(),
                 campoGrupo=campo.dato("grupo"),
                 campoValor=campo.dato("valor");        
             if(typeof campoGrupo==="undefined"||grupo!=campoGrupo) return;
@@ -155,12 +159,16 @@ var componenteAlternar=function() {
             }
 
             if(desactivar&&componente!=t) componente.valorIndividual(false);
+
+            var v=componente.propiedad(false,"valorInicial");
+            if(v) valorInicial=v;
         });
 
         return {
             componentes:componentesGrupo,
             componenteActivo:componenteActivo,
-            valorActivo:valorActivo
+            valorActivo:valorActivo,
+            valorInicial:valorInicial
         };
     };
 
@@ -243,6 +251,7 @@ var componenteAlternar=function() {
     this.valor=function(valor) {
         var grupo=this.campo.dato("grupo"),
             miValor=this.campo.dato("valor");
+
         if(typeof valor!=="boolean"&&typeof grupo==="string") {
             //Buscar/establecer valor del grupo
 
@@ -252,7 +261,10 @@ var componenteAlternar=function() {
             var grupo=this.buscarGrupo();
             
             //Devolver valor del componente activo
-            if(typeof valor==="undefined") return grupo.valorActivo;            
+            if(typeof valor==="undefined") return grupo.valorActivo;  
+            
+            //Si es null, volver al valor inicial del grupo (puede contener expresiones)
+            if(valor===null) valor=ui.evaluarExpresion(grupo.valorInicial,this.obtenerDatos());
 
             //Activar el componente que coincida con el valor asignado y desactivar el resto
             grupo.componentes.porCada(function(valorComponente,componente) {
@@ -262,6 +274,10 @@ var componenteAlternar=function() {
         }
 
         //Valor individual
+            
+        //Si es null, volver al valor inicial (puede contener expresiones)
+        if(valor===null) valor=this.propiedad("valorInicial");
+
         return this.valorIndividual(valor);
     };
 };

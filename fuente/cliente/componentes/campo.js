@@ -78,6 +78,8 @@ var componenteCampo=function() {
 
         if(this.propiedad("tipo")=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
 
+        if(!ui.enModoEdicion()) this.valor(null);
+
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -164,7 +166,7 @@ var componenteCampo=function() {
         } 
         
         if(propiedad=="valorInicial") {
-            this.campo.atributo("value",valor);
+            this.campo.valor(valor);
             return this;
         }
         
@@ -229,6 +231,9 @@ var componenteCampo=function() {
                 }
             } catch {}
         }
+
+        //Si es null, volver al valor inicial (puede contener expresiones)
+        if(valor===null) valor=this.propiedad("valorInicial");
 
         return this.clasePadre.valor.call(this,valor);
     };

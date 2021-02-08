@@ -71,6 +71,8 @@ var componenteDesplegable=function() {
         this.campo=this.elemento.querySelector("select");
         this.elementoEventos=this.campo;
 
+        if(!ui.enModoEdicion()) this.valor(null);
+
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -320,6 +322,17 @@ var componenteDesplegable=function() {
         var valor=this.campo.valor();
         if(!this.opciones.hasOwnProperty(valor)) return null;
         return this.opciones[valor];
+    };
+
+    /**
+     * Devuelve o establece el valor del campo.
+     * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
+     * @returns {(*|undefined)}
+     */
+    this.valor=function(valor) {
+        //Si es null, volver al valor inicial (puede contener expresiones)
+        if(valor===null) valor=this.propiedad("valor");
+        return this.clasePadre.valor.call(this,valor);
     };
 };
 

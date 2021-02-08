@@ -46,10 +46,7 @@ var componenteFecha=function() {
         if(this.fueInicializado) return this; 
         this.campo=this.elemento.querySelector("input");
 
-        if(!ui.enModoEdicion()) {
-            var v=this.propiedad("valorInicial");
-            if(v) this.establecerValor(v);
-        }
+        if(!ui.enModoEdicion()) this.valor(null);
 
         this.clasePadre.inicializar.call(this);
         return this;
@@ -284,9 +281,9 @@ var componenteFecha=function() {
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
             return this.valorEpoch;
-        } else if(!valor) {
-            this.establecerValor(null);
         } else {
+            //Si es null, volver al valor inicial (puede contener expresiones)
+            if(valor===null) valor=this.propiedad("valorInicial");
             this.establecerValor(valor);
         }
         return this;

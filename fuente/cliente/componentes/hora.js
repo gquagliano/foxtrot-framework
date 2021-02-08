@@ -20,6 +20,9 @@ var componenteHora=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
+
+        if(!ui.enModoEdicion()) this.valor(null);
+        
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -31,6 +34,17 @@ var componenteHora=function() {
         this.elemento=document.crear(""); 
         this.clasePadre.crear.call(this);
         return this;
+    };
+
+    /**
+     * Devuelve o establece el valor del campo.
+     * @param {*} [valor] - Valor a establecer. Si se omite, devolverá el valor actual.
+     * @returns {(*|undefined)}
+     */
+    this.valor=function(valor) {
+        //Si es null, volver al valor inicial (puede contener expresiones)
+        if(valor===null) valor=this.propiedad("valorInicial");
+        return this.clasePadre.valor.call(this,valor);
     };
 };
 

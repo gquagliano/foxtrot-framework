@@ -17,11 +17,13 @@ class controlador {
      * @var \cliente $cliente Instancia de la interfaz con el cliente.
      * @var bool $publica Indica si es la versión pública del controlador.
      * @var \controlador $privado Si es una clase pública, instancia de la versión privada del controlador.
+     * @var \aplicacion $aplicacion Instancia de la clase privada de la aplicación.
      */
     protected $nombre;
     protected $cliente;
     protected $publica=false;
     protected $privado=null;
+    protected $aplicacion;
 
     /**
      * Constructor.
@@ -44,6 +46,8 @@ class controlador {
 
         //Inicializar comunicación con el cliente
         if(!$this->cliente) $this->cliente=new cliente();
+
+        $this->aplicacion=\foxtrot::obtenerAplicacion();
     }
 
     /**

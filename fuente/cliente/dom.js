@@ -191,6 +191,18 @@
         }
 
         if(util.esIndefinido(valor)) return this.value?this.value:"";
+
+        if(valor===null) valor="";
+
+        //En un select, ante un valor vacío se debe seleccionar la primer opción
+        if(!valor&&tipo=="select-one") {
+            var opcion=null;
+            //¿Hay una opción con value=""?
+            if(valor==="") opcion=this.querySelector("option[value='']");
+            if(!opcion) opcion=this.querySelector("option");
+            if(opcion) valor=opcion.value;
+        }
+
         this.value=valor;
         return this;
     };

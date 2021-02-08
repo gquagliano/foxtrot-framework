@@ -148,10 +148,11 @@ var componentePestana=function() {
      * @returns {Componente}
      */
     this.eliminar=function(descendencia) {
+        var padre=this.obtenerPadre();
+        
         this.clasePadre.eliminar.call(this,descendencia);        
         
         //Regenerar los encabezados del componente Pestañas
-        var padre=this.obtenerPadre();
         if(padre) padre.actualizarEncabezados(true);
 
         return this;

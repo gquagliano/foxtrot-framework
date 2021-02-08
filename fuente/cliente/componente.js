@@ -1934,7 +1934,7 @@ var componente=new function() {
      * @returns {(boolean|undefined)}
      */
     this.editorDesactivado=function() {
-        this.modoEdicionListo=true;
+        this.modoEdicionListo=false;
     };
 
     /**

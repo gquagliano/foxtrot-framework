@@ -148,7 +148,7 @@ var componenteAlternar=function() {
             var campo=componente.obtenerCampo(),
                 campoGrupo=campo.dato("grupo"),
                 campoValor=campo.dato("valor");        
-            if(typeof campoGrupo==="undefined"||grupo!=campoGrupo) return;
+            if(typeof campoGrupo==="undefined"||grupo==""||grupo!=campoGrupo) return;
             if(typeof campoValor==="undefined"||!campoValor||campoValor.trim()=="") campoValor=componente.obtenerNombre();
 
             componentesGrupo[campoValor]=componente;
@@ -252,7 +252,7 @@ var componenteAlternar=function() {
         var grupo=this.campo.dato("grupo"),
             miValor=this.campo.dato("valor");
 
-        if(typeof valor!=="boolean"&&typeof grupo==="string") {
+        if(typeof valor!=="boolean"&&typeof grupo==="string"&&grupo!="") {
             //Buscar/establecer valor del grupo
 
             if(typeof miValor==="undefined") miValor=this.nombre;

@@ -220,6 +220,12 @@ var editable=new function() {
                 e.stopPropagation();
             };
 
+        //Si el elemento está vacío, al menos en Opera, no recibe foco
+        if(this.innerText=="") {
+            this.innerText=" ";
+            //TODO Seleccionar todo
+        }
+
         //Crear un destino especial que permita soltar algunos componentes (etiqueta, imagen) como así también contenido como texto e imágenes
         this.crearDestino({
             drop:onDrop,

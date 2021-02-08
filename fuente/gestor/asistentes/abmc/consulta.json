@@ -6,7 +6,6 @@
             "nombre": null,
             "componente": "vista",
             "propiedades": {
-                "clase": "m-0 py-5",
                 "titulo": "{titulo}"
             }
         },
@@ -31,6 +30,7 @@
             "selector": null,
             "componente": "texto",
             "propiedades": {
+                "clase": "m-0 py-5",
                 "formato": "h1"
             }
         },

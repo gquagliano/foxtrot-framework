@@ -116,6 +116,8 @@ var util=new function() {
         while(ruta.length>1) {
             var parte=ruta.shift();
             if(typeof objeto==="object") {
+                //Si llegamos a una propiedad indefinida, crear un objeto
+                if(typeof objeto[parte]==="undefined") objeto[parte]={};
                 objeto=objeto[parte];
             } else {
                 break;

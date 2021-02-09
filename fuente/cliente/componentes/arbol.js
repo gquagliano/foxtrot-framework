@@ -20,6 +20,8 @@ var componenteArbol=function() {
     this.itemsAutogenerados=[];
     this.itemSinDatos=null;
     this.listado=null;
+    
+    this.redibujar=true;
 
     /**
      * Propiedades de Árbol.
@@ -101,6 +103,7 @@ var componenteArbol=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla, y sin tener en cuenta el valor de `propiedad`.
+        this.redibujar=true;
         this.clasePadre.establecerDatos.call(this,obj,actualizar,false,true);
         return this;
     };
@@ -140,7 +143,8 @@ var componenteArbol=function() {
         if(ui.enModoEdicion()) return;
 
         //Aplicar cambios en los campos
-        this.obtenerDatosActualizados();
+        if(!this.redibujar) this.obtenerDatosActualizados();
+        this.redibujar=false;
 
         var rutasAbiertas=this.obtenerItemsAbiertos();        
 

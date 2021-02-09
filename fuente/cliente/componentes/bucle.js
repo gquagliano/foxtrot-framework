@@ -19,6 +19,8 @@ var componenteBucle=function() {
     this.itemSinDatos=null;
     this.elementoPadre=null;
 
+    this.redibujar=true;
+
     /**
      * Propiedades de Bucle.
      */
@@ -72,6 +74,7 @@ var componenteBucle=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
+        this.redibujar=true;
         this.clasePadre.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
@@ -86,7 +89,8 @@ var componenteBucle=function() {
         if(ui.enModoEdicion()) return;
 
         //Aplicar cambios en los campos
-        this.obtenerDatosActualizados();
+        if(!this.redibujar) this.obtenerDatosActualizados();
+        this.redibujar=false;
 
         //Almacenar dónde está el foco
         var enfocables=this.elemento.buscarEnfocables(),    

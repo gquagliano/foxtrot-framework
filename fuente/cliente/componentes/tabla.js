@@ -15,6 +15,8 @@ var componenteTabla=function() {
 
     this.componente="tabla";
 
+    this.redibujar=true;
+
     var t=this;
 
     /**
@@ -85,6 +87,7 @@ var componenteTabla=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
+        this.redibujar=true;
         this.clasePadre.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
@@ -99,7 +102,8 @@ var componenteTabla=function() {
         if(ui.enModoEdicion()) return;
 
         //Aplicar valores de los campos
-        this.obtenerDatosActualizados();
+        if(!this.redibujar) this.obtenerDatosActualizados();
+        this.redibujar=false;
 
         //Almacenar dónde está el foco
         var enfocables=this.elemento.buscarEnfocables(),    

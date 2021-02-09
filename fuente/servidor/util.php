@@ -77,10 +77,13 @@ class util {
      * Aplica un formato estándar a un valor numérico.
      * @param int|float $valor Valor a formatear.
      * @param int $decimales Cantidad de decimales.
+     * @param bool $ocultarDecimales Trunca los decimales cuando el valor es `.00`.
      * @return string
      */
-    public static function formatoNumero($valor,$decimales=2) {
+    public static function formatoNumero($valor,$decimales=2,$ocultarDecimales=false) {
+        if(!is_numeric($valor)) $valor=floatval($valor);
         if(!$valor) $valor=0;
+        if($ocultarDecimales&&$valor==round($valor)) return number_format($valor,0,'','.');
         return number_format($valor,$decimales,',','.');
     }
     

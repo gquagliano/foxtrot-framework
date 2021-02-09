@@ -253,6 +253,7 @@ var componenteBuscador=function() {
     this.mostrarResultados=function() {
         if(!this.desplegableResultados) this.desplegableResultados=ui.crearDesplegable(this,{
                 adaptativo:false, //debe permitir continuar escribiendo
+                reposicionar:false,
                 clase:"buscador-resultados-busqueda",
                 retornoCierre:function() {
                     t.desplegableResultados=null;

@@ -525,15 +525,16 @@
         },opciones);
 
         var altoElemRelativo=0,
-            anchoElemRelativo=0;
+            anchoElemRelativo=0,
+            posicionElementoRelativo=null;
 
         if(elementoRelativo) {
-            var posicionElemento=elementoRelativo.posicionAbsoluta();
+            posicionElementoRelativo=elementoRelativo.posicionAbsoluta();
             altoElemRelativo=elementoRelativo.alto();
             anchoElemRelativo=elementoRelativo.ancho();
             elemento.estilos({
-                left:posicionElemento.x,
-                top:posicionElemento.y+altoElemRelativo,
+                left:posicionElementoRelativo.x,
+                top:posicionElementoRelativo.y+altoElemRelativo,
                 right:"auto",
                 bottom:"auto"                
             });
@@ -574,9 +575,15 @@
             var bottom=altoVentana-posicion.y;
             if(opciones.reposicionar&&altoVentana-bottom>=alto+margen) {
                 //Abrir hacia arriba (si hay más espacio)
+                var nuevoTop="auto",nuevoBottom="auto";
+                if(posicionElementoRelativo) {
+                    nuevoTop=posicionElementoRelativo.y-alto;
+                } else {
+                    nuevoBottom=altoVentana-alto-margen;
+                }
                 elemento.estilos({
-                    top:"auto",
-                    bottom:bottom
+                    top:nuevoTop,
+                    bottom:nuevoBottom
                 });
             } else if(opciones.redimensionar) {
                 //Redimensionar
@@ -610,7 +617,12 @@
      * @param {Desplegable} desplegable
      */
     var posicionarDesplegable=function(desplegable) {
-        ui.posicionarElemento(desplegable.elem,desplegable.componente.obtenerElemento());
+        var opc={
+            reposicionar:desplegable.opciones.reposicionar,
+            redimensionar:desplegable.opciones.redimensionar,
+            anchoComponente:desplegable.opciones.anchoComponente
+        };
+        ui.posicionarElemento(desplegable.elem,desplegable.componente.obtenerElemento(),null,opc);
     };
 
     /**
@@ -620,6 +632,8 @@
      * @param {Object} [opciones] - Configuración del desplegable.
      * @param {string} [opciones.desplegar="abajo"] - Dirección hacia la cual se desplegará, relativo al componente (actualmente "abajo" es el único valor disponible).
      * @param {boolean} [opciones.reposicionar=true] - Reposicionar el desplegable si no hay espacio suficiente hasta el borde de la ventana. Si es false, será redimensionado.
+     * @param {bool} [opciones.redimensionar=true] - Si admite redimensionar el elemento si es necesario.
+     * @param {bool} [opciones.anchoComponente=true] - Ajustar al ancho del componente relativo.
      * @param {boolean} [opciones.adaptativo=true] - Si es true, tendrá una presentación diferente en pantallas pequeñas para mejor usabilidad.
      * @param {string} [opciones.clase] - Clase CSS.
      * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
@@ -634,6 +648,8 @@
      * @param {Object} [opciones] - Configuración del desplegable.
      * @param {string} [opciones.desplegar="abajo"] - Dirección hacia la cual se desplegará, relativo al componente (actualmente "abajo" es el único valor disponible).
      * @param {boolean} [opciones.reposicionar=true] - Reposicionar el desplegable si no hay espacio suficiente hasta el borde de la ventana. Si es false, será redimensionado.
+     * @param {bool} [opciones.redimensionar=true] - Si admite redimensionar el elemento si es necesario.
+     * @param {bool} [opciones.anchoComponente=true] - Ajustar al ancho del componente relativo.
      * @param {boolean} [opciones.adaptativo=true] - Si es true, tendrá una presentación diferente en pantallas pequeñas para mejor usabilidad.
      * @param {string} [opciones.clase] - Clase CSS.
      * @param {function} [opciones.retornoCierre] - Función de retorno al cerrarse el desplegable en forma automática.
@@ -661,6 +677,8 @@
         opciones=Object.assign({
             desplegar:"abajo",
             reposicionar:true,
+            redimensionar:true,
+            anchoComponente:true,
             adaptativo:true,
             clase:null,
             retornoCierre:null,

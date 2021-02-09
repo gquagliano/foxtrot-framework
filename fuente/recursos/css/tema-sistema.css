@@ -370,7 +370,9 @@ body.escritorio .btn:hover,
     color: #3790dc;
 }
 .form-control:focus,
-.custom-select:focus {
+.custom-select:focus,
+.btn:focus,
+.btn.focus {
     border-color: #337ab7;
 }
 .btn-primary {

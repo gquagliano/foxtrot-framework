@@ -161,6 +161,8 @@ var componenteFecha=function() {
                     t.desplegable=null;
                     t.campo.blur();
                 },
+                anchoComponente:false,
+                redimensionar:false,
                 mantener:true,
                 clase:"desplegable-calendario"
             });

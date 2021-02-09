@@ -550,6 +550,40 @@ var componente=new function() {
      */
     this.obtenerDatos=function() {
         return this.datos;
+    };    
+
+    /**
+     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
+     * @param {(componente[]} [buscarEn] - Parámetro de uso interno. Listado de componentes donde realizar la búsqueda de campos.
+     * @returns {Object[]}
+     */
+    this.obtenerDatosActualizados=function(buscarEn) {
+        var t=this,
+            fn=function(comp,indice) {
+                comp.obtenerHijos().forEach(function(hijo) {
+                    var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
+                        nombre=hijo.obtenerNombre(),
+                        valor=hijo.valor();
+                    if(typeof valor!=="undefined") {
+                        if(propiedad) {
+                            util.asignarPropiedad(t.datos[indice],propiedad,valor);
+                        } else if(nombre) {
+                            t.datos[indice][nombre]=valor;
+                        }
+                    }
+                    fn(hijo,indice);
+                });
+            };
+
+        buscarEn.forEach(function(hijo) {
+            //if(!hijo.autogenerado) return;
+            if(t.datos.length<=hijo.indice) t.datos[hijo.indice]={};
+            
+            //Dentro de cada item, buscar recursivamente todos los componentes relacionados con una propiedad
+            fn(hijo,hijo.indice);
+        });
+
+        return this.datos;
     };
 
     /**

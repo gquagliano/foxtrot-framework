@@ -25,6 +25,9 @@ var componenteBuscador=function() {
     this.resultados=[];
     this.ajax=null;
 
+    if(!ui.hasOwnProperty("_buscador_cacheValores")) ui._buscador_cacheValores={};
+    var prefijoCache;
+
     //Selección
     this.item=null;
     this.valorActual=null;
@@ -43,8 +46,13 @@ var componenteBuscador=function() {
                 etiqueta:"Texto de relleno",
                 adaptativa:false
             },
+            //Deprecada por sobreescribir la propiedad común propiedadValor
             propiedadValor:{
                 etiqueta:"Propiedad valor",
+                adaptativa:false
+            },            
+            propiedadValorItem:{
+                etiqueta:"Propiedad valor del ítem seleccionado",
                 adaptativa:false
             },
             propiedadEtiqueta:{
@@ -74,6 +82,8 @@ var componenteBuscador=function() {
 
         this.campo=this.elemento.querySelector("input");
         this.elementoEventos=this.campo;
+        
+        prefijoCache=this.nombreVista+this.nombre;
 
         this.clasePadre.inicializar.call(this);
         return this;
@@ -153,7 +163,7 @@ var componenteBuscador=function() {
 
         //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
         if(this.seleccionarPrimerElemento||buscandoUnico) {
-            if(resultados&&resultados.length) this.establecerValor(0);
+            if(resultados&&resultados.length&&resultados[0]!==null) this.establecerValor(0);
             return;
         }
 
@@ -172,6 +182,12 @@ var componenteBuscador=function() {
         this.abortarBusqueda();
 
         this.buscando=true;
+
+        if(valor&&ui._buscador_cacheValores.hasOwnProperty(prefijoCache+valor)) {
+            t.establecerResultados([ui._buscador_cacheValores[prefijoCache+valor]],true);
+            return;
+        }
+        
         //this.seleccionarPrimerElemento=false;
         ui.mostrarPrecarga("barra");
 
@@ -235,7 +251,7 @@ var componenteBuscador=function() {
         var valor=this.propiedad(false,propiedad);
 
         //Predeterminados
-        if(!valor) valor={propiedadValor:"id",propiedadEtiqueta:"titulo"}[propiedad];
+        if(!valor) valor={propiedadValor:"id",propiedadValorItem:"id",propiedadEtiqueta:"titulo"}[propiedad];
 
         //Expresión
         if(expresion.contieneExpresion(valor)) return ui.evaluarExpresion(valor,obj);
@@ -305,8 +321,14 @@ var componenteBuscador=function() {
         } else {
             this.item=this.resultados[indice];
 
-            this.valorActual=obtenerValorItem("propiedadValor",this.item);
+            //Solución provisoria hasta que sea removido propiedadValor
+            var propiedad="propiedadValorItem";
+            if(!this.propiedad(false,"propiedadValorItem")) propiedad="propiedadValor";
+            this.valorActual=obtenerValorItem(propiedad,this.item);
+            
             this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
+
+            ui._buscador_cacheValores[prefijoCache+this.valorActual]=this.item;
         }
 
         this.campo.valor(this.etiquetaActual);
@@ -442,6 +464,7 @@ var componenteBuscador=function() {
         } else if(!valor) {
             this.establecerValor(null);
         } else {
+            this.valorActual=valor;
             this.buscar(null,valor);
         }
         return this;

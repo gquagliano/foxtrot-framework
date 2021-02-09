@@ -314,7 +314,11 @@ var componenteBuscador=function() {
      * @returns {Componente}
      */
     this.establecerValor=function(indice) {
+        var valorModificado=false;
+
         if(indice===null) {
+            if(this.valorActual!==null) valorModificado=true;
+
             this.item=null;
             this.valorActual=null;
             this.etiquetaActual="";
@@ -324,8 +328,11 @@ var componenteBuscador=function() {
             //Solución provisoria hasta que sea removido propiedadValor
             var propiedad="propiedadValorItem";
             if(!this.propiedad(false,"propiedadValorItem")) propiedad="propiedadValor";
-            this.valorActual=obtenerValorItem(propiedad,this.item);
+            var nuevoValor=obtenerValorItem(propiedad,this.item);
+
+            if(this.valorActual!==nuevoValor) valorModificado=true;
             
+            this.valorActual=nuevoValor;
             this.etiquetaActual=obtenerValorItem("propiedadEtiqueta",this.item);
 
             ui._buscador_cacheValores[prefijoCache+this.valorActual]=this.item;
@@ -336,7 +343,7 @@ var componenteBuscador=function() {
         this.cerrarResultados();
 
         //Evento
-        this.procesarEvento("modificacion","modificacion");
+        if(valorModificado) this.procesarEvento("modificacion","modificacion");
 
         return this;
     };

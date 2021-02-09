@@ -577,7 +577,9 @@ var componente=new function() {
 
         buscarEn.forEach(function(hijo) {
             //if(!hijo.autogenerado) return;
-            if(t.datos.length<=hijo.indice) t.datos[hijo.indice]={};
+            if(t.datos.length<=hijo.indice)
+                //t.datos[hijo.indice]={};
+                return;                
             
             //Dentro de cada item, buscar recursivamente todos los componentes relacionados con una propiedad
             fn(hijo,hijo.indice);

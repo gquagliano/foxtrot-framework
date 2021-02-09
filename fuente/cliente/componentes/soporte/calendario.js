@@ -101,18 +101,18 @@ function calendario(opciones) {
      * @param {number} fechaSeleccionada 
      * @returns {HTMLTableCellElement}
      */
-    var construirTd=function(ano,mes,dia,hoy,fechaSeleccionada) {
+    var construirDia=function(ano,mes,dia,hoy,fechaSeleccionada) {
         var fecha=new Date(ano,mes,dia);
 
-        var td=document.crear("td"),
+        var div=document.crear("div"),
             a=document.crear("<a tabindex='-1' href='#' rel='"+util.fechaAEpoch(fecha)+"'>"+dia+"</a>")
-                .anexarA(td)
+                .anexarA(div)
                 .evento("click",clickFecha);
 
         if(iguales(hoy,fecha)) a.agregarClase("calendario-hoy");
         if(iguales(fechaSeleccionada,fecha)) a.agregarClase("calendario-seleccion");
 
-        return td;
+        return div;
     };
 
     /**
@@ -199,7 +199,8 @@ function calendario(opciones) {
             .establecerTexto(this.meses[this.mes]+" "+this.ano)
             .atributo("title",this.meses[this.mes]+" "+this.ano);
 
-        var tabla=document.crear("table");
+        var cuerpo=document.crear("div");
+        cuerpo.className="calendario-cuerpo";
 
         var ano=this.ano;
         var mes=this.mes;
@@ -225,23 +226,23 @@ function calendario(opciones) {
         var totalMesAnterior=diasDelMes(anoMesAnterior,mesAnterior);
 
         //Generar encabezado
-        var trDias=document.crear("tr");
+        var divDias=document.crear("div");
         for(var i=0;i<this.dias.length;i++)
-            trDias.anexar(
-                document.crear("th").establecerTexto(this.dias[i])
+            divDias.anexar(
+                document.crear("label").establecerTexto(this.dias[i])
             );            
-        tabla.anexar(trDias);
+            cuerpo.anexar(divDias);
 
-        var tr=document.crear("tr"),
+        var div=document.crear("div"),
             diaSemana=0;
 
         //Agregar últimos días del mes anterior
         for(i=1; i<=primerDia; i++) {
             var n=totalMesAnterior-primerDia+i;
 
-            construirTd(anoMesAnterior,mesAnterior,n,hoy,fechaSeleccionada)
+            construirDia(anoMesAnterior,mesAnterior,n,hoy,fechaSeleccionada)
                 .agregarClase("calendario-dias-mes-previo")
-                .anexarA(tr);
+                .anexarA(div);
 
             diaSemana++;
         }
@@ -250,12 +251,12 @@ function calendario(opciones) {
         for(i=1;i<=total;i++) {
             //Cada 7 días, insertar en la tabla y generar nuevo tr
             if (diaSemana%7==0) {
-                if (diaSemana>0) tabla.anexar(tr);
-                tr=document.crear("tr");
+                if (diaSemana>0) cuerpo.anexar(div);
+                div=document.crear("div");
             }
 
-            construirTd(ano,mes,i,hoy,fechaSeleccionada)
-                .anexarA(tr)
+            construirDia(ano,mes,i,hoy,fechaSeleccionada)
+                .anexarA(div)
 
             diaSemana++;
         }
@@ -264,16 +265,16 @@ function calendario(opciones) {
         if(diaSemana%7>0) {
             var dif=7-diaSemana%7;
             for(i=1;i<=dif;i++)
-                construirTd(anoMesSiguiente,mesSiguiente,i,hoy,fechaSeleccionada)
+                construirDia(anoMesSiguiente,mesSiguiente,i,hoy,fechaSeleccionada)
                     .agregarClase("calendario-dias-mes-siguiente")
-                    .anexarA(tr)
+                    .anexarA(div)
         }
         
-        tabla.anexar(tr)
+        cuerpo.anexar(div);
 
-        var tablaVieja=this.elem.querySelector("table");
-        if(tablaVieja) tablaVieja.remover();
-        this.elem.anexar(tabla);
+        var cuerpoViejo=this.elem.querySelector("div.calendario-cuerpo");
+        if(cuerpoViejo) cuerpoViejo.remover();
+        this.elem.anexar(cuerpo);
 
         return this;
     };

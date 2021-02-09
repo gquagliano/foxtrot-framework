@@ -434,16 +434,32 @@ li.menu-separador::after {
 .calendario * {
     outline: none;
 }
-.calendario table {
+.calendario-cuerpo {
     width: 100%;
     max-width: 250px;
     margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+.calendario-cuerpo>div {
+    display: flex;
+    padding: .1em 0;
+}
+.calendario-cuerpo>div>div,
+.calendario-cuerpo>div>label {
+    flex: 1;
+    padding: 0 .2em;
+    text-align: center;
+}
+.calendario-cuerpo label {
+    font-weight: bold;
 }
 .calendario a {
     color: inherit;
     transition: color .2s,background-color .2s;
     display: block;
     border-radius: 2px;
+    padding: .2em 0;
 }
 .calendario .calendario-dias-mes-previo a,
 .calendario .calendario-dias-mes-siguiente a {

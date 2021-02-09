@@ -409,7 +409,7 @@ class entidad {
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|alias|contrasena|indice|modelo|relacion|columna|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|alias|contrasena|indice|simple|modelo|relacion|columna|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=strtolower(trim($etiqueta));

@@ -1164,7 +1164,7 @@ class modelo {
      */
     public function ejecutarConsultasRelacionadas() {
         foreach($this->campos as $nombre=>$campo) {
-            if($campo->tipo=='relacional'&&($campo->relacion=='1:1'||$campo->relacion=='1:0')) { //Las relaciones uno a muchos se procesarán en otra etapa
+            if($campo->tipo=='relacional'&&!$campo->simple&&($campo->relacion=='1:1'||$campo->relacion=='1:0')) { //Las relaciones uno a muchos se procesarán en otra etapa
                 //La entidad puede ser una instancia, un objeto anónimo o un array asociativo
                 $entidad=$this->consultaValores->$nombre;
                 if($entidad===null) continue;
@@ -1191,9 +1191,8 @@ class modelo {
                 $modelo->establecerValor('id',$entidad->id)
                     ->guardar();
 
-                $idInsertado=$modelo->obtenerId();
-
-                $this->consultaValores->$columna=$idInsertado;
+                $this->consultaValores->$nombre=$modelo->obtenerEntidad();
+                $this->consultaValores->$columna=$modelo->obtenerId();
             }
         }
         return $this;

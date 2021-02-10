@@ -213,18 +213,16 @@ var editable=new function() {
      * @memberof external:Node
      */
     Node.prototype.iniciarEdicion=function() {
+        //Si el elemento está vacío, al menos en Opera, no recibe foco
+        if(this.innerText=="") this.append("Editar...");
+        
         this.editable(true);
+        //TODO Seleccionar todo
 
         var t=this,
             f=function(e) {
                 e.stopPropagation();
             };
-
-        //Si el elemento está vacío, al menos en Opera, no recibe foco
-        if(this.innerText=="") {
-            this.innerText=" ";
-            //TODO Seleccionar todo
-        }
 
         //Crear un destino especial que permita soltar algunos componentes (etiqueta, imagen) como así también contenido como texto e imágenes
         this.crearDestino({

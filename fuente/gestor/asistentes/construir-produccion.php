@@ -113,7 +113,7 @@ class construirProduccion extends asistente {
         //En servidor, los módulos se copian completos
         //En cliente, se copian solo los subdirectorios de módulos
         function copiarModulos($ruta){
-            $subdirs=glob(_desarrollo.$ruta.'{*,.[!.]*,..?*}',GLOB_ONLYDIR);
+            $subdirs=glob(_desarrollo.$ruta.'{*,.[!.]*,..?*}',GLOB_BRACE|GLOB_ONLYDIR);
             foreach($subdirs as $subdir) {
                 //Si tiene .ignorar, solo copiar una vez
                 $nombre=basename($subdir);

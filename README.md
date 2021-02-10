@@ -20,7 +20,7 @@ Instalación, descripción del gestor, el editor y la estructura del sistema, y 
 
 ☝ ¿Comentarios?  
 🤷‍♂️ ¿Dudas?  
-🤓 ¿Querés aprender a usar el framework?
+🤓 ¿Querés aprender a usar el framework?  
 ⌨ ¿Te gustaría contribuir?  
 **Escribinos:** contacto@foxtrot.ar
 

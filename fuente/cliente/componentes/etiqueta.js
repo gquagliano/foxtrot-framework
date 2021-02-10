@@ -42,6 +42,8 @@ var componenteEtiqueta=function() {
      */
     this.actualizar=function() {
         this.clasePadre.actualizar.call(this,false);
+        
+        this.actualizacionEnCurso=true;
 
         var propiedad=this.propiedad(false,"propiedad"),
             contenido=this.propiedad(false,"contenido"),
@@ -59,8 +61,9 @@ var componenteEtiqueta=function() {
             if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
             this.elemento.establecerHtml(resultado);
         }
+        
+        this.actualizacionEnCurso=false;
 
-        this.clasePadre.actualizar.call(this);
         return this;
     };
 

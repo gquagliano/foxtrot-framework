@@ -142,6 +142,8 @@ var componenteArbol=function() {
 
         if(ui.enModoEdicion()) return;
 
+        this.actualizacionEnCurso=true;
+
         //Aplicar cambios en los campos
         if(!this.redibujar) this.obtenerDatosActualizados();
         this.redibujar=false;
@@ -172,6 +174,8 @@ var componenteArbol=function() {
             //Volver a abrir los items
             this.abrirItems(rutasAbiertas);
         }
+        
+        this.actualizacionEnCurso=false;
 
         return this;
     };

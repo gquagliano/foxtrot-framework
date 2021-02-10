@@ -97,12 +97,16 @@ var componenteItemMenu=function() {
     this.actualizar=function(actualizarHijos) {
         this.clasePadre.actualizar.call(this,actualizarHijos);
         
+        this.actualizacionEnCurso=true;
+        
         //Agregar/limpiar clase .con-submenu
         if(!this.elemento.querySelector(".menu")) {
             this.elemento.removerClase("con-submenu");
         } else {
             this.elemento.agregarClase("con-submenu");
         }
+        
+        this.actualizacionEnCurso=false;
 
         return this;
     };

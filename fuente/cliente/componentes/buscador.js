@@ -508,7 +508,6 @@ var componenteBuscador=function() {
         } else if(!valor) {
             this.establecerValor(null);
         } else {
-            this.valorActual=valor;
             this.buscar(null,valor);
         }
         return this;

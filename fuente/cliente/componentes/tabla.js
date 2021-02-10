@@ -100,6 +100,8 @@ var componenteTabla=function() {
         this.clasePadre.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
+        
+        this.actualizacionEnCurso=true;
 
         //Aplicar valores de los campos
         if(!this.redibujar) this.obtenerDatosActualizados();
@@ -131,6 +133,8 @@ var componenteTabla=function() {
                 if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
             }
         }
+        
+        this.actualizacionEnCurso=false;
 
         return this;
     };

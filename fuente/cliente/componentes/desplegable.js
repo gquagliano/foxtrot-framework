@@ -291,6 +291,8 @@ var componenteDesplegable=function() {
      */
     this.actualizar=function() {
         this.clasePadre.actualizar.call(this,false);
+        
+        this.actualizacionEnCurso=true;
 
         //Regenerar opciones asignadas mediante establecerOpciones() / establecerGrupos()
         if(this.gruposAsignados) {
@@ -311,7 +313,9 @@ var componenteDesplegable=function() {
             this.opcionesAsignadas=null;
         }
 
-        return this.clasePadre.actualizar.call(this);
+        this.actualizacionEnCurso=false;
+        
+        return this;
     };
 
     /**

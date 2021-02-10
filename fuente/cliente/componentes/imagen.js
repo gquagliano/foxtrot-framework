@@ -161,6 +161,8 @@ var componenteImagen=function() {
      */
     this.actualizar=function() {
         this.clasePadre.actualizar.call(this,false);
+        
+        this.actualizacionEnCurso=true;
 
         //Actualizar el origen para todos los tamaños
         var origen=this.propiedadObj("origen"),
@@ -169,8 +171,9 @@ var componenteImagen=function() {
                 var resultado=ui.evaluarExpresion(valor,t.datos);
                 t.propiedadModificada("origen",resultado,tamano);
             });
+        
+        this.actualizacionEnCurso=false;
 
-        this.clasePadre.actualizar.call(this);
         return this;
     };
 

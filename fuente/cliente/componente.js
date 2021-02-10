@@ -50,6 +50,7 @@ var componente=new function() {
      * @var {componente} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
      * @var {Object} valoresPropiedades - Almacen de valores de parámetros.
      * @var {boolean} listoEjecutado - Indica si ya fue ejecutado el evento *Listo*.
+     * @var {boolean} actualizacionEnCurso - Determina si el componente se encuentra en proceso de actualización o redibujado.
      */
     this.id=null;
     this.selector=null;
@@ -70,6 +71,7 @@ var componente=new function() {
     this.clasePadre=this;
     this.valoresPropiedades=null;
     this.listoEjecutado=false;
+    this.actualizacionEnCurso=false;
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -878,6 +880,14 @@ var componente=new function() {
     };
 
     /**
+     * Devuelve `true` si el componente se encuentra en proceso de actualización o redibujado.
+     * @reutns {boolean}
+     */
+    this.actualizando=function() {
+        return this.actualizacionEnCurso;
+    };
+
+    /**
      * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
      * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
      * forma específica.
@@ -885,6 +895,8 @@ var componente=new function() {
      * @returns {componente}
      */
     this.actualizar=function(actualizarHijos) {
+        this.actualizacionEnCurso=true;
+
         if(typeof actualizarHijos==="undefined") actualizarHijos=true;
         if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
 
@@ -910,6 +922,7 @@ var componente=new function() {
                 hijo.actualizar();
             });
 
+        this.actualizacionEnCurso=false;
         return this;
     };
 

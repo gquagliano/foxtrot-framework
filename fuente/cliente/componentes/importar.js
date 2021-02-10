@@ -141,11 +141,13 @@ var componenteImportar=function() {
      * Actualiza el componente y la vista que contiene.
      * @returns {componenteImportar}
      */
-    this.actualizar=function() {
+    this.actualizar=function() {        
+        this.actualizacionEnCurso=true;
+
         var vista=this.vista();
         if(vista) vista.actualizar();
-        this.clasePadre.actualizar.call(this);
-        return this;
+
+        return this.clasePadre.actualizar.call(this);
     };
 
     /**

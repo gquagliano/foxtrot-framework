@@ -65,6 +65,8 @@ var componenteCondicional=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
+        this.actualizacionEnCurso=true;
+
         var condicion;
         if(!this.propiedad(false,"condicion")) {
             //Sin condición, utilizar el origen de datos
@@ -79,6 +81,7 @@ var componenteCondicional=function() {
             condicion=this.propiedad("condicion");
         }
         this.establecerVisibilidad(!!condicion);
+        
         return this.clasePadre.actualizar.call(this);
     };
 

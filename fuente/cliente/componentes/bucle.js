@@ -87,6 +87,8 @@ var componenteBucle=function() {
         this.clasePadre.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
+        
+        this.actualizacionEnCurso=true;
 
         //Aplicar cambios en los campos
         if(!this.redibujar) this.obtenerDatosActualizados();
@@ -119,6 +121,8 @@ var componenteBucle=function() {
                 if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
             }
         }
+        
+        this.actualizacionEnCurso=false;
 
         return this;
     };

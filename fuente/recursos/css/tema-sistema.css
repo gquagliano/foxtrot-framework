@@ -201,6 +201,7 @@ textarea.form-control {
     background-color: #fff;
 }
 .custom-select {
+    background-size: 18px;
     padding: 0 2.1rem 0 .5rem;
 }
 .btn,.btn * {

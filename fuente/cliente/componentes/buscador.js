@@ -65,6 +65,14 @@ var componenteBuscador=function() {
                 ayuda:"Valor del item a seleccionar por defecto, realizando la búsqueda correspondiente al cargar la vista. Puede contener expresiones."
             }
         },
+        "Comportamiento":{
+            desplegable:{
+                etiqueta:"Desplegable",
+                tipo:"logico",
+                adaptativa:false,
+                ayuda:"Habilita la opción de desplegar todos los ítems sin haber ingresado un texto a buscar."
+            }
+        },
         "Eventos":{
             buscar:{
                 etiqueta:"Buscar",
@@ -85,6 +93,14 @@ var componenteBuscador=function() {
         
         prefijoCache=this.nombreVista+this.nombre;
 
+        var boton=this.elemento.querySelector(".btn-desplegar");
+        if(!boton) {
+            //Por retrocompatibilidad, se agrega el botón, si no existe, al inicializar
+            boton=document.crear("<button type='button' class='btn-desplegar'></button>")
+                .anexarA(this.elemento);
+        }
+        boton.evento("click",clickDesplegar);        
+
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -96,6 +112,7 @@ var componenteBuscador=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<input class='form-control' autocomplete='off' type='text'>"); 
         this.elemento.anexar(this.campo);
+        document.crear("<button type='button' class='btn-desplegar'></button>").anexarA(this.elemento);
         this.clasePadre.crear.call(this);
         return this;
     };
@@ -172,13 +189,21 @@ var componenteBuscador=function() {
         return this;
     };
 
+    var clickDesplegar=(function(evento) {
+        evento.preventDefault();
+        this.buscar(null,null,true);
+    }).bind(this);
+
     /**
      * Inicia una nueva búsqueda.
      * @param {string} texto - Búsqueda por texto.
      * @param {string} [valor] - Busca un elemento específico.
+     * @param {boolean} [todo=false] - Ejecuta la búsqueda de todos los resultados, aunque `texto` esté vacío.
      * @returns {componente}
      */
-    this.buscar=function(texto,valor) {
+    this.buscar=function(texto,valor,todo) {
+        if(typeof todo==="undefined") todo=false;
+        
         this.abortarBusqueda();
 
         this.buscando=true;
@@ -195,6 +220,7 @@ var componenteBuscador=function() {
 
         if(texto) obj.buscar=texto;
         else if(valor) obj.valor=valor;
+        else if(todo) obj.listado=true;
         else return this;
         
         this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(res) {
@@ -280,7 +306,7 @@ var componenteBuscador=function() {
         var elem=this.desplegableResultados.obtenerElemento();
         elem.establecerHtml("");
 
-        if(!this.resultados.length) {
+        if(!this.resultados.length||this.resultados.length[0]===null) {
             elem.anexar("<span class='sin-datos'>No se encontraron coincidencias.</span>");
         } else {
             var clickItem=function(ev) {
@@ -292,6 +318,8 @@ var componenteBuscador=function() {
                 };
 
             this.resultados.forEach(function(item,indice) {
+                if(!item) return;
+
                 var etiqueta=obtenerValorItem("propiedadEtiqueta",item);
 
                 elem.anexar(
@@ -388,7 +416,7 @@ var componenteBuscador=function() {
                 return;
             }
             
-            if(this.resultados.length) {
+            if(this.resultados.length&&this.resultados[0]!==null) {
                 //Si está mostrando los resultados de búsqueda, seleccionar el elemento activo
                 var indice=this.indiceSeleccionado<0?0:this.indiceSeleccionado; //si no se presionó arriba/abajo, indiceSeleccionado=-1, seleccionar el primer elemento
                 this.establecerValor(indice);     
@@ -440,9 +468,18 @@ var componenteBuscador=function() {
                 this.campo.removerAtributo("disabled");
             }
             return this;
-        }        
+        }      
         
-        if(propiedad=="valor") return this; //No se asigna al campo realmente
+        if(propiedad=="desplegable") {
+            if(valor===true||valor===1||valor==="1") {
+                this.elemento.agregarClase("desplegable");
+            } else {
+                this.elemento.removerClase("desplegable");
+            }
+            return this;
+        }
+        
+        if(propiedad=="valor") return this; //No se asigna al campo
 
         this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

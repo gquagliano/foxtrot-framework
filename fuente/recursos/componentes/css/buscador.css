@@ -31,6 +31,33 @@
 .buscador-resultados-busqueda>.activo {
     background-color: #e8ebf1;
 }
+.buscador .btn-desplegar {
+    background-color: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: absolute;
+    z-index: 2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235e6c7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 18px;
+    background-position: center;
+    background-repeat: no-repeat;
+    right: 1px;
+    top: 1px;
+    bottom: 1px;
+    width: 2.1em;
+    display: none;
+    cursor: pointer;
+}
+.buscador.desplegable .btn-desplegar {
+    display: block;
+}
+.buscador.desplegable input {
+    background-position: center right 2em;
+}
+
 @media(max-width:576px) {
     .buscador-resultados-busqueda>* {
         padding: .74rem 1rem;

@@ -1253,12 +1253,21 @@ class modelo {
      * @return \modelo
      */
     public function obtenerUno() {
+        $fila=$this->obtenerUnResultado();
+        if(!$fila) return null;
+        return $this->fabricarEntidad($fila);
+    }
+    
+    /**
+     * Ejecuta la consulta devolviendo un único objeto. A diferencia con `obtenerUno()`, el objeto devuelto no es una entidad, sino que es 
+     * el primer resultado tal cual proviene de la base de datos.
+     * @return object
+     */
+    public function obtenerUnResultado() {
         $this->consultaCantidad=1;
         $this->ejecutarConsulta();
         if(!$this->resultado) return null;
-        $fila=$this->resultado->siguiente();
-        if(!$fila) return null;
-        return $this->fabricarEntidad($fila);
+        return $this->resultado->siguiente();
     }
 
     /**
@@ -1276,8 +1285,26 @@ class modelo {
     }
 
     /**
+     * Ejecuta la consulta y devuelve un array de objetos. A diferencia con `obtenerListado()` y `obtenerListadoAsociativo()`, los objetos devueltos
+     * no son entidades, sino que son los resultados tal cual provienen de la base de datos.
+     * @return array
+     */
+    public function obtenerListadoResultados() {
+        $this->ejecutarConsulta();
+        if(!$this->resultado) return [];
+
+        $resultado=[];
+        while($fila=$this->resultado->siguiente()) {
+            $resultado[]=$fila;
+        }
+
+        return $resultado;
+    }
+
+    /**
      * Ejecuta la consulta y devuelve un array de elementos.
-     * @param boolean $objetoEstandar Si es `true`, devolverá un listado de objetos anónimos (`stdClass`) en lugar de instancias de la entidad.
+     * @param boolean $objetoEstandar Si es `true`, devolverá un listado de objetos anónimos (`stdClass`) en lugar de instancias de la entidad. Nótese
+     * que solo se incluirán los campos que se correspondan con campos de la entidad.
      * @param string $campos Campos a asignar a la entidad. Si se omite, se asignarán todos los campos disponibles en la consulta. Esto es útil cuando se desee
      * obtener un listado con menos campos que los que se han seleccionado con `seleccionar()`.
      * @return array

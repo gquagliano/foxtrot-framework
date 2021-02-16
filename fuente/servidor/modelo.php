@@ -38,6 +38,9 @@ class modelo {
     protected $tipoEntidad;
     protected $nombre;
     
+    /** @var \aplicacion $aplicacion Instancia de la clase privada de la aplicación. */
+    protected $aplicacion;
+
     protected $consultaColumnas=null;
     protected $consultaCondiciones=[];
     protected $gruposAbiertos=0;
@@ -88,6 +91,7 @@ class modelo {
      * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
      */
     function __construct($bd=null) {
+        $this->aplicacion=foxtrot::obtenerAplicacion();
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
         
         $nombre=get_called_class();

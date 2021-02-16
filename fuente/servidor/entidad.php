@@ -21,6 +21,8 @@ class entidad {
     protected $tipoModelo;
     public static $omitirFechas=false;
     
+    /** @var \aplicacion $aplicacion Instancia de la clase privada de la aplicación. */
+    protected $aplicacion;    
 
     /**
      * @var int $id ID.
@@ -41,6 +43,7 @@ class entidad {
      * `(new entidad)->establecerValoresPublicos($valores)` si el objeto proviene del cliente.
      */
     function __construct($valores=null) {
+        $this->aplicacion=foxtrot::obtenerAplicacion();
         if($valores) $this->establecerValores($valores);
     }
 

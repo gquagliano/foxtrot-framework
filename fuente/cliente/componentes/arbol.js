@@ -267,28 +267,30 @@ var componenteArbol=function() {
 
         //TODO Implementar util.recorrerSinRecursion() cuando este método esté estable  (al momento de escribir esto, se estaba migrando desde Foxtrot 6)
 
-        listado.forEach(function(obj,indice) {
-            var li=documento.crear("<li class='arbol-item'>")
-                    .anexarA(ul),
-                contenedor=documento.crear("<div class='contenedor arbol-componentes-item'>")
-                    .anexarA(li);
-            if(expandido) li.agregarClase("expandido");
+        if(listado) {
+            listado.forEach(function(obj,indice) {
+                var li=documento.crear("<li class='arbol-item'>")
+                        .anexarA(ul),
+                    contenedor=documento.crear("<div class='contenedor arbol-componentes-item'>")
+                        .anexarA(li);
+                if(expandido) li.agregarClase("expandido");
 
-            var rutaItem=ruta.concat(indice).join(".");
-            li.dato("ruta",rutaItem);
+                var rutaItem=ruta.concat(indice).join(".");
+                li.dato("ruta",rutaItem);
 
-            t.obtenerHijos().forEach(function(hijo) {
-                if(!t.autogenerado) t.generarItem(hijo,contenedor,obj,nivel,rutaItem,indice);
+                t.obtenerHijos().forEach(function(hijo) {
+                    if(!t.autogenerado) t.generarItem(hijo,contenedor,obj,nivel,rutaItem,indice);
+                });
+
+                //Si tienen la propiedad con la descendencia, avanzar recursivamente
+                if(obj.hasOwnProperty(propiedad)) {
+                    t.generarItems(obj[propiedad],li,nivel+1,ruta.concat(indice),propiedad,expandido);
+                }
+
+                //Sin hijos
+                if(!obj.hasOwnProperty(propiedad)||!util.esArray(obj[propiedad])||!obj[propiedad].length) li.agregarClase("ultimo-nivel");
             });
-
-            //Si tienen la propiedad con la descendencia, avanzar recursivamente
-            if(obj.hasOwnProperty(propiedad)) {
-                t.generarItems(obj[propiedad],li,nivel+1,ruta.concat(indice),propiedad,expandido);
-            }
-
-            //Sin hijos
-            if(!obj.hasOwnProperty(propiedad)||!util.esArray(obj[propiedad])||!obj[propiedad].length) li.agregarClase("ultimo-nivel");
-        });
+        }
 
         return this;
     };

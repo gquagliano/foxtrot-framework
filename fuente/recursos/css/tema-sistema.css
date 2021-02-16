@@ -224,6 +224,11 @@ textarea.form-control {
 .custom-control-input:focus~.custom-control-label::before {
     box-shadow: none !important;
 }
+.buscador .btn-desplegar {
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    transition: border-color .2s;
+}
 
 /*Tablas*/
 
@@ -454,6 +459,9 @@ body.escritorio .btn-secondary:hover,
 .custom-radio .custom-control-input:focus:checked~.custom-control-label::before,
 .custom-switch .custom-control-input:focus:checked~.custom-control-label::after {
     border-color: #3b3e40;
+}
+.buscador.desplegable .btn-desplegar:focus {
+    border-color: #347ab7;
 }
 
 /*

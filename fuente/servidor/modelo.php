@@ -200,7 +200,8 @@ class modelo {
     public function fabricarModelo($modelo,$bd=null,$replicarConfiguracion=true) {   
         if($bd===null) $bd=$this->bd;    
 
-        if(class_exists($modelo)) { //Nombre completo de la clase (ej. modelo::class)            
+        if(class_exists($modelo)&&is_subclass_of($modelo,self::class)) {
+            //Nombre completo de la clase (ej. modelo::class)            
             $obj=new $modelo($bd);
         } else {
             $obj=\foxtrot::obtenerInstanciaModelo($modelo,$bd);

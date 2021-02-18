@@ -283,7 +283,7 @@ class modelo {
         }
 
         $this->sql=null;
-        $this->alias='t1';
+        //$this->alias='t1';
 
         $this->ultimoId=null;
 

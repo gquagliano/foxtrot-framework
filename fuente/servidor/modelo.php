@@ -1577,7 +1577,7 @@ class modelo {
      */
     public function prepararRelaciones(&$alias,$recursivo,&$cadenaRelaciones) {
         //Detectar una relación cíclica (se relaciona con un modelo que ya fue relacionado previamente, potencialmente derivando en un bucle infinito)
-        $relacionadoPreviamente=in_array($this->nombreModelo,$cadenaRelaciones);
+        $relacionadoPreviamente=array_count_values($cadenaRelaciones)[$this->nombreModelo];
         $cadenaRelaciones[]=$this->nombreModelo;
 
         foreach($this->campos as $nombre=>$campo) {
@@ -1601,7 +1601,7 @@ class modelo {
                 if($campo->relacion=='1:n') {
                     $condicion=$obj->alias.'.`'.$campo->columna.'`='.$this->alias.'.`id`';
                     //Desactivar el procesamiento del campo si se detecta una relación cíclica
-                    if(in_array($campo->modelo,$cadenaRelaciones)) $this->omitirRelaciones($nombre);
+                    if(array_count_values($cadenaRelaciones)[$campo->modelo]>1) $this->omitirRelaciones($nombre);
                 } else {
                     $condicion=$obj->alias.'.`id`='.$this->alias.'.`'.$campo->columna.'`';
                 }
@@ -1617,7 +1617,7 @@ class modelo {
                 );
 
                 //Avanzar recursivamente                
-                if(!$relacionadoPreviamente&&$recursivo) {
+                if((!$relacionadoPreviamente||$relacionadoPreviamente<1)&&$recursivo) {
                     //Si el modelo se relaciona con sí mismo, solo procesar una vez
                     $continuar=$campo->modelo!=$this->nombreModelo;
                     $obj->prepararRelaciones($alias,$continuar,$cadenaRelaciones);

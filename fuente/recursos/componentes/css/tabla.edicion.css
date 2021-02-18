@@ -23,6 +23,7 @@
 }
 .foxtrot-modo-edicion td {
     padding-top: 3em !important;
+    width: auto !important;
 }
 .foxtrot-modo-edicion td .foxtrot-encabezado-temporal {
     white-space: nowrap;

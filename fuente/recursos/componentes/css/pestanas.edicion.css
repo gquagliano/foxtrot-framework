@@ -1,0 +1,16 @@
+/**
+ * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+.foxtrot-modo-edicion.foxtrot-mostrar-invisibles .pestanas>.encabezados .btn.d-none {
+    display: inline-block !important;
+}
+.foxtrot-modo-edicion.foxtrot-bordes .contenedor .pestanas .pestana.d-none {
+    display: none !important;
+}
+.foxtrot-modo-edicion.foxtrot-bordes .contenedor .pestanas .pestana.activa.d-none {
+    display: block !important;
+}

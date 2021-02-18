@@ -153,7 +153,7 @@ var componentePestanas=function() {
                     ev.preventDefault();
                     ev.stopPropagation();
 
-                    if(this.es({clase:"deshabilitado"})) return;
+                    if(!ui.enModoEdicion()&&this.es({clase:"deshabilitado"})) return;
 
                     t.activarPestana(parseInt(this.dato("indice")));
                     
@@ -178,7 +178,7 @@ var componentePestanas=function() {
                 boton.removerClase("d-none");
             }
 
-            if(pestana.esActiva()&&visible&&habilitado) {
+            if(pestana.esActiva()&&(ui.enModoEdicion()||(visible&&habilitado))) {
                 boton.agregarClase("activa");
                 pestanaActiva=i;
             } else {

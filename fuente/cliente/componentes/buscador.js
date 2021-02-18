@@ -150,6 +150,9 @@ var componenteBuscador=function() {
                     t.buscar(valor);
                 },500);
             }
+        })
+        .evento("focus",function(ev) {
+            this.select();
         });
 
         this.elemento.evento("focusout",function(ev) {

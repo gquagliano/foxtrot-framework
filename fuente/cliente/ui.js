@@ -895,6 +895,21 @@ var ui=new function() {
         return this;
     };
 
+    /**
+     * Prepara la utilidad de auto-seleccionar-todo el contenido de los campos.
+     * @returns {ui}
+     */
+    this.autoseleccionar=function() {
+        if(modoEdicion) return this;
+        cuerpo.eventoFiltrado("click focus",{clase:"autoseleccionar"},function(ev) {
+            var elemento=this;
+            if(this.nodeName!="INPUT"&&this.nodeName!="TEXTAREA") elemento=this.querySelector("input,textarea");
+            if(!elemento) return;
+            elemento.select();
+        });
+        return this;
+    };
+
     ////Vistas
 
     //Cuando hablamos de vistas nos referimos al componente "padre" que es la representación lógica de la maquetación de la misma
@@ -1759,6 +1774,7 @@ var ui=new function() {
         }
 
         this.autofoco();
+        this.autoseleccionar();
 
         if(typeof retorno==="function") retorno();
 

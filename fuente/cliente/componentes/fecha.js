@@ -83,10 +83,13 @@ var componenteFecha=function() {
         this.campo.evento("paste input",function(ev) {
             //Al borrar todo el texto, reestablecer
             if(t.campo.valor()=="") t.valorEpoch(null);
-        });
-
-        this.campo.evento("focus",function(ev) {
+        })
+        .evento("focus",function(ev) {
+            this.select();
             t.abrirCalendario(); 
+        })
+        .evento("focusout",function(ev) {
+            t.validarValor();
         });
 
         this.elemento.evento("focusout",function(ev) {
@@ -94,10 +97,6 @@ var componenteFecha=function() {
             if(ev.relatedTarget&&(ev.relatedTarget.es({elemento:this})||ev.relatedTarget.padre({elemento:this}))) return;
             
             t.cerrarCalendario();
-        });
-
-        this.campo.evento("focusout",function(ev) {
-            t.validarValor();
         });
 
         return this;

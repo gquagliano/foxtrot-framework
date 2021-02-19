@@ -45,7 +45,7 @@ var util=new function() {
      * @returns {boolean}
      */
     this.esObjeto=function(obj) {
-        return typeof obj==="object"&&!this.esArray(obj);
+        return typeof obj==="object"&&!this.esArray(obj)&&obj!==null;
     };
 
     /**

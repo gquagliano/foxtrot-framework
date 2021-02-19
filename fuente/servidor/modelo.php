@@ -1444,15 +1444,19 @@ class modelo {
 
     /**
      * Elimina los elementos que coincidan con la consulta.
+     * @param int $id ID del elemento a eliminar. Si se omite, se utilizarán las condiciones preestablecidas.
+     * @param int $e Parámetro de uso interno. Valor a asignar al campo de baja lógica.
      * @return \modelo
      */
-    public function eliminar($e=1) {
+    public function eliminar($id=null,$e=1) {
         $procesarRelaciones=$this->consultaProcesarRelaciones;
         $relacionesCampos=$this->consultaOmitirRelacionesCampos;
         $valores=$this->consultaValores;
         $this->consultaProcesarRelaciones=false;
         $this->consultaOmitirRelacionesCampos=[];
         $this->consultaValores=null;
+
+        if($id) $this->donde(['id'=>$id]);
 
         $this->establecerValores(['e'=>$e])->actualizar();
 
@@ -1465,10 +1469,11 @@ class modelo {
 
     /**
      * Restaura los elementos que coincidan con la consulta.
+     * @param int $id ID del elemento a restaurar. Si se omite, se utilizarán las condiciones preestablecidas.
      * @return \modelo
      */
-    public function restaurar() {
-        return $this->eliminar(0);
+    public function restaurar($id=null) {
+        return $this->eliminar($id,0);
     }
 
     /**

@@ -36,11 +36,13 @@
 .menu-flotante.menu-edicion {
     opacity: 1 !important;
     pointer-events: all !important;
+    display: block !important;
 }
 .menu-deslizable.menu-edicion {
     opacity: 1 !important;
     left: 0 !important;
     pointer-events: all !important;
+    display: block !important;
 }
 
 .foxtrot-mostrar-invisibles .menu-ancla {

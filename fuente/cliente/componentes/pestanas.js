@@ -210,7 +210,8 @@ var componentePestanas=function() {
      * @returns {componentePestanas}
      */
     this.activarPestana=function(pestana) {
-        if(typeof pestana==="number") {
+        if(typeof pestana==="string") pestana=parseInt(pestana);
+        if(!isNaN(pestana)) {
             var hijos=this.obtenerHijos();
             if(pestana<0) pestana=hijos.length+pestana;
             if(hijos.length>pestana) pestana=hijos[pestana];

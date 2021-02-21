@@ -193,7 +193,12 @@ var componenteBuscador=function() {
 
         //Si fue invocado buscar(null,valor) también seleccionar el primero automáticamente
         if(this.seleccionarPrimerElemento||buscandoUnico) {
-            if(resultados&&resultados.length&&resultados[0]!==null) this.establecerValor(0);
+            if(resultados&&resultados.length&&resultados[0]!==null) {
+                this.establecerValor(0);
+            } else {
+                //Si no se encuentra un resultado, seleccionar todo el texto para poder realizar otra búsqueda rápidamente
+                this.campo.select();
+            }
             return;
         }
 

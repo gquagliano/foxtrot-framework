@@ -233,16 +233,42 @@ class foxtrot {
             $archivos=self::incluirDirectorio(_modeloAplicacion);
 
             //Extraer los modelos de entre los archivos incluidos
-            self::$listadoModelos=[];
+
+            $archivosValidos=[];
             foreach($archivos as $archivo) {
                 $ruta=substr($archivo,strlen(_modeloAplicacion)); //Ruta relativa
                 $ruta=substr($ruta,0,-4); //Sin extensión
                 $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$ruta,true);
-                if(class_exists($clase)&&is_subclass_of($clase,'\\modelo'))
-                    self::$listadoModelos[]=(object)[
-                        'nombre'=>$ruta,
+                if(class_exists($clase))
+                    $archivosValidos[]=(object)[
+                        'ruta'=>$ruta,
                         'clase'=>$clase
                     ];
+            }
+            
+            self::$listadoModelos=[];
+            $nombresModelos=[];
+            foreach($archivosValidos as $archivo) {
+                if(is_subclass_of($archivo->clase,'\\modelo')) {
+                    self::$listadoModelos[]=(object)[
+                        'nombre'=>$archivo->ruta,
+                        'clase'=>$archivo->clase
+                    ];
+                    $nombresModelos[]=$archivo->clase;
+                }
+            }
+            //Buscar entidades sin modelo concreto
+            foreach($archivosValidos as $archivo) {
+                if(is_subclass_of($archivo->clase,'\\entidad')) {
+                    $modelo=call_user_func([$archivo->clase,'obtenerNombreModelo']);
+                    if(!in_array($modelo,$nombresModelos)) {                        
+                        self::$listadoModelos[]=(object)[
+                            'nombre'=>$archivo->ruta,
+                            'entidad'=>$archivo->clase,
+                            'clase'=>null
+                        ];
+                    }
+                }
             }
 
 	        //Controladores privados (importar completo)

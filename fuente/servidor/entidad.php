@@ -157,7 +157,7 @@ class entidad {
      * @return string
      */
     public static function obtenerNombreModelo() {
-        if(static::$tipoModelo) return static::$tipoModelo;
+        if(static::$tipoModelo) return '\\'.static::$tipoModelo;
         return static::$nombreModelo;
     }
 

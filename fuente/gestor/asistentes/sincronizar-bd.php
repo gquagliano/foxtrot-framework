@@ -40,7 +40,7 @@ class sincronizarBd extends asistente {
                 <select class="custom-select" name="modelo">
                     <option value="">Todos</option>
 <?php
-        foreach(gestor::obtenerModelos() as $modelo) echo '<option value="'.$modelo->nombre.'">'.$modelo->nombre.'</option>';
+        foreach(gestor::obtenerModelos() as $modelo) echo '<option value="'.$modelo->nombre.'">'.$modelo->nombre.' '.($modelo->entidad?'(Entidad)':'').'</option>';
 ?>
                 </select>
             </div>
@@ -77,8 +77,14 @@ class sincronizarBd extends asistente {
         $clasesCreadas=[];
         foreach(gestor::obtenerModelos() as $modelo) {
             if($filtrar&&$filtrar!=$modelo->nombre) continue;
-            $clase=$modelo->clase;
-            $obj=new $clase;
+
+            if($modelo->clase) {
+                $clase=$modelo->clase;
+                $obj=new $clase;
+            } else {
+                $obj=call_user_func([$modelo->entidad,'fabricarModelo']);
+            }
+
             $creada=$this->procesar($obj);
             if($creada) $clasesCreadas[]=$obj;
         }

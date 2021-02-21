@@ -153,6 +153,15 @@ class entidad {
     }
 
     /**
+     * Devuelve el nombre del modelo de datos. Cuando exista el modelo concreto, devolverá el nombre completo de la clase (con espacio de nombres).
+     * @return string
+     */
+    public static function obtenerNombreModelo() {
+        if(static::$tipoModelo) return static::$tipoModelo;
+        return static::$nombreModelo;
+    }
+
+    /**
      * Devuelve un objeto estándar con los valores de la instancia.
      * @param bool $incluirOcultos Si es `false`, se omitirán los campos ocultos (`@oculto`) y privados (`@privado`).
      * @return object

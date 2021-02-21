@@ -194,6 +194,34 @@ class modelo {
     }
 
     /**
+     * Crea y devuelve una instancia del modelo correspondiente a la entidad especificada.
+     * @param string $entidad Nombre de la entidad.
+     * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
+     * @param bool $replicarConfiguracion Crea el modelo con la misma configuración que esta instancia con respecto al procesamiento de relaciones, campos ocultos, etc.
+     * @return \modelo
+     */
+    public function fabricarModeloPorEntidad($entidad,$bd=null,$replicarConfiguracion=true) {   
+        if($bd===null) $bd=$this->bd;
+
+        $obj=foxtrot::obtenerInstanciaModeloPorEntidad($entidad,$bd);        
+
+        if($replicarConfiguracion) $this->replicarConfiguracion($obj);
+
+        return $obj;
+    }
+
+    /**
+     * Fabrica el modelo correspondiente a un campo relacional. Método de uso interno (no realiza validaciones).
+     * @param object $campo Campo.
+     * @return \modelo
+     */
+    protected function fabricarModeloCampo($campo) {
+        if($campo->modelo) return $this->fabricarModelo($campo->modelo);
+        if($campo->entidad) return $this->fabricarModeloPorEntidad($campo->entidad);
+        return null;
+    }
+
+    /**
      * Crea y devuelve una instancia del modelo especificado.
      * @param string $modelo Nombre del modelo.
      * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
@@ -210,22 +238,29 @@ class modelo {
             $obj=\foxtrot::obtenerInstanciaModelo($modelo,$bd);
         }
 
-        if($replicarConfiguracion)
-            $obj->configurar([
-                'consultaProcesarRelaciones'=>$this->consultaProcesarRelaciones,
-                'consultaProcesarRelaciones1n'=>$this->consultaProcesarRelaciones1n,
-                'consultaOmitirRelacionesCampos'=>$this->consultaOmitirRelacionesCampos,
-                'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
-                'consultaIncluirOcultos'=>$this->consultaIncluirOcultos,
-                'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados,
-                'consultaForzarRelaciones'=>$this->consultaForzarRelaciones,
-                'consultaForzarRelacionesCampos'=>$this->consultaForzarRelacionesCampos,
-                'consultaContrasena'=>$this->consultaContrasena,
-                'usarValoresPublicos'=>$this->usarValoresPublicos
-            ]);
-            //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
-
+        if($replicarConfiguracion) $this->replicarConfiguracion($obj);
+        
         return $obj;
+    }
+
+    /**
+     * Copia la configuración de la instancia a la instancia especificada.
+     * @param \modelo $obj Instancia de destino.
+     */
+    protected function replicarConfiguracion($obj) {
+        $obj->configurar([
+            'consultaProcesarRelaciones'=>$this->consultaProcesarRelaciones,
+            'consultaProcesarRelaciones1n'=>$this->consultaProcesarRelaciones1n,
+            'consultaOmitirRelacionesCampos'=>$this->consultaOmitirRelacionesCampos,
+            'consultaSeleccionarEliminados'=>$this->consultaSeleccionarEliminados,
+            'consultaIncluirOcultos'=>$this->consultaIncluirOcultos,
+            'consultaLimpiarRelacionados'=>$this->consultaLimpiarRelacionados,
+            'consultaForzarRelaciones'=>$this->consultaForzarRelaciones,
+            'consultaForzarRelacionesCampos'=>$this->consultaForzarRelacionesCampos,
+            'consultaContrasena'=>$this->consultaContrasena,
+            'usarValoresPublicos'=>$this->usarValoresPublicos
+            //consultaBloquear no se replica (solo el modelo al que se le solicitó el bloqueo debe ejecutarlo)
+        ]);
     }
 
     /**
@@ -582,7 +617,9 @@ class modelo {
                 if($campo->relacion=='1:n') {
                     if(!$procesar1n) continue;
 
-                    $modelo=$this->fabricarModelo($campo->modelo);
+                    $modelo=$this->fabricarModeloCampo($campo);
+                    if(!$modelo) continue;
+
                     $modelo->donde([
                         $campo->columna=>$item->id
                     ]);
@@ -592,7 +629,10 @@ class modelo {
                     $columna=$campo->columna;
                     if($item->$columna&&!$item->$nombre) {
                         //Hay un valor en la columna pero no en el campo relacional
-                        $modelo=$this->fabricarModelo($campo->modelo);
+                        
+                        $modelo=$this->fabricarModeloCampo($campo);
+                        if(!$modelo) continue;
+
                         $relacion=$modelo->obtenerItem($item->$columna);
                         if($relacion) {
                             $item->$nombre=$relacion;
@@ -1177,7 +1217,6 @@ class modelo {
                 $entidad=$this->consultaValores->$nombre;
                 if($entidad===null) continue;
 
-                $nombreModelo=$campo->modelo;
                 $columna=$campo->columna;
 
                 if(!$this->consultaProcesarRelaciones||in_array($nombre,$this->consultaOmitirRelacionesCampos)) {
@@ -1190,7 +1229,9 @@ class modelo {
                     continue;
                 }
 
-                $modelo=$this->fabricarModelo($nombreModelo);
+                $modelo=$this->fabricarModeloCampo($campo);
+                if(!$modelo) continue;
+
                 if($this->usarValoresPublicos) {
                     $modelo->establecerValoresPublicos($entidad);
                 } else {
@@ -1218,8 +1259,9 @@ class modelo {
 
                 $ids=[];
 
-                $nombreModelo=$campo->modelo;
-                $modelo=$this->fabricarModelo($nombreModelo);
+                $modelo=$this->fabricarModeloCampo($campo);
+                if(!$modelo) continue;
+
                 $columna=$campo->columna;
                 $miId=$this->obtenerId();
 
@@ -1596,7 +1638,8 @@ class modelo {
                 if($this->consultaForzarRelaciones||in_array($nombre,$this->consultaForzarRelacionesCampos)) $omitir=false;
                 if($omitir) continue;
 
-                $obj=$this->fabricarModelo($campo->modelo);
+                $obj=$this->fabricarModeloCampo($campo);
+                if(!$obj) continue;
                 
                 if($campo->alias) {
                     $obj->alias=$campo->alias;

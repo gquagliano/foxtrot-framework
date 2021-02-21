@@ -583,6 +583,21 @@ class foxtrot {
         return new $clase;
     }
 
+    /**
+     * Crea y deuvelve una instancia de un modelo de datos correspondiente a una entidad.
+     * @param string $nombre Nombre de la entidad cuyo modelo se desea crear.
+     * @param \bd $bd Instancia de la base de datos.
+     * @return \modelo
+     */
+    public static function obtenerInstanciaModeloPorEntidad($nombre,$bd=null) {
+        //Las clases ya fueron incluidas
+        
+        $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
+        if(!class_exists($clase)) return null;
+
+        return call_user_func([$clase,'fabricarModelo'],$bd);
+    }
+
     ////Módulos
 
     /**

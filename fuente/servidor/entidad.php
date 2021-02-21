@@ -71,7 +71,8 @@ class entidad {
 
             //Convertir relacionales en entidades
             if($campo->tipo=='relacional') {
-                $modelo=\foxtrot::obtenerInstanciaModelo($campo->modelo);
+                $modelo=$this->fabricarModeloCampo($campo);
+                if(!$modelo) continue;
 
                 if($campo->relacion=='1:n') {
                     if(is_array($valor)) {
@@ -221,6 +222,17 @@ class entidad {
     }
 
     /**
+     * Fabrica el modelo correspondiente a un campo relacional. Método de uso interno (no realiza validaciones).
+     * @param object $campo Campo.
+     * @return \modelo
+     */
+    protected function fabricarModeloCampo($campo) {
+        if($campo->modelo) return foxtrot::obtenerInstanciaModelo($campo->modelo);
+        if($campo->entidad) return foxtrot::obtenerInstanciaModeloPorEntidad($campo->entidad);
+        return null;
+    }
+
+    /**
      * Procesa los campos relacionales que no hayan sido asignados.
      * @param array $campos Nombres de los campos a procesar. Si se omite, se procesarán todos aquellos campos relacionales sin asignar.
      * @return \entidad
@@ -240,7 +252,9 @@ class entidad {
             if(count($campos)&&!in_array($nombre,$campos)) continue;
             
             if($campo->tipo=='relacional'&&!is_object($this->$nombre)) {
-                $modeloRelacionado=\foxtrot::obtenerInstanciaModelo($campo->modelo);
+                $modeloRelacionado=$this->fabricarModeloCampo($campo);
+                if(!$modeloRelacionado) continue;
+
                 $columna=$campo->columna;
                 if($campo->relacion=='1:n') {
                     $this->$nombre=$modeloRelacionado->donde([$columna=>$this->id])
@@ -273,7 +287,6 @@ class entidad {
         $campo=$campos->$nombreCampo;
 
         $columna=$campo->columna;
-        $nombreModelo=$campo->modelo;
 
         if(!$this->$columna) {
             $this->$nombreCampo=null;
@@ -281,7 +294,8 @@ class entidad {
         }
 
         if(!$this->$nombreCampo) {
-            $modelo=\foxtrot::obtenerInstanciaModelo($nombreModelo);
+            $modelo=$this->fabricarModeloCampo($campo);
+            if(!$modelo) return $this;
             $this->$nombreCampo=$modelo->obtenerItem($this->$columna);
         }
 
@@ -310,9 +324,9 @@ class entidad {
         $campo=$campos->$nombreCampo;
 
         $columna=$campo->columna;
-        $nombreModelo=$campo->modelo;
 
-        $modelo=\foxtrot::obtenerInstanciaModelo($nombreModelo);
+        $modelo=$this->fabricarModeloCampo($campo);
+        if(!$modelo) return [];
 
         $listado=$modelo
             ->donde([$columna=>$this->id])
@@ -379,6 +393,7 @@ class entidad {
         //@indice
         //@indice unico
         //@modelo *
+        //@entidad *
         //@relacion *
         //@columna *
         //@predeterminado *
@@ -418,7 +433,7 @@ class entidad {
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|alias|contrasena|indice|simple|modelo|relacion|columna|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|alias|contrasena|indice|simple|modelo|entidad|relacion|columna|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[];
                 foreach($coincidencias[1] as $i=>$etiqueta) {
                     $etiqueta=strtolower(trim($etiqueta));

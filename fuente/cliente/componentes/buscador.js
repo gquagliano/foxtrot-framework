@@ -46,13 +46,8 @@ var componenteBuscador=function() {
                 etiqueta:"Texto de relleno",
                 adaptativa:false
             },
-            //Deprecada por sobreescribir la propiedad común propiedadValor
-            propiedadValor:{
-                etiqueta:"Propiedad valor",
-                adaptativa:false
-            },            
-            propiedadValorItem:{
-                etiqueta:"Propiedad valor del ítem seleccionado",
+            propiedadClave :{
+                etiqueta:"Propiedad clave",
                 adaptativa:false
             },
             propiedadEtiqueta:{
@@ -280,7 +275,7 @@ var componenteBuscador=function() {
         var valor=this.propiedad(false,propiedad);
 
         //Predeterminados
-        if(!valor) valor={propiedadValor:"id",propiedadValorItem:"id",propiedadEtiqueta:"titulo"}[propiedad];
+        if(!valor) valor={propiedadClave:"id",propiedadEtiqueta:"titulo"}[propiedad];
 
         //Expresión
         if(expresion.contieneExpresion(valor)) return ui.evaluarExpresion(valor,obj);
@@ -356,10 +351,7 @@ var componenteBuscador=function() {
         } else {
             this.item=this.resultados[indice];
 
-            //Solución provisoria hasta que sea removido propiedadValor
-            var propiedad="propiedadValorItem";
-            if(!this.propiedad(false,"propiedadValorItem")) propiedad="propiedadValor";
-            var nuevoValor=obtenerValorItem(propiedad,this.item);
+            var nuevoValor=obtenerValorItem("propiedadClave",this.item);
 
             if(this.valorActual!==nuevoValor) valorModificado=true;
             

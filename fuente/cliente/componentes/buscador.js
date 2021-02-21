@@ -33,6 +33,8 @@ var componenteBuscador=function() {
     this.valorActual=null;
     this.etiquetaActual="";
 
+    var ignorarTodaEntrada=false;
+
     /**
      * Propiedades de Campo.
      */
@@ -119,12 +121,25 @@ var componenteBuscador=function() {
         this.campo.removerEventos();
 
         this.campo.evento("keydown",function(ev) {
+            if(ignorarTodaEntrada) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                return;
+            }
+
             if(ev.which==27) { //ESC
                 ev.preventDefault();
                 t.abortarBusqueda(true);
                 t.cerrarResultados();
             } else if(ev.which==13) { //Intro
                 t.procesarIntro(ev);
+                //Al recibir un intro, ignorar toda entrada siguiente por unos milisegundos, esto se hace por compatibilidad con algunos lectores
+                //de códigos de barras que envían información adicional al final y pueden causar problemas (ej. lector Bematech envía dos caracteres
+                //adicionales según el tipo de código que pueden causar acciones en el navegador, como abrir la pestaña de Descargas).
+                ignorarTodaEntrada=true;
+                setTimeout(function() {
+                    ignorarTodaEntrada=false;
+                },800);
             } else if(t.resultados&&t.resultados.length&&(ev.which==38||ev.which==40)) { //Arriba/Abajo
                 t.moverSeleccion(ev);
             }

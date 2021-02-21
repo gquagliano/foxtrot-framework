@@ -18,6 +18,8 @@ var componenteCampo=function() {
     this.componente="campo";
     this.tinymce=false;
 
+    var ignorarTodaEntrada=false;
+
     /**
      * Propiedades de Campo.
      */
@@ -31,7 +33,8 @@ var componenteCampo=function() {
                     multilinea:"Texto multilínea",
                     contrasena:"Contraseña",
                     numero:"Numérico",
-                    tinymce:"Editor (TinyMce)"
+                    tinymce:"Editor (TinyMce)",
+                    codigoBarras:"Código de barras"
                 },
                 adaptativa:false
             },
@@ -95,6 +98,24 @@ var componenteCampo=function() {
         return this;
     };
 
+    var eventoKeydown=function(ev) {
+        if(ignorarTodaEntrada) {console.log(1);
+            ev.preventDefault();
+            ev.stopPropagation();
+            return;
+        }
+    };
+
+    /**
+     * Establece los eventos predeterminados.
+     */
+    this.establecerEventos=function() {
+        this.clasePadre.establecerEventos.call(this);
+        this.campo.removerEvento("keydown",eventoKeydown)
+            .evento("keydown",eventoKeydown);
+        return this;
+    };    
+
     /**
      * Evento Intro.
      * @returns {Componente}
@@ -102,14 +123,26 @@ var componenteCampo=function() {
     this.intro=function(ev) {
         if(!ui.enModoEdicion()) {
             //Enviar formulario con Enter
-            var esTextarea=t.propiedad(null,"tipo")=="multilinea",
+            var tipo=t.propiedad(null,"tipo"),
+                esTextarea=tipo=="multilinea",
+                esCodigo=tipo=="codigoBarras",
                 manejador=t.propiedad(null,"intro");
-            if(!manejador) { //Si hay un evento definido por el usuario, dejar que sea procesado
-                if(!esTextarea) { //Campo multilínea no reacciona al enter
+            if(esCodigo) {
+                //Si es un campo de código de barras, nunca enviar el formulario
+                
+                //Además, ignorar toda entrada siguiente por unos milisegundos, esto se hace por compatibilidad con algunos lectores
+                //de códigos de barras que envían información adicional al final y pueden causar problemas (ej. lector Bematech envía dos caracteres
+                //adicionales según el tipo de código que pueden causar acciones en el navegador, como abrir la pestaña de Descargas).
+                ignorarTodaEntrada=true;
+                setTimeout(function() {
+                    ignorarTodaEntrada=false;
+                },800);
+            } else if(!manejador) {
+                //Para cualquier otro tipo excepto multilínea, si no hay un manejador asignado enviar el formulario
+                if(!esTextarea) {
                     this.enviarFormulario();
                     ev.preventDefault();
                 }
-                //Detener evento, aunque sea multilínea
                 ev.stopPropagation();
                 return true;
             }
@@ -152,8 +185,10 @@ var componenteCampo=function() {
                     this.campo=this.elemento.querySelector("input");
                 }
 
+                if(!valor) valor="text";
                 var tipos={
                     texto:"text",
+                    codigoBarras:"text",
                     contrasena:"password",
                     numero:"number"
                 };

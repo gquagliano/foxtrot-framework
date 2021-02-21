@@ -1,12 +1,12 @@
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * Copyright, 2021, Gabriel Quagliano. Bajo licencia Apache 2.0.
  * 
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
  */
 
 /**
- * Intérprete de expresiones (Versión provisoria simplificada).
+ * Intérprete de expresiones.
  * @class 
  */
 function expresion(expr) {
@@ -17,13 +17,10 @@ function expresion(expr) {
     this.variables={
         "nul":null,
         "nulo":null,
-        "null":null,
         "v":true,
         "verdadero":true,
-        "true":true,
         "f":false,
-        "falso":false,
-        "false":false
+        "falso":false
     };
 
     this.funciones={
@@ -32,7 +29,9 @@ function expresion(expr) {
     };
     
     /**
-     * 
+     * Agrega las variables a la instancia.
+     * @param {Object} obj - Variables en el formato `{nombre:valor}`.
+     * @returns {expresion}
      */
     this.establecerVariables=function(obj) {
         var t=this;
@@ -43,7 +42,9 @@ function expresion(expr) {
     };
     
     /**
-     * 
+     * Agrega las funciones a la instancia.
+     * @param {Object} obj - Variables en el formato `{nombre:función}`.
+     * @returns {expresion}
      */
     this.establecerFunciones=function(obj) {
         var t=this;
@@ -54,21 +55,25 @@ function expresion(expr) {
     };
 
     /**
-     * 
+     * Devuelve las variables asignadas.
+     * @returns {Object}
      */
     this.obtenerVariables=function() {
         return this.variables;
     };
     
     /**
-     * 
+     * Devuelve las funciones definidas.
+     * @returns {Object}
      */
     this.obtenerFunciones=function() {
         return this.funcion;
     };
     
     /**
-     * 
+     * Establece la expresión a analizar.
+     * @param string expr - Expresión.
+     * @returns {expresion}
      */
     this.establecerExpresion=function(expr) {
         this.cadena=null;
@@ -79,137 +84,28 @@ function expresion(expr) {
         return this;
     };
 
-    var analizarObjeto=function(nombre) {
-        if(nombre==="") return "";
-        if(/^[0-9]$/.test(nombre)&&!isNaN(nombre)) return parseInt(nombre);
-        if(/^[0-9\.]$/.test(nombre)&&!isNaN(nombre)) return parseFloat(nombre);
-        if(nombre.length>=2&&nombre.substr(0,1)=="'"&&nombre.substr(-1)=="'") return nombre.substr(1,nombre.length-2);
-        if(nombre==="verdadero"||nombre==="v") return true;
-        if(nombre==="falso"||nombre==="f") return false;
-        if(nombre==="n"||nombre==="nulo") return null;
-        if(typeof nombre==="undefined") return null;
-    }.bind(this);
-
-    var buscarPropiedad=function(objeto,nombre) {
-        var valor=analizarObjeto(nombre);
-
-        //Si nombre era una cadena, un número o un literal no definido, buscar propiedad/elemento de objeto
-        if(typeof objeto!=="undefined"&&(typeof valor==="string"||(typeof valor==="undefined"&&typeof nombre==="string")||typeof nombre==="number")) {
-            var elem=objeto[valor||nombre];
-            //Si es una función, devolver un bind para que al ejecutarla el valor de this sea el correcto
-            if(typeof elem==="function") return elem.bind(objeto);
-            return expresion.analizarValor(elem);
-        }
-
-        //Si nombre era un literal no definido, buscar función o variable
-        if(typeof valor==="undefined"&&typeof nombre==="string") {
-            if(this.variables.hasOwnProperty(valor||nombre)) return expresion.analizarValor(this.variables[valor||nombre]);
-            if(this.funciones.hasOwnProperty(valor||nombre)) return expresion.analizarValor(this.funciones[valor||nombre]);
-        }
-
-        return expresion.analizarValor(valor);
-    }.bind(this);
-
     /**
-     * 
+     * Ejecuta la expresión.
+     * @returns {*}
      */
     this.ejecutar=function() {
         if(!this.cadena) return null;
-        
-        var pila=[],
-            uitlimoObjeto=null,
-            objeto,
-            bufer="",
-            argumentos=[],
-            enCadena=false,
-            ternarioCondicion=null;
-
-        for(var i=0;i<this.cadena.length;i++) {
-            var caracter=this.cadena[i],
-                anterior=i==0?null:this.cadena[i-1];
-
-            if(!enCadena) {
-                if(caracter=="'") {
-                    enCadena=true;
-                    bufer="'";
-                } else if(ternarioCondicion===false) {
-                    //Si la condición del ternario fue falsa, saltar hasta :
-                    if(caracter!=":") continue;
-                    ternarioCondicion=null;
-                    bufer="";
-                } else if(caracter==".") {
-                    if(bufer==""&&(!anterior||(anterior!="]"&&anterior!=")"))) {
-                        //Punto decimal (.123)
-                        bufer="0";
-                    } else if(/^[0-9+]$/.test(bufer)) {
-                        //Punto decimal (12.345)
-                        bufer+=".";
-                    } else if(bufer!="") {
-                        //Acceso a propiedad
-                        uitlimoObjeto=objeto;
-                        objeto=buscarPropiedad(objeto,bufer);
-                        bufer="";
-                    }
-                } else if(caracter=="?") {
-                    ternarioCondicion=!!buscarPropiedad(objeto,bufer);
-                    uitlimoObjeto=objeto;
-                    objeto=undefined;
-                    bufer="";
-                } else if(caracter==":") {
-                    if(ternarioCondicion) {
-                        //Si la condición del ternario fue verdadera, terminar
-                        break;
-                    }
-                    uitlimoObjeto=objeto;
-                    objeto=undefined;
-                    bufer="";
-                } else if(caracter=="[") {
-                    pila.push(buscarPropiedad(objeto,bufer));
-                    uitlimoObjeto=objeto;
-                    objeto=undefined;
-                    bufer="";
-                } else if(caracter=="]") {
-                    uitlimoObjeto=objeto;
-                    objeto=buscarPropiedad(objeto,bufer);
-                    var superior=pila.pop();
-                    objeto=buscarPropiedad(superior,objeto);
-                    bufer="";
-                } else if(caracter=="(") {
-                    pila.push(buscarPropiedad(objeto,bufer));
-                    uitlimoObjeto=objeto;
-                    objeto=undefined;
-                    bufer="";
-                    argumentos=[];
-                } else if(caracter==",") {
-                    argumentos.push(buscarPropiedad(objeto,bufer));
-                    uitlimoObjeto=objeto;
-                    objeto=undefined;
-                    bufer="";
-                } else if(caracter==")") {
-                    if(bufer!="") argumentos.push(buscarPropiedad(objeto,bufer));
-                    var superior=pila.pop();
-                    uitlimoObjeto=objeto;
-                    objeto=superior.apply(window,argumentos);
-                    bufer="";
-                } else {
-                    bufer+=caracter;
-                }
-            } else {
-                bufer+=caracter;
-                var anterior=this.cadena[i-1];
-                if(caracter=="'"&&anterior!="\\") enCadena=false;
-            }
-        }
-
-        if(bufer!="") {
-            uitlimoObjeto=objeto;
-            objeto=buscarPropiedad(objeto,bufer);
-        }
-
-        //Si es una función, devolver un bind al objeto anterior para que al invocarla this tenga el valor correcto
-        if(uitlimoObjeto&&typeof objeto==="function") return objeto.bind(uitlimoObjeto);
-
-        return objeto;
+        return new Function("variables","for(var i=0;i<=1;i++) { \
+    for(var p in variables[i]) { \
+        if(variables[i].hasOwnProperty(p)) { \
+            var variable=variables[i][p]; \
+            try { \
+                eval(\"var \"+p+\"=variable;\"); \
+            } catch { } \
+        } \
+    } \
+} \
+\"use strict\"; \
+try { \
+    return ("+this.cadena+"); \
+} catch { \
+    return null; \
+}")([this.variables,this.funciones]);
     };
 
     this.establecerExpresion(expr);
@@ -217,6 +113,8 @@ function expresion(expr) {
 
 /**
  * Determina si un objeto es una expresión o no.
+ * @param {*} obj - Valor a evaluar.
+ * @returns {boolean}
  * @memberof expresion
  */
 expresion.esExpresion=function(obj) {
@@ -225,6 +123,8 @@ expresion.esExpresion=function(obj) {
 
 /**
  * Determina si una cadena probablemente contiene expresiones o no.
+ * @param {*} obj - Valor a evaluar.
+ * @returns {boolean}
  * @memberof expresion
  */
 expresion.contieneExpresion=function(obj) {
@@ -236,7 +136,8 @@ expresion.funcionesGlobales={};
 
 /**
  * Establece las variables que estarán siempre disponibles al utilizar expresion.evaluar().
- * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de variables.
+ * @param {Object} obj - Variables a definir con el formato `{nombre:valor}`.
+ * @returns {expresion}
  * @memberof expresion
  */
 expresion.establecerVariablesGlobales=function(obj) {
@@ -246,7 +147,8 @@ expresion.establecerVariablesGlobales=function(obj) {
 
 /**
  * Establece las funciones que estarán siempre disponibles al utilizar expresion.evaluar().
- * @param {Object} obj - Objeto cuyas propiedades se corresponden con los nombres de funciones.
+ * @param {Object} obj - Funciones a definir con el formato `{nombre:funcion}`.
+ * @returns {expresion}
  * @memberof expresion
  */
 expresion.establecerFuncionesGlobales=function(obj) {
@@ -254,6 +156,12 @@ expresion.establecerFuncionesGlobales=function(obj) {
     return expresion;
 };
 
+/**
+ * Analiza un valor y devuelve el mismo valor procesado, o tal cual, según corresponda por su tipo.
+ * @param {*} valor - Valor a analizar.
+ * @returns {*}
+ * @memberof expresion
+ */
 expresion.analizarValor=function(valor) {
     if(typeof valor==="undefined") return null;
     if(typeof valor!=="string") return valor;
@@ -267,6 +175,7 @@ expresion.analizarValor=function(valor) {
 
 /**
  * Busca y ejecuta todas las expresiones presentes en una cadena. Las llaves pueden escaparse con \{ \} para evitar que una expresión sea evaluada.
+ * @param {string} cadena - Cadena a analizar.
  * @returns {*} Cuando la cadena contenga una única expresión, el valor de retorno puede ser cualquier tipo resultante de la misma. Cuando se trate de una cadena con múltiples expresiones, el retorno siempre será una cadena con las expresiones reemplazadas por sus valores.
  * @memberof expresion
  */
@@ -282,6 +191,17 @@ expresion.evaluar=function(cadena) {
     
     expr.establecerVariables(expresion.variablesGlobales);
     expr.establecerFunciones(expresion.funcionesGlobales);
+
+    //Omitir análisis si la cadena contiene únicamente la expresión
+    if(expresion.esExpresion(cadena)) {
+        try {
+            return expresion.analizarValor(expr.establecerExpresion(cadena).ejecutar());
+        } catch {
+            return "";
+        }
+    }
+    //O si no contiene ninguna expresión
+    if(!expresion.contieneExpresion(cadena)) return cadena;
 
     for(var i=0;i<=total;i++) {
         var caracter=cadena[i],

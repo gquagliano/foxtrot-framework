@@ -264,7 +264,7 @@ var componenteAlternar=function() {
             if(typeof valor==="undefined") return grupo.valorActivo;  
             
             //Si es null, volver al valor inicial del grupo (puede contener expresiones)
-            if(valor===null) valor=ui.evaluarExpresion(grupo.valorInicial,this.obtenerDatos());
+            if(valor===null) valor=this.evaluarExpresion(grupo.valorInicial);
 
             //Activar el componente que coincida con el valor asignado y desactivar el resto
             grupo.componentes.porCada(function(valorComponente,componente) {

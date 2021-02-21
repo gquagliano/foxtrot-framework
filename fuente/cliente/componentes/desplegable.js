@@ -168,12 +168,12 @@ var componenteDesplegable=function() {
 
                     //Pueden ser expresiones
                     if(expresion.esExpresion(propClave)) {
-                        clave=ui.evaluarExpresion(propClave,obj);
+                        clave=t.evaluarExpresion(propClave,obj);
                     } else if(propClave) {
                         clave=obj[propClave];
                     }
                     if(expresion.esExpresion(propValor)) {
-                        valor=ui.evaluarExpresion(propValor,obj);
+                        valor=t.evaluarExpresion(propValor,obj);
                     } else if(propValor) {
                         valor=obj[propValor];
                     }
@@ -190,7 +190,7 @@ var componenteDesplegable=function() {
                 if(util.esObjeto(obj)&&propValor) {    
                     //Además puede ser una expresión
                     if(expresion.esExpresion(propValor)) {
-                        valor=ui.evaluarExpresion(propValor,obj);
+                        valor=t.evaluarExpresion(propValor,obj);
                     } else {
                         valor=obj[propValor];
                     }

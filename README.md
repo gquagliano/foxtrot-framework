@@ -124,11 +124,9 @@ Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en mucho
 
 [Documentación del ORM](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM).
 
-**Intérprete lógico-matemático (JS)**
+**Intérprete de expresiones**
 
-Desarrollamos un intérprete para permitir la inserción de variables, llamados a funciones y expresiones simples en cualquier texto, donde las expresiones se encierran entre `{` y `}`. La finalidad del mismo es simplificar el enlace de la interfaz con el código fuente y los datos.
-
-El intérprete deberá portarse a PHP si se ofrece la posibilidad de pre-procesar algunos componentes del lado del servidor.
+El intérprete de expresiones permite ejecutar código JavaScript en forma segura. La mayoría de las propiedades de los componentes utilizan el intérprete de expresiones, de forma tal que se puedan embeber variables dinámicos entre los valores de las mismas. Las expresiones se definen encerradas entre llaves `{...}` y tienen acceso al ámbito global y a variables locales específicas.
 
 **Módulos**
 

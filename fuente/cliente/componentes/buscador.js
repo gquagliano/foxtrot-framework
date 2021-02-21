@@ -298,7 +298,7 @@ var componenteBuscador=function() {
         if(!valor) valor={propiedadClave:"id",propiedadEtiqueta:"titulo"}[propiedad];
 
         //Expresión
-        if(expresion.contieneExpresion(valor)) return ui.evaluarExpresion(valor,obj);
+        if(expresion.contieneExpresion(valor)) return this.evaluarExpresion(valor,obj);
 
         //Nombre de propiedad
         if(obj.hasOwnProperty(valor)) return obj[valor];

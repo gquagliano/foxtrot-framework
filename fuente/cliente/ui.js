@@ -378,6 +378,8 @@ var ui=new function() {
     this.registrarAplicacion=function(funcion) {
         //En este caso no puede haber más de una clase, por lo que no tiene sentido llevar un almacén de funciones, instanciamos directamente
         instanciaAplicacion=aplicacion.fabricarAplicacion(funcion);
+        //Exportar a global
+        aplicacion=instanciaAplicacion;
         instanciaAplicacion.inicializar();
         //Evento
         instanciaAplicacion.inicializado();
@@ -1224,39 +1226,41 @@ var ui=new function() {
     /**
      * Evalúa una expresión utilizando el intérprete configurado con diferentes objetos predefinidos relacionados a la interfaz y la aplicación.
      * @param {string} - cadena Cadena a evaluar.
-     * @param {Object} [variables] - Variables adicionales.
-     * @param {Object} [funciones] - Funciones adicionales.
+     * @param {Object} [valores] - Valores de las variables en la expresión.
+     * @param {*} [valores.objeto] - Valor de `objeto`.
+     * @param {controlador} [valores.controlador] - Valor de `controlador`.
+     * @param {componente} [valores.componente] - Valor de `componente`.
+     * @param {componentes} [valores.componentes=valores.controlador.componentes] - Valor de `componentes`.
+     * @param {*} [valores.this] - Valor de `this`, si la expresión resuelve a una función.
+     * @param {*} [valores.valor] - Valor de `valor`.
      */
-    this.evaluarExpresion=function(cadena,variables,funciones) {
+    this.evaluarExpresion=function(cadena,valores) {
         if(typeof cadena==="undefined") return null;
         if(typeof cadena!=="string") return cadena;
-        
-        //Agregar al intérprete el controlador y otros objetos y funciones útiles
-        var vars={
-            ui:ui,
-            util:util,
-            aplicacion:instanciaAplicacion,
-            controlador:instanciaControladorPrincipal,
-            principal:instanciaControladorPrincipal,
-            componentes:componentes,
-            componentesPrincipal:componentes,
-            parametros:this.obtenerParametros(), //TODO Cache
-            window:win,
-            document:doc
-        };
-        if(instanciasControladores) instanciasControladores.porCada(function(nombre,obj) {
-                vars[nombre]=obj;
-            });
-        if(typeof variables!=="undefined") Object.assign(vars,variables);
+        if(typeof valores!=="object") valores={};
+        valores=Object.assign({
+            objeto:null,
+            controlador:null,
+            componente:null,
+            valor:null,
+            componentes:null,
+            this:null
+        },valores);
 
-        var funcs={
-        };
-        if(typeof funciones!=="undefined") Object.assign(funcs,funciones);
+        var expr=new expresion(cadena);
 
-        expresion.establecerVariablesGlobales(vars);
-        expresion.establecerFuncionesGlobales(funcs);
-
-        return expresion.evaluar(cadena);
+        if(valores.objeto) expr.establecerObjeto(valores.objeto);
+        if(valores.controlador) expr.establecerControlador(valores.controlador);
+        if(valores.componente) expr.establecerComponente(valores.componente);
+        if(valores.valor) expr.establecerValor(valores.valor);
+        if(valores.componentes) {
+            expr.establecerComponentes(valores.componentes);
+        } else if(valores.controlador) {
+            expr.establecerComponentes(valores.controlador.componentes);
+        }
+        if(valores.this) expr.establecerThis(valores.this);
+            
+        return expr.evaluar();
     };
 
     ////Navegación
@@ -1352,6 +1356,8 @@ var ui=new function() {
         var fn=function() {        
             var destino=ui.procesarUrl(ruta);
             ui.cambiarUrl(destino.url,{vista:destino.vista});
+            //Preprocesar parámetros de la URL
+            ui.obtenerParametros();
         };
 
         if(confirmarSalidaActivado) {
@@ -1361,7 +1367,7 @@ var ui=new function() {
             },{icono:"pregunta"});
         } else {
             fn();
-        }     
+        }
         
         return this;
     };
@@ -1663,6 +1669,8 @@ var ui=new function() {
                 resultado[decodeURIComponent(parte.substring(0,p)).toLowerCase()]=decodeURIComponent(parte.substring(p+1));
             }
         });
+        //Exportar a global
+        parametros=resultado;
         return resultado;
     };
 
@@ -1749,8 +1757,14 @@ var ui=new function() {
             obj.establecerAplicacion(instanciaAplicacion);
             instanciasVistas[nombre].establecerControlador(nombre);
 
-            //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
-            if(principal) instanciasVistas[nombre].establecerElemento(cuerpo);
+            if(principal) {
+                //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
+                instanciasVistas[nombre].establecerElemento(cuerpo);
+                //Exportar a global
+                principal=obj;
+            }
+            //Exportar a global
+            controlador=obj;
             
             //Evento
             if(principal) {
@@ -1819,6 +1833,9 @@ var ui=new function() {
                 body.agregarClase("cordova");
             }
 
+            //Preprocesar parámetros de la URL
+            this.obtenerParametros();
+
             this.ejecutarVista(nombreVistaPrincipal,true);
 
             if(!esCordova) {
@@ -1866,15 +1883,31 @@ var configComponente={
     grupo:null
 };
 
-/** @var {componente[]} componentes - Instancias de componentes con nombre. */
-var componentes={};
-/** @var {controlador[]} controladores - Instancias de controladores cargados. */
-var controladores={};
+/**
+ * @var {componente[]} componentes - Instancias de componentes con nombre.
+ * @var {controlador[]} controladores - Instancias de controladores cargados.
+ * @var {aplicacion} aplicacion - Instancias del controlador de la aplicación.
+ * @var {controlador} controlador - Instancia del controlador de la vista actual.
+ * @var {controlador} principal - Instancia del controlador de la vista actual. A diferencia de `controlador`, cuando se trabaje con
+ * vistas embebibles corresponderá siempre a la vista principal.
+ * @var {Object} parametros - Parámetros de la URL actual (GET).
+ */
+var controladores={},
+    componentes={},
+    aplicacion=null,
+    controlador=null,
+    principal=null,
+    parametros=null;
+
 var _vistasEmbebibles={};
 
 window["ui"]=ui;
 window["componentes"]=componentes;
 window["controladores"]=controladores;
+window["parametros"]=parametros;
+window["aplicacion"]=aplicacion;
+window["controlador"]=controlador;
+window["principal"]=principal;
 
 //Evitar que los links <a href="#"> naveguen antes de que se hayan asignado los controladores de eventos
 document.body.eventoFiltrado("click",{atributos:{href:"#"}},function(ev) {

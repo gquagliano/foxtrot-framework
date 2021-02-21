@@ -51,6 +51,7 @@ var componente=new function() {
      * @var {Object} valoresPropiedades - Almacen de valores de parámetros.
      * @var {boolean} listoEjecutado - Indica si ya fue ejecutado el evento *Listo*.
      * @var {boolean} actualizacionEnCurso - Determina si el componente se encuentra en proceso de actualización o redibujado.
+     * @var {controlador} controlador - Instancia del controlador de la vista a la cual pertenece.
      */
     this.id=null;
     this.selector=null;
@@ -72,6 +73,7 @@ var componente=new function() {
     this.valoresPropiedades=null;
     this.listoEjecutado=false;
     this.actualizacionEnCurso=false;
+    this.controlador=null;
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -355,6 +357,7 @@ var componente=new function() {
      */
     this.establecerNombreVista=function(nombre) {
         this.nombreVista=nombre;
+        this.controlador=ui.obtenerInstanciaControladorVista(nombre);
         return this;
     };
 
@@ -371,7 +374,7 @@ var componente=new function() {
      * @returns {controlador}
      */
     this.obtenerControlador=function() {
-        return ui.obtenerInstanciaControladorVista(this.nombreVista);
+        return this.controlador;
     };
 
     /**
@@ -1658,18 +1661,12 @@ var componente=new function() {
     /**
      * Evalúa una expresión incluyendo las variables relacionadas al componente.
      * @param {string} cadena - Cadena a evaluar.
+     * @param {*} [objeto=this.datos] - Valor de `objeto`.
      * @returns {*}
      */
-    this.evaluarExpresion=function(cadena) {
-        var ctl=ui.obtenerInstanciaControladorVista(this.nombreVista),
-        vars=Object.assign({
-            //evento:evento,
-            //valor:this.valor(),
-            //reemplazar controlador y el listado de componentes por esta vista (puede no ser la principal, por ejemplo si es una vista embebible)
-            controlador:ctl,
-            componentes:ctl?ctl.componentes:componentes
-        },this.datos);    
-        return ui.evaluarExpresion(cadena,vars);
+    this.evaluarExpresion=function(cadena,objeto) {
+        if(typeof objeto==="undefined") objeto=this.datos;
+        return ui.evaluarExpresion(cadena,{ objeto:objeto, componente:this, controlador:this.controlador, valor:this.valor() });
     };
 
     /**

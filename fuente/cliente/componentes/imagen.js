@@ -168,7 +168,7 @@ var componenteImagen=function() {
         var origen=this.propiedadObj("origen"),
             t=this;
         if(origen) origen.porCada(function(tamano,valor) {
-                var resultado=ui.evaluarExpresion(valor,t.datos);
+                var resultado=t.evaluarExpresion(valor);
                 t.propiedadModificada("origen",resultado,tamano);
             });
         

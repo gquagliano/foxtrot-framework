@@ -55,7 +55,7 @@ var componenteEtiqueta=function() {
                 resultado=util.obtenerPropiedad(this.datos,propiedad);
             } else if(contenido) {
                 //Como expresion
-                resultado=ui.evaluarExpresion(contenido,this.datos);
+                resultado=this.evaluarExpresion(contenido);
             }
 
             if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores

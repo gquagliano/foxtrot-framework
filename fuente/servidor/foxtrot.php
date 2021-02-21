@@ -374,7 +374,10 @@ class foxtrot {
 
         self::inicializarEnrutador();
 
-        if($aplicacion!==false) self::instanciarAplicacion();
+        if($aplicacion!==false) {
+            self::instanciarAplicacion();
+            self::$instanciaAplicacion->listo();
+        }
     }
 
     /**
@@ -449,7 +452,7 @@ class foxtrot {
     }
 
     /**
-     * 
+     * Aborta la ejecución de la solicitud.
      */
     public static function detener() {
         exit;

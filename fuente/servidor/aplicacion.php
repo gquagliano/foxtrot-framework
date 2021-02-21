@@ -27,4 +27,10 @@ class aplicacion extends controlador {
         //Referencia a la clase pública (\controlador no habrá podido cargar la clase)
         if($this->publica) $this->privado=\foxtrot::aplicacion();
     }
+
+    /**
+     * Método invocado cuando la inicialización del framework y la aplicación está completa.
+     */
+    public function listo() {
+    }
 }

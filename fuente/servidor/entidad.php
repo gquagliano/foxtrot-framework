@@ -17,8 +17,11 @@ class entidad {
     /**
      * @var string $tipoModelo Tipo del modelo de datos (asignar `modelo::class`).
      * @var bool $omitirFechas Establecer a `true` para omitir la creación y el mantenimiento de los campos de fecha.
+     * @var string $nombreModelo Nombre del modelo. Se utiliza para generar un modelo en blanco en tiempo de ejecución cuando la clase concreta
+     * del modelo no existe. Es ignorado si `$tipoModelo` está definido.
      */
-    protected $tipoModelo;
+    protected static $tipoModelo;
+    protected static $nombreModelo;
     public static $omitirFechas=false;
     
     /** @var \aplicacion $aplicacion Instancia de la clase privada de la aplicación. */
@@ -128,7 +131,7 @@ class entidad {
      * @return \entidad
      */
     public function prepararValores($operacion) {
-        if(!self::$omitirFechas) {
+        if(!static::$omitirFechas) {
             if($operacion=='insertar') $this->fecha_alta=time();
             if($this->e) $this->fecha_baja=time();
             $this->fecha_actualizacion=time();
@@ -141,8 +144,11 @@ class entidad {
      * @param \bd $bd Instancia de la interfaz de la base de datos (por defecto, se utilizará la conexión abierta, no se iniciará una nueva instancia).
      * @return \modelo
      */
-    public function fabricarModelo($bd=null) {
-        return new $this->tipoModelo($bd);
+    public static function fabricarModelo($bd=null) {
+        if(!isset(static::$tipoModelo))
+            return new modelo($bd,static::$nombreModelo,static::class);
+
+        return new static::$tipoModelo($bd);
     }
 
     /**
@@ -154,7 +160,7 @@ class entidad {
         $obj=(object)get_object_vars($this);
         
         //Como estamos invocando get_object_vars() desde un método de la instancia, se han incluido propiedades protegidas y privadas; Remover
-        unset($obj->tipoModelo);
+        //unset(...);
 
         foreach($this->obtenerCampos() as $nombre=>$campo) {
             //Remover campos ocultos y privados
@@ -186,7 +192,7 @@ class entidad {
         $obj=(object)get_object_vars($this);
         
         //Como estamos invocando get_object_vars() desde un método de la instancia, se han incluido propiedades protegidas y privadas; Remover
-        unset($obj->tipoModelo);
+        //unset(...);
 
         foreach($this->obtenerCampos() as $nombre=>$campo) {
             //Remover si se especificó $campos y no está en el array ni es una clave del array (elemento asociativo)
@@ -226,8 +232,8 @@ class entidad {
         $cadenaRelaciones=null;
         if(is_array($campos[0])) $cadenaRelaciones=$campos[0];
         if($cadenaRelaciones) {
-            if(in_array($this->tipoModelo,$cadenaRelaciones)) return $this;
-            $cadenaRelaciones[]=$this->tipoModelo;
+            if(in_array(static::$tipoModelo,$cadenaRelaciones)) return $this;
+            $cadenaRelaciones[]=static::$tipoModelo;
         }
 
         foreach($this->obtenerCampos() as $nombre=>$campo) {

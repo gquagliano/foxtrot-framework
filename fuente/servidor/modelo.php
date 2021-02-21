@@ -89,12 +89,15 @@ class modelo {
     /**
      * Constructor.
      * @param \bd $bd Instancia de la interfaz de base de datos (por defecto, utilizará la conexión abierta, no iniciará una nueva conexión).
+     * @param string $nombre Nombre de la tabla en la base de datos. Se utiliza para aquellos casos en que la clase concreta del modelo no está definida.
+     * @param string $tipoEntidad Tipo de la clase de la entidad. Se utiliza para aquellos casos en que la clase concreta del modelo no está definida.
      */
-    function __construct($bd=null) {
+    function __construct($bd=null,$nombre=null,$tipoEntidad=null) {
         $this->aplicacion=foxtrot::obtenerAplicacion();
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
-        
-        $nombre=get_called_class();
+
+        if($nombre) $this->nombre=$nombre;
+        if($tipoEntidad) $this->tipoEntidad=$tipoEntidad;
 
         //Recuperar el nombre del modelo a partir del archivo
         $ruta=(new ReflectionClass($this))->getFileName();
@@ -102,13 +105,13 @@ class modelo {
         $partes=\util::separarRuta($ruta);
         $ruta=trim($partes->ruta,'/');
         if($ruta) $ruta.='/';
-        $nombre=preg_replace('/\.php$/','',$partes->nombre);                
-        $this->nombreModelo=$ruta.$nombre;
+        $clase=preg_replace('/\.php$/','',$partes->nombre);
+        $this->nombreModelo=$ruta.$clase;
 
-        //El nombre predeterminado de la tabla es el nombre de la clase (sin subdir)
+        //El nombre predeterminado de la tabla es el nombre de la clase (sin ruta)
         if(!$this->nombre) {
-            $p=strrpos($nombre,'\\');
-            $this->nombre=$p===false?$nombre:substr($nombre,$p+1);
+            $p=strrpos($clase,'\\');
+            $this->nombre=$p===false?$clase:substr($clase,$p+1);
         }
 
         $this->cargarEstructura();

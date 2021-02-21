@@ -12,8 +12,12 @@ defined('_inc') or exit;
  * Clase base para un manejador de eventos, a ser utilizada en la clase del gestor de eventos.
  */
 class manejador {
+    /** @var \aplicacion $aplicacion Instancia de la clase de la aplicación. */
     protected $aplicacion;
 
+    /**
+     * Constructor.
+     */
     function __construct() {
         $this->aplicacion=foxtrot::aplicacion();
     }

@@ -12,6 +12,7 @@ defined('_inc') or exit;
  * Clase de gestión de eventos.
  */
 class eventos {
+    /** @var array $instancias Listado de instancias suscriptas. */
     protected static $instancias=[];
 
     /**
@@ -36,7 +37,7 @@ class eventos {
     }
 
     /**
-     * 
+     * Método mágico `__callStatic`. Dispersa la invocación del método a los manejadores.
      */
     public static function __callStatic($nombre,$argumentos) {
         foreach(self::$instancias as $instancia) {

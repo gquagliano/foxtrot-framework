@@ -1713,6 +1713,12 @@ var componente=new function() {
 
         //Si está deshabilitado, suprimir el evento
         var deshabilitado=this.propiedad(null,"deshabilitado");
+        if(!deshabilitado) {
+            //Verificar si es descendencia de un elemento deshabilitado
+            //Realizaremos esto buscando en el DOM por clase .deshabilitado/disabled (compatible con Bootstrap) o atributo disabled, para
+            //mayor eficiencia. Sería poco eficiente leer la propiedad deshabilitado de cada componente en toda la ascendencia ante cada evento.
+            if(this.elemento.closest(".deshabilitado,.disabled,[disabled]")) deshabilitado=true;
+        }
         if(deshabilitado) {
             evento.preventDefault();
             evento.stopPropagation();

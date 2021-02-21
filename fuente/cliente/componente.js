@@ -39,7 +39,7 @@ var componente=new function() {
      * @var {(Element|Node)} contenedor - Elemento contenedor de la descendencia del componente (puede diferir de `elemento`).
      * @var {boolean} contenidoEditable - Indica si presenta contenido editable mediante el editor de texto (doble click).
      * @var {boolean} elementoEditable - Si `contenidoEditable` es `true`, este es el elemento que admite edición de texto.
-     * @var {(Element|Node)} elementoEventos - Elemento al cual se asignan los manejadores de eventos por defecto.
+     * @var {(Element|Node)} elementoEventos - Elemento al cual se asignan los controladores de eventos por defecto.
      * @var {boolean} arrastrable - Indica si el componente se puede arrastrar y soltar.
      * @var {boolean} fueInicializado - Indica si la instancia ya fue inicializada.
      * @var {boolean} modoEdicionListo - Indica si la instancia ya fue preparado para editar el componente en el editor de vistas.
@@ -1673,7 +1673,7 @@ var componente=new function() {
     };
 
     /**
-     * Procesa una cadena que representa el manejador de un evento, almacenada en las propiedades del componente.
+     * Procesa una cadena que representa el controlador de un evento, almacenada en las propiedades del componente.
      * @param {string} nombre - Nombre de la propiedad a leer.
      * @param {Object} [evento] - Objeto del evento.
      * @returns {*}
@@ -1743,7 +1743,7 @@ var componente=new function() {
         //Método interno del componente
         if(metodo&&typeof this[metodo]==="function") {
             var ret=this[metodo](evento);
-            //Los métodos que devuelvan true, detendrán el procesamiento del manejador
+            //Los métodos que devuelvan true, detendrán el procesamiento del controlador
             if(ret===true) return;
         }       
                 
@@ -1761,35 +1761,35 @@ var componente=new function() {
         parametrosServidor.evento=nombre;
         parametrosServidor.vista=this.nombreVista;
 
-        //Manejador definido por el usuario
-        var manejador=this.procesarCadenaEvento(propiedad,evento);
+        //Controlador de evento definido por el usuario
+        var controladorEvento=this.procesarCadenaEvento(propiedad,evento);
 
         var procesado=true;
 
         var ajax,resultadoLocal;
 
-        if(typeof manejador==="function") {
-            resultadoLocal=manejador(this,evento);
+        if(typeof controladorEvento==="function") {
+            resultadoLocal=controladorEvento(this,evento);
 
             if(retorno) retorno(resultadoLocal);
-        } else if(typeof manejador==="boolean"&&manejador) {
+        } else if(typeof controladorEvento==="boolean"&&controladorEvento) {
             //Si la expresión devolvió true, se asume procesado el evento
-            resultadoLocal=manejador;
+            resultadoLocal=controladorEvento;
 
             if(retorno) retorno(resultadoLocal);
-        } else if(typeof manejador==="string") {
-            if(/^[\d\.]+$/.test(manejador)) {
-                resultadoLocal=manejador.indexOf(".")>=0?parseFloat(manejador):parseInt(manejador);
+        } else if(typeof controladorEvento==="string") {
+            if(/^[\d\.]+$/.test(controladorEvento)) {
+                resultadoLocal=controladorEvento.indexOf(".")>=0?parseFloat(controladorEvento):parseInt(controladorEvento);
             } else {
-                resultadoLocal=manejador;
+                resultadoLocal=controladorEvento;
                 var comando=null,
-                    coincidencia=manejador.match(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl):(.+)/);                
+                    coincidencia=controladorEvento.match(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl):(.+)/);                
                 if(coincidencia) {
                     comando=coincidencia[1];
-                    manejador=coincidencia[2];
+                    controladorEvento=coincidencia[2];
                 } else {
                     //Corregir \: (ejemplo enviar\:test -> enviar:test, sin tomarlo como comando)
-                    manejador=manejador.replace(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl)\:/,"$1:");
+                    controladorEvento=controladorEvento.replace(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl)\:/,"$1:");
                 }
 
                 var vista=ui.obtenerInstanciaVista(this.nombreVista),
@@ -1816,38 +1816,38 @@ var componente=new function() {
                     });
 
                     //Invocar el método
-                    var metodo=obj.servidor[manejador];
+                    var metodo=obj.servidor[controladorEvento];
                     ajax=metodo.apply(obj.servidor,args);
                 } else if(comando=="ir") {
                     //Navegación
-                    ui.irA(manejador,nuevaVentana);
+                    ui.irA(controladorEvento,nuevaVentana);
                 } else if(comando=="no-ir") {
                     //Reemplazar URL sin navegar
-                    ui.noIrA(manejador,nuevaVentana);
+                    ui.noIrA(controladorEvento,nuevaVentana);
                 } else if(comando=="abrir") {
                     //Popup
-                    ui.abrirVentana(manejador);
+                    ui.abrirVentana(controladorEvento);
                 } else if(comando=="apl") {
                     //Propiedad del controlador de aplicacion
                     var obj=ui.aplicacion();
-                    resultadoLocal=obj[manejador].call(obj,this,evento);
+                    resultadoLocal=obj[controladorEvento].call(obj,this,evento);
 
                     if(retorno) retorno(resultadoLocal);
                 } else if(comando) {
-                    //Manejador con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
+                    //Controlador de evento con el formato nombreComponente:valor invocará el método eventoExterno(valor,evento) en el
                     //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
                     //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
                     
                     //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
                     var nombre=comando,
-                        valor=manejador,
+                        valor=controladorEvento,
                         obj=componentes[nombre];
                     resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
 
                     if(retorno) retorno(resultadoLocal);
-                } else if(manejador!="") {
+                } else if(controladorEvento!="") {
                     //Propiedad del controlador
-                    if(ctl&&typeof ctl[manejador]==="function") resultadoLocal=ctl[manejador].call(ctl,this,evento);
+                    if(ctl&&typeof ctl[controladorEvento]==="function") resultadoLocal=ctl[controladorEvento].call(ctl,this,evento);
 
                     if(retorno) retorno(resultadoLocal);
                 }

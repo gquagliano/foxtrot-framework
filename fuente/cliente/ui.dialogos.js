@@ -474,7 +474,7 @@
         ev.preventDefault();
     },
     /**
-     * Remueve los manejadores de eventos relacionados con los desplegables.
+     * Remueve los controladores de eventos relacionados con los desplegables.
      */
     removerEventosDesplegable=function(elem) {
         window.removerEvento("resize scroll wheel blur",cerrarDesplegableAbierto);
@@ -484,7 +484,7 @@
             .removerEvento("click",clickElemSombraDesplegable);
     },
     /**
-     * Asigna los manejadores de eventos relacionados con los desplegables.
+     * Asigna los controladores de eventos relacionados con los desplegables.
      */
     establecerEventosDesplegable=function(elem) {
         removerEventosDesplegable(elem);

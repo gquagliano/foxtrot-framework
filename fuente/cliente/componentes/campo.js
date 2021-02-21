@@ -126,7 +126,7 @@ var componenteCampo=function() {
             var tipo=t.propiedad(null,"tipo"),
                 esTextarea=tipo=="multilinea",
                 esCodigo=tipo=="codigoBarras",
-                manejador=t.propiedad(null,"intro");
+                controlador=t.propiedad(null,"intro");
             if(esCodigo) {
                 //Si es un campo de código de barras, nunca enviar el formulario
                 
@@ -137,8 +137,8 @@ var componenteCampo=function() {
                 setTimeout(function() {
                     ignorarTodaEntrada=false;
                 },800);
-            } else if(!manejador) {
-                //Para cualquier otro tipo excepto multilínea, si no hay un manejador asignado enviar el formulario
+            } else if(!controlador) {
+                //Para cualquier otro tipo excepto multilínea, si no hay un controlador asignado enviar el formulario
                 if(!esTextarea) {
                     this.enviarFormulario();
                     ev.preventDefault();

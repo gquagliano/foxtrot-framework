@@ -899,7 +899,7 @@
     };
 
     /**
-     * Ejecuta todos los manejadores asignados a un evento.
+     * Ejecuta todos los controladores asignados a un evento.
      * @memberof external:EventTarget
      * @param {string} nombre - Nombre del evento.
      */
@@ -976,7 +976,7 @@
     };
 
     /**
-     * Remueve todos los manejadores de eventos asignados.
+     * Remueve todos los controladores de eventos asignados.
      * @memberof external:EventTarget
      * @returns {EventTarget}
      */
@@ -991,7 +991,7 @@
      * @memberof external:EventTarget
      * @param {*} nombre 
      * @param {*} funcion 
-     * @param {boolean} [captura=false] - Si un manejador se registró dos veces, uno con captura y otro sin, cada uno debe ser eliminado por separado.
+     * @param {boolean} [captura=false] - Si un controlador se registró dos veces, uno con captura y otro sin, cada uno debe ser eliminado por separado.
      */
     EventTarget.prototype.removerEvento=function(nombre,funcion,captura) {
         if(typeof captura==="undefined") captura=false;
@@ -1295,7 +1295,7 @@
     };
 
     /**
-     * Ejecuta todos los manejadores asignados a un evento.
+     * Ejecuta todos los controladores asignados a un evento.
      * @memberof external:NodeList
      * @param {string} nombre - Nombre del evento.
      */
@@ -1315,7 +1315,7 @@
     };
 
     /**
-     * Remueve todos los manejadores de eventos asignados.
+     * Remueve todos los controladores de eventos asignados.
      * @memberof external:NodeList
      * @returns {EventTarget}
      */

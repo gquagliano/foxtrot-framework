@@ -546,7 +546,7 @@ var componenteArbol=function() {
         evento.ruta=t.obtenerRuta(li);
         var retorno=t.procesarEvento("click","click",null,evento);
         
-        //Si no hubo un manejador definido, alternar
+        //Si no hubo un controlador definido, alternar
         if(retorno!==true) {
             li.alternarClase("expandido");
 

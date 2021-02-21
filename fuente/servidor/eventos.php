@@ -16,16 +16,16 @@ class eventos {
     protected static $instancias=[];
 
     /**
-     * Permite suscribir una instancia de `\manejador`.
-     * @param \manejador $objeto Instancia del manejador de eventos.
+     * Permite suscribir una instancia de `\controladorEventos`.
+     * @param \controladorEventos $objeto Instancia del controlador de eventos.
      */
     public static function suscribir($objeto) {
         self::$instancias[]=$objeto;
     }
 
     /**
-     * Desuscribe una instancia de `\manejador`.
-     * @param \manejador $objeto Instancia del manejador de eventos.
+     * Desuscribe una instancia de `\controladorEventos`.
+     * @param \controladorEventos $objeto Instancia del controlador de eventos.
      */
     public static function desuscribir($objeto) {
         foreach(self::$instancias as $i=>$instancia) {
@@ -37,7 +37,7 @@ class eventos {
     }
 
     /**
-     * Método mágico `__callStatic`. Dispersa la invocación del método a los manejadores.
+     * Método mágico `__callStatic`. Dispersa la invocación del método a los controladores de eventos.
      */
     public static function __callStatic($nombre,$argumentos) {
         foreach(self::$instancias as $instancia) {

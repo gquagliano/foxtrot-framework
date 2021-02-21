@@ -109,8 +109,8 @@ var componenteFecha=function() {
     this.intro=function(ev) {
         if(!ui.enModoEdicion()) {
             //Enviar formulario con Enter
-            var manejador=t.propiedad(null,"intro");
-            if(!manejador) { //Si hay un evento definido por el usuario, dejar que sea procesado
+            var controlador=t.propiedad(null,"intro");
+            if(!controlador) { //Si hay un evento definido por el usuario, dejar que sea procesado
                 this.enviarFormulario();
                 ev.preventDefault();
                 ev.stopPropagation();

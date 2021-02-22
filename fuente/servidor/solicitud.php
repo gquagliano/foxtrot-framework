@@ -25,10 +25,12 @@ class solicitud {
     public static function incializar() {
         self::procesarOptions();
 
-        //TODO Configurable        
-        header('Access-Control-Allow-Origin: *',true);
-        header('Accept-Language: *',true);
-        header_remove('X-Powered-By');
+        if(!foxtrot::esCli()) {
+            //TODO Configurable
+            header('Access-Control-Allow-Origin: *',true);
+            header('Accept-Language: *',true);
+            header_remove('X-Powered-By');
+        }
 
         self::procesarParametros();
         //TODO Implementar esta clase en todos los lugares donde se utilicen las variables globales y luego:

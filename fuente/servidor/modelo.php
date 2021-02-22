@@ -1660,7 +1660,7 @@ class modelo {
                     if(array_count_values($cadenaRelaciones)[$campo->modelo]>1) $this->omitirRelaciones($nombre);
                 } else {
                     $condicion=$obj->alias.'.`id`='.$this->alias.'.`'.$campo->columna.'`';
-                }
+                }   
 
                 $this->relacionar(
                     $nombre,
@@ -1780,6 +1780,8 @@ class modelo {
             $parentesis=null;
             
             foreach($this->consultaCondiciones as $i=>$condicion) {
+                if(!$condicion||!$condicion->condicion) continue;
+
                 if(is_string($condicion)&&($condicion==')'||$condicion=='(')) {
                     if($i==count($this->consultaCondiciones)-1) {
                         //La última condición es )
@@ -1803,6 +1805,7 @@ class modelo {
                 $parentesis=null;
             }
 
+            if(!$condiciones) $condiciones='1';
             $sql.=' ( '.$condiciones.' ) ';
         } elseif($operacion=='actualizar'&&$this->consultaValores->id) {
             $sql.=' WHERE '.$this->alias.'.`id`=? ';

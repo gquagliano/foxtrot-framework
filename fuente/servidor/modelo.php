@@ -96,22 +96,26 @@ class modelo {
         $this->aplicacion=foxtrot::obtenerAplicacion();
         $this->bd=$bd?$bd:foxtrot::obtenerInstanciaBd();
 
-        if($nombre) $this->nombre=$nombre;
         if($tipoEntidad) $this->tipoEntidad=$tipoEntidad;
 
-        //Recuperar el nombre del modelo a partir del archivo
-        $ruta=(new ReflectionClass($this))->getFileName();
-        $ruta=substr(realpath($ruta),strlen(realpath(_modeloAplicacion)));
-        $partes=\util::separarRuta($ruta);
-        $ruta=trim($partes->ruta,'/');
-        if($ruta) $ruta.='/';
-        $clase=preg_replace('/\.php$/','',$partes->nombre);
-        $this->nombreModelo=$ruta.$clase;
+        if($nombre) {
+            $this->nombre=$nombre;
+            $this->nombreModelo=$nombre;
+        } else {
+            //Recuperar el nombre del modelo a partir del archivo
+            $ruta=(new ReflectionClass($this))->getFileName();
+            $ruta=substr(realpath($ruta),strlen(realpath(_modeloAplicacion)));
+            $partes=\util::separarRuta($ruta);
+            $ruta=trim($partes->ruta,'/');
+            if($ruta) $ruta.='/';
+            $clase=preg_replace('/\.php$/','',$partes->nombre);
+            $this->nombreModelo=$ruta.$clase;
 
-        //El nombre predeterminado de la tabla es el nombre de la clase (sin ruta)
-        if(!$this->nombre) {
-            $p=strrpos($clase,'\\');
-            $this->nombre=$p===false?$clase:substr($clase,$p+1);
+            //El nombre predeterminado de la tabla es el nombre de la clase (sin ruta)
+            if(!$this->nombre) {
+                $p=strrpos($clase,'\\');
+                $this->nombre=$p===false?$clase:substr($clase,$p+1);
+            }
         }
 
         $this->cargarEstructura();
@@ -144,7 +148,7 @@ class modelo {
 
             //Asignar valores existentes en la consulta
             foreach($this->consultaRelaciones as $relacion) {
-                if($relacion->campo&&($relacion->siempre||$this->consultaProcesarRelaciones)) {
+                if($relacion->campo&&$relacion->tipo!='1:n'&&($relacion->siempre||$this->consultaProcesarRelaciones)) {
                     $campo=$relacion->campo;
                     $obj->$campo=$relacion->modelo->fabricarEntidad($fila);
                     //Si no hubo coincidencias, mantener el campo nulo
@@ -216,8 +220,8 @@ class modelo {
      * @return \modelo
      */
     protected function fabricarModeloCampo($campo) {
-        if($campo->modelo) return $this->fabricarModelo($campo->modelo);
         if($campo->entidad) return $this->fabricarModeloPorEntidad($campo->entidad);
+        if($campo->modelo) return $this->fabricarModelo($campo->modelo);
         return null;
     }
 
@@ -423,7 +427,7 @@ class modelo {
     /**
      * Establece una relación con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
      * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
-     * @param string $tipo Tipo de relación (`1:0`, `1:1`, `1:N`)
+     * @param string $tipo Tipo de relación (`1:0`, `1:1`, `1:n`)
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
      * @param string $condicion Condición, como SQL.
@@ -482,7 +486,7 @@ class modelo {
     }
 
     /**
-     * Establece una relación 1:N con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
+     * Establece una relación 1:n con otro modelo, dado su nombre, clase o instancia. Pueden insertarse parámetros adicionales en la condición con el formato `@nombre`.
      * @param string $campo Campo a relacionar. Si no es necesario que la entidad se asigne a un campo, especificar `null`.
      * @param string $modelo Nombre del modelo a relacionar.
      * @param string $alias Alias a asignar al modelo relacionado.
@@ -512,7 +516,7 @@ class modelo {
     }
 
     /**
-     * Omite solo las relaciones 1:N.
+     * Omite solo las relaciones 1:n.
      * @return \modelo
      */
     public function omitirRelacionesUnoAMuchos() {
@@ -539,7 +543,7 @@ class modelo {
     }
 
     /**
-     * Al actualizar una fila, preservará las filas relacionadas en campos 1:N que no se incluyan en el listado. Esto significa que, con cada consulta, solo se actualizarán y
+     * Al actualizar una fila, preservará las filas relacionadas en campos 1:n que no se incluyan en el listado. Esto significa que, con cada consulta, solo se actualizarán y
      * se agregarán las nuevas relaciones, pero nunca se eliminarán. Por defecto, esto está desactivado.
      * @return \modelo
      */
@@ -549,7 +553,7 @@ class modelo {
     }
 
     /**
-     * Al actualizar una fila, se eliminarán las filas relacionadas en campos 1:N que no existan en el listado. Esto significa que, con cada consulta, solo se preservarán
+     * Al actualizar una fila, se eliminarán las filas relacionadas en campos 1:n que no existan en el listado. Esto significa que, con cada consulta, solo se preservarán
      * las relaciones que estén explícitamente asignadas a la entidad. Este es el comportamiento por defecto.
      * @return \modelo
      */
@@ -1248,7 +1252,7 @@ class modelo {
     }
 
     /**
-     * Ejecuta las consultas de inserción o actualización en los campos relacionales 1:N.
+     * Ejecuta las consultas de inserción o actualización en los campos relacionales 1:n.
      * @return \modelo
      */
     public function ejecutarConsultasRelacionadasUnoAMuchos() {

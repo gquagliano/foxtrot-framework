@@ -236,8 +236,8 @@ class entidad {
      * @return \modelo
      */
     protected function fabricarModeloCampo($campo) {
-        if($campo->modelo) return foxtrot::obtenerInstanciaModelo($campo->modelo);
         if($campo->entidad) return foxtrot::obtenerInstanciaModeloPorEntidad($campo->entidad);
+        if($campo->modelo) return foxtrot::obtenerInstanciaModelo($campo->modelo);
         return null;
     }
 
@@ -454,6 +454,8 @@ class entidad {
 
                     $campos->$propiedad->$etiqueta=$valor;
                 }
+                //Si se omite @modelo, establecer igual que @entidad
+                if($campos->$propiedad->tipo=='relacional'&&!$campos->$propiedad->modelo) $campos->$propiedad->modelo=$campos->$propiedad->entidad;
             }
         }
 

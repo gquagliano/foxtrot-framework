@@ -1066,6 +1066,20 @@ class modelo {
     }
 
     /**
+     * Establece el ordenamiento como una expresión SQL. A diferencia de `ordenaroPor()`, no realizará ninguna interpretación del valor
+     * especificado.
+     * @param string $orden Expresión.
+     * @return \modelo
+     */
+    public function ordenadoPorCrudo($orden) {
+        $this->consultaOrden[]=(object)[
+            'campo'=>$orden,
+            'orden'=>null
+        ];
+        return $this;
+    }
+
+    /**
      * Establece los valores a guardar. En una segunda llamada a este método con un objeto o array, se asignarán los valores a la entidad establecida previamente. Especificar
      * una entidad siempre reemplazará la entidad previamente asignada (en caso contrario, solo se actualizarán las propiedades incluidas en el objeto o array).
      * @param object|array|\entidad $objeto Entidad u objeto o array [propiedad=>valor].

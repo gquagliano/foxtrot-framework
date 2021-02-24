@@ -32,6 +32,7 @@ class configuracion {
     public static $seguridadSmtp='';
     public static $contrasenaSmtp='';
     public static $rutaArchivos='temp/';
+    public static $depuracion=false;
 
     protected static $otrosParametros=[];
 

@@ -8,7 +8,7 @@
 
 defined('_inc') or exit;
 
-error_reporting(E_ERROR | E_WARNING);
+error_reporting(0);
 
 /**
  * Clase principal del sistema (prototipo).
@@ -449,6 +449,10 @@ class foxtrot {
      */
     protected static function procesarConfiguracion() {
         date_default_timezone_set(configuracion::obtener('zonaHoraria'));
+        
+        if(configuracion::$depuracion) {
+            error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+        }
     }
 
     /**

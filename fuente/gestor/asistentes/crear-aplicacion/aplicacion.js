@@ -2,6 +2,10 @@
  * Controlador de la aplicación. Autogenerado por el asistente de Foxtrot.
  */
 ui.registrarAplicacion(function() {
+    "use strict";
+
+    var t=this;
+
     /**
      * Valida la sesión.
      * @param {function} retorno - Función de retorno en caso de ser un usuario autenticado.

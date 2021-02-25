@@ -83,12 +83,13 @@ var servidor=new function() {
      * @param {function} [opciones.error=function] - Función de error. Por defecto, será invocado el evento `errorServidor`.
      * @param {function} [opciones.listo] - Función a invocar tras la solicitud (siempre será invocada, independientemente del valor de retorno, excepto en caso de error).
      * @param {function} [opciones.siempre] - Función a invocar tras la solicitud (siempre será invocada, incluso en caso de error).
-     * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar.
+     * @param {Object} [opciones.parametros] - Parámetros o argumentos a enviar. Acepta instancias de `File` o `Blob` solo cuando `opciones.formulario` es `true`.
      * @param {Object} [opciones.abortar=true] - Determina si se deben abortar otras solicitudes en curso.
      * @param {Object} [opciones.precarga=true] - Determina si se debe mostrar la animación de precarga. Posibles valores: true (precarga normal a pantalla completa), "barra" (barra de progreso superior que no bloquea la pantalla), false (solicitud silenciosa).
      * @param {boolean} [opciones.formulario=false] - Envía la solicitud como datos de formulario (FormData).
      * @param {function} [opciones.progreso] - Función de notificación de progreso. Recibirá el progreso de 0 a 1 como argumento.
      * @param {number} [opciones.tiempo] - Tiempo límite (si se omite, será el valor por defecto de ajax).
+     * @param {Object[]} [opciones.archivos] - Archivos a enviar. Debe ser un array de objetos `{ datos:File o Blob, nombre:"nombre" }`. Solo tendrá efecto cuando `opciones.formulario` sea `true`. 
      * @returns {Ajax}
      */
     this.invocarMetodo=function(opciones) {
@@ -127,21 +128,33 @@ var servidor=new function() {
             campos.porCada(function(campo,valor)  {
                 param.append(campo,valor);
             });
+
+            if(util.esObjeto(opciones.archivos)) {
+                opciones.archivos.porCada(function(campo,objeto) {
+                    if(objeto instanceof File||objeto instanceof Blob) {
+                        param.append(campo,objeto);
+                    } else {
+                        param.append(campo,objeto.datos,objeto.nombre);
+                    }
+                });
+            }
+
+            var parametros=opciones.parametros.clonar(),
+                parametros2=opciones.parametros.clonar();
             
-            if(util.esObjeto(opciones.parametros)) {
-                //Extraer los archivos
-                var lista=opciones.parametros.clonar();
-                lista.porCada(function(campo,valor) {
-                    if(valor instanceof File) {
+            //Extraer archivos presentes en parámetros
+            if(util.esObjeto(parametros)) {
+                parametros2.porCada(function(campo,valor) {
+                    if(valor instanceof File||valor instanceof Blob) {
                         param.append(campo,valor);
-                        delete opciones.parametros[campo];
+                        delete parametros[campo];
                     }
                 });
             }
             
             //Otros valores enviar por __p
-            if(opciones.parametros) {
-                var json=JSON.stringify(opciones.parametros);
+            if(parametros) {
+                var json=JSON.stringify(parametros);
                 if(json!==null) param.append("__p",json);
             }
         } else {

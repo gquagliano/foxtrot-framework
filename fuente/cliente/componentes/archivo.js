@@ -22,6 +22,7 @@ var componenteArchivo=function() {
     this.ajax=null;
     this.subidaEnCurso=false;
     this.datosCordova=null;
+    this.opcionesCordova={};
 
     /**
      * Propiedades de Campo.
@@ -134,25 +135,51 @@ var componenteArchivo=function() {
                 var multimedia=t.propiedad("multimedia");
                 if(multimedia=="video"||multimedia=="videoFrontal"||multimedia=="foto"||multimedia=="fotoFrontal") {
                     ev.preventDefault();
+                    
+                    var opciones=Object.assign({
+                        quality:"50",
+                        destinationType:0, //DATA_URL
+                        encodingType:0, //JPEG
+                        correctOrientation:true,
+                        saveToPhotoAlbum:false,
+                        mediaType:multimedia=="video"||multimedia=="videoFrontal"?1:0, //VIDEO:PICTURE
+                        cameraDirection:multimedia=="videoFrontal"||multimedia=="fotoFrontal"?1:0 //FRONT:BACK
+                    },t.opcionesCordova);
+
                     navigator.camera.getPicture(function(datos) {
                         //Listo
-                        t.datosCordova="data:image/jpeg;base64,"+datos;
+                        if(opciones.destinationType==0) { //DATA_URL
+                            t.datosCordova={
+                                tipo:"data_url",
+                                datos:"data:image/jpeg;base64,"+datos
+                            };
+                        } else if(opciones.destinationType==1) { //FILE_URI
+                            t.datosCordova={
+                                tipo:"file_uri",
+                                datos:datos
+                            };
+                        }
                         fn();
                     },function() {
                         //Error, deseleccionar
                         t.datosCordova=null;
                         fn();
-                    },{
-                        quality:"50",
-                        destinationType:0, //DATA_URL
-                        encodingType:0, //JPEG
-                        mediaType:multimedia=="video"||multimedia=="videoFrontal"?1:0, //VIDEO:PICTURE
-                        cameraDirection:multimedia=="videoFrontal"||multimedia=="fotoFrontal"?1:0 //FRONT:BACK
-                    });
+                    },opciones);
                 }                
             });
         }
 
+        return this;
+    };
+
+    /**
+     * Permite sobreescribir las opciones predeterminadas para la integración con el plugin `cordova-plugin-camera` que tiene lugar cuando
+     * la aplicación se está ejecutando en un dispositivo y la propiedad `multimedia` es `video`, `videoFrontal`, `foto` o `fotoFrontal`.
+     * @param {Object} opciones - Opciones. Ver [https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-camera/index.html](https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-camera/index.html).
+     * @returns {componente}
+     */
+    this.establecerOpcionesCordova=function(opciones) {
+        this.opcionesCordova=opciones;
         return this;
     };
 
@@ -248,7 +275,9 @@ var componenteArchivo=function() {
     };
 
     /**
-     * Genera el valor de archivos.
+     * Genera el valor de archivos. Nótese que en caso de toma de contenido multimedia en dispositivos (Cordova), los datos del archivo estarán
+     * establecidos en la propiedad `datos` como Base64 si `destinationType` era `0` o `DATA_URL` (predeterminado), o en `nativo` si `destinationType`
+     * era `1` o `FILE_URI`.
      * @returns {Componente}
      */
     this.procesarArchivos=function() {
@@ -258,14 +287,17 @@ var componenteArchivo=function() {
         var nombres=[];
 
         if(this.datosCordova) {
+            var datos=null,nativo=null;
+            if(this.datosCordova.tipo=="data_url") datos=this.datosCordova.datos;
+            if(this.datosCordova.tipo=="file_uri") nativo=this.datosCordova.datos;
             this.archivos=[
                 {
-                    nativo:null,
+                    nativo:nativo,
                     nombre:"fotografia.jpg",
                     tamano:null,
                     tipo:"image/jpeg",
                     archivo:null,
-                    datos:this.datosCordova
+                    datos:datos
                 }
             ];
 

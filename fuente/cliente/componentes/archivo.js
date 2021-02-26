@@ -147,17 +147,19 @@ var componenteArchivo=function() {
                     },t.opcionesCordova);
 
                     navigator.camera.getPicture(function(datos) {
-                        //Listo
-                        if(opciones.destinationType==0) { //DATA_URL
-                            t.datosCordova={
-                                tipo:"data_url",
-                                datos:"data:image/jpeg;base64,"+datos
-                            };
-                        } else if(opciones.destinationType==1) { //FILE_URI
-                            t.datosCordova={
-                                tipo:"file_uri",
-                                datos:datos
-                            };
+                        //Listo                        
+                        if(typeof this.datosCordova.datos==="string") { //Si se toma la foto y se cancela, datos puede ser un array vacío 🤨
+                            if(opciones.destinationType==0) { //DATA_URL
+                                t.datosCordova={
+                                    tipo:"data_url",
+                                    datos:"data:image/jpeg;base64,"+datos
+                                };
+                            } else if(opciones.destinationType==1) { //FILE_URI
+                                t.datosCordova={
+                                    tipo:"file_uri",
+                                    datos:datos
+                                };
+                            }
                         }
                         fn();
                     },function() {

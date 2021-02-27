@@ -102,7 +102,18 @@ var componenteImagen=function() {
             if(t==tamano) break;
         }
 
-        this.elemento.atributo("src",origen);
+        if(origen) origen=this.evaluarExpresion(origen);
+        
+        //Mostrar imagen de relleno, si corresponde
+        if(!origen) {
+            if(ui.enModoEdicion()) {
+                this.elemento.atributo("src",icono);
+            } else {
+                this.elemento.removerAtributo("src");
+            }
+        } else {
+            this.elemento.atributo("src",origen);
+        }
     };
     
     /**
@@ -145,13 +156,7 @@ var componenteImagen=function() {
         
         this.actualizacionEnCurso=true;
 
-        //Actualizar el origen para todos los tamaños
-        var origen=this.propiedadObj("origen"),
-            t=this;
-        if(origen) origen.porCada(function(tamano,valor) {
-                var resultado=t.evaluarExpresion(valor);
-                t.propiedadModificada("origen",resultado,tamano);
-            });
+        this.establecerOrigen();
         
         this.actualizacionEnCurso=false;
 
@@ -162,15 +167,11 @@ var componenteImagen=function() {
      * Evento `editor`.
      * @returns {Componente}
      */
-    this.editor=function() {
-        //Mostrar imagen de relleno, si corresponde
-        this.elemento.atributo("src",icono);        
-        this.establecerOrigen();
-
+    this.editor=function() {      
         this.elemento.onerror=function() {
             this.src=icono;
         };
-
+        this.establecerOrigen();
         return this.clasePadre.editor.call(this);
     };    
 
@@ -180,7 +181,7 @@ var componenteImagen=function() {
      */
     this.editorDesactivado=function() {
         //Remover imagen de relleno
-        this.elemento.atributo("src","");
+        this.elemento.removerAtributo("src");
         return this.clasePadre.editorDesactivado.call(this);
     };
 };

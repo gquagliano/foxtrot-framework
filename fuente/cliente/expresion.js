@@ -21,6 +21,8 @@ function expresion(expr) {
     this.componentes=null;
     this.this=null;
 
+    var cacheSubexpresiones={};
+
     /**
      * Establece el valor de `obj` / `objeto` en la expresión.
      * @param {*} valor - Valor a establecer.
@@ -91,48 +93,65 @@ function expresion(expr) {
         return this;
     };
 
-    var extraerUltimoMiembro=function(expresion) {
-        var corchetes=0,
-            llaves=0,
-            parentesis=0,
-            comillas=null,
-            bufer="",
-            miembros=[];
-        for(var i=0;i<expresion.length;i++) {
-            var c=expresion[i],
-                cAnt=i>0?expresion[i-1]:null;
+    var extraerUltimoMiembro=function(expresion,procesarTernario) {
+        if(cacheSubexpresiones[expresion]) return cacheSubexpresiones[expresion];
 
-            if(!comillas) {
-                if(!comillas&&!corchetes&&!llaves&&!parentesis&&(c=="."||c=="["||c=="{"||c=="(")) {
-                    miembros.push(bufer);
+        if(typeof procesarTernario==="undefined") procesarTernario=true;
+
+        var resultado;
+
+        //Detectar expresión con operador ternario
+        var coincidencias=expresion.match(/^(.+?)\?(.+):(.+)$/);
+        if(procesarTernario&&coincidencias) {
+            //En este caso, vamos a modificar la expresión para extraer la subexpresión de cada término, manteniendo la condición,
+            //para que se pueda interpretar cuál corresponde tomar más adelante
+            resultado=coincidencias[1]+"?"+extraerUltimoMiembro(coincidencias[2],false)+":"+extraerUltimoMiembro(coincidencias[3],false);
+        } else {
+            var corchetes=0,
+                llaves=0,
+                parentesis=0,
+                comillas=null,
+                bufer="",
+                miembros=[];
+            for(var i=0;i<expresion.length;i++) {
+                var c=expresion[i],
+                    cAnt=i>0?expresion[i-1]:null;
+
+                if(!comillas) {
+                    if(!comillas&&!corchetes&&!llaves&&!parentesis&&(c=="."||c=="["||c=="{"||c=="(")) {
+                        miembros.push(bufer);
+                    }
+
+                    if(c=="[") {
+                        corchetes++;
+                    } else if(c=="{") {
+                        llaves++;
+                    } else if(c=="(") {
+                        parentesis++;
+                    } else if(c=="]") {
+                        corchetes--;
+                    } else if(c=="}") {
+                        llaves--;
+                    } else if(c==")") {
+                        parentesis--;
+                    } else if(c=="\""||c=="'") {
+                        comillas=c;
+                    }
+                } else {
+                    if(c==comillas&&cAnt!="\\") {
+                        comillas=null;
+                    }
                 }
 
-                if(c=="[") {
-                    corchetes++;
-                } else if(c=="{") {
-                    llaves++;
-                } else if(c=="(") {
-                    parentesis++;
-                } else if(c=="]") {
-                    corchetes--;
-                } else if(c=="}") {
-                    llaves--;
-                } else if(c==")") {
-                    parentesis--;
-                } else if(c=="\""||c=="'") {
-                    comillas=c;
-                }
-            } else {
-                if(c==comillas&&cAnt!="\\") {
-                    comillas=null;
-                }
+                bufer+=c;
             }
-
-            bufer+=c;
+            if(bufer!="") miembros.push(bufer);
+            if(miembros.length<=1) return expresion;
+            resultado=miembros[miembros.length-2];
         }
-        if(bufer!="") miembros.push(bufer);
-        if(miembros.length<=1) return Window;
-        return miembros[miembros.length-2];
+
+        cacheSubexpresiones[expresion]=resultado;
+        return resultado;
     };
 
     /**
@@ -156,8 +175,14 @@ function expresion(expr) {
 /*Algunas constantes útiles*/ \
 var nulo=null,falso=false,f=false,verdadero=true,v=true; \
 try { \
-    var resultado=("+cadena+"); \
-    if(typeof resultado===\"function\") return resultado.bind("+expresionPadre+"); \
+    var resultado=("+cadena+"), \
+        objeto=window; \
+    if(typeof resultado===\"function\") { \
+        try { \
+            objeto=("+expresionPadre+"); \
+        } catch { } \
+        return resultado.bind(objeto); \
+    } \
     return resultado; \
 } catch { \
     return null; \

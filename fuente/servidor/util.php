@@ -117,4 +117,16 @@ class util {
         }
         return $resultado;
     }
+
+    /**
+     * Devuelve la cantidad de minutos correspondiente al desplazamiento (*offset*) de la zona horaria especificada.
+     * @param string $zona Zona horaria. Por defecto, el valor de `configuracion::zonaHoraria`.
+     * @return int
+     */
+    public static function obtenerMinutosZonaHoraria($zona=null) {
+        if(!$zona) $zona=\configuracion::$zonaHoraria;
+        $utc=new \DateTimeZone('utc');
+        $zona=new \DateTimeZone($zona);
+        return $zona->getOffset(new \DateTime('now',$utc))/60;
+    }
 }

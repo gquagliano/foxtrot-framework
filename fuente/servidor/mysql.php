@@ -145,8 +145,9 @@ class bd {
         $this->e->query('set sql_mode=""');
         //$this->e->query('set names "utf8"');
         $this->e->set_charset('utf8');
-        $horas=\configuracion::$zonaHorariaMinutos>=0?'+':'-';
-        $horas.=\util::minutosAHoras(\configuracion::$zonaHorariaMinutos);        
+
+        $zona=\util::obtenerMinutosZonaHoraria(\configuracion::$zonaHorariaMinutos);
+        $horas=($zona>=0?'+':'-').\util::minutosAHoras($zona);
         $this->e->query("set @@session.time_zone='".$horas."'");        
         
         return $this;

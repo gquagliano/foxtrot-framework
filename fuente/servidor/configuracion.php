@@ -18,7 +18,6 @@ class configuracion {
     public static $enrutador=null;
     public static $rutaBase='/';
     public static $zonaHoraria='UTC';
-    public static $zonaHorariaMinutos=0;
     public static $servidorBd='127.0.0.1';
     public static $puertoBd=3306;
     public static $usuarioBd;

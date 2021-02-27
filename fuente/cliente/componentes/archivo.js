@@ -148,7 +148,7 @@ var componenteArchivo=function() {
 
                     navigator.camera.getPicture(function(datos) {
                         //Listo                        
-                        if(typeof this.datosCordova.datos==="string") { //Si se toma la foto y se cancela, datos puede ser un array vacío 🤨
+                        if(typeof datos==="string") {
                             if(opciones.destinationType==0) { //DATA_URL
                                 t.datosCordova={
                                     tipo:"data_url",
@@ -163,7 +163,7 @@ var componenteArchivo=function() {
                         }
                         fn();
                     },function() {
-                        //Error, deseleccionar
+                        //Error/cancelado, deseleccionar
                         t.datosCordova=null;
                         fn();
                     },opciones);

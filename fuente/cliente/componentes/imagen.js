@@ -17,8 +17,6 @@ var componenteImagen=function() {
 
     this.componente="imagen";
 
-    this.img=null;
-
     //Ícono del componente como se encuentra en recursos/componentes/img en base64
     var icono="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAN5JREFUeNpi/P//PwMtAeOoBURbEJ9b4wGkZgOxDIVmPgbitIWTW3aAOExIErOoYDgIyELNAgMWNAkGoM2MlJgODIn/MLPQfUATMGoBQcBCZkQKQ5N0LDBRfKXIB0DDLND4nEBqMxAHAvEUioIIaJgrkDoCpDugfJD6xUBsCVWSABRLIMsCoEYFILUCiJmBuBzIbwDSvUAcjKZ0ClBOmyQLgBo4gNQaIBZCEq4H4gIsyrmBeBVQDzfRkQyMuB9AymTIJVNQKSgLLUsoBY+x+SANWYLS4nq0yhw8FgAEGABnFE5SPUVGtgAAAABJRU5ErkJggg==";
     
@@ -69,14 +67,8 @@ var componenteImagen=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.fueInicializado) return this; 
-
-        this.img=this.elemento.querySelector("img");
-
-        this.img.onerror=function() {
-            this.src=icono;
-        };
-
+        if(this.fueInicializado) return this;
+        this.establecerOrigen();
         this.clasePadre.inicializar.call(this);
         return this;
     };
@@ -85,10 +77,42 @@ var componenteImagen=function() {
      * Crea el elemento del DOM para esta instancia.
      */
     this.crear=function() {
-        this.elemento=document.crear("<picture/>");
-        this.img=document.crear("<img src='"+icono+"'>").anexarA(this.elemento);
-        this.clasePadre.crear.call(this);
-        return this;
+        this.elemento=document.crear("<img src='"+icono+"'>");
+        return this.clasePadre.crear.call(this);
+    };
+
+    /**
+     * Establece el atributo `src` de la imagen según el tamaño de pantalla.
+     * @param {string} [tamano] - Tamaño actual.
+     */
+    this.establecerOrigen=function(tamano) {
+        if(typeof tamano==="undefined") tamano=ui.obtenerTamano();
+        if(!this.elemento) return;
+        
+        var origenes=this.propiedadObj("origen");
+        if(!origenes) return;
+
+        var origen=origenes.hasOwnProperty("g")?origenes.g:null, //Comenzar en 'g'
+            tamanosPantalla=ui.obtenerArrayTamanos();
+
+        for(var i=0;i<tamanosPantalla.length;i++) {
+            var t=tamanosPantalla[i];
+            if(origenes.hasOwnProperty(t)) origen=origenes[t];
+            //Continuar hasta llegar al tamaño actual
+            if(t==tamano) break;
+        }
+
+        this.elemento.atributo("src",origen);
+    };
+    
+    /**
+     * Evento 'Tamaño'.
+     * @param {string} tamano - Tamaño actual.
+     * @param {(string|null)} tamanoAnterior - Tamaño anterior.
+     */
+    this.tamano=function(tamano,tamanoAnterior) {
+        this.establecerOrigen(tamano);
+        return this.clasePadre.tamano.call(this,tamano,tamanoAnterior);
     };
 
     /**
@@ -100,60 +124,17 @@ var componenteImagen=function() {
 
         if(propiedad=="origen") {
             //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
-            
-            if(tamano=="g") {
-                this.img.atributo("src",typeof valor==="string"&&valor.trim()!=""?valor:icono);
-            } else {
-                //Construir <source>s
-
-                this.elemento.querySelectorAll("source").remover();
-
-                var elem=this.elemento,
-                    img=this.img,
-                    origenes=this.propiedadObj("origen"),
-                    anchosPantalla=ui.obtenerTamanos();
-                if(origenes) {
-                    ui.obtenerArrayTamanos().reverse().forEach(function(tam) {
-                        if(!origenes.hasOwnProperty(tam)) return;
-
-                        var src=origenes[tam],
-                            px=anchosPantalla[tam];
-
-                        if(typeof src==="string"&&src.trim()!="") {
-                            var tag=document.crear("<source media='(min-width:"+px+"px)'>")
-                                .atributo("srcset",src);
-                            elem.insertBefore(tag,img);
-                        }
-                    });
-                }
-            }
-
+            this.establecerOrigen();
             return this;
         }
         
         if(propiedad=="alt") {
-            this.img.atributo("alt",valor);
+            this.elemento.atributo("alt",valor);
             return this;
         }
         
         this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
-    };    
-
-    /**
-     * Devuelve un objeto con todos los parámetros de configuración.
-     */
-    this.obtenerPropiedades=function() {
-        var obj=this.valoresPropiedades.clonar();
-        if(ui.enModoEdicion()) {
-            //Excluir el origen cuando sea data:...
-            var tamanos=ui.obtenerTamanos();
-            for(var tamano in tamanos) {
-                if(!tamanos.hasOwnProperty(tamano)) continue;
-                if(obj.origen&&obj.origen.hasOwnProperty(tamano)&&obj.origen[tamano]&&obj.origen[tamano].substr(0,5)!="data:") delete obj.origen[tamano];
-            }
-        }            
-        return obj;
     };
 
     /**
@@ -183,7 +164,12 @@ var componenteImagen=function() {
      */
     this.editor=function() {
         //Mostrar imagen de relleno, si corresponde
-        if(!this.img.atributo("src")) this.img.atributo("src",icono);
+        this.elemento.atributo("src",icono);        
+        this.establecerOrigen();
+
+        this.elemento.onerror=function() {
+            this.src=icono;
+        };
 
         return this.clasePadre.editor.call(this);
     };    
@@ -194,8 +180,7 @@ var componenteImagen=function() {
      */
     this.editorDesactivado=function() {
         //Remover imagen de relleno
-        if(this.img.atributo("src")==icono) this.img.atributo("src","");
-
+        this.elemento.atributo("src","");
         return this.clasePadre.editorDesactivado.call(this);
     };
 };

@@ -19,5 +19,5 @@ class {entidad} extends \entidad {
     //id, e (campo de baja lógica), fecha_alta, fecha_actualizacion y fecha_baja son automáticos, no requieren definir la propiedad ni comentarios
     
     //TODO Agregar las propiedades concretas
-    //Ver: https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM
+    //Ver: https://github.com/gquagliano/foxtrot-framework/wiki/Modelo-de-datos-y-ORM
 }

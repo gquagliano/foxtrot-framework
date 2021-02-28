@@ -20,7 +20,7 @@ foxtrot::establecerEnrutadorAplicacion(new enrutadorAplicacionPredeterminado($do
 configuracion::establecer([
     'url'=>(foxtrot::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].'/',
     //El parámetro rutaBase permite configurar el sistema en un subdirectorio (omitir si se instala en el raíz del servidor web)
-    'rutaBase'=>'/experimental-foxtrot-framework/desarrollo/',
+    'rutaBase'=>'/foxtrot-framework/desarrollo/',
 
     //Configuración global (cada aplicación puede sobreescribirla)
 

@@ -20,7 +20,7 @@
 // deben tener métodos de acceso (las que no lo tengan, están pendientes de agregar) y se documentan, al igual que las variables, para que IDE reconozca el tipo, o para la
 // persona que está trabajando en el código fuente de Foxtrot.
 
-define('_wiki',__DIR__.'/../../experimental-foxtrot-framework.wiki/');
+define('_wiki',__DIR__.'/../../foxtrot-framework.wiki/');
 define('_salidaPhp',_wiki.'phpdoc/');
 define('_salidaJs',_wiki.'/jsdoc/');
 define('_excluir',[

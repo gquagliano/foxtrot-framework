@@ -5,15 +5,15 @@
 
 ## Qué es Foxtrot Framework
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/editor.jpg)
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/editor.jpg)
 
 Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, con un **editor visual** de vistas, que integra cliente (*frontend*) en JavaScript y servidor (*backend*) _headless_ en PHP, y que busca ser el *framework-ultra-liviano-multi-plataforma-todo-en-uno* **más fácil** de aprender y de usar.
 
 Tenemos el compromiso de crear **un framework que no sea como todos los demás**, uno que **no sobrecargue** ni al sistema, ni al equipo del usuario, ni la cabeza del programador. Uno que prácticamente **no requiera configuración**, sea **super-fácil** de usar y que esté escrito en **lenguaje casi-humano**.
 
-**¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](https://github.com/gquagliano/experimental-foxtrot-framework/wiki)** (en redacción).
+**¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](https://github.com/gquagliano/foxtrot-framework/wiki)** (en redacción).
 
-**[Primeros pasos](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Primeros-pasos)**
+**[Primeros pasos](https://github.com/gquagliano/foxtrot-framework/wiki/Primeros-pasos)**
 
 **[Video de introducción](https://youtu.be/j0hDNhlKW3Q)**  
 Instalación, descripción del gestor, el editor y la estructura del sistema, y vistazo general a las principales funciones.
@@ -30,17 +30,17 @@ Instalación, descripción del gestor, el editor y la estructura del sistema, y 
 
 ## Estado
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/tick.jpg) Gestor de aplicaciones (*¡adiós línea de comandos!*).
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Editor de vistas completamente funcional.
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/tick.jpg) Editor de vistas completamente funcional.
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/tick.jpg) Integración *vista - controlador JS - controlador PHP* completa.
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Acceso a datos y ORM, completos.
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/tick.jpg) Acceso a datos y ORM, completos.
 
-![](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/img/tick.jpg) Compilación
+![](https://github.com/gquagliano/foxtrot-framework/wiki/img/tick.jpg) Compilación
 
-Ver [Estado del proyecto - Pendientes - Funcionalidad futura](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Estado-del-proyecto).
+Ver [Estado del proyecto - Pendientes - Funcionalidad futura](https://github.com/gquagliano/foxtrot-framework/wiki/Estado-del-proyecto).
 
 ## Aplicación de ejemplo
 
@@ -52,15 +52,15 @@ Se incluye una aplicación de ejemplo demostrando las funciones principales del 
 
 #### Wiki
 
-https://github.com/gquagliano/experimental-foxtrot-framework/wiki
+https://github.com/gquagliano/foxtrot-framework/wiki
 
 #### PHP
 
-https://github.com/gquagliano/experimental-foxtrot-framework/wiki/phpdoc-indice
+https://github.com/gquagliano/foxtrot-framework/wiki/phpdoc-indice
 
 #### JS
 
-https://github.com/gquagliano/experimental-foxtrot-framework/wiki/jsdoc-indice
+https://github.com/gquagliano/foxtrot-framework/wiki/jsdoc-indice
 
 #### Estructura del proyecto
 
@@ -86,29 +86,29 @@ El framework cuenta con un editor de vistas *WYSIWYG* *Drag&drop*, que almacena 
 
 El editor también permite configurar visualmente estructuras de control (bucles, condicionales, etc.), variables (acceso a datos) e integraciones con los controladores JS y PHP de la vista.
 
-[Más información sobre el gestor de aplicaciones](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Gestor-de-aplicaciones).
+[Más información sobre el gestor de aplicaciones](https://github.com/gquagliano/foxtrot-framework/wiki/Gestor-de-aplicaciones).
 
-[Más información sobre el editor de vistas](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Editor-de-vistas).
+[Más información sobre el editor de vistas](https://github.com/gquagliano/foxtrot-framework/wiki/Editor-de-vistas).
 
-[Listado de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Listado-de-componentes).
+[Listado de componentes](https://github.com/gquagliano/foxtrot-framework/wiki/Listado-de-componentes).
 
-[Estructura y guía de desarrollo de componentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Visi%C3%B3n-general-de-la-estructura-de-los-componentes).
+[Estructura y guía de desarrollo de componentes](https://github.com/gquagliano/foxtrot-framework/wiki/Visi%C3%B3n-general-de-la-estructura-de-los-componentes).
 
 #### Estructura de las aplicaciones
 
 El framework es multi-aplicación, lo que significa que el desarrollador puede trabajar en varias aplicaciones a la vez, y un servidor puede alojar múltiples aplicaciones a la vez, con una única instalación de Foxtrot, simplificando el mantenimiento y las actualizaciones.
 
-[Más información sobre las aplicaciones y su estructura](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Definici%C3%B3n-y-ciclo-de-vida-de-la-aplicaci%C3%B3n).
+[Más información sobre las aplicaciones y su estructura](https://github.com/gquagliano/foxtrot-framework/wiki/Definici%C3%B3n-y-ciclo-de-vida-de-la-aplicaci%C3%B3n).
 
 #### API
 
 El framework está dividido en cliente y servidor, pero desacoplados: Ambos pueden residir en la misma ubicación (el cliente se descarga desde el mismo servidor web) o separados (por ejemplo, cliente local en una aplicación móvil o de escritorio).
 
-El lado del servidor está compuesto por controladores de servidor y el modelo de datos (incluye [ORM propio](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM)).
+El lado del servidor está compuesto por controladores de servidor y el modelo de datos (incluye [ORM propio](https://github.com/gquagliano/foxtrot-framework/wiki/Modelo-de-datos-y-ORM)).
 
 El lado del cliente está compuesto por controladores de cliente y vistas. Cada vista está compuesta por componentes, los cuales guardan relación con los elementos del DOM y permiten la manipulación de la vista mediante sus métodos y propiedades. Existen componentes que representan estructuras de control (condicionales, bucles, inclusión de una vista dentro de otra, etc.) automatizando la presentación de información y la navegación. Incluye un gestor del DOM propio (reemplaza a jQuery).
 
-[Más información en el Wiki](https://github.com/gquagliano/experimental-foxtrot-framework/wiki).
+[Más información en el Wiki](https://github.com/gquagliano/foxtrot-framework/wiki).
 
 **Comunicación cliente<->servidor transparente**
 
@@ -122,7 +122,7 @@ Las aplicaciones se compilan con Closure y comprimen, para garantizar carga y ej
 
 Un ORM propio liviano y fácil de utilizar reduce al mínimo, o elimina en muchos casos, el uso de código SQL, aumentando así la seguridad y mejorando el diseño de los objetos de la aplicación. Se define íntegramente mediante objetos, contribuyendo con el control de errores y el autocompletado al escribir código. El ORM permite crear y mantener actualizada la estructura de la base de datos a partir del código PHP del modelo de datos. Además, como todo en Foxtrot, sus métodos están en español.
 
-[Documentación del ORM](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Modelo-de-datos-y-ORM).
+[Documentación del ORM](https://github.com/gquagliano/foxtrot-framework/wiki/Modelo-de-datos-y-ORM).
 
 **Intérprete de expresiones**
 
@@ -132,7 +132,7 @@ El intérprete de expresiones permite ejecutar código JavaScript en forma segur
 
 Existen diferentes utilidades que se pueden incluir del lado del cliente y/o del lado del servidor en forma de módulos o *plug-ins*, para la asistencia en la implementación de servicios de terceros (como reCaptcha o Firebase) y la realización de tareas específicas (como generar PDF o XLS).
 
-[Más información sobre los módulos y listado de módulos existentes](https://github.com/gquagliano/experimental-foxtrot-framework/wiki/Módulos).
+[Más información sobre los módulos y listado de módulos existentes](https://github.com/gquagliano/foxtrot-framework/wiki/Módulos).
 
 ## Colaboraciones
 

@@ -235,7 +235,7 @@ $ruta=dirname($uri).'/';
             <div class="col-md-4">
                 <h3 class="mb-3">Hola</h3>
                 <p>¡Gracias por descargar Foxtrot!</p>
-                <p class="mb-0"><a href="https://github.com/gquagliano/experimental-foxtrot-framework/wiki" target="_blank"><strong>Wiki / Documentación</strong></a></p>
+                <p class="mb-0"><a href="https://github.com/gquagliano/foxtrot-framework/wiki" target="_blank"><strong>Wiki / Documentación</strong></a></p>
             </div>
             <div class="col-md-8 text-md-left">
                 <form method="get">

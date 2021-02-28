@@ -379,7 +379,7 @@ var ui=new function() {
         //En este caso no puede haber más de una clase, por lo que no tiene sentido llevar un almacén de funciones, instanciamos directamente
         instanciaAplicacion=aplicacion.fabricarAplicacion(funcion);
         //Exportar a global
-        aplicacion=instanciaAplicacion;
+        window.aplicacion=instanciaAplicacion;
         instanciaAplicacion.inicializar();
         //Evento
         instanciaAplicacion.inicializado();
@@ -615,9 +615,9 @@ var ui=new function() {
         if(typeof param=="string"&&instanciasComponentesId.hasOwnProperty(param)) {
             //Por ID
             return instanciasComponentes[instanciasComponentesId[param]].obtenerId();
-        } if(typeof param=="string"&&componentes.hasOwnProperty(param)) {
+        } if(typeof param=="string"&&window.componentes.hasOwnProperty(param)) {
             //Por nombre
-            return componentes[param].obtenerId();
+            return window.componentes[param].obtenerId();
         } else if(typeof param==="object"&&param.esComponente()) {
             return param.obtenerId();
         } else if(typeof param==="object"&&param.nodeName) { //TODO Agregar Object.esNodo()
@@ -865,6 +865,15 @@ var ui=new function() {
         instanciasControladores={};
         instanciaControladorPrincipal=null;
         id=1;
+
+        //Globales
+        window.controladores={};
+        window.componentes={};
+        window.aplicacion=null;
+        window.controlador=null;
+        window.principal=null;
+        window.parametros=null;
+
         return this;
     };
 
@@ -1043,7 +1052,7 @@ var ui=new function() {
      * 
      */
     this.registrarControlador=function(nombre,funcion) {
-        controladores[nombre]=funcion;        
+        controladores[nombre]=funcion;
         return this;
     };
 
@@ -1093,6 +1102,10 @@ var ui=new function() {
 
         instanciasControladores[nombre]=obj;
         if(principal) instanciaControladorPrincipal=obj;
+
+        //Exportar a global
+        window.controladores[nombre]=obj;
+        if(principal) window.principal=obj;
         
         obj.inicializar();
         //Evento
@@ -1670,7 +1683,7 @@ var ui=new function() {
             }
         });
         //Exportar a global
-        parametros=resultado;
+        window.parametros=resultado;
         return resultado;
     };
 
@@ -1760,11 +1773,9 @@ var ui=new function() {
             if(principal) {
                 //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
                 instanciasVistas[nombre].establecerElemento(cuerpo);
-                //Exportar a global
-                principal=obj;
             }
             //Exportar a global
-            controlador=obj;
+            window.controlador=obj;
             
             //Evento
             if(principal) {

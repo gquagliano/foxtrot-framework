@@ -49,7 +49,7 @@ var componentePestanas=function() {
         this.encabezado=this.elemento.childNodes.filtrar({ clase:"encabezados" })[0];
         this.contenedor=this.elemento.childNodes.filtrar({ clase:"contenedor" })[0];
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -65,7 +65,7 @@ var componentePestanas=function() {
         this.contenedor=document.crear("<div class='contenedor'>");
         this.elemento.anexar(this.contenedor);
 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
     
@@ -74,7 +74,7 @@ var componentePestanas=function() {
      */
     this.listo=function() {
         this.actualizarEncabezados(false);
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
     };   
 
     /**
@@ -88,7 +88,7 @@ var componentePestanas=function() {
         var indice=this.propiedad("predeterminada");
         if(typeof indice==="string"||typeof indice==="number") this.activarPestana(indice);
 
-        return this.clasePadre.editorDesactivado.call(this);
+        return this.prototipo.editorDesactivado.call(this);
     };    
 
     /**
@@ -99,7 +99,7 @@ var componentePestanas=function() {
         //Volver a la pestaña en la que se estaba trabajando
         if(editandoPestana) this.activarPestana(editandoPestana);
 
-        return this.clasePadre.editor.call(this);
+        return this.prototipo.editor.call(this);
     };
 
     /**

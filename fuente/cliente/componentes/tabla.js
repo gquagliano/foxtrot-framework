@@ -46,7 +46,7 @@ var componenteTabla=function() {
 
         this.contenedor=this.elemento.querySelector("tbody");
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -55,7 +55,7 @@ var componenteTabla=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-striped table-hover' cellspacing='0'><tbody/></table></div></div>"); 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };    
     
@@ -75,7 +75,7 @@ var componenteTabla=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
     
@@ -88,7 +88,7 @@ var componenteTabla=function() {
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
         this.redibujar=true;
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,false);
+        this.prototipo.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
 
@@ -97,7 +97,7 @@ var componenteTabla=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
         
@@ -242,7 +242,7 @@ var componenteTabla=function() {
         var listado=this.obtenerHijos().filter(function(hijo) {
             return hijo.autogenerado;
         });
-        return this.clasePadre.obtenerDatosActualizados.call(this,listado);
+        return this.prototipo.obtenerDatosActualizados.call(this,listado);
     };
 
     /**

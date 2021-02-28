@@ -21,9 +21,9 @@ var enrutador=new function() {
     //que entenderá el enrutador de servidor. Esto significa que debe existir un enrutador de cliente compatible por cada enrutador de servidor.
     
     /**
-     * @var {enrutador} clasePadre - Clase `enrutador` (equivalente a `parent` en OOP).
+     * @var {enrutador} prototipo - Instancia de `enrutador`.
      */
-    this.clasePadre=this;
+    this.prototipo=this;
 
     /**
     * Fabrica una instancia de un controlador concreto dada su función.

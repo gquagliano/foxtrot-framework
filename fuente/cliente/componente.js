@@ -47,7 +47,7 @@ var componente=new function() {
      * @var {Object} datos - Origen de datos asignado.
      * @var {boolean} oculto - Indica si el componente está oculto, lo cual significa que el mismo no se publica en `componentes`, aunque tenga un nombre asignado (es independiente de la visiblidad del elemento del DOM).
      * @var {(Element|Node)} campo - Elemento campo, si el componente presenta algún tipo de campo de ingreso (`input`, `textarea`, etc.)
-     * @var {componente} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
+     * @var {componente} prototipo - Instancia de `componente`.
      * @var {Object} valoresPropiedades - Almacen de valores de parámetros.
      * @var {boolean} listoEjecutado - Indica si ya fue ejecutado el evento *Listo*.
      * @var {boolean} actualizacionEnCurso - Determina si el componente se encuentra en proceso de actualización o redibujado.
@@ -69,7 +69,7 @@ var componente=new function() {
     this.datos=null;
     this.oculto=false;
     this.campo=null;
-    this.clasePadre=this;
+    this.prototipo=this;
     this.valoresPropiedades=null;
     this.listoEjecutado=false;
     this.actualizacionEnCurso=false;

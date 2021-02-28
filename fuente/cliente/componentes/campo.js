@@ -83,7 +83,7 @@ var componenteCampo=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -94,7 +94,7 @@ var componenteCampo=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<input class='form-control' type='text'>"); 
         this.elemento.anexar(this.campo);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -110,7 +110,7 @@ var componenteCampo=function() {
      * Establece los eventos predeterminados.
      */
     this.establecerEventos=function() {
-        this.clasePadre.establecerEventos.call(this);
+        this.prototipo.establecerEventos.call(this);
         this.campo.removerEvento("keydown",eventoKeydown)
             .evento("keydown",eventoKeydown);
         return this;
@@ -148,7 +148,7 @@ var componenteCampo=function() {
             }
         }
 
-        return this.clasePadre.intro.call(this,evento);
+        return this.prototipo.intro.call(this,evento);
     };
 
     /**
@@ -243,7 +243,7 @@ var componenteCampo=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -270,7 +270,7 @@ var componenteCampo=function() {
         //Si es null, volver al valor inicial (puede contener expresiones)
         if(valor===null) valor=this.propiedad("valorInicial");
 
-        return this.clasePadre.valor.call(this,valor);
+        return this.prototipo.valor.call(this,valor);
     };
 
     /**

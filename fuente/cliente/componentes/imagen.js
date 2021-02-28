@@ -69,7 +69,7 @@ var componenteImagen=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.establecerOrigen();
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
     
@@ -78,7 +78,7 @@ var componenteImagen=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<img src='"+icono+"'>");
-        return this.clasePadre.crear.call(this);
+        return this.prototipo.crear.call(this);
     };
 
     /**
@@ -123,7 +123,7 @@ var componenteImagen=function() {
      */
     this.tamano=function(tamano,tamanoAnterior) {
         this.establecerOrigen(tamano);
-        return this.clasePadre.tamano.call(this,tamano,tamanoAnterior);
+        return this.prototipo.tamano.call(this,tamano,tamanoAnterior);
     };
 
     /**
@@ -144,7 +144,7 @@ var componenteImagen=function() {
             return this;
         }
         
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -152,7 +152,7 @@ var componenteImagen=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
         
         this.actualizacionEnCurso=true;
 
@@ -172,7 +172,7 @@ var componenteImagen=function() {
             this.src=icono;
         };
         this.establecerOrigen();
-        return this.clasePadre.editor.call(this);
+        return this.prototipo.editor.call(this);
     };    
 
     /**
@@ -182,7 +182,7 @@ var componenteImagen=function() {
     this.editorDesactivado=function() {
         //Remover imagen de relleno
         this.elemento.removerAtributo("src");
-        return this.clasePadre.editorDesactivado.call(this);
+        return this.prototipo.editorDesactivado.call(this);
     };
 };
 

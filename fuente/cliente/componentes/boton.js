@@ -75,7 +75,7 @@ var componenteBoton=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<a href='#'></a>");
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -85,7 +85,7 @@ var componenteBoton=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -137,7 +137,7 @@ var componenteBoton=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

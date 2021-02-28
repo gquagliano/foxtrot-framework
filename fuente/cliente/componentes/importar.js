@@ -92,7 +92,7 @@ var componenteImportar=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -101,7 +101,7 @@ var componenteImportar=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -109,7 +109,7 @@ var componenteImportar=function() {
      * Evento Listo.
      */
     this.listo=function() {
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
 
         if(ui.enModoEdicion()) return;
         
@@ -147,7 +147,7 @@ var componenteImportar=function() {
         var vista=this.vista();
         if(vista) vista.actualizar();
 
-        return this.clasePadre.actualizar.call(this);
+        return this.prototipo.actualizar.call(this);
     };
 
     /**

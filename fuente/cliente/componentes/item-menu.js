@@ -54,7 +54,7 @@ var componenteItemMenu=function() {
         this.elementoEventos=this.enlace;
         this.contenedor=this.elemento;
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -71,7 +71,7 @@ var componenteItemMenu=function() {
         this.elementoEditable=this.enlace;
         this.elementoEventos=this.enlace;
 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -95,7 +95,7 @@ var componenteItemMenu=function() {
      * @returns {componente}
      */
     this.actualizar=function(actualizarHijos) {
-        this.clasePadre.actualizar.call(this,actualizarHijos);
+        this.prototipo.actualizar.call(this,actualizarHijos);
         
         this.actualizacionEnCurso=true;
         
@@ -272,7 +272,7 @@ var componenteItemMenu=function() {
             });
         }
 
-        this.clasePadre.establecerEventos.call(this);
+        this.prototipo.establecerEventos.call(this);
         return this;
     };
 
@@ -309,7 +309,7 @@ var componenteItemMenu=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -336,7 +336,7 @@ var componenteItemMenu=function() {
             if(comp&&comp.componente=="menu") editor.establecerSeleccion(comp);
         }
 
-        return this.clasePadre.eliminar.call(this,descendencia);
+        return this.prototipo.eliminar.call(this,descendencia);
     };
 
     /**

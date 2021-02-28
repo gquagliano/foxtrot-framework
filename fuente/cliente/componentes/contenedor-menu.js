@@ -95,7 +95,7 @@ var componenteContenedorMenu=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };    
 
@@ -104,7 +104,7 @@ var componenteContenedorMenu=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<ul class='nav'>");
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         this.gestionarAncla();
         return this;
     };
@@ -121,7 +121,7 @@ var componenteContenedorMenu=function() {
         });
         this.tamano();
         
-        this.clasePadre.editor.call(this);
+        this.prototipo.editor.call(this);
     };
 
     /**
@@ -130,7 +130,7 @@ var componenteContenedorMenu=function() {
      */
     this.editorDesactivado=function() {
         this.gestionarAncla();
-        return this.clasePadre.editorDesactivado.call(this);
+        return this.prototipo.editorDesactivado.call(this);
     };
     
     /**
@@ -161,7 +161,7 @@ var componenteContenedorMenu=function() {
             .agregarClase("menu-"+modoActual+"-activo")
             .removerAtributo("style"); //TODO Deshacer solo los estilos asignados por abrir()
 
-        this.clasePadre.tamano.call(this,tamano,tamanoAnterior);
+        this.prototipo.tamano.call(this,tamano,tamanoAnterior);
     };
     
     /**
@@ -173,7 +173,7 @@ var componenteContenedorMenu=function() {
             t.cerrar();
             return true;
         }
-        return this.clasePadre.establecerEventos.call(this);
+        return this.prototipo.establecerEventos.call(this);
     };
     
     /**
@@ -205,7 +205,7 @@ var componenteContenedorMenu=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -220,7 +220,7 @@ var componenteContenedorMenu=function() {
             this.ancla.agregarClase("seleccionado");
         else
             this.ancla.removerClase("seleccionado");
-        return this.clasePadre.seleccionado.call(this,estado);
+        return this.prototipo.seleccionado.call(this,estado);
     };
 
     /**
@@ -406,7 +406,7 @@ var componenteContenedorMenu=function() {
      * @returns {componente}
      */
     this.eliminar=function(descendencia) {
-        this.clasePadre.call(this,descendencia);
+        this.prototipo.call(this,descendencia);
         if(this.ancla) this.ancla.remover();
         return this;
     };

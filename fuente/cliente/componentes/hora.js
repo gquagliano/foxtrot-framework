@@ -23,7 +23,7 @@ var componenteHora=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
         
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -32,7 +32,7 @@ var componenteHora=function() {
      */
     this.crear=function() {
         this.elemento=document.crear(""); 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -44,7 +44,7 @@ var componenteHora=function() {
     this.valor=function(valor) {
         //Si es null, volver al valor inicial (puede contener expresiones)
         if(valor===null) valor=this.propiedad("valorInicial");
-        return this.clasePadre.valor.call(this,valor);
+        return this.prototipo.valor.call(this,valor);
     };
 };
 

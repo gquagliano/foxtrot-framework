@@ -73,7 +73,7 @@ var componenteDesplegable=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -84,7 +84,7 @@ var componenteDesplegable=function() {
         this.elemento=document.crear("<div>");
         this.campo=document.crear("<select class='custom-select'>"); 
         this.elemento.anexar(this.campo);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -92,7 +92,7 @@ var componenteDesplegable=function() {
      * Evento Listo.
      */
     this.listo=function() {
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
 
         if(ui.enModoEdicion()) return;
 
@@ -135,7 +135,7 @@ var componenteDesplegable=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -290,7 +290,7 @@ var componenteDesplegable=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
         
         this.actualizacionEnCurso=true;
 
@@ -336,7 +336,7 @@ var componenteDesplegable=function() {
     this.valor=function(valor) {
         //Si es null, volver al valor inicial (puede contener expresiones)
         if(valor===null) valor=this.propiedad("valor");
-        return this.clasePadre.valor.call(this,valor);
+        return this.prototipo.valor.call(this,valor);
     };
 };
 

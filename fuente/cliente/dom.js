@@ -1471,7 +1471,7 @@
      * Devuelve el prototipo del objeto (atajo).
      * @memberof external:Object
      */
-    Object.prototype.prototipo=function() {
+    Object.prototype.obtenerPrototipo=function() {
         return Object.getPrototypeOf(this);
     };
 

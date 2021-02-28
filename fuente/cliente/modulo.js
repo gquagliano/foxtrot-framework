@@ -24,11 +24,11 @@ var modulo=new function() {
     /**
      * @var {servidor} servidor - Acceso al controlador de servidor.
      * @var {string} nombre - Nombre del módulo.
-     * @var {aplicacion} clasePadre - Clase `modulo` (equivalente a `parent` en OOP).
+     * @var {modulo} prototipo - Instancia de `modulo`.
      */
     this.servidor=null;
     this.nombre=null;
-    this.clasePadre=this;
+    this.prototipo=this;
 
     /**
      * Devuelve la instancia del gestor de la interfaz con el servidor.

@@ -49,7 +49,7 @@ var componentePestana=function() {
 
         if(this.elemento.es({ clase:"activa" })) this.activa=true;
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -59,7 +59,7 @@ var componentePestana=function() {
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
         this.contenedor=this.elemento;
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -83,7 +83,7 @@ var componentePestana=function() {
 
         if(propiedad=="etiqueta") this.actualizarContenedor();
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);           
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);           
         
         //Regenerar los encabezados del componente Pestañas
         var padre=this.obtenerPadre();
@@ -150,7 +150,7 @@ var componentePestana=function() {
     this.eliminar=function(descendencia) {
         var padre=this.obtenerPadre();
         
-        this.clasePadre.eliminar.call(this,descendencia);        
+        this.prototipo.eliminar.call(this,descendencia);        
         
         //Regenerar los encabezados del componente Pestañas
         if(padre) padre.actualizarEncabezados(true);

@@ -18,10 +18,10 @@ var aplicacion=new function() {
 
     /**
      * @var {servidor} servidor - Acceso al controlador de servidor.
-     * @var {aplicacion} clasePadre - Clase `aplicacion` (equivalente a `parent` en OOP).
+     * @var {aplicacion} prototipo - Instancia de `aplicacion`.
      */
     this.servidor=null;
-    this.clasePadre=this;
+    this.prototipo=this;
     
     /**
      * Devuelve la instancia del gestor de la interfaz con el servidor.

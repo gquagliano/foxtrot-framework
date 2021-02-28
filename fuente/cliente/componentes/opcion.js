@@ -76,7 +76,7 @@ var componenteAlternar=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -93,7 +93,7 @@ var componenteAlternar=function() {
         this.elemento.anexar(this.campo);
         this.elemento.anexar(this.elementoEditable);
 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -107,7 +107,7 @@ var componenteAlternar=function() {
         this.elemento.querySelector("input").atributo("id",id);
         this.elemento.querySelector("label").atributo("for",id);
 
-        return this.clasePadre.editor.call(this);
+        return this.prototipo.editor.call(this);
     };
 
     /**
@@ -115,7 +115,7 @@ var componenteAlternar=function() {
      * @returns {Componente}
      */
     this.establecerEventos=function() {
-        this.clasePadre.establecerEventos.call(this);
+        this.prototipo.establecerEventos.call(this);
 
         var t=this;
         this.campo.evento("change",function() {
@@ -228,7 +228,7 @@ var componenteAlternar=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

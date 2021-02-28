@@ -48,7 +48,7 @@ var componenteTexto=function() {
         
         this.elementoEditable=this.elemento;
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -58,7 +58,7 @@ var componenteTexto=function() {
     this.crear=function() {
         this.elemento=document.crear("<p class='texto'>Hacé doble click para comenzar a escribir...</p>");
         
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
     
@@ -105,7 +105,7 @@ var componenteTexto=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

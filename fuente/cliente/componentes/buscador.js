@@ -98,7 +98,7 @@ var componenteBuscador=function() {
         }
         boton.evento("click",clickDesplegar);        
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -110,7 +110,7 @@ var componenteBuscador=function() {
         this.campo=document.crear("<input class='form-control' autocomplete='off' type='text'>"); 
         this.elemento.anexar(this.campo);
         document.crear("<button type='button' class='btn-desplegar'></button>").anexarA(this.elemento);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -496,7 +496,7 @@ var componenteBuscador=function() {
         
         if(propiedad=="valor") return this; //No se asigna al campo
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -504,7 +504,7 @@ var componenteBuscador=function() {
      * Evento Listo.
      */
     this.listo=function() {
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
 
         if(ui.enModoEdicion()) return;
         

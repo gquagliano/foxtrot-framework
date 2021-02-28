@@ -33,7 +33,7 @@ var componenteCondicional=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -43,7 +43,7 @@ var componenteCondicional=function() {
     this.crear=function() {
         this.elemento=document.crear("<div>"); 
         this.contenedor=this.elemento;
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -82,7 +82,7 @@ var componenteCondicional=function() {
         }
         this.establecerVisibilidad(!!condicion);
         
-        return this.clasePadre.actualizar.call(this);
+        return this.prototipo.actualizar.call(this);
     };
 
     /**
@@ -90,7 +90,7 @@ var componenteCondicional=function() {
      */
     this.listo=function() {
         this.actualizar();
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
     };
     
     /**
@@ -101,7 +101,7 @@ var componenteCondicional=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //Ignorar propiedad
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,true,true);
+        this.prototipo.establecerDatos.call(this,obj,actualizar,true,true);
         return this;
     };
 

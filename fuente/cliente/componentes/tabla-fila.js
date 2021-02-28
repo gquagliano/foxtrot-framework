@@ -26,7 +26,7 @@ var componenteFilaTabla=function() {
 
         this.contenedor=this.elemento;
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -36,7 +36,7 @@ var componenteFilaTabla=function() {
     this.crear=function() {
         //Nota: Debe usarse el nombre del tag y no <tr>
         this.elemento=document.crear("tr"); 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -79,7 +79,7 @@ var componenteFilaTabla=function() {
                 return true;
             }
         }
-        return this.clasePadre.click.call(this,evento);
+        return this.prototipo.click.call(this,evento);
     };
 };
 

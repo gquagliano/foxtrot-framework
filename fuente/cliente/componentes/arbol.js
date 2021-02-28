@@ -72,7 +72,7 @@ var componenteArbol=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector(".componente-arbol-plantilla");
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -83,7 +83,7 @@ var componenteArbol=function() {
         this.elemento=document.crear("<div></div>");
         this.contenedor=document.crear("<div class='componente-arbol-plantilla'></div></div>")
             .anexarA(this.elemento);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -92,7 +92,7 @@ var componenteArbol=function() {
      */
     this.listo=function() {
         this.actualizar();
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
     };
     
     /**
@@ -104,7 +104,7 @@ var componenteArbol=function() {
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla, y sin tener en cuenta el valor de `propiedad`.
         this.redibujar=true;
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,false,true);
+        this.prototipo.establecerDatos.call(this,obj,actualizar,false,true);
         return this;
     };
 
@@ -138,7 +138,7 @@ var componenteArbol=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
 
@@ -315,7 +315,7 @@ var componenteArbol=function() {
      * @returns {Object[]}
      */
     this.obtenerDatosActualizados=function() {
-        return this.clasePadre.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
+        return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
     };
 
     /**

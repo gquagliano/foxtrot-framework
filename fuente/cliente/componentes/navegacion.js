@@ -20,7 +20,7 @@ var componenteNavegacion=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -29,7 +29,7 @@ var componenteNavegacion=function() {
      */
     this.crear=function() {
         this.elemento=document.crear(""); 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 };

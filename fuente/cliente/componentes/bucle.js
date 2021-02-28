@@ -40,7 +40,7 @@ var componenteBucle=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector(".componente-bucle-plantilla");
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -51,7 +51,7 @@ var componenteBucle=function() {
         this.elemento=document.crear("<div></div>");
         this.contenedor=document.crear("<div class='componente-bucle-plantilla'></div></div>")
             .anexarA(this.elemento);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -63,7 +63,7 @@ var componenteBucle=function() {
         this.ocultarDescendencia();
 
         this.actualizar();
-        this.clasePadre.listo.call(this);
+        this.prototipo.listo.call(this);
     };
     
     /**
@@ -75,7 +75,7 @@ var componenteBucle=function() {
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
         this.redibujar=true;
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,false);
+        this.prototipo.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
 
@@ -84,7 +84,7 @@ var componenteBucle=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
         
@@ -210,7 +210,7 @@ var componenteBucle=function() {
      * @returns {Object[]}
      */
     this.obtenerDatosActualizados=function() {
-        return this.clasePadre.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
+        return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
     };
 
     /**

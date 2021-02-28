@@ -33,7 +33,7 @@ var componenteEtiqueta=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<span class='etiqueta'/>");
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -41,7 +41,7 @@ var componenteEtiqueta=function() {
      * Actualiza el componente.
      */
     this.actualizar=function() {
-        this.clasePadre.actualizar.call(this,false);
+        this.prototipo.actualizar.call(this,false);
         
         this.actualizacionEnCurso=true;
 
@@ -95,7 +95,7 @@ var componenteEtiqueta=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //Ignorar propiedad, ya que esta puede variar cuando se genera el contenido de la etiqueta
-        this.clasePadre.establecerDatos.call(this,obj,actualizar,false,true);
+        this.prototipo.establecerDatos.call(this,obj,actualizar,false,true);
         return this;
     };
 

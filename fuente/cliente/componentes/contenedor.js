@@ -37,7 +37,7 @@ var componenteContenedor=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
     
@@ -46,7 +46,7 @@ var componenteContenedor=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div class='container'/>");
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
     
@@ -66,7 +66,7 @@ var componenteContenedor=function() {
             }
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 };

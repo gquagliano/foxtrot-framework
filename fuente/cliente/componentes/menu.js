@@ -21,7 +21,7 @@ var componenteMenu=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector("ul");
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -34,7 +34,7 @@ var componenteMenu=function() {
         this.contenedor=document.crear("<ul>")
             .anexarA(this.elemento);
 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
 
         return this;
     };

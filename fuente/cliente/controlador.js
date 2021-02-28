@@ -26,7 +26,7 @@ var controlador=new function() {
      * @var {componente[]} instanciasComponentes - Listado de todos los componentes.
      * @var {Object} valores - Valores a informar por `obtenerValores()`. Estos valores serán recuperados automáticamente por `ui.obtenerValores()`, por lo que,
      * entre otros casos, serán enviados automáticamente al servidor en eventos con prefijo `enviar:`.
-     * @var {aplicacion} clasePadre - Clase `componente` (equivalente a `parent` en OOP).
+     * @var {controlador} prototipo - Instancia de `controlador`.
      */
     this.nombre=null;
     this.servidor=null;
@@ -36,7 +36,7 @@ var controlador=new function() {
     this.componentes={};
     this.instanciasComponentes=[];
     this.valores={};
-    this.clasePadre=this;
+    this.prototipo=this;
 
     ////Acceso a propiedades    
 

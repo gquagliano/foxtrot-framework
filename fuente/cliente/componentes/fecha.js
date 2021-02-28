@@ -48,7 +48,7 @@ var componenteFecha=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -59,7 +59,7 @@ var componenteFecha=function() {
         this.elemento=document.crear("<div tabindex='0'>");
         this.campo=document.crear("<input class='form-control' autocomplete='off' type='text'>")
             .anexarA(this.elemento);
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -118,7 +118,7 @@ var componenteFecha=function() {
             }
         }
 
-        return this.clasePadre.intro.call(this,evento);
+        return this.prototipo.intro.call(this,evento);
     };
 
     /**
@@ -145,7 +145,7 @@ var componenteFecha=function() {
             return this;
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

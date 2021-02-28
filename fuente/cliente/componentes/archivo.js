@@ -84,7 +84,7 @@ var componenteArchivo=function() {
         this.etiqueta=this.elemento.querySelector("label");
         this.boton=this.elemento.querySelector(".custom-file-command");
 
-        this.clasePadre.inicializar.call(this);
+        this.prototipo.inicializar.call(this);
         return this;
     };
 
@@ -103,7 +103,7 @@ var componenteArchivo=function() {
         this.boton=document.crear("<span class='custom-file-command'>Seleccionar</span>");
         this.elemento.anexar(this.boton);
 
-        this.clasePadre.crear.call(this);
+        this.prototipo.crear.call(this);
         return this;
     };
 
@@ -441,7 +441,7 @@ var componenteArchivo=function() {
             }
         }
 
-        this.clasePadre.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

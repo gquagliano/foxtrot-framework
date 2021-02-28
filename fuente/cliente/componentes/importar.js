@@ -17,6 +17,7 @@ var componenteImportar=function() {
     this.elementoVistaInterior=null;
     this.nombreVistaInterior=null;
     this.instanciaControlador=null;
+    this.instanciaVista=null;
     
     var trabajando=false,
         numeroOperacion=0,
@@ -58,7 +59,7 @@ var componenteImportar=function() {
      * Devuelve la instancia del controlador de la vista que contiene.
      * @returns {controlador|null}
      */
-    this.controlador=function() {
+    this.obtenerControlador=function() {
         return this.instanciaControlador;
     };
 
@@ -66,9 +67,8 @@ var componenteImportar=function() {
      * Devuelve la instancia de la vista que contiene.
      * @returns {componente|null}
      */
-    this.vista=function() {
-        if(this.nombreVistaInterior) return ui.obtenerInstanciaVista(this.nombreVistaInterior);
-        return null;
+    this.obtenerVista=function() {
+        return this.instanciaVista;
     };
 
     /**
@@ -144,8 +144,7 @@ var componenteImportar=function() {
     this.actualizar=function() {        
         this.actualizacionEnCurso=true;
 
-        var vista=this.vista();
-        if(vista) vista.actualizar();
+        if(this.instanciaVista) this.instanciaVista.actualizar();
 
         return this.prototipo.actualizar.call(this);
     };
@@ -216,6 +215,8 @@ var componenteImportar=function() {
                     if(enCurso.indexOf(op)<0) return;
 
                     t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
+                    t.instanciaVista=ui.obtenerInstanciaVista(nombre);
+
                     ui.animarAparecer(t.elementoVistaInterior,function() {
                         ui.autofoco(t.elementoVistaInterior);
                     });
@@ -258,13 +259,11 @@ var componenteImportar=function() {
      * @reeturns {*}
      */
     this.valor=function(valor) {
-        var vista=this.vista();
-        
         if(typeof valor==="undefined") {
-            if(vista) return vista.obtenerValores();
+            if(this.instanciaVista) return this.instanciaVista.obtenerValores();
             return {};
         } else {
-            if(vista) vista.establecerValores(valor);
+            if(this.instanciaVista) this.instanciaVista.establecerValores(valor);
             return this;
         }
     };

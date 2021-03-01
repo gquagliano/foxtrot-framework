@@ -272,6 +272,14 @@ var componenteContenedorMenu=function() {
     }).bind(this);
 
     /**
+     * Devuelve `true` si el menú (flotante o deslizable) se encuentra actualmente abierto.
+     * @returns {boolean}
+     */
+    this.abierto=function() {
+        return menuAbierto;
+    };
+
+    /**
      * Abre el menú flotante o deslizable de acuerdo a su configuración. Si el menú se encuentra en modo bloque, no tiene fecto.
      * @returns {Componente}
      *//**

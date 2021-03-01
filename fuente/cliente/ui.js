@@ -1544,7 +1544,7 @@ var ui=new function() {
 
                     //Por último, cerrar la aplicación
                     ui.salir();
-                },false);
+                },false);                
             },false);
         }
 
@@ -1863,7 +1863,8 @@ var ui=new function() {
         this.eventoComponentes(null,"listo");
 
         if(esCordova) {
-            doc.querySelector("#contenedor-cordova").agregarClase("listo");
+            var contenedor=doc.querySelector("#contenedor-cordova");
+            if(contenedor) contenedor.agregarClase("listo");
         }
 
         return this;

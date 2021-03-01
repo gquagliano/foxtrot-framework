@@ -229,6 +229,16 @@ var componenteFecha=function() {
 
         if(!v||v.trim()=="") return this;
 
+        if(v.trim()=="hoy") {
+            var fecha=new Date();
+            fecha.setHours(0);
+            fecha.setMinutes(0);
+            fecha.setSeconds(0);
+            this.valorEpoch=util.fechaAEpoch(fecha);
+            this.campo.valor(util.fechaLocal(fecha));
+            return this;
+        }
+
         var regexp=/^([0-9]{1,2})(\/([0-9]{1,2})(\/([0-9]{2,4}))?)?$/,
             coincidencias=v.match(regexp);
 

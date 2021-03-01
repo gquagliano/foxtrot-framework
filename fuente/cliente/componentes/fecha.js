@@ -94,8 +94,11 @@ var componenteFecha=function() {
 
         this.elemento.evento("focusout",function(ev) {
             //Ignorar si el foco permanece dentro del div (el focusout se está propagando desde alguno de los hijos)
-            if(ev.relatedTarget&&(ev.relatedTarget.es({elemento:this})||ev.relatedTarget.padre({elemento:this}))) return;
-            
+            if(ev.relatedTarget&&(ev.relatedTarget.es({elemento:this})||ev.relatedTarget.padre({elemento:this}))) return;            
+            //O si está en modo adaptado
+            var tamano=ui.obtenerTamano();
+            if(tamano=="xs"||tamano=="sm") return;
+
             t.cerrarCalendario();
         });
 

@@ -161,14 +161,14 @@
         ui.cerrarDialogo(dialogoAbierto);
     },
     actualizarZIndexDialogos=function() {
-        if(!dialogosAbiertos.length) return;
-
         //Traer al frente el último diálogo abierto y ubicar los demás detrás de la sombra
 
-        var dialogo=dialogosAbiertos[dialogosAbiertos.length-1],
+        var dialogo=null,
             z=9999; //z-index de la sombra, según CSS
 
-        if(dialogo.param.sobreponer) {
+        if(dialogosAbiertos.length) dialogo=dialogosAbiertos[dialogosAbiertos.length-1];
+
+        if((dialogo&&dialogo.param.sobreponer)||(desplegableAbierto&&desplegableAbierto.param.sobreponer)) {
             z=999999; //z-index de la sombra al sobreponer, según CSS
             ui.obtenerElementoSombra().agregarClase("sobreponer");
         } else {
@@ -176,13 +176,15 @@
         }
 
         z-=dialogosAbiertos.length-1;
-
         for(var i=0;i<dialogosAbiertos.length-1;i++) {
             dialogosAbiertos[i].elem.estilo("zIndex",z);
-            z++;
+            z++;  
         }
         
-        dialogo.elem.estilo("zIndex",z+1);
+        if(dialogo) dialogo.elem.estilo("zIndex",z+1);
+
+        //Si hay un desplegable abierto, siempre queda al frente
+        if(desplegableAbierto) desplegableAbierto.elem.estilo("zIndex",z+2);
     },
     docDialogoKeyDn=function(ev) {
         if(ev.which==27) {
@@ -191,18 +193,11 @@
             ev.stopPropagation();
         }
     },
-    docBackbuttonDialogo=function(ev) {
-        cerrarDialogoAbierto();
-        ev.preventDefault();
-        ev.stopPropagation();
-    },
     removerEventosDialogo=function() {
-        document.removerEvento("backbutton",docBackbuttonDialogo)
-            .removerEvento("keydown",docDialogoKeyDn);
+        document.removerEvento("keydown",docDialogoKeyDn);
     },
     establecerEventosDialogo=function() {
-        document.evento("backbutton",docBackbuttonDialogo)
-            .evento("keydown",docDialogoKeyDn);
+        document.evento("keydown",docDialogoKeyDn);
 
         //Click en la sombra
         ui.obtenerElementoSombra()
@@ -464,11 +459,6 @@
     elemMousewheel=function(ev) {
         ev.stopPropagation();
     },
-    docBackbuttonDesplegable=function(ev) {
-        cerrarDesplegableAbierto();
-        ev.preventDefault();
-        ev.stopPropagation();
-    },
     clickElemSombraDesplegable=function(ev) {
         cerrarDesplegableAbierto(true);
         ev.preventDefault();
@@ -478,7 +468,6 @@
      */
     removerEventosDesplegable=function(elem) {
         window.removerEvento("resize scroll wheel blur",cerrarDesplegableAbierto);
-        document.removerEvento("backbutton",docBackbuttonDesplegable);
         elem.removerEvento("wheel",elemMousewheel);
         ui.obtenerElementoSombra()
             .removerEvento("click",clickElemSombraDesplegable);
@@ -490,7 +479,6 @@
         removerEventosDesplegable(elem);
 
         window.evento("resize scroll wheel blur",cerrarDesplegableAbierto);
-        document.evento("backbutton",docBackbuttonDesplegable);
         elem.evento("wheel",elemMousewheel);
             
         //Click en la sombra
@@ -688,7 +676,8 @@
 
         var doc=ui.obtenerDocumento(),
             elem=doc.crear("<div tabindex='-1' class='foxtrot-desplegable"+(opciones.clase?" "+opciones.clase:"")+(opciones.adaptativo?" foxtrot-desplegable-adaptativo":"")+"'>")
-                .anexarA(componente.obtenerElemento());
+                //.anexarA(componente.obtenerElemento());
+                .anexarA(doc.body);
 
         doc.crear("<a href='#' class='foxtrot-desplegable-x'>")
             .evento("mousedown",function(ev) {
@@ -759,6 +748,8 @@
         }
 
         removerEventosDesplegable(elem);
+
+        ui.ocultarSombra();
 
         desplegableAbierto=null;
 

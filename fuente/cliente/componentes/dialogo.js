@@ -79,6 +79,14 @@ var componenteDialogo=function() {
     };
 
     /**
+     * Devuelve `true` si el diálog se encuentra actualmente abierto.
+     * @returns {boolean}
+     */
+    this.abierto=function() {
+        return dialogo&&dialogo.abierto;
+    };
+
+    /**
      * Abre el diálogo.
      * @param {function} [retorno] - Función de retorno al cerrar el diálogo.
      * @returns Componente

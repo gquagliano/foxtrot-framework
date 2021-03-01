@@ -14,6 +14,9 @@
 .desplegable-calendario {
     min-width: 220px;
 }
+.desplegable-calendario .calendario .calendario-titulo {
+    white-space: normal;
+}
 @media(max-width:576px) {
     .foxtrot-desplegable-adaptativo .calendario .btn {
         flex: 0 0 2.5rem;
@@ -24,5 +27,13 @@
     }
     .foxtrot-desplegable-adaptativo .calendario .calendario-nav {
         margin-bottom: .7rem;
+    }
+}
+@media(max-width:435px) {
+    .foxtrot-desplegable-adaptativo .calendario-cuerpo>div>div,
+    .foxtrot-desplegable-adaptativo .calendario-cuerpo>div>label,
+    .foxtrot-desplegable-adaptativo .calendario a {
+        padding-left: 0;
+        padding-right: 0;
     }
 }

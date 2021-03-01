@@ -790,8 +790,9 @@ var componente=new function() {
 
         ui.eliminarInstanciaComponente(this.id);
 
-        //Eliminar estilos
-        ui.removerEstilos(this.selector);
+        //Eliminar estilos, solo en el editor, para no guardar basura; en ejecución se mantienen ya que puede existir una nueva instancia
+        //con el mismo selector en el futuro (caso vistas embebibles que se destruyen y vuelven a crear).
+        if(ui.enModoEdicion()) ui.removerEstilos(this.selector);
 
         //Avanzar recursivamente
         this.obtenerHijos().forEach(function(hijo) {

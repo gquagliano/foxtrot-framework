@@ -102,7 +102,7 @@ var ui=new function() {
             //Buscar la hoja de estilos correspondiente a los estilos de la vista (por el momento la identificamos por nombre, esto quizás debería mejorar--TODO)
             estilos=this.buscarHojaEstilos("cliente/vistas/"+nombreVistaPrincipal+"(-.+?)?\.css");
             //Si no se encuentra, buscar hoja de estilos combinada (aplicacion.css o cordova.css)
-            if(!estilos) estilos=this.buscarHojaEstilos("recursos/css/"+(esCordova?"cordova":"aplicacion")+"(-.+?)?\.css");
+            if(!estilos) estilos=this.buscarHojaEstilos("recursos/css/(cordova|aplicacion)(-.+?)?\.css");
         }
         return estilos;
     };

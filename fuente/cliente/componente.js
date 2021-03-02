@@ -2261,6 +2261,8 @@ var componente=new function() {
                     hijo.valor(valores[nombre]);
                 } else if(propiedad) {
                     hijo.valor(util.obtenerPropiedad(valores,propiedad));
+                } else {
+                    hijo.valor(valores);
                 }
             }
             

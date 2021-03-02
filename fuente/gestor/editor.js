@@ -1103,7 +1103,8 @@ var editor=new function() {
         this.componentesSeleccionados.forEach(function(comp) {
             comp.seleccionado(false);
         });
-
+        
+        removerZonas();
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-seleccionado").removerClase("foxtrot-seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-hijo-seleccionado").removerClase("foxtrot-hijo-seleccionado");
         this.componentesSeleccionados=[];
@@ -1543,7 +1544,8 @@ var editor=new function() {
             //Remover clases y otras propiedades
                 .removerClase("foxtrot-seleccionado foxtrot-hijo-seleccionado foxtrot-editor-ignorar foxtrot-editando-texto \
                     foxtrot-arrastrable-destino foxtrot-arrastrable-arrastrable foxtrot-arrastrable-arrastrando foxtrot-modo-edicion \
-                    foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre-hijo movil escritorio")
+                    foxtrot-bordes foxtrot-mostrar-invisibles foxtrot-arrastrable-arrastrando-sobre foxtrot-arrastrable-arrastrando-sobre-hijo \
+                    movil escritorio")
             //Remover atributos y propiedades innecesarias
                 .removerAtributo("contentEditable")
                 .removerAtributo("draggable");

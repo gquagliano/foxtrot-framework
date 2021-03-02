@@ -324,7 +324,7 @@ var componenteDesplegable=function() {
      */
     this.obtenerItem=function() {
         var valor=this.campo.valor();
-        if(!this.opciones.hasOwnProperty(valor)) return null;
+        if(!this.opciones||!this.opciones.hasOwnProperty(valor)) return null;
         return this.opciones[valor];
     };
 

@@ -231,7 +231,7 @@ var servidor=new function() {
             var params=resp.hasOwnProperty("p")?resp.p:[],
                 ctl=ui.obtenerAplicacion();
 
-            if(ctl.hasOwnProperty(resp.m)) ctl[resp.m].apply(ctl,params);
+            if(ctl.hasOwnProperty(resp.a)) ctl[resp.a].apply(ctl,params);
             
             procesado=true;
         } else if(resp.hasOwnProperty("e")) {

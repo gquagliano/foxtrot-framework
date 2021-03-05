@@ -84,7 +84,7 @@ var util=new function() {
      * @returns {boolean}
      */
     this.esListaDeElementos=function(obj) {
-        return obj!==null&&typeof obj==="object"&&(obj instanceof NodeList||obj instanceof HTMLCollection||typeof obj.entries==="function");
+        return obj!==null&&typeof obj==="object"&&(obj instanceof NodeList||obj instanceof HTMLCollection);
     };
 
     /**

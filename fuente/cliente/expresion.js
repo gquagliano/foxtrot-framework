@@ -49,7 +49,7 @@ function expresion(expr) {
      * @returns {expresion}
      */
     this.establecerValor=function(valor) {
-        this.objeto=valor;
+        this.valor=valor;
         return this;
     };
     

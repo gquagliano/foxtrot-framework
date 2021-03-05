@@ -30,6 +30,14 @@
  */
 
 /**
+ * @external Element
+ */
+
+/**
+ * @external Array
+ */
+
+/**
  * Extiende los prototipos del DOM.
  * @deprecated
  */
@@ -1604,7 +1612,24 @@
          * @param {function} fn - Función.
          * @memberof external:NodeList
          */
-        NodeList.prototype.forEach=forEachFn;        
+        NodeList.prototype.forEach=forEachFn;
+
+    //Fuente: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/from
+    var toStr=Object.prototype.toString,
+        isCallable=function (fn) {
+            return typeof fn==="function"||toStr.call(fn)==="[object Function]";
+        },
+        toInteger=function(value) {
+            var number=Number(value);
+            if(isNaN(number)) return 0;
+            if(number===0||!isFinite(number)) return number;
+            return (number>0?1:-1)*Math.floor(Math.abs(number));
+        },
+        maxSafeInteger=Math.pow(2,53)-1,
+        toLength=function(value) {
+            var len=toInteger(value);
+            return Math.min(Math.max(len,0),maxSafeInteger);
+        };
 
     if(!Array.hasOwnProperty("from"))
         /**
@@ -1613,57 +1638,39 @@
          * @returns {*[]}
          * @memberof external:Array
          */
-        Array.from=(function () {
-            var toStr=Object.prototype.toString,
-                isCallable=function (fn) {
-                    return typeof fn==="function"||toStr.call(fn)==="[object Function]";
-                },
-                toInteger=function(value) {
-                    var number=Number(value);
-                    if(isNaN(number)) return 0;
-                    if(number===0||!isFinite(number)) return number;
-                    return (number>0?1:-1)*Math.floor(Math.abs(number));
-                },
-                maxSafeInteger=Math.pow(2,53)-1,
-                toLength=function(value) {
-                    var len=toInteger(value);
-                    return Math.min(Math.max(len,0),maxSafeInteger);
-                };
+        Array.from=function from(arrayLike) {
+            var C=this,
+                items = Object(arrayLike);
 
-            return function from(arrayLike) {
-                var C=this,
-                    items = Object(arrayLike);
+            if(arrayLike==null) return null;
 
-                if(arrayLike==null) return null;
-
-                var mapFn=arguments.length>1?arguments[1]:void undefined,
-                    T;
-                
-                if(typeof mapFn!=="undefined") {
-                    if(!isCallable(mapFn)) return null;
-
-                    if(arguments.length>2) T = arguments[2];
-                }
-
-                var len=toLength(items.length),
-                    A=isCallable(C)?Object(new C(len)):new Array(len),
-                    k=0,
-                    kValue;
+            var mapFn=arguments.length>1?arguments[1]:void undefined,
+                T;
             
-                while(k<len) {
-                    kValue=items[k];
-                    if(mapFn) {
-                        A[k]=typeof T==="undefined"?mapFn(kValue,k):mapFn.call(T,kValue,k);
-                    } else {
-                        A[k]=kValue;
-                    }
-                    k += 1;
+            if(typeof mapFn!=="undefined") {
+                if(!isCallable(mapFn)) return null;
+
+                if(arguments.length>2) T = arguments[2];
+            }
+
+            var len=toLength(items.length),
+                A=isCallable(C)?Object(new C(len)):new Array(len),
+                k=0,
+                kValue;
+        
+            while(k<len) {
+                kValue=items[k];
+                if(mapFn) {
+                    A[k]=typeof T==="undefined"?mapFn(kValue,k):mapFn.call(T,kValue,k);
+                } else {
+                    A[k]=kValue;
                 }
-            
-                A.length=len;
-                return A;
-            };
-        }());
+                k += 1;
+            }
+        
+            A.length=len;
+            return A;
+        };
 
     if(!Element.prototype.hasOwnProperty("matches"))
         /**

@@ -16,15 +16,14 @@
 // definición, quien esté accediendo a ellas está modificando la clase y puede ver la documentación en el mismo código fuente), solo se documentan aquellas que el
 // usuario pueda necesitar al escribir su aplicación o extender el código de Foxtrot.
 //
-// Asimismo, se excluyen variables y aquellas propiedades que no sean de interés para el usuario deben deben ocultarse con @ignore. Normalmente, las mismas propiedades
-// deben tener métodos de acceso (las que no lo tengan, están pendientes de agregar) y se documentan, al igual que las variables, para que IDE reconozca el tipo, o para la
+// Asimismo, se excluyen variables y aquellas propiedades que no sean de interés para el usuario deben ocultarse con @ignore. Normalmente, las mismas propiedades
+// deben tener métodos de acceso (las que no lo tengan, están pendientes de ser creados) y se documentan, al igual que las variables, para que IDE reconozca el tipo, o para la
 // persona que está trabajando en el código fuente de Foxtrot.
 
 define('_wiki',__DIR__.'/../../foxtrot-framework.wiki/');
 define('_salidaPhp',_wiki.'phpdoc/');
 define('_salidaJs',_wiki.'/jsdoc/');
 define('_excluir',[
-    realpath(__DIR__.'/../fuente/cliente/expresion-desarrollo.js')
 ]);
 
 $clasesPhp=[];

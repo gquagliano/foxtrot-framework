@@ -469,3 +469,15 @@ body.escritorio .btn-secondary:hover,
 337ab7
 b5cfe5
 */
+
+/* Soporte para navegadores antiguos (identificados por html.es5) */
+
+.es5 .custom-switch .custom-control-label::after {
+    transition: left .2s;
+    transform: none !important;
+    left: -3.45rem;
+}
+.es5 .custom-switch .custom-control-input:checked~.custom-control-label::after {
+    transform: none;
+    left: -3rem;
+}

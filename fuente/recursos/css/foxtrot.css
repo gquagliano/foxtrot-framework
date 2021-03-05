@@ -634,3 +634,28 @@ li.menu-separador::after {
         visibility: hidden;
     }
 }
+
+/* Soporte para navegadores antiguos (identificados por html.es5) */
+
+.es5 .aparece {
+    display: block;
+    opacity: 1 !important;
+}
+.es5 .desaparece {
+    display: none !important;
+}
+.es5 .custom-select {
+    width: 100%;
+    padding-right: 2em;
+    background-image: none;
+    background: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.es5 .componente.desplegable {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235e6c7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 1.1em;
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: calc(100% - .4em);
+}

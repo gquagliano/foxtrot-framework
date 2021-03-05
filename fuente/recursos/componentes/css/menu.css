@@ -54,7 +54,7 @@
     line-height: 1.5rem;
     border: 1px solid #e8ebf1;
     border-radius: 2px;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 7%), 0 10px 15px rgb(0 0 0 / 15%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.071), 0 10px 15px rgba(0, 0, 0, 0.149);
 }
 .menu-deslizable-activo { 
     display: block;   

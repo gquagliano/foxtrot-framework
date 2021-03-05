@@ -526,6 +526,7 @@ var componente=new function() {
     this.establecerDatos=function(obj,actualizar,dispersar,ignorarPropiedad) {
         if(typeof actualizar==="undefined") actualizar=true;
         if(typeof dispersar==="undefined") dispersar=true;
+        if(typeof ignorarPropiedad==="undefined") ignorarPropiedad=false;
 
         //Si se omite obj, obtener de la propiedad Origen
         if(typeof obj==="undefined") obj=this.propiedad(true,"datos");

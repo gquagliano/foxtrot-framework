@@ -267,9 +267,6 @@ var servidor=new function() {
         }
 
         var solicitud=function(target,nombre) {
-            if(target.hasOwnProperty(nombre)) return target[nombre];
-    
-            //Los métodos inexistentes serán solicitados al servidor
             return function() {
                 var args=arguments.aArray(),
                     opc={
@@ -333,15 +330,21 @@ var servidor=new function() {
              * @returns {*}
              */
             this.preparar=function() {
+                if(typeof Proxy==="function") return this;
                 for(var i=0;i<arguments.length;i++)
                     this[arguments[i]]=solicitud(this,arguments[i]);
+                return this;
             };
         }();
 
         if(typeof Proxy!=="function") return fn;
 
         return new Proxy(fn,{
-            get:solicitud
+            get:function(target,nombre) {
+                if(target.hasOwnProperty(nombre)) return target[nombre];    
+                //Los métodos inexistentes serán solicitados al servidor
+                return solicitud(target,nombre);
+            }
         });
     };
 

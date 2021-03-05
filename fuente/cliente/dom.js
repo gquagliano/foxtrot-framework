@@ -953,6 +953,16 @@
             fn=function(ev) {
                 var elemento=null;
 
+                //Compatibilidad con ES5
+                if(typeof ev.path==="undefined") {
+                    var elem=this;
+                    ev.path=[];
+                    while(elem||elem==window) {
+                        ev.path.push(elem);
+                        elem=elem.parentNode;
+                    }
+                }
+
                 if(estricto) {
                     elemento=ev.path[0];
                     if(!elemento.es(filtro)) return;                    
@@ -1409,6 +1419,18 @@
     };
 
     /**
+     * Implementación de forEach en objetos.
+     * @memberof external:Object
+     */
+    Object.prototype.porCada=function(fn) {
+        var t=this;
+        Object.keys(t).forEach(function(clave) {
+            if(typeof fn==="function") fn.call(t,clave,t[clave]);
+        });
+        return this;
+    };
+
+    /**
      * Genera y devuelve un nuevo objeto intercambiando las claves por los valores.
      * @returns {Object}
      * @memberof external:Object
@@ -1426,7 +1448,7 @@
      * @memberof external:Object
      */
     Object.prototype.aArray=function() {
-        return Object.values(this);
+        return Array.from(this);
     };
 
     /**
@@ -1503,5 +1525,167 @@
 
     /** @var {HTMLBodyElement} cuerpo - Alias de document.body. */
     window["cuerpo"]=document.body;
+
+    ////Compatibilidad con ES5 (polyfills)    
+
+    if(!Object.hasOwnProperty("entries")) {
+        /**
+         * *Polyfill* para `Object.entries()`.
+         * @param {Object} obj - Objeto de entrada.
+         * @returns {*[]}
+         * @memberof external:Object
+         */
+        Object.entries=function(obj) {
+            var propiedades=Object.keys(obj),
+                res=[];
+            for(var i=0;i<propiedades.length;i++)
+                res.push([propiedades[i],obj[propiedades[i]]]);
+            return res;
+        };
+
+        //Agregar clase a <html>
+        document.body.parentElement.classList.add("es5");
+    }
+
+    if(!Object.hasOwnProperty("values"))
+        /**
+         * *Polyfill* para `Object.values()`.
+         * @param {Object} obj - Objeto de entrada.
+         * @returns {*[]}
+         * @memberof external:Object
+         */
+        Object.values=function(obj) {
+            var propiedades=Object.keys(obj),
+                res=[];
+            for(var i=0;i<propiedades.length;i++)
+                res.push(obj[propiedades[i]]);
+            return res;
+        };
+
+    if(!Object.hasOwnProperty("assign"))
+        /**
+         * *Polyfill* para `Object.assign()`.
+         * @param {Object} obj - Objeto de entrada.
+         * @returns {*[]}
+         * @memberof external:Object
+         */
+        Object.assign=function(destino,args) {
+            if(destino==null) return null;
+
+            var res=Object(destino);
+
+            for(var i=1;i<arguments.length;i++) {
+                var arg=arguments[i];
+                if(arg==null) continue;
+                for(var prop in arg)
+                    if(arg.hasOwnProperty(prop))
+                            res[prop]=arg[prop];
+            }
+
+            return res;
+        };
+
+    var forEachFn=function(fn) {
+        for(var i=0;i<this.length;i++)
+            fn(this[i],i);
+    };
+
+    if(!DOMTokenList.prototype.hasOwnProperty("forEach")) 
+        /**
+         * *Polyfill* para `DOMTokenList.forEach()`.
+         * @param {function} fn - Función.
+         * @memberof external:DOMTokenList
+         */
+        DOMTokenList.prototype.forEach=forEachFn;     
+
+    if(!NodeList.prototype.hasOwnProperty("forEach"))
+        /**
+         * *Polyfill* para `NodeList.forEach()`.
+         * @param {function} fn - Función.
+         * @memberof external:NodeList
+         */
+        NodeList.prototype.forEach=forEachFn;        
+
+    if(!Array.hasOwnProperty("from"))
+        /**
+         * *Polyfill* para `Array.from()`. Fuente: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/from
+         * @param {*} valor - Valor de entrada.
+         * @returns {*[]}
+         * @memberof external:Array
+         */
+        Array.from=(function () {
+            var toStr=Object.prototype.toString,
+                isCallable=function (fn) {
+                    return typeof fn==="function"||toStr.call(fn)==="[object Function]";
+                },
+                toInteger=function(value) {
+                    var number=Number(value);
+                    if(isNaN(number)) return 0;
+                    if(number===0||!isFinite(number)) return number;
+                    return (number>0?1:-1)*Math.floor(Math.abs(number));
+                },
+                maxSafeInteger=Math.pow(2,53)-1,
+                toLength=function(value) {
+                    var len=toInteger(value);
+                    return Math.min(Math.max(len,0),maxSafeInteger);
+                };
+
+            return function from(arrayLike) {
+                var C=this,
+                    items = Object(arrayLike);
+
+                if(arrayLike==null) return null;
+
+                var mapFn=arguments.length>1?arguments[1]:void undefined,
+                    T;
+                
+                if(typeof mapFn!=="undefined") {
+                    if(!isCallable(mapFn)) return null;
+
+                    if(arguments.length>2) T = arguments[2];
+                }
+
+                var len=toLength(items.length),
+                    A=isCallable(C)?Object(new C(len)):new Array(len),
+                    k=0,
+                    kValue;
+            
+                while(k<len) {
+                    kValue=items[k];
+                    if(mapFn) {
+                        A[k]=typeof T==="undefined"?mapFn(kValue,k):mapFn.call(T,kValue,k);
+                    } else {
+                        A[k]=kValue;
+                    }
+                    k += 1;
+                }
+            
+                A.length=len;
+                return A;
+            };
+        }());
+
+    if(!Element.prototype.hasOwnProperty("matches"))
+        /**
+         * *Polyfill* para `Element.matches()`.
+         * @param {function} fn - Función.
+         * @memberof external:Element
+         */
+        Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector;
+
+    if(!Element.prototype.hasOwnProperty("closest"))
+        /**
+         * *Polyfill* para `Element.closest()`.
+         * @param {function} fn - Función.
+         * @memberof external:Element
+         */
+        Element.prototype.closest=function(selector) {
+            var elem=this;
+            while(elem&&elem.nodeType===1) {
+              if(elem.matches(selector)) return elem;
+              elem=elem.parentElement;
+            }
+            return null;
+        };
 })();
 

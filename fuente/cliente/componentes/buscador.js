@@ -36,14 +36,10 @@ var componenteBuscador=function() {
     var ignorarTodaEntrada=false;
 
     /**
-     * Propiedades de Campo.
+     * Propiedades de Buscador.
      */
     this.propiedadesConcretas={
         "Campo de búsqueda":{
-            valor:{
-                etiqueta:"Valor inicial",
-                adaptativa:false
-            },
             relleno:{
                 etiqueta:"Texto de relleno",
                 adaptativa:false

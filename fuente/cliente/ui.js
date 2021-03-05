@@ -1589,7 +1589,7 @@ var ui=new function() {
         if(params) {
             retorno=metodo.apply(instanciaAplicacion,params);
         } else {
-            retorno=metodo.call(obj);
+            retorno=metodo.call(instanciaAplicacion);
         }
         //El método puede devolver true para detener el evento
         if(typeof retorno==="boolean"&&retorno) return true;

@@ -167,12 +167,12 @@ var componenteDesplegable=function() {
                     //Si valor es un objeto, se admite el uso de propiedadClave y propiedadValor
 
                     //Pueden ser expresiones
-                    if(expresion.esExpresion(propClave)) {
+                    if(expresion.contieneExpresion(propClave)) {
                         clave=t.evaluarExpresion(propClave,obj);
                     } else if(propClave) {
                         clave=obj[propClave];
                     }
-                    if(expresion.esExpresion(propValor)) {
+                    if(expresion.contieneExpresion(propValor)) {
                         valor=t.evaluarExpresion(propValor,obj);
                     } else if(propValor) {
                         valor=obj[propValor];
@@ -189,7 +189,7 @@ var componenteDesplegable=function() {
                 //Si valor es un objeto, se admite el uso de propiedadValor para determinar qué propiedad mostrar
                 if(util.esObjeto(obj)&&propValor) {    
                     //Además puede ser una expresión
-                    if(expresion.esExpresion(propValor)) {
+                    if(expresion.contieneExpresion(propValor)) {
                         valor=t.evaluarExpresion(propValor,obj);
                     } else {
                         valor=obj[propValor];

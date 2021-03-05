@@ -53,7 +53,7 @@ var editable=new function() {
         moviendoNodo=elem;
         try {
             rango.insertNode(elem);
-        } catch { }
+        } catch(x) { }
 
         obj.inicializar();
 
@@ -119,7 +119,7 @@ var editable=new function() {
             comp=null,
             insertar=null;
 
-        try { obj=JSON.parse(datos); } catch {}
+        try { obj=JSON.parse(datos); } catch(x) {}
         
         if(obj) {
             if(obj.hasOwnProperty("insertarComponente")) {

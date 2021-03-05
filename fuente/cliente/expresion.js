@@ -180,11 +180,11 @@ try { \
     if(typeof resultado===\"function\") { \
         try { \
             objeto=("+expresionPadre+"); \
-        } catch { } \
+        } catch(x) { } \
         return resultado.bind(objeto); \
     } \
     return resultado; \
-} catch { \
+} catch(x) { \
     return null; \
 }")
             //Valores de las variables locales
@@ -228,7 +228,7 @@ try { \
         if(expresion.esExpresion(cadena)) {
             try {
                 return this.analizarValor(this.ejecutar());
-            } catch {
+            } catch(x) {
                 return "";
             }
         }
@@ -246,7 +246,7 @@ try { \
                 //Ejecutar expresión
                 try {
                     valor=this.establecerExpresion("{"+bufer+"}").ejecutar();
-                } catch {
+                } catch(x) {
                     //Si falla, devolver vacío
                     valor="";
                 }

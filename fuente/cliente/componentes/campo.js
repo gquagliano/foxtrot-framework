@@ -264,7 +264,7 @@ var componenteCampo=function() {
                     //También al leer el valor
                     tinyMCE.triggerSave();
                 }
-            } catch {}
+            } catch(x) {}
         }
 
         //Si es null, volver al valor inicial (puede contener expresiones)

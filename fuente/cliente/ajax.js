@@ -52,7 +52,7 @@ function ajax(param) {
             var resp=null;
             try {
                 resp=JSON.parse(ev.target.responseText);
-            } catch { }
+            } catch(x) { }
             if(param.listo) param.listo.call(self,resp,ev);
         } else {
             if(param.error) param.error.call(self,ev);

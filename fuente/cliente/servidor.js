@@ -266,7 +266,43 @@ var servidor=new function() {
             controladorOrigen=controladorOrigen.obtenerNombre();
         }
 
-        return new Proxy(new function() {
+        var solicitud=function(target,nombre) {
+            if(target.hasOwnProperty(nombre)) return target[nombre];
+    
+            //Los métodos inexistentes serán solicitados al servidor
+            return function() {
+                var args=arguments.aArray(),
+                    opc={
+                        controlador:target.controlador,
+                        controladorOrigen:target.controladorOrigen,
+                        metodo:nombre,
+                        error:function() {
+                            ui.evento("errorServidor");
+                        }
+                    };
+
+                opc=Object.assign(opc,target.predeterminados);
+
+                //Los métodos admiten múltiples formas:
+
+                //servidor.foo()
+                
+                //servidor.foo(opciones)
+                if(args.length==1&&util.esObjeto(args[0])) {
+                    opc=Object.assign(opc,args[0]);
+                } else {
+                    //servidor.foo(retorno)
+                    if(typeof args[0]=="function") opc.retorno=args.shift();
+                    
+                    //servidor.foo(retorno,...args)
+                    //servidor.foo(...args)
+                    if(args.length>0) opc.parametros=args;
+                }
+
+                return servidor.invocarMetodo(opc);
+            };
+        },
+        fn=new function() {
             this.controlador=controlador;
             this.controladorOrigen=controladorOrigen;        
             this.predeterminados={};
@@ -290,43 +326,22 @@ var servidor=new function() {
                 servidor.establecerOpcionesProximaConsulta(opciones);
                 return this;
             };
-        }(),{
-            get(target,nombre) {
-                if(target.hasOwnProperty(nombre)) return target[nombre];
-        
-                //Los métodos inexistentes serán solicitados al servidor
-                return function() {
-                    var args=arguments.aArray(),
-                        opc={
-                            controlador:target.controlador,
-                            controladorOrigen:target.controladorOrigen,
-                            metodo:nombre,
-                            error:function() {
-                                ui.evento("errorServidor");
-                            }
-                        };
 
-                    opc=Object.assign(opc,target.predeterminados);
-        
-                    //Los métodos admiten múltiples formas:
-        
-                    //servidor.foo()
-                    
-                    //servidor.foo(opciones)
-                    if(args.length==1&&util.esObjeto(args[0])) {
-                        opc=Object.assign(opc,args[0]);
-                    } else {
-                        //servidor.foo(retorno)
-                        if(typeof args[0]=="function") opc.retorno=args.shift();
-                        
-                        //servidor.foo(retorno,...args)
-                        //servidor.foo(...args)
-                        if(args.length>0) opc.parametros=args;
-                    }
-        
-                    return servidor.invocarMetodo(opc);
-                }
-            }
+            /**
+             * Permite establecer los nombres de los métodos de servidor que utilizará el controlador, por compatibilidad con ES5.
+             * @param {string} ...metodos - Nombres de métodos.
+             * @returns {*}
+             */
+            this.preparar=function() {
+                for(var i=0;i<arguments.length;i++)
+                    this[arguments[i]]=solicitud(this,arguments[i]);
+            };
+        }();
+
+        if(typeof Proxy!=="function") return fn;
+
+        return new Proxy(fn,{
+            get:solicitud
         });
     };
 

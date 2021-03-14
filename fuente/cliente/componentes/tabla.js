@@ -120,7 +120,7 @@ var componenteTabla=function() {
         //Vamos a ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
         this.ocultarDescendencia();
 
-        t.generarEncabezados();
+        this.generarEncabezados(true);
 
         if(!this.datos.length) {
             this.mostrarMensajeSinDatos();
@@ -174,11 +174,18 @@ var componenteTabla=function() {
 
     /**
      * Genera el encabezado de la tabla
-     * @returns {Componente}
+     * @param {boolean} [regenerar=false] - Si es `true` y ya existe la fila de encabezados, será eliminada y regenerada.
+     * @returns {componente}
      */
-    this.generarEncabezados=function() {
+    this.generarEncabezados=function(regenerar) {
+        if(typeof regenerar==="undefined") regenerar=false;
+
         var filas=this.buscarFilas(),
             fila=null;
+        
+        var previo=this.elemento.querySelector("thead");
+        if(previo&&!regenerar) return this;
+        if(previo) previo.remover();
         
         //Solo se considera la primer fila que no sea autogenerada en los encabezados
         if(filas.length) fila=filas[0];
@@ -203,18 +210,28 @@ var componenteTabla=function() {
     };
 
     /**
-     * Genera las filas de la tabla
+     * Genera las filas de la tabla.
+     * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
      * @returns {Componente}
      */
-    this.generarFilas=function() {
-        var filas=this.buscarFilas();
+    this.generarFilas=function(indice) {
+        this.generarEncabezados();
 
-        this.datos.forEach(function(obj,indice) {
-            //Puede existir más de una fila como plantilla
-            filas.forEach(function(fila) {
-                fila.generarFila(t,obj,indice);
+        var t=this,
+            fn=function(obj,i) {
+                //Puede existir más de una fila como plantilla
+                t.buscarFilas().forEach(function(fila) {
+                    fila.generarFila(t,obj,i);
+                });
+            };
+
+        if(typeof indice==="number") {
+            fn(this.datos[indice],indice);
+        } else {
+            this.datos.forEach(function(obj,indice) {
+                fn(obj,indice);
             });
-        });
+        }
 
         return this;
     };
@@ -261,12 +278,24 @@ var componenteTabla=function() {
      */
     this.agregarFila=function(obj) {
         if(!util.esArray(this.datos)) this.datos=[];
+        var idx=this.datos.push(obj)-1;
 
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
-        
-        this.datos.push(obj);
-        this.actualizar();
+        //Generar fila sin redibujar todo
+        this.generarFilas(idx);
+
+        return this;
+    };
+    
+    /**
+     * Agrega los elementos del listado provisto.
+     * @param {*[]} listado - Listado (*array*) de elementos a insertar.
+     * @returns {componente}
+     */
+    this.agregarFilas=function(listado) {
+        var t=this;
+        listado.porCada(function(i,elem) {
+            t.agregarFila(elem);
+        });
         return this;
     };
 

@@ -146,32 +146,39 @@ var componenteBucle=function() {
     };
 
     /**
-     * Genera y devuelve un nuevo item.
-     * @param {Componente} elemento - Elemento a clonar.
-     * @param {Object} obj - Objeto a representar (datos del item).
+     * Genera y agrega un nuevo item.
      * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {Componente}
+     * @returns {componente}
      */
-    this.generarItem=function(hijo,obj,indice) {
+    this.generarItem=function(indice) {
+        var t=this;
+
         if(!this.elementoPadre) this.elementoPadre=this.elemento.padre();
-        var nuevo=hijo.clonar(this.elementoPadre,true); //Anexar al padre del componente bucle
+        
+        this.obtenerHijos().forEach(function(hijo) {
+            if(hijo.autogenerado) return;
+    
+            var nuevo=hijo.clonar(t.elementoPadre,true); //Anexar al padre del componente bucle
 
-        this.itemsAutogenerados.push(nuevo);
+            t.itemsAutogenerados.push(nuevo);
 
-        //Agregar método al origen de datos
-        obj.obtenerIndice=(function(i) {
-            return function() {
-                return i;
-            };
-        })(indice);
+            var obj=t.datos[indice];
 
-        nuevo.establecerDatos(obj);
-        nuevo.indice=indice;
-        nuevo.autogenerado=true;
-        nuevo.ocultarDescendencia();
-        nuevo.obtenerElemento().agregarClase("autogenerado");
+            //Agregar método al origen de datos
+            obj.obtenerIndice=(function(i) {
+                return function() {
+                    return i;
+                };
+            })(indice);
 
-        return nuevo;
+            nuevo.establecerDatos(obj);
+            nuevo.indice=indice;
+            nuevo.autogenerado=true;
+            nuevo.ocultarDescendencia();
+            nuevo.obtenerElemento().agregarClase("autogenerado");
+        });
+
+        return this;
     };
 
     /**
@@ -182,9 +189,7 @@ var componenteBucle=function() {
         var t=this;
 
         this.datos.forEach(function(obj,indice) {
-            t.obtenerHijos().forEach(function(hijo) {
-                if(!t.autogenerado) t.generarItem(hijo,obj,indice);
-            });
+            t.generarItem(indice);
         });
 
         return this;
@@ -229,12 +234,24 @@ var componenteBucle=function() {
      */
     this.agregarElemento=function(obj) {
         if(!util.esArray(this.datos)) this.datos=[];
+        var idx=this.datos.push(obj)-1;
 
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
+        //Agregar el nuevo elemento sin redibujar todo
+        this.generarItem(idx);
 
-        this.datos.push(obj);
-        this.actualizar();
+        return this;
+    };
+
+    /**
+     * Agrega los elementos del listado provisto.
+     * @param {*[]} listado - Listado (*array*) de elementos a insertar.
+     * @returns {componente}
+     */
+    this.agregarElementos=function(listado) {
+        var t=this;
+        listado.porCada(function(i,elem) {
+            t.agregarElemento(elem);
+        });
         return this;
     };
 

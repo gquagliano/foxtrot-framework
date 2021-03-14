@@ -2263,7 +2263,7 @@ var componente=new function() {
                 } else if(propiedad) {
                     hijo.valor(util.obtenerPropiedad(valores,propiedad));
                 } else {
-                    hijo.valor(valores);
+                    //hijo.valor(valores);
                 }
             }
             

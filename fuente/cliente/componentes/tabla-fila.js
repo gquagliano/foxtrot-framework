@@ -45,7 +45,7 @@ var componenteFilaTabla=function() {
      * @param {Componente} padre - Componente padre (tabla).
      * @param {Object} obj - Objeto a representar (datos de la fila).
      * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.generarFila=function(padre,obj,indice) {
         var nuevo=this.clonar(padre,true);
@@ -63,6 +63,16 @@ var componenteFilaTabla=function() {
         nuevo.obtenerElemento().agregarClase("autogenerado");
 
         return nuevo;
+    };    
+
+    /**
+     * Asigna un nuevo origen de datos a la fila existente.
+     * @param {Object} obj - Objeto a representar (datos de la fila).
+     * @returns {componente}
+     */
+    this.actualizarFila=function(obj) {
+        this.establecerDatos(obj);
+        return this;
     };    
 
     /**

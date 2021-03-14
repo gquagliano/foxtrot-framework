@@ -19,7 +19,7 @@ var componenteBucle=function() {
     this.itemSinDatos=null;
     this.elementoPadre=null;
 
-    this.redibujar=true;
+    this.descartarValores=false;
 
     /**
      * Propiedades de Bucle.
@@ -74,41 +74,50 @@ var componenteBucle=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
-        this.redibujar=true;
+        this.descartarValores=true;
         this.prototipo.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
 
     /**
      * Actualiza el componente.
-     * @returns {Componente}
+     * @param {boolean} [redibujar=false] - Si es `true`, descartará el contenido y forzará el redibujado del componente completo.
+     * @returns {componente}
      */
-    this.actualizar=function() {
+    this.actualizar=function(redibujar) {
+        if(typeof redibujar==="undefined") redibujar=false;
+
         this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
         
         this.actualizacionEnCurso=true;
 
-        //Aplicar cambios en los campos
-        if(!this.redibujar) this.obtenerDatosActualizados();
-        this.redibujar=false;
+        //var indiceFoco=-1;
 
-        //Almacenar dónde está el foco
-        var enfocables=this.elemento.buscarEnfocables(),    
-            foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target),
-            indiceFoco=enfocables.indexOf(foco);
+        if(redibujar) {
+            //Aplicar cambios en los campos
+            if(!this.descartarValores) this.obtenerDatosActualizados();
+            this.descartarValores=false;
 
-        //Limpiar filas autogeneradas
-        ui.eliminarComponentes(this.itemsAutogenerados);
-        this.itemsAutogenerados=[];
-
-        if(!this.datos||!util.esArray(this.datos)) return this;
-
-        if(this.itemSinDatos) {
-            this.itemSinDatos.remover();
-            this.itemSinDatos=null;
+            //Almacenar dónde está el foco
+            //var enfocables=this.elemento.buscarEnfocables(),    
+            //    foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target);
+            //indiceFoco=enfocables.indexOf(foco);
         }
+
+        if(redibujar||!this.datos||!this.datos.length) {
+            //Limpiar filas autogeneradas
+            ui.eliminarComponentes(this.itemsAutogenerados);
+            this.itemsAutogenerados=[];
+        }
+        
+        this.removerMensajeSinDatos();
+
+        if(!this.datos) {
+            this.actualizacionEnCurso=false;
+            return this;
+        }        
 
         if(!this.datos.length) {
             this.mostrarMensajeSinDatos();
@@ -116,20 +125,32 @@ var componenteBucle=function() {
             this.generarItems();
 
             //Intentar reestablecer el foco
-            if(indiceFoco>=0) {
-                enfocables=this.elemento.buscarEnfocables();
-                if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
-            }
+            //if(indiceFoco>=0) {
+            //    enfocables=this.elemento.buscarEnfocables();
+            //    if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
+            //}
         }
         
         this.actualizacionEnCurso=false;
 
         return this;
     };
+    
+    /**
+     * Elimina el mensaje de bloque sin datos, si existe.
+     * @returns {componente}
+     */
+    this.removerMensajeSinDatos=function() {
+        if(this.itemSinDatos) {
+            this.itemSinDatos.remover();
+            this.itemSinDatos=null;
+        }
+        return this;
+    };    
 
     /**
      * Genera el mensaje de bloque sin datos.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad("mensajeVacio");
@@ -183,14 +204,36 @@ var componenteBucle=function() {
 
     /**
      * Genera los items del componente.
-     * @returns {Componente}
+     * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
+     * @returns {componente}
      */
-    this.generarItems=function() {
+    this.generarItems=function(indice) {
         var t=this;
 
-        this.datos.forEach(function(obj,indice) {
-            t.generarItem(indice);
-        });
+        var fn=function(i) {
+            if(i>=t.itemsAutogenerados.length) {
+                t.generarItem(i);
+            } else {
+                t.itemsAutogenerados[i].establecerDatos(t.datos[i]);
+            }
+        },
+        remover=function(i) {
+            t.itemsAutogenerados[i].eliminar();
+            t.itemsAutogenerados.splice(i,1);
+        };
+
+        if(typeof indice==="number") {
+            fn(indice);
+        } else {
+            this.datos.forEach(function(obj,indice) {
+                fn(indice);
+            });
+            //Remover items excedentes
+            if(this.datos.length<this.itemsAutogenerados.length) {
+                for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
+                    remover(i);
+            }
+        }
 
         return this;
     };
@@ -236,8 +279,10 @@ var componenteBucle=function() {
         if(!util.esArray(this.datos)) this.datos=[];
         var idx=this.datos.push(obj)-1;
 
+        this.removerMensajeSinDatos();
+
         //Agregar el nuevo elemento sin redibujar todo
-        this.generarItem(idx);
+        this.generarItems(idx);
 
         return this;
     };
@@ -261,9 +306,6 @@ var componenteBucle=function() {
      * @returns {componente}
      */
     this.removerElemento=function(indice) {
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
-
         this.datos.splice(indice,1);
         this.actualizar();
         return this;

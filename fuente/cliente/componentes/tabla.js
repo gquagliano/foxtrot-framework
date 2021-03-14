@@ -15,7 +15,8 @@ var componenteTabla=function() {
 
     this.componente="tabla";
 
-    this.redibujar=true;
+    this.descartarValores=false;
+    this.filasAutogeneradas=[];
 
     var t=this;
 
@@ -87,35 +88,49 @@ var componenteTabla=function() {
      */
     this.establecerDatos=function(obj,actualizar) {
         //No recursivo, ya que los componentes que contiene se usan solo como plantilla
-        this.redibujar=true;
+        this.descartarValores=true;
         this.prototipo.establecerDatos.call(this,obj,actualizar,false);
         return this;
     };
 
     /**
      * Actualiza el componente.
-     * @returns {Componente}
+     * @param {boolean} [redibujar=false] - Si es `true`, descartará el contenido y forzará el redibujado del componente completo.
+     * @returns {componente}
      */
-    this.actualizar=function() {
+    this.actualizar=function(redibujar) {
+        if(typeof redibujar==="undefined") redibujar=false;
+
         this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
         
         this.actualizacionEnCurso=true;
 
-        //Aplicar valores de los campos
-        if(!this.redibujar) this.obtenerDatosActualizados();
-        this.redibujar=false;
+        //var indiceFoco=-1;
 
-        //Almacenar dónde está el foco
-        var enfocables=this.elemento.buscarEnfocables(),    
-            foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target),
-            indiceFoco=enfocables.indexOf(foco);
-            
-        //Limpiar filas autogeneradas
-        ui.eliminarComponentes(this.elemento.querySelectorAll(".autogenerado"));
+        if(redibujar) {
+            //Aplicar valores de los campos
+            if(!this.descartarValores) this.obtenerDatosActualizados();
+            this.descartarValores=false;
 
-        if(!this.datos) return this;
+            //Almacenar dónde está el foco
+            //var enfocables=this.elemento.buscarEnfocables(),    
+            //    foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target);
+            //indiceFoco=enfocables.indexOf(foco);
+        }
+                
+        if(redibujar||!this.datos||!this.datos.length) {
+            ui.eliminarComponentes(this.elemento.querySelectorAll(".autogenerado"));
+            this.filasAutogeneradas=[];
+        }
+
+        this.removerMensajeSinDatos();
+
+        if(!this.datos) {
+            this.actualizacionEnCurso=false;
+            return this;
+        }
 
         //Vamos a ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
         this.ocultarDescendencia();
@@ -128,10 +143,10 @@ var componenteTabla=function() {
             t.generarFilas();
 
             //Intentar reestablecer el foco
-            if(indiceFoco>=0) {
-                enfocables=this.elemento.buscarEnfocables();
-                if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
-            }
+            //if(indiceFoco>=0) {
+            //    enfocables=this.elemento.buscarEnfocables();
+            //    if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
+            //}
         }
         
         this.actualizacionEnCurso=false;
@@ -140,8 +155,18 @@ var componenteTabla=function() {
     };
 
     /**
+     * Remueve la fila con el mensaje de tabla sin datos, si existe.
+     * @returns {componente}
+     */
+    this.removerMensajeSinDatos=function() {
+        var elem=this.contenedor.querySelector("tr.fila-sin-datos");
+        if(elem) elem.remover();
+        return this;
+    };
+
+    /**
      * Genera la fila con el mensaje de tabla sin datos.
-     * @returns {Componente}
+     * @returns {componente}
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad(null,"vacia");
@@ -210,6 +235,15 @@ var componenteTabla=function() {
     };
 
     /**
+     * Genera o actualiza una fila de la tabla.
+     * @param {*} obj 
+     * @param {*} indice 
+     */
+    this.generarFila=function(obj,indice) {
+
+    };
+
+    /**
      * Genera las filas de la tabla.
      * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
      * @returns {Componente}
@@ -219,10 +253,30 @@ var componenteTabla=function() {
 
         var t=this,
             fn=function(obj,i) {
+                if(i>=t.filasAutogeneradas.length) {
+                    agregar(obj,i);
+                } else {
+                    actualizar(obj,i);
+                }
+            },
+            agregar=function(obj,i) {
                 //Puede existir más de una fila como plantilla
+                var arr=[];
                 t.buscarFilas().forEach(function(fila) {
-                    fila.generarFila(t,obj,i);
+                    arr.push(fila.generarFila(t,obj,i));
                 });
+                t.filasAutogeneradas.push(arr);
+            },
+            actualizar=function(obj,i) {
+                t.filasAutogeneradas[i].forEach(function(fila) {
+                    fila.actualizarFila(obj);
+                });
+            },
+            remover=function(i) {
+                t.filasAutogeneradas[i].forEach(function(fila) {
+                    fila.eliminar();
+                });
+                t.filasAutogeneradas.splice(i,1);
             };
 
         if(typeof indice==="number") {
@@ -231,6 +285,11 @@ var componenteTabla=function() {
             this.datos.forEach(function(obj,indice) {
                 fn(obj,indice);
             });
+            //Remover filas excedentes
+            if(this.datos.length<this.filasAutogeneradas.length) {
+                for(var i=this.datos.length;i<this.filasAutogeneradas.length;i++)
+                    remover(i);
+            }
         }
 
         return this;
@@ -280,6 +339,8 @@ var componenteTabla=function() {
         if(!util.esArray(this.datos)) this.datos=[];
         var idx=this.datos.push(obj)-1;
 
+        this.removerMensajeSinDatos();
+
         //Generar fila sin redibujar todo
         this.generarFilas(idx);
 
@@ -305,9 +366,6 @@ var componenteTabla=function() {
      * @returns {componente}
      */
     this.removerFila=function(indice) {
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
-
         this.datos.splice(indice,1);
         this.actualizar();
         return this;

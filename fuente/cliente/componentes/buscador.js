@@ -44,7 +44,7 @@ var componenteBuscador=function() {
                 etiqueta:"Texto de relleno",
                 adaptativa:false
             },
-            propiedadClave :{
+            propiedadClave:{
                 etiqueta:"Propiedad clave",
                 adaptativa:false
             },
@@ -222,9 +222,17 @@ var componenteBuscador=function() {
 
         this.buscando=true;
 
-        if(valor&&ui._buscador_cacheValores.hasOwnProperty(prefijoCache+valor)) {
-            t.establecerResultados([ui._buscador_cacheValores[prefijoCache+valor]],true);
-            return;
+        if(valor) {
+            //Extraer propiedad clave del valor
+            if(typeof valor==="object"&&valor!==null) {
+                var propiedad=this.propiedad("propiedadClave");
+                if(propiedad) valor=util.obtenerPropiedad(valor,propiedad);
+            }
+
+            if(ui._buscador_cacheValores.hasOwnProperty(prefijoCache+valor)) {
+                t.establecerResultados([ui._buscador_cacheValores[prefijoCache+valor]],true);
+                return;
+            }
         }
         
         //this.seleccionarPrimerElemento=false;

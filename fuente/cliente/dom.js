@@ -1456,7 +1456,7 @@
      * @memberof external:Object
      */
     Object.prototype.aArray=function() {
-        return Array.from(this);
+        return Object.values(this);
     };
 
     /**

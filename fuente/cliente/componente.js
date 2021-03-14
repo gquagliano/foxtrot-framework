@@ -1624,7 +1624,7 @@ var componente=new function() {
             });
 
             //Modificación (solo campos)
-            if(this.campo) elemento.evento("change",function(ev) {
+            if(this.campo) elemento.evento("change input paste",function(ev) {
                     t.procesarEvento("change","modificacion","modificacion",ev);
                 });
 

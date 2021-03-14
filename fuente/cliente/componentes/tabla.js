@@ -343,6 +343,11 @@ var componenteTabla=function() {
 
         //Generar fila sin redibujar todo
         this.generarFilas(idx);
+        
+        //Autofoco
+        var elems=this.filasAutogeneradas[idx];
+        for(var i=0;i<elems.length;i++)
+            ui.autofoco(elems[i].obtenerElemento());
 
         return this;
     };

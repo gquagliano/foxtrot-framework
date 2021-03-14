@@ -283,6 +283,9 @@ var componenteBucle=function() {
 
         //Agregar el nuevo elemento sin redibujar todo
         this.generarItems(idx);
+        
+        //Autofoco
+        ui.autofoco(this.itemsAutogenerados[idx].obtenerElemento());
 
         return this;
     };
@@ -294,9 +297,11 @@ var componenteBucle=function() {
      */
     this.agregarElementos=function(listado) {
         var t=this;
+
         listado.porCada(function(i,elem) {
             t.agregarElemento(elem);
         });
+
         return this;
     };
 

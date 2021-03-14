@@ -1559,7 +1559,7 @@ var componente=new function() {
         if(typeof valor==="undefined") return this.campo.valor();
             
         this.campo.valor(valor);
-        if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
+        //if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
         return this;
     };
 

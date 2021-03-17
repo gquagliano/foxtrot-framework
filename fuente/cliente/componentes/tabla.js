@@ -276,7 +276,6 @@ var componenteTabla=function() {
                 t.filasAutogeneradas[i].forEach(function(fila) {
                     fila.eliminar();
                 });
-                t.filasAutogeneradas.splice(i,1);
             };
 
         if(typeof indice==="number") {
@@ -289,6 +288,7 @@ var componenteTabla=function() {
             if(this.datos.length<this.filasAutogeneradas.length) {
                 for(var i=this.datos.length;i<this.filasAutogeneradas.length;i++)
                     remover(i);
+                this.filasAutogeneradas.splice(this.datos.length);
             }
         }
 

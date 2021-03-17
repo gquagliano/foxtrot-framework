@@ -219,7 +219,6 @@ var componenteBucle=function() {
         },
         remover=function(i) {
             t.itemsAutogenerados[i].eliminar();
-            t.itemsAutogenerados.splice(i,1);
         };
 
         if(typeof indice==="number") {
@@ -232,6 +231,7 @@ var componenteBucle=function() {
             if(this.datos.length<this.itemsAutogenerados.length) {
                 for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
                     remover(i);
+                this.itemsAutogenerados.splice(this.datos.length);
             }
         }
 

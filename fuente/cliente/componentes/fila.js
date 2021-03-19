@@ -14,6 +14,7 @@ var componenteFila=function() {
     "use strict";
 
     this.componente="fila";
+    this.esFlex=true;
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.

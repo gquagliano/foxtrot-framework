@@ -127,7 +127,12 @@ var componenteImagen=function() {
     };
 
     /**
-     * Actualiza el componente.
+     * Actualiza el componente tras la modificación de una propiedad.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @param {*} [valor] - Valor asignado.
+     * @param {string} [tamano="g"] - Tamaño de pantalla.
+     * @param {*} [valorAnterior] - Valor anterior.
+     * @returns {componente}
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)

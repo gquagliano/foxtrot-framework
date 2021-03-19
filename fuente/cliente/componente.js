@@ -74,6 +74,7 @@ var componente=new function() {
     this.listoEjecutado=false;
     this.actualizacionEnCurso=false;
     this.controlador=null;
+    this.esFlex=false;
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -1218,16 +1219,18 @@ var componente=new function() {
             return this;
         }
 
-        if(propiedad=="visibilidad") {            
+        if(propiedad=="visibilidad") {         
+            var nombre=this.esFlex?"flex":"block";
+            
             this.elemento.removerClase(new RegExp("^(visible|invisible)"+claseTamano+"$"))
-                .removerClase(new RegExp("^d"+claseTamano+"-(block|none)$"));
+                .removerClase(new RegExp("^d"+claseTamano+"-("+nombre+"|none)$"));
 
             if(valor=="invisible") {
                 this.elemento.agregarClase("invisible"+claseTamano);
             } else if(valor=="oculto") {
                 this.elemento.agregarClase("d"+claseTamano+"-none");
             } else if(valor=="visible") {
-                this.elemento.agregarClase("d"+claseTamano+"-block visible"+claseTamano);
+                this.elemento.agregarClase("d"+claseTamano+"-"+nombre+" visible"+claseTamano);
             }
             return this;
         }

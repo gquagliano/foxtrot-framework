@@ -383,6 +383,7 @@ li.menu-separador::after {
 .dialogo .dialogo-opciones .btn {
     flex: 0 0 auto;
     margin-left: 10px;
+    text-transform: none;
 }
 .dialogo .dialogo-opciones:empty {
     display: none;

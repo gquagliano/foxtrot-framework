@@ -38,6 +38,8 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
         _desarrollo.'servidor/componentes',
         _desarrollo.'servidor/enrutadores',
         _desarrollo.'servidor/modulos',
+        _desarrollo.'servidor/datos',
+        _desarrollo.'servidor/mysql',
         _desarrollo.'temp',
         _desarrollo.'temp/temp-privado'
     ];

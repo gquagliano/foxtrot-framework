@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * Copyright, 2021, Gabriel Quagliano. Bajo licencia Apache 2.0.
  * 
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
@@ -23,6 +23,9 @@ class foxtrot {
     protected static $bd=null;
     protected static $cli=false;
     protected static $listadoModelos=[];
+    
+    //TODO Hacer configurable.
+    protected static $origenDatos='mysqli';
 
     /**
      * 
@@ -42,6 +45,14 @@ class foxtrot {
      */
     public static function obtenerUrl() {
         return configuracion::$url;
+    }
+
+    /**
+     * Alias de `obtenerUrl()`.
+     * @return string
+     */
+    public static function url() {
+        return self::obtenerUrl();
     }
 
     /**
@@ -91,7 +102,7 @@ class foxtrot {
     }
 
     /**
-     * Alias de obtenerAplicacion().
+     * Alias de `obtenerAplicacion()`.
      * @return \aplicacion
      */
     public static function aplicacion() {
@@ -104,6 +115,14 @@ class foxtrot {
      */
     public static function obtenerAplicacionPublica() {
         return self::$instanciaAplicacionPublico;
+    }
+
+    /**
+     * Alias de `obtenerAplicacionPublica()`.
+     * @return \aplicacion
+     */
+    public static function publica() {
+        return self::obtenerAplicacionPublica();
     }
 
     /**
@@ -167,19 +186,30 @@ class foxtrot {
         include(_servidor.'solicitud.php');
         include(_servidor.'tipo-solicitud.php');
         include(_servidor.'enrutador.php');
-        include(_servidor.'enrutadorAplicacion.php');
+        include(_servidor.'enrutador-aplicacion.php');
+        include(_servidor.'entidad-base.php');
         include(_servidor.'entidad.php');
+        include(_servidor.'modelo-base.php');
         include(_servidor.'modelo.php');
         include(_servidor.'componente.php');
         include(_servidor.'modulo.php');
         include(_servidor.'http.php');
         include(_servidor.'almacenamiento.php');
-        include(_servidor.'controladorEventos.php');
+        include(_servidor.'controlador-eventos.php');
         include(_servidor.'eventos.php');
 
-        //TODO Hacer configurable. En teoría, debería poderse implementar cualquier motor de base de datos o repositorio (archivo, API) implementando clases compatibles con bd
-        include(_servidor.'mysql.php');
-        include(_servidor.'mysql-resultado.php');
+        include(_servidor.'datos/nulo.php');
+        include(_servidor.'datos/bd.php');
+        include(_servidor.'datos/resultado.php');
+        include(_servidor.'datos/constructor.php');
+        include(_servidor.'datos/condicion.php');
+        include(_servidor.'datos/relacion.php');
+
+        include(_servidor.self::$origenDatos.'/bd.php');
+        include(_servidor.self::$origenDatos.'/resultado.php');
+        include(_servidor.self::$origenDatos.'/constructor.php');
+        include(_servidor.self::$origenDatos.'/condicion.php');
+        include(_servidor.self::$origenDatos.'/relacion.php');
 
         include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
         include(_servidor.'enrutadores/enrutadorPredeterminado.php');
@@ -575,18 +605,53 @@ class foxtrot {
         return \util::convertirGuiones(\util::limpiarValor($parte));
     }
 
+    /**
+     * Obtiene y devuelve el nombre, la ruta relativa y la clase a partir de una instancia de un objeto, o `null` si no corresponde.
+     * @param mixed $this Objeto a analizar.
+     * @param string $base Espacio base relativo a `\aplicacion\nombreApl\`.
+     * @return object|null
+     */
+    public static function obtenerDatosClase($obj,$base) {
+        $clase=get_class($obj);
+        
+        $espacio='aplicaciones\\'._apl.'\\'.$base.'\\';        
+        if(!preg_match('#^'.str_replace('\\','\\\\',$espacio).'#',$clase)) return null;
+        $ruta=substr($clase,strlen($espacio));
+
+        $archivo=(new ReflectionClass($obj))->getFileName();
+
+        $partes=\util::separarRuta($ruta);        
+        $nombre=$partes->nombre;
+        $ruta=$partes->ruta;
+        
+        return (object)[
+            'archivo'=>$archivo,
+            'ruta'=>$ruta,
+            'clase'=>$clase,
+            'nombre'=>$nombre
+        ];
+    }
+
     ////Base de datos y modelo de datos
 
     /**
      * Devuelve la instancia de la clase \bd, creándola si es necesario.
-     * @return \bd
+     * @return \datos\bd
      */
-    public static function obtenerInstanciaBd() {
+    public static function obtenerBd() {
         if(!self::$bd) {
-            //El conector cambiará según qué clase `db` esté implementada
-            self::$bd=new bd(true);
+            $clase='\\'.self::$origenDatos.'\\bd';
+            self::$bd=new $clase(true);
         }
         return self::$bd;
+    }
+
+    /**
+     * Alias de `obtenerBd()`.
+     * @return \datos\bd
+     */
+    public static function bd() {
+        return self::obtenerBd();
     }
 
     /**
@@ -600,10 +665,10 @@ class foxtrot {
     /**
      * Crea y deuvelve una instancia de un modelo de datos.
      * @param string $nombre Nombre del modelo a crear.
-     * @param \bd $bd Instancia de la base de datos.
+     * @param \datos\bd $bd Instancia de la base de datos.
      * @return \modelo
      */
-    public static function obtenerInstanciaModelo($nombre,$bd=null) {
+    public static function fabricarModelo($nombre,$bd=null) {
         //Las clases ya fueron incluidas
         
         //Cuando presenten /, cambia su espacio
@@ -616,10 +681,10 @@ class foxtrot {
     /**
      * Crea y deuvelve una instancia de un modelo de datos correspondiente a una entidad.
      * @param string $nombre Nombre de la entidad cuyo modelo se desea crear.
-     * @param \bd $bd Instancia de la base de datos.
+     * @param \datos\bd $bd Instancia de la base de datos.
      * @return \modelo
      */
-    public static function obtenerInstanciaModeloPorEntidad($nombre,$bd=null) {
+    public static function fabricarModeloPorEntidad($nombre,$bd=null) {
         //Las clases ya fueron incluidas
         
         $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
@@ -636,7 +701,7 @@ class foxtrot {
      * @param bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
      * @return \modulo
      */
-    public static function obtenerInstanciaModulo($nombre,$publico=false) {
+    public static function fabricarModulo($nombre,$publico=false) {
         $ruta=_modulos.$nombre.'/'.$nombre.($publico?'.pub':'').'.php';
         if(!file_exists($ruta)) return null;
         include_once($ruta);
@@ -654,7 +719,7 @@ class foxtrot {
      * @param bool $publico Determina si debe devolver la clase pública (true) o la clase privada (false).
      * @return \modulo
      */
-    public static function obtenerInstanciaComponente($nombre,$publico=false) {
+    public static function fabricarComponente($nombre,$publico=false) {
         $ruta=_componentes.$nombre.($publico?'.pub':'').'.php';
         if(!file_exists($ruta)) return null;
         include_once($ruta);
@@ -672,7 +737,7 @@ class foxtrot {
      * @param bool $publico Determina si debe devolver la clase pública (`true`) o privada (`false`).
      * @return \controlador
      */
-    public static function obtenerInstanciaControlador($nombre,$publico=false) {
+    public static function fabricarControlador($nombre,$publico=false) {
         $partes=\util::separarRuta($nombre);
 
         //Los controladores que presenten /, se buscan en el subdirectorio

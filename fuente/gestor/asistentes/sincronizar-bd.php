@@ -63,7 +63,7 @@ class sincronizarBd extends asistente {
     public function ejecutar($param) {        
         $filtrar=$param->modelo;
         $aplicacion=gestor::obtenerNombreAplicacion();
-        $this->bd=foxtrot::obtenerInstanciaBd();
+        $this->bd=foxtrot::obtenerBd();
 
         $this->tablas=[];
         $resultado=$this->bd->consulta('show tables from #__'.configuracion::$nombreBd);
@@ -117,27 +117,27 @@ class sincronizarBd extends asistente {
 
         if($parametros->contrasena) return 'TEXT';
         
-        if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)) {
-            return 'VARCHAR('.$coincidencias[1].') NULL DEFAULT '.$predeterminado;
+        if($tipo=='cadena') {
+            return 'VARCHAR('.$parametros->longitud.') NULL DEFAULT '.$predeterminado;
         }
 
-        if(preg_match('/logico/',$tipo,$coincidencias)) {
+        if($tipo=='logico') {
             return 'TINYINT(1) NOT NULL DEFAULT '.($predeterminado=='1'||$predeterminado=='true'?'1':'0');
         }
         
-        if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
-            $long=$coincidencias[2]?$coincidencias[2]:4;
+        if($tipo=='entero'||$tipo=='entero sin signo') {
+            $long=$parametros->longitud?$parametros->longitud:4;
             $tipos=[1=>'TINYINT',2=>'SMALLINT',3=>'MEDIUMINT',4=>'INT',5=>'INT',6=>'INT',7=>'INT',8=>'BIGINT'];
             return $tipos[$long].'('.$long.')'.
-                (trim($coincidencias[3])=='sin signo'?' UNSIGNED':'').
+                ($tipo=='entero sin signo'?' UNSIGNED':'').
                 ' NULL DEFAULT '.$predeterminado;
         }
 
-        if(preg_match('/decimal\(([0-9\.,]+)\)( sin signo)?/',$tipo,$coincidencias)) {
+        if($tipo=='decimal'||$tipo=='decimal sin signo') {
             //Admite punto o coma
-            $coincidencias[1]=str_replace('.',',',$coincidencias[1]);
+            $coincidencias[1]=str_replace('.',',',$parametros->longitud);
             return 'DECIMAL('.$coincidencias[1].')'.
-                (trim($coincidencias[2])=='sin signo'?' UNSIGNED':'').
+                ($tipo=='decimal sin signo'?' UNSIGNED':'').
                 ' NULL DEFAULT '.$predeterminado;
         }
 
@@ -179,27 +179,28 @@ class sincronizarBd extends asistente {
 
         if($tipo=='texto'&&!preg_match('/text/i',$campoBd->Type)) return false;
         
-        if(preg_match('/cadena\(([0-9]+)\)/',$tipo,$coincidencias)&&!preg_match('/varchar\('.$coincidencias[1].'\)/i',$campoBd->Type)) return false;
+        if($tipo=='cadena'&&!preg_match('/varchar\('.$parametros->longitud.'\)/i',$campoBd->Type)) return false;
         
-        if(preg_match('/entero(\(([0-9]+)\))?( sin signo)?/',$tipo,$coincidencias)) {
-            $long=$coincidencias[2]?$coincidencias[2]:4;
+        if($tipo=='entero'||$tipo=='entero sin signo') {
+            $long=$parametros->longitud?$parametros->longitud:4;
             $tipos=[1=>'tinyint',2=>'smallint',3=>'mediumint',4=>'int',8=>'bigint'];
             if(!preg_match('/^'.$tipos[$long].'/i',$campoBd->Type)||
-                ($coincidencias[2]&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
-                (trim($coincidencias[3])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
+                ($parametros->longitud&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
+                ($tipo=='entero sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
         }
 
-        if(preg_match('/decimal\(([0-9]+)\)( sin signo)?/',$tipo,$coincidencias)&&(
-            !preg_match('/decimal\('.$coincidencias[2].'\)/i',$campoBd->Type)||
-            (trim($coincidencias[2])=='sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))
-        )) return false;
+        if($tipo=='decimal'||$tipo=='decimal sin signo') {
+            $long=str_replace('.',',',$parametros->longitud);
+            if(!preg_match('/decimal\('.$long.'\)/i',$campoBd->Type)||
+                ($tipo=='decimal sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
+        }
 
-        if(preg_match('/logico/',$tipo,$coincidencias)) {
+        if($tipo=='logico') {
             if(!preg_match('/tinyint/i',$campoBd->Type)) return false;
             $predeterminado=$predeterminado!='1'&&$predeterminado!='true'?'0':'1';
         }
 
-        if(preg_match('/fecha/',$tipo,$coincidencias)&&!preg_match('/datetime/i',$campoBd->Type)) return false;
+        if($tipo=='fecha'&&!preg_match('/datetime/i',$campoBd->Type)) return false;
         
         if($predeterminado!==$campoBd->Default) return false;
 
@@ -207,7 +208,7 @@ class sincronizarBd extends asistente {
     }
 
     protected function procesar($clase) {
-        $tabla=configuracion::$prefijoBd.$clase->obtenerNombreTabla();
+        $tabla=configuracion::$prefijoBd.$clase->obtenerTabla();
 
         $camposEntidad=$clase->obtenerCampos();
         

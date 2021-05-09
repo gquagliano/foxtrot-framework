@@ -1,58 +1,52 @@
 <?php
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * Copyright, 2021, Gabriel Quagliano. Bajo licencia Apache 2.0.
  * 
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
- * @version 1.0
+ * @version 1.1
  */
+
+namespace mysqli;
 
 defined('_inc') or exit;
 
 /**
  * Gestor/iterador de resultados de consultas a la base de datos.
  */
-class resultado {
+class resultado extends \datos\resultado {
 	protected $r=null;
 	protected $stmt=false;
 	protected $columnas=[];
-
-	var $filas=0;
-
 	protected $indice=0;
 	protected $filasIgnoradas=[];
 
     /**
-     * 
+     * @var array $variables Almacena el índice dentro de `$asignaciones` donde está almacenado el valor de cada variable.
+     * @var array $asignaciones Valores asignados a la consulta preparada.
      */
-	function __destruct() {
-		//if(!$this->r) return;
-		//if($this->stmt) $this->r->free_result(); else $this->r->free();
-	}
+	public $asignaciones=[];
+	public $variables=[];
 
     /**
      * Establece el objeto resultado con el que se va a trabajar.
-	 * @param mysqli_result $r
-	 * @return resultado
+	 * @param \mysqli_result $r
+	 * @return \mysqli\resultado
      */
 	public function establecer($r) {
-		$this->stmt=null;
+		$this->stmt=false;
 		$this->r=$r;
-
-		$this->filas=$r->num_rows;
 
 		return $this;
 	}
 
     /**
-     * Establece el objeto STMT con el que se va a trabajar.
-	 * @param mysqli_stmt $r
-	 * @return resultado
+     * Establece la sentencia con la que se va a trabajar.
+	 * @param \mysqli_stmt $r
+	 * @return \mysqli\resultado
      */
 	public function establecerStmt($r) {
 		$this->stmt=true;
 		$this->r=$r;
-
-		$this->filas=$r->num_rows;
 
 		$this->r->store_result();
 		$md=$this->r->result_metadata();
@@ -64,6 +58,24 @@ class resultado {
 		}
 
 		return $this;
+	}
+
+    /**
+     * Destruye el resultado o la sentencia preparada.
+	 * @return \datos\resultado
+     */
+	public function liberar() {
+		if($this->stmt) @$this->r->close();
+		$this->r=null;
+		return $this;
+	}
+
+	/**
+	 * Devuelve la sentencia actual.
+	 * @return \mysqli_stmt
+	 */
+	public function obtenerStmt() {
+		return $this->r;
 	}
 
     /**
@@ -116,42 +128,17 @@ class resultado {
     /**
      * Mueve el puntero al número de fila especificado.
 	 * @param int $numero Número de fila de destino.
-	 * @return resultado
+	 * @return \mysqli\resultado
      */
 	public function irA($numero) {
 		$this->indice=$numero;
 		$this->r->data_seek($numero);
 		return $this;
 	}
-
-    /**
-     * Devuelve el primer resultado, moviendo el puntero (vuelve al comienzo y avanza la posición al segundo resultado).
-	 * @return object|null
-     */
-	public function primero() {
-		$this->irA(0);
-		return $this->siguiente();
-	}
-
-    /**
-     * Mueve el puntero al primer resultado (alias de `irA(0)`).
-	 * @return resultado
-     */
-	public function rebobinar() {
-		return $this->irA(0);
-	}
-
-    /**
-     * Devuelve la fila actual como objeto y avanza el resultado (alias de `aObjeto()`.)
-	 * @return resultado
-     */
-	function siguiente() {
-		return $this->aObjeto();
-	}
 	
 	/**
 	 * Remueve la última fila recuperada del set de resultados actual.
-	 * @return resultado
+	 * @return \mysqli\resultado
 	 */
 	function remover() {
 		//En realidad utilizamos una bandera para ignorar la fila la próxima vez que se solicite
@@ -165,6 +152,18 @@ class resultado {
      */
     public function obtenerNumeroFilas() {
         if(!$this->r) return 0;
+		if($this->stmt) $this->r->store_result();
+		if($this->r->affected_rows>=0) return $this->r->affected_rows;
         return $this->r->num_rows;
     }
+    
+    /**
+     * Devuelve el ID insertado.
+	 * @return int
+     */
+    public function obtenerId() {
+		if(!$this->r) return null;
+		if($this->stmt) $this->r->store_result();
+		return $this->r->insert_id;
+	}
 }

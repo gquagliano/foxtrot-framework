@@ -29,12 +29,12 @@ class enrutador {
         $this->tipos=[
             'foxtrot',
             'recurso',
-            'pagina',
             'controlador',
             'aplicacion',
             'componente',
             'modulo',
-            'vista'
+            'vista',
+            'pagina'
         ];
         foreach($this->tipos as $tipo) {
             include_once(_servidor.'enrutadores/tipos/'.$tipo.'.php');

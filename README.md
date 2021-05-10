@@ -11,7 +11,7 @@ Foxtrot es un framework de desarrollo rápido de aplicaciones web y móviles, co
 
 Tenemos el compromiso de crear **un framework que no sea como todos los demás**, uno que **no sobrecargue** ni al sistema, ni al equipo del usuario, ni la cabeza del programador. Uno que prácticamente **no requiera configuración**, sea **super-fácil** de usar y que esté escrito en **lenguaje casi-humano**.
 
-Es importante también **promover adecuado aprendizaje y escritura de código PHP y (especialmente) JavaScript**, entendiendo y empoderando el correcto uso de clases (PHP) y del prototipo (JavScript) sobre cualquier otro patrón. Es por eso que en Foxtrot **no hay *pseudo-clases* ni un DOM virtual**, solo utilidades para abreviar y automatizar los mecanismos más frecuentes y muchas, muchas utilidades.
+Es importante también **promover adecuado aprendizaje y escritura de código PHP y (especialmente) JavaScript**, entendiendo y empoderando el correcto uso de clases (PHP) y del prototipo (JavScript) sobre cualquier otro patrón. Es por eso que en Foxtrot **no hay *pseudo-clases* ni un DOM virtual**, solo *(muchas, muchas)* utilidades para abreviar y automatizar los mecanismos más frecuentes de la interacción entre el usuario y la interfaz, y entre el cliente y el servidor.
 
 **¿Qué es? ¿Por qué se desarrolla? ¿Dónde está la documentación? 👉 [Accedé al Wiki](https://github.com/gquagliano/foxtrot-framework/wiki)** (en redacción).
 

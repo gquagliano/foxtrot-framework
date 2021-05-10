@@ -169,7 +169,7 @@ function expresion(expr) {
 
         return new Function(
             //Variables locales
-            "obj","objeto","controlador","componente","componentes","valor","val","args",
+            "obj","objeto","item","controlador","componente","componentes","valor","val","args",
             //
 "\"use strict\"; \
 /*Algunas constantes útiles*/ \
@@ -188,7 +188,7 @@ try { \
     return null; \
 }")
             //Valores de las variables locales
-            (this.objeto,this.objeto,this.controlador,this.componente,this.componentes,this.valor,this.valor,this.this);
+            (this.objeto,this.objeto,this.objeto,this.controlador,this.componente,this.componentes,this.valor,this.valor,this.this);
     };     
 
     /**

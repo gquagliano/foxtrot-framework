@@ -79,9 +79,10 @@ class gestor {
         
         if(count(self::$aplicaciones)) {
             $aplicacion=$_SESSION['_gestorAplicacion'];
-            if(!$aplicacion||!in_array($aplicacion,self::$aplicaciones)) $aplicacion=$_SESSION['_gestorAplicacion']=self::$aplicaciones[0];
+            
+            if(!$aplicacion||!in_array($aplicacion,self::$aplicaciones)) self::seleccionarAplicacion(self::$aplicaciones[0]);
 
-            define('_gestorAplicacion',$aplicacion);
+            define('_gestorAplicacion',$_SESSION['_gestorAplicacion']);
             self::$aplicacion=$_SESSION['_gestorAplicacion'];
 
             foxtrot::cargarAplicacion(_gestorAplicacion);

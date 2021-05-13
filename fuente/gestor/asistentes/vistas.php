@@ -59,7 +59,7 @@ class vistas extends asistente {
     private function eliminarDirVacio($dir) {        
         while(1) {            
             $archivos=glob($dir.'/*');
-            if(!count($archivos)) {
+            if(!count($archivos)&&is_dir($dir)) {
                 rmdir($dir);
                 //Subir un nivel y eliminar también si está vacío
                 $dir=dirname($dir);

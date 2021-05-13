@@ -85,14 +85,15 @@ class entidadBase {
 
     /**
      * Procesa los campos relacionales de esta instancia.
+     * @param bool $actualizar Solo si es `true` se volverán a procesar los campos que ya tengan su valor asignado.
      * @return \entidadBase
      */
-    public function procesarRelaciones() {
+    public function procesarRelaciones($actualizar=false) {
         foreach(static::obtenerCampos() as $campo) {
             $propiedad=$campo->nombre;
             $columna=$campo->campo;
 
-            if(!$campo->relacional||$this->$propiedad) continue;
+            if(!$campo->relacional||($this->$propiedad&&!$actualizar)) continue;
 
             if($campo->entidad) {
                 $modelo=\foxtrot::fabricarModeloPorEntidad($campo->entidad);

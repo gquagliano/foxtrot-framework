@@ -24,7 +24,7 @@ class controlador extends \tipoSolicitud {
     public function ejecutar() {
         $controlador=$this->obtenerControlador();
 
-        $obj=\foxtrot::obtenerInstanciaControlador($controlador,true);        
+        $obj=\foxtrot::fabricarControlador($controlador,true);        
         if(!$obj) return $this->error();
 
         $this->ejecutarMetodo($obj,$this->obtenerMetodo());        

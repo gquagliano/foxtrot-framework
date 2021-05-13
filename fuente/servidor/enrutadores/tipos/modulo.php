@@ -24,7 +24,7 @@ class modulo extends \tipoSolicitud {
     public function ejecutar() {
         $modulo=$this->obtenerModulo();
 
-        $obj=\foxtrot::obtenerInstanciaModulo($modulo,true);
+        $obj=\foxtrot::fabricarModulo($modulo,true);
         if($obj===null) return $this->error();
 
         $this->ejecutarMetodo($obj,$this->obtenerMetodo());

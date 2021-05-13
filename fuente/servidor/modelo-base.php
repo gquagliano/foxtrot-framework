@@ -354,18 +354,20 @@ class modeloBase {
     /**
      * Establece los valores para la operación de inserción o actualización. Solo se considerarán aquellas propiedades cuyo valor no sea
      * `null` (además de ser válidas).
-     * @param object|array|\entidadBase $valores Valores como objeto, array asociativo o instancia de una entidad.
+     * @param object|array|\entidadBase $valores Valores como objeto, array asociativo o instancia de una entidad. Cuando se especifique una
+     * instancia de la entidad, *siempre* se reemplazarán los valores previos (independientemente del valor de `$reemplazar`).
      * @param bool $reemplazar Si es `false`, actualizará los valores asignados previamente.
      * @return \modeloBase
      */
     public function establecerValores($valores,$reemplazar=false) {
-        if(is_object($valores)&&is_subclass_of($valores,entidad::class))
-            $valores=$valores->obtenerObjeto();
+        if(is_object($valores)&&is_subclass_of($valores,entidad::class)) {
+            $this->valores=$valores;
+            return $this;
+        }
 
         if(is_array($valores)) $valores=(object)$valores;
 
-        if(!$this->valores||is_subclass_of($valores,entidad::class)||$reemplazar)
-            $this->valores=$this->fabricarEntidad();
+        if(!$this->valores||$reemplazar) $this->valores=$this->fabricarEntidad();
 
         foreach($this->campos as $nombre=>$campo) {
             if(isset($valores->$nombre)) $this->valores->$nombre=$valores->$nombre;
@@ -578,15 +580,6 @@ class modeloBase {
         if($item->__cantidad) return $item->__cantidad;
 
         return $this->cantidadFilas;
-    }
-
-    /**
-     * Guarda los valores actualmente asignados. Actualizará o creará el registro según esté asignada o no el campo `id`.
-     * @return \modeloBase
-     */
-    public function guardar() {
-        if($this->valores&&$this->valores->id) return $this->actualizar();
-        return $this->crear();
     }
 
     /**

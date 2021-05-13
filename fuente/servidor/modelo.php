@@ -32,6 +32,15 @@ class modelo extends modeloBase {
     }
 
     /**
+     * Guarda los valores actualmente asignados. Actualizará o creará el registro según esté asignada o no el campo `id`.
+     * @return \modeloBase
+     */
+    public function guardar() {
+        if($this->valores&&$this->valores->id) return $this->actualizar();
+        return $this->crear();
+    }
+
+    /**
      * Agrega une condición `O` (`OR`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */

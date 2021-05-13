@@ -90,7 +90,7 @@ class entidadBase {
     public function procesarRelaciones() {
         foreach(static::obtenerCampos() as $campo) {
             $propiedad=$campo->nombre;
-            $columna=$campo->columna;
+            $columna=$campo->campo;
 
             if(!$campo->relacional||$this->$propiedad) continue;
 
@@ -228,6 +228,7 @@ class entidadBase {
 
                     $campos->$propiedad->$etiqueta=$valor;
                 }
+                if(!$campos->$propiedad->campo&&$campos->$propiedad->columna) $campos->$propiedad->campo=$campos->$propiedad->columna;
                 if($campos->$propiedad->tipo=='relacional') $campos->$propiedad->relacional=true;
             }
         }

@@ -1061,7 +1061,7 @@ class modeloBase {
                 $tipo=self::relacion1N;
             }
             
-            $this->agregarRelacion($tipo,$modelo,$alias,$campo->campo?$campo->campo:$campo->columna,'id');
+            $this->agregarRelacion($tipo,$modelo,$alias,$campo->campo,'id');
 
             $this->relaciones[]=(object)[
                 'modelo'=>$modelo,

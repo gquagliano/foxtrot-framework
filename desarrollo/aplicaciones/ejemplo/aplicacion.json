@@ -1,5 +1,9 @@
 {
     "vistas": {
+        "inicio": {
+            "tipo": "independiente",
+            "cliente": "web"
+        }
     },
     "tema": "sistema"
 }

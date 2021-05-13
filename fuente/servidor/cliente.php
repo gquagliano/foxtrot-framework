@@ -15,6 +15,7 @@ class cliente {
     protected $controlador;
     protected $esAplicacion=false;
     protected static $responderCrudo=false;
+    protected static $formatearSalida=false;
 
     /**
      * Constructor.
@@ -34,6 +35,14 @@ class cliente {
     }
 
     /**
+     * Activa o desactiva el formateo de la respuesta, para depuración, en las respuestas web.
+     * @param bool $activar Activar o desactivar la opción.
+     */
+    public static function establecerFormatearSalida($activar=true) {
+        self::$formatearSalida=$activar;
+    }
+
+    /**
      * Establece que la instancia del cliente es para comunicación, por defecto, con el controlador de aplicación.
      * @return \cliente
      */
@@ -49,14 +58,18 @@ class cliente {
     public static function responder($data) {
         if(!\foxtrot::esCli()) {
             //Web
+
+            $opc=0;
+            if(self::$formatearSalida) $opc=JSON_PRETTY_PRINT;
+
             if(self::$responderCrudo) {
                 //Crudo (raw)
-                $salida=json_encode($data);
+                $salida=json_encode($data,$opc);
             } else {
                 //Cliente de Foxtrot
                 $salida=json_encode([
                     'r'=>$data
-                ]);
+                ],$opc);
             }            
             header('Content-length: '.strlen($salida),true);
             echo $salida;

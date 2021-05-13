@@ -679,6 +679,21 @@ class foxtrot {
     }
 
     /**
+     * Crea y deuvelve una instancia de una entidad del modelo de datos.
+     * @param string $nombre Nombre de la entidad a crear.
+     * @return \entidad
+     */
+    public static function fabricarEntidad($nombre) {
+        //Las clases ya fueron incluidas
+        
+        //Cuando presenten /, cambia su espacio
+        $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
+        if(!class_exists($clase)) return null;
+
+        return new $clase;
+    }
+
+    /**
      * Crea y deuvelve una instancia de un modelo de datos correspondiente a una entidad.
      * @param string $nombre Nombre de la entidad cuyo modelo se desea crear.
      * @param \datos\bd $bd Instancia de la base de datos.

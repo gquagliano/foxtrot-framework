@@ -2,25 +2,25 @@
 
 ## Configuración
 
-1. Si aún no fue construído, construir el framework. Ver [Primeros pasos](https://github.com/gquagliano/foxtrot-framework/wiki/Primeros-pasos)
+1. Si aún no fue construído, construir el framework. Ver [Primeros pasos](https://github.com/gquagliano/foxtrot-framework/wiki/Primeros-pasos).
 
 2. Configurar las credenciales y el nombre de la base de datos en el archivo `config.php` de esta aplicación (`/desarrollo/aplicaciones/ejemplo/config.php`).
 
-3. Completar la configuración general del framework, si aún no fue hecho (`/desarrollo/config.php`; ver documentación en el mismo código), y establecer el dominio a utilizar para esta aplicación, por ejemplo:
-
-    $dominios=[
-        'localhost'=>'ejemplo'
-    ];
+3. Completar la configuración general del framework, si aún no fue hecho (`/desarrollo/config.php`; ver documentación en el mismo código), y establecer el dominio a utilizar para esta aplicación, por ejemplo:  
+  
+        $dominios=[
+            'localhost'=>'ejemplo'
+        ];
 
 4. Ingresar al gestor de aplicaciones, seleccionar la aplicación `ejemplo` y construir la base de datos mediante el comando ![](img/gestor/sincronizar.png) *Sincronizar base de datos*. Ver [Gestor de aplicaciones](https://github.com/gquagliano/foxtrot-framework/wiki/Gestor-de-aplicaciones).
 
 ## Qué ver
 
-### Ejemplos de uso del ORM
+### Definición del modelo de datos (ORM)
 
 Ver código fuente de los archivos en `servidor/modelo/` de esta aplicación.
 
-### Demostración de un API REST
+### Demostración de un API REST con ejemplos de uso del ORM
 
 Ingresar en `http://localhost/foxtrot-framework/desarrollo/api/pruebas/demostracionORM` (ajustar la URL según corresponda a la instalación de Foxtrot).
 

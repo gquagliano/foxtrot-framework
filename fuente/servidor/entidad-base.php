@@ -43,13 +43,15 @@ class entidadBase {
      * Asigna los valores a las propiedades de la instancia.
      * @param array|object $objeto Objeto u array asociativo de valores.
      * @param bool $aceptarPrivados Solo si es `true`, se admitirá la asignación de propiedades privadas (`@privado`).
+     * @param bool $soloPublicos Si es `true`, únicamente se procesarán los campos públicos (`@publico`).
      * @return \entidadBase
      */
-    public function asignarObjeto($objeto,$aceptarPrivados=false) {
+    public function asignarObjeto($objeto,$aceptarPrivados=false,$soloPublicos=false) {
         if(is_array($objeto)) $objeto=(array)$objeto;
 
         foreach(static::obtenerCampos() as $campo) {
-            if($campo->privado&&!$aceptarPrivados) continue;
+            if(($campo->privado&&!$aceptarPrivados)||
+                (!$campo->publico&&$soloPublicos)) continue;
 
             $propiedad=$campo->nombre;
 
@@ -176,8 +178,7 @@ class entidadBase {
         $campos=(object)[
             'id'=>(object)[
                 'nombre'=>'id',
-                'tipo'=>'entero sin signo',
-                'publico'=>true
+                'tipo'=>'entero sin signo'
             ],
             'e'=>(object)[
                 'nombre'=>'e',

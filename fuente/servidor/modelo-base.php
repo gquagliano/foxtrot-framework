@@ -357,9 +357,10 @@ class modeloBase {
      * @param object|array|\entidadBase $valores Valores como objeto, array asociativo o instancia de una entidad. Cuando se especifique una
      * instancia de la entidad, *siempre* se reemplazarán los valores previos (independientemente del valor de `$reemplazar`).
      * @param bool $reemplazar Si es `false`, actualizará los valores asignados previamente.
+     * @param bool $soloPublicos Si es `true`, únicamente se procesarán los campos públicos (es decir, que presenten `@publico`).
      * @return \modeloBase
      */
-    public function establecerValores($valores,$reemplazar=false) {
+    public function establecerValores($valores,$reemplazar=false,$soloPublicos=false) {
         if(is_object($valores)&&is_subclass_of($valores,entidad::class)) {
             $this->valores=$valores;
             return $this;
@@ -370,6 +371,8 @@ class modeloBase {
         if(!$this->valores||$reemplazar) $this->valores=$this->fabricarEntidad();
 
         foreach($this->campos as $nombre=>$campo) {
+            if($soloPublicos&&!$campo->publico) continue;
+            
             if(isset($valores->$nombre)) $this->valores->$nombre=$valores->$nombre;
         }
 
@@ -377,9 +380,10 @@ class modeloBase {
     }
 
     /**
-     * Establece los valores para la operación de inserción o actualización. Solo se considerarán aquellas propiedades *públicas* (es decir,
-     * que presenten `@publico` y cuyo valor no sea `null` (además de ser válidas). Este método debe utilizarse cuando se reciban valores
-     * desde el cliente.
+     * Establece los valores para la operación de inserción o actualización, considerando únicamente los campos que sean válidos, públicos (es
+     * decir, que presenten `@publico`) y cuyo valor no sea `null`. Este método debe utilizarse cuando se reciban valores
+     * desde el cliente. Nótese que, a diferencia de `establecerValores()`, si se especifica una instancia de una entidad, solo se tomarán
+     * sus valores (no se preservará la instancia provista).
      * @param object|array|\entidadBase $valores Valores como objeto, array asociativo o instancia de una entidad.
      * @param bool $reemplazar Si es `false`, actualizará los valores asignados previamente.
      * @return \modeloBase
@@ -387,17 +391,7 @@ class modeloBase {
     public function establecerValoresPublicos($valores,$reemplazar=false) {
         if(is_object($valores)&&is_subclass_of($valores,entidad::class))
             $valores=$valores->obtenerObjeto();
-
-        if(is_array($valores)) $valores=(object)$valores;
-
-        if(!$this->valores||is_subclass_of($valores,entidad::class)||$reemplazar)
-            $this->valores=$this->fabricarEntidad();
-
-        foreach($this->campos as $nombre=>$campo) {
-            if(isset($valores->$nombre)) $this->valores->$nombre=$valores->$nombre;
-        }
-
-        return $this;
+        return $this->establecerValores($valores,$reemplazar,true);
     }
 
     ////Acciones

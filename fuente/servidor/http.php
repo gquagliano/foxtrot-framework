@@ -43,23 +43,23 @@ class http {
 
     /**
      * Realiza una solicitud HTTP y devuelve el cuerpo de la respuesta
-     * @var string $tipo Tipo de solicitud, 'get' o 'post'.
+     * @var string $tipo Tipo de solicitud, `'get'` o `'post'`.
      * @var string $url URL.
-     * @var array $campos Array asociativo de campos.
+     * @var array|string $campos Array asociativo de campos o cuerpo crudo (cadena) de la solicitud `POST`.
      * @var array $encabezados Array de encabezados adicionales.
      * @var array $opciones Array de opciones de CURL adicionales.
      * @var bool $mantener Si es true, no se cerrará la instancia de CURL luego de realizar la solicitud.
      * @return string|bool
      */
-    protected static function solicitud($tipo,$url,$campos,$encabezados=null,$opciones=null,$mantener=false) {			
+    protected static function solicitud($tipo,$url,$campos=null,$encabezados=null,$opciones=null,$mantener=false) {			
         if(!self::$curlAbierto) self::$curl=curl_init();
         self::$curlAbierto=true;
 
         if(!is_array($opciones)) $opciones=[];
-        if(!is_array($campos)) $campos=[];
+        if(!is_array($campos)&&!is_string($campos)) $campos=[];
         if(!is_array($encabezados)) $encabezados=[];
 
-        if(count($campos)) {
+        if(is_array($campos)) {
             $campos=http_build_query($campos);
 
             if($tipo=='get') {
@@ -74,10 +74,11 @@ class http {
             CURLOPT_POST=>$tipo=='post',
             CURLOPT_RETURNTRANSFER=>true,
             CURLOPT_POSTFIELDS=>$tipo=='post'?$campos:null,
-            CURLOPT_HTTPHEADER=>$encabezados
+            CURLOPT_HTTPHEADER=>$encabezados,
+            CURLOPT_HTTP_VERSION=>CURL_HTTP_VERSION_1_1
         ];
         foreach($opciones as $clave=>$valor) $arrayOpciones[$clave]=$valor;
-
+        
         curl_setopt_array(self::$curl,$arrayOpciones);
 
         $res=curl_exec(self::$curl);
@@ -97,7 +98,7 @@ class http {
     /**
      * Realiza una solicitud HTTP GET y devuelve el cuerpo de la respuesta
      * @var string $url URL.
-     * @var array $campos Array asociativo de campos.
+     * @var array|string $campos Array asociativo de campos o cuerpo crudo (como cadena).
      * @var array $encabezados Array de encabezados adicionales.
      * @return string|bool
      */

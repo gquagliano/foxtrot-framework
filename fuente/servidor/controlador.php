@@ -42,7 +42,7 @@ class controlador {
         $nombre=$ruta.$nombre;
 
 		//Si es una clase pública, asignar instancia de la versión privada en $privado
-    	if($this->publica) $this->privado=\foxtrot::obtenerInstanciaControlador($nombre);
+    	if($this->publica) $this->privado=\foxtrot::fabricarControlador($nombre);
 
         //Inicializar comunicación con el cliente
         if(!$this->cliente) $this->cliente=new cliente();

@@ -1,3 +1,5 @@
 *
 !.gitignore
-!aplicaciones/ejemplo
+!/aplicaciones
+!/aplicaciones/ejemplo
+!/aplicaciones/ejemplo/**

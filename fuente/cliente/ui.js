@@ -1777,15 +1777,23 @@ var ui=new function() {
             //Exportar a global
             window.controlador=obj;
             
-            //Evento
-            if(principal) {
-                //Al cargar la vista principal el evento Listo es invocado en todo el sistema
-                this.evento("listo");
+            //Evento 'listo'
+            var listo=function() {
+                if(principal) {
+                    //Al cargar la vista principal el evento Listo es invocado en todo el sistema
+                    ui.evento("listo");
+                } else {
+                    //Al cargar una vista secundaria, solo en la misma
+                    ui.eventoComponentes(obj.obtenerComponentes(),"listo");
+                    obj.listo();
+                }
+            };
+            if(esCordova) {                
+                document.addEventListener("deviceready",listo,false);
             } else {
-                //Al cargar una vista secundaria, solo en la misma
-                this.eventoComponentes(obj.obtenerComponentes(),"listo");
-                obj.listo();
-            }            
+                listo();
+            }
+
             //Ejecutar un evento 'tamaño' para que, en caso de que la vista requiera realizar un ajuste inicial en base al tamaño de pantalla, no deba realizarlo
             //necesariamente en 'listo'
             var tamano=ui.obtenerTamano();
@@ -1859,12 +1867,21 @@ var ui=new function() {
         tamanoActual=ui.obtenerTamano();
         body.agregarClase("tamano-"+this.obtenerTamano());
 
-        //El evento Listo en los componentes se ejecuta incluso en modo edición
-        this.eventoComponentes(null,"listo");
+        var listo=function() {
+            //El evento Listo en los componentes se ejecuta incluso en modo edición
+            ui.eventoComponentes(null,"listo");
+        };
 
         if(esCordova) {
             var contenedor=doc.querySelector("#contenedor-cordova");
             if(contenedor) contenedor.agregarClase("listo");
+            
+            document.addEventListener("deviceready",function() {
+                console.log("dr");
+                listo();
+            },false);
+        } else {
+            listo();
         }
 
         return this;

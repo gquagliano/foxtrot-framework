@@ -114,14 +114,67 @@ var moduloFirebase=function() {
     };
 
     /**
-     * Inicializa y autoriza notificaciones Push a través de FCM (Firebase Cloud Messaging).
+     * Inicializa y autoriza notificaciones Push a través de FCM (Firebase Cloud Messaging) en aplicaciones Cordova.
+     * @param {Object} opciones - Opciones.
+     * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro la clave o *token*.
+     * @param {function} [opciones.error] - Función de retorno en caso de error o cancelación de la solicitud.
+     * @parma {function} [opciones.notificacion] - Función de retorno al recibir una notificación.
+     * @returns {moduloFirebase}
+     */
+    this.notificacionesCordova=function(opciones) {
+        //cordova-plugin-firebase-messaging
+
+        opciones=Object.assign({
+            retorno:null,
+            error:null,
+            notificacion:null
+        },opciones);
+
+        if(!ui.esCordova()) return this;
+
+        if(typeof cordova.plugins.firebase!="object") {
+            if(opciones.error) opciones.error(null);
+            return this;
+        }
+
+        var obtenerToken=function() {
+            cordova.plugins.firebase.messaging.getToken().then(function(token) {
+                if(opciones.retorno) opciones.retorno(token);
+            })
+            .catch(function(error) {
+                if(opciones.error) opciones.error(error);
+            });
+        };
+
+        cordova.plugins.firebase.messaging
+            .requestPermission({forceShow:true})
+            .then(function() {
+                obtenerToken();
+            })
+            .catch(function(error) {
+                if(opciones.error) opciones.error(error);
+            });
+
+        cordova.plugins.firebase.messaging.onTokenRefresh(function() {
+            obtenerToken();
+        });
+
+        cordova.plugins.firebase.messaging.onBackgroundMessage(function(datos) {
+            if(opciones.notificacion) opciones.notificacion(datos);
+        });
+
+        return this;
+    };
+
+    /**
+     * Inicializa y autoriza notificaciones Push a través de FCM (Firebase Cloud Messaging) en el navegador web de escritorio o móvil.
      * @param {Object} opciones - Opciones.
      * @param {string} [opciones.clave] - Clave pública. Si se omite, se utilizará el parámetro `vapid` de la configuración inicial del módulo.
      * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro la clave o *token*.
      * @param {function} [opciones.error] - Función de retorno en caso de error o cancelación de la solicitud.
      * @returns {moduloFirebase}
      */
-    this.notificaciones=function(opciones) {
+    this.notificacionesWeb=function(opciones) {
         opciones=Object.assign({
             clave:this.configuracion.vapid,
             retorno:null,
@@ -163,6 +216,8 @@ var moduloFirebase=function() {
 
         return this;
     };
+
+    //TODO Comprobar autorización, desuscribir    
 };
 
 ui.registrarModulo("firebase",moduloFirebase);

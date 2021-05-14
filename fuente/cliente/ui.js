@@ -1882,6 +1882,10 @@ var ui=new function() {
             listo();
         }
 
+        //Simular Cordova (integración con el gestor de aplicaciones)
+        if(esCordova&&localStorage.getItem("_simularCordova"))
+            document.dispatchEvent(new Event("deviceready"));
+
         return this;
     };
 }();

@@ -209,6 +209,7 @@ class construirCordova extends asistente {
         $json=gestor::obtenerJsonAplicacion();
         $json->embebible=[
             'inicio'=>$param->inicio,
+            'modulos'=>$param->modulos,
             'cordova'=>[
                 'www'=>$param->www,
                 'plataforma'=>$param->plataforma,

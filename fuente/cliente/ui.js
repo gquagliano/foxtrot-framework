@@ -1876,10 +1876,7 @@ var ui=new function() {
             var contenedor=doc.querySelector("#contenedor-cordova");
             if(contenedor) contenedor.agregarClase("listo");
             
-            document.addEventListener("deviceready",function() {
-                console.log("dr");
-                listo();
-            },false);
+            document.addEventListener("deviceready",listo,false);
         } else {
             listo();
         }

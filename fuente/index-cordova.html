@@ -16,7 +16,8 @@ Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
         <script>
         //// Configuración
         var _nombreApl="",              //Nombre de la aplicación
-            _vistaInicial="";    //Nombre de archivo de la vista inicial
+            _vistaInicial="",           //Nombre de archivo de la vista inicial
+            _simular=false;             //Determina si se trata de una simulación de Cordova desde el gestor de aplicaciones
         ////
 
         window.onload=function() {
@@ -25,6 +26,7 @@ Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
             if(h.indexOf("?")>0) h=h.substring(0,h.indexOf("?"));
             urlBase=h.substr(0,h.lastIndexOf("/")+1);
             localStorage.setItem("_urlBase",urlBase);
+            localStorage.setItem("_simularCordova",_simular);
             window.location.href="aplicaciones/"+_nombreApl+"/cliente/vistas/"+_vistaInicial;
         };
         </script>

@@ -1528,8 +1528,9 @@ var ui=new function() {
                         return;
                     }
 
-                    if(self.obtenerDialogoAbierto()) {
-                        ui.cerrarDialogo();
+                    var dialogo=self.obtenerDialogoAbierto();
+                    if(dialogo) {
+                        if(!dialogo.param.modal) ui.cerrarDialogo();
                         return;
                     }
 

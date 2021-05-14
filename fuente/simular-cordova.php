@@ -11,7 +11,9 @@ $html=file_get_contents(__DIR__.'/index-cordova.html');
 echo preg_replace([
     '/_nombreApl=".*?"/',
     '/_vistaInicial=".*?"/',
+    '/_simular=(true|false)/'
 ],[
     '_nombreApl="'.$_REQUEST['aplicacion'].'"',
-    '_vistaInicial="'.$_GET['vista'].'.html"'
+    '_vistaInicial="'.$_GET['vista'].'.html"',
+    '_simular=true'
 ],$html);

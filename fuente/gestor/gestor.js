@@ -12,7 +12,7 @@
 /**
  * @class Gestor de aplicaciones.
  */
-var gestor=new function() {
+ var gestor=new function() {
     "use strict";
 
     var t=this,
@@ -355,6 +355,15 @@ var gestor=new function() {
      */
     this.aceptarConstruirEmbebible=function() {
         this.procesarAsistente("construir-cordova","dialogo-construir-embebible");
+    };
+
+    /**
+     * Procesa la selección del desplegable "Plataforma" del diálogo de construir embebible.
+     * @param {Node} elem - Elemento desplegable.
+     */
+    this.plataformaSeleccionada=function(elem) {
+        var valor=elem.valor();
+        document.querySelector("#dialogo-construir-embebible [name='destino']").propiedad("disabled",valor=="electron");
     };
 
     /**

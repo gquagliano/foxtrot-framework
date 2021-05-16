@@ -46,7 +46,11 @@ class construirCordova extends asistente {
                 <div class="form-group row">
                     <label class="col-3 col-form-label">Plataforma</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" name="plataforma" value="<?=$json->embebible->cordova->plataforma?>">
+                        <select class="custom-select" name="plataforma" onchange="gestor.plataformaSeleccionada(this)">
+                            <option <?=!$json->embebible->cordova->plataforma||$json->embebible->cordova->plataforma=='android'?'selected':''?>>android</option>
+                            <option <?=$json->embebible->cordova->plataforma=='ios'?'selected':''?>>ios</option>
+                            <option <?=$json->embebible->cordova->plataforma=='electron'?'selected':''?>>electron</option>
+                        </select>
                     </div>
                 </div>
                 <div class="custom-control custom-checkbox">
@@ -67,7 +71,8 @@ class construirCordova extends asistente {
                 <input type="checkbox" class="custom-control-input" name="ejecutar" checked id="ce-ejecutar" checked>
                 <label class="custom-control-label" for="ce-ejecutar">Ejecutar en </label>
             </div>
-            <input type="text" class="form-control ml-2 form-control-sm" name="destino" value="<?=$json->embebible->cordova->destino?>">
+            <input type="text" class="form-control ml-2 form-control-sm" name="destino" value="<?=$json->embebible->cordova->destino?>"
+                <?=$json->embebible->cordova->plataforma=='electron'?'disabled':''?>>
             <em class="d-inline-block ml-2">(Opcional si hay solo un dispositivo conectado)</em>
         </div>
         <div class="custom-control custom-checkbox">
@@ -82,13 +87,21 @@ class construirCordova extends asistente {
             <input type="checkbox" class="custom-control-input" name="limpiar" id="ce-limpiar">
             <label class="custom-control-label" for="ce-limpiar">Limpiar directorios de salida (<em>&iexcl;Incluso <code>www</code>!</em>)</label>
         </div>
-        <div class="custom-control custom-checkbox">
+        <div class="custom-control custom-checkbox mb-2">
             <input type="checkbox" class="custom-control-input" name="clean" id="ce-clean">
             <label class="custom-control-label" for="ce-clean">Ejecutar <code>cordova clean</code></label>
         </div>
-        <div class="custom-control custom-checkbox mb-3">
-            <input type="checkbox" class="custom-control-input" name="noconstruir" id="noconstruir">
-            <label class="custom-control-label" for="noconstruir">Solo ejecutar, no volver a construir</label>
+        <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" name="accion" value="normal" id="accion-normal" <?=!$json->embebible->accion||$json->embebible->accion=='normal'?'checked':''?>>
+            <label class="custom-control-label" for="accion-normal">Construir y ejecutar</label>
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" name="accion" value="construir" id="accion-construir" <?=$json->embebible->accion=='construir'?'checked':''?>>
+            <label class="custom-control-label" for="accion-construir">Solo construir, no ejecutar</label>
+        </div>
+        <div class="custom-control custom-radio mb-3">
+            <input type="radio" class="custom-control-input" name="accion" value="ejecutar" id="accion-ejecutar" <?=$json->embebible->accion=='ejecutar'?'checked':''?>>
+            <label class="custom-control-label" for="accion-ejecutar">Solo ejecutar, no volver a construir</label>
         </div>
 <?php
         if(!function_exists('shell_exec')) {
@@ -108,99 +121,94 @@ class construirCordova extends asistente {
         //Almacenar parámetros en el JSON para la próxima ejecución
         $this->actualizarJson($param);
 
-        //Solo ejecutar (no construir)
-        if($param->noconstruir) { 
-            chdir($param->www);
+        if($param->accion=='normal'||$param->accion=='construir') {
+            if(!$param->inicio) gestor::error('Ingresá el nombre de la vista inicial.');
 
-            $pl=$param->plataforma;
-            if(!$pl) $pl='android';
+            //Primero, construir aplicación
+            asistentes::obtenerAsistente('construir-produccion')
+                ->ejecutar($param,false,true);
 
-            $destino='';
-            if($param->destino) $destino='--target='.escapeshellarg($param->destino);
-
-            $comando='cordova run '.escapeshellarg($pl).' '.$destino.' --nobuild 2>&1';
-            $o=shell_exec($comando);
-            registroExec($comando,$o);    
-            
-            return;
-        }
-
-        if(!$param->inicio) gestor::error('Ingresá el nombre de la vista inicial.');
-
-        //Primero, construir aplicación
-        asistentes::obtenerAsistente('construir-produccion')
-            ->ejecutar($param,false,true);
-
-        $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
-        if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe o no es una vista Cordova.');
-
-        //Limpiar directorio
-        if($param->limpiar) {
-            $archivos=buscarArchivos(_embeber,'{*,.[!.]*,..?*}',null,true,true,true);            
-            eliminarTodo($archivos);
-        }
-        
-        //Copiar todo excepto archivos PHP
-        $tipos=['*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
-        copiar(_produccion,$tipos,_embeber);
-
-        //Remover directorios innecesarios
-        eliminarDir(_embeber.'temp/');
-        eliminarDir(_embeber.'servidor/');
-
-        //Intentar configurar index-cordova.html
-
-        $html=file_get_contents(_fuente.'index-cordova.html');
-
-        file_put_contents(_embeber.'index-cordova.html',preg_replace_array([
-            '/_nombreApl=".*?"/'=>'_nombreApl="'.gestor::obtenerNombreAplicacion().'"',
-            '/_vistaInicial=".*?"/'=>'_vistaInicial="'.$inicio.'"'
-        ],$html));
-
-        if($param->www) {
-            $dir=$param->www;
-            if(substr($dir,-1)!='/'&&substr($dir,-1)!='\\') $dir.='/';
-
-            //config.xml
-            if($param->config) {
-                $ruta=$dir.'../config.xml';
-                $xml=file_get_contents($ruta);
-                $xml=preg_replace('/(<content .*?)src=".+?"(.*?>)/s','\1src="index-cordova.html"\2',$xml);
-                file_put_contents($ruta,$xml);
-            }
+            $inicio=preg_replace('/[^a-z0-9 _\.\/-]/i','',$param->inicio).'.html';
+            if(!file_exists(_produccion.$rutaAplicacion.'cliente/vistas/'.$inicio)) gestor::error('La vista inicial no existe o no es una vista Cordova.');
 
             //Limpiar directorio
             if($param->limpiar) {
-                $archivos=buscarArchivos($dir,'{*,.[!.]*,..?*}',null,true,true,true);
+                $archivos=buscarArchivos(_embeber,'{*,.[!.]*,..?*}',null,true,true,true);            
                 eliminarTodo($archivos);
             }
-
-            //Copiar
-            copiar(_embeber,'{*,.[!.]*,..?*}',$dir);
             
-            //Ejecutar
-            if($param->ejecutar) {
+            //Copiar todo excepto archivos PHP
+            $tipos=['*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
+            copiar(_produccion,$tipos,_embeber);
+
+            //Remover directorios innecesarios
+            eliminarDir(_embeber.'temp/');
+            eliminarDir(_embeber.'servidor/');
+
+            //Intentar configurar index-cordova.html
+
+            $html=file_get_contents(_fuente.'index-cordova.html');
+
+            file_put_contents(_embeber.'index-cordova.html',preg_replace_array([
+                '/_nombreApl=".*?"/'=>'_nombreApl="'.gestor::obtenerNombreAplicacion().'"',
+                '/_vistaInicial=".*?"/'=>'_vistaInicial="'.$inicio.'"'
+            ],$html));
+
+            if($param->www) {
+                $dir=$param->www;
+                if(substr($dir,-1)!='/'&&substr($dir,-1)!='\\') $dir.='/';
+
+                //config.xml
+                if($param->config) {
+                    $ruta=$dir.'../config.xml';
+                    $xml=file_get_contents($ruta);
+                    $xml=preg_replace('/(<content .*?)src=".+?"(.*?>)/s','\1src="index.html"\2',$xml);
+                    file_put_contents($ruta,$xml);
+                }
+
+                //Limpiar directorio
+                if($param->limpiar) {
+                    $archivos=buscarArchivos($dir,'{*,.[!.]*,..?*}',null,true,true,true);
+                    eliminarTodo($archivos);
+                }
+
+                //Copiar
+                copiar(_embeber,'{*,.[!.]*,..?*}',$dir);
+
+                //Renombrar index-cordova por index.html (Electron, al menos por un error conocido a la fecha, no respeta <content src>)
+                rename($dir.'index-cordova.html',$dir.'index.html');
+            }
+        }
+            
+        //Ejecutar
+        if($param->accion=='normal'||$param->accion=='ejecutar') {
+            if($param->www) {
+                $dir=dirname($param->www);
                 chdir($dir);
                 
                 $pl=$param->plataforma;
                 if(!$pl) $pl='android';
 
                 if($param->clean) {
-                    $comando='cordova clean '.escapeshellarg($pl).' 2>&1';
+                    $comando='cordova clean '.escapeshellarg($pl).' --no-update-notifier 2>&1';
                     $o=shell_exec($comando);
                     registroExec($comando,$o);
                 }
 
-                $comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
-                $o=shell_exec($comando);
-                registroExec($comando,$o);
+                //$comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
+                //$o=shell_exec($comando);
+                //registroExec($comando,$o);
 
                 $destino='';
                 if($param->destino) $destino='--target='.escapeshellarg($param->destino);
 
-                $comando='cordova run '.escapeshellarg($pl).' '.$destino.' 2>&1';
-                $o=shell_exec($comando);
-                registroExec($comando,$o);
+                if($param->accion=='ejecutar') $destino.=' --nobuild';
+
+                $comando='run '.escapeshellarg($pl).' '.$destino.' --no-update-notifier 2>&1';
+                
+                $esperar=$pl!='electron';
+                $o=ejecutar('cordova',$comando,$esperar);
+                registroExec('cordova '.$comando,$o);
             }
         }
     }
@@ -210,6 +218,7 @@ class construirCordova extends asistente {
         $json->embebible=[
             'inicio'=>$param->inicio,
             'modulos'=>$param->modulos,
+            'accion'=>$param->accion,
             'cordova'=>[
                 'www'=>$param->www,
                 'plataforma'=>$param->plataforma,

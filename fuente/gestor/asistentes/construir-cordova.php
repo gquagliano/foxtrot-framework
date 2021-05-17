@@ -180,25 +180,21 @@ class construirCordova extends asistente {
             }
         }
             
-        //Ejecutar
-        if($param->accion=='normal'||$param->accion=='ejecutar') {
-            if($param->www) {
-                $dir=dirname($param->www);
-                chdir($dir);
-                
-                $pl=$param->plataforma;
-                if(!$pl) $pl='android';
+        //Construir y ejecutar
+        if($param->www) {
+            $dir=dirname($param->www);
+            chdir($dir);
 
-                if($param->clean) {
-                    $comando='cordova clean '.escapeshellarg($pl).' --no-update-notifier 2>&1';
-                    $o=shell_exec($comando);
-                    registroExec($comando,$o);
-                }
+            $pl=$param->plataforma;
+            if(!$pl) $pl='android';
 
-                //$comando='cordova prepare '.escapeshellarg($pl).' 2>&1';
-                //$o=shell_exec($comando);
-                //registroExec($comando,$o);
-
+            if($param->clean) {
+                $comando='cordova clean '.escapeshellarg($pl).' --no-update-notifier 2>&1';
+                $o=shell_exec($comando);
+                registroExec($comando,$o);
+            }
+        
+            if($param->accion=='normal'||$param->accion=='ejecutar') {
                 $destino='';
                 if($param->destino) $destino='--target='.escapeshellarg($param->destino);
 
@@ -209,6 +205,10 @@ class construirCordova extends asistente {
                 $esperar=$pl!='electron';
                 $o=ejecutar('cordova',$comando,$esperar);
                 registroExec('cordova '.$comando,$o);
+            } else {                
+                $comando='cordova prepare '.escapeshellarg($pl).' --no-update-notifier 2>&1';
+                $o=shell_exec($comando);
+                registroExec($comando,$o);
             }
         }
     }

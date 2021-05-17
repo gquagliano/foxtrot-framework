@@ -31,7 +31,9 @@
         precargaVisible=false,
         barraVisible=false,
         elementoPrecarga=null,
-        elementoBarra=null;
+        elementoBarra=null,
+        colorBarra="#ffffff",
+        colorBarraSombra="#8c8c8c";
 
     /**
      * Muestra una animación de precarga.
@@ -914,6 +916,10 @@
         ui.obtenerElementoSombra();
         elemSombra.removerEventos();
         ui.detenerAnimacion(elemSombra).animarAparecer(elemSombra);
+
+        //Integración con Cordova
+        ui.establecerColoresBarraEstado();
+        
         return ui;
     };
 
@@ -924,6 +930,29 @@
      */
     ui.ocultarSombra=function() {
         if(elemSombra) ui.detenerAnimacion(elemSombra).animarDesaparecer(elemSombra);
+        
+        //Integración con Cordova
+        ui.establecerColoresBarraEstado();
+
+        return ui;
+    };
+
+    /**
+     * Establece los colores para la barra de estado (Cordova).
+     * @param {string} normal - Color normal, como hexagesimal.
+     * @param {string} sombra - Color cuando la sombra detrás de los diálogos está visible, como hexagesimal. Por defecto, es #8c8c8c (color
+     * predeterminado sobre un fondo blanco).
+     * @returns {ui}
+     */
+    ui.establecerColoresBarraEstado=function(normal,sombra) {
+        if(typeof normal=="string") colorBarra=normal;
+        if(typeof sombra=="string") colorBarraSombra=sombra;
+        
+        if(ui.esCordova()&&typeof StatusBar=="object")
+            StatusBar.backgroundColorByHexString(
+                dialogosAbiertos.length?colorBarraSombra:colorBarra
+            );
+
         return ui;
     };
 

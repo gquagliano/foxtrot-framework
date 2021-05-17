@@ -117,12 +117,14 @@ var moduloFirebase=function() {
      * Inicializa y autoriza notificaciones Push a través de FCM (Firebase Cloud Messaging) en aplicaciones Cordova.
      * @param {Object} opciones - Opciones.
      * @param {function} [opciones.retorno] - Función de retorno. Recibirá como único parámetro la clave o *token*.
-     * @param {function} [opciones.error] - Función de retorno en caso de error o cancelación de la solicitud.
-     * @parma {function} [opciones.notificacion] - Función de retorno al recibir una notificación.
+     * @param {function} [opciones.error] - Función de retorno en caso de error o cancelación de la solicitud. Recibirá como único parámetro
+     * el error (como cadena), `false` si fue cancelada o denegada la autorización o `null` si no fue posible iniciar el servicio.
+     * @parma {function} [opciones.notificacion] - Función de retorno al recibir una notificación. Recibirá como único parámetro el objeto
+     * de la notificación.
      * @returns {moduloFirebase}
      */
     this.notificacionesCordova=function(opciones) {
-        //cordova-plugin-firebase-messaging
+        //cordova-plugin-firebasex
 
         opciones=Object.assign({
             retorno:null,
@@ -132,35 +134,46 @@ var moduloFirebase=function() {
 
         if(!ui.esCordova()) return this;
 
-        if(typeof cordova.plugins.firebase!="object") {
+        if(typeof FirebasePlugin!="object") {
             if(opciones.error) opciones.error(null);
             return this;
         }
 
         var obtenerToken=function() {
-            cordova.plugins.firebase.messaging.getToken().then(function(token) {
-                if(opciones.retorno) opciones.retorno(token);
-            })
-            .catch(function(error) {
+            FirebasePlugin.getToken(function(clave) {
+                if(opciones.retorno) opciones.retorno(clave);
+            }, function(error) {
                 if(opciones.error) opciones.error(error);
             });
         };
 
-        cordova.plugins.firebase.messaging
-            .requestPermission({forceShow:true})
-            .then(function() {
+        FirebasePlugin.hasPermission(function(res) {
+            if(res) {
                 obtenerToken();
-            })
-            .catch(function(error) {
-                if(opciones.error) opciones.error(error);
-            });
-
-        cordova.plugins.firebase.messaging.onTokenRefresh(function() {
-            obtenerToken();
+            } else if(!requested){
+                FirebasePlugin.grantPermission(function() {
+                    FirebasePlugin.hasPermission(function(res) {
+                        if(res) {
+                            obtenerToken();
+                        } else if(opciones.error) {
+                            opciones.error(false);
+                        }
+                    });
+                });
+            } else if(opciones.error) {
+                opciones.error(false);
+            }
         });
 
-        cordova.plugins.firebase.messaging.onBackgroundMessage(function(datos) {
-            if(opciones.notificacion) opciones.notificacion(datos);
+        FirebasePlugin.onMessageReceived(function(mensaje) {
+            if(mensaje.messageType!=="notification") return;
+            if(opciones.notificacion) opciones.notificacion(mensaje);
+        });
+    
+        FirebasePlugin.onTokenRefresh(function(clave) {
+            if(opciones.retorno) opciones.retorno(clave);
+        }, function(error) {
+            if(opciones.error) opciones.error(error);
         });
 
         return this;

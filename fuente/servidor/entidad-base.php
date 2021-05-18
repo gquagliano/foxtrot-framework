@@ -191,19 +191,19 @@ class entidadBase {
             $campos->fecha_alta=(object)[
                 'nombre'=>'fecha_alta',
                 'tipo'=>'entero',
-                'longitud'=>'6',
+                'longitud'=>'4',
                 'indice'=>true
             ];
             $campos->fecha_actualizacion=(object)[
                 'nombre'=>'fecha_actualizacion',
                 'tipo'=>'entero',
-                'longitud'=>'6',
+                'longitud'=>'4',
                 'indice'=>true
             ];
             $campos->fecha_baja=(object)[
                 'nombre'=>'fecha_baja',
                 'tipo'=>'entero',
-                'longitud'=>'6',
+                'longitud'=>'4',
                 'indice'=>true
             ];
         }

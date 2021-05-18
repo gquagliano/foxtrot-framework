@@ -82,6 +82,13 @@ class entidadBase {
             $objeto->$propiedad=$this->$propiedad;
         }
 
+        //Sumar otras propiedades públicas
+        $propiedades=(new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
+        foreach($propiedades as $propiedad) {
+        	$nombre=$propiedad->name;
+        	$objeto->$nombre=$this->$nombre;
+        }
+
         return $objeto;
     }
 

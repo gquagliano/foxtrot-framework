@@ -1566,6 +1566,17 @@ var ui=new function() {
         if(typeof obj==="undefined") obj=null;
         if(typeof params==="undefined") params=null;
 
+        var metodo=instanciaAplicacion[nombre],
+            retorno;
+        if(typeof metodo!=="function") return false;
+        if(params) {
+            retorno=metodo.apply(instanciaAplicacion,params);
+        } else {
+            retorno=metodo.call(instanciaAplicacion);
+        }
+        //El método puede devolver true para detener el evento
+        if(typeof retorno==="boolean"&&retorno) return true;
+
         //Controladores de vistas
         for(var control in instanciasControladores) {
             if(!instanciasControladores.hasOwnProperty(control)||(obj&&obj!=instanciasControladores[control])) continue;
@@ -1583,17 +1594,6 @@ var ui=new function() {
             //El método puede devolver true para detener el evento
             if(typeof retorno==="boolean"&&retorno) return true;
         }
-
-        var metodo=instanciaAplicacion[nombre],
-            retorno;
-        if(typeof metodo!=="function") return false;
-        if(params) {
-            retorno=metodo.apply(instanciaAplicacion,params);
-        } else {
-            retorno=metodo.call(instanciaAplicacion);
-        }
-        //El método puede devolver true para detener el evento
-        if(typeof retorno==="boolean"&&retorno) return true;
 
         return false;
     };

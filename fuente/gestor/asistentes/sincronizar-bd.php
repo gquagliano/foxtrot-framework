@@ -185,7 +185,7 @@ class sincronizarBd extends asistente {
             $long=$parametros->longitud?$parametros->longitud:4;
             $tipos=[1=>'tinyint',2=>'smallint',3=>'mediumint',4=>'int',8=>'bigint'];
             if(!preg_match('/^'.$tipos[$long].'/i',$campoBd->Type)||
-                ($parametros->longitud&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
+                //($parametros->longitud&&!preg_match('/\('.$long.'\)/',$campoBd->Type))||
                 ($tipo=='entero sin signo'&&!preg_match('/unsigned/i',$campoBd->Type))) return false;
         }
 

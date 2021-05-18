@@ -893,6 +893,35 @@ var util=new function() {
 
         return res;
     };
+
+    /**
+     * Busca un elemento del array.
+     * @param {*[]} array - Array.
+     * @param {*} buscar - Valor a buscar por coincidencia exacta, o expresión regular.
+     * @returns {(number|null)}
+     */
+    this.buscarElemento=function(array,buscar) {
+        if(this.esExpresionRegular(buscar)) {
+            for(var i=0;i<array.length;i++)
+                if(buscar.test(array[i])) 
+                    return i;
+            return false;
+        }
+            
+        var pos=array.indexOf(buscar);
+        return pos<0?false:pos;
+    };
+
+    /**
+     * Busca y remueve un elemento del array.
+     * @param {*[]} array - Array.
+     * @param {*} buscar - Valor a buscar por coincidencia exacta, o expresión regular.
+     */
+    this.removerElemento=function(array,buscar) {
+        var pos=this.buscarElemento(array,buscar);
+        if(pos===false) return;
+        array.splice(pos,1);
+    };
 };
 
 window["util"]=util;

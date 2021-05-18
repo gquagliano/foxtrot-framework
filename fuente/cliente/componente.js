@@ -559,8 +559,9 @@ var componente=new function() {
         if(typeof dispersar==="undefined") dispersar=true;
         if(typeof ignorarPropiedad==="undefined") ignorarPropiedad=false;
 
-        //Si se omite obj, obtener de la propiedad Origen
-        if(typeof obj==="undefined") obj=this.propiedad(true,"datos");
+        //Si se omite obj, intentar usar el último objeto asignado, u obtener de la propiedad Origen
+        if(typeof obj==="undefined") obj=this.datos;
+        if(typeof obj==="undefined"||!obj) obj=this.propiedad(true,"datos");
         if(!obj) return this;
 
         var propiedad=null;
@@ -591,10 +592,14 @@ var componente=new function() {
 
     /**
      * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @param {(componente[]} [buscarEn] - Parámetro de uso interno. Listado de componentes donde realizar la búsqueda de campos.
+     * @param {componente[]} [buscarEn] - Parámetro de uso interno. Listado de componentes donde realizar la búsqueda de campos.
      * @returns {Object[]}
      */
-    this.obtenerDatosActualizados=function(buscarEn) {
+    this.obtenerDatosActualizados=function(buscarEn,obtenerDestino) {
+    	if(typeof obtenerDestino=="undefined") obtenerDestino=function(elem,indice) {
+    		return t.datos[indice];
+    	};
+
         var t=this,
             fn=function(comp,indice) {
                 comp.obtenerHijos().forEach(function(hijo) {
@@ -602,11 +607,14 @@ var componente=new function() {
                         nombre=hijo.obtenerNombre(),
                         valor=hijo.valor();
                     if(typeof valor!=="undefined") {
-                        if(propiedad) {
-                            util.asignarPropiedad(t.datos[indice],propiedad,valor);
-                        } else if(nombre) {
-                            t.datos[indice][nombre]=valor;
-                        }
+                    	var padre=obtenerDestino(hijo,indice);
+                    	if(padre) {
+	                        if(propiedad) {
+	                            util.asignarPropiedad(padre,propiedad,valor);
+	                        } else if(nombre) {
+	                            padre[nombre]=valor;
+	                        }
+	                    }
                     }
                     fn(hijo,indice);
                 });

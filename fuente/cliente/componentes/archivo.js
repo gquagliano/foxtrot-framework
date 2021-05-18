@@ -84,6 +84,8 @@ var componenteArchivo=function() {
         this.etiqueta=this.elemento.querySelector("label");
         this.boton=this.elemento.querySelector(".custom-file-command");
 
+        this.clasesCss.push("custom-file");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

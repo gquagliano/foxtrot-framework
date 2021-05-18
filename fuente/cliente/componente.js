@@ -26,7 +26,8 @@ var componente=new function() {
     ////Privado
     
     var propiedadesCombinadas=null,
-        ultimaClase=null;
+        ultimaClase=null,
+        clasesCssEstablecidas="";
 
     ////Propiedades
 
@@ -52,6 +53,7 @@ var componente=new function() {
      * @var {boolean} listoEjecutado - Indica si ya fue ejecutado el evento *Listo*.
      * @var {boolean} actualizacionEnCurso - Determina si el componente se encuentra en proceso de actualización o redibujado.
      * @var {controlador} controlador - Instancia del controlador de la vista a la cual pertenece.
+     * @var {*[]} clasesCss - Listado todas las de clases CSS propias del componente posibles. Cada componente concreto debe agregar las propias.
      */
     this.id=null;
     this.selector=null;
@@ -75,6 +77,28 @@ var componente=new function() {
     this.actualizacionEnCurso=false;
     this.controlador=null;
     this.esFlex=false;
+    this.clasesCss=[
+        "componente",
+        "contenedor",
+        /^float(-sm|-md|-lg|-xl)?-(left|right|none)$/,
+        /^text(-sm|-md|-lg|-xl)?-(left|right|center|justify)$/,
+        /^d(-sm|-md|-lg|-xl)?-(block|flex|inline|inline-block)$/,
+        /^flex(-sm|-md|-lg|-xl)?-(row|column)(-reverse)?$/,
+        /^justify-content(-sm|-md|-lg|-xl)?-(start|end|center|between|around)$/,
+        /^align-items(-sm|-md|-lg|-xl)?-(start|end|center|baseline|stretch)?$/,
+        /^(visible|invisible)(-sm|-md|-lg|-xl)?$/,
+        /^d(-sm|-md|-lg|-xl)?-(flex|block|none)$/,
+        /^font-weight-(light|normal|medium|bold)$/,
+        "font-italic",
+        "subrayado",
+        "tachado",
+        "autofoco",
+        "deshabilitado",
+        //Clases del editor
+        "foxtrot-editando-texto",
+        "foxtrot-seleccionado",
+        "foxtrot-hijo-seleccionado"
+    ];
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -444,7 +468,11 @@ var componente=new function() {
 
         if(this.selector&&actualizar) {
             //Remover clase anterior (si es ID, se mantiene, aunque se eliminarán sus estilos)
-            if(this.selector.substring(0,1)==".") this.elemento.removerClase(this.selector.substring(1));
+            if(this.selector.substring(0,1)==".") {
+                var nombre=this.selector.substring(1);
+                this.elemento.removerClase(nombre);
+                util.removerElemento(clasesCss,nombre);
+            }
 
             //Mover estilos
             if(nuevo) {
@@ -458,11 +486,13 @@ var componente=new function() {
 
         if(nuevo&&actualizar) {
             //El selector puede ser un ID o una clase
-            var pc=nuevo.substring(0,1);
+            var pc=nuevo.substring(0,1),
+                nombre=nuevo.substring(1);
             if(pc==".") {
-                this.elemento.agregarClase(nuevo.substring(1));
+                this.elemento.agregarClase(nombre);
+                this.clasesCss.push(nombre);
             } else if(pc=="#") {
-                this.elemento.atributo("id",nuevo.substring(1));
+                this.elemento.atributo("id",nombre);
             }
         }
 
@@ -626,6 +656,8 @@ var componente=new function() {
      * Fabrica una instancia de un componente concreto dada su función.
      */
     this.fabricarComponente=function(fn) {
+        //TODO Aquí se debe mejorar el trabajo con prototipos (remover "pseudo-herencia")
+
         //Heredar prototipo
         fn.prototype=new (this.cttr());
 
@@ -634,6 +666,7 @@ var componente=new function() {
         //Inicializar las propiedades que son objetos (de otro modo, se copiarán las referencias desde el prototipo)
         obj.hijos=[];
         obj.valoresPropiedades={};
+        obj.clasesCss=this.clasesCss.clonar();
 
         return obj;
     };
@@ -711,6 +744,7 @@ var componente=new function() {
         if(this.elemento) {
             //Las clases css que se mantengan al salir del modo de edición deben ser breves
             this.elemento.agregarClase("componente "+this.componente);
+            this.clasesCss.push(this.componente);
 
             if(!this.contenidoEditable) this.elemento.propiedad("contenteditable",false);
         }
@@ -1148,12 +1182,20 @@ var componente=new function() {
         }
 
         if(propiedad=="clase") {
+            //Preservar clases propias del componente antes de agregar las clases del usuario, a fin de prevenir la eliminación
+            //accidental de estas clases
+            this.preservarClasesCss();
+
             if(valorAnterior) this.elemento.removerClase(valorAnterior)
             if(ultimaClase) this.elemento.removerClase(ultimaClase);
             if(valor&&valor.trim()!="") {
                 ultimaClase=valor;
                 this.elemento.agregarClase(valor);
             }
+
+            //Volver a asignar las clases internas que puedan haberse removido
+            this.establecerClasesCss();
+
             return this;
         }
 
@@ -1310,6 +1352,28 @@ var componente=new function() {
         }
 
         return this;
+    };
+
+    /**
+     * Actualiza `clasesCssEstablecidas` con las clases internas actualmente asignadas, a fin de poder reestablecerse mediante `establecerClasesCss()`.
+     */
+    this.preservarClasesCss=function() {
+        var res=[],
+            clases=this.elemento.classList;
+
+        for(var i=0;i<clases.length;i++) {
+            if(util.buscarElemento(this.clasesCss,clases[i]))
+                res.push(clases[i]);
+        }
+
+        clasesCssEstablecidas=res.join(" ");
+    };
+
+    /**
+     * Establece o reestablece las clases CSS propias del componente.
+     */
+    this.establecerClasesCss=function() {
+        this.elemento.agregarClase(clasesCssEstablecidas);
     };
 
     /**

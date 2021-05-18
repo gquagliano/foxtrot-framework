@@ -76,6 +76,8 @@ var componenteAlternar=function() {
 
         if(!ui.enModoEdicion()) this.valor(null);
 
+        this.clasesCss.push(/^custom-(control|control-inline|switch|checkbox|radio)$/);
+
         this.prototipo.inicializar.call(this);
         return this;
     };

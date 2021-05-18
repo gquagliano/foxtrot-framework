@@ -86,6 +86,12 @@ var componenteBoton=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
         this.prototipo.inicializar.call(this);
+
+        this.clasesCss=this.clasesCss.concat(
+            "btn",
+            /^btn-(primary|secondary|success|danger|warning|info|light|dark)$/
+        );
+        
         return this;
     };
 

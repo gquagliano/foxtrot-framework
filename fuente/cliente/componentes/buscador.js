@@ -94,6 +94,8 @@ var componenteBuscador=function() {
         }
         boton.evento("click",clickDesplegar);        
 
+        this.clasesCss.push("desplegable");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

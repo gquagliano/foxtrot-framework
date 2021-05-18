@@ -27,6 +27,18 @@ var componenteEtiqueta=function() {
             }
         }
     };
+
+    /**
+     * Inicializa la instancia tras ser creada o restaurada.
+     */
+    this.inicializar=function() {
+        if(this.fueInicializado) return this; 
+
+        this.clasesCss=this.clasesCss.concat("etiqueta");
+
+        this.prototipo.inicializar.call(this);
+        return this;
+    };
     
     /**
      * Crea el elemento del DOM para esta instancia.

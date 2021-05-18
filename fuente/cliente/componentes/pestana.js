@@ -49,6 +49,8 @@ var componentePestana=function() {
 
         if(this.elemento.es({ clase:"activa" })) this.activa=true;
 
+        this.clasesCss.push("activa");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

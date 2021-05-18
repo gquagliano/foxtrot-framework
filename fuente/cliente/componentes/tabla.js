@@ -45,7 +45,9 @@ var componenteTabla=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
 
-        this.contenedor=this.elemento.querySelector("tbody");
+        this.contenedor=this.elemento.querySelector("tbody");        
+
+        this.clasesCss.push("ocultar-contenidos");
 
         this.prototipo.inicializar.call(this);
         return this;

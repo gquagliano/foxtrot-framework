@@ -54,6 +54,8 @@ var componenteItemMenu=function() {
         this.elementoEventos=this.enlace;
         this.contenedor=this.elemento;
 
+        this.clasesCss=this.clasesCss.concat("con-submenu","menu-separador");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

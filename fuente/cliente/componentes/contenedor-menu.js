@@ -95,6 +95,14 @@ var componenteContenedorMenu=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento;
+
+        this.clasesCss=this.clasesCss.concat(
+            /^menu-(flotante|deslizable|bloque)-activo$/,
+            /^menu-(click|abierto)$/,
+            /^menu(-sm|-md|-lg|-xl)?-(flotante|deslizable|bloque)$/,
+            "nav"
+        );
+
         this.prototipo.inicializar.call(this);
         return this;
     };    

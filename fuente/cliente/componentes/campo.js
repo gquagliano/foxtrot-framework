@@ -81,7 +81,9 @@ var componenteCampo=function() {
 
         if(this.propiedad("tipo")=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
 
-        if(!ui.enModoEdicion()) this.valor(null);
+        if(!ui.enModoEdicion()) this.valor(null);       
+
+        this.clasesCss.push("ocultar-control");
 
         this.prototipo.inicializar.call(this);
         return this;

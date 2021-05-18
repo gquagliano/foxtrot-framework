@@ -21,6 +21,9 @@ var componenteMenu=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector("ul");
+
+        this.clasesCss=this.clasesCss.concat("menu","menu-contextual");
+        
         this.prototipo.inicializar.call(this);
         return this;
     };

@@ -23,6 +23,8 @@ var componenteFormulario=function() {
 
         this.contenedor=this.elemento;
 
+        this.clasesCss.push("formulario");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

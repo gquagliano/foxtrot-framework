@@ -22,6 +22,9 @@ var componenteFila=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
+
+        this.clasesCss.push("row");
+        
         this.prototipo.inicializar.call(this);
         return this;
     };

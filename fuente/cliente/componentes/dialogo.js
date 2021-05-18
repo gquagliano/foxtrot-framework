@@ -48,6 +48,8 @@ var componenteDialogo=function() {
         //insertar el elemento dentro de un <div class='dialogo'>
         this.elemento.removerClase("dialogo");
 
+        this.clasesCss.push("contenido-componente-dialogo");
+
         return this;
     };
    

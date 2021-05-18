@@ -38,6 +38,9 @@ var componenteEspaciador=function() {
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
+
+        this.clasesCss=this.clasesCss.concat("horizontal","vertical","con-borde");
+
         this.prototipo.inicializar.call(this);
         return this;
     };

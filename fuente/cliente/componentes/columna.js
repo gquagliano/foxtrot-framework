@@ -38,6 +38,9 @@ var componenteColumna=function() {
         if(this.fueInicializado) return this;
         this.contenedor=this.elemento;
         this.prototipo.inicializar.call(this);
+
+        this.clasesCss.push(/^col-.+/);
+
         return this;
     };
     

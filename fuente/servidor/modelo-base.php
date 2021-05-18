@@ -318,8 +318,19 @@ class modeloBase {
      * @param int $origen Origen o registro inicial, comenzando desde `0`.
      * @param int $cantidad Cantidad.
      * @return \modeloBase
+     *//**
+     * Establece el límite.
+     * @param int $cantidad Cantidad.
+     * @return \modeloBase
      */
-    public function limite($origen,$cantidad) {
+    public function limite($a,$b=null) {
+    	if($b===null) {
+    		$origen=0;
+    		$cantidad=$a;
+    	} else {
+    		$origen=$a;
+    		$cantidad=$b;
+    	}
         $this->constructor->establecerLimite($origen,$cantidad);
         return $this;
     }

@@ -13,7 +13,8 @@
 var componenteArbol=function() {   
     "use strict";
 
-    var t=this;
+    var t=this,
+    	ignorarValor=false;
 
     this.componente="arbol";
 
@@ -47,6 +48,10 @@ var componenteArbol=function() {
                 etiqueta:"Propiedad",
                 adaptativa:false,
                 ayuda:"Nombre de la propiedad que contiene la descendencia."
+            },
+            interactivo:{
+            	etiqueta:"Interactivo",
+            	tipo:"logico"
             }
         },
         "Eventos":{
@@ -72,6 +77,9 @@ var componenteArbol=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
         this.contenedor=this.elemento.querySelector(".componente-arbol-plantilla");
+
+        this.clasesCss.push("no-interactivo");
+
         this.prototipo.inicializar.call(this);
         return this;
     };
@@ -130,6 +138,28 @@ var componenteArbol=function() {
         rutas.porCada(function(i,ruta) {
             t.expandir(ruta);
         });
+        return this;
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(typeof valor==="undefined") valor=null;
+
+        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+
+        if(propiedad=="interactivo") {
+            if(valor===false||valor===0||valor==="0") {
+                this.elemento.agregarClase("no-interactivo");
+            } else {
+                this.elemento.removerClase("no-interactivo");
+            }
+            return this;
+        }
+
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
@@ -302,6 +332,7 @@ var componenteArbol=function() {
      */
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
+        	if(ignorarValor) return null;
             //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
             return this.obtenerDatosActualizados();            
         } else {
@@ -315,7 +346,16 @@ var componenteArbol=function() {
      * @returns {Object[]}
      */
     this.obtenerDatosActualizados=function() {
-        return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
+    	//Pausar la respuesta de valor(), que invocaría obtenerDatosActualizados()
+    	ignorarValor=true;
+        var res=this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados,function(elem,indice) {
+        	//Buscar la fila a la que corresponde cada componente con nombre
+        	var item=elem.obtenerElemento().padre({clase:"arbol-item"}),
+        		ruta=item.dato("ruta");
+        	return t.obtenerObjeto(ruta,false);        	
+        });
+        ignorarValor=false;
+        return res;
     };
 
     /**
@@ -462,10 +502,14 @@ var componenteArbol=function() {
     /**
      * Devuelve un objeto correspondiente a un nivel e índice.
      * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
+     * @param {boolean} [actualizarValores=true] - Determina si se debe utilizar el listado de valores actualizados (`true`) o el
+     * origen de datos actual.
      * @returns {(object|null)}
      */
-    this.obtenerObjeto=function(ruta) {
-        var obj=this.obtenerDatosActualizados(),
+    this.obtenerObjeto=function(ruta,actualizarValores) {
+    	if(typeof actualizarValores=="undefined") actualizarValores=true;
+
+        var obj=actualizarValores?this.obtenerDatosActualizados():this.datos,
             propiedad=this.propiedad("propiedad");
         ruta=ruta.split(".");
 
@@ -532,6 +576,9 @@ var componenteArbol=function() {
      * @returns {boolean}
      */
     this.click=function(evento) {
+    	var interactivo=this.propiedad("interactivo");
+    	if(interactivo!==null&&!interactivo) return false;
+
         //Buscar el <li>
         var li=null;
         for(var i=0;i<evento.path.length;i++) {

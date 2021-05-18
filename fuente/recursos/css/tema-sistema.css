@@ -325,8 +325,11 @@ textarea.form-control {
 .arbol li {
     padding: .4rem 0 .4rem 2rem;
 }
-.arbol li:first-child {
-    margin-top: .4rem;
+.arbol.no-interactivo li {
+    cursor: default;
+}
+.arbol.no-interactivo>.arbol-listado>li {
+    padding-left: 0;
 }
 .arbol li:last-child {
     padding-bottom: 0;
@@ -347,6 +350,9 @@ textarea.form-control {
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM1ZTZjN2IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNoZXZyb24tZG93biI+PHBvbHlsaW5lIHBvaW50cz0iNiA5IDEyIDE1IDE4IDkiPjwvcG9seWxpbmU+PC9zdmc+");
 }
 .arbol li.ultimo-nivel::before {
+    display: none;
+}
+.arbol.no-interactivo .arbol-item::before {
     display: none;
 }
 .arbol li.ultimo-nivel {

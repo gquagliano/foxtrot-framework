@@ -381,11 +381,11 @@ class modelo extends modeloBase {
 
     /**
      * Establece la paginación.
-     * @param int $numero Número de página, comenzando desde `1`.
      * @param int $cantidad Cantidad de elementos por página.
+     * @param int $numero Número de página, comenzando desde `1`.
      * @return \modelo
      */
-    public function pagina($numero,$cantidad) {
+    public function pagina($cantidad,$numero) {
         $this->constructor->establecerLimite(($numero-1)*$cantidad,$cantidad);
         return $this;
     }

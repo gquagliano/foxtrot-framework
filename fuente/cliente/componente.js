@@ -1877,13 +1877,28 @@ var componente=new function() {
                     if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores());
 
                     //Retorno
-                    args.unshift(function(respuesta) {
+                    var fn=function(respuesta) {
                         if(retorno) retorno(respuesta);
-                    });
+                    };
 
                     //Invocar el método
-                    var metodo=obj.servidor[controladorEvento];
-                    ajax=metodo.apply(obj.servidor,args);
+                    if((comando=="servidor"||comando=="enviar")&&controladorEvento.indexOf(".")>=0) {
+                    	//controlador.metodo (no debería admitirse más de un punto)
+                    	var partes=controladorEvento.split("."),
+                    		nombreControlador=partes[0],
+                    		nombreMetodo=partes[1];
+                    	ajax=servidor.invocarMetodo({
+                    		controlador:nombreControlador,
+                    		metodo:nombreMetodo,
+                    		retorno:fn,
+                    		parametros:args
+                    	});
+                    } else {
+                    	//Utilizar el controlador (JS)
+                    	var metodo=obj.servidor[controladorEvento];
+                    	args.unshift(fn);
+                    	ajax=metodo.apply(obj.servidor,args);
+                    }
                 } else if(comando=="ir") {
                     //Navegación
                     ui.irA(controladorEvento,nuevaVentana);

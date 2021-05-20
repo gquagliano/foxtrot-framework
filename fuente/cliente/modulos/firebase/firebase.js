@@ -199,6 +199,10 @@ var moduloFirebase=function() {
             return this;
         }
 
+        var fnError=function(error) {
+        	if(opciones.error) opciones.error(error);
+        };
+
         var messaging=firebase.messaging();
         
         navigator.serviceWorker
@@ -217,11 +221,11 @@ var moduloFirebase=function() {
 
                                 t.claveMessaging=token;
                                 if(opciones.retorno) opciones.retorno(token);
-                            }).catch(function(error) {
-                                if(opciones.error) opciones.error(error);
-                            });
-                    });
-            });
+                            }).catch(fnError);
+                    })
+		            .catch(fnError);
+            })
+            .catch(fnError);
 
         //messaging.onMessage(function(obj) {
         //    console.log(obj);

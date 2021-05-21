@@ -211,11 +211,18 @@ try { \
     /**
      * Busca y ejecuta todas las expresiones presentes en una cadena. Las llaves pueden escaparse con \{ \} para evitar que una expresión sea evaluada.
      * @param {string} cadena - Cadena a analizar.
+     * @param {(function|null)} retorno - Función personalizada para el reemplazo de cada expresión hallada. Opcional (por defecto, ejecutará la expresión
+     * y la sustituirá por el resultado).
      * @returns {*} Cuando la cadena contenga una única expresión, el valor de retorno puede ser cualquier tipo resultante de la misma. Cuando se trate de una cadena con múltiples expresiones, el retorno siempre será una cadena con las expresiones reemplazadas por sus valores.
      * @memberof expresion
      */
-    this.evaluar=function() {
-        if(!this.cadena) return null;        
+    this.evaluar=function(retorno) {
+    	if(!this.cadena) return null;
+
+    	if(typeof retorno!="function")
+			retorno=function(expr) {
+				return this.establecerExpresion(expr).ejecutar();
+    		};
 
         var cadena=this.cadena,
             bufer="",
@@ -245,7 +252,7 @@ try { \
             if(enLlave&&caracter=="}"&&anterior!="\\") {
                 //Ejecutar expresión
                 try {
-                    valor=this.establecerExpresion("{"+bufer+"}").ejecutar();
+                    valor=retorno.call(this,"{"+bufer+"}",i-bufer.length-1);
                 } catch(x) {
                     //Si falla, devolver vacío
                     valor="";
@@ -300,6 +307,21 @@ expresion.esExpresion=function(obj) {
  */
 expresion.contieneExpresion=function(obj) {
     return typeof obj==="string"&&obj.trim().length>2&&/\{.+?\}/.test(obj);
+};
+
+/**
+ * Remueve todas las expresiones presentes en la cadena.
+ * @param {*} valor - Valor a evaluar.
+ * @returns {string}
+ * @memberof expresion
+ */
+expresion.remover=function(valor) {
+	if(expresion.esExpresion(valor)) return "";
+	if(!expresion.contieneExpresion(valor)) return valor;
+	return new expresion(valor)
+		.evaluar(function(expr) {
+			return "";
+		});
 };
 
 window["expresion"]=expresion;

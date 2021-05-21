@@ -83,45 +83,47 @@ var componenteVista=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        //TODO Estas propiedades deberían aceptar expresiones, las cuales se actualizarían al cargar la página o modificarse el 
+	        //origen de datos, puede quedar como algo configurable en cada propiedad (que el usario elija si debe o no aceptar expresiones 
+	        //para evitar procesar todo cada vez)
 
-        //TODO Estas propiedades deberían aceptar expresiones, las cuales se actualizarían al cargar la página o modificarse el origen de datos, puede quedar como algo configurable en cada propiedad (que el usario elija si debe o no aceptar expresiones para evitar procesar todo cada vez)
-
-        if(propiedad=="titulo") {
-            ui.obtenerDocumento().title=valor;
-            return this;
-        }
-        
-        if(propiedad=="descripcion"||propiedad=="palabrasClave") {
-            var nombres={
-                descripcion:"description",
-                palabrasClave:"keywords"
-            };
-            var doc=ui.obtenerDocumento(),
-                elem=doc.querySelector("meta[name='"+nombres[propiedad]+"']");
-            if(!elem) elem=doc.crear("<meta name='"+nombres[propiedad]+"'>").anexarA(doc.head);
-            elem.propiedad("content",valor);
-            return this;
-        }
-        
-        if(propiedad=="imagen") {
-            var doc=ui.obtenerDocumento(),
-                elem=doc.querySelector("meta[property='og:image']");
-            if(!elem) elem=doc.crear("<meta property='og:image'>").anexarA(doc.head);
-            elem.propiedad("content",valor);
-            return this;
-        }
-        
-        if(propiedad=="precarga") {
-            var doc=ui.obtenerDocumento();
-            if(valor===true||valor===1||valor==="1") {
-                ui.obtenerCuerpo().insertarDespues(doc.crear("<div id='foxtrot-precarga' class='visible'>"));
-            } else {
-                var elem=doc.querySelector("#foxtrot-precarga");
-                if(elem) elem.remover();
-            }
-            return this;
-        }
+	        if(propiedad=="titulo") {
+	            ui.obtenerDocumento().title=valor;
+	            return this;
+	        }
+	        
+	        if(propiedad=="descripcion"||propiedad=="palabrasClave") {
+	            var nombres={
+	                descripcion:"description",
+	                palabrasClave:"keywords"
+	            };
+	            var doc=ui.obtenerDocumento(),
+	                elem=doc.querySelector("meta[name='"+nombres[propiedad]+"']");
+	            if(!elem) elem=doc.crear("<meta name='"+nombres[propiedad]+"'>").anexarA(doc.head);
+	            elem.propiedad("content",valor);
+	            return this;
+	        }
+	        
+	        if(propiedad=="imagen") {
+	            var doc=ui.obtenerDocumento(),
+	                elem=doc.querySelector("meta[property='og:image']");
+	            if(!elem) elem=doc.crear("<meta property='og:image'>").anexarA(doc.head);
+	            elem.propiedad("content",valor);
+	            return this;
+	        }
+	        
+	        if(propiedad=="precarga") {
+	            var doc=ui.obtenerDocumento();
+	            if(valor===true||valor===1||valor==="1") {
+	                ui.obtenerCuerpo().insertarDespues(doc.crear("<div id='foxtrot-precarga' class='visible'>"));
+	            } else {
+	                var elem=doc.querySelector("#foxtrot-precarga");
+	                if(elem) elem.remover();
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

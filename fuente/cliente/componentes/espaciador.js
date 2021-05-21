@@ -61,22 +61,22 @@ var componenteEspaciador=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="tipo") {
+	            this.elemento.removerClase("horizontal vertical");
+	            if(valor) this.elemento.agregarClase(valor);
+	            return this;
+	        }
 
-        if(propiedad=="tipo") {
-            this.elemento.removerClase("horizontal vertical");
-            if(valor) this.elemento.agregarClase(valor);
-            return this;
-        }
-
-        if(propiedad=="borde") {
-            if(valor!==true&&valor!==1) {
-                this.elemento.removerClase("con-borde");
-            } else {
-                this.elemento.agregarClase("con-borde");
-            }
-            return this;
-        }
+	        if(propiedad=="borde") {
+	            if(valor!==true&&valor!==1) {
+	                this.elemento.removerClase("con-borde");
+	            } else {
+	                this.elemento.agregarClase("con-borde");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

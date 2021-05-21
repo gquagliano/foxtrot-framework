@@ -67,16 +67,16 @@ var componenteTabla=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        if(propiedad=="ocultarContenidos") {
-            if(valor===true||valor===1||valor==="1") {
-                this.elemento.agregarClase("ocultar-contenidos");
-            } else {
-                this.elemento.removerClase("ocultar-contenidos");
-            }
-            return this;
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="ocultarContenidos") {
+	            if(valor===true||valor===1||valor==="1") {
+	                this.elemento.agregarClase("ocultar-contenidos");
+	            } else {
+	                this.elemento.removerClase("ocultar-contenidos");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

@@ -58,15 +58,15 @@ var componenteDialogo=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        if(propiedad=="modal"||propiedad=="ocultarIconoCerrar") {
-            //Destruir para que se reconstruya con los nuevos valores al abrir
-            if(dialogo) {
-                ui.eliminarDialogo(dialogo);
-                dialogo=null;
-            }
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="modal"||propiedad=="ocultarIconoCerrar") {
+	            //Destruir para que se reconstruya con los nuevos valores al abrir
+	            if(dialogo) {
+	                ui.eliminarDialogo(dialogo);
+	                dialogo=null;
+	            }
+	        }
+	    }
             
         return this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
     };

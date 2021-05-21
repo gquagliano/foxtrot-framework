@@ -189,29 +189,29 @@ var componenteContenedorMenu=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="comportamiento") {
+	            if(valor=="click") {
+	                this.elemento.agregarClase("menu-click");
+	            } else {
+	                this.elemento.removerClase("menu-click");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="comportamiento") {
-            if(valor=="click") {
-                this.elemento.agregarClase("menu-click");
-            } else {
-                this.elemento.removerClase("menu-click");
-            }
-            return this;
-        }
-
-        if(propiedad=="modo") {
-            var claseTamano=(tamano!="g"&&tamano!="xs"?tamano+"-":"");
-            this.elemento
-                .removerClase(new RegExp("^menu-"+claseTamano+"(flotante|deslizable|bloque)$"))
-                .agregarClase("menu-"+claseTamano+{
-                    flotante:"flotante",
-                    bloque:"bloque",
-                    deslizarIzquierda:"deslizable"
-                }[valor]);
-            this.gestionarAncla();
-            return this;
-        }
+	        if(propiedad=="modo") {
+	            var claseTamano=(tamano!="g"&&tamano!="xs"?tamano+"-":"");
+	            this.elemento
+	                .removerClase(new RegExp("^menu-"+claseTamano+"(flotante|deslizable|bloque)$"))
+	                .agregarClase("menu-"+claseTamano+{
+	                    flotante:"flotante",
+	                    bloque:"bloque",
+	                    deslizarIzquierda:"deslizable"
+	                }[valor]);
+	            this.gestionarAncla();
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

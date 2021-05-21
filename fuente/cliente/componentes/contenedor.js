@@ -58,16 +58,16 @@ var componenteContenedor=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        if(propiedad=="tipo") {
-            this.elemento.removerClase(/(container|container-fluid)/);
-            if(!valor||valor=="normal") {
-                this.elemento.agregarClase("container");
-            } else if(valor=="fluido") {
-                this.elemento.agregarClase("container-fluid");
-            }
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="tipo") {
+	            this.elemento.removerClase(/(container|container-fluid)/);
+	            if(!valor||valor=="normal") {
+	                this.elemento.agregarClase("container");
+	            } else if(valor=="fluido") {
+	                this.elemento.agregarClase("container-fluid");
+	            }
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

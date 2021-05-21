@@ -1112,8 +1112,9 @@ var componente=new function() {
         if(!ui.enModoEdicion()) {
             estilos=this.elemento.style;
         } else {
-            //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-            if(expresion.contieneExpresion(valor)) valor=null;
+            //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css), excepto para propiedades
+            //que tengan una consideración especial de las expresiones en tiempo de diseño (por ahora solo es el caso de `clase`).
+            if(!~["clase"].indexOf(propiedad)&&expresion.contieneExpresion(valor)) valor=null;
             estilos=this.obtenerEstilos(adaptativa?tamano:"g"); //Utilizar siempre los estilos globales si la propiedad no es adaptativa
         }
 
@@ -1198,6 +1199,21 @@ var componente=new function() {
             if(ultimaClase) this.elemento.removerClase(ultimaClase);
             if(valor&&valor.trim()!="") {
                 ultimaClase=valor;
+
+                //En modo de edición, remover las expresiones para poder asignar y previsualizar otras clases regulares
+                if(ui.enModoEdicion()) {
+                	var removerClases=[];
+                	valor=new expresion(valor).evaluar(function(expr,posicion) {
+                		var precede=valor.substring(0,posicion);
+                		//La expresión es parte del nombre de una clase ("clase-{etc}"), remover también "clase-"
+                		if(precede.substr(-1)!=" ") removerClases.push(precede.substring(precede.lastIndexOf(" ")));
+                		//Remover la expresión
+                		return "";
+                	});
+                	for(var i=0;i<removerClases.length;i++)
+                		valor=valor.replace(removerClases[i],"");
+                }
+
                 this.elemento.agregarClase(valor);
             }
 

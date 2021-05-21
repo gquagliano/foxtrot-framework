@@ -190,45 +190,45 @@ var componenteAlternar=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-        
-        if(propiedad=="valorInicial") {
-            if(valor!==true&&this.propiedad("grupo")) {
-                //Si es parte de un grupo, interpretar el valor
-                this.valor(valor);
-            } else if(valor===true||valor===1||valor==="1") {
-                this.campo.atributo("checked",true);
-            } else {
-                this.campo.removerAtributo("checked");                
-            }
-            return this;
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {        
+	        if(propiedad=="valorInicial") {
+	            if(valor!==true&&this.propiedad("grupo")) {
+	                //Si es parte de un grupo, interpretar el valor
+	                this.valor(valor);
+	            } else if(valor===true||valor===1||valor==="1") {
+	                this.campo.atributo("checked",true);
+	            } else {
+	                this.campo.removerAtributo("checked");                
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="tipo") {
-            if(!valor) valor="switch";
-            this.elemento.removerClase(/custom-(switch|checkbox|radio)/)
-                .agregarClase("custom-"+{
-                        alternar:"switch",
-                        checkbox:"checkbox",
-                        opcion:"radio"
-                    }[valor]);
-            this.campo.atributo("type",valor=="opcion"?"radio":"checkbox");
-            return this;
-        }
+	        if(propiedad=="tipo") {
+	            if(!valor) valor="switch";
+	            this.elemento.removerClase(/custom-(switch|checkbox|radio)/)
+	                .agregarClase("custom-"+{
+	                        alternar:"switch",
+	                        checkbox:"checkbox",
+	                        opcion:"radio"
+	                    }[valor]);
+	            this.campo.atributo("type",valor=="opcion"?"radio":"checkbox");
+	            return this;
+	        }
 
-        if(propiedad=="grupo"||propiedad=="valor") {
-            this.campo.dato(propiedad,valor);
-            return this;
-        }
+	        if(propiedad=="grupo"||propiedad=="valor") {
+	            this.campo.dato(propiedad,valor);
+	            return this;
+	        }
 
-        if(propiedad=="estructura") {
-            if(valor=="enLinea") {
-                this.elemento.agregarClase("custom-control-inline");
-            } else {
-                this.elemento.removerClase("custom-control-inline");
-            }
-            return this;
-        }
+	        if(propiedad=="estructura") {
+	            if(valor=="enLinea") {
+	                this.elemento.agregarClase("custom-control-inline");
+	            } else {
+	                this.elemento.removerClase("custom-control-inline");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

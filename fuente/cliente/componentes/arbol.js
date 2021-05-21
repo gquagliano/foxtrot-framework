@@ -148,16 +148,16 @@ var componenteArbol=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        if(propiedad=="interactivo") {
-            if(valor===false||valor===0||valor==="0") {
-                this.elemento.agregarClase("no-interactivo");
-            } else {
-                this.elemento.removerClase("no-interactivo");
-            }
-            return this;
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="interactivo") {
+	            if(valor===false||valor===0||valor==="0") {
+	                this.elemento.agregarClase("no-interactivo");
+	            } else {
+	                this.elemento.removerClase("no-interactivo");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

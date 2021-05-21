@@ -131,22 +131,22 @@ var componenteFecha=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="relleno") {
+	            this.campo.atributo("placeholder",valor);
+	            return this;
+	        }
 
-        if(propiedad=="relleno") {
-            this.campo.atributo("placeholder",valor);
-            return this;
-        }
-
-        if(propiedad=="deshabilitado") {
-            //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor===true||valor===1||valor==="1") {
-                this.campo.propiedad("disabled",true);
-            } else {
-                this.campo.removerAtributo("disabled");
-            }
-            return this;
-        }
+	        if(propiedad=="deshabilitado") {
+	            //Aplicar al campo (por defecto se aplica al elemento)
+	            if(valor===true||valor===1||valor==="1") {
+	                this.campo.propiedad("disabled",true);
+	            } else {
+	                this.campo.removerAtributo("disabled");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

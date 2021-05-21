@@ -81,16 +81,17 @@ var componentePestana=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="etiqueta") this.actualizarContenedor();
 
-        if(propiedad=="etiqueta") this.actualizarContenedor();
+	        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);           
+	        
+	        //Regenerar los encabezados del componente Pestañas
+	        var padre=this.obtenerPadre();
+	        if(padre) padre.actualizarEncabezados(true);
+	    }
 
-        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);           
-        
-        //Regenerar los encabezados del componente Pestañas
-        var padre=this.obtenerPadre();
-        if(padre) padre.actualizarEncabezados(true);
-
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 

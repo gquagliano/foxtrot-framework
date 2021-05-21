@@ -160,90 +160,90 @@ var componenteCampo=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="relleno") {
+	            this.campo.atributo("placeholder",valor);
+	            return this;
+	        }
 
-        if(propiedad=="relleno") {
-            this.campo.atributo("placeholder",valor);
-            return this;
-        }
+	        if(propiedad=="tipo") {
+	            if(valor=="multilinea"||valor=="tinymce") {
+	                //Reemplazar por textarea
 
-        if(propiedad=="tipo") {
-            if(valor=="multilinea"||valor=="tinymce") {
-                //Reemplazar por textarea
+	                this.campo.valor("");
+	                this.campo.outerHTML=this.campo.outerHTML.replace("<input ","<textarea ").replace(/type=".*?"/,"");
 
-                this.campo.valor("");
-                this.campo.outerHTML=this.campo.outerHTML.replace("<input ","<textarea ").replace(/type=".*?"/,"");
+	                //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
+	                this.campo=this.elemento.querySelector("textarea");
+	            } else {
+	                if(valorAnterior=="multilinea"||valor=="tinymce") {
+	                    //Reemplazar por input
 
-                //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
-                this.campo=this.elemento.querySelector("textarea");
-            } else {
-                if(valorAnterior=="multilinea"||valor=="tinymce") {
-                    //Reemplazar por input
+	                    this.campo.valor("");
+	                    this.campo.outerHTML=this.campo.outerHTML.replace("<textarea ","<input ").replace("</textarea>","");
 
-                    this.campo.valor("");
-                    this.campo.outerHTML=this.campo.outerHTML.replace("<textarea ","<input ").replace("</textarea>","");
+	                    //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
+	                    this.campo=this.elemento.querySelector("input");
+	                }
 
-                    //Debe actualizarse la referencia al campo luego de reemplazar el outerHTML
-                    this.campo=this.elemento.querySelector("input");
-                }
+	                if(!valor) valor="text";
+	                var tipos={
+	                    texto:"text",
+	                    codigoBarras:"text",
+	                    contrasena:"password",
+	                    numero:"number"
+	                };
+	                this.campo.atributo("type",tipos[valor]);
+	            }
 
-                if(!valor) valor="text";
-                var tipos={
-                    texto:"text",
-                    codigoBarras:"text",
-                    contrasena:"password",
-                    numero:"number"
-                };
-                this.campo.atributo("type",tipos[valor]);
-            }
+	            if(valor=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
+	        
+	            return this;
+	        } 
+	        
+	        if(propiedad=="valorInicial") {
+	            this.campo.valor(valor);
+	            return this;
+	        }
+	        
+	        if(propiedad=="longitud"&&!isNaN(valor)) {
+	            this.campo.propiedad("maxlength",valor);
+	            return this;
+	        }
 
-            if(valor=="tinymce"&&!ui.enModoEdicion()) this.cargarTinymce();
-        
-            return this;
-        } 
-        
-        if(propiedad=="valorInicial") {
-            this.campo.valor(valor);
-            return this;
-        }
-        
-        if(propiedad=="longitud"&&!isNaN(valor)) {
-            this.campo.propiedad("maxlength",valor);
-            return this;
-        }
+	        if(propiedad=="paso"&&/^[0-9\.]$/.test(valor)) {
+	            this.campo.propiedad("step",valor);
+	            return this;
+	        }
 
-        if(propiedad=="paso"&&/^[0-9\.]$/.test(valor)) {
-            this.campo.propiedad("step",valor);
-            return this;
-        }
+	        if(propiedad=="ocultarControl") {
+	            if(valor===true||valor===1||valor==="1") {
+	                this.campo.agregarClase("ocultar-control");
+	            } else {
+	                this.campo.removerClase("ocultar-control");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="ocultarControl") {
-            if(valor===true||valor===1||valor==="1") {
-                this.campo.agregarClase("ocultar-control");
-            } else {
-                this.campo.removerClase("ocultar-control");
-            }
-            return this;
-        }
+	        if(propiedad=="deshabilitado") {
+	            //Aplicar al campo (por defecto se aplica al elemento)
+	            if(valor===true||valor===1||valor==="1") {
+	                this.campo.propiedad("disabled",true);
+	            } else {
+	                this.campo.removerAtributo("disabled");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="deshabilitado") {
-            //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor===true||valor===1||valor==="1") {
-                this.campo.propiedad("disabled",true);
-            } else {
-                this.campo.removerAtributo("disabled");
-            }
-            return this;
-        }
-
-        if(propiedad=="largoMaximo") {
-            if(valor) {
-                this.campo.atributo("maxlength",valor);
-            } else {
-                this.campo.removerAtributo("maxlength");
-            }
-            return this;
-        }
+	        if(propiedad=="largoMaximo") {
+	            if(valor) {
+	                this.campo.atributo("maxlength",valor);
+	            } else {
+	                this.campo.removerAtributo("maxlength");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

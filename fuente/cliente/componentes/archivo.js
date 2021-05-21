@@ -393,55 +393,55 @@ var componenteArchivo=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="multiple") {
+	            if(valor===true||valor===1||valor==="1") {
+	                this.campo.atributo("multiple",true);
+	            } else {
+	                this.campo.removerAtributo("multiple");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="multiple") {
-            if(valor===true||valor===1||valor==="1") {
-                this.campo.atributo("multiple",true);
-            } else {
-                this.campo.removerAtributo("multiple");
-            }
-            return this;
-        }
+	        if(propiedad=="acepta") {
+	            this.campo.atributo("accept",valor);
+	            return this;
+	        } 
+	        
+	        if(propiedad=="multimedia") {
+	            if(!valor) {
+	                this.campo.removerAtributo("capture");
+	            } else {
+	                if(valor=="audio"||valor=="videoFrontal"||valor=="fotoFrontal") {
+	                    this.campo.atributo("capture","user");
+	                } else {
+	                    this.campo.atributo("capture","environment");
+	                }
+	                
+	                if(valor=="audio") {
+	                    this.campo.atributo("accept","user");
+	                } else if(valor=="video"||valor=="videoFrontal") {
+	                    this.campo.atributo("accept","video/*");
+	                } else if(valor=="foto"||valor=="fotoFrontal") {
+	                    this.campo.atributo("accept","image/*");
+	                }
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="acepta") {
-            this.campo.atributo("accept",valor);
-            return this;
-        } 
-        
-        if(propiedad=="multimedia") {
-            if(!valor) {
-                this.campo.removerAtributo("capture");
-            } else {
-                if(valor=="audio"||valor=="videoFrontal"||valor=="fotoFrontal") {
-                    this.campo.atributo("capture","user");
-                } else {
-                    this.campo.atributo("capture","environment");
-                }
-                
-                if(valor=="audio") {
-                    this.campo.atributo("accept","user");
-                } else if(valor=="video"||valor=="videoFrontal") {
-                    this.campo.atributo("accept","video/*");
-                } else if(valor=="foto"||valor=="fotoFrontal") {
-                    this.campo.atributo("accept","image/*");
-                }
-            }
-            return this;
-        }
+	        if(propiedad=="etiqueta") {
+	            this.boton.establecerHtml(valor);
+	            return this;
+	        }
 
-        if(propiedad=="etiqueta") {
-            this.boton.establecerHtml(valor);
-            return this;
-        }
-
-        if(propiedad=="ocultarNombre") {
-            if(!valor) {
-                this.elemento.removerClase("ocultar-nombre");
-            } else {
-                this.elemento.agregarClase("ocultar-nombre");
-            }
-        }
+	        if(propiedad=="ocultarNombre") {
+	            if(!valor) {
+	                this.elemento.removerClase("ocultar-nombre");
+	            } else {
+	                this.elemento.agregarClase("ocultar-nombre");
+	            }
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

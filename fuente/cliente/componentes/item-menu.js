@@ -285,31 +285,31 @@ var componenteItemMenu=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="enlace") {
+	            if(!valor) valor="#";
+	            this.enlace.atributo("href",valor);
+	            return this;
+	        }
 
-        if(propiedad=="enlace") {
-            if(!valor) valor="#";
-            this.enlace.atributo("href",valor);
-            return this;
-        }
+	        if(propiedad=="nuevaVentana") {
+	            if(valor!==true&&valor!==1) {
+	                this.enlace.removerAtributo("target");
+	            } else {
+	                this.enlace.atributo("target","_blank");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="nuevaVentana") {
-            if(valor!==true&&valor!==1) {
-                this.enlace.removerAtributo("target");
-            } else {
-                this.enlace.atributo("target","_blank");
-            }
-            return this;
-        }
-
-        if(propiedad=="separador") {
-            if(valor) {
-                this.elemento.agregarClase("menu-separador");
-            } else {
-                this.elemento.removerClase("menu-separador");
-            }
-            return this;
-        }
+	        if(propiedad=="separador") {
+	            if(valor) {
+	                this.elemento.agregarClase("menu-separador");
+	            } else {
+	                this.elemento.removerClase("menu-separador");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

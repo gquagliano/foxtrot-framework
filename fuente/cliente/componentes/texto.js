@@ -67,43 +67,43 @@ var componenteTexto=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="formato") {
+	            var seleccionado=this.elemento.es({clase:"seleccionado"});
 
-        if(propiedad=="formato") {
-            var seleccionado=this.elemento.es({clase:"seleccionado"});
+	            //Cambiar tipo de etiqueta
+	            if(!valor) valor="p";
+	            if(valor=="etiqueta") valor="label";
+	            if(valor=="enLinea") valor="span";
+	            
+	            //Crear nuevo elemento con el contenido del actual
+	            var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
+	            elem.innerHTML=this.elemento.innerHTML;
 
-            //Cambiar tipo de etiqueta
-            if(!valor) valor="p";
-            if(valor=="etiqueta") valor="label";
-            if(valor=="enLinea") valor="span";
-            
-            //Crear nuevo elemento con el contenido del actual
-            var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
-            elem.innerHTML=this.elemento.innerHTML;
+	            //Reemplazar
+	            this.elemento.insertarDespues(elem)
+	                .remover();
 
-            //Reemplazar
-            this.elemento.insertarDespues(elem)
-                .remover();
+	            //Actualizar referencia
+	            this.elemento=elem;            
+	            this.fueInicializado=false;
+	            this.inicializar();
 
-            //Actualizar referencia
-            this.elemento=elem;            
-            this.fueInicializado=false;
-            this.inicializar();
+	            //Restaurar selección
+	            if(seleccionado) {
+	                editor.limpiarSeleccion()
+	                    .establecerSeleccion(this.elemento);
+	            }
 
-            //Restaurar selección
-            if(seleccionado) {
-                editor.limpiarSeleccion()
-                    .establecerSeleccion(this.elemento);
-            }
+	            if(ui.enModoEdicion()) {
+	                //En el editor, debemos notificar que el elemento fue reemplazado, ya que todos los eventos estaban aplicados sobre el elemento viejo (a diferencia
+	                //de otros componentes que cuentan con un contenedor)
+	                editor.prepararComponenteInsertado(this);
+	            }
 
-            if(ui.enModoEdicion()) {
-                //En el editor, debemos notificar que el elemento fue reemplazado, ya que todos los eventos estaban aplicados sobre el elemento viejo (a diferencia
-                //de otros componentes que cuentan con un contenedor)
-                editor.prepararComponenteInsertado(this);
-            }
-
-            return this;
-        }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

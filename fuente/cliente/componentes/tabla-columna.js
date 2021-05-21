@@ -104,11 +104,11 @@ var componenteColumnaTabla=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        //Actualizar encabezados en el editor
-        if(propiedad=="encabezado"&&ui.enModoEdicion()) 
-            this.encabezadoTemporal.establecerHtml(valor);
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        //Actualizar encabezados en el editor
+	        if(propiedad=="encabezado"&&ui.enModoEdicion()) 
+	            this.encabezadoTemporal.establecerHtml(valor);
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

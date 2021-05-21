@@ -102,46 +102,46 @@ var componenteBoton=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="estilo") {
+	            this.elemento.removerClase(/btn-(primary|secondary|success|danger|warning|info|light|dark)/);
+	            if(valor) this.elemento.agregarClase("btn-"+valor);
+	            return this;
+	        }
 
-        if(propiedad=="estilo") {
-            this.elemento.removerClase(/btn-(primary|secondary|success|danger|warning|info|light|dark)/);
-            if(valor) this.elemento.agregarClase("btn-"+valor);
-            return this;
-        }
+	        if(propiedad=="tipo") {
+	            if(valor=="boton") {
+	                this.elemento.agregarClase("btn");
+	            } else {
+	                this.elemento.removerClase("btn");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="tipo") {
-            if(valor=="boton") {
-                this.elemento.agregarClase("btn");
-            } else {
-                this.elemento.removerClase("btn");
-            }
-            return this;
-        }
+	        if(propiedad=="enlace") {
+	            if(!valor) valor="#";
+	            this.elemento.atributo("href",valor);
+	            return this;
+	        }
 
-        if(propiedad=="enlace") {
-            if(!valor) valor="#";
-            this.elemento.atributo("href",valor);
-            return this;
-        }
+	        if(propiedad=="nuevaVentana") {
+	            if(!valor) {
+	                this.elemento.removerAtributo("target");
+	            } else {
+	                this.elemento.atributo("target","_blank");
+	            }
+	            return this;
+	        }
 
-        if(propiedad=="nuevaVentana") {
-            if(!valor) {
-                this.elemento.removerAtributo("target");
-            } else {
-                this.elemento.atributo("target","_blank");
-            }
-            return this;
-        }
-
-        if(propiedad=="predeterminado") {
-            if(valor===true||valor===1||valor==="1") {
-                this.elemento.agregarClase("predeterminado");
-            } else {
-                this.elemento.removerClase("predeterminado");
-            }
-            return this;
-        }
+	        if(propiedad=="predeterminado") {
+	            if(valor===true||valor===1||valor==="1") {
+	                this.elemento.agregarClase("predeterminado");
+	            } else {
+	                this.elemento.removerClase("predeterminado");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

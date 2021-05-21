@@ -136,18 +136,18 @@ var componenteImagen=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
-
-        if(propiedad=="origen") {
-            //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
-            this.establecerOrigen();
-            return this;
-        }
-        
-        if(propiedad=="alt") {
-            this.elemento.atributo("alt",valor);
-            return this;
-        }
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(propiedad=="origen") {
+	            //TODO Si es una ruta relativa, anexar la URL al directorio de imágenes de la aplicación
+	            this.establecerOrigen();
+	            return this;
+	        }
+	        
+	        if(propiedad=="alt") {
+	            this.elemento.atributo("alt",valor);
+	            return this;
+	        }
+	    }
         
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

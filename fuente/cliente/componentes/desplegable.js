@@ -106,34 +106,34 @@ var componenteDesplegable=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
-        if(expresion.contieneExpresion(valor)&&ui.enModoEdicion()) valor=null;
+        if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
+	        if(!ui.enModoEdicion()) {
+	            if(propiedad=="opciones"&&typeof valor==="object"&&valor!==null) {
+	                this.establecerOpciones(valor);
+	                return this;
+	            }
+	            if(propiedad=="grupos"&&typeof valor==="object"&&valor!==null) {
+	                this.establecerGrupos(valor);
+	                return this;
+	            }
 
-        if(!ui.enModoEdicion()) {
-            if(propiedad=="opciones"&&typeof valor==="object"&&valor!==null) {
-                this.establecerOpciones(valor);
-                return this;
-            }
-            if(propiedad=="grupos"&&typeof valor==="object"&&valor!==null) {
-                this.establecerGrupos(valor);
-                return this;
-            }
+	            if(propiedad=="propiedadClave"||propiedad=="propiedadEtiqueta") {
+	                //Actualizar opciones
+	                this.actualizar();
+	                return this;
+	            }
+	        }
 
-            if(propiedad=="propiedadClave"||propiedad=="propiedadEtiqueta") {
-                //Actualizar opciones
-                this.actualizar();
-                return this;
-            }
-        }
-
-        if(propiedad=="deshabilitado") {
-            //Aplicar al campo (por defecto se aplica al elemento)
-            if(valor===true||valor===1||valor==="1") {
-                this.campo.propiedad("disabled",true);
-            } else {
-                this.campo.removerAtributo("disabled");
-            }
-            return this;
-        }
+	        if(propiedad=="deshabilitado") {
+	            //Aplicar al campo (por defecto se aplica al elemento)
+	            if(valor===true||valor===1||valor==="1") {
+	                this.campo.propiedad("disabled",true);
+	            } else {
+	                this.campo.removerAtributo("disabled");
+	            }
+	            return this;
+	        }
+	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;

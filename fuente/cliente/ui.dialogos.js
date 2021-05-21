@@ -751,7 +751,7 @@
 
         removerEventosDesplegable(elem);
 
-        ui.ocultarSombra();
+        if(!dialogosAbiertos.length) ui.ocultarSombra();
 
         desplegableAbierto=null;
 

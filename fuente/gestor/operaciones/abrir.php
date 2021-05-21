@@ -18,7 +18,8 @@ header('Content-Type: text/plain; charset=utf-8',true);
 prepararVariables();
 
 if(!file_exists($rutaJs)) {
-    //Controlador un nuevo con el mismo nombre que la vista (en el futuro esto debería ser opcional ya que no es necesario que toda vista tenga un controlador de igual nombre)
+    //Controlador un nuevo con el mismo nombre que la vista (en el futuro esto debería ser opcional ya que no es necesario que toda
+    //vista tenga un controlador de igual nombre)
     crearControlador();
 }
 
@@ -28,14 +29,11 @@ if(!file_exists($rutaHtml)) {
 }
 
 if($modo=='embebible') {
-    $url='operaciones/marco.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
+    $url='operaciones/marco-embebible.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
 } elseif($cliente=='cordova') {
 	$url='operaciones/marco-cordova.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
 } else {
-    $url=foxtrot::obtenerEnrutador()->obtenerUrlVista($nombreVista);
-    //Forzar aplicación
-    $url.=strpos($url,'?')===false?'?':'&';
-    $url.='__apl='.$nombreApl;
+	$url='operaciones/marco.php?aplicacion='.$nombreApl.'&vista='.$nombreVista;
 }
 
 echo json_encode([

@@ -6,12 +6,14 @@
  * @version 1.0
  */
 
+namespace enrutadores;
+
 defined('_inc') or exit;
 
 /**
  * Enrutador de solicitudes predeterminado para aplicaciones de una sola página.
  */
-class enrutadorUnaPagina extends enrutador {
+class unaPagina extends \enrutador {
     /**
      * @var $vistaInicio Vista inicial.
      */

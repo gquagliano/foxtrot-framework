@@ -211,10 +211,10 @@ class foxtrot {
         include(_servidor.self::$origenDatos.'/condicion.php');
         include(_servidor.self::$origenDatos.'/relacion.php');
 
-        include(_servidor.'enrutadores/enrutadorAplicacionPredeterminado.php');
-        include(_servidor.'enrutadores/enrutadorPredeterminado.php');
-        include(_servidor.'enrutadores/enrutadorUnaPagina.php');
-        include(_servidor.'enrutadores/enrutadorApi.php');
+        include(_servidor.'enrutadores/aplicacion/predeterminado.php');
+        include(_servidor.'enrutadores/predeterminado.php');
+        include(_servidor.'enrutadores/unaPagina.php');
+        include(_servidor.'enrutadores/api.php');
     }
 
     /**
@@ -355,7 +355,7 @@ class foxtrot {
                 $cls=_espacioApl.'enrutadores\\'.$enrutador;
             } else {
                 //Enrutador del sistema
-                $cls='\\'.$enrutador;
+                $cls='\\enrutadores\\'.$enrutador;
             }
             self::$enrutador=new $cls;
             return;
@@ -402,7 +402,7 @@ class foxtrot {
         //Crear el enrutador
         self::fabricarEnrutador(configuracion::$enrutador,$sol->uri,$sol->params);
 	    //Si no quedó definido, utilizar el predeterminado
-        if(!self::$enrutador) self::$enrutador=new enrutadorPredetermiando;
+        if(!self::$enrutador) self::$enrutador=new \enrutadores\predeterminado;
     }
 
     /**

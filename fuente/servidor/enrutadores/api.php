@@ -6,12 +6,14 @@
  * @version 1.0
  */
 
+namespace enrutadores;
+
 defined('_inc') or exit;
 
 /**
  * Enrutador de solicitudes predeterminado para.
  */
-class enrutadorApi extends enrutador {
+class api extends \enrutador {
     /**
      * Constructor.
      */

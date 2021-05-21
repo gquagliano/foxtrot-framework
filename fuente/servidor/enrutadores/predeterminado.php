@@ -6,12 +6,14 @@
  * @version 1.0
  */
 
+namespace enrutadores;
+
 defined('_inc') or exit;
 
 /**
  * Enrutador de solicitudes predeterminado.
  */
-class enrutadorPredetermiando extends enrutador {
+class predeterminado extends \enrutador {
     /**
      * Analiza la URL provista, estableciendo las propiedades del entutador.
      * @return \enrutador

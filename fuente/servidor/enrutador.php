@@ -37,7 +37,7 @@ class enrutador {
             'pagina'
         ];
         foreach($this->tipos as $tipo) {
-            include_once(_servidor.'enrutadores/tipos/'.$tipo.'.php');
+            include_once(_servidor.'enrutadores/tipos-solicitud/'.$tipo.'.php');
         }
     }
 

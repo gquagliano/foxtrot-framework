@@ -15,7 +15,7 @@ $dominios=[
     'localhost'=>'ejemplo'
 ];
 
-foxtrot::establecerEnrutadorAplicacion(new enrutadorAplicacionPredeterminado($dominios));
+foxtrot::establecerEnrutadorAplicacion(new \enrutadores\aplicacion\predeterminado($dominios));
 
 configuracion::establecer([
     'url'=>(foxtrot::esHttps()?'https':'http').'://'.$_SERVER['HTTP_HOST'].'/',

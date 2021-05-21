@@ -6,12 +6,14 @@
  * @version 1.0
  */
 
+namespace enrutadores\aplicacion;
+
 defined('_inc') or exit;
 
 /**
  * Enrutador de aplicaciones predeterminado, determina la aplicación a ejecutar en base a un listado de expresiones regulares de nombres de dominio.
  */
-class enrutadorAplicacionPredeterminado extends enrutadorAplicacion {
+class predeterminado extends \enrutadorAplicacion {
     protected $dominios;
 
     /**

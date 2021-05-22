@@ -40,8 +40,10 @@ class modelo extends modeloBase {
         return $this->crear();
     }
 
+    ////donde
+
     /**
-     * Agrega une condición `O` (`OR`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `O` (`OR`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oDonde() {
@@ -51,7 +53,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `XOR` (*`O` exclusivo*). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `XOR` (*`O` exclusivo*). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oxDonde() {
@@ -61,15 +63,25 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `Y` (`AND`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `Y` (`AND`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function yDonde() {
         return call_user_func_array([$this,'donde'],func_get_args());
     }
 
+    ////dondeNo
+
     /**
-     * Agrega une condición `O` (`OR`) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición negada. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeNo() {
+        return call_user_func_array([$this,'yDondeNo'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oDondeNo() {
@@ -80,7 +92,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `XOR` (*`O` exclusivo*) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `XOR` (*`O` exclusivo*) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oxDondeNo() {
@@ -91,7 +103,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `Y` (`AND`) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `Y` (`AND`) por desigualdad (`<>`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function yDondeNo() {
@@ -100,8 +112,18 @@ class modelo extends modeloBase {
         return call_user_func_array([$this,'donde'],$args);
     }
 
+    ////dondeComo
+
     /**
-     * Agrega une condición `O` (`OR`) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeComo() {
+        return call_user_func_array([$this,'yDondeComo'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oDondeComo() {
@@ -112,7 +134,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `OX` (*`O` exclusivo*) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `OX` (*`O` exclusivo*) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oxDondeComo() {
@@ -123,7 +145,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `Y` (`AND`) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `Y` (`AND`) por búsqueda parcial (`LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function yDondeComo() {
@@ -132,8 +154,18 @@ class modelo extends modeloBase {
         return call_user_func_array([$this,'donde'],$args);
     }
 
+    ////dondeNoComo
+
     /**
-     * Agrega une condición `O` (`OR`) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeNoComo() {
+        return call_user_func_array([$this,'yDondeNoComo'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oDondeNoComo() {
@@ -144,7 +176,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `XOR` (*`O` exclusivo*) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `XOR` (*`O` exclusivo*) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function oxDondeNoComo() {
@@ -155,7 +187,7 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega une condición `Y` (`AND`) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
+     * Agrega una condición `Y` (`AND`) por búsqueda parcial no coincidente (`NOT LIKE`). Ver `donde()` para información sobre los parámetros.
      * @return \modelo
      */
     public function yDondeNoComo() {
@@ -164,8 +196,92 @@ class modelo extends modeloBase {
         return call_user_func_array([$this,'donde'],$args);
     }
 
+    ////dondeEn
+
     /**
-     * Agrega una condición Y.
+     * Agrega una condición por listado de valores (`IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeEn() {
+        return call_user_func_array([$this,'yDondeEn'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) por listado de valores (`IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeEn() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]=condicion::operadorEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) por listado de valores (`IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeEn() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]=condicion::operadorEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) por listado de valores (`IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeEn() {
+        $args=func_get_args();
+        $args[]=condicion::operadorEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    ////dondeNoEn
+
+    /**
+     * Agrega una condición por listado de valores no coincidentes (`NOT IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeNoEn() {
+        return call_user_func_array([$this,'yDondeNoEn'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) por listado de valores no coincidentes (`NOT IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeNoEn() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]=condicion::operadorNoEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) por listado de valores no coincidentes (`NOT IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeNoEn() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]=condicion::operadorNoEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) por listado de valores no coincidentes (`NOT IN()`). Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeNoEn() {
+        $args=func_get_args();
+        $args[]=condicion::operadorNoEn;
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`).
      * @param \entidad $entidad Utilizar las propiedades definidas de la entidad como condiciones.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
      * valores (por defecto, `=`).
@@ -178,7 +294,7 @@ class modelo extends modeloBase {
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición Y.
+     * Agrega una condición `Y` (`AND`).
      * @param array|object $condiciones Objeto o array asociativo `[campo=>valor]`.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
      * valores (por defecto, `=`).
@@ -191,18 +307,22 @@ class modelo extends modeloBase {
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición Y.
+     * Agrega una condición `Y` (`AND`).
      * @param string $campo Campo.
      * @param mixed $valor Valor.
+     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
+     * valores (por defecto, `=`).
      * @return \modelo
      *//**
      * Agrega una condición.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param string $campo Campo.
      * @param mixed $valor Valor.
+     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
+     * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición Y.
+     * Agrega una condición `Y` (`AND`).
      * @param string $campo Campo.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
      * @param mixed $valor Valor.
@@ -215,7 +335,7 @@ class modelo extends modeloBase {
      * @param mixed $valor Valor.
      * @return \modelo
      *//**
-     * Agrega una condición Y.
+     * Agrega una condición `Y` (`AND`).
      * @param string $sql Condición como SQL.
      * @param array|object $parametros Array asociativo de parámetros (opcional).
      * @param array|mixed $valor Array asociativo de tipos de datos (`[parametro=>tipo]`, opcional).
@@ -235,63 +355,67 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Agrega una condición HAVING Y.
+     * Agrega una condición `HAVING` `Y` (`AND`).
      * @param \entidad $entidad Utilizar las propiedades definidas de la entidad como condiciones.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición HAVING.
+     * Agrega una condición `HAVING`.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param \entidad $entidad Utilizar las propiedades definidas de la entidad como condiciones.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición  HAVINGY.
+     * Agrega una condición `HAVING` `Y` (`AND`).
      * @param array|object $condiciones Objeto o array asociativo `[campo=>valor]`.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición HAVING.
+     * Agrega una condición `HAVING`.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param array|object $condiciones Objeto o array asociativo `[campo=>valor]`.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los
      * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición  HAVINGY.
+     * Agrega una condición `HAVING` `Y` (`AND`).
      * @param string $campo Campo.
      * @param mixed $valor Valor.
+     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
+     * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición HAVING.
+     * Agrega una condición `HAVING`.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param string $campo Campo.
      * @param mixed $valor Valor.
+     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
+     * valores (por defecto, `=`).
      * @return \modelo
      *//**
-     * Agrega una condición  HAVINGY.
+     * Agrega una condición `HAVING` `Y` (`AND`).
      * @param string $campo Campo.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
      * @param mixed $valor Valor.
      * @return \modelo
      *//**
-     * Agrega una condición HAVING.
+     * Agrega una condición `HAVING`.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param string $campo Campo.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
      * @param mixed $valor Valor.
      * @return \modelo
      *//**
-     * Agrega una condición  HAVINGY.
+     * Agrega una condición `HAVING` `Y` (`AND`).
      * @param string $sql Condición como SQL.
      * @param array|object $parametros Array asociativo de parámetros (opcional).
      * @param array|mixed $valor Array asociativo de tipos de datos (`[parametro=>tipo]`, opcional).
      * @return \modelo
      *//**
-     * Agrega una condición HAVING.
+     * Agrega una condición `HAVING`.
      * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
      * @param string $sql Condición como SQL.
      * @param array|object $parametros Array asociativo de parámetros (opcional).
@@ -315,14 +439,17 @@ class modelo extends modeloBase {
         $tipo=array_shift($args);
 
         $union=self::y;
-        if($args[0]==self::y||$args[0]==self::o||$args[0]==self::ox)
+        if(in_array($args[0],[self::y,self::o,self::ox]))
             $union=array_shift($args);
+
+        $operador='=';
+        if(in_array($args[count($args)-1],['=','<>','<','<=','>','>=',self::como,self::noComo,self::en,self::noEn]))
+        	$operador=array_pop($args);
 
         //donde($entidad[,$operador])
         //donde($union,$entidad[,$operador])
         if(is_object($args[0])&&get_class($args[0])==$this->_tipoEntidad) {
             $obj=$args[0];
-            $operador=$args[1];
 
             $obj->prepararValores(self::seleccionar);
 
@@ -338,7 +465,6 @@ class modelo extends modeloBase {
         //donde($union,['campo'=>valor][,$operador])
         if(is_object($args[0])||is_array($args[0])) {
             $array=is_object($args[0])?(array)$args[0]:$args[0];
-            $operador=$args[1];
             
             foreach($array as $clave=>$valor) {
                 if($valor===null) continue;
@@ -348,18 +474,19 @@ class modelo extends modeloBase {
             return $this;
         }
 
-        //donde($campo,$valor)
-        //donde($union,$campo,$valor)
+        //donde($campo,$valor[,$operador])
+        //donde($union,$campo,$valor[,$operador])
         if(count($args)==2&&array_key_exists($args[0],$this->campos)) {
             list($nombre,$valor)=$args;
 
             if($valor===null) return $this;
 
-            return $this->agregarCondicion($nombre,'=',$valor,$union,$tipo);
+            return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
         }
 
-        //donde($campo,$operador,$valor)
-        //donde($union,$campo,$operador,$valor)
+        //donde($campo,$operador,$valor[,$operador2])
+        //donde($union,$campo,$operador,$valor[,$operador2])
+        //$operador2 es ignorado
         if(count($args)==3&&array_key_exists($args[0],$this->campos)) {
             list($nombre,$operador,$valor)=$args;
             
@@ -368,8 +495,9 @@ class modelo extends modeloBase {
             return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
         }
 
-        //donde($sql[,$parametros,$tipos])
-        //donde($union,$sql[,$parametros,$tipos])
+        //donde($sql[,$parametros,$tipos,$operador])
+        //donde($union,$sql[,$parametros,$tipos,$operador])
+        //$operador es ignorado
         if(is_string($args[0])) {
             list($sql,$parametros,$tipos)=$args;
 

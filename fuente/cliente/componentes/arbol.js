@@ -52,6 +52,27 @@ var componenteArbol=function() {
             interactivo:{
             	etiqueta:"Interactivo",
             	tipo:"logico"
+            },
+            devuelve:{
+                etiqueta:"Valor devuelto",
+                adaptativa:false,
+                tipo:"opciones",
+                opciones:{
+                    "normal":"Origen de datos actualizado",
+                    "listado":"Listado plano (sin anidar)"
+                }
+            },
+            filtrarPropiedades:{
+                etiqueta:"Devolver propiedades",
+                adaptativa:false,
+                ayuda:"Propiedades a incluir de cada elemento del listado del valor devuelto, separadas por coma (por defecto\
+                    devuelve el objeto original)."
+            },
+            filtrarItems:{
+                etiqueta:"Filtrar valor devuelto",
+                adaptativa:false,
+                ayuda:"Nombre de una propiedad a evaluar en cada elemento del listado. Solo se incluirán en el valor devuelto aquellos\
+                    elementos cuya valor se evalúe como verdadero (truthy)."
             }
         },
         "Eventos":{
@@ -288,8 +309,8 @@ var componenteArbol=function() {
         if(typeof elementoPadre==="undefined") elementoPadre=this.elemento;
         if(typeof nivel==="undefined") nivel=0;
         if(typeof ruta==="undefined") ruta=[];
-        if(typeof propiedad==="undefined") propiedad=this.propiedad("propiedad");
-        if(typeof expandido==="undefined") expandido=this.propiedad("estadoInicial")=="expandido";
+        if(typeof propiedad==="undefined") propiedad=this.propiedad(false,"propiedad");
+        if(typeof expandido==="undefined") expandido=this.propiedad(false,"estadoInicial")=="expandido";
 
         var ul=documento.crear("<ul class='arbol-listado'>")
             .anexarA(elementoPadre);
@@ -334,11 +355,76 @@ var componenteArbol=function() {
         if(typeof valor==="undefined") {
         	if(ignorarValor) return null;
             //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.obtenerDatosActualizados();            
+            return this.extraerValor();           
         } else {
             //Cuando se asigne un valor, establecer como origen de datos
             this.establecerDatos(valor);
         }
+    };
+
+    /**
+     * Genera y devuelve el valor de retorno según las propiedades `devuelve`, `filtrarPropiedades` y `filtrarItems`.
+     * @returns {*}
+     */
+    this.extraerValor=function() {
+        var obj=this.obtenerDatosActualizados(),
+            devuelve=this.propiedad(false,"devuelve"),
+            propiedad=this.propiedad(false,"propiedad"),
+            propiedades=this.propiedad(false,"filtrarPropiedades"),
+            filtro=this.propiedad(false,"filtrarItems");
+
+        if(!obj) return obj;
+
+        var filtrar=function(item) {
+            if(filtro&&!item[filtro]) return null;
+
+            if(!propiedades||typeof item!="object") return item;
+
+            if(typeof propiedades!="string") {
+                propiedades=propiedades.split(",");
+                for(var i=0;i<propiedades.length;i++)
+                    propiedades[i]=propiedades[i].trim();
+            }
+
+            var nuevoItem={};
+
+            for(var prop in item) {
+                if(~propiedades.indexOf(prop))
+                    nuevoItem[prop]=item[prop];
+            }
+
+            return nuevoItem;
+        },
+        listado=[];
+
+        (function recorrer(items,destino) {
+            for(var i=0;i<items.length;i++) {
+                var item=items[i],
+                    filtrado=filtrar(item);
+
+                if(filtrado===null) {
+                    //Si el item no se incluye tras los filtros, se debe detener la búsqueda solo si el valor debe ser devuelto como árbol, de
+                    //lo contrario, el item se omite pero continúa la búsqueda en forma recursiva añadiendo los items al listado independientemente
+                    //de si la ascendencia fue incluida o no.
+                    if(devuelve!="listado") continue;
+                } else {
+                    destino.push(filtrado);
+                }
+
+                if(propiedad&&typeof item[propiedad]=="object") {
+                    if(devuelve=="listado") {
+                        //Agregar descendencia directamente en el listado 
+                        recorrer(item[propiedad],destino);
+                    } else {
+                        //Mantener la estructura anidada
+                        destino[propiedad]=[];
+                        recorrer(item[propiedad],destino[propiedad]);
+                    }
+                }
+            }
+        })(obj,listado);
+
+        return listado;
     };
 
     /**

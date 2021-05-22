@@ -35,6 +35,18 @@ var componenteTabla=function() {
                 etiqueta:"Mensaje de tabla vacía",
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",
                 adaptativa:false
+            },
+            filtrarPropiedades:{
+                etiqueta:"Devolver propiedades",
+                adaptativa:false,
+                ayuda:"Propiedades a incluir de cada elemento del listado del valor devuelto, separadas por coma (por defecto\
+                    devuelve el objeto original)."
+            },
+            filtrarItems:{
+                etiqueta:"Filtrar valor devuelto",
+                adaptativa:false,
+                ayuda:"Nombre de una propiedad a evaluar en cada elemento del listado. Solo se incluirán en el valor devuelto aquellos\
+                    elementos cuya valor se evalúe como verdadero (truthy)."
             }
         }
     };
@@ -305,11 +317,55 @@ var componenteTabla=function() {
     this.valor=function(valor) {
         if(typeof valor==="undefined") {
             //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.obtenerDatosActualizados();            
+            return this.extraerValor();            
         } else {
             //Cuando se asigne un valor, establecer como origen de datos
             this.establecerDatos(valor);
         }
+    };   
+
+    /**
+     * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.
+     * @returns {*}
+     */
+     this.extraerValor=function() {
+        var obj=this.obtenerDatosActualizados(),
+            propiedades=this.propiedad(false,"filtrarPropiedades"),
+            filtro=this.propiedad(false,"filtrarItems");
+
+        if(!obj) return obj;
+
+        var filtrar=function(item) {
+            if(filtro&&!item[filtro]) return null;
+
+            if(!propiedades||typeof item!="object") return item;
+
+            if(typeof propiedades!="string") {
+                propiedades=propiedades.split(",");
+                for(var i=0;i<propiedades.length;i++)
+                    propiedades[i]=propiedades[i].trim();
+            }
+
+            var nuevoItem={};
+
+            for(var prop in item) {
+                if(~propiedades.indexOf(prop))
+                    nuevoItem[prop]=item[prop];
+            }
+
+            return nuevoItem;
+        },
+        listado=[];
+
+        for(var i=0;i<obj.length;i++) {
+            var item=obj[i],
+                filtrado=filtrar(item);
+
+            if(filtrado!==null)
+                listado.push(filtrado);
+        }
+
+        return listado;
     };
 
     /**

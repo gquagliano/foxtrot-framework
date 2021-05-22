@@ -602,7 +602,7 @@ var componente=new function() {
 
         var t=this,
             fn=function(comp,indice) {
-                comp.obtenerHijos().forEach(function(hijo) {
+                var asignarValor=function(hijo) {
                     var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
                         nombre=hijo.obtenerNombre(),
                         valor=hijo.valor();
@@ -616,6 +616,10 @@ var componente=new function() {
 	                        }
 	                    }
                     }
+                };
+                asignarValor(comp);
+                comp.obtenerHijos().forEach(function(hijo) {
+                    asignarValor(hijo);
                     fn(hijo,indice);
                 });
             };

@@ -66,10 +66,10 @@ var componenteTexto=function() {
      * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
-        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
         if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
 	        if(propiedad=="formato") {
-	            var seleccionado=this.elemento.es({clase:"seleccionado"});
+	            var seleccionado=this.elemento.es({clase:"foxtrot-seleccionado"});
 
 	            //Cambiar tipo de etiqueta
 	            if(!valor) valor="p";
@@ -80,25 +80,31 @@ var componenteTexto=function() {
 	            var elem=document.crear("<"+valor+(valor=="p"?" class='texto'":"")+">");
 	            elem.innerHTML=this.elemento.innerHTML;
 
+                //Preservar las clases que no sean del sistema
+                for(var i=0;i<this.elemento.classList.length;i++)
+                    if(!util.buscarElemento(this.clasesCss,this.elemento.classList[i]))
+                        elem.agregarClase(this.elemento.classList[i]);
+
 	            //Reemplazar
 	            this.elemento.insertarDespues(elem)
 	                .remover();
 
 	            //Actualizar referencia
-	            this.elemento=elem;            
+	            this.elemento=elem;
+
 	            this.fueInicializado=false;
 	            this.inicializar();
-
-	            //Restaurar selección
-	            if(seleccionado) {
-	                editor.limpiarSeleccion()
-	                    .establecerSeleccion(this.elemento);
-	            }
 
 	            if(ui.enModoEdicion()) {
 	                //En el editor, debemos notificar que el elemento fue reemplazado, ya que todos los eventos estaban aplicados sobre el elemento viejo (a diferencia
 	                //de otros componentes que cuentan con un contenedor)
 	                editor.prepararComponenteInsertado(this);
+
+                    //Restaurar selección
+                    if(seleccionado) {
+                        editor.limpiarSeleccion()
+                            .establecerSeleccion(this.elemento);
+                    }
 	            }
 
 	            return this;

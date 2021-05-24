@@ -227,13 +227,10 @@
      * @param {string} [parametros.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
      * `notificacion`, `seguridad`, `ok`, `problema-red`.
+     * @param {(string|Node|Element)} [parametros.destino=document.body] - Elemento de destino, dentro del cual se creará el diálogo.
      * @returns {Dialogo}
      */
     ui.construirDialogo=function(parametros) {
-        //Anexar al documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
-        var elem=document.crear("<div class='dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
-            .anexarA(document.body);
-
         parametros=Object.assign({
             cuerpo:null,
             opciones:null,
@@ -245,8 +242,12 @@
             abierto:false,
             modal:false,
             sobreponer:false,
-            icono:null
+            icono:null,
+            destino:document.body //Utilizar el documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
         },parametros);
+
+        var elem=document.crear("<div class='dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
+            .anexarA(parametros.destino);
 
         var cuerpo=elem.querySelector(".dialogo-contenido");
         if(typeof parametros.cuerpo==="object"&&(parametros.cuerpo instanceof Node)) {

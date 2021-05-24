@@ -42,6 +42,8 @@ var componenteDialogo=function() {
 
         this.contenedor=this.elemento;
 
+        this.ocultarDescendencia();
+
         this.prototipo.inicializar.call(this);
 
         //Remover la clase 'dialogo' (agregada por inicializarComponente) ya que es solo el cuerpo; ui.construirDialogo() va a

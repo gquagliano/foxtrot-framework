@@ -1105,6 +1105,7 @@ var editor=new function() {
         });
         
         removerZonas();
+        ui.obtenerCuerpo().removerClase("foxtrot-seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-seleccionado").removerClase("foxtrot-seleccionado");
         ui.obtenerCuerpo().querySelectorAll(".foxtrot-hijo-seleccionado").removerClase("foxtrot-hijo-seleccionado");
         this.componentesSeleccionados=[];
@@ -1603,6 +1604,11 @@ var editor=new function() {
      */
     this.ejecutar=function() {
         var doc=ui.obtenerDocumento();
+
+        //Inicializar la instancia de la vista principal
+        ui.obtenerInstanciaVistaPrincipal()
+            .establecerElemento(ui.obtenerCuerpo())
+            .inicializar();
 
         this.detectarNodosInsertados(doc);
         

@@ -114,6 +114,9 @@ a:active {
     outline: none !important;
     overflow: visible !important;
 }
+.foxtrot-modo-edicion #foxtrot-cuerpo.foxtrot-seleccionado {
+    box-shadow: inset 0 0 0 1px rgb(126 186 229) !important;
+}
 .foxtrot-editor .form-control,
 .foxtrot-editor .custom-select,
 .foxtrot-gestor .form-control,

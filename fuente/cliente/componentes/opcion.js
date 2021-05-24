@@ -10,7 +10,7 @@
  * @class
  * @extends componente
  */
-var componenteAlternar=function() {   
+var componenteOpcion=function() {   
     "use strict";
 
     this.componente="opcion";
@@ -65,16 +65,18 @@ var componenteAlternar=function() {
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
 
-        this.campo=this.elemento.querySelector("input");
-        this.elementoEditable=this.elemento.querySelector("label");
+        if(this.elemento) {
+            this.campo=this.elemento.querySelector("input");
+            this.elementoEditable=this.elemento.querySelector("label");
 
-        //Regenerar los ID de los elementos cada vez que se inicializa, ya que puede estar duplicado (por ejemplo cuando se lo inserta en un bucle, 
-        //una tabla o si se clona el componente por cualuqier otro motivo)
-        var id=this.id+"-"+ui.generarId();
-        this.campo.atributo("id",id);
-        this.elementoEditable.atributo("for",id);
+            //Regenerar los ID de los elementos cada vez que se inicializa, ya que puede estar duplicado (por ejemplo cuando se lo inserta en un bucle, 
+            //una tabla o si se clona el componente por cualuqier otro motivo)
+            var id=this.id+"-"+ui.generarId();
+            this.campo.atributo("id",id);
+            this.elementoEditable.atributo("for",id);
 
-        if(!ui.enModoEdicion()) this.valor(null);
+            if(!ui.enModoEdicion()) this.valor(null);
+        }
 
         this.clasesCss.push(/^custom-(control|control-inline|switch|checkbox|radio)$/);
 
@@ -118,6 +120,8 @@ var componenteAlternar=function() {
      */
     this.establecerEventos=function() {
         this.prototipo.establecerEventos.call(this);
+
+        if(!this.campo) return this;
 
         var t=this;
         this.campo.evento("change",function() {
@@ -284,7 +288,7 @@ var componenteAlternar=function() {
     };
 };
 
-ui.registrarComponente("opcion",componenteAlternar,configComponente.clonar({
+ui.registrarComponente("opcion",componenteOpcion,configComponente.clonar({
     descripcion:"Campo de opción",
     etiqueta:"Opción",
     grupo:"Formulario",

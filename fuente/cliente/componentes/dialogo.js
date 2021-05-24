@@ -97,6 +97,7 @@ var componenteDialogo=function() {
         if(typeof retorno!=="function") retorno=null;
         
         if(!dialogo) dialogo=ui.construirDialogo({
+                destino:this.vista.obtenerElemento(),
                 cuerpo:this.elemento,
                 mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
                 modal:this.propiedad("modal"),

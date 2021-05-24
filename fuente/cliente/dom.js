@@ -500,6 +500,8 @@
         //Devolver nulo si se estaba filtrando y no hubo coincidencias
         if(typeof filtro!=="undefined"&&!coincidencia) return null;
 
+        if(typeof elem=="undefined") return null;
+
         return elem;        
     };
 

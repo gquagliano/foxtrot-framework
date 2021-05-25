@@ -18,7 +18,6 @@ var ui=new function() {
     var self=this,
         componentesRegistrados={},
         instanciasComponentes=[],
-        instanciasComponentesId={},
         controladores={},
         instanciasControladores={},
         instanciaControladorPrincipal=null,
@@ -37,11 +36,12 @@ var ui=new function() {
         urlBase=null,
         esCordova=false,
         instanciasVistas={},
-        nombreVistaPrincipal=null,
         enrutadores={},
         instanciaEnrutador=null,
         instanciaAplicacion=null,
         urlModificada=0,
+        instanciaVistaPrincipal=null,
+        nombreVistaPrincipal=null,
         jsonVistaPrincipal=null,
         confirmarSalidaActivado=false,
         confirmarSalidaMensaje;
@@ -480,15 +480,22 @@ var ui=new function() {
 
     /**
      * Crea una instancia de un componente dado su nombre.
-     * @param {(Object|string)} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente previamente guardado (desde JSON).
-     * @param {string} [vista] - Nombre de la vista.
+     * @param {(Object|string)} comp - Nombre del componente u objeto que representa el componente, si se está creando un componente
+     * previamente guardado (desde JSON).
+     * @param {componenteVista} [vista] - Instancia de la vista.
      * @returns {Componente}
      */
     this.crearComponente=function(comp,vista) {
-        if(typeof vista==="undefined") vista=nombreVistaPrincipal;
-        var v=vista.replace(/[^a-z0-9]/g,"-");
+        if(typeof vista=="undefined"||vista===null) vista=instanciaVistaPrincipal;
 
-        var nombre,id;
+        var nombreVista=typeof vista=="object"&&vista!==null?
+            vista.obtenerNombreVista():
+            nombreVistaPrincipal;
+
+        var v=nombreVista.replace(/[^a-z0-9]/g,"-"),
+            nombre,
+            id;
+
         if(typeof comp==="string") {
             //Nuevo
             nombre=comp;
@@ -502,7 +509,7 @@ var ui=new function() {
         
         var obj=componente.fabricarComponente(componentesRegistrados[nombre].fn);
 
-        obj.establecerNombreVista(vista)
+        obj.establecerVista(vista)
             .establecerId(id);
 
         if(typeof comp==="object") {
@@ -515,14 +522,7 @@ var ui=new function() {
             obj.crear();
         }
         
-        var i=instanciasComponentes.push(obj);
-
-        //Índice
-        instanciasComponentesId[id]=i-1;
-
-        //Agregar al controlador
-        var controlador=this.obtenerInstanciaControladorVista(vista);
-        if(controlador) controlador.agregarComponente(obj); //el controlador puede no existir, por ejemplo en el editor
+        instanciasComponentes.push(obj);
 
         //Evento
         obj.inicializar();
@@ -577,9 +577,9 @@ var ui=new function() {
         //que donde se encuentre un componente, componente.eliminar() se encargará de su descendencia, con lo cual no tendría sentido
         //continuar la búsqueda
         if(!elemento.hasChildNodes()) elemento.childNodes.forEach(function(hijo) {
-                var id=identificarComponente(hijo);
-                if(id) {
-                    ui.obtenerInstanciaComponente(id).eliminar(true);
+                var componente=ui.obtenerInstanciaComponente(hijo);
+                if(componente) {
+                    componente.eliminar(true);
                 } else {
                     //Nodo común, descender
                     ui.eliminarComponentes(hijo,eliminarElemento);
@@ -609,40 +609,20 @@ var ui=new function() {
     };
 
     /**
-     * Devuelve el ID de un componente dado su ID, instancia, nombre o elemento del DOM.
-     */
-    function identificarComponente(param) {
-        if(typeof param=="string"&&instanciasComponentesId.hasOwnProperty(param)) {
-            //Por ID
-            return instanciasComponentes[instanciasComponentesId[param]].obtenerId();
-        } if(typeof param=="string"&&window.componentes.hasOwnProperty(param)) {
-            //Por nombre
-            return window.componentes[param].obtenerId();
-        } else if(typeof param==="object"&&param.esComponente()) {
-            return param.obtenerId();
-        } else if(typeof param==="object"&&param.nodeName) { //TODO Agregar Object.esNodo()
-            return param.dato("fxid");
-        }
-
-        //if(typeof param==="number"||!isNaN(parseInt(param))) return parseInt(param);
-        //if(typeof param==="string"&&componentes.hasOwnProperty(param)) return componentes[param];
-        //if(param instanceof Node) return param.dato("fxid"); TODO ¿Revisar?
-        
-        return null;
-    }
-
-    /**
      * Devuelve la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
      * @param {*} param - Valor a evaluar.
      * @returns {Componente}
      */
     this.obtenerInstanciaComponente=function(param) {
-        var id=identificarComponente(param);    
-        if(!id) return null;
-        if(!instanciasComponentesId.hasOwnProperty(id)) return null;
-        var comp=instanciasComponentesId[id];
-        if(!instanciasComponentes.hasOwnProperty(comp)) return null;
-        return instanciasComponentes[comp];
+        if(typeof param==="string")
+            //Por ID, solo se espera desde el editor, por lo que no es necesario considerar componentes repetidos (bucles, vistas importadas)
+            return this.obtenerInstanciaComponente(cuerpo.querySelector("[data-fxid='"+param+"']"));
+        
+        if(typeof param==="object"&&param.esComponente()) return param;
+
+        if(typeof param==="object"&&param.nodeName) return param.metadato("componente");
+        
+        return null;
     };
 
     /**
@@ -658,28 +638,23 @@ var ui=new function() {
      * Elimina la instancia de un componente dado su ID, instancia, nombre o elemento del DOM.
      */
     this.eliminarInstanciaComponente=function(param) {
-        var id=identificarComponente(param);
-        if(!id) return this;
-
-        delete instanciasComponentes[instanciasComponentesId[id]];
-        delete instanciasComponentesId[id];
-        
         return this;
-    }
+    };
 
     /**
      * Busca todos los componentes con nombre y devuelve un objeto con sus valores.
-     * @param {string} [nombreVista] - Nombre de la vista. Si se omite, se devolverán todos los campos de la página.
+     * @param {componenteVista} [vista] - Instancia de la vista. Si se omite, o es `null`, se devolverán todos los campos de la página.
      * @returns {Object}
      */
-    this.obtenerValores=function(nombreVista) {
-        if(typeof nombreVista==="undefined") nombreVista=null;
+    this.obtenerValores=function(vista) {
+        if(typeof vista==="undefined"||!vista) vista=this.obtenerInstanciaVistaPrincipal();
 
         //La forma más fácil es solicitárselo a los componentes vista  
-        var valores=this.obtenerInstanciaVistaPrincipal().obtenerValores();
+        var valores=vista.obtenerValores();
 
         //Anexar los valores del controlador
-        valores=Object.assign(valores,this.obtenerInstanciaControladorPrincipal().obtenerValores());
+        var controlador=vista.obtenerControlador();
+        if(controlador) valores=Object.assign(valores,controlador.obtenerValores());
 
         return valores;
     };
@@ -807,7 +782,7 @@ var ui=new function() {
 
     /**
      * Almacena el JSON para la vista principal.
-     * @param {Object|string} valor - Objeto o JSON codificado.
+     * @param {(Object|string)} valor - Objeto o JSON codificado.
      * @returnos {ui}
      */
     this.establecerJson=function(valor) {
@@ -818,28 +793,73 @@ var ui=new function() {
 
     /**
      * Inicializa la vista y sus componentes dado su json.
-     * @param {Object} json - Objeto (JSON de la vista decodificado).
+     * @param {(Object|string)} json - Objeto de la vista.
      * @param {controlador} [controlador] - Instancia del controlador de la vista.
-     * @returns {ui}
+     * @param {componenteVista} [vista] - Instancia de la vista.
+     * @param {boolean} [soloVista=null] - Si es `true`, buscará e inicializará únicamente el componente de la vista; `false`, solo los
+     * componentes excepto la vista; `null` (o la omisión del parámetro) procesará todos los componentes.
+     * @aram {boolean} [vistaUnica=false] - Si es `false`, devolverá la instancia existente de la vista (*singleton*).
+     * @returns {(string|undefined)}
      */
-    this.procesarJson=function(json,controlador) {
-        var nombreVista=json.nombre,
-            fn=function(componente) {
-                var obj=ui.crearComponente(componente,nombreVista);
-                return obj;
-            };
+    this.procesarJson=function(json,controlador,vista,soloVista,vistaUnica) {
+        if(typeof json=="string") json=JSON.parse(json);
+        if(typeof soloVista=="undefined") soloVista=null;
+        if(typeof vistaUnica=="undefined") vistaUnica=false;
+        var claveVista;
 
         //Preparar los componentes
-        json.componentes.forEach(function(componente) {
-            if(!componente) return;
-            
-            var obj=fn(componente);
+        for(var i=0;i<json.componentes.length;i++) {
+            var componente=json.componentes[i];
 
-            //Almacenar en cache de instancias
-            if(componente.componente=="vista") instanciasVistas[nombreVista]=obj;
-        });
+            if(soloVista!==false&&componente.componente=="vista") {
+                var nombreVista=json.nombre;
 
-        return this;  
+                //Es única y ya existe
+                if(vistaUnica&&instanciasVistas.hasOwnProperty(nombreVista))
+                    return nombreVista;
+
+                //No es necesario que sea única, generar un elemento nueuvo en instanciasVistas nueva cada vez
+                claveVista=nombreVista;
+                if(!vistaUnica) {
+                    var i=0;
+                    while(instanciasVistas.hasOwnProperty(claveVista+(i>0?"-"+i:"")))
+                        i++;
+                    claveVista=claveVista+(i>0?"-"+i:"");
+                }
+
+                instanciasVistas[claveVista]=ui.crearComponente(componente);
+                return claveVista;
+            }
+
+            if(soloVista!==true&&componente.componente!="vista") {
+                ui.crearComponente(componente,vista);
+            }
+        }
+    };
+
+    /**
+     * Inicializa la vista dado su json.
+     * @param {(Object|string)} json - Objeto de la vista.
+     * @param {controlador} [controlador] - Instancia del controlador de la vista.
+     * @returns {componenteVista}
+     */
+    this.procesarJsonVista=function(json,controlador) {
+        if(typeof json=="string") json=JSON.parse(json);
+        var clave=this.procesarJson(json,controlador,null,true,false);
+        instanciasVistas[clave].establecerNombreVista(json.nombre);
+        return instanciasVistas[clave];
+    };
+
+    /**
+     * Inicializa los componentes de la vista (excepto el componente Vista propiamente dicho) dado su json.
+     * @param {(Object|string)} json - Objeto de la vista.
+     * @param {controlador} [controlador] - Instancia del controlador de la vista.
+     * @param {componenteVista} [vista] - Instancia de la vista.
+     * @returns {ui}
+     */
+    this.procesarJsonComponentes=function(json,controlador,vista) {
+        if(typeof json=="string") json=JSON.parse(json);
+        return this.procesarJson(json,controlador,vista,false);
     };
 
     /**
@@ -858,7 +878,6 @@ var ui=new function() {
      */
     this.limpiar=function() {
         instanciasComponentes=[];
-        instanciasComponentesId={};
         instanciasVistas={};
         nombreVistaPrincipal=null;
         controladores={};
@@ -966,7 +985,7 @@ var ui=new function() {
      * 
      */
     this.obtenerInstanciaVistaPrincipal=function() {
-        return instanciasVistas[nombreVistaPrincipal];
+        return instanciaVistaPrincipal;
     };
 
     /**
@@ -987,7 +1006,7 @@ var ui=new function() {
      * @returns {ui}
      */
     this.actualizar=function() {
-        instanciasVistas[nombreVistaPrincipal].actualizar();
+        instanciaVistaPrincipal.actualizar();
         return this;
     };
 
@@ -1090,21 +1109,35 @@ var ui=new function() {
 
     /**
      * Busca y devuelve un controlador dado su nombre, creándolo si no existe.
+     * @param {string} nombre - Nombre del controlador.
+     * @param {boolean} [principal=false] - Determina si es el controlador de la vista principal.
+     * @param {boolean} [unico=false] - Si es `false`, devolverá la instancia existente en lugar de crear una nueva (*singleton*).
+     * @returns {controlador}
      */
-    this.obtenerInstanciaControlador=function(nombre,principal) {
-        if(util.esIndefinido(principal)) principal=false;
+    this.obtenerInstanciaControlador=function(nombre,principal,unico) {
+        if(typeof principal=="undefined") principal=false;
+        if(typeof unico=="undefined") unico=false;
 
         if(!controladores.hasOwnProperty(nombre)) return null;
+
+        if(unico&&instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
         
-        if(instanciasControladores.hasOwnProperty(nombre)) return instanciasControladores[nombre];
+        //Si unico=false, siempre generar un nuevo elemento en instanciasControladores
+        var clave=nombre,
+            i=0;
+        if(!unico) {
+            while(instanciasControladores.hasOwnProperty(clave+(i>0?"-"+i:"")))
+                i++;
+            clave=clave+(i>0?"-"+i:"");
+        }
 
         var obj=controlador.fabricarControlador(nombre,controladores[nombre]);
 
-        instanciasControladores[nombre]=obj;
+        instanciasControladores[clave]=obj;
         if(principal) instanciaControladorPrincipal=obj;
 
         //Exportar a global
-        window.controladores[nombre]=obj;
+        window.controladores[clave]=obj;
         if(principal) window.principal=obj;
         
         obj.inicializar();
@@ -1753,7 +1786,7 @@ var ui=new function() {
      */
     this.ejecutarVista=function(nombre,principal,json,html,destino,retorno) {
         //Por el momento, el controlador es el que tiene el mismo nombre que la vista
-        var obj=ui.crearControlador(nombre,principal);
+        var controlador=ui.crearControlador(nombre,principal);
 
         if(typeof html==="string"&&typeof destino!=="undefined") {
             //Remover #foxtrot-cuerpo del HTML, ya que solo debería tener ese ID la vista principal
@@ -1761,56 +1794,64 @@ var ui=new function() {
             destino.establecerHtml(html);
         }
         
-        if(typeof json==="undefined") json=jsonVistaPrincipal;
-        this.procesarJson(json,obj);
+        if(typeof json==="undefined") json=jsonVistaPrincipal;        
+        
+        var vista=this.procesarJsonVista(json,controlador);
+
+        if(principal) {
+            instanciaVistaPrincipal=vista;
+            vista.establecerPrincipal();
+            //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
+            vista.establecerElemento(cuerpo);
+        } else {
+            vista.establecerElemento(destino.querySelector(".componente.vista"));
+        }
+        vista.inicializar();
         
         //Asociamos la vista y el controlador para que, llegado el caso de que los nombres de vista y controlador puedan diferir, quede desacoplado
         //cualquier otro lugar que se necesite conocer el controlador *actual* de la vista.
-        if(obj) {
-            obj.establecerVista(instanciasVistas[nombre]);
-            obj.establecerAplicacion(instanciaAplicacion);
-            instanciasVistas[nombre].establecerControlador(nombre);
-
+        controlador.establecerVista(vista);
+        controlador.establecerAplicacion(instanciaAplicacion);
+        vista.establecerControlador(controlador);
+        
+        this.procesarJsonComponentes(json,controlador,vista);
+        
+        //Exportar a global
+        window.controlador=controlador;
+        
+        //Evento 'listo'
+        var listo=function() {
             if(principal) {
-                //La vista principal utilizará el cuerpo principal, vistas secundarias pueden utilizar otros contenedores
-                instanciasVistas[nombre].establecerElemento(cuerpo);
-            }
-            //Exportar a global
-            window.controlador=obj;
-            
-            //Evento 'listo'
-            var listo=function() {
-                if(principal) {
-                    //Al cargar la vista principal el evento Listo es invocado en todo el sistema
-                    ui.evento("listo");
-                } else {
-                    //Al cargar una vista secundaria, solo en la misma
-                    ui.eventoComponentes(obj.obtenerComponentes(),"listo");
-                    obj.listo();
-                }
-            };
-            if(esCordova) {                
-                document.addEventListener("deviceready",listo,false);
+                //Al cargar la vista principal el evento Listo es invocado en todo el sistema
+                ui.evento("listo");
             } else {
-                listo();
+                //Al cargar una vista secundaria, solo en la misma
+                ui.eventoComponentes(controlador.obtenerComponentes(),"listo");
+                controlador.listo();
             }
 
             //Ejecutar un evento 'tamaño' para que, en caso de que la vista requiera realizar un ajuste inicial en base al tamaño de pantalla, no deba realizarlo
             //necesariamente en 'listo'
             var tamano=ui.obtenerTamano();
             if(principal) {
-                if(!this.evento("tamano",[tamano,null]))
-                    this.eventoComponentes(null,"tamano",false,[tamano,null]);
+                if(!ui.evento("tamano",[tamano,null]))
+                ui.eventoComponentes(null,"tamano",false,[tamano,null]);
             } else {
-                obj.tamano(tamano,tamano);
-                this.eventoComponentes(obj.obtenerComponentes(),"tamano",false,[tamano,null]);
+                controlador.tamano(tamano,tamano);
+                ui.eventoComponentes(controlador.obtenerComponentes(),"tamano",false,[tamano,null]);
             }
+        };
+        
+        if(esCordova) {                
+            document.addEventListener("deviceready",listo,false);
+        } else {
+            listo();
         }
 
         this.autofoco();
         this.autoseleccionar();
 
-        if(typeof retorno==="function") retorno();
+        if(typeof retorno==="function") retorno(controlador,vista);
 
         return this;
     };
@@ -1836,7 +1877,12 @@ var ui=new function() {
     this.ejecutar=function() {
         if(modoEdicion) {
             //En modo de edición, procesar el JSON y pasar el control al editor
-            this.procesarJson(jsonVistaPrincipal);
+
+            var vista=this.procesarJsonVista(jsonVistaPrincipal);
+            instanciaVistaPrincipal=vista;            
+            vista.establecerElemento(cuerpo);
+            this.procesarJsonComponentes(jsonVistaPrincipal,null,vista);
+
             editor.ejecutar();
 
             body.agregarClase("escritorio");

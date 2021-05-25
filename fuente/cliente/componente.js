@@ -44,7 +44,7 @@ var componente=new function() {
      * @var {boolean} arrastrable - Indica si el componente se puede arrastrar y soltar.
      * @var {boolean} fueInicializado - Indica si la instancia ya fue inicializada.
      * @var {boolean} modoEdicionListo - Indica si la instancia ya fue preparado para editar el componente en el editor de vistas.
-     * @var {string} nombreVista - Nombre de la vista a la cual pertenece la instancia.
+     * @var {componenteVista} vista - Vista a la cual pertenece la instancia.
      * @var {Object} datos - Origen de datos asignado.
      * @var {boolean} oculto - Indica si el componente está oculto, lo cual significa que el mismo no se publica en `componentes`, aunque tenga un nombre asignado (es independiente de la visiblidad del elemento del DOM).
      * @var {(Element|Node)} campo - Elemento campo, si el componente presenta algún tipo de campo de ingreso (`input`, `textarea`, etc.)
@@ -67,7 +67,7 @@ var componente=new function() {
     this.arrastrable=true;
     this.fueInicializado=false;
     this.modoEdicionListo=false;
-    this.nombreVista=null;
+    this.vista=null;
     this.datos=null;
     this.oculto=false;
     this.campo=null;
@@ -368,21 +368,22 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve el nombre de la vista a la cual pertenece.
-     * @returns {string}
-     */
-    this.obtenerNombreVista=function() {
-        return this.nombreVista;
-    };
-
-    /**
-     * Asigna el nombre de la vista a la cual pertenece el componente.
-     * @param {string} nombre - Nombre de la vista.
+     * Asigna la vista a la cual pertenece el componente.
+     * @param {componenteVista} vista - Instancia de la vista.
      * @returns {componente}
      */
-    this.establecerNombreVista=function(nombre) {
-        this.nombreVista=nombre;
-        this.controlador=ui.obtenerInstanciaControladorVista(nombre);
+    this.establecerVista=function(vista) {
+        if(this.vista) this.vista.removerComponente(this);
+        if(this.controlador&&this.nombre&&!this.oculto) this.controlador.removerComponente(this);
+
+        this.vista=vista;
+        this.controlador=vista?
+            vista.obtenerControlador():
+            null;
+
+        if(this.vista) this.vista.agregarComponente(this);
+        if(this.controlador&&this.nombre&&!this.oculto) this.controlador.agregarComponente(this,this.nombre);
+
         return this;
     };
 
@@ -391,7 +392,7 @@ var componente=new function() {
      * @returns {componenteVista}
      */
     this.obtenerVista=function() {
-        return ui.obtenerInstanciaVista(this.nombreVista);
+        return this.vista;
     };
 
     /**
@@ -422,6 +423,8 @@ var componente=new function() {
      * @returns {componente}
      */
     this.establecerComponenteOculto=function() {
+        if(this.controlador&&!this.oculto&&this.nombre) this.controlador.removerComponente(this.nombre);
+
         this.oculto=true;
         return this;
     };
@@ -509,10 +512,18 @@ var componente=new function() {
 
     /**
      * Devuelve el elemento del campo de esta instancia.
-     * @reteurns {HTMLElement}
+     * @returns {HTMLElement}
      */
     this.obtenerCampo=function() {
         return this.campo;
+    };
+
+    /**
+     * Devuelve si el componente es o no un campo.
+     * @returns {boolean}
+     */
+    this.esCampo=function() {
+        return this.campo!==null;
     };
 
     /**
@@ -539,14 +550,6 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve el componente padre.
-     * @returns {(Object|null)}
-     */
-    this.obtenerPadre=function() {
-        return this.padre;
-    };
-
-    /**
      * Establece el origen de datos.
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
@@ -555,13 +558,12 @@ var componente=new function() {
      * @returns {componente}
      */
     this.establecerDatos=function(obj,actualizar,dispersar,ignorarPropiedad) {
-        if(typeof actualizar==="undefined") actualizar=true;
-        if(typeof dispersar==="undefined") dispersar=true;
-        if(typeof ignorarPropiedad==="undefined") ignorarPropiedad=false;
+        if(typeof actualizar=="undefined") actualizar=true;
+        if(typeof dispersar=="undefined") dispersar=true;
+        if(typeof ignorarPropiedad=="undefined") ignorarPropiedad=false;
 
         //Si se omite obj, intentar usar el último objeto asignado, u obtener de la propiedad Origen
-        if(typeof obj==="undefined") obj=this.datos;
-        if(typeof obj==="undefined"||!obj) obj=this.propiedad(true,"datos");
+        if(typeof obj=="undefined"||!obj) obj=this.datos||this.propiedad(true,"datos");
         if(!obj) return this;
 
         var propiedad=null;
@@ -625,7 +627,6 @@ var componente=new function() {
             };
 
         buscarEn.forEach(function(hijo) {
-            //if(!hijo.autogenerado) return;
             if(t.datos.length<=hijo.indice)
                 //t.datos[hijo.indice]={};
                 return;                
@@ -691,15 +692,15 @@ var componente=new function() {
      * @returns {componente}
      */
     this.clonar=function(padre,oculto,elemento) {
-        if(typeof oculto==="undefined") oculto=false;
-        if(typeof elemento==="undefined") elemento=null;
+        if(typeof oculto=="undefined") oculto=false;
+        if(typeof elemento=="undefined") elemento=null;
 
         var nuevoId=ui.generarId();
 
         if(!elemento) {
             //Duplicar el elemento del DOM
-            var elemento=this.elemento.clonar(),
-                elemPadre=padre;
+            elemento=this.elemento.clonar();
+            var elemPadre=padre;
             if(padre.esComponente()) elemPadre=padre.obtenerContenedor();
             elemPadre.anexar(elemento);
 
@@ -719,28 +720,18 @@ var componente=new function() {
         //Renombrar el elemento (se asume que está duplicado y debe asignarse a la nueva instancia)
         elemento.dato("fxid",nuevoId)
             .removerAtributo("id");
-
-        var nombre=this.obtenerNombre();
-
-        if(nombre&&!oculto) {
-            //Si es visible, vamos a buscar un nombre que esté libre para que no sobreescriba la referencia nuestra en componentes
-            var i=1;
-            while(componentes.hasOwnProperty(nombre+"-"+i)) i++;
-            nombre+="-"+i;
-        }
             
         var propiedades={
             id:nuevoId,
             oculto:oculto,
-            nombre:nombre,
             selector:this.obtenerSelector(),
             componente:this.obtenerTipo(),
             propiedades:this.obtenerPropiedades()
         };
 
-        var comp=ui.crearComponente(propiedades,this.nombreVista);
+        var comp=ui.crearComponente(propiedades,this.vista);
 
-        comp.restaurar();
+        comp.establecerElemento(elemento);
 
         return comp;
     };
@@ -757,6 +748,8 @@ var componente=new function() {
             //Las clases css que se mantengan al salir del modo de edición deben ser breves
             this.elemento.agregarClase("componente "+this.componente);
             this.clasesCss.push(this.componente);
+
+            this.elemento.metadato("componente",this);
 
             if(!this.contenidoEditable) this.elemento.propiedad("contenteditable",false);
         }
@@ -829,12 +822,12 @@ var componente=new function() {
     this.eliminar=function(descendencia) {
         if(typeof descendencia==="undefined") descendencia=false;
 
-        var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista); //Nota: el controlador puede no existir, por ejemplo en el editor
-        
         if(this.nombre) {
-            componentes[this.nombre]=null;
-            if(controlador) controlador.removerComponente(this.nombre);
+            if(this.vista.esPrincipal()&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
+            if(this.controlador) this.controlador.removerComponente(this.nombre);
         }
+
+        this.vista.removerComponente(this);
 
         ui.eliminarInstanciaComponente(this.id);
 
@@ -862,6 +855,11 @@ var componente=new function() {
         return this;
     };
 
+    /**
+     * Establece el elemento del DOM correspondiente a esta instancia.
+     * @param {(Node|Element)} elem - Elemento.
+     * @returns {componente}
+     */
     this.establecerElemento=function(elem) {
         this.elemento=elem;
 
@@ -877,14 +875,16 @@ var componente=new function() {
      */
     this.restaurar=function() {
         if(!this.elemento) {
-            //El elemento puede haber sido asignado en restaurar() o durante la creación de la instancia
-            var body=ui.obtenerDocumento().body;
-            this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
+            var vista=this.obtenerVista(),
+                buscarEn=vista?vista.obtenerElemento():ui.obtenerCuerpo();
+            this.elemento=buscarEn.querySelector("[data-fxid='"+this.id+"']");
         }
+
         if(this.elemento) {
             this.fueInicializado=false;
             this.inicializar(); 
-        }        
+        }
+
         return this;
     };
 
@@ -910,12 +910,10 @@ var componente=new function() {
 
         this.oculto=oculto;
 
-        var controlador=ui.obtenerInstanciaControladorVista(this.nombreVista); //Nota: el controlador puede no existir, por ejemplo en el editor
-        
-        //Eliminar de componentes si cambia el nombre
+        //Eliminar de componentes y controlador.componentes si cambia el nombre
         if(this.nombre&&(this.nombre!=nombre||this.oculto)) {
-            if(componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
-            if(controlador) controlador.removerComponente(this.nombre);
+            if(this.vista.esPrincipal()&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
+            if(this.controlador) this.controlador.removerComponente(this.nombre);
         }
         
         this.nombre=nombre;
@@ -923,9 +921,9 @@ var componente=new function() {
         //Registrar acceso rápido (esperar al evento Listo)
         if(nombre&&!this.oculto) {
             //Si pertenece a la vista principal, en window.componentes
-            if(this.nombreVista==ui.obtenerNombreVistaPrincipal()) componentes[nombre]=this;
+            if(this.vista.esPrincipal()) componentes[nombre]=this;
             //Y siempre en el controlador
-            if(controlador) controlador.agregarComponente(this,nombre); 
+            if(this.controlador) this.controlador.agregarComponente(this,nombre); 
         }
 
         return this;
@@ -1853,7 +1851,7 @@ var componente=new function() {
         if(!parametrosServidor) parametrosServidor={};
         parametrosServidor.componente=this.nombre;
         parametrosServidor.evento=nombre;
-        parametrosServidor.vista=this.nombreVista;
+        parametrosServidor.vista=this.vista.obtenerNombreVista();
 
         //Controlador de evento definido por el usuario
         var controladorEvento=this.procesarCadenaEvento(propiedad,evento);
@@ -1886,8 +1884,8 @@ var componente=new function() {
                     controladorEvento=controladorEvento.replace(/^(servidor|enviar|servidor-apl|enviar-apl|ir|no-ir|abrir|apl)\:/,"$1:");
                 }
 
-                var vista=ui.obtenerInstanciaVista(this.nombreVista),
-                    ctl=ui.obtenerInstanciaControlador(vista.obtenerNombreControlador()),
+                var vista=this.vista,
+                    ctl=this.controlador,
                     apl=ui.aplicacion();
 
                 if(comando=="servidor"||comando=="enviar"||comando=="servidor-apl"||comando=="enviar-apl") {
@@ -1902,7 +1900,7 @@ var componente=new function() {
 
                     var args=[parametrosServidor];
                     //enviar y enviar-apl => El primer parámetro serán los valores de los componentes
-                    if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores());
+                    if(comando=="enviar"||comando=="enviar-apl") args.unshift(ui.obtenerValores(vista));
 
                     //Retorno
                     var fn=function(respuesta) {
@@ -2065,7 +2063,6 @@ var componente=new function() {
      */
     this.listo=function() {
         this.listoEjecutado=true;
-        if(!ui.enModoEdicion()) this.establecerNombre(); //Registrar nombre (ya ha sido establecido por ui)
         this.procesarPropiedades();
     };
 
@@ -2221,7 +2218,7 @@ var componente=new function() {
     };
 
     ////Árbol
-    
+
     //La jerarquía estará definida exclusivamente por el DOM, no almacenaremos información de las relaciones entre los componentes en el JSON
 
     var coincideFiltroComponente=function(comp,filtro) {
@@ -2232,37 +2229,12 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve el componente padre o un componente de su ascendencia que coincida con el filtro.
-     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre del componente.
+     * Devuelve un array de componentes hijos, o un listado de componentes de su descendencia que coincidan con el filtro.
+     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, solo devolverá la descendencia directa.
      * @param {string} [filtro.componente] - Tipo de componente.
      * @param {string} [filtro.nombre] - Nombre del componente.
      * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
-     * @returns {componente}
-     */
-    this.obtenerPadre=function(filtro) {
-        var elem=this.elemento.padre({
-            clase:"componente"
-        });
-        if(!elem) return null;
-        var comp=ui.obtenerInstanciaComponente(elem);
-
-        if(typeof filtro!=="undefined") {
-            //Continuar subiendo hasta que coincida o se llegue al comienzo del árbol
-            if(!comp) return null;
-            if(coincideFiltroComponente(comp,filtro)) return comp;
-            comp=comp.obtenerPadre(filtro);
-        }
-
-        return comp;
-    };
-
-    /**
-     * Devuelve un array de componentes hijos o un listado de componentes de su descendencia que coincidan con el filtro.
-     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre del componente.
-     * @param {string} [filtro.componente] - Tipo de componente.
-     * @param {string} [filtro.nombre] - Nombre del componente.
-     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
-     * @returns {Componente[]}
+     * @returns {componente[]}
      */
     this.obtenerHijos=function(filtro) {
         var hijos=[];
@@ -2295,7 +2267,32 @@ var componente=new function() {
         if(elem) fn(elem);
 
         return hijos;
-    };    
+    };
+
+    /**
+     * Devuelve el componente padre o un componente de su ascendencia que coincida con el filtro.
+     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre directo del componente.
+     * @param {string} [filtro.componente] - Tipo de componente.
+     * @param {string} [filtro.nombre] - Nombre del componente.
+     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
+     * @returns {componente}
+     */
+    this.obtenerPadre=function() {
+        var elem=this.elemento.padre({
+            clase:"componente"
+        });
+        if(!elem) return null;
+        var comp=ui.obtenerInstanciaComponente(elem);
+
+        if(typeof filtro!=="undefined") {
+            //Continuar subiendo hasta que coincida o se llegue al comienzo del árbol
+            if(!comp) return null;
+            if(coincideFiltroComponente(comp,filtro)) return comp;
+            comp=comp.obtenerPadre(filtro);
+        }
+
+        return comp;
+    };
 
     /**
      * Mueve el componente a una nueva posición dentro del padre.
@@ -2389,9 +2386,9 @@ var componente=new function() {
      * @returns {componente}
      */
     this.limpiarValores=function() {
-        this.obtenerHijos().forEach(function(hijo) {   
-            if(hijo.obtenerNombre()) hijo.valor(null);
-            //Continuar la búsqueda en forma recursiva
+        if(this.nombre||this.campo) this.valor(null);
+        //Continuar la búsqueda en forma recursiva
+        this.obtenerHijos().forEach(function(hijo) {
             hijo.limpiarValores();
         });
         return this;

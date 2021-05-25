@@ -59,7 +59,7 @@ var componenteImportar=function() {
      * Devuelve la instancia del controlador de la vista que contiene.
      * @returns {controlador|null}
      */
-    this.obtenerControlador=function() {
+    this.obtenerControladorInterior=function() {
         return this.instanciaControlador;
     };
 
@@ -67,7 +67,7 @@ var componenteImportar=function() {
      * Devuelve la instancia de la vista que contiene.
      * @returns {componente|null}
      */
-    this.obtenerVista=function() {
+    this.obtenerVistaInterior=function() {
         return this.instanciaVista;
     };
 
@@ -75,7 +75,7 @@ var componenteImportar=function() {
      * Devuelve el nombre de la vista que contiene.
      * @returns {string}
      */
-    this.obtenerNombreVista=function() {
+    this.obtenerNombreVistaInterior=function() {
         return this.nombreVistaInterior;
     };
 
@@ -211,11 +211,11 @@ var componenteImportar=function() {
                 t.elementoVistaInterior=doc.crear("<div class='contenedor-vista-importada oculto'>");
                 t.elementoVistaInterior.anexarA(t.elemento);
 
-                ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVistaInterior,function() {
+                ui.ejecutarVista(nombre,false,obj.json,obj.html,t.elementoVistaInterior,function(controlador,vista) {
                     if(enCurso.indexOf(op)<0) return;
 
-                    t.instanciaControlador=ui.obtenerInstanciaControladorVista(nombre);
-                    t.instanciaVista=ui.obtenerInstanciaVista(nombre);
+                    t.instanciaControlador=controlador;
+                    t.instanciaVista=vista;
 
                     ui.animarAparecer(t.elementoVistaInterior,function() {
                         ui.autofoco(t.elementoVistaInterior);

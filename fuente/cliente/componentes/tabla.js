@@ -318,11 +318,20 @@ var componenteTabla=function() {
         if(typeof valor==="undefined") {
             //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
             return this.extraerValor();            
+        } else if(valor===null) {
+            //Si valor es null, solo limpiar
+            this.limpiarValoresAutogenerados(true);
         } else {
             //Cuando se asigne un valor, establecer como origen de datos
             this.establecerDatos(valor);
         }
     };   
+
+    this.limpiarValoresAutogenerados=function() {
+        for(var i=0;i<this.itemsAutogenerados.length;i++)
+            this.itemsAutogenerados[i].limpiarValores();
+        return this;
+    };
 
     /**
      * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.

@@ -355,11 +355,20 @@ var componenteArbol=function() {
         if(typeof valor==="undefined") {
         	if(ignorarValor) return null;
             //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.extraerValor();           
+            return this.extraerValor();
+        } else if(valor===null) {
+            //Si valor es null, solo limpiar
+            this.limpiarValoresAutogenerados();
         } else {
-            //Cuando se asigne un valor, establecer como origen de datos
+            //Cuando se asigne un valor, tratarlo como nuevo origen de datos
             this.establecerDatos(valor);
         }
+    };
+
+    this.limpiarValoresAutogenerados=function() {
+        for(var i=0;i<this.itemsAutogenerados.length;i++)
+            this.itemsAutogenerados[i].limpiarValores();
+        return this;
     };
 
     /**

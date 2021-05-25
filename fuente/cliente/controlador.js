@@ -61,7 +61,7 @@ var controlador=new function() {
      * @returns {string}
      */
     this.obtenerNombreVista=function() {
-        return this.vista.obtenerNombre();
+        return this.vista.obtenerNombreVista();
     };
 
     /**
@@ -88,8 +88,8 @@ var controlador=new function() {
      * Devuelve la instancia de la vista que está controlando actualmente.
      * @param {Componente} vista 
      */
-    this.obtenerVista=function(vista) {
-        return this.vista=vista;
+    this.obtenerVista=function() {
+        return this.vista;
     };
 
     /**

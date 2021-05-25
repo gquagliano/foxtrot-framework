@@ -374,15 +374,14 @@ var componente=new function() {
      */
     this.establecerVista=function(vista) {
         if(this.vista) this.vista.removerComponente(this);
-        if(this.controlador&&this.nombre&&!this.oculto) this.controlador.removerComponente(this);
+        if(this.controlador) this.controlador.removerComponente(this);
 
         this.vista=vista;
         this.controlador=vista?
             vista.obtenerControlador():
             null;
 
-        if(this.vista) this.vista.agregarComponente(this);
-        if(this.controlador&&this.nombre&&!this.oculto) this.controlador.agregarComponente(this,this.nombre);
+        if(this.controlador&&this.nombre&&!this.oculto) this.controlador.agregarComponente(this);
 
         return this;
     };
@@ -423,7 +422,9 @@ var componente=new function() {
      * @returns {componente}
      */
     this.establecerComponenteOculto=function() {
-        if(this.controlador&&!this.oculto&&this.nombre) this.controlador.removerComponente(this.nombre);
+        //Ocultar de los almacenes por nombre
+        if(this.controlador) this.controlador.removerComponente(this);
+        if(this.vista.esPrincipal()) ui.removerComponente(this);
 
         this.oculto=true;
         return this;
@@ -823,8 +824,8 @@ var componente=new function() {
         if(typeof descendencia==="undefined") descendencia=false;
 
         if(this.nombre) {
-            if(this.vista.esPrincipal()&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
-            if(this.controlador) this.controlador.removerComponente(this.nombre);
+            if(this.vista.esPrincipal()) ui.removerComponente(this);
+            if(this.controlador) this.controlador.removerComponente(this);
         }
 
         this.vista.removerComponente(this);
@@ -912,8 +913,8 @@ var componente=new function() {
 
         //Eliminar de componentes y controlador.componentes si cambia el nombre
         if(this.nombre&&(this.nombre!=nombre||this.oculto)) {
-            if(this.vista.esPrincipal()&&componentes.hasOwnProperty(this.nombre)) delete componentes[this.nombre];
-            if(this.controlador) this.controlador.removerComponente(this.nombre);
+            if(this.vista.esPrincipal()) ui.removerComponente(this);
+            if(this.controlador) this.controlador.removerComponente(this);
         }
         
         this.nombre=nombre;
@@ -921,9 +922,9 @@ var componente=new function() {
         //Registrar acceso rápido (esperar al evento Listo)
         if(nombre&&!this.oculto) {
             //Si pertenece a la vista principal, en window.componentes
-            if(this.vista.esPrincipal()) componentes[nombre]=this;
+            if(this.vista.esPrincipal()) ui.agregarComponente(this);
             //Y siempre en el controlador
-            if(this.controlador) this.controlador.agregarComponente(this,nombre); 
+            if(this.controlador) this.controlador.agregarComponente(this); 
         }
 
         return this;
@@ -1945,11 +1946,9 @@ var componente=new function() {
                     //componente. Cada comppnente puede decidir qué hacer con el valor. De esta forma implementamos la navegación
                     //en el widget de importación de vista manteniendo loz componentes concretos desacoplados.
                     
-                    //Debemos buscarlo en forma global ya que es por nombre (ui los indiza por ID, TODO debería tener un almacén de vista->componente por nombre)
                     var nombre=comando,
-                        valor=controladorEvento,
-                        obj=componentes[nombre];
-                    resultadoLocal=obj.eventoExterno.call(obj,valor,evento);
+                        valor=controladorEvento;
+                    resultadoLocal=obj.eventoExterno.call(this,valor,evento);
 
                     if(retorno) retorno(resultadoLocal);
                 } else if(controladorEvento!="") {

@@ -42,8 +42,6 @@ var componenteDialogo=function() {
 
         this.contenedor=this.elemento;
 
-        this.ocultarDescendencia();
-
         this.prototipo.inicializar.call(this);
 
         //Remover la clase 'dialogo' (agregada por inicializarComponente) ya que es solo el cuerpo; ui.construirDialogo() va a
@@ -98,7 +96,8 @@ var componenteDialogo=function() {
     this.abrir=function(retorno) {
         if(typeof retorno!=="function") retorno=null;
         
-        if(!dialogo) dialogo=ui.construirDialogo({
+        if(!dialogo) {
+            dialogo=ui.construirDialogo({
                 cuerpo:this.elemento,
                 mostrarCerrar:!this.propiedad("ocultarIconoCerrar"),
                 modal:this.propiedad("modal"),
@@ -107,6 +106,9 @@ var componenteDialogo=function() {
                     if(retorno) retorno();
                 }
             });
+            //Como el cuerpo del diálgo será movido en el DOM, registrar este componente en la vista
+            this.vista.agregarComponente(this);
+        }
 
         ui.abrirDialogo(dialogo);
     };

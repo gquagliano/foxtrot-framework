@@ -1881,17 +1881,52 @@ var ui=new function() {
 
     /**
      * Finaliza la ejecución de la vista e invoca el evento `fin` en su controlador y sus componentes.
-     * @param {string} nombre - Nombre de la vista.
+     * @param {componenteVista} vista - Vista.
      * @returns {ui}
      */
-    this.finalizarVista=function(nombre) {
-        var ctl=this.obtenerInstanciaControladorVista(nombre);
+    this.finalizarVista=function(vista) {
+        var ctl=vista.obtenerControlador();
         if(ctl) {
-            if(!this.evento("fin",null,ctl)) 
-                this.eventoComponentes(ctl.obtenerComponentes(),"fin");
+            this.eventoComponentes(ctl.obtenerComponentes(),"fin");
+            this.evento("fin",null,ctl);
         }
         return this;
-    };    
+    };
+
+    /**
+     * Elimina todas las referencias a la vista, su controlador y sus componentes. Se espera el llamado a este método desde el controlador
+     * tras responder al evento `fin`.
+     * @param {componenteVista} vista - Vista.
+     * @returns {ui}
+     */
+    this.vistaFinalizada=function(vista) {
+        //Ignorar en la vista principal (nunca debería suceder)
+        if(vista.esPrincipal()) return this;
+
+        //Eliminar referencias al controlador
+        var controlador=vista.obtenerControlador();
+        if(controlador) {
+            for(var clave in instanciasControladores) {
+                if(instanciasControladores.hasOwnProperty(clave)&&instanciasControladores[clave]==controlador) {
+                    delete instanciasControladores[clave];
+                    break;
+                }
+            }
+        }
+
+        //Eliminar componentes
+        this.eliminarComponentes(vista.obtenerHijos());
+
+        //Eliminar referencias a la vista
+        for(var clave in instanciasVistas) {
+            if(instanciasVistas.hasOwnProperty(clave)&&instanciasVistas[clave]==vista) {
+                delete instanciasVistas[clave];
+                break;
+            }
+        }
+
+        return this;
+    };
 
     /**
      * Inicia la ejecución del sistema.

@@ -260,9 +260,11 @@ var controlador=new function() {
     };
 
     /**
-     * Evento `fin`.
+     * Evento `fin`. Si se sobreescribe, debe invocar `this.prototipo.fin.call(this)` a fin de completar la limpieza. *Nota:* El evento
+     * `fin` no se puede detener.
      */
     this.fin=function() {
+        ui.vistaFinalizada(this.vista);
     };
     
     /**

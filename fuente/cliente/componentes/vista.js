@@ -111,6 +111,7 @@ var componenteVista=function() {
      * @returns {componente}
      */
     this.removerComponente=function(componente) {
+        if(this.componentes===null) return this;
         var p=this.componentes.indexOf(componente);
         if(~p) this.componentes.splice(p,1);
         return this;

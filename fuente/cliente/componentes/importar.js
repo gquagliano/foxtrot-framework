@@ -19,7 +19,8 @@ var componenteImportar=function() {
     this.instanciaControlador=null;
     this.instanciaVista=null;
     
-    var trabajando=false,
+    var t=this,
+        trabajando=false,
         numeroOperacion=0,
         enCurso=[];
 
@@ -239,12 +240,9 @@ var componenteImportar=function() {
     this.cerrarVistaActual=function(retorno) {
         if(typeof retorno!=="function") retorno=null;
 
-        ui.finalizarVista(this.nombreVistaInterior);
-
         if(this.elementoVistaInterior) {
-            var elem=this.elementoVistaInterior;
-            ui.animarDesaparecer(elem,function() {
-                ui.eliminarComponentes(elem);
+            ui.animarDesaparecer(this.elementoVistaInterior,function() {
+                ui.finalizarVista(t.instanciaVista);
                 if(retorno) retorno();
             });
         } else {

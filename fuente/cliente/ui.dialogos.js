@@ -228,7 +228,7 @@
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
      * `notificacion`, `seguridad`, `ok`, `problema-red`.
      * @param {(string|Node|Element)} [parametros.destino=document.body] - Elemento de destino, dentro del cual se creará el diálogo.
-     * @returns {Dialogo}
+     * @returns {dialogo}
      */
     ui.construirDialogo=function(parametros) {
         parametros=Object.assign({
@@ -330,9 +330,12 @@
     /**
      * Abre un diálogo construido con construirDialogo().
      * @memberof ui
-     * @param {Dialogo} dialogo 
+     * @param {dialogo} dialogo 
+     * @returns {ui}
      */
     ui.abrirDialogo=function(dialogo) {
+        if(dialogo.abierto) return ui;
+
         dialogosAbiertos.push(dialogo);
 
         actualizarZIndexDialogos();
@@ -370,7 +373,7 @@
     /**
      * Devuelve todos los diálogos abiertos.
      * @memberof ui
-     * @returns {Dialogo[]}
+     * @returns {dialogo[]}
      */
     ui.obtenerDialogosAbiertos=function() {
         return dialogosAbiertos;
@@ -379,7 +382,7 @@
     /**
      * Cierra un diálogo construido con construirDialogo().
      * @memberof ui
-     * @param {Dialogo} [dialogo] - Diálogo.
+     * @param {dialogo} [dialogo] - Diálogo.
      * @param {number} [opcion=null] - Número de opción que cierra el diálogo, o NULL.
      * @param {boolean} [omitirAnimacion=false] - Si es true, ierra el diálogo inmediatamente.
      * @param {boolean} [eliminar] - Eliminar el diálogo luego de cerrar. Si se omite, se tomará de la configuración del diálogo.
@@ -429,7 +432,7 @@
     /**
      * Elimina o destruye un diálogo construido con construirDialogo().
      * @memberof ui
-     * @param {Dialogo} dialogo 
+     * @param {dialogo} dialogo 
      */
     ui.eliminarDialogo=function(dialogo) {
         //Restaurar contenido a su ubicación original

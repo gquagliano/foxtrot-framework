@@ -113,48 +113,34 @@ var controlador=new function() {
     /**
      * Agrega la instancia del componente al repositorio.
      * @param {componente} componente - Componente.
-     * @param {string} [nombre] - Si se especifica el nombre, será agregado a componentes en lugar de instanciasComponentes.
      * @returns {controlador}
      */
-    this.agregarComponente=function(componente,nombre) {
-        if(typeof nombre!=="undefined") {
-            this.componentes[nombre]=componente;
-        } else {
+    this.agregarComponente=function(componente) {
+        var nombre=componente.obtenerNombre();
+        if(nombre) this.componentes[nombre]=componente;
+
+        if(!~this.instanciasComponentes.indexOf(componente))
             this.instanciasComponentes.push(componente);
-        }
+            
         return this;
     };
     
     /**
      * Elimina las referencias a la instancia del componente.
-     * @param {(componente|string)} componente - Componente, instancia o nombre.
+     * @param {componente} componente - Componente.
      * @returns {controlador}
      */
     this.removerComponente=function(componente) {
-        var nombre=null,
-            cadena=typeof componente==="string";
-        
-        if(cadena) nombre=componente;
+        var nombre=componente.obtenerNombre(),
+            pos=this.instanciasComponentes.indexOf(componente);
 
-        for(var i=0;i<this.instanciasComponentes.length;i++) {
-            if(cadena) {
-                if(this.instanciasComponentes[i]&&this.instanciasComponentes[i].obtenerNombre()==componente) {
-                    delete this.instanciasComponentes[i];
-                    break;
-                }
-            } else {
-                if(this.instanciasComponentes[i]===componente) {
-                    nombre=this.instanciasComponentes[i].obtenerNombre();
-                    delete this.instanciasComponentes[i];
-                    break;
-                }
-            }
-        }
+        if(~pos) this.instanciasComponentes.splice(pos,1);
 
-        if(nombre&&this.componentes.hasOwnProperty(nombre)) this.componentes[nombre]=null;
+        if(nombre&&this.componentes.hasOwnProperty(nombre)&&this.componentes[nombre]==componente)
+            delete this.componentes[componente];
 
         return this;
-    };    
+    };
 
     ////Gestión de la instancia
 

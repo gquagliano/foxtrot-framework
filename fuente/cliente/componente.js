@@ -2221,12 +2221,12 @@ var componente=new function() {
 
     //La jerarquía estará definida exclusivamente por el DOM, no almacenaremos información de las relaciones entre los componentes en el JSON
 
-    var coincideFiltroComponente=function(comp,filtro) {
+    /*var coincideFiltroComponente=function(comp,filtro) {
         if(filtro.hasOwnProperty("componente")&&comp.componente==filtro.componente) return true;
         if(filtro.hasOwnProperty("nombre")&&comp.nombre==filtro.nombre) return true;
         if(filtro.hasOwnProperty("elemento")&&comp.elemento.es(filtro.elemento)) return true;
         return false;
-    };
+    };*/
 
     /**
      * Devuelve un array de componentes hijos, o un listado de componentes de su descendencia que coincidan con el filtro.
@@ -2236,27 +2236,18 @@ var componente=new function() {
      * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
      * @returns {componente[]}
      */
-    this.obtenerHijos=function(filtro) {
+    this.obtenerHijos=function() {
         var hijos=[];
         
-        //Los componentes no serán necesariamente hijos directos, por lo tanto debemos profundizar en la descendencia hasta en contrar un componente (no puede utilizarse
-        //querySelectorAll para esto ya que seleccionaría *todos* los componentes)
+        //Los componentes no serán necesariamente hijos directos, por lo tanto debemos profundizar en la descendencia en el DOM hasta encontrar
+        //un componente (no puede utilizarse querySelectorAll ya que solo necesitamos el primer nivel)
         
         var fn=function(padre) {
             var elementos=padre.hijos();
             for(var i=0;i<elementos.length;i++) {
                 if(elementos[i].es({clase:"componente"})) {
                     var comp=ui.obtenerInstanciaComponente(elementos[i]);
-                    if(comp) {
-                        if(typeof filtro!=="undefined") {
-                            //Agregar solo si coincide
-                            if(coincideFiltroComponente(comp,filtro)) hijos.push(comp);
-                            //Con su descendencia
-                            hijos=hijos.concat(comp.obtenerHijos(filtro));
-                        } else {                        
-                            hijos.push(comp);
-                        }
-                    }
+                    if(comp) hijos.push(comp);
                 } else {
                     fn(elementos[i]);
                 }
@@ -2270,11 +2261,7 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve el componente padre o un componente de su ascendencia que coincida con el filtro.
-     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, devolverá el padre directo del componente.
-     * @param {string} [filtro.componente] - Tipo de componente.
-     * @param {string} [filtro.nombre] - Nombre del componente.
-     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
+     * Devuelve el componente padre.
      * @returns {componente}
      */
     this.obtenerPadre=function() {
@@ -2282,16 +2269,7 @@ var componente=new function() {
             clase:"componente"
         });
         if(!elem) return null;
-        var comp=ui.obtenerInstanciaComponente(elem);
-
-        if(typeof filtro!=="undefined") {
-            //Continuar subiendo hasta que coincida o se llegue al comienzo del árbol
-            if(!comp) return null;
-            if(coincideFiltroComponente(comp,filtro)) return comp;
-            comp=comp.obtenerPadre(filtro);
-        }
-
-        return comp;
+        return ui.obtenerInstanciaComponente(elem);
     };
 
     /**

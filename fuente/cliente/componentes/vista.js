@@ -17,6 +17,7 @@ var componenteVista=function() {
     this.arrastrable=false;
     this.nombreVista=null;
     this.principal=false;
+    /** @var {componente[]} componentes - Listado de componentes *adicionales* a aquellos que le pertenecen por jerarquía del DOM. */
     this.componentes=null;
 
     this.propiedadesConcretas={
@@ -99,7 +100,8 @@ var componenteVista=function() {
      */
     this.agregarComponente=function(componente) {
         if(this.componentes===null) this.componentes=[];
-        this.componentes.push(componente);
+        if(!~this.componentes.indexOf(componente))
+            this.componentes.push(componente);
         return this;
     };
 
@@ -180,27 +182,41 @@ var componenteVista=function() {
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
-    };    
+    };
 
     /**
      * Actualiza toda la vista. Este método no redibuja los componentes ni reasigna todas sus propiedades. Está diseñado para poder
      * solicitar a los componentes que se refresquen o vuelvan a cargar determinadas propiedades, como el origen de datos.
+     * @param {boolean} [actualizarHijos=true] - Determina si se debe desencadenar la actualización de la descendencia del componente.
      * @returns {componente}
      */
-     this.actualizar=function() {
-        this.actualizacionEnCurso=true;
+     this.actualizar=function(actualizarHijos) {
+        this.prototipo.actualizar.call(this,actualizarHijos);
 
-        if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
-
-        this.actualizarPropiedadesExpresiones();
-
-        //Utilizamos el listado de componentes en lugar del método de actualización normal por descendencia
-        if(this.componentes!==null)
+        //Actualizar también los componentes registrados en el almacén
+        if(this.componentes!==null) {
+            this.actualizacionEnCurso=true;
             for(var i=0;i<this.componentes.length;i++)
                 this.componentes[i].actualizar(true);
+            this.actualizacionEnCurso=false;
+        }
 
-        this.actualizacionEnCurso=false;
         return this;
+    };
+    
+    /**
+    * Devuelve un listado de componentes hijos (descendencia directa).
+    * @returns {componente[]}
+    */
+    this.obtenerHijos=function() {
+        var hijos=this.prototipo.obtenerHijos.call(this);
+
+        //Sumar también los componentes registrados en el almacén
+        //Ignora el filtro
+        if(this.componentes!==null)
+            hijos=hijos.concat(this.componentes);
+        
+        return hijos;
     };
 };
 

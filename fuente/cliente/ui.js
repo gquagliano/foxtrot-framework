@@ -621,7 +621,7 @@ var ui=new function() {
         if(typeof param==="object"&&param.esComponente()) return param;
 
         if(typeof param==="object"&&param.nodeName) return param.metadato("componente");
-        
+
         return null;
     };
 
@@ -675,6 +675,29 @@ var ui=new function() {
 
         return this;
     };
+
+    /**
+     * Registra un componente en el almacén global `componentes`.
+     * @param {componente} componente - Instancia del componente.
+     * @returns {ui}
+     */
+    this.agregarComponente=function(componente) {
+        var nombre=componente.obtenerNombre();
+        if(nombre) window.componentes[nombre]=componente;
+        return this;
+    };
+
+    /**
+     * Remueve un componente del almacén global `componentes`.
+     * @param {componente} componente - Instancia del componente.
+     * @returns {ui}
+     */
+    this.removerComponente=function(componente) {
+        var nombre=componente.obtenerNombre();
+        if(nombre&&componentes.hasOwnProperty(nombre)&&componentes[nombre]==componente)
+            delete window.componentes[nombre];
+        return this;
+    };    
 
     ////Cargar/guardar
 

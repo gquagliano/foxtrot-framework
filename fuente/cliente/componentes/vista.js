@@ -15,7 +15,9 @@ var componenteVista=function() {
 
     this.componente="vista";
     this.arrastrable=false;
-    this.nombreControlador=null;  
+    this.nombreVista=null;
+    this.principal=false;
+    this.componentes=null;
 
     this.propiedadesConcretas={
         "Metadatos":{
@@ -43,24 +45,81 @@ var componenteVista=function() {
                 adaptativa:false
             }
         }
-    };  
-
-    /**
-     * Devuelve el nombre del controlador actual de la vista.
-     */
-    this.obtenerNombreControlador=function() {
-        return this.nombreControlador;
     };
 
     /**
-     * Establece el nombre del controlador actual de la vista.
-     * @param {string} nombre 
+     * Asigna el controlador de la vista.
+     * @param {controlador} controlador - Instancia del controlador.
+     * @returns {componenteVista}
      */
-    this.establecerControlador=function(nombre) {
-        this.nombreControlador=nombre;
+    this.establecerControlador=function(controlador) {
+        this.controlador=controlador;
+        return this;
     };
 
+    /**
+     * Establece el nombre de la vista.
+     * @param {string} nombre - Nombre.
+     * @returns {componente}
+     */
+    this.establecerNombreVista=function(nombre) {
+        this.nombreVista=nombre;
+        return this;
+    };
+
+    /**
+     * Devuelve el nombre de la vista.
+     * @returns {string}
+     */
+    this.obtenerNombreVista=function() {
+        return this.nombreVista;
+    };
+
+    /**
+     * Establece que esta vista es la vista principal.
+     * @returns {componente}
+     */
+    this.establecerPrincipal=function() {
+        this.principal=true;
+        return this;
+    };
+
+    /**
+     * Devuelve si la vista es la vista principal.
+     * @returns {boolean}
+     */
+    this.esPrincipal=function() {
+        return this.principal;
+    };
+
+    /**
+     * Agrega un componente a la descendencia de esta instancia.
+     * @param {componente} componente - Componente a agregar.
+     * @returns {componente}
+     */
+    this.agregarComponente=function(componente) {
+        if(this.componentes===null) this.componentes=[];
+        this.componentes.push(componente);
+        return this;
+    };
+
+    /**
+     * Remueve un componente de la descendencia de esta instancia.
+     * @param {componente} componente - Componente a remover.
+     * @returns {componente}
+     */
+    this.removerComponente=function(componente) {
+        var p=this.componentes.indexOf(componente);
+        if(~p) this.componentes.splice(p,1);
+        return this;
+    };
+
+    /**
+     * Inicializa la instancia.
+     * @returns {componente}
+     */ 
     this.inicializar=function() {
+        this.vista=this;
         this.contenedor=this.elemento;
         return this.prototipo.inicializar.call(this);
     };
@@ -69,12 +128,6 @@ var componenteVista=function() {
      * Inicializa la instancia en base a su ID y sus parámetros.
      */
     this.restaurar=function() {
-        //Si el elemento no se encuentra por id, asignar como elemento el cuerpo de la página (caso vista nueva)
-        var body=ui.obtenerDocumento().body;
-        this.elemento=body.querySelector("[data-fxid='"+this.id+"']");
-        if(!this.elemento) this.elemento=body.querySelector("#foxtrot-cuerpo");
-
-        this.prototipo.restaurar.call(this);
         return this;
     };
     
@@ -126,6 +179,27 @@ var componenteVista=function() {
 	    }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        return this;
+    };    
+
+    /**
+     * Actualiza toda la vista. Este método no redibuja los componentes ni reasigna todas sus propiedades. Está diseñado para poder
+     * solicitar a los componentes que se refresquen o vuelvan a cargar determinadas propiedades, como el origen de datos.
+     * @returns {componente}
+     */
+     this.actualizar=function() {
+        this.actualizacionEnCurso=true;
+
+        if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
+
+        this.actualizarPropiedadesExpresiones();
+
+        //Utilizamos el listado de componentes en lugar del método de actualización normal por descendencia
+        if(this.componentes!==null)
+            for(var i=0;i<this.componentes.length;i++)
+                this.componentes[i].actualizar(true);
+
+        this.actualizacionEnCurso=false;
         return this;
     };
 };

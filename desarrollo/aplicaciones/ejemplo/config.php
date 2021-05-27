@@ -18,12 +18,12 @@ configuracion::establecer([
     'enrutador'=>[
         //Nótese que las rutas deben comenzar con / y ordenarse de más específica a menos específica, ya que la primer coincidencia será
         //la que se utilice
-        '/api/'=>'enrutadorApi',
-        '/'=>'enrutadorUnaPagina'
+        '/api/'=>'api',
+        '/'=>'unaPagina'
     ],
     
     //Credenciales de la base de datos (los parámetros omitidos se heredan de la configuración global)
-    'usuarioBd'=>'root',
-    'contrasenaBd'=>'toor',
-    'nombreBd'=>'test3'
+    //'usuarioBd'=>'root',
+    //'contrasenaBd'=>'toor',
+    //'nombreBd'=>'test'
 ]);

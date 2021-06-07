@@ -124,6 +124,125 @@ var util=new function() {
             }
         }
         if(typeof objeto==="object"&&ruta.length==1) objeto[ruta[0]]=valor;
+    };    
+
+    /**
+     * Completa la cadena por la izquierda (*pad left*).
+     * @param {string} cadena - Cadena a procesar.
+     * @param {number} longitud - Longitud deseada.
+     * @param {string} [completar=" "] - Caracter o cadena de relleno.
+     */
+     this.completarIzquierda=function(cadena,longitud,completar) {
+        if(typeof completar=="undefined") var completar=" ";
+        if(typeof cadena!="string") cadena=cadena.toString();
+        while(cadena.length<longitud)
+            cadena=completar+cadena;
+        if(cadena.length>longitud) return cadena.substr(-longitud); //dado que completar puede ser más de un caracter, se puede haber excedido
+        return cadena;
+    };
+
+    /**
+     * Completa la cadena por la derecha (*pad right*).
+     * @param {string} cadena - Cadena a procesar.
+     * @param {number} longitud - Longitud deseada.
+     * @param {string} [completar=" "] - Caracter o cadena de relleno.
+     */
+    this.completarDerecha=function(cadena,longitud,completar) {
+        if(typeof completar=="undefined") var completar=" ";
+        if(typeof cadena!="string") cadena=cadena.toString();
+        while(cadena.length<longitud)
+            cadena=cadena+completar;
+        if(cadena.length>longitud) return cadena.substr(0,longitud); //dado que completar puede ser más de un caracter, se puede haber excedido
+        return cadena;
+    };
+
+    /**
+     * Convierte una cantidad de minutos (entero) a horas y minutos.
+     * @param {number} valor - Minutos desde las 0:00.
+     * @param {boolean} [string=true] - Si es `true`, devolverá un string `H:mm`. De lo contrario, devolverá un array `[H,m]`.
+     * @returns {(string|number[])}
+     */
+    this.minutosAHoras=function(valor,string) {
+        var horas=Math.floor(valor/60),
+            minutos=valor-horas*60;
+        if(typeof string==="undefined"||string)
+            return horas+":"+(minutos<10?"0":"")+minutos;
+        return [horas,minutos];
+    };
+
+    /**
+     * Convierte una cantidad de segundos a horas y minutos.
+     * @param {number} valor - Segundos desde las 0:00:00.
+     * @param {boolean} [devolverSegundos=false] - Devolver los segundos.
+     * @param {boolean} [string=true] - Si es `true`, devolverá un string `H:mm`, o `H:mm:ss` si `segundos` es `true`. De lo contrario, devolverá un array
+     * `[H,m,s]`.
+     * @returns {(string|number[])}
+     */
+    this.segundosAHoras=function(valor,devolverSegundos,string) {
+        if(typeof devolverSegundos=="undefined") devolverSegundos=false;
+        var horas=Math.floor(valor/60/60),
+            minutos=Math.floor((valor-horas*60*60)/60),
+            segundos=Math.floor(valor-horas*60*60-minutos*60);
+        if(typeof string==="undefined"||string)
+            return horas+":"+(minutos<10?"0":"")+minutos+(devolverSegundos?":"+(segundos<10?"0":"")+segundos:"");
+        return [horas,minutos,segundos];
+    };
+
+    /**
+     * Convierte una hora en formato `horas:minutos` a un entero representando la cantidad de minutos desde las 0:00.
+     * @param {string} hora - Hora a analizar.
+     * @returns {(number|null)}
+     */
+    this.horasAMinutos=function(valor) {
+        if(!/^\d{1,}:\d{1,2}$/.test(valor)) return null;
+        var partes=valor.split(":");
+        return parseInt(partes[0])*60+parseInt(partes[1]);
+    };
+
+    /**
+     * Convierte una hora en formato `horas:minutos[:segundos]` a un entero representando la cantidad de segundos desde las 0:00.
+     * @param {string} valor - Hora a analizar.
+     * @returns {(number|null)}
+     */
+    this.horasASegundos=function(valor) {
+        if(!/^\d{1,}:\d{1,2}(:\d{1,2})?$/.test(valor)) return null;
+        var partes=valor.split(":");
+        return parseInt(partes[0])*60*60+parseInt(partes[1])*60+(partes.length==3?partes[2]:0);
+    };
+
+    /**
+     * Obtiene la cantidad de minutos desde las 0:00 de la fecha epoch especificada.
+     * @param {number} fecha - Fecha a analizar.
+     * @returns {number}
+     */
+    this.epochAMinutos=function(fecha) {
+        fecha=this.fechaHora(fecha,"H:i").split(":");
+        return parseInt(fecha[0])*60+parseInt(fecha[1]);
+    };
+
+    /**
+     * Convierte una fecha epoch a un objeto Date.
+     * @param {number} tiempo - Tiempo epoch.
+     * @returns {Date}
+     */
+    this.epochAFecha=function(tiempo) {
+        return new Date(parseInt(tiempo)*1000);
+    };
+
+    /**
+     * Devuelve la cantidad de días transcurridos entre dos fechas.
+     */
+    this.diasEntre=function(a,b) {
+        return Math.round(Math.abs((+a)-(+b))/8.64e7);
+    };
+
+    /**
+     * Verifica si el valor dado es una fecha válida.
+     * @param {*} valor - Valor a analizar.
+     * @returns {boolean}
+     */
+    this.validarFecha=function(valor) {
+        return !isNaN(Date.parse(valor));
     };
 
     /////TODO Los siguientes métodos se están migrando desde Foxtrot 6. Solo se les asignó un nombre en español, que debe ser definitivo. Se deben terminar de
@@ -418,128 +537,6 @@ var util=new function() {
         return (si=si?[1e3,'k','B']:[1024,'K','iB'],b=Math,c=b.log,
                 d=c(bytes)/c(si[0])|0,bytes/b.pow(si[0],d)).toFixed(2)
             +' '+(d?(si[1]+'MGTPEZY')[--d]+si[2]:'Bytes');
-    };
-
-    /**
-     * 
-     */
-    this.completarIzquierda=function(str,len,pad) {
-        if(typeof pad=="undefined") var pad=" ";
-        str=str.toString();
-        while(str.length<len) {
-            str=pad+str;
-        }
-        return str;
-    };
-
-    /**
-     * 
-     */
-    this.completarDerecha=function(str,len,pad) {
-        if(typeof pad=="undefined") var pad=" ";
-        str=str.toString();
-        while(str.length<len) {
-            str=str+pad;
-        }
-        return str;
-    };
-
-    /**
-     * Convierte una cantidad de minutos (entero) a `horas:minutos`.
-     */
-    this.minutosAHoras=function(q,str) {
-        var j=Math.floor(q/60);
-        var m=q-j*60;
-        if(!typeof str==="undefined"&&str) {
-            return j+':'+(m<10?"0":"")+m;
-        } else {
-            return [j,m];
-        }
-    };
-
-    /**
-     * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de minutos correspondiente.
-     */
-    this.horasAMinutos=function(q) {
-        if(!/^[0-9]{1,2}:[0-9]{1,2}$/.test(q)) return null;
-        q=q.split(":");
-        return parseInt(q[0])*60+parseInt(q[1]);
-    };
-
-    /**
-     * 
-     */
-    this.horasAMinutosUtc=function(q) {
-        q=this.horasAMinutos(q);
-        if(q===null) return q;
-        t+=new Date().getTimezoneOffset();
-    };
-
-    /**
-     * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de segundos correspondientes.
-     * @param q String.
-     */
-    this.horasASegundos=function(q) {
-        if(!/^[0-9]{1,2}:[0-9]{1,2}$/.test(q)) return null;
-        q=q.split(":");
-        return parseInt(q[0])*60*60+parseInt(q[1])*60;
-    };
-
-    /**
-    * Convierte una hora (string con formato `horas:minutos`) a un entero representando la cantidad de segundos correspondientes. Convierte
-    * la salida a UTC según la zona horaria actual.
-    */
-    this.horasASegundosUtc=function(q) {
-        q=this.horasASegundos(q);
-        if(q===null) return q;
-        q+=new Date().getTimezoneOffset()*60;
-        return q;
-    };
-
-    /**
-     * 
-     */
-    this.segundosAHoras=function(v) {
-        var h=Math.floor(v/60/60),
-            m=Math.floor((v-h*60*60)/60);
-        return h+":"+(m<10?"0":"")+m;
-    };
-
-    /**
-     * 
-     */
-    this.segundosAHorasUtc=function(v) {
-        v-=new Date().getTimezoneOffset()*60;
-        var h=Math.floor(v/60/60),
-            m=Math.floor((v-h*60*60)/60);
-        return h+":"+(m<10?"0":"")+m;
-    };
-
-    /**
-     * Obtiene la cantidad de minutos desde las 0:00 de la fecha epoch especificada.
-     */
-    this.epochAMinutos=function(q) {
-        q=this.fechaHora(q,"H:i").split(":");
-        return parseInt(q[0])*60+parseInt(q[1]);
-    };
-
-    /**
-     * Convierte una fecha epoch (UTC) a un objeto Date.
-     * @param v Tiempo epoch.
-     */
-    this.epochAFecha=function(v) {
-        return new Date(parseInt(v)*1000);
-    };
-
-    /**
-     * Devuelve la cantidad de días transcurridos entre dos fechas.
-     */
-    this.diasEntre=function(a,b) {
-        return Math.round(Math.abs((+a)-(+b))/8.64e7);
-    };
-
-    this.validarFecha=function(d) {
-        return !isNaN(Date.parse(d));
     };
 
     /**

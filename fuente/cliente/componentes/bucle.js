@@ -14,12 +14,10 @@ var componenteBucle=function() {
     "use strict";
 
     this.componente="bucle";
+    this.iterativo=true;
 
-    this.itemsAutogenerados=[];
     this.itemSinDatos=null;
     this.elementoPadre=null;
-
-    this.descartarValores=false;
 
     /**
      * Propiedades de Bucle.
@@ -50,7 +48,7 @@ var componenteBucle=function() {
      * Inicializa la instancia tras ser creada o restaurada.
      */
     this.inicializar=function() {
-        if(this.fueInicializado) return this; 
+        if(this.fueInicializado) return this;
         this.contenedor=this.elemento.querySelector(".componente-bucle-plantilla");
         this.prototipo.inicializar.call(this);
         return this;
@@ -61,7 +59,7 @@ var componenteBucle=function() {
      */
     this.crear=function() {
         this.elemento=document.crear("<div></div>");
-        this.contenedor=document.crear("<div class='componente-bucle-plantilla'></div></div>")
+        this.contenedor=document.crear("<div class='componente-bucle-plantilla'></div>")
             .anexarA(this.elemento);
         this.prototipo.crear.call(this);
         return this;
@@ -70,34 +68,17 @@ var componenteBucle=function() {
     /**
      * Evento Listo.
      */
-    this.listo=function() {        
-        //Ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
-        this.ocultarDescendencia();
-
+    this.listo=function() {
         this.actualizar();
         this.prototipo.listo.call(this);
-    };
-    
-    /**
-     * Establece el origen de datos.
-     * @param {Object} obj - Objeto a asignar.
-     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @returns Componente
-     */
-    this.establecerDatos=function(obj,actualizar) {
-        //No recursivo, ya que los componentes que contiene se usan solo como plantilla
-        this.descartarValores=true;
-        this.prototipo.establecerDatos.call(this,obj,actualizar,false);
-        return this;
     };
 
     /**
      * Actualiza el componente.
-     * @param {boolean} [redibujar=false] - Si es `true`, descartará el contenido y forzará el redibujado del componente completo.
      * @returns {componente}
      */
-    this.actualizar=function(redibujar) {
-        if(typeof redibujar==="undefined") redibujar=false;
+    this.actualizar=function() {
+        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
 
         this.prototipo.actualizar.call(this,false);
 
@@ -251,30 +232,6 @@ var componenteBucle=function() {
     };
 
     /**
-     * Devuelve o establece el valor del componente.
-     * @param {*} [valor] - Valor a establecer
-     * @returns {*}
-     */
-    this.valor=function(valor) {
-        if(typeof valor==="undefined") {
-            //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.extraerValor();            
-        } else if(valor===null) {
-            //Si valor es null, solo limpiar
-            this.limpiarValoresAutogenerados(true);
-        } else {
-            //Cuando se asigne un valor, establecer como origen de datos
-            this.establecerDatos(valor);
-        }
-    };    
-
-    this.limpiarValoresAutogenerados=function() {
-        for(var i=0;i<this.itemsAutogenerados.length;i++)
-            this.itemsAutogenerados[i].limpiarValores();
-        return this;
-    };
-
-    /**
      * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.
      * @returns {*}
      */
@@ -324,15 +281,6 @@ var componenteBucle=function() {
      */
     this.obtenerDatosActualizados=function() {
         return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
-    };
-
-    /**
-     * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
-     * @returns {Object}
-     */
-    this.obtenerValores=function() {
-        return;
-        //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
     };
 
     /**

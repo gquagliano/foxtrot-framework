@@ -17,12 +17,10 @@ var componenteArbol=function() {
     	ignorarValor=false;
 
     this.componente="arbol";
+    this.iterativo=true;
 
-    this.itemsAutogenerados=[];
     this.itemSinDatos=null;
     this.listado=null;
-    
-    this.redibujar=true;
 
     /**
      * Propiedades de Árbol.
@@ -131,7 +129,6 @@ var componenteArbol=function() {
      * @returns Componente
      */
     this.establecerDatos=function(obj,actualizar) {
-        //No recursivo, ya que los componentes que contiene se usan solo como plantilla, y sin tener en cuenta el valor de `propiedad`.
         this.redibujar=true;
         this.prototipo.establecerDatos.call(this,obj,actualizar,false,true);
         return this;
@@ -189,6 +186,8 @@ var componenteArbol=function() {
      * @returns {Componente}
      */
     this.actualizar=function() {
+        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
+        
         this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
@@ -352,23 +351,8 @@ var componenteArbol=function() {
      * @returns {*}
      */
     this.valor=function(valor) {
-        if(typeof valor==="undefined") {
-        	if(ignorarValor) return null;
-            //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.extraerValor();
-        } else if(valor===null) {
-            //Si valor es null, solo limpiar
-            this.limpiarValoresAutogenerados();
-        } else {
-            //Cuando se asigne un valor, tratarlo como nuevo origen de datos
-            this.establecerDatos(valor);
-        }
-    };
-
-    this.limpiarValoresAutogenerados=function() {
-        for(var i=0;i<this.itemsAutogenerados.length;i++)
-            this.itemsAutogenerados[i].limpiarValores();
-        return this;
+        if(ignorarValor) return null;
+        return this.prototipo.valor.call(this,valor);
     };
 
     /**
@@ -451,15 +435,6 @@ var componenteArbol=function() {
         });
         ignorarValor=false;
         return res;
-    };
-
-    /**
-     * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
-     * @returns {Object}
-     */
-    this.obtenerValores=function() {
-        return;
-        //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
     };
 
     /**

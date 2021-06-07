@@ -54,6 +54,10 @@ var componente=new function() {
      * @var {boolean} actualizacionEnCurso - Determina si el componente se encuentra en proceso de actualización o redibujado.
      * @var {controlador} controlador - Instancia del controlador de la vista a la cual pertenece.
      * @var {*[]} clasesCss - Listado todas las de clases CSS propias del componente posibles. Cada componente concreto debe agregar las propias.
+     * @var {boolean} iterativo - Indica si el componente concreto es una estructura que itere su contenido.
+     * @var {*[]} itemsAutogenerados - Listado de items autogenerados por el componente iterativo.
+     * @var {boolean} descartarValores - Indica si se deben descartar los valores de los campos durante el próximo redibujado (componentes iterativos).
+     * @var {boolean} redibujar - Indica si se debe redibujar por completo el componente durante la próxima actualización.
      */
     this.id=null;
     this.selector=null;
@@ -99,6 +103,10 @@ var componente=new function() {
         "foxtrot-seleccionado",
         "foxtrot-hijo-seleccionado"
     ];
+    this.iterativo=false;
+    this.itemsAutogenerados=[];
+    this.descartarValores=false;
+    this.redibujar=false;
 
     /**
      * @var {Obejct} propiedadesComunes - Propiedades comunes a todos los componentes.
@@ -554,14 +562,17 @@ var componente=new function() {
      * Establece el origen de datos.
      * @param {Object} obj - Objeto a asignar.
      * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @param {boolean} [dispersar=true] - Si es `true`, los datos serán aplicados a toda la descendencia en forma recursiva.
+     * @param {boolean} [dispersar] - Si es `true`, los datos serán aplicados a toda la descendencia en forma recursiva. Por defecto, `false` para componentes
+     * iterativos, `true` para todos los demás.
      * @param {boolean} [ignorarPropiedad=false] - Si es `true` no tendrá en cuenta el valor de la propiedad *Propiedad* (`propiedad`) del componente.
      * @returns {componente}
      */
     this.establecerDatos=function(obj,actualizar,dispersar,ignorarPropiedad) {
         if(typeof actualizar=="undefined") actualizar=true;
-        if(typeof dispersar=="undefined") dispersar=true;
+        if(typeof dispersar=="undefined") dispersar=!this.iterativo;
         if(typeof ignorarPropiedad=="undefined") ignorarPropiedad=false;
+
+        if(this.iterativo) this.descartarValores=true;
 
         //Si se omite obj, intentar usar el último objeto asignado, u obtener de la propiedad Origen
         if(typeof obj=="undefined"||!obj) obj=this.datos||this.propiedad(true,"datos");
@@ -681,6 +692,7 @@ var componente=new function() {
         obj.hijos=[];
         obj.valoresPropiedades={};
         obj.clasesCss=this.clasesCss.clonar();
+        obj.itemsAutogenerados=[];
 
         return obj;
     };
@@ -969,11 +981,17 @@ var componente=new function() {
             if(typeof valor!=="undefined") this.valor(valor);
         }
 
-        if(actualizarHijos) this.obtenerHijos().forEach(function(hijo) {
+        if(actualizarHijos) {
+            var t=this;
+            this.obtenerHijos().forEach(function(hijo) {
+                hijo.redibujar=t.redibujar;
                 hijo.actualizar();
             });
+        }
 
         this.actualizacionEnCurso=false;
+        this.redibujar=false;
+
         return this;
     };
 
@@ -1648,12 +1666,42 @@ var componente=new function() {
      * @returns {(componente|undefined|*)}
      */
     this.valor=function(valor) {
-        if(!this.campo) return;
+        if(this.iterativo) {
+            //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
+            if(typeof valor==="undefined") return this.extraerValor();            
+
+            //Si valor es null, solo limpiar
+            if(valor===null) this.limpiarValoresAutogenerados(true);
+
+            //Cuando se asigne un valor, establecer como origen de datos
+            return this.establecerDatos(valor);
+        }
+
+        if(!this.campo) return this;
 
         if(typeof valor==="undefined") return this.campo.valor();
             
         this.campo.valor(valor);
         //if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
+
+        return this;
+    };
+
+    /**
+     * Genera y devuelve el valor de retorno según las propiedades del componente concreto.
+     * @returns {*}
+     */
+    this.extraerValor=function() {
+        return null;
+    };
+
+    /**
+     * Limpia los valores de los campos que se encuentren entre los items autogenerados.
+     * @returns {componente}
+     */
+    this.limpiarValoresAutogenerados=function() {
+        for(var i=0;i<this.itemsAutogenerados.length;i++)
+            this.itemsAutogenerados[i].limpiarValores();
         return this;
     };
 
@@ -2062,6 +2110,13 @@ var componente=new function() {
      */
     this.listo=function() {
         this.listoEjecutado=true;
+        
+        if(this.iterativo) {
+            //Ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas
+            //al obtener/establecer los valores de la vista
+            this.ocultarDescendencia();
+        }
+
         this.procesarPropiedades();
     };
 
@@ -2310,6 +2365,11 @@ var componente=new function() {
      * @returns {Object}
      */
     this.obtenerValores=function() {
+        if(this.iterativo) {
+            //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
+            return null;
+        }
+
         var hijos=this.obtenerHijos(),
             valores={};
 

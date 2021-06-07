@@ -14,9 +14,7 @@ var componenteTabla=function() {
     "use strict";
 
     this.componente="tabla";
-
-    this.descartarValores=false;
-    this.filasAutogeneradas=[];
+    this.iterativo=true;
 
     var t=this;
 
@@ -93,28 +91,14 @@ var componenteTabla=function() {
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
-    
-    /**
-     * Establece el origen de datos.
-     * @param {Object} obj - Objeto a asignar.
-     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @returns Componente
-     */
-    this.establecerDatos=function(obj,actualizar) {
-        //No recursivo, ya que los componentes que contiene se usan solo como plantilla
-        this.descartarValores=true;
-        this.prototipo.establecerDatos.call(this,obj,actualizar,false);
-        return this;
-    };
 
     /**
      * Actualiza el componente.
-     * @param {boolean} [redibujar=false] - Si es `true`, descartará el contenido y forzará el redibujado del componente completo.
      * @returns {componente}
      */
-    this.actualizar=function(redibujar) {
-        if(typeof redibujar==="undefined") redibujar=false;
-
+    this.actualizar=function() {
+        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
+        
         this.prototipo.actualizar.call(this,false);
 
         if(ui.enModoEdicion()) return;
@@ -136,7 +120,7 @@ var componenteTabla=function() {
                 
         if(redibujar||!this.datos||!this.datos.length) {
             ui.eliminarComponentes(this.elemento.querySelectorAll(".autogenerado"));
-            this.filasAutogeneradas=[];
+            this.itemsAutogenerados=[];
         }
 
         this.removerMensajeSinDatos();
@@ -267,7 +251,7 @@ var componenteTabla=function() {
 
         var t=this,
             fn=function(obj,i) {
-                if(i>=t.filasAutogeneradas.length) {
+                if(i>=t.itemsAutogenerados.length) {
                     agregar(obj,i);
                 } else {
                     actualizar(obj,i);
@@ -279,15 +263,15 @@ var componenteTabla=function() {
                 t.buscarFilas().forEach(function(fila) {
                     arr.push(fila.generarFila(t,obj,i));
                 });
-                t.filasAutogeneradas.push(arr);
+                t.itemsAutogenerados.push(arr);
             },
             actualizar=function(obj,i) {
-                t.filasAutogeneradas[i].forEach(function(fila) {
+                t.itemsAutogenerados[i].forEach(function(fila) {
                     fila.actualizarFila(obj);
                 });
             },
             remover=function(i) {
-                t.filasAutogeneradas[i].forEach(function(fila) {
+                t.itemsAutogenerados[i].forEach(function(fila) {
                     fila.eliminar();
                 });
             };
@@ -299,37 +283,13 @@ var componenteTabla=function() {
                 fn(obj,indice);
             });
             //Remover filas excedentes
-            if(this.datos.length<this.filasAutogeneradas.length) {
-                for(var i=this.datos.length;i<this.filasAutogeneradas.length;i++)
+            if(this.datos.length<this.itemsAutogenerados.length) {
+                for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
                     remover(i);
-                this.filasAutogeneradas.splice(this.datos.length);
+                this.itemsAutogenerados.splice(this.datos.length);
             }
         }
 
-        return this;
-    };
-
-    /**
-     * Devuelve o establece el valor del componente.
-     * @param {*} [valor] - Valor a establecer
-     * @returns {*}
-     */
-    this.valor=function(valor) {
-        if(typeof valor==="undefined") {
-            //Cuando se solicite el valor del componente, devolver el origen de datos actualizado con las propiedades que puedan haber cambiado
-            return this.extraerValor();            
-        } else if(valor===null) {
-            //Si valor es null, solo limpiar
-            this.limpiarValoresAutogenerados(true);
-        } else {
-            //Cuando se asigne un valor, establecer como origen de datos
-            this.establecerDatos(valor);
-        }
-    };   
-
-    this.limpiarValoresAutogenerados=function() {
-        for(var i=0;i<this.itemsAutogenerados.length;i++)
-            this.itemsAutogenerados[i].limpiarValores();
         return this;
     };
 
@@ -389,15 +349,6 @@ var componenteTabla=function() {
     };
 
     /**
-     * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
-     * @returns {Object}
-     */
-    this.obtenerValores=function() {
-        return;
-        //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
-    };
-
-    /**
      * Agrega una nueva fila.
      * @param {*} obj - Elemento a insertar.
      * @returns {componente}
@@ -412,7 +363,7 @@ var componenteTabla=function() {
         this.generarFilas(idx);
         
         //Autofoco
-        var elems=this.filasAutogeneradas[idx];
+        var elems=this.itemsAutogenerados[idx];
         for(var i=0;i<elems.length;i++)
             ui.autofoco(elems[i].obtenerElemento());
 

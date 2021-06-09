@@ -2429,7 +2429,7 @@ var componente=new function() {
 
     /**
      * Devuelve un elemento del origen de datos correspondiente a un índice o, en el caso de listados a nidados, una ruta.
-     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto (por ejemplo `0.1.0`).
+     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
      * @param {string} [propiedadRecursiva] - Nombre de la propiedad para avanzar en forma recursiva, si corresponde.
      * @returns {(Object|null)}
      */
@@ -2643,12 +2643,25 @@ var componente=new function() {
      * @returns {Object}
      */
     this.prepararElemento=function(obj,indice,recursivo) {
-        //Agregar método al origen de datos
+        //Agregar métodos al origen de datos
+
         obj.obtenerIndice=(function(i) {
             return function() {
                 return i;
             };
         })(indice);
+        
+        obj.obtenerNivel=(function(i) {
+            return function() {
+                return i;
+            };
+        })(recursivo?recursivo.nivel:null);
+
+        obj.obtenerRuta=(function(i) {
+            return function() {
+                return i;
+            };
+        })(recursivo?recursivo.ruta.concat(indice).join("."):null);
 
         return obj;
     };
@@ -2675,7 +2688,7 @@ var componente=new function() {
 
             nuevo.establecerDatos(objeto);
             nuevo.indice=indice;
-            if(recursivo) nuevo.ruta=recursivo.ruta.concat(indice);
+            if(recursivo) nuevo.ruta=recursivo.ruta.concat(indice).join(".");
             nuevo.autogenerado=true;
             nuevo.ocultarDescendencia();
             nuevo.obtenerElemento().agregarClase("autogenerado");

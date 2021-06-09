@@ -196,29 +196,6 @@ var componenteArbol=function() {
             .establecerHtml(texto);
 
         return this;
-    };    
-
-    /**
-     * Prepara un elemento del origen de datos con sus metadatos y funciones útiles.
-     * @param {Object} obj - Objeto.
-     * @param {number} indice - Índice dentro del origen de datos.
-     * @param {Object} recursivo - Parámetros del recorrido recursivo del listado.
-     * @returns {Object}
-     */
-     this.prepararElemento=function(obj,indice,recursivo) {
-        obj.obtenerNivel=(function(i) {
-            return function() {
-                return i;
-            };
-        })(recursivo.nivel);
-
-        obj.obtenerRuta=(function(i) {
-            return function() {
-                return i;
-            };
-        })(recursivo.ruta);
-
-        return this.prototipo.prepararElemento.call(this,obj,indice,recursivo);
     };
 
     /**
@@ -312,8 +289,8 @@ var componenteArbol=function() {
 
     /**
      * Expande o abre un nivel dada su ruta.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol completo. Para expandir todo
-     * el primer nivel, especificar `-1`.
+     * @param {string} [ruta] - Ruta como array o índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol
+     * completo. Para expandir todo el primer nivel (pero no los sub-niveles), especificar `-1`.
      * @returns {componenteArbol}
      */
     this.expandir=function(ruta) {
@@ -342,8 +319,8 @@ var componenteArbol=function() {
 
     /**
      * Contrae o cierra un nivel dada su ruta.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá el árbol completo. Para contraer todo
-     * el primer nivel, especificar `-1`.
+     * @param {string} [ruta] - Ruta como array o índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá
+     * el árbol completo. Para contraer todo el primer nivel (pero mantener el estado de los sub-niveles), especificar `-1`.
      * @returns {componenteArbol}
      */
     this.contraer=function(ruta) {
@@ -373,7 +350,7 @@ var componenteArbol=function() {
     /**
      * Alterna el estado de un nivel dada su ruta.
      * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`). Si se omite, se expandirá/contraerá el árbol
-     * completo. Para alternar todo el primer nivel, especificar `-1`.
+     * completo. Para alternar todo el primer nivel (pero mantener el estado de los sub-niveles), especificar `-1`.
      * @returns {componenteArbol}
      */
     this.alternar=function(ruta) {
@@ -426,7 +403,7 @@ var componenteArbol=function() {
 
     /**
      * Devuelve un elemento del origen de datos correspondiente a un índice o, en el caso de listados a nidados, una ruta.
-     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto (por ejemplo `0.1.0`).
+     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
      * @returns {(Object|null)}
      */
     this.obtenerObjetoDatos=function(indice) {
@@ -439,12 +416,13 @@ var componenteArbol=function() {
 
     /**
      * Devuelve el elemento (`<li>`) correspondiente a un nivel.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
+     * @param {string} [ruta] - Ruta como array o índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
      * @returns {Node}
      */
     this.obtenerItem=function(ruta) {
         var elemento=this.ul;
-        ruta=ruta.split(".");
+
+        if(typeof ruta=="string") ruta=ruta.split(".");
 
         for(var i=0;i<ruta.length;i++) {
             var indice=parseInt(ruta[i]);

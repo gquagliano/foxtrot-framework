@@ -188,12 +188,6 @@ var ui=new function() {
             if(obj) reglas.push(obj);
         }
 
-        if(!reglas.length) {
-            //Inicializar
-            this.establecerEstilosSelector(selector,"",tamano);
-            reglas=this.obtenerEstilos(selector,tamano);
-        }
-
         //Si se filtró por tamaño, devolver solo las reglas del mismo
         if(tamano) {
             var filtradas=[];
@@ -206,6 +200,12 @@ var ui=new function() {
                 if(tamano=="g") filtradas.push(reglas[i]);
             }
             reglas=filtradas;       
+        }
+
+        if(!reglas.length) {
+            //Inicializar
+            this.establecerEstilosSelector(selector,"",tamano);
+            reglas=this.obtenerEstilos(selector,tamano);
         }
 
         return reglas;

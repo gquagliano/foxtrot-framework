@@ -528,6 +528,8 @@
      * @memberof external:Node
      */
     Node.prototype.agregarClase=function(clase) {
+        if(typeof clase!="string") return this;
+
         var t=this;
         clase=clase.split(" ");
         clase.forEach(function(v) {
@@ -543,6 +545,8 @@
      * @memberof external:Node
      */
     Node.prototype.removerClase=function(clase) {
+        if(typeof clase!="string") return this;
+        
         var t=this;
 
         if(util.esExpresionRegular(clase)) {

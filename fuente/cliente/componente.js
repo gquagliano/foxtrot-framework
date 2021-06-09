@@ -2630,12 +2630,17 @@ var componente=new function() {
 
     /**
      * Prepara un elemento del origen de datos con sus metadatos y funciones útiles.
+     * @param {componente} componente - Componente o elemento del DOM.
      * @param {Object} obj - Objeto.
      * @param {number} indice - Índice dentro del origen de datos.
      * @param {Object} recursivo - Parámetros del recorrido recursivo del listado, si corresponde.
      * @returns {Object}
      */
-    this.prepararElemento=function(obj,indice,recursivo) {
+    this.prepararElemento=function(componente,obj,indice,recursivo) {
+        componente.establecerDatos(obj);
+        componente.indice=indice;
+        if(recursivo) componente.ruta=recursivo.ruta.concat(indice).join(".");
+
         //Agregar métodos al origen de datos
 
         obj.obtenerIndice=(function(i) {
@@ -2656,7 +2661,7 @@ var componente=new function() {
             };
         })(recursivo?recursivo.ruta.concat(indice).join("."):null);
 
-        return obj;
+        return componente;
     };
 
     /**
@@ -2677,11 +2682,8 @@ var componente=new function() {
 
             t.itemsAutogenerados.push(nuevo);
 
-            t.prepararElemento(objeto,indice,recursivo);
+            t.prepararElemento(nuevo,objeto,indice,recursivo);
 
-            nuevo.establecerDatos(objeto);
-            nuevo.indice=indice;
-            if(recursivo) nuevo.ruta=recursivo.ruta.concat(indice).join(".");
             nuevo.autogenerado=true;
             nuevo.ocultarDescendencia();
             nuevo.obtenerElemento().agregarClase("autogenerado");
@@ -2716,8 +2718,7 @@ var componente=new function() {
                 return t.generarItem(destino,obj,i,recursivo);
             
             //Actualizar elemento existente
-            t.prepararElemento(obj,i,recursivo);
-            t.itemsAutogenerados[i].establecerDatos(obj);
+            t.prepararElemento(t.itemsAutogenerados[i],obj,i,recursivo);
             return destino;
         },
         remover=function(i) {

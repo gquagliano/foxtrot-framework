@@ -974,14 +974,7 @@ var componente=new function() {
         //Esto evita que todos los componentes tengan un selector, aún cuando no sea necesario
         if(!this.selector) this.generarSelector();
 
-        var estilos=ui.obtenerEstilos(this.selector,tamano);
-
-        if(!estilos.length) {
-            //Inicializar
-            ui.establecerEstilosSelector(this.selector,"",tamano);
-            estilos=ui.obtenerEstilos(this.selector,tamano);
-        }
-        
+        var estilos=ui.obtenerEstilos(this.selector,tamano);        
         return estilos[0].estilos;
     };
 

@@ -188,18 +188,24 @@ var ui=new function() {
             if(obj) reglas.push(obj);
         }
 
+        if(!reglas.length) {
+            //Inicializar
+            this.establecerEstilosSelector(selector,"",tamano);
+            reglas=this.obtenerEstilos(selector,tamano);
+        }
+
         //Si se filtró por tamaño, devolver solo las reglas del mismo
         if(tamano) {
-            var res=[];
+            var filtradas=[];
             for(var i=0;i<reglas.length;i++) {
                 //Media query
                 if(reglas[i].hasOwnProperty("tamano")) {
                     if(reglas[i].tamano==tamano) return reglas[i].reglas;
                     continue;
                 }
-                if(tamano=="g") res.push(reglas[i]);
+                if(tamano=="g") filtradas.push(reglas[i]);
             }
-            return res;            
+            reglas=filtradas;       
         }
 
         return reglas;

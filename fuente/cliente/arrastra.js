@@ -306,7 +306,7 @@
      */
     Node.prototype.pausarArrastreArbol=function(estado) {
         var elem=this;
-        while(elem!==null&&elem.nodeName!="BODY") { //Parar al llegar a <body>
+        while(elem!==null&&elem.nodeName!="BODY"&&elem.nodeName!="HTML") { //Parar al llegar a <body>
             elem.pausarArrastre(estado);
             elem=elem.padre();
         }

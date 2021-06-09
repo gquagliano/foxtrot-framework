@@ -56,6 +56,7 @@ var componente=new function() {
      * @var {*[]} clasesCss - Listado todas las de clases CSS propias del componente posibles. Cada componente concreto debe agregar las propias.
      * @var {boolean} iterativo - Indica si el componente concreto es una estructura que itere su contenido.
      * @var {*[]} itemsAutogenerados - Listado de items autogenerados por el componente iterativo.
+     * @var {Node} contenedorItems - Contenedor de los items autogenerados del componente iterativo. Por defecto, será coincidente con `elemento`.
      * @var {boolean} descartarValores - Indica si se deben descartar los valores de los campos durante el próximo redibujado (componentes iterativos).
      * @var {boolean} redibujar - Indica si se debe redibujar por completo el componente durante la próxima actualización.
      */
@@ -105,6 +106,7 @@ var componente=new function() {
     ];
     this.iterativo=false;
     this.itemsAutogenerados=[];
+    this.contenedorItems=null;
     this.descartarValores=false;
     this.redibujar=false;
 
@@ -598,55 +600,17 @@ var componente=new function() {
 
     /**
      * Devuelve el origen de datos actual.
-     * @returns {Object}
+     * @returns {*}
      */
     this.obtenerDatos=function() {
-        return this.datos;
-    };    
+        return this.obtenerDatosActualizados();
+    };
 
     /**
-     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @param {componente[]} [buscarEn] - Parámetro de uso interno. Listado de componentes donde realizar la búsqueda de campos.
-     * @returns {Object[]}
+     * Devuelve el origen de datos actual tal como fue asignado, sin procesar las relaciones entre sus propiedades y campos del componente.
+     * @returns {*}
      */
-    this.obtenerDatosActualizados=function(buscarEn,obtenerDestino) {
-    	if(typeof obtenerDestino=="undefined") obtenerDestino=function(elem,indice) {
-    		return t.datos[indice];
-    	};
-
-        var t=this,
-            fn=function(comp,indice) {
-                var asignarValor=function(hijo) {
-                    var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
-                        nombre=hijo.obtenerNombre(),
-                        valor=hijo.valor();
-                    if(typeof valor!=="undefined") {
-                    	var padre=obtenerDestino(hijo,indice);
-                    	if(padre) {
-	                        if(propiedad) {
-	                            util.asignarPropiedad(padre,propiedad,valor);
-	                        } else if(nombre) {
-	                            padre[nombre]=valor;
-	                        }
-	                    }
-                    }
-                };
-                asignarValor(comp);
-                comp.obtenerHijos().forEach(function(hijo) {
-                    asignarValor(hijo);
-                    fn(hijo,indice);
-                });
-            };
-
-        buscarEn.forEach(function(hijo) {
-            if(t.datos.length<=hijo.indice)
-                //t.datos[hijo.indice]={};
-                return;                
-            
-            //Dentro de cada item, buscar recursivamente todos los componentes relacionados con una propiedad
-            fn(hijo,hijo.indice);
-        });
-
+    this.obtenerDatosCrudos=function() {
         return this.datos;
     };
 
@@ -701,7 +665,7 @@ var componente=new function() {
      * Genera y devuelve un nuevo componente con las mismas propiedades y una copia del elemento del DOM.
      * @param {componente} padre - Padre del nuevo componente. Puede ser null si se especificará elemento.
      * @param {boolean} [oculto=false] - Determina si el componente debe ser visible o permanecer anónimo aunque tenga un nombre asignado (a nivel API, no interfaz).
-     * @param {(Node|Element)} [elemento] - Elemento del DOM. Si se especifica, en lugar de duplicar el actual, se intentará recuperar el mismo.
+     * @param {Node} [elemento] - Elemento del DOM. Si se especifica, en lugar de duplicar el actual, se intentará recuperar el mismo.
      * @returns {componente}
      */
     this.clonar=function(padre,oculto,elemento) {
@@ -870,7 +834,7 @@ var componente=new function() {
 
     /**
      * Establece el elemento del DOM correspondiente a esta instancia.
-     * @param {(Node|Element)} elem - Elemento.
+     * @param {Node} elem - Elemento.
      * @returns {componente}
      */
     this.establecerElemento=function(elem) {
@@ -954,13 +918,18 @@ var componente=new function() {
      * Actualiza el componente y sus hijos en forma recursiva (método para sobreescribir.) Este método no redibuja el componente ni reasigna todas sus propiedades. Está diseñado
      * para poder solicitar al componente que se refresque o vuelva a cargar determinadas propiedades, como el origen de datos. Cada componente concreto lo implementa, o no, de
      * forma específica.
-     * @param {boolean} [actualizarHijos=true] - Determina si se debe desencadenar la actualización de la descendencia del componente.
+     * @param {boolean} [actualizarHijos] - Determina si se debe desencadenar la actualización de la descendencia del componente. Por defecto, es `true` excepto en componentes
+     * iterativos.
      * @returns {componente}
      */
     this.actualizar=function(actualizarHijos) {
         this.actualizacionEnCurso=true;
 
-        if(typeof actualizarHijos==="undefined") actualizarHijos=true;
+        if(this.iterativo) {
+            actualizarHijos=false;
+        } else if(typeof actualizarHijos==="undefined") {
+            actualizarHijos=true;
+        }
         if(!ui.enModoEdicion()) this.establecerDatos(undefined,false);
 
         this.actualizarPropiedadesExpresiones();
@@ -988,6 +957,8 @@ var componente=new function() {
                 hijo.actualizar();
             });
         }
+
+        if(this.iterativo) this.actualizarIterativo();
 
         this.actualizacionEnCurso=false;
         this.redibujar=false;
@@ -1671,7 +1642,10 @@ var componente=new function() {
             if(typeof valor==="undefined") return this.extraerValor();            
 
             //Si valor es null, solo limpiar
-            if(valor===null) this.limpiarValoresAutogenerados(true);
+            if(valor===null) {
+                this.limpiarValoresAutogenerados(true);
+                return this;
+            }
 
             //Cuando se asigne un valor, establecer como origen de datos
             return this.establecerDatos(valor);
@@ -1684,24 +1658,6 @@ var componente=new function() {
         this.campo.valor(valor);
         //if(document.activeElement===this.campo&&typeof this.campo.select==="function") this.campo.select();
 
-        return this;
-    };
-
-    /**
-     * Genera y devuelve el valor de retorno según las propiedades del componente concreto.
-     * @returns {*}
-     */
-    this.extraerValor=function() {
-        return null;
-    };
-
-    /**
-     * Limpia los valores de los campos que se encuentren entre los items autogenerados.
-     * @returns {componente}
-     */
-    this.limpiarValoresAutogenerados=function() {
-        for(var i=0;i<this.itemsAutogenerados.length;i++)
-            this.itemsAutogenerados[i].limpiarValores();
         return this;
     };
 
@@ -2428,6 +2384,377 @@ var componente=new function() {
         this.obtenerHijos().forEach(function(hijo) {
             hijo.limpiarValores();
         });
+        return this;
+    };    
+
+    /**
+     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
+     * @param {componente[]} [buscarEn] - Parámetro de uso interno. Listado de componentes donde realizar la búsqueda de campos.
+     * @returns {Object[]}
+     */
+    this.obtenerDatosActualizados=function(buscarEn) {
+        if(typeof buscarEn=="undefined") buscarEn=this.itemsAutogenerados;
+
+        var t=this,
+            fn=function(comp,obj) {
+                var asignarValor=function(hijo) {
+                    var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
+                        nombre=hijo.obtenerNombre(),
+                        valor=hijo.valor();
+                    if(typeof valor!=="undefined") {
+                        if(propiedad) {
+                            util.asignarPropiedad(obj,propiedad,valor);
+                        } else if(nombre) {
+                            obj[nombre]=valor;
+                        }
+                    }
+                };
+                asignarValor(comp);
+                comp.obtenerHijos().forEach(function(hijo) {
+                    asignarValor(hijo);
+                    fn(hijo,obj);
+                });
+            };
+
+        buscarEn.forEach(function(hijo) {
+            var obj=t.obtenerObjetoDatos(hijo.ruta||hijo.indice);
+
+            //Dentro de cada item, buscar recursivamente todos los componentes relacionados con una propiedad
+            if(t.datos.length>hijo.indice)
+                fn(hijo,obj);
+        });
+
+        return this.datos;
+    };   
+
+    /**
+     * Devuelve un elemento del origen de datos correspondiente a un índice o, en el caso de listados a nidados, una ruta.
+     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto (por ejemplo `0.1.0`).
+     * @param {string} [propiedadRecursiva] - Nombre de la propiedad para avanzar en forma recursiva, si corresponde.
+     * @returns {(Object|null)}
+     */
+    this.obtenerObjetoDatos=function(indice,propiedadRecursiva) {
+        if(typeof propiedadRecursiva=="undefined") propiedadRecursiva=null;
+
+        var obj=this.datos;
+
+        if(!propiedadRecursiva)
+            return obj[indice];
+
+        var ruta=indice;
+        if(typeof ruta=="string") ruta=ruta.split(".");
+
+        for(var i=0;i<ruta.length;i++) {
+            var item=parseInt(ruta[i]);
+            
+            if(i>0) {
+                if(!obj.hasOwnProperty(propiedadRecursiva)||!util.esArray(obj[propiedadRecursiva])) return null;
+                obj=obj[propiedadRecursiva];
+            }
+
+            if(!util.esArray(obj)||obj.length<item) return null;
+
+            obj=obj[item];
+        }
+
+        return obj;
+    };
+
+    /**
+     * Agrega un nuevo elemento.
+     * @param {*} obj - Elemento a insertar.
+     * @returns {componente}
+     */
+    this.agregarElemento=function(obj) {
+        if(!util.esArray(this.datos)) this.datos=[];
+        var idx=this.datos.push(obj)-1;
+
+        this.removerMensajeSinDatos();
+
+        //Agregar el nuevo elemento sin redibujar todo
+        this.generarItems(idx);
+        
+        //Autofoco
+        ui.autofoco(this.itemsAutogenerados[idx].obtenerElemento());
+
+        return this;
+    };
+
+    /**
+     * Agrega los elementos del listado provisto.
+     * @param {*[]} listado - Listado (*array*) de elementos a insertar.
+     * @returns {componente}
+     */
+    this.agregarElementos=function(listado) {
+        var t=this;
+
+        listado.porCada(function(i,elem) {
+            t.agregarElemento(elem);
+        });
+
+        return this;
+    };
+
+    /**
+     * Remueve un elemento dado su índice.
+     * @param {number} indice - Número de fila (basado en 0).
+     * @returns {componente}
+     */
+    this.removerElemento=function(indice) {
+        this.datos.splice(indice,1);
+        this.actualizar();
+        return this;
+    };
+
+    ////Componentes iterativos
+
+    /**
+     * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems` para componentes iterativos.
+     * @param {string} [propiedadRecursiva] - Nombre de una propiedad para recorrer el listado en forma recursiva.
+     * @param {boolean} [devolverListado=false] - Al analizar un listado recursivo, indica si debe devolverse un listado plano (`true`) o mantenerse la
+     * estructura anidada (`false`).
+     * @returns {*}
+     */
+    this.extraerValor=function(propiedadRecursiva,devolverListado) {
+        if(typeof propiedadRecursiva=="undefined") propiedadRecursiva=null;
+        if(typeof devolverListado=="undefined") devolverListado=false;
+        
+        var obj=this.obtenerDatosActualizados(),
+            propiedades=this.propiedad(false,"filtrarPropiedades"),
+            filtro=this.propiedad(false,"filtrarItems");
+
+        if(!obj) return obj;
+
+        var filtrar=function(item) {
+            if(filtro&&!item[filtro]) return null;
+
+            if(!propiedades||typeof item!="object") return item;
+
+            if(typeof propiedades!="string") {
+                propiedades=propiedades.split(",");
+                for(var i=0;i<propiedades.length;i++)
+                    propiedades[i]=propiedades[i].trim();
+            }
+
+            var nuevoItem={};
+
+            for(var prop in item) {
+                if(~propiedades.indexOf(prop))
+                    nuevoItem[prop]=item[prop];
+            }
+
+            return nuevoItem;
+        },
+        listado=[];
+
+        (function recorrer(items,destino) {
+            for(var i=0;i<items.length;i++) {
+                var item=items[i],
+                    filtrado=filtrar(item);
+
+                if(filtrado===null) {
+                    //Si el item no se incluye tras los filtros, se debe detener la búsqueda solo si el valor debe ser devuelto como árbol, de
+                    //lo contrario, el item se omite pero continúa la búsqueda en forma recursiva añadiendo los items al listado independientemente
+                    //de si la ascendencia fue incluida o no.
+                    if(!devolverListado) continue;
+                } else {
+                    destino.push(filtrado);
+                }
+
+                if(propiedadRecursiva&&typeof item[propiedadRecursiva]=="object") {
+                    if(devolverListado) {
+                        //Agregar descendencia directamente en el listado 
+                        recorrer(item[propiedadRecursiva],destino);
+                    } else {
+                        //Mantener la estructura anidada
+                        filtrado[propiedadRecursiva]=[];
+                        recorrer(item[propiedadRecursiva],filtrado[propiedadRecursiva]);
+                    }
+                }
+            }
+        })(obj,listado);
+        
+        return listado;
+    };
+    
+    /**
+     * Limpia los valores de los campos que se encuentren entre los items autogenerados.
+     * @returns {componente}
+     */
+    this.limpiarValoresAutogenerados=function() {
+        for(var i=0;i<this.itemsAutogenerados.length;i++)
+            this.itemsAutogenerados[i].limpiarValores();
+        return this;
+    };
+    
+    /**
+     * Elimina el mensaje de bloque sin datos, si existe.
+     * @returns {componente}
+     */
+    this.removerMensajeSinDatos=function() {
+        //A implementar en el componente concreto
+        return this;
+    };    
+
+    /**
+     * Genera el mensaje de bloque sin datos.
+     * @returns {componente}
+     */
+    this.mostrarMensajeSinDatos=function() {
+        //A implementar en el componente concreto
+        return this;
+    };    
+
+    /**
+     * Actualiza el componente iterativo.
+     * @returns {componente}
+     */
+     this.actualizarIterativo=function() {
+        if(ui.enModoEdicion()) return this;
+
+        //Aplicar cambios en los campos
+        //if(!this.descartarValores) this.obtenerDatosActualizados();
+        this.descartarValores=false;
+
+        if(this.redibujar||!this.datos||!this.datos.length) {
+            //Limpiar filas autogeneradas
+            ui.eliminarComponentes(this.itemsAutogenerados);
+            this.itemsAutogenerados=[];
+        }
+        
+        this.removerMensajeSinDatos();
+
+        if(!this.datos) return this;
+
+        if(!this.datos.length) {
+            this.mostrarMensajeSinDatos();
+        } else {
+            this.generarItems();
+        }
+
+        return this;
+    };
+
+    /**
+     * Prepara un elemento del origen de datos con sus metadatos y funciones útiles.
+     * @param {Object} obj - Objeto.
+     * @param {number} indice - Índice dentro del origen de datos.
+     * @param {Object} recursivo - Parámetros del recorrido recursivo del listado, si corresponde.
+     * @returns {Object}
+     */
+    this.prepararElemento=function(obj,indice,recursivo) {
+        //Agregar método al origen de datos
+        obj.obtenerIndice=(function(i) {
+            return function() {
+                return i;
+            };
+        })(indice);
+
+        return obj;
+    };
+
+    /**
+     * Genera y agrega un nuevo item correspondiente a un elemento del origen de datos del componente iterativo.
+     * @param {Node} destino - Elemento de destino.
+     * @param {*} objeto - Objeto o elemento del origen de datos.
+     * @param {number} indice - Indice del elemento en el listado u origen de datos.
+     * @param {Object} [recursivo] - Parámetros del recorrido recursivo del listado, si corresponde.
+     * @returns {Node}
+     */
+    this.generarItem=function(destino,objeto,indice,recursivo) {
+        var t=this;
+        
+        this.obtenerHijos().forEach(function(hijo) {
+            if(hijo.autogenerado) return;
+    
+            var nuevo=hijo.clonar(destino,true);
+
+            t.itemsAutogenerados.push(nuevo);
+
+            t.prepararElemento(objeto,indice,recursivo);
+
+            nuevo.establecerDatos(objeto);
+            nuevo.indice=indice;
+            if(recursivo) nuevo.ruta=recursivo.ruta.concat(indice);
+            nuevo.autogenerado=true;
+            nuevo.ocultarDescendencia();
+            nuevo.obtenerElemento().agregarClase("autogenerado");
+        });
+
+        return destino;
+    };
+
+    /**
+     * Genera los items del componente iterativo.
+     * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
+     * @param {object[]} [listado] - Listado a utilizar. Por defecto, utilizará el origen de datos.
+     * @param {Node} [destino] - Elemento de destino. Por defecto, utilizará el elemento del componente.
+     * @param {int} [recursivo.nivel=0] - Nivel actual.
+     * @param {Object} [recursivo] - Parámetros para recorrer `listado` en forma recursiva. Puede presentar propiedades adicionales, las cuales serán pasadas
+     * tal cual a la descendencia.
+     * @param {string} [recursivo.propiedad] - Propiedad de cada elemento de `listado` que contiene la descendencia.
+     * @param {int} [recursivo.nivel=0] - Nivel actual.
+     * @param {int[]} [recursivo.ruta] - Ruta actual, como listado de índices.
+     * @returns {componente}
+     */
+    this.generarItems=function(indice,listado,destino,recursivo) {
+        if(typeof listado=="undefined") listado=this.datos;
+        if(typeof destino=="undefined") destino=this.contenedorItems||this.elemento;
+        if(typeof recursivo=="undefined") recursivo=null;
+
+        var t=this;
+
+        var fn=function(obj,i) {
+            //Por el momento, no soporta la actualización en listados anidados, por lo tanto si es recursivo se generan nuevos elementos siempre
+            if(recursivo||i>=t.itemsAutogenerados.length)
+                return t.generarItem(destino,obj,i,recursivo);
+            
+            //Actualizar elemento existente
+            t.prepararElemento(obj,i,recursivo);
+            t.itemsAutogenerados[i].establecerDatos(obj);
+            return destino;
+        },
+        remover=function(i) {
+            t.itemsAutogenerados[i].eliminar();
+        };
+
+        if(indice!==null&&!isNaN(indice)) {
+            fn(listado[indice],indice);
+        } else {
+            if(recursivo) {
+                //Inicializar objeto para el primer nivel (solo `propiedad` es requerido)
+                if(typeof recursivo.nivel!="number") recursivo.nivel=0;
+                if(typeof recursivo.ruta!="object") recursivo.ruta=[];
+            }
+
+            listado.forEach(function(obj,indice) {
+                var elemento=fn(obj,indice);
+
+                //Si corresponde, avanzar recursivamente
+                if(recursivo) {
+                    if(obj.hasOwnProperty(recursivo.propiedad)) {
+                        var copiaRecursivo=Object.assign({},recursivo);
+                        copiaRecursivo.nivel=recursivo.nivel+1;
+                        copiaRecursivo.ruta=recursivo.ruta.concat(indice);
+
+                        //TODO Implementar util.recorrerSinRecursion()
+                        t.generarItems(null,obj[recursivo.propiedad],elemento,copiaRecursivo);
+                    }
+                
+                    //Agregar una clase CSS si el elemento no tiene descendencia
+                    if(!obj.hasOwnProperty(recursivo.propiedad)||!util.esArray(obj[recursivo.propiedad])||!obj[recursivo.propiedad].length)
+                        elemento.agregarClase("ultimo-nivel");
+                }
+            });
+
+            //Remover items excedentes (excepto cuando el listado es anidado, ya que por el momento no soporta la actualización de elementos existentes)
+            if(!recursivo&&listado.length<this.itemsAutogenerados.length) {
+                for(var i=listado.length;i<this.itemsAutogenerados.length;i++)
+                    remover(i);
+                this.itemsAutogenerados.splice(listado.length);
+            }
+        }
+
         return this;
     };
 };

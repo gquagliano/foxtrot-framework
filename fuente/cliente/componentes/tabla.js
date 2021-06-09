@@ -51,11 +51,13 @@ var componenteTabla=function() {
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
+     * @returns {componenteArbol}
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this;
 
-        this.contenedor=this.elemento.querySelector("tbody");        
+        this.contenedor=this.elemento.querySelector("tbody");
+        this.contenedorItems=this.contenedor;   
 
         this.clasesCss.push("ocultar-contenidos");
 
@@ -65,6 +67,7 @@ var componenteTabla=function() {
 
     /**
      * Crea el elemento del DOM para esta instancia.
+     * @returns {componenteArbol}
      */
     this.crear=function() {
         this.elemento=document.crear("<div><div class='table-responsive'><table class='table table-striped table-hover' cellspacing='0'><tbody/></table></div></div>"); 
@@ -74,6 +77,7 @@ var componenteTabla=function() {
     
     /**
      * Actualiza el componente tras la modificación de una propiedad.
+     * @returns {componenteArbol}
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
@@ -93,68 +97,19 @@ var componenteTabla=function() {
     };
 
     /**
-     * Actualiza el componente.
-     * @returns {componente}
+     * Actualiza el componente iterativo.
+     * @returns {componenteTabla}
      */
-    this.actualizar=function() {
-        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
-        
-        this.prototipo.actualizar.call(this,false);
-
+    this.actualizarIterativo=function() {
         if(ui.enModoEdicion()) return;
-        
-        this.actualizacionEnCurso=true;
-
-        //var indiceFoco=-1;
-
-        if(redibujar) {
-            //Aplicar valores de los campos
-            if(!this.descartarValores) this.obtenerDatosActualizados();
-            this.descartarValores=false;
-
-            //Almacenar dónde está el foco
-            //var enfocables=this.elemento.buscarEnfocables(),    
-            //    foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target);
-            //indiceFoco=enfocables.indexOf(foco);
-        }
-                
-        if(redibujar||!this.datos||!this.datos.length) {
-            ui.eliminarComponentes(this.elemento.querySelectorAll(".autogenerado"));
-            this.itemsAutogenerados=[];
-        }
-
-        this.removerMensajeSinDatos();
-
-        if(!this.datos) {
-            this.actualizacionEnCurso=false;
-            return this;
-        }
-
-        //Vamos a ocultar toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
-        this.ocultarDescendencia();
-
         this.generarEncabezados(true);
-
-        if(!this.datos.length) {
-            this.mostrarMensajeSinDatos();
-        } else {
-            t.generarFilas();
-
-            //Intentar reestablecer el foco
-            //if(indiceFoco>=0) {
-            //    enfocables=this.elemento.buscarEnfocables();
-            //    if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
-            //}
-        }
-        
-        this.actualizacionEnCurso=false;
-
+        this.prototipo.actualizarIterativo.call(this);
         return this;
     };
 
     /**
      * Remueve la fila con el mensaje de tabla sin datos, si existe.
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.removerMensajeSinDatos=function() {
         var elem=this.contenedor.querySelector("tr.fila-sin-datos");
@@ -164,7 +119,7 @@ var componenteTabla=function() {
 
     /**
      * Genera la fila con el mensaje de tabla sin datos.
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad(null,"vacia");
@@ -182,7 +137,7 @@ var componenteTabla=function() {
 
     /**
      * Devuelve los componentes fila que no sean autogenerados.
-     * @returns {Componente[]}
+     * @returns {componente[]}
      */
     this.buscarFilas=function() {
         var hijos=this.obtenerHijos(),
@@ -198,7 +153,7 @@ var componenteTabla=function() {
     /**
      * Genera el encabezado de la tabla
      * @param {boolean} [regenerar=false] - Si es `true` y ya existe la fila de encabezados, será eliminada y regenerada.
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.generarEncabezados=function(regenerar) {
         if(typeof regenerar==="undefined") regenerar=false;
@@ -232,165 +187,56 @@ var componenteTabla=function() {
         return this;
     };
 
+    ////Alias
+
     /**
      * Genera o actualiza una fila de la tabla.
-     * @param {*} obj 
-     * @param {*} indice 
+     * @param {number} indice - Indice del origen de datos (índice del elemento).
+     * @returns {componenteTabla}
      */
     this.generarFila=function(obj,indice) {
-
+        this.prototipo.generarItem(this,indice);
+        return this;
     };
 
     /**
      * Genera las filas de la tabla.
      * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
-     * @returns {Componente}
+     * @returns {componenteTabla}
      */
     this.generarFilas=function(indice) {
         this.generarEncabezados();
-
-        var t=this,
-            fn=function(obj,i) {
-                if(i>=t.itemsAutogenerados.length) {
-                    agregar(obj,i);
-                } else {
-                    actualizar(obj,i);
-                }
-            },
-            agregar=function(obj,i) {
-                //Puede existir más de una fila como plantilla
-                var arr=[];
-                t.buscarFilas().forEach(function(fila) {
-                    arr.push(fila.generarFila(t,obj,i));
-                });
-                t.itemsAutogenerados.push(arr);
-            },
-            actualizar=function(obj,i) {
-                t.itemsAutogenerados[i].forEach(function(fila) {
-                    fila.actualizarFila(obj);
-                });
-            },
-            remover=function(i) {
-                t.itemsAutogenerados[i].forEach(function(fila) {
-                    fila.eliminar();
-                });
-            };
-
-        if(typeof indice==="number") {
-            fn(this.datos[indice],indice);
-        } else {
-            this.datos.forEach(function(obj,indice) {
-                fn(obj,indice);
-            });
-            //Remover filas excedentes
-            if(this.datos.length<this.itemsAutogenerados.length) {
-                for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
-                    remover(i);
-                this.itemsAutogenerados.splice(this.datos.length);
-            }
-        }
-
+        this.prototipo.generarFilas.call(this,indice);
         return this;
-    };
-
-    /**
-     * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.
-     * @returns {*}
-     */
-     this.extraerValor=function() {
-        var obj=this.obtenerDatosActualizados(),
-            propiedades=this.propiedad(false,"filtrarPropiedades"),
-            filtro=this.propiedad(false,"filtrarItems");
-
-        if(!obj) return obj;
-
-        var filtrar=function(item) {
-            if(filtro&&!item[filtro]) return null;
-
-            if(!propiedades||typeof item!="object") return item;
-
-            if(typeof propiedades!="string") {
-                propiedades=propiedades.split(",");
-                for(var i=0;i<propiedades.length;i++)
-                    propiedades[i]=propiedades[i].trim();
-            }
-
-            var nuevoItem={};
-
-            for(var prop in item) {
-                if(~propiedades.indexOf(prop))
-                    nuevoItem[prop]=item[prop];
-            }
-
-            return nuevoItem;
-        },
-        listado=[];
-
-        for(var i=0;i<obj.length;i++) {
-            var item=obj[i],
-                filtrado=filtrar(item);
-
-            if(filtrado!==null)
-                listado.push(filtrado);
-        }
-
-        return listado;
-    };
-
-    /**
-     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @returns {Object[]}
-     */
-    this.obtenerDatosActualizados=function() {
-        var listado=this.obtenerHijos().filter(function(hijo) {
-            return hijo.autogenerado;
-        });
-        return this.prototipo.obtenerDatosActualizados.call(this,listado);
     };
 
     /**
      * Agrega una nueva fila.
      * @param {*} obj - Elemento a insertar.
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.agregarFila=function(obj) {
-        if(!util.esArray(this.datos)) this.datos=[];
-        var idx=this.datos.push(obj)-1;
-
-        this.removerMensajeSinDatos();
-
-        //Generar fila sin redibujar todo
-        this.generarFilas(idx);
-        
-        //Autofoco
-        var elems=this.itemsAutogenerados[idx];
-        for(var i=0;i<elems.length;i++)
-            ui.autofoco(elems[i].obtenerElemento());
-
+        this.prototipo.agregarElemento.call(this,obj);
         return this;
     };
     
     /**
      * Agrega los elementos del listado provisto.
      * @param {*[]} listado - Listado (*array*) de elementos a insertar.
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.agregarFilas=function(listado) {
-        var t=this;
-        listado.porCada(function(i,elem) {
-            t.agregarFila(elem);
-        });
+        this.prototipo.agregarElementos.call(this,listado);
         return this;
     };
 
     /**
      * Remueve una fila dado su índice.
      * @param {number} indice - Número de fila (basado en 0).
-     * @returns {componente}
+     * @returns {componenteTabla}
      */
     this.removerFila=function(indice) {
-        this.datos.splice(indice,1);
-        this.actualizar();
+        this.prototipo.removerElemento.call(this,indice);
         return this;
     };
 };

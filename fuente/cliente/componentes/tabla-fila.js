@@ -41,41 +41,6 @@ var componenteFilaTabla=function() {
     };
 
     /**
-     * Genera y devuelve la fila con sus celdas.
-     * @param {Componente} padre - Componente padre (tabla).
-     * @param {Object} obj - Objeto a representar (datos de la fila).
-     * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {componente}
-     */
-    this.generarFila=function(padre,obj,indice) {
-        var nuevo=this.clonar(padre,true);
-
-        //Agregar método al oriden de datos
-        obj.obtenerIndice=(function(i) {
-            return function() {
-                return i;
-            };
-        })(indice);
-
-        nuevo.establecerDatos(obj);
-        nuevo.indice=indice;
-        nuevo.autogenerado=true;
-        nuevo.obtenerElemento().agregarClase("autogenerado");
-
-        return nuevo;
-    };    
-
-    /**
-     * Asigna un nuevo origen de datos a la fila existente.
-     * @param {Object} obj - Objeto a representar (datos de la fila).
-     * @returns {componente}
-     */
-    this.actualizarFila=function(obj) {
-        this.establecerDatos(obj);
-        return this;
-    };    
-
-    /**
      * Evento Click.
      * @param {Object} evento - Parámetros del evento.
      */

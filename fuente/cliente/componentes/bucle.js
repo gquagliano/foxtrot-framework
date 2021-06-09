@@ -46,16 +46,21 @@ var componenteBucle=function() {
 
     /**
      * Inicializa la instancia tras ser creada o restaurada.
+     * @returns {componenteArbol}
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this;
+
         this.contenedor=this.elemento.querySelector(".componente-bucle-plantilla");
+        this.contenedorItems=this.elemento.padre();
+
         this.prototipo.inicializar.call(this);
         return this;
     };
 
     /**
      * Crea el elemento del DOM para esta instancia.
+     * @returns {componenteArbol}
      */
     this.crear=function() {
         this.elemento=document.crear("<div></div>");
@@ -72,78 +77,22 @@ var componenteBucle=function() {
         this.actualizar();
         this.prototipo.listo.call(this);
     };
-
-    /**
-     * Actualiza el componente.
-     * @returns {componente}
-     */
-    this.actualizar=function() {
-        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
-
-        this.prototipo.actualizar.call(this,false);
-
-        if(ui.enModoEdicion()) return;
-        
-        this.actualizacionEnCurso=true;
-
-        //var indiceFoco=-1;
-
-        if(redibujar) {
-            //Aplicar cambios en los campos
-            if(!this.descartarValores) this.obtenerDatosActualizados();
-            this.descartarValores=false;
-
-            //Almacenar dónde está el foco
-            //var enfocables=this.elemento.buscarEnfocables(),    
-            //    foco=this.elemento.activeElement||(event&&event.activeElement)||(event&&event.target);
-            //indiceFoco=enfocables.indexOf(foco);
-        }
-
-        if(redibujar||!this.datos||!this.datos.length) {
-            //Limpiar filas autogeneradas
-            ui.eliminarComponentes(this.itemsAutogenerados);
-            this.itemsAutogenerados=[];
-        }
-        
-        this.removerMensajeSinDatos();
-
-        if(!this.datos) {
-            this.actualizacionEnCurso=false;
-            return this;
-        }        
-
-        if(!this.datos.length) {
-            this.mostrarMensajeSinDatos();
-        } else {
-            this.generarItems();
-
-            //Intentar reestablecer el foco
-            //if(indiceFoco>=0) {
-            //    enfocables=this.elemento.buscarEnfocables();
-            //    if(indiceFoco<enfocables.length) enfocables[indiceFoco].focus();
-            //}
-        }
-        
-        this.actualizacionEnCurso=false;
-
-        return this;
-    };
     
     /**
      * Elimina el mensaje de bloque sin datos, si existe.
-     * @returns {componente}
+     * @returns {componenteBucle}
      */
-    this.removerMensajeSinDatos=function() {
+     this.removerMensajeSinDatos=function() {
         if(this.itemSinDatos) {
             this.itemSinDatos.remover();
             this.itemSinDatos=null;
         }
         return this;
-    };    
+    };
 
     /**
      * Genera el mensaje de bloque sin datos.
-     * @returns {componente}
+     * @returns {componenteBucle}
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad("mensajeVacio");
@@ -156,176 +105,6 @@ var componenteBucle=function() {
             .anexarA(this.elementoPadre)
             .establecerHtml(texto);
 
-        return this;
-    };
-
-    /**
-     * Genera y agrega un nuevo item.
-     * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {componente}
-     */
-    this.generarItem=function(indice) {
-        var t=this;
-
-        if(!this.elementoPadre) this.elementoPadre=this.elemento.padre();
-        
-        this.obtenerHijos().forEach(function(hijo) {
-            if(hijo.autogenerado) return;
-    
-            var nuevo=hijo.clonar(t.elementoPadre,true); //Anexar al padre del componente bucle
-
-            t.itemsAutogenerados.push(nuevo);
-
-            var obj=t.datos[indice];
-
-            //Agregar método al origen de datos
-            obj.obtenerIndice=(function(i) {
-                return function() {
-                    return i;
-                };
-            })(indice);
-
-            nuevo.establecerDatos(obj);
-            nuevo.indice=indice;
-            nuevo.autogenerado=true;
-            nuevo.ocultarDescendencia();
-            nuevo.obtenerElemento().agregarClase("autogenerado");
-        });
-
-        return this;
-    };
-
-    /**
-     * Genera los items del componente.
-     * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
-     * @returns {componente}
-     */
-    this.generarItems=function(indice) {
-        var t=this;
-
-        var fn=function(i) {
-            if(i>=t.itemsAutogenerados.length) {
-                t.generarItem(i);
-            } else {
-                t.itemsAutogenerados[i].establecerDatos(t.datos[i]);
-            }
-        },
-        remover=function(i) {
-            t.itemsAutogenerados[i].eliminar();
-        };
-
-        if(typeof indice==="number") {
-            fn(indice);
-        } else {
-            this.datos.forEach(function(obj,indice) {
-                fn(indice);
-            });
-            //Remover items excedentes
-            if(this.datos.length<this.itemsAutogenerados.length) {
-                for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
-                    remover(i);
-                this.itemsAutogenerados.splice(this.datos.length);
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.
-     * @returns {*}
-     */
-     this.extraerValor=function() {
-        var obj=this.obtenerDatosActualizados(),
-            propiedades=this.propiedad(false,"filtrarPropiedades"),
-            filtro=this.propiedad(false,"filtrarItems");
-
-        if(!obj) return obj;
-
-        var filtrar=function(item) {
-            if(filtro&&!item[filtro]) return null;
-
-            if(!propiedades||typeof item!="object") return item;
-
-            if(typeof propiedades!="string") {
-                propiedades=propiedades.split(",");
-                for(var i=0;i<propiedades.length;i++)
-                    propiedades[i]=propiedades[i].trim();
-            }
-
-            var nuevoItem={};
-
-            for(var prop in item) {
-                if(~propiedades.indexOf(prop))
-                    nuevoItem[prop]=item[prop];
-            }
-
-            return nuevoItem;
-        },
-        listado=[];
-
-        for(var i=0;i<obj.length;i++) {
-            var item=obj[i],
-                filtrado=filtrar(item);
-
-            if(filtrado!==null)
-                listado.push(filtrado);
-        }
-
-        return listado;
-    };
-
-    /**
-     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @returns {Object[]}
-     */
-    this.obtenerDatosActualizados=function() {
-        return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
-    };
-
-    /**
-     * Agrega un nuevo elemento.
-     * @param {*} obj - Elemento a insertar.
-     * @returns {componente}
-     */
-    this.agregarElemento=function(obj) {
-        if(!util.esArray(this.datos)) this.datos=[];
-        var idx=this.datos.push(obj)-1;
-
-        this.removerMensajeSinDatos();
-
-        //Agregar el nuevo elemento sin redibujar todo
-        this.generarItems(idx);
-        
-        //Autofoco
-        ui.autofoco(this.itemsAutogenerados[idx].obtenerElemento());
-
-        return this;
-    };
-
-    /**
-     * Agrega los elementos del listado provisto.
-     * @param {*[]} listado - Listado (*array*) de elementos a insertar.
-     * @returns {componente}
-     */
-    this.agregarElementos=function(listado) {
-        var t=this;
-
-        listado.porCada(function(i,elem) {
-            t.agregarElemento(elem);
-        });
-
-        return this;
-    };
-
-    /**
-     * Remueve un elemento dado su índice.
-     * @param {number} indice - Número de fila (basado en 0).
-     * @returns {componente}
-     */
-    this.removerElemento=function(indice) {
-        this.datos.splice(indice,1);
-        this.actualizar();
         return this;
     };
 };

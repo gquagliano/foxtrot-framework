@@ -13,14 +13,14 @@
 var componenteArbol=function() {   
     "use strict";
 
-    var t=this,
-    	ignorarValor=false;
+    var t=this;
 
     this.componente="arbol";
     this.iterativo=true;
 
     this.itemSinDatos=null;
-    this.listado=null;
+    this.ul=null;
+    this.li=[];
 
     /**
      * Propiedades de Árbol.
@@ -42,8 +42,8 @@ var componenteArbol=function() {
                 ayuda:"Esta propiedad afecta solo al estado inicial del componente.",
                 adaptativa:false
             },
-            propiedad:{
-                etiqueta:"Propiedad",
+            descendencia:{
+                etiqueta:"Propiedad descendencia",
                 adaptativa:false,
                 ayuda:"Nombre de la propiedad que contiene la descendencia."
             },
@@ -87,14 +87,13 @@ var componenteArbol=function() {
         }
     };
 
-    //Remover propiedad común "Propiedad" (movida al grupo "Árbol")
-    delete this.propiedadesComunes["Datos"]["propiedad"];
-
     /**
      * Inicializa la instancia tras ser creada o restaurada.
+     * @returns {componenteArbol}
      */
     this.inicializar=function() {
         if(this.fueInicializado) return this; 
+
         this.contenedor=this.elemento.querySelector(".componente-arbol-plantilla");
 
         this.clasesCss.push("no-interactivo");
@@ -105,6 +104,7 @@ var componenteArbol=function() {
 
     /**
      * Crea el elemento del DOM para esta instancia.
+     * @returns {componenteArbol}
      */
     this.crear=function() {
         this.elemento=document.crear("<div></div>");
@@ -121,46 +121,10 @@ var componenteArbol=function() {
         this.actualizar();
         this.prototipo.listo.call(this);
     };
-    
-    /**
-     * Establece el origen de datos.
-     * @param {Object} obj - Objeto a asignar.
-     * @param {boolean} [actualizar=true] - Actualizar el componente luego de establecer el origen de datos.
-     * @returns Componente
-     */
-    this.establecerDatos=function(obj,actualizar) {
-        this.redibujar=true;
-        this.prototipo.establecerDatos.call(this,obj,actualizar,false,true);
-        return this;
-    };
-
-    /**
-     * Devuelve un listado de las rutas de los items abiertos.
-     * @returns string[]
-     */
-    this.obtenerItemsAbiertos=function() {
-        var resultado=[];
-        if(!this.listado) return resultado;
-        this.listado.querySelectorAll(".arbol-item.expandido").porCada(function(i,elem) {
-            resultado.push(elem.dato("ruta"));
-        });
-        return resultado;
-    };
-
-    /**
-     * Abre los ítems especificados dadas sus rutas.
-     * @param {string[]} rutas 
-     * @returns {componenteArbol}
-     */
-    this.abrirItems=function(rutas) {
-        rutas.porCada(function(i,ruta) {
-            t.expandir(ruta);
-        });
-        return this;
-    };
 
     /**
      * Actualiza el componente.
+     * @returns {componenteArbol}
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
@@ -183,56 +147,42 @@ var componenteArbol=function() {
 
     /**
      * Actualiza el componente.
-     * @returns {Componente}
+     * @returns {componenteArbol}
      */
-    this.actualizar=function() {
-        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
+    this.actualizarIterativo=function() {
+        if(ui.enModoEdicion()) return this;
         
-        this.prototipo.actualizar.call(this,false);
+        var rutasAbiertas=this.obtenerItemsExpandidos();
 
-        if(ui.enModoEdicion()) return;
+        //TODO Actualizar elementos al actualizar el origen de datos
+        //Por el momento, el árbol siempre se regenera por completo, sus items nunca son actualizados
+        this.redibujar=true;
+        if(this.ul) this.ul.remover();
 
-        this.actualizacionEnCurso=true;
-
-        //Aplicar cambios en los campos
-        if(!this.redibujar) this.obtenerDatosActualizados();
-        this.redibujar=false;
-
-        var rutasAbiertas=this.obtenerItemsAbiertos();        
-
-        //Limpiar filas autogeneradas
-        if(this.listado) {
-            ui.eliminarComponentes(this.listado);
-            this.listado=null;
-        }
-        this.itemsAutogenerados=[];
-
-        if(!this.datos||!util.esArray(this.datos)) return this;
-
-        //Ocultamos toda la descendencia para que las instancias originales de los campos que se van a duplicar no se vean afectadas al obtener/establecer los valores de la vista
-        this.ocultarDescendencia();
-
+        this.prototipo.actualizarIterativo.call(this);
+        
+        //Volver a abrir los items
+        if(this.datos&&this.datos.length)            
+            this.expandirItems(rutasAbiertas);
+        
+        return this;
+    };    
+    
+    /**
+     * Elimina el mensaje de bloque sin datos, si existe.
+     * @returns {componenteArbol}
+     */
+     this.removerMensajeSinDatos=function() {
         if(this.itemSinDatos) {
             this.itemSinDatos.remover();
             this.itemSinDatos=null;
         }
-
-        if(!this.datos.length) {
-            this.mostrarMensajeSinDatos();
-        } else {
-            this.generarItems();
-            //Volver a abrir los items
-            this.abrirItems(rutasAbiertas);
-        }
-        
-        this.actualizacionEnCurso=false;
-
         return this;
     };
 
     /**
      * Genera el mensaje de bloque sin datos.
-     * @returns {Componente}
+     * @returns {componenteArbol}
      */
     this.mostrarMensajeSinDatos=function() {
         var texto=this.propiedad(null,"mensajeVacio");
@@ -246,224 +196,117 @@ var componenteArbol=function() {
             .establecerHtml(texto);
 
         return this;
-    };
+    };    
 
     /**
-     * Genera y devuelve un nuevo item.
-     * @param {Componente} elemento - Elemento a clonar.
-     * @param {(Node|Element)} elementoPadre - Elemento de destino donde insertar el componente.
-     * @param {Object} obj - Objeto a representar (datos del item).
-     * @param {number} nivel - Nivel actual dentro del árbol.
-     * @param {string} ruta - Ruta como concatenación de índices.
-     * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {Componente}
+     * Prepara un elemento del origen de datos con sus metadatos y funciones útiles.
+     * @param {Object} obj - Objeto.
+     * @param {number} indice - Índice dentro del origen de datos.
+     * @param {Object} recursivo - Parámetros del recorrido recursivo del listado.
+     * @returns {Object}
      */
-    this.generarItem=function(hijo,elementoPadre,obj,nivel,ruta,indice) {
-        var nuevo=hijo.clonar(elementoPadre,true);
-        this.itemsAutogenerados.push(nuevo);
-
-        //Agregar métodos al origen de datos
-
-        obj.obtenerIndice=(function(i) {
-            return function() {
-                return i;
-            };
-        })(indice);
-
+     this.prepararElemento=function(obj,indice,recursivo) {
         obj.obtenerNivel=(function(i) {
             return function() {
                 return i;
             };
-        })(nivel);
+        })(recursivo.nivel);
 
         obj.obtenerRuta=(function(i) {
             return function() {
                 return i;
             };
-        })(ruta);
+        })(recursivo.ruta);
 
-        nuevo.establecerDatos(obj)
-            .establecerValores(obj,true);
-        nuevo.indice=indice;
-        nuevo.nivel=nivel;
-        nuevo.ruta=ruta;
-        nuevo.autogenerado=true;
-        nuevo.obtenerElemento().agregarClase("autogenerado");
-
-        return nuevo;
+        return this.prototipo.prepararElemento.call(this,obj,indice,recursivo);
     };
 
     /**
-     * Genera los items del componente.
-     * @param {object[]} [listado] - Listado de items a utilizar. Por defecto, utilizará el origen de datos y avanzará recursivamente a por la propiedad establecida.
-     * @param {(Node|Element)} [padre] - Elemento padre. Por defecto, utilizará el elemento del componente. En el nivel `0`, el `<ul>` generado será asignado a `this.listado`.
-     * @param {number} [nivel=0] - Nivel actual.
-     * @param {string[]} [ruta] - Ruta actual.
-     * @param {string} [propiedad] - Nombre de la propiedad que contiene la descendencia. Por defecto, utilizará el valor de *Propiedad* (`propiedad`).
-     * @param {boolean} [expandido] - Crear expandido. Por defecto, utilizará el valor de *Estado inicial* (`estadoInicial`).
-     * @returns {Componente}
+     * Genera y agrega un nuevo item correspondiente a un elemento del origen de datos del componente iterativo.
+     * @param {Node} destino - Elemento de destino. Por defecto, `this.contenedorItems` o `this.elemento`.
+     * @param {*} objeto - Objeto o elemento del origen de datos.
+     * @param {number} indice - Indice del elemento en el listado u origen de datos.
+     * @param {Object} recursivo - Parámetros del recorrido recursivo del listado, si corresponde.
+     * @returns {Node}
      */
-    this.generarItems=function(listado,elementoPadre,nivel,ruta,propiedad,expandido) {
-        if(typeof listado==="undefined") listado=this.datos;
-        if(typeof elementoPadre==="undefined") elementoPadre=this.elemento;
-        if(typeof nivel==="undefined") nivel=0;
-        if(typeof ruta==="undefined") ruta=[];
-        if(typeof propiedad==="undefined") propiedad=this.propiedad(false,"propiedad");
-        if(typeof expandido==="undefined") expandido=this.propiedad(false,"estadoInicial")=="expandido";
+    this.generarItem=function(destino,objeto,indice,recursivo) {
+        if(typeof destino=="undefined"||!destino) destino=this.elemento;
+
+        var li=documento.crear("<li class='arbol-item'>")
+                .anexarA(destino),
+            contenedor=documento.crear("<div class='contenedor arbol-componentes-item'>")
+                .anexarA(li);
+
+        this.li.push(li);
+        
+        if(recursivo.expandir) li.agregarClase("expandido");
+
+        li.dato("ruta",recursivo.ruta.concat(indice).join("."));
+
+        this.prototipo.generarItem.call(this,contenedor,objeto,indice,recursivo);
+        
+        return li;
+    };    
+
+    /**
+     * Genera los items del árbol.
+     * @param {number} [indice] - Ignorado.
+     * @param {object[]} [listado] - Listado a utilizar. Por defecto, utilizará el origen de datos.
+     * @param {Node} [destino] - Elemento de destino. Por defecto, utilizará el elemento del componente.
+     * @param {int} [recursivo.nivel=0] - Nivel actual.
+     * @param {Object} [recursivo] - Parámetros para recorrer `listado` en forma recursiva. Puede presentar propiedades adicionales, las cuales serán pasadas
+     * tal cual a la descendencia.
+     * @param {string} [recursivo.propiedad] - Propiedad de cada elemento de `listado` que contiene la descendencia.
+     * @param {int} [recursivo.nivel=0] - Nivel actual.
+     * @param {int[]} [recursivo.ruta] - Ruta actual, como listado de índices.
+     * @returns {componenteArbol}
+     */
+    this.generarItems=function(indice,listado,destino,recursivo) {
+        if(typeof destino=="undefined") destino=this.elemento;
 
         var ul=documento.crear("<ul class='arbol-listado'>")
-            .anexarA(elementoPadre);
-        if(nivel==0) this.listado=ul;
+            .anexarA(destino);
 
-        //TODO Implementar util.recorrerSinRecursion() cuando este método esté estable  (al momento de escribir esto, se estaba migrando desde Foxtrot 6)
+        if(typeof recursivo=="undefined") {
+            //Primer nivel     
+            this.li=[];
+            this.ul=ul;
 
-        if(listado) {
-            listado.forEach(function(obj,indice) {
-                var li=documento.crear("<li class='arbol-item'>")
-                        .anexarA(ul),
-                    contenedor=documento.crear("<div class='contenedor arbol-componentes-item'>")
-                        .anexarA(li);
-                if(expandido) li.agregarClase("expandido");
-
-                var rutaItem=ruta.concat(indice).join(".");
-                li.dato("ruta",rutaItem);
-
-                t.obtenerHijos().forEach(function(hijo) {
-                    if(!t.autogenerado) t.generarItem(hijo,contenedor,obj,nivel,rutaItem,indice);
-                });
-
-                //Si tienen la propiedad con la descendencia, avanzar recursivamente
-                if(obj.hasOwnProperty(propiedad)) {
-                    t.generarItems(obj[propiedad],li,nivel+1,ruta.concat(indice),propiedad,expandido);
-                }
-
-                //Sin hijos
-                if(!obj.hasOwnProperty(propiedad)||!util.esArray(obj[propiedad])||!obj[propiedad].length) li.agregarClase("ultimo-nivel");
-            });
+            recursivo={
+                propiedad:this.propiedad(false,"descendencia"),
+                expandir:this.propiedad(false,"estadoInicial")=="expandido"
+            };
         }
 
+        destino=ul;
+        
+        this.prototipo.generarItems.call(this,null,listado,destino,recursivo);
+
         return this;
     };
 
     /**
-     * Devuelve o establece el valor del componente.
-     * @param {*} [valor] - Valor a establecer
-     * @returns {*}
+     * Devuelve un listado de las rutas de los items expandidos.
+     * @returns {string[]}
      */
-    this.valor=function(valor) {
-        if(ignorarValor) return null;
-        return this.prototipo.valor.call(this,valor);
-    };
-
-    /**
-     * Genera y devuelve el valor de retorno según las propiedades `devuelve`, `filtrarPropiedades` y `filtrarItems`.
-     * @returns {*}
-     */
-    this.extraerValor=function() {
-        var obj=this.obtenerDatosActualizados(),
-            devuelve=this.propiedad(false,"devuelve"),
-            propiedad=this.propiedad(false,"propiedad"),
-            propiedades=this.propiedad(false,"filtrarPropiedades"),
-            filtro=this.propiedad(false,"filtrarItems");
-
-        if(!obj) return obj;
-
-        var filtrar=function(item) {
-            if(filtro&&!item[filtro]) return null;
-
-            if(!propiedades||typeof item!="object") return item;
-
-            if(typeof propiedades!="string") {
-                propiedades=propiedades.split(",");
-                for(var i=0;i<propiedades.length;i++)
-                    propiedades[i]=propiedades[i].trim();
-            }
-
-            var nuevoItem={};
-
-            for(var prop in item) {
-                if(~propiedades.indexOf(prop))
-                    nuevoItem[prop]=item[prop];
-            }
-
-            return nuevoItem;
-        },
-        listado=[];
-
-        (function recorrer(items,destino) {
-            for(var i=0;i<items.length;i++) {
-                var item=items[i],
-                    filtrado=filtrar(item);
-
-                if(filtrado===null) {
-                    //Si el item no se incluye tras los filtros, se debe detener la búsqueda solo si el valor debe ser devuelto como árbol, de
-                    //lo contrario, el item se omite pero continúa la búsqueda en forma recursiva añadiendo los items al listado independientemente
-                    //de si la ascendencia fue incluida o no.
-                    if(devuelve!="listado") continue;
-                } else {
-                    destino.push(filtrado);
-                }
-
-                if(propiedad&&typeof item[propiedad]=="object") {
-                    if(devuelve=="listado") {
-                        //Agregar descendencia directamente en el listado 
-                        recorrer(item[propiedad],destino);
-                    } else {
-                        //Mantener la estructura anidada
-                        destino[propiedad]=[];
-                        recorrer(item[propiedad],destino[propiedad]);
-                    }
-                }
-            }
-        })(obj,listado);
-
-        return listado;
-    };
-
-    /**
-     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @returns {Object[]}
-     */
-    this.obtenerDatosActualizados=function() {
-    	//Pausar la respuesta de valor(), que invocaría obtenerDatosActualizados()
-    	ignorarValor=true;
-        var res=this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados,function(elem,indice) {
-        	//Buscar la fila a la que corresponde cada componente con nombre
-        	var item=elem.obtenerElemento().padre({clase:"arbol-item"}),
-        		ruta=item.dato("ruta");
-        	return t.obtenerObjeto(ruta,false);        	
+     this.obtenerItemsExpandidos=function() {
+        var resultado=[];
+        if(!this.ul) return resultado;
+        this.ul.querySelectorAll(".arbol-item.expandido").porCada(function(i,elem) {
+            resultado.push(elem.dato("ruta"));
         });
-        ignorarValor=false;
-        return res;
+        return resultado;
     };
 
     /**
-     * Agrega un nuevo elemento.
-     * @param {*} obj - Elemento a insertar.
-     * @returns {componente}
+     * Expande los ítems especificados dadas sus rutas.
+     * @param {string[]} rutas 
+     * @returns {componenteArbol}
      */
-    this.agregarElemento=function(obj) {
-        if(!util.esArray(this.datos)) this.datos=[];
-
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
-
-        this.datos.push(obj);
-        this.actualizar();
-        return this;
-    };
-
-    /**
-     * Remueve un elemento dado su índice.
-     * @param {number} indice - Número de fila (basado en 0).
-     * @returns {componente}
-     */
-    this.removerElemento=function(indice) {
-        //Preservar estado actual
-        this.datos=this.obtenerDatosActualizados();
-
-        this.datos.splice(indice,1);
-        this.actualizar();
+    this.expandirItems=function(rutas) {
+        rutas.porCada(function(i,ruta) {
+            t.expandir(ruta);
+        });
         return this;
     };
 
@@ -475,12 +318,12 @@ var componenteArbol=function() {
      */
     this.expandir=function(ruta) {
         if(typeof ruta==="undefined") {
-            this.listado.querySelectorAll("li").agregarClase("expandido");
+            this.ul.querySelectorAll("li").agregarClase("expandido");
             return this;
         }
         
         if(ruta==="-1") {
-            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+            this.ul.hijos({etiqueta:"li"}).forEach(function(elem) {
                 elem.agregarClase("expandido");
             });
             return this;
@@ -505,12 +348,12 @@ var componenteArbol=function() {
      */
     this.contraer=function(ruta) {
         if(typeof ruta==="undefined") {
-            this.listado.querySelectorAll("li").removerClase("expandido");
+            this.ul.querySelectorAll("li").removerClase("expandido");
             return this;
         }
         
         if(ruta==="-1") {
-            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+            this.ul.hijos({etiqueta:"li"}).forEach(function(elem) {
                 elem.removerClase("expandido");
             });
             return this;
@@ -535,12 +378,12 @@ var componenteArbol=function() {
      */
     this.alternar=function(ruta) {
         if(typeof ruta==="undefined") {
-            this.listado.querySelectorAll("li").alternarClase("expandido");
+            this.ul.querySelectorAll("li").alternarClase("expandido");
             return this;
         }
         
         if(ruta==="-1") {
-            this.listado.hijos({etiqueta:"li"}).forEach(function(elem) {
+            this.ul.hijos({etiqueta:"li"}).forEach(function(elem) {
                 elem.alternarClase("expandido");
             });
             return this;
@@ -570,33 +413,28 @@ var componenteArbol=function() {
     };
 
     /**
-     * Devuelve un objeto correspondiente a un nivel e índice.
-     * @param {string} [ruta] - Ruta como índices separados por punto, comenzando desde `0` (por ejemplo `0.1.0`).
-     * @param {boolean} [actualizarValores=true] - Determina si se debe utilizar el listado de valores actualizados (`true`) o el
-     * origen de datos actual.
-     * @returns {(object|null)}
+     * Genera y devuelve el valor de retorno según las propiedades `devuelve`, `filtrarPropiedades` y `filtrarItems`.
+     * @returns {*}
      */
-    this.obtenerObjeto=function(ruta,actualizarValores) {
-    	if(typeof actualizarValores=="undefined") actualizarValores=true;
+    this.extraerValor=function() {
+        return this.prototipo.extraerValor.call(
+            this,
+            this.propiedad(false,"descendencia"),
+            this.propiedad(false,"devuelve")=="listado"
+        );
+    };
 
-        var obj=actualizarValores?this.obtenerDatosActualizados():this.datos,
-            propiedad=this.propiedad("propiedad");
-        ruta=ruta.split(".");
-
-        for(var i=0;i<ruta.length;i++) {
-            var indice=parseInt(ruta[i]);
-            
-            if(i>0) {
-                if(!obj.hasOwnProperty(propiedad)||!util.esArray(obj[propiedad])) return null;
-                obj=obj[propiedad];
-            }
-
-            if(!util.esArray(obj)||obj.length<indice) return null;
-
-            obj=obj[indice];
-        }
-
-        return obj;
+    /**
+     * Devuelve un elemento del origen de datos correspondiente a un índice o, en el caso de listados a nidados, una ruta.
+     * @param {(number|string|number[])} [indice] - Índice, o ruta como array o índices separados por punto (por ejemplo `0.1.0`).
+     * @returns {(Object|null)}
+     */
+    this.obtenerObjetoDatos=function(indice) {
+        return this.prototipo.obtenerObjetoDatos.call(
+            this,
+            indice,
+            this.propiedad(false,"descendencia")
+        );
     };
 
     /**
@@ -605,13 +443,13 @@ var componenteArbol=function() {
      * @returns {Node}
      */
     this.obtenerItem=function(ruta) {
-        var elemento=this.listado;
+        var elemento=this.ul;
         ruta=ruta.split(".");
 
         for(var i=0;i<ruta.length;i++) {
             var indice=parseInt(ruta[i]);
 
-            if(typeof elemento==="undefined") return null;
+            if(typeof elemento=="undefined") return null;
 
             if(elemento.nodeName=="LI") {
                 //Si estamos en un <li>, tomar el <ul>
@@ -652,7 +490,7 @@ var componenteArbol=function() {
         //Buscar el <li>
         var li=null;
         for(var i=0;i<evento.path.length;i++) {
-            if(evento.nodeName==="BODY") break;
+            if(!(evento.path[i] instanceof Node)||evento.path[i].nodeName=="BODY"||evento.path[i].nodeName=="HTML") break;
             if(evento.path[i].es({clase:"arbol-item"})) {
                 li=evento.path[i];
                 break;
@@ -677,7 +515,7 @@ var componenteArbol=function() {
 };
 
 ui.registrarComponente("arbol",componenteArbol,configComponente.clonar({
-    descripcion:"Lista jerárquica (árbol)",
+    descripcion:"Lista anidada (árbol)",
     etiqueta:"Árbol",
     grupo:"Estructura",
     icono:"arbol.png"

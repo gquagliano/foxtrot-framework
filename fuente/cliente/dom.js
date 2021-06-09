@@ -528,7 +528,7 @@
      * @memberof external:Node
      */
     Node.prototype.agregarClase=function(clase) {
-        if(typeof clase!="string") return this;
+        if(clase===null) return this; //TODO Validar que sea estríctamente una cadena o una expresión regular
 
         var t=this;
         clase=clase.split(" ");
@@ -545,7 +545,7 @@
      * @memberof external:Node
      */
     Node.prototype.removerClase=function(clase) {
-        if(typeof clase!="string") return this;
+        if(clase===null) return this; //TODO Validar que sea estríctamente una cadena o una expresión regular
         
         var t=this;
 
@@ -574,6 +574,8 @@
      * @memberof external:Node
      */
     Node.prototype.alternarClase=function(clase) {
+        if(clase===null) return this; //TODO Validar que sea estríctamente una cadena o una expresión regular
+
         var t=this;
 
         if(util.esExpresionRegular(clase)) {

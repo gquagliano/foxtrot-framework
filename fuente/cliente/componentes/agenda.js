@@ -34,47 +34,57 @@ var componenteAgenda=function() {
         "Agenda":{
             bloque:{
                 etiqueta:"Duración de cada bloque",
-                ayuda:"En minutos."
+                ayuda:"En minutos.",
+                evaluable:true
             },
             altoBloque:{
-                etiqueta:"Alto del bloque"                
+                etiqueta:"Alto del bloque",
+                evaluable:true               
             },
             colorDivisiones:{
                 etiqueta:"Color de las divisiones",
-                tipo:"color"
+                tipo:"color",
+                evaluable:true
             },
             colorSubdivisiones:{
                 etiqueta:"Color de las subdivisiones",
-                tipo:"color"
+                tipo:"color",
+                evaluable:true
             },
             subdividir:{
                 etiqueta:"Subdividir bloques",
                 tipo:"logico",
                 ayuda:"Activar para subdividir los bloques por la mitad. Por ejemplo, si la duración del bloque es de 60 minutos, presentará subdivisiones cada\
-                    30 min. El efecto es solo estético."
+                    30 min. El efecto es solo estético.",
+                evaluable:true
             },
             fecha:{
                 etiqueta:"Fecha",
                 ayuda:"Fecha del día que representa. Admite el nombre (o ruta) de una propiedad de su origen de datos.",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             horaActual:{
                 etiqueta:"Señalar hora actual",
                 ayuda:"Señala la hora actual, si la fecha asignada coincide con la fecha de hoy.",
                 tipo:"logico",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             hora:{
                 etiqueta:"Mostrar barra de horario",
-                tipo:"logico"
+                tipo:"logico",
+                evaluable:true
             },
             horaMinima:{
                 etiqueta:"Hora mínima",
-                ayuda:"H:mm (24 horas)."
+                ayuda:"H:mm (24 horas).",
+                evaluable:true
             },
             horaMaxima:{
                 etiqueta:"Hora máxima",
-                ayuda:"H:mm (24 horas)."
+                ayuda:"H:mm (24 horas).",
+                evaluable:true
             },
             propiedadDesde:{
                 etiqueta:"Propiedad Desde",

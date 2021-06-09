@@ -797,6 +797,7 @@ var editor=new function() {
             if(padre!=ui.obtenerCuerpo()&&padre.nodeName!="BODY") {
                 var posicion=padre.posicionAbsoluta(),
                     ancho=padre.ancho(),
+                    alto=padre.alto(),
                     zona5=doc.crear("<div class='foxtrot-zona foxtrot-zona-anterior foxtrot-zona-5'>"),
                     zona6=doc.crear("<div class='foxtrot-zona foxtrot-zona-siguiente foxtrot-zona-6'>");
 

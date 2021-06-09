@@ -1,5 +1,5 @@
 /**
- * Copyright, 2020, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * Copyright, 2021, Gabriel Quagliano. Bajo licencia Apache 2.0.
  * 
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
@@ -14,8 +14,11 @@ var componenteAgenda=function() {
     "use strict";
 
     var altoBloque=60, //Valor predeterminado
+        duracionBloque=60, //Valor predeterminado
         horaMinima=null,
-        horaMaxima=null;
+        horaMaxima=null,
+        ultimaHoraMinima=null,
+        ultimaHoraMaxima=null;
 
     this.componente="agenda";
     this.iterativo=true;
@@ -71,6 +74,22 @@ var componenteAgenda=function() {
             horaMaxima:{
                 etiqueta:"Hora máxima",
                 ayuda:"H:mm (24 horas)."
+            },
+            propiedadDesde:{
+                etiqueta:"Propiedad Desde",
+                adaptativa:false
+            },
+            propiedadHasta:{
+                etiqueta:"Propiedad Hasta",
+                adaptativa:false
+            },
+            modo:{
+                etiqueta:"Modo de origen",
+                tipo:"opciones",
+                opciones:{
+                    fecha:"Fechas",
+                    minutos:"Horas o minutos"
+                }
             },
             extenderHorario:{
                 etiqueta:"Extender horario",
@@ -129,6 +148,38 @@ var componenteAgenda=function() {
     this.listo=function() {
         this.actualizar();
         this.prototipo.listo.call(this);
+    };    
+
+    /**
+     * Procesa un evento.
+     * @param {string} nombre - Nombre del evento.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @param {string} [metodo] - Método interno del componente.
+     * @param {Event} [evento] - Objeto nativo del evento.
+     * @param {*} [parametros] - Parámetros a pasar a la función.
+     * @param {function} [retorno] - Función de retorno.
+     * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
+     * @param {boolean} [nuevaVentana=false] - En caso de navegación, abrir la nueva vista o URL en una nueva ventana.
+     * @returns {(ajax|*|undefined)}
+     */
+    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana) {
+        if(typeof parametros=="undefined") parametros={};
+
+        if(evento instanceof MouseEvent||evento instanceof TouchEvent) {
+            //Determinar la hora correspondiente a la posición donde se produjo el evento
+            
+            var bloque=obtenerParametrosBloque(),
+                y=evento.offsetY,
+                modo=this.propiedad("modo"),
+                fecha=this.propiedad("fecha");
+
+            console.log(y,bloque,(y/bloque.alto)*bloque.duracion);
+            
+
+            parametros.fecha=123;
+        }
+
+        return this.prototipo.procesarEvento.call(this,nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana);
     };
 
     /**
@@ -136,6 +187,10 @@ var componenteAgenda=function() {
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
         if(typeof valor==="undefined") valor=null;
+
+        //Reconstruir solo si cambió alguna de las propiedades
+        if(~["hora","altoBloque","colorDivisiones","colorSubdivisiones","subdividir","horaMinima","horaMaxima"].indexOf(propiedad))
+            this.actualizar().generarFondo().construirHorarios();
 
         //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
         if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
@@ -145,60 +200,46 @@ var componenteAgenda=function() {
 	            } else {
 	                this.elemento.agregarClase("subdividir");
 	            }
-                this.generarFondo();
 	            return this;
 	        }
 
-            //Reconstruir solo si cambió alguna de las propiedades
-            if(~["altoBloque","colorDivisiones","colorSubdivisiones","subdividir","horaMinima","horaMaxima"].indexOf(propiedad))
-                this.generarFondo().construirHorarios();
+            if(propiedad=="hora") {
+	            if(valor!==true&&valor!==1) {
+	                this.elemento.agregarClase("ocultar-hora");
+	            } else {
+	                this.elemento.removerClase("ocultar-hora");
+	            }
+	            return this;
+	        }
 	    }
-
-        this.actualizar();
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
     };
 
+    var obtenerParametrosBloque=(function() {
+        var valor=this.propiedad("altoBloque");
+        if(valor&&!isNaN(valor)) altoBloque=valor;
+        
+        valor=this.propiedad("bloque");
+        if(valor&&!isNaN(valor)) duracionBloque=valor;
+
+        return {
+            alto:altoBloque,
+            duracion:duracionBloque
+        };
+    }).bind(this);
+
     /**
      * Actualiza el componente.
      * @returns {componenteAgenda}
      */
-    this.actualizar=function() {
-        var redibujar=this.redibujar; //componente.actualizar() reiniciará su valor
+    this.actualizarIterativo=function() {
+        obtenerParametrosBloque();
 
-        this.prototipo.actualizar.call(this,false);
-
-        var valor=this.propiedad("altoBloque");
-        if(valor&&!isNaN(valor)) altoBloque=valor;
-
-        if(!ui.enModoEdicion()) {        
-            this.actualizacionEnCurso=true;
-
-            if(redibujar) {
-                //Aplicar cambios en los campos
-                if(!this.descartarValores) this.obtenerDatosActualizados();
-                this.descartarValores=false;
-            }
-
-            if(redibujar||!this.datos||!this.datos.length) {
-                //Limpiar filas autogeneradas
-                ui.eliminarComponentes(this.itemsAutogenerados);
-                this.itemsAutogenerados=[];
-            }
-            
-            if(!this.datos) {
-                this.actualizacionEnCurso=false;
-                return this;
-            }        
-
-            if(this.datos.length)
-                this.generarItems();
-            
-            this.actualizacionEnCurso=false;
-        }
-
-        if(redibujar) {
+        this.prototipo.actualizarIterativo.call(this);
+        
+        if(this.redibujar) {
             this.generarFondo()
                 .construirHorarios();
         }
@@ -211,7 +252,7 @@ var componenteAgenda=function() {
      * @reutrns {componenteAgenda}
      */
     this.generarFondo=function() {
-        if(!this.contenedor) return this;
+        if(!this.elemento) return this;
 
         //Es mucho más eficiente y rápido (especialmente en móviles) utilizar una imagen de fondo para subdividir los horarios y luego posicionar los
         //eventos en forma absoluta, que agregar un elemento por cada franja horaria. Creamos la imagen dinámicamente (el formato SVG se debe simplemente
@@ -233,9 +274,18 @@ var componenteAgenda=function() {
             
         svg+="</g></svg>";
 
-        this.contenedor.estilo("backgroundImage","url(\"data:image/svg+xml;utf8,"+svg+"\")");
+        obtenerEstilos().backgroundImage="url(\"data:image/svg+xml;utf8,"+svg+"\")";
+
         return this;
     };
+
+    var obtenerEstilos=(function(selector) {
+        if(typeof selector=="undefined")
+            return this.obtenerEstilos("g");
+
+        //Para elementos hijos, generar un nuevo selector en la hoja de estilos
+        return ui.obtenerEstilos(this.selector+" "+selector,"g")[0].estilos;
+    }).bind(this);
 
     /**
      * Construye la barra lateral de horarios.
@@ -244,210 +294,88 @@ var componenteAgenda=function() {
     this.construirHorarios=function() {
         if(!this.contenedor) return this;
 
-        if(this.barraHorarios) this.barraHorarios.remover();
-
         var mostrar=this.propiedad("hora");
-        if(mostrar===false||mostrar===0||mostrar==="0") return this;
-
-        this.barraHorarios=document.crear("<div class='agenda-barra-horarios'>")
-            .anexarA(this.elemento);
+        if(mostrar===null) mostrar=true; //por defecto, true
             
         var hora=horaMinima!==null?
             horaMinima:
             this.propiedad("horaMinima");
-        if(!hora||hora<0) {
-            hora=0;
-        } else {
-            hora=util.horasAMinutos(hora);
-        }
-
-        var salto=parseInt(this.propiedad("bloque"));
-        if(isNaN(salto)) salto=60;
+        if(isNaN(hora)) hora=util.horasAMinutos(hora);
+        if(!hora||hora<0) hora=0;
         
         var maximo=horaMaxima!==null?
             horaMaxima:
             this.propiedad("horaMaxima");
-        if(!maximo||maximo==hora||maximo>1439) {
-            maximo=1439;
-        } else {
-            maximo=util.horasAMinutos(hora);
+        if(isNaN(maximo)) maximo=util.horasAMinutos(maximo);
+        if(!maximo||maximo<=hora||maximo>1439) maximo=1439;
+
+        //Siempre establecer el alto del componente
+        obtenerEstilos().minHeight=((((maximo-hora)/duracionBloque)*altoBloque)-1)+"px";
+
+        if(!mostrar&&this.barraHorarios) {
+            this.barraHorarios.remover();
+            this.barraHorarios=null;
+            return this;
         }
 
-        for(;hora<maximo;hora+=salto)
-            document.crear("label")
+        //No regenerar si el rango no cambió
+        if(this.barraHorarios&&
+            (ultimaHoraMinima==hora&&ultimaHoraMaxima==maximo)||
+            (horaMinima!==null&&horaMaxima!==null&&horaMinima>=hora&&horaMaxima<=maximo))
+                return this;
+
+        if(this.barraHorarios) {
+            this.barraHorarios.establecerHtml("");
+        } else {
+            this.barraHorarios=document
+                .crear("<div class='agenda-barra-horarios'>")
+                .anexarA(this.elemento);
+        }
+
+        ultimaHoraMinima=hora;
+        ultimaHoraMaxima=maximo;
+
+        var label=null;
+        for(;hora<maximo;hora+=duracionBloque)
+            label=document.crear("label")
                 .establecerTexto(util.minutosAHoras(hora))
-                .estilo("height",altoBloque)
-                .anexarA(this.barraHorarios);        
+                .anexarA(this.barraHorarios);
+
+        obtenerEstilos(".agenda-barra-horarios label").height=altoBloque+"px";
+        obtenerEstilos(".agenda-barra-horarios label:last-child").height=(altoBloque-1)+"px";
 
         return this;
     };
 
     /**
-     * Genera y agrega un nuevo item.
-     * @param {number} indice - Indice del origen de datos (índice del elemento).
-     * @returns {componente}
+     * Genera y agrega un nuevo item correspondiente a un elemento del origen de datos.
+     * @param {Node} destino - Elemento de destino.
+     * @param {*} objeto - Objeto o elemento del origen de datos.
+     * @param {number} indice - Indice del elemento en el listado u origen de datos.
+     * @returns {Node}
      */
-    this.generarItem=function(indice) {
-        var t=this;
-        
-        /*this.obtenerHijos().forEach(function(hijo) {
-            if(hijo.autogenerado) return;
-    
-            var nuevo=hijo.clonar(t.elementoPadre,true); //Anexar al padre del componente bucle
+    this.generarItem=function(destino,objeto,indice) {
+        var divEvento=document
+            .crear("<div class='agenda-evento'>")
+            .anexarA(destino);
 
-            t.itemsAutogenerados.push(nuevo);
-
-            var obj=t.datos[indice];
-
-            //Agregar método al origen de datos
-            obj.obtenerIndice=(function(i) {
-                return function() {
-                    return i;
-                };
-            })(indice);
-
-            nuevo.establecerDatos(obj);
-            nuevo.indice=indice;
-            nuevo.autogenerado=true;
-            nuevo.ocultarDescendencia();
-            nuevo.obtenerElemento().agregarClase("autogenerado");
-        });*/
-
-        return this;
+        this.prototipo.generarItem.call(this,divEvento,objeto,indice);
     };
 
     /**
      * Genera los items del componente.
      * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
+     * @param {object[]} [listado] - Listado a utilizar. Por defecto, utilizará el origen de datos.
+     * @param {Node} [destino] - Elemento de destino. Por defecto, utilizará el elemento del componente.
      * @returns {componente}
      */
-    this.generarItems=function(indice) {
-        /*var t=this;
+    this.generarItems=function(indice,listado,destino) {
+        this.prototipo.generarItems.call(this,indice,listado,destino);
 
-        var fn=function(i) {
-            if(i>=t.itemsAutogenerados.length) {
-                t.generarItem(i);
-            } else {
-                t.itemsAutogenerados[i].establecerDatos(t.datos[i]);
-            }
-        },
-        remover=function(i) {
-            t.itemsAutogenerados[i].eliminar();
-        };
-
-        if(typeof indice==="number") {
-            fn(indice);
-        } else {
-            this.datos.forEach(function(obj,indice) {
-                fn(indice);
-            });
-            //Remover items excedentes
-            if(this.datos.length<this.itemsAutogenerados.length) {
-                for(var i=this.datos.length;i<this.itemsAutogenerados.length;i++)
-                    remover(i);
-                this.itemsAutogenerados.splice(this.datos.length);
-            }
-        }*/
-
-        return this;
-    };
-
-    /**
-     * Genera y devuelve el valor de retorno según las propiedades `filtrarPropiedades` y `filtrarItems`.
-     * @returns {*}
-     */
-     this.extraerValor=function() {
-        /*var obj=this.obtenerDatosActualizados(),
-            propiedades=this.propiedad(false,"filtrarPropiedades"),
-            filtro=this.propiedad(false,"filtrarItems");
-
-        if(!obj) return obj;
-
-        var filtrar=function(item) {
-            if(filtro&&!item[filtro]) return null;
-
-            if(!propiedades||typeof item!="object") return item;
-
-            if(typeof propiedades!="string") {
-                propiedades=propiedades.split(",");
-                for(var i=0;i<propiedades.length;i++)
-                    propiedades[i]=propiedades[i].trim();
-            }
-
-            var nuevoItem={};
-
-            for(var prop in item) {
-                if(~propiedades.indexOf(prop))
-                    nuevoItem[prop]=item[prop];
-            }
-
-            return nuevoItem;
-        },
-        listado=[];
-
-        for(var i=0;i<obj.length;i++) {
-            var item=obj[i],
-                filtrado=filtrar(item);
-
-            if(filtrado!==null)
-                listado.push(filtrado);
-        }
-
-        return listado;*/
-    };
-
-    /**
-     * Devuelve el origen de datos actualizado con las propiedades que hayan cambiado por tratarse de componentes de ingreso de datos (campos, etc.)
-     * @returns {Object[]}
-     */
-    this.obtenerDatosActualizados=function() {
-        return this.prototipo.obtenerDatosActualizados.call(this,this.itemsAutogenerados);
-    };
-
-    /**
-     * Agrega un nuevo elemento.
-     * @param {*} obj - Elemento a insertar.
-     * @returns {componente}
-     */
-    this.agregarElemento=function(obj) {
-        /*if(!util.esArray(this.datos)) this.datos=[];
-        var idx=this.datos.push(obj)-1;
-
-        this.removerMensajeSinDatos();
-
-        //Agregar el nuevo elemento sin redibujar todo
-        this.generarItems(idx);
-        
-        //Autofoco
-        ui.autofoco(this.itemsAutogenerados[idx].obtenerElemento());*/
-
-        return this;
-    };
-
-    /**
-     * Agrega los elementos del listado provisto.
-     * @param {*[]} listado - Listado (*array*) de elementos a insertar.
-     * @returns {componente}
-     */
-    this.agregarElementos=function(listado) {
-        /*var t=this;
-
-        listado.porCada(function(i,elem) {
-            t.agregarElemento(elem);
-        });*/
-
-        return this;
-    };
-
-    /**
-     * Remueve un elemento dado su índice.
-     * @param {number} indice - Número de fila (basado en 0).
-     * @returns {componente}
-     */
-    this.removerElemento=function(indice) {
-        /*this.datos.splice(indice,1);
-        this.actualizar();*/
-        return this;
+        //Remover contenedores que hayan quedado vacíos
+        this.elemento.querySelectorAll(".agenda-evento").forEach(function(elem) {
+            if(elem.obtenerHtml()=="") elem.remover();
+        });
     };
 };
 

@@ -1,0 +1,26 @@
+/**
+ * Copyright, 2021, Gabriel Quagliano. Bajo licencia Apache 2.0.
+ * 
+ * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
+ * @version 1.0
+ */
+
+.agenda {
+    cursor: pointer;
+}
+.agenda .componente-agenda-plantilla {
+    display: none !important;
+    position: relative;
+}
+.agenda .agenda-barra-horarios {
+    width: 5em;
+    background: #00000008;
+    border-right: 1px solid #dadce0;
+}
+.agenda .agenda-barra-horarios label {
+    font-size: inherit;
+    margin: 0;
+    padding: .42em;
+    overflow: hidden;
+    font-weight: inherit;
+}

@@ -13,7 +13,8 @@
 var componenteAgenda=function() {    
     "use strict";
 
-    var altoBloque=60, //Valor predeterminado
+    var t=this,
+        altoBloque=60, //Valor predeterminado
         duracionBloque=60, //Valor predeterminado
         horaMinima=null,
         horaMaxima=null,
@@ -170,13 +171,22 @@ var componenteAgenda=function() {
             
             var bloque=obtenerParametrosBloque(),
                 y=evento.offsetY,
-                modo=this.propiedad("modo"),
-                fecha=this.propiedad("fecha");
+                modo=this.propiedad(false,"modo"),
+                subdividir=this.propiedad("subdividir"),
+                fecha=this.propiedad("fecha"),
+                minutos=(y/bloque.alto)*bloque.duracion;
 
-            console.log(y,bloque,(y/bloque.alto)*bloque.duracion);
+            //Redondear los minutos al bloque más cercano, considerando subdivisiones
+            var bloques=Math.floor(minutos/(bloque.duracion/(subdividir?2:1)));
+            minutos=bloques*bloque.duracion;
+            //Sumar los minutos hasta el primer bloque
+            minutos+=obtenerHoraMinima();
             
-
-            parametros.fecha=123;
+            if(modo=="fecha") {
+                parametros.fecha=fecha+minutos*60;
+            } else {
+                parametros.fecha=minutos;
+            }
         }
 
         return this.prototipo.procesarEvento.call(this,nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana);
@@ -287,6 +297,16 @@ var componenteAgenda=function() {
         return ui.obtenerEstilos(this.selector+" "+selector,"g")[0].estilos;
     }).bind(this);
 
+    var obtenerHoraMinima=(function() {
+        if(horaMinima===null) {
+            horaMinima=this.propiedad("horaMinima");
+            if(isNaN(horaMinima)) horaMinima=util.horasAMinutos(horaMinima);
+            if(!horaMinima||horaMinima<0) horaMinima=0;
+        }
+
+        return horaMinima;
+    }).bind(this);
+
     /**
      * Construye la barra lateral de horarios.
      * @reutrns {componenteAgenda}
@@ -297,15 +317,11 @@ var componenteAgenda=function() {
         var mostrar=this.propiedad("hora");
         if(mostrar===null) mostrar=true; //por defecto, true
             
-        var hora=horaMinima!==null?
-            horaMinima:
-            this.propiedad("horaMinima");
-        if(isNaN(hora)) hora=util.horasAMinutos(hora);
-        if(!hora||hora<0) hora=0;
-        
-        var maximo=horaMaxima!==null?
-            horaMaxima:
-            this.propiedad("horaMaxima");
+        var minimo=obtenerHoraMinima(),        
+            maximo=horaMaxima!==null?
+                horaMaxima:
+                this.propiedad("horaMaxima");
+
         if(isNaN(maximo)) maximo=util.horasAMinutos(maximo);
         if(!maximo||maximo<=hora||maximo>1439) maximo=1439;
 
@@ -319,10 +335,8 @@ var componenteAgenda=function() {
         }
 
         //No regenerar si el rango no cambió
-        if(this.barraHorarios&&
-            (ultimaHoraMinima==hora&&ultimaHoraMaxima==maximo)||
-            (horaMinima!==null&&horaMaxima!==null&&horaMinima>=hora&&horaMaxima<=maximo))
-                return this;
+        if(this.barraHorarios&&ultimaHoraMinima!==null&&ultimaHoraMaxima!==null&&ultimaHoraMinima<=minimo&&ultimaHoraMaxima>=maximo)
+            return this;
 
         if(this.barraHorarios) {
             this.barraHorarios.establecerHtml("");
@@ -332,12 +346,11 @@ var componenteAgenda=function() {
                 .anexarA(this.elemento);
         }
 
-        ultimaHoraMinima=hora;
+        ultimaHoraMinima=minimo;
         ultimaHoraMaxima=maximo;
 
-        var label=null;
-        for(;hora<maximo;hora+=duracionBloque)
-            label=document.crear("label")
+        for(var hora=minimo;hora<maximo;hora+=duracionBloque)
+            document.crear("label")
                 .establecerTexto(util.minutosAHoras(hora))
                 .anexarA(this.barraHorarios);
 
@@ -357,6 +370,7 @@ var componenteAgenda=function() {
     this.generarItem=function(destino,objeto,indice) {
         var divEvento=document
             .crear("<div class='agenda-evento'>")
+            .dato("indice",indice)
             .anexarA(destino);
 
         this.prototipo.generarItem.call(this,divEvento,objeto,indice);
@@ -367,15 +381,132 @@ var componenteAgenda=function() {
      * @param {number} [indice] - Índice del objeto de datos que se desea generar. Si se omite, iterará sobre todo el origen de datos. 
      * @param {object[]} [listado] - Listado a utilizar. Por defecto, utilizará el origen de datos.
      * @param {Node} [destino] - Elemento de destino. Por defecto, utilizará el elemento del componente.
-     * @returns {componente}
+     * @returns {componenteAgenda}
      */
     this.generarItems=function(indice,listado,destino) {
+        this.posicionarEventos();
         this.prototipo.generarItems.call(this,indice,listado,destino);
+        this.actualizarEventos();
+    };
 
-        //Remover contenedores que hayan quedado vacíos
-        this.elemento.querySelectorAll(".agenda-evento").forEach(function(elem) {
-            if(elem.obtenerHtml()=="") elem.remover();
+    /**
+     * Calcula el posicionamiento de los eventos de acuerdo a su horario.
+     * @returns {componenteAgenda}
+     */
+    this.posicionarEventos=function() {
+        var eventos=this.obtenerDatos(),
+            resultado=[];
+
+        if(!eventos||!util.esArray(eventos)) return;
+
+        horaMinima=null;
+        horaMaxima=null;
+
+        //Reiniciar hora mínima al valor por defecto o configurado
+        obtenerHoraMinima();
+
+        var modo=this.propiedad(false,"modo"),
+            bloque=obtenerParametrosBloque(),
+            fecha=this.propiedad("fecha"),
+            desde=this.propiedad(false,"propiedadDesde"),
+            hasta=this.propiedad(false,"propiedadHasta");
+
+        //Propiedades predeterminadas
+        if(!desde) desde="desde";
+        if(!hasta) hasta="hasta";
+
+        for(var i=0;i<eventos.length;i++) {
+            var item=eventos[i];
+            if(item.hasOwnProperty(desde)&&item.hasOwnProperty(hasta)) {
+                //Convertir horas a minutos, guardar resultados en _desde y _hasta para no sobreescribir los valores originales
+                if(modo=="minutos") {
+                    if(isNaN(item[desde])) {
+                        item._desde=util.horasAMinutos(item[desde]);
+                    } else {
+                        item._desde=parseInt(item[desde]);
+                    }
+                    
+                    if(isNaN(item[hasta])) {
+                        item._hasta=util.horasAMinutos(item[hasta]);
+                    } else {
+                        item._hasta=parseInt(item[hasta]);
+                    }
+                } else {
+                    //Restar la fecha del día
+                    item._desde=item[desde]-fecha;
+                    item._hasta=item[hasta]-fecha;
+                }
+
+                //Mantener solo eventos válidos
+                if(item._desde>=item._hasta) continue;
+
+                resultado.push(item);
+
+                //Buscar el horario mínimo y máximo
+                if(horaMinima===null||item._desde<horaMinima) horaMinima=item._desde;
+                if(horaMaxima===null||item._hasta>horaMaxima) horaMaxima=item._hasta;
+
+                //TODO Corregir fechas de eventos que comiencen o finalicen en un día distinto
+                //Sería posible solo en modo fecha                
+            }
+        }
+
+        //Ordenar eventos por hora de inicio, luego por duración
+        resultado
+            .sort(function(a,b) {
+                return a._desde>b._desde?1:-1
+            })
+            .sort(function(a,b) {
+                return (a._hasta-a._desde)<=(b._hasta-b._desde)?1:0
+            });
+
+        //Posicionar verticalmente
+        resultado.forEach(function(item) {
+            item._posicion={
+                x:0,
+                y:((item._desde-horaMinima)/bloque.duracion)*bloque.alto,
+                alto:((item._hasta-item._desde)/bloque.duracion)*bloque.alto
+            };       
         });
+
+        //TODO Mejorar posicionamiento horizontal de superposiciones
+        for(var i=0;i<resultado.length;i++) {
+            var cant=0;
+            for(var j=0;j<i;j++) {
+                if(!(resultado[i]._hasta<=resultado[j]._desde||resultado[i]._desde>=resultado[j]._hasta))
+                    cant++;
+            }
+            resultado[i]._posicion.x=10*cant;
+        }        
+        
+        //Regenerar barra de horarios si es necesario (si hay eventos que se exceden los valores actuales)
+        this.construirHorarios();
+
+        this.datos=resultado;
+    };
+
+    /**
+     * Actualiza los contenedores de los eventos.
+     * @returns {componenteAgenda}
+     */
+    this.actualizarEventos=function() {
+        this.elemento.querySelectorAll(".agenda-evento").forEach(function(elem) {
+            if(elem.obtenerHtml()=="") {
+                elem.remover();
+                return;
+            }
+
+            var obj=t.datos[elem.dato("indice")];
+
+            //Posicionamiento
+            elem.estilos({
+                top:obj._posicion.y,
+                marginLeft:obj._posicion.x,
+                height:obj._posicion.alto
+            });
+        });
+
+        return this;
     };
 };
 

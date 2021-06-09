@@ -7,6 +7,7 @@
 
 .agenda {
     cursor: pointer;
+    position: relative;
 }
 .agenda .componente-agenda-plantilla {
     display: none !important;
@@ -14,7 +15,7 @@
 }
 .agenda .agenda-barra-horarios {
     width: 5em;
-    background: #00000008;
+    background: #f7f7f7;
     border-right: 1px solid #dadce0;
 }
 .agenda .agenda-barra-horarios label {
@@ -23,4 +24,18 @@
     padding: .42em;
     overflow: hidden;
     font-weight: inherit;
+}
+.agenda .agenda-evento {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    border-radius: .25rem;
+    overflow: hidden;
+    top: 0;
+    bottom: auto;
+    left: 75px;
+    right: 10px;
+}
+.agenda.ocultar-hora .agenda-evento {
+    left: 10px;
 }

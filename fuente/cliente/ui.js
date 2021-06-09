@@ -204,8 +204,13 @@ var ui=new function() {
 
         if(!reglas.length) {
             //Inicializar
-            this.establecerEstilosSelector(selector,"",tamano);
-            reglas=this.obtenerEstilos(selector,tamano);
+            var regla=this.establecerEstilosSelector(selector,"",tamano);
+            reglas.push({
+                selector:regla.selectorText,
+                estilos:regla.style,
+                texto:regla.cssText,
+                indice:0
+            });
         }
 
         return reglas;
@@ -259,12 +264,15 @@ var ui=new function() {
      * @param {string} selector - Selector.
      * @param {(string|Object[])} css - Estilos. Puede ser código CSS o un objeto compatible con la salida de obtenerEstilos().
      * @param {(string|null)} [tamano] - Tamaño de pantalla. Si se omite, o si es null, se establecerán los estilos generales (sin media query).
-     * @returns {ui}
+     * @returns {(CSSStyleRule|null)}
      */
     this.establecerEstilosSelector=function(selector,css,tamano) {
         if(util.esIndefinido(tamano)||!tamano) tamano="g";
 
-        if(util.esArray(css)) return this.procesarObjetoEstilos(selector,css);
+        if(util.esArray(css)) {
+            this.procesarObjetoEstilos(selector,css);
+            return null;
+        }
 
         var tamanoPx=tamanos[tamano],
             hoja=this.obtenerElementoEstilos(),
@@ -343,13 +351,13 @@ var ui=new function() {
         var indice=Math.max(indicePrimerRegla,indicePrimerMedia);
        
         if(!css) css="";
-        hoja.insertRule(
+        var i=hoja.insertRule(
                 selector+"{"+css+"}",
                 //Insertar las reglas globales antes del primer mediaquery
                 tamano=="xs"||tamano=="g"?indice:reglas.length
             );
 
-        return this;
+        return hoja.rules.item(i);
     };
 
     /**
@@ -359,7 +367,8 @@ var ui=new function() {
      * @returns {ui}
      */
     this.removerEstilos=function(selector,tamano) {
-        return this.establecerEstilosSelector(selector,null,tamano);
+        this.establecerEstilosSelector(selector,null,tamano);
+        return this;
     };
 
     /**

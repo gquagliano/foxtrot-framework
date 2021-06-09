@@ -66,7 +66,7 @@ var componenteColumna=function() {
 	            e.removerClase(/col-.+/);
 	            var tamanos=this.propiedadObj(propiedad);
 	            ["g","sm","md","lg","xl"].forEach(function(p) {
-	                if(tamanos.hasOwnProperty(p)&&!isNaN(tamanos[p])) e.agregarClase("col-"+(p=="g"?"":p+"-")+tamanos[p]);
+	                if(tamanos.hasOwnProperty(p)&&tamanos[p]) e.agregarClase("col-"+(p=="g"?"":p+"-")+tamanos[p]);
 	            });
 	        }
 	    }

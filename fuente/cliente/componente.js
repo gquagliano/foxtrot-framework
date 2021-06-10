@@ -314,6 +314,7 @@ var componente=new function() {
                 etiqueta:"Click",
                 adaptativa:false,
                 evento:true,
+                evaluable:true,
                 eventoCampo:true
             },
             menuContextual:{
@@ -321,16 +322,19 @@ var componente=new function() {
                 adaptativa:false,
                 ayuda:"Ingresar el nombre de un componente Menú existente en la vista, o una expresión que resuelva a una instancia de un componente Menú.",
                 evento:true,
+                evaluable:true,
                 eventoCampo:true
             },
             intro:{
                 etiqueta:"Intro",
                 adaptativa:false,
+                evaluable:true,
                 evento:true
             },
             modificacion:{
                 etiqueta:"Modificación",
                 adaptativa:false,
+                evaluable:true,
                 evento:true,
                 eventoCampo:true
             }
@@ -339,6 +343,7 @@ var componente=new function() {
             datos:{
                 etiqueta:"Origen de datos",
                 adaptativa:false,
+                evaluable:true,
                 ayuda:"Permite establecer el origen de datos utilizando una expresión, equivalente a componente.establecerDatos(). Modificar esta propiedad en tiempo de ejecución no tendrá efecto."
             },
             propiedad:{
@@ -1545,8 +1550,14 @@ var componente=new function() {
 
         //Determinar si la propiedad es adaptativa (por defecto, si)
         var adaptativa=true,
+            evaluable=false,
             definicion=this.buscarPropiedad(nombre);
-        if(definicion&&definicion.hasOwnProperty("adaptativa")) adaptativa=definicion.adaptativa;
+        if(definicion) {
+            if(definicion.hasOwnProperty("adaptativa")) adaptativa=definicion.adaptativa;
+            if(definicion.hasOwnProperty("evaluable")) evaluable=definicion.evaluable;
+        }
+        
+        if(!evaluable) evaluar=false;
 
         if(util.esIndefinido(valor)) {
             if(!this.valoresPropiedades.hasOwnProperty(nombre)) return null;
@@ -1569,7 +1580,11 @@ var componente=new function() {
                     }
             }
             
-            if(typeof resultado==="string") resultado=evaluar?this.evaluarExpresion(resultado):resultado;
+            if(typeof resultado=="string") {
+                if(ui.enModoEdicion()) return resultado;
+                if(evaluar) resultado=this.evaluarExpresion(resultado);
+            }
+            
             return resultado;
         }
 

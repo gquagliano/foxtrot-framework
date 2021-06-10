@@ -13,6 +13,9 @@
     display: none !important;
     position: relative;
 }
+.agenda.ocultar-hora .agenda-barra-horarios {
+    display: none;
+}
 .agenda .agenda-barra-horarios {
     width: 5em;
     background: #f7f7f7;
@@ -35,6 +38,9 @@
     bottom: auto;
     left: 75px;
     right: 10px;
+    background-color: #f7f7f7;
+    border: 1px solid #dadce0;
+    padding: 0 .3em;
 }
 .agenda.ocultar-hora .agenda-evento {
     left: 10px;

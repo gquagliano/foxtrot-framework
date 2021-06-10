@@ -2317,6 +2317,26 @@ var componente=new function() {
             padre.anexar(this.elemento);
         }
         return this;
+    };    
+
+    /**
+     * Busca y devuelve todos los componentes del mismo tipo cuya propiedad coincida con el valor especificado.
+     * @param {string} propiedad - Nombre de la propiedad.
+     * @param {*} valor - Valor a buscar.
+     * @returns {componente[]}
+     */
+     this.buscarComponentes=function(propiedad,valor) {
+        var t=this,
+            elems=this.vista.obtenerElemento().querySelectorAll(".componente."+this.componente),
+            resultado=[];
+    
+        elems.forEach(function(elem) {
+            var componente=ui.obtenerInstanciaComponente(elem);
+            if(!componente||componente.propiedad(propiedad)!=valor) return;
+            resultado.push(componente);
+        });
+
+        return resultado;
     };
 
     ////Datos

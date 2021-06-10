@@ -159,7 +159,7 @@ var componenteAgenda=function() {
     this.listo=function() {
         this.actualizar();
         this.prototipo.listo.call(this);
-    };    
+    };
 
     /**
      * Procesa un evento.
@@ -209,8 +209,11 @@ var componenteAgenda=function() {
         if(typeof valor==="undefined") valor=null;
 
         //Reconstruir solo si cambió alguna de las propiedades
-        if(~["hora","altoBloque","colorDivisiones","colorSubdivisiones","subdividir","horaMinima","horaMaxima"].indexOf(propiedad))
-            this.actualizar().generarFondo().construirHorarios();
+        if(~["hora","altoBloque","colorDivisiones","colorSubdivisiones","subdividir","horaMinima","horaMaxima"].indexOf(propiedad)) {
+            horaMinima=null;
+            horaMaxima=null;
+            this.generarFondo().construirHorarios();
+        }
 
         //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
         if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
@@ -322,7 +325,9 @@ var componenteAgenda=function() {
      * @reutrns {componenteAgenda}
      */
     this.construirHorarios=function() {
-        if(!this.contenedor) return this;
+        if(!this.elemento) return this;
+
+        var bloque=obtenerParametrosBloque();
 
         var mostrar=this.propiedad("hora");
         if(mostrar===null) mostrar=true; //por defecto, true
@@ -333,19 +338,22 @@ var componenteAgenda=function() {
                 this.propiedad("horaMaxima");
 
         if(isNaN(maximo)) maximo=util.horasAMinutos(maximo);
-        if(!maximo||maximo<=hora||maximo>1439) maximo=1439;
+        if(!maximo||maximo<=minimo||maximo>1439) maximo=1439;
 
         //Siempre establecer el alto del componente
-        obtenerEstilos().minHeight=((((maximo-hora)/duracionBloque)*altoBloque)-1)+"px";
+        obtenerEstilos().minHeight=((((maximo-minimo)/bloque.duracion)*bloque.alto)-1)+"px";
 
         if(!mostrar&&this.barraHorarios) {
             this.barraHorarios.remover();
             this.barraHorarios=null;
+            this.elemento.agregarClase("ocultar-hora");
             return this;
         }
+        
+        this.elemento.removerClase("ocultar-hora");
 
         //No regenerar si el rango no cambió
-        if(this.barraHorarios&&ultimaHoraMinima!==null&&ultimaHoraMaxima!==null&&ultimaHoraMinima<=minimo&&ultimaHoraMaxima>=maximo)
+        if(!ui.enModoEdicion()&&this.barraHorarios&&ultimaHoraMinima!==null&&ultimaHoraMaxima!==null&&ultimaHoraMinima<=minimo&&ultimaHoraMaxima>=maximo)
             return this;
 
         if(this.barraHorarios) {
@@ -359,13 +367,13 @@ var componenteAgenda=function() {
         ultimaHoraMinima=minimo;
         ultimaHoraMaxima=maximo;
 
-        for(var hora=minimo;hora<maximo;hora+=duracionBloque)
+        for(var hora=minimo;hora<maximo;hora+=bloque.duracion)
             document.crear("label")
                 .establecerTexto(util.minutosAHoras(hora))
                 .anexarA(this.barraHorarios);
 
-        obtenerEstilos(".agenda-barra-horarios label").height=altoBloque+"px";
-        obtenerEstilos(".agenda-barra-horarios label:last-child").height=(altoBloque-1)+"px";
+        obtenerEstilos(".agenda-barra-horarios label").height=bloque.alto+"px";
+        obtenerEstilos(".agenda-barra-horarios label:last-child").height=(bloque.alto-1)+"px";
 
         return this;
     };

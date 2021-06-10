@@ -57,14 +57,15 @@ var componenteEtiqueta=function() {
         
         this.actualizacionEnCurso=true;
 
-        var propiedad=this.propiedad(false,"propiedad"),
+        var datos=this.obtenerDatosCrudos(),
+            propiedad=this.propiedad(false,"propiedad"),
             contenido=this.propiedad(false,"contenido"),
             resultado="";
 
-        if(this.datos) {
+        if(datos) {
             if(propiedad) {
                 //Como propiedad específica
-                resultado=util.obtenerPropiedad(this.datos,propiedad);
+                resultado=util.obtenerPropiedad(datos,propiedad);
             } else if(contenido) {
                 //Como expresion
                 resultado=this.evaluarExpresion(contenido);

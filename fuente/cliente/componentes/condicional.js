@@ -70,12 +70,7 @@ var componenteCondicional=function() {
         var condicion;
         if(!this.propiedad(false,"condicion")) {
             //Sin condición, utilizar el origen de datos
-            if(typeof this.datos==="object") {
-                var propiedad=this.propiedad(false,"propiedadValor");
-                condicion=propiedad?util.obtenerPropiedad(this.datos,propiedad):this.datos;
-            } else {
-                condicion=this.datos;
-            }
+            condicion=this.obtenerDatos();
         } else {
             //Obtener valor procesado
             condicion=this.propiedad("condicion");

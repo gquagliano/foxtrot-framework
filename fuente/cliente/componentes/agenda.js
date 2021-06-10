@@ -394,17 +394,17 @@ var componenteAgenda=function() {
      * @returns {componenteAgenda}
      */
     this.generarItems=function(indice,listado,destino) {
-        this.posicionarEventos();
-        this.prototipo.generarItems.call(this,indice,listado,destino);
-        this.actualizarEventos();
+        var eventos=this.posicionarEventos();
+        this.prototipo.generarItems.call(this,indice,eventos,destino);
+        this.actualizarEventos(eventos);
     };
 
     /**
      * Calcula el posicionamiento de los eventos de acuerdo a su horario.
-     * @returns {componenteAgenda}
+     * @returns {Object[]}
      */
     this.posicionarEventos=function() {
-        var eventos=this.obtenerDatos(),
+        var eventos=this.obtenerDatos(true),
             resultado=[];
 
         if(!eventos||!util.esArray(eventos)) return;
@@ -492,21 +492,22 @@ var componenteAgenda=function() {
         //Regenerar barra de horarios si es necesario (si hay eventos que se exceden los valores actuales)
         this.construirHorarios();
 
-        this.datos=resultado;
+        return resultado;
     };
 
     /**
      * Actualiza los contenedores de los eventos.
+     * @param {Object[]} datos - Listado de eventos.
      * @returns {componenteAgenda}
      */
-    this.actualizarEventos=function() {
+    this.actualizarEventos=function(datos) {
         this.elemento.querySelectorAll(".agenda-evento").forEach(function(elem) {
             if(elem.obtenerHtml()=="") {
                 elem.remover();
                 return;
             }
 
-            var obj=t.datos[elem.dato("indice")];
+            var obj=datos[elem.dato("indice")];
 
             //Posicionamiento
             elem.estilos({

@@ -599,19 +599,37 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve el origen de datos actual.
+     * Filtra el objeto dado según el valor de `propiedadValor`.
+     * @param {*} obj - Objeto a procesar.
      * @returns {*}
      */
-    this.obtenerDatos=function() {
-        return this.obtenerDatosActualizados();
+    this.filtrarDatos=function(obj) {
+        if(typeof obj!="object") return obj;
+
+        var propiedad=this.propiedad("propiedadValor");
+        if(!propiedad) return obj;
+        return util.obtenerPropiedad(obj,propiedad);
+    };
+
+    /**
+     * Devuelve el origen de datos actual.
+     * @param {boolean} [filtrar=false] - Si es `true`, el valor devuelto será filtrado según `propiedadValor`.
+     * @returns {*}
+     */
+    this.obtenerDatos=function(filtrar) {
+        var datos=this.obtenerDatosActualizados();        
+        if(typeof filtrar=="undefined"||!filtrar) return datos;
+        return this.filtrarDatos(datos);
     };
 
     /**
      * Devuelve el origen de datos actual tal como fue asignado, sin procesar las relaciones entre sus propiedades y campos del componente.
+     * @param {boolean} [filtrar=false] - Si es `true`, el valor devuelto será filtrado según `propiedadValor`.
      * @returns {*}
      */
-    this.obtenerDatosCrudos=function() {
-        return this.datos;
+    this.obtenerDatosCrudos=function(filtrar) {
+        if(typeof filtrar=="undefined"||!filtrar) return this.datos;
+        return this.filtrarDatos(this.datos);
     };
 
     /**
@@ -934,19 +952,11 @@ var componente=new function() {
 
         this.actualizarPropiedadesExpresiones();
 
-        //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedad` y el componente presente un campo,
+        //Cuando se asigne un origen de datos, esté establecida la propiedad `propiedadValor` y el componente presente un campo,
         //intentar asignar el valor desde el origen de datos (otros usos de la propiedad deben implementarse en actualizar() en el 
         //componente concreto)        
-        if(this.datos&&this.campo) {
-            var propiedad=this.propiedad("propiedadValor")||this.propiedad("propiedad"),
-                valor;
-
-            if(propiedad) {
-                valor=util.obtenerPropiedad(this.datos,propiedad);
-            } else {
-                return this;
-            }
-
+        if(this.campo) {
+            var valor=this.obtenerDatos(true);
             if(typeof valor!=="undefined") this.valor(valor);
         }
 
@@ -1754,11 +1764,11 @@ var componente=new function() {
     /**
      * Evalúa una expresión incluyendo las variables relacionadas al componente.
      * @param {string} cadena - Cadena a evaluar.
-     * @param {*} [objeto=this.datos] - Valor de `objeto`.
+     * @param {*} [objeto] - Valor de `objeto`.
      * @returns {*}
      */
     this.evaluarExpresion=function(cadena,objeto) {
-        if(typeof objeto==="undefined") objeto=this.datos;
+        if(typeof objeto=="undefined") objeto=this.obtenerDatos();
         return ui.evaluarExpresion(cadena,{ objeto:objeto, componente:this, controlador:this.controlador, valor:this.valor() });
     };
 
@@ -1800,6 +1810,8 @@ var componente=new function() {
         if(typeof nuevaVentana==="undefined") nuevaVentana=false;
 
         if(!evento) evento=document.createEvent("Event");
+
+        this.obtenerDatosActualizados();
 
         //Si está deshabilitado, suprimir el evento
         var deshabilitado=this.propiedad(null,"deshabilitado");
@@ -2349,7 +2361,7 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {   
             var nombre=hijo.obtenerNombre(),
-                propiedad=hijo.propiedad("propiedadValor")||hijo.propiedad("propiedad");
+                propiedad=hijo.propiedad("propiedadValor");
             if(inclusoOcultos||!hijo.esComponenteOculto()) {
                 if(nombre&&valores.hasOwnProperty(nombre)) {
                     hijo.valor(valores[nombre]);
@@ -2391,9 +2403,19 @@ var componente=new function() {
         var t=this,
             fn=function(comp,obj) {
                 var asignarValor=function(hijo) {
-                    var propiedad=hijo.propiedad(false,"propiedadValor")||hijo.propiedad(false,"propiedad"),
+                    var propiedad=hijo.propiedad("propiedadValor"),
                         nombre=hijo.obtenerNombre(),
+                        valor;
+                        
+                    if(hijo.esCampo()) {
                         valor=hijo.valor();
+                    } else {
+                        //Si no es un campo, obtener el origen de datos actualizado, no su valor. Si bien es posible obtenerlo mediante valor(),
+                        //queremos evitar posprocesamiento de los datos
+                        valor=hijo.obtenerDatosActualizados();
+                        if(propiedad) valor=util.obtenerPropiedad(valor,propiedad);
+                    }
+
                     if(typeof valor!=="undefined") {
                         if(propiedad) {
                             util.asignarPropiedad(obj,propiedad,valor);
@@ -2609,7 +2631,9 @@ var componente=new function() {
         //if(!this.descartarValores) this.obtenerDatosActualizados();
         this.descartarValores=false;
 
-        if(this.redibujar||!this.datos||!this.datos.length) {
+        var datos=this.obtenerDatosCrudos(true);
+
+        if(this.redibujar||!util.esArray(datos)||!datos.length) {
             //Limpiar filas autogeneradas
             ui.eliminarComponentes(this.itemsAutogenerados);
             this.itemsAutogenerados=[];
@@ -2617,9 +2641,9 @@ var componente=new function() {
         
         this.removerMensajeSinDatos();
 
-        if(!this.datos) return this;
+        if(!datos) return this;
 
-        if(!this.datos.length) {
+        if(util.esArray(datos)&&!datos.length) {
             this.mostrarMensajeSinDatos();
         } else {
             this.generarItems();
@@ -2706,7 +2730,7 @@ var componente=new function() {
      * @returns {componente}
      */
     this.generarItems=function(indice,listado,destino,recursivo) {
-        if(typeof listado=="undefined") listado=this.datos;
+        if(typeof listado=="undefined") listado=this.obtenerDatosCrudos(true);
         if(typeof destino=="undefined") destino=this.contenedorItems||this.elemento;
         if(typeof recursivo=="undefined") recursivo=null;
 
@@ -2734,6 +2758,8 @@ var componente=new function() {
                 if(typeof recursivo.ruta!="object") recursivo.ruta=[];
             }
 
+            if(!listado) return this;
+            
             listado.forEach(function(obj,indice) {
                 var elemento=fn(obj,indice);
 

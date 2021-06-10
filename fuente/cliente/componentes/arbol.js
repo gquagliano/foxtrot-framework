@@ -162,8 +162,7 @@ var componenteArbol=function() {
         this.prototipo.actualizarIterativo.call(this);
         
         //Volver a abrir los items
-        if(this.datos&&this.datos.length)            
-            this.expandirItems(rutasAbiertas);
+        this.expandirItems(rutasAbiertas);
         
         return this;
     };    

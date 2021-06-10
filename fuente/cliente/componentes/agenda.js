@@ -561,8 +561,8 @@ var componenteAgenda=function() {
                     }
                 } else {
                     //Restar la fecha del día
-                    item._desde=item[desde]-fecha;
-                    item._hasta=item[hasta]-fecha;
+                    item._desde=(item[desde]-fecha)/60;
+                    item._hasta=(item[hasta]-fecha)/60;
                 }
 
                 //Mantener solo eventos válidos

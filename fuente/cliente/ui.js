@@ -323,7 +323,7 @@ var ui=new function() {
                 hoja.insertRule("@media (min-width: "+tamanoPx+"px) { }",i);
 
                 //Insertar/reemplazar dentro del media nuevo
-                hoja=hoja.cssRules[i];
+                hoja=hoja.cssRules.item(i);
             }
         } else {
             for(var i=0;i<reglas.length;i++) { 
@@ -357,7 +357,7 @@ var ui=new function() {
                 tamano=="xs"||tamano=="g"?indice:reglas.length
             );
 
-        return hoja.rules.item(i);
+        return reglas.item(i);
     };
 
     /**

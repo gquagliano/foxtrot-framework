@@ -66,17 +66,26 @@ class crearModelo extends asistente {
     public function ejecutar($param) {
         if(!$param->nombre||!$param->entidad) gestor::error('Ingresá el nombre del modelo y el nombre de la entidad.');
 
-        $partes=\util::separarRuta($param->nombre);
-        $nombre=$partes->nombre;
-        $ruta=$partes->ruta;
+        //Si se crea modelo+entidad, el modelo puede contener subdirectorios, pero la entidad no; si se crea solo la entidad, ocurre lo contrario
+        $modelo=$param->nombre;
+        $entidad=$param->entidad;
+        if($param->soloEntidad) {
+            $partes=\util::separarRuta($param->entidad);
+            $entidad=$partes->nombre;
+            $ruta=$partes->ruta;
+        } else {
+            $partes=\util::separarRuta($param->nombre);
+            $modelo=$partes->nombre;
+            $ruta=$partes->ruta;
+        }
 
         $clase=\foxtrot::prepararNombreClase($param->nombre)->nombre;
         $entidad=\foxtrot::prepararNombreClase($param->entidad)->nombre;
         $espacio=\foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().'modelo\\'.$ruta,true,true);
         
         $ruta=_raiz.'aplicaciones/'.gestor::obtenerNombreAplicacion().'/servidor/modelo/'.$ruta;
-        $rutaModelo=$ruta.$nombre.'.php';
-        $rutaEntidad=$ruta.$param->entidad.'.php';
+        $rutaModelo=$ruta.$modelo.'.php';
+        $rutaEntidad=$ruta.$entidad.'.php';
 
         if(!is_dir($ruta)) mkdir($ruta,0755,true);
 

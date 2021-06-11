@@ -34,7 +34,6 @@
     flex-direction: row;
     border-radius: .25rem;
     overflow: hidden;
-    top: 0;
     bottom: auto;
     left: calc(5em + 10px);
     right: 10px;
@@ -50,11 +49,21 @@
     z-index: 1;
     pointer-events: none;
     background-color: #ffc6c670;
-    top: 0;
     bottom: auto;
     left: 5em;
     right: 0px;
 }
 .agenda.ocultar-hora .agenda-rango-deshabilitado {
+    left: 0;
+}
+.agenda .agenda-ahora {
+    position: absolute;
+    z-index: 5;
+    height: 1px;
+    background-color: #f00;
+    left: 5em;
+    right: 0;
+}
+.agenda.ocultar-hora .agenda-ahora {
     left: 0;
 }

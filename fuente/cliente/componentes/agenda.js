@@ -68,7 +68,7 @@ var componenteAgenda=function() {
             },
             horaActual:{
                 etiqueta:"Señalar hora actual",
-                ayuda:"Señala la hora actual, si la fecha asignada coincide con la fecha de hoy.",
+                ayuda:"Señala la hora actual, si el valor asignado a la propiedad Fecha coincide con la fecha de hoy.",
                 tipo:"logico",
                 adaptativa:false,
                 evaluable:true
@@ -196,7 +196,7 @@ var componenteAgenda=function() {
                 y=evento.offsetY,
                 modo=this.propiedad(false,"modo"),
                 subdividir=this.propiedad("subdividir"),
-                fecha=this.propiedad("fecha"),
+                fecha=medianoche(this.propiedad("fecha")),
                 minutos=(y/bloque.alto)*bloque.duracion;
 
             //Redondear los minutos al bloque más cercano, considerando subdivisiones
@@ -439,6 +439,9 @@ var componenteAgenda=function() {
     this.construirHorarios=function() {
         if(!this.elemento) return this;
 
+        this.construirHorariosDeshabilitados();
+        this.senalarHoraActual();
+
         var bloque=obtenerParametrosBloque();
 
         var mostrar=this.propiedad("hora");
@@ -542,7 +545,7 @@ var componenteAgenda=function() {
 
         var modo=this.propiedad(false,"modo"),
             bloque=obtenerParametrosBloque(),
-            fecha=this.propiedad("fecha"),
+            fecha=medianoche(this.propiedad("fecha")),
             desde=this.propiedad(false,"propiedadDesde"),
             hasta=this.propiedad(false,"propiedadHasta");
 
@@ -621,8 +624,6 @@ var componenteAgenda=function() {
         //Regenerar barra de horarios si es necesario (si hay eventos que se exceden los valores actuales)
         this.construirHorarios();
 
-        this.construirHorariosDeshabilitados();
-
         return resultado;
     };
 
@@ -676,7 +677,7 @@ var componenteAgenda=function() {
         var deshabilitados=this.propiedad("deshabilitados"),
             bloque=obtenerParametrosBloque(),
             modo=this.propiedad(false,"modo"),
-            fecha=this.propiedad("fecha"),
+            fecha=medianoche(this.propiedad("fecha")),
             desde=this.propiedad(false,"propiedadDesde")||"desde",
             hasta=this.propiedad(false,"propiedadHasta")||"hasta",
             minima=obtenerHoraMinima(),
@@ -732,6 +733,45 @@ var componenteAgenda=function() {
 
         return this;
     };
+
+    /**
+     * Genera el indicador de la hora actual, si corresponde.
+     * @returns {componenteAgenda}
+     */
+    this.senalarHoraActual=function() {
+        this.elemento.querySelectorAll(".agenda-ahora").remover();
+
+        if(!this.propiedad("horaActual")) return this;
+
+        if(medianoche(this.propiedad("fecha"))!=medianoche(util.epoch())) return this;
+
+        var minutos=util.horasAMinutos(util.fecha(util.epochLocal(),"H:i")),
+            bloque=obtenerParametrosBloque(),
+            minima=obtenerHoraMinima(),
+            maxima=obtenerHoraMaxima(),
+            y;
+
+        if(minutos<minima||minutos>maxima) return this;
+
+        y=((minutos-minima)/bloque.duracion)*bloque.alto;
+
+        document
+            .crear("<span class='agenda-ahora'>")
+            .anexarA(this.elemento)
+            .estilo("top",y);
+    };
+
+    /**
+     * Devuelve la fecha a las 0:00 del día.
+     * @param {number} epoch - Fecha de referencia (tiempo epoch).
+     * @returns {number}
+     */
+    var medianoche=function(epoch) {
+        //TODO Estamos asumiendo todo UTC. Analizar mejoras para simplificar el trabajo con diferentes zonas horarias.
+        var fecha=util.convertirAFecha(util.epochALocal(epoch));
+        return util.fechaAEpoch(new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0));
+    };
+    
 };
 
 ui.registrarComponente("agenda",componenteAgenda,configComponente.clonar({

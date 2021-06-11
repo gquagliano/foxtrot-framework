@@ -470,6 +470,20 @@ body.escritorio .btn-secondary:hover,
 .buscador.desplegable .btn-desplegar:focus {
     border-color: #347ab7;
 }
+.agenda .agenda-ahora {
+    background-color: #347ab7;
+    height: 2px;
+}
+.agenda .agenda-ahora::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    border-radius: 100%;
+    background-color: #347ab7;
+}
 
 /*
 337ab7

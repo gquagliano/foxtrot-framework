@@ -47,6 +47,15 @@ class crearModelo extends asistente {
                 <input type="text" class="form-control" name="tabla" placeholder="Opcional">
             </div>
         </div>
+        <div class="form-group row">
+            <label class="col-3 col-form-label"></label>
+            <div class="col-sm-9">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="soloEntidad" id="cm-solo-entidad">
+                    <label class="custom-control-label" for="cm-solo-entidad">Crear solo la entidad</label>
+                </div>
+            </div>
+        </div>
 <?php
     }
 
@@ -84,14 +93,21 @@ class crearModelo extends asistente {
             '{espacio}'=>$espacio
         ];
 
-        file_put_contents(
-            $rutaModelo,
-            str_replace_array($vars,file_get_contents(__DIR__.'/crear-modelo/modelo.php'))
-        );
+        if($param->soloEntidad) {
+            file_put_contents(
+                $rutaEntidad,
+                str_replace_array($vars,file_get_contents(__DIR__.'/crear-modelo/entidad-sola.php'))
+            );
+        } else {
+            file_put_contents(
+                $rutaModelo,
+                str_replace_array($vars,file_get_contents(__DIR__.'/crear-modelo/modelo.php'))
+            );
 
-        file_put_contents(
-            $rutaEntidad,
-            str_replace_array($vars,file_get_contents(__DIR__.'/crear-modelo/entidad.php'))
-        );
+            file_put_contents(
+                $rutaEntidad,
+                str_replace_array($vars,file_get_contents(__DIR__.'/crear-modelo/entidad.php'))
+            );
+        }
     }
 }

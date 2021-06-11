@@ -20,7 +20,8 @@ var componenteAgenda=function() {
         horaMaxima=null,
         ultimaHoraMinima=null,
         ultimaHoraMaxima=null,
-        sincronizando=false;
+        sincronizando=false,
+        temporizador;
 
     this.componente="agenda";
     this.iterativo=true;
@@ -759,6 +760,12 @@ var componenteAgenda=function() {
             .crear("<span class='agenda-ahora'>")
             .anexarA(this.elemento)
             .estilo("top",y);
+
+        //Actualizar en 1 min.
+        clearTimeout(temporizador);
+        temporizador=setTimeout(function() {
+            t.senalarHoraActual();
+        },60000);
     };
 
     /**
@@ -771,7 +778,6 @@ var componenteAgenda=function() {
         var fecha=util.convertirAFecha(util.epochALocal(epoch));
         return util.fechaAEpoch(new Date(fecha.getFullYear(),fecha.getMonth(),fecha.getDate(),0,0,0));
     };
-    
 };
 
 ui.registrarComponente("agenda",componenteAgenda,configComponente.clonar({

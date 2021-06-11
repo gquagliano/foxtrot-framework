@@ -50,6 +50,36 @@ var componenteEtiqueta=function() {
     };
 
     /**
+     * Evento `editorDesactivado`.
+     */
+    this.editorDesactivado=function() {
+        //Remover texto de relleno
+        this.elemento.establecerHtml("");
+    };
+
+    /**
+     * Evento `editor`.
+     */
+    this.editor=function() {
+        //Mostrar texto de relleno en el editor
+        var propiedad=this.propiedad(false,"propiedad"),
+            contenido=this.propiedad(false,"contenido");
+        //Preservar el asa, si existe
+        var asa=this.elemento.querySelector(".foxtrot-etiqueta-componente");
+        this.elemento.establecerHtml(propiedad||contenido);
+        if(asa) this.elemento.anexar(asa);
+    };
+
+    /**
+     * Actualiza el componente.
+     */
+    this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
+        if(ui.enModoEdicion()) this.editor();
+        this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
+        return this;
+    };
+
+    /**
      * Actualiza el componente.
      */
     this.actualizar=function() {
@@ -61,7 +91,7 @@ var componenteEtiqueta=function() {
             propiedad=this.propiedad(false,"propiedad"),
             contenido=this.propiedad(false,"contenido"),
             resultado="";
-
+            
         if(datos) {
             if(propiedad) {
                 //Como propiedad específica

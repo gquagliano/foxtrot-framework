@@ -18,7 +18,7 @@
 }
 .agenda .agenda-barra-horarios {
     width: 5em;
-    background: #f7f7f7;
+    background-color: #f7f7f7b0;
     border-right: 1px solid #dadce0;
 }
 .agenda .agenda-barra-horarios label {
@@ -36,7 +36,7 @@
     overflow: hidden;
     top: 0;
     bottom: auto;
-    left: 75px;
+    left: calc(5em + 10px);
     right: 10px;
     background-color: #f7f7f7;
     border: 1px solid #dadce0;
@@ -44,4 +44,17 @@
 }
 .agenda.ocultar-hora .agenda-evento {
     left: 10px;
+}
+.agenda .agenda-rango-deshabilitado {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    background-color: #ffc6c670;
+    top: 0;
+    bottom: auto;
+    left: 5em;
+    right: 0px;
+}
+.agenda.ocultar-hora .agenda-rango-deshabilitado {
+    left: 0;
 }

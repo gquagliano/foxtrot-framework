@@ -27,6 +27,7 @@ var componenteAgenda=function() {
     
     this.barraHorarios=null;
     this.descartarValores=false;
+    this.horariosDeshabilitados=[];
 
     /**
      * Propiedades de Agenda.
@@ -93,6 +94,12 @@ var componenteAgenda=function() {
             },
             propiedadHasta:{
                 etiqueta:"Propiedad Hasta",
+                adaptativa:false
+            },
+            deshabilitados:{
+                etiqueta:"Horarios deshabilitados",
+                ayuda:"Expresión que apunte a un listado de rangos horarios deshabilitados (desde - hasta).",
+                evaluable:true,
                 adaptativa:false
             },
             modo:{
@@ -593,7 +600,8 @@ var componenteAgenda=function() {
             item._posicion={
                 x:0,
                 y:((item._desde-horaMinima)/bloque.duracion)*bloque.alto,
-                alto:((item._hasta-item._desde)/bloque.duracion)*bloque.alto
+                alto:((item._hasta-item._desde)/bloque.duracion)*bloque.alto,
+                z:10
             };       
         });
 
@@ -605,12 +613,29 @@ var componenteAgenda=function() {
                     cant++;
             }
             resultado[i]._posicion.x=10*cant;
+            resultado[i]._posicion.z=10+i;
         }        
         
         //Regenerar barra de horarios si es necesario (si hay eventos que se exceden los valores actuales)
         this.construirHorarios();
 
+        this.construirHorariosDeshabilitados();
+
         return resultado;
+    };
+
+    /**
+     * Deshabilita los rangos horarios especificados. No afecta los horarios mínimos o máximos. Nótese que se descartarán horarios que hayan sido
+     * deshabilitados previamente, y que no puede utilizarse en combinación con la propiedad *Horarios deshabilitados* (`deshabilitados`).
+     * @param {Object[]} [horarios] - Listado de horarios a deshabilitar. Cada uno debe presentar dos propiedades, *hora desde* y *hora hasta*, respetando
+     * la configuración de *Propiedad desde* (`propiedadDesde`), *Propiedad hasta* (`propiedadHasta`) y *Modo* (`modo`).
+     * @returns {componenteAgenda}
+     */
+    this.deshabilitarHorarios=function(horarios) {
+        if(typeof horarios!="object"||!horarios) horarios=[];
+        this.horariosDeshabilitados=horarios;
+        this.actualizar();
+        return this;
     };
 
     /**
@@ -631,9 +656,77 @@ var componenteAgenda=function() {
             elem.estilos({
                 top:obj._posicion.y,
                 marginLeft:obj._posicion.x,
-                height:obj._posicion.alto
+                height:obj._posicion.alto,
+                zIndex:obj._posicion.z
             });
         });
+
+        return this;
+    };
+
+    /**
+     * Genera y posiciona los elementos para cubrir los horarios deshabilitados.
+     * @returns {componenteAgenda}
+     */
+    this.construirHorariosDeshabilitados=function() {
+        this.elemento.querySelectorAll(".agenda-rango-deshabilitado").remover();
+
+        var deshabilitados=this.propiedad("deshabilitados"),
+            bloque=obtenerParametrosBloque(),
+            modo=this.propiedad(false,"modo"),
+            fecha=this.propiedad("fecha"),
+            desde=this.propiedad(false,"propiedadDesde")||"desde",
+            hasta=this.propiedad(false,"propiedadHasta")||"hasta",
+            minima=obtenerHoraMinima(),
+            maxima=obtenerHoraMaxima();
+
+        if(typeof deshabilitados=="object"&&deshabilitados) this.horariosDeshabilitados=deshabilitados;
+
+        for(var i=0;i<this.horariosDeshabilitados.length;i++) {
+            var item=this.horariosDeshabilitados[i];
+            if(item&&item.hasOwnProperty(desde)&&item.hasOwnProperty(hasta)) {
+                var itemDesde,
+                    itemHasta,
+                    y,
+                    alto;
+
+                if(modo=="minutos") {
+                    if(isNaN(item[desde])) {
+                        itemDesde=util.horasAMinutos(item[desde]);
+                    } else {
+                        itemDesde=parseInt(item[desde]);
+                    }
+                    
+                    if(isNaN(item[hasta])) {
+                        itemHasta=util.horasAMinutos(item[hasta]);
+                    } else {
+                        itemHasta=parseInt(item[hasta]);
+                    }
+                } else {
+                    //Restar la fecha del día
+                    itemDesde=(item[desde]-fecha)/60;
+                    itemHasta=(item[hasta]-fecha)/60;
+                }
+
+                if(itemDesde<minima) itemDesde=minima;
+                if(itemHasta>maxima) itemHasta=maxima;
+
+                if(itemDesde>=itemHasta) continue;
+                
+                y=((itemDesde-minima)/bloque.duracion)*bloque.alto;
+                alto=((itemHasta-itemDesde)/bloque.duracion)*bloque.alto;
+                
+                var elem=document.crear("<div class='agenda-rango-deshabilitado'>")
+                    .estilos({
+                        top:y,
+                        height:alto
+                    })
+                    .anexarA(this.elemento);
+
+                if(typeof item.clase=="string")
+                    elem.agregarClase(item.clase); //TODO Documentar
+            }
+        }
 
         return this;
     };

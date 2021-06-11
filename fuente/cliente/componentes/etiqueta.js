@@ -100,11 +100,14 @@ var componenteEtiqueta=function() {
                 //Como expresion
                 resultado=this.evaluarExpresion(contenido);
             }
+        } else if(contenido) {
+            //Como expresión global, sin origen de datos específico
+            resultado=ui.evaluarExpresion(contenido);
+        }        
 
-            if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
-            this.elemento.establecerHtml(resultado);
-        }
-        
+        if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores
+        this.elemento.establecerHtml(resultado);
+
         this.actualizacionEnCurso=false;
 
         return this;

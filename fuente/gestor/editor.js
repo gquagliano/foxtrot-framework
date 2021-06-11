@@ -1222,6 +1222,7 @@ var editor=new function() {
         var fn=function(comp) {
             var elem=comp.obtenerContenedor(),
                 nuevoSelector={},
+                vista=ui.vista(),
                 nombreVista=ui.obtenerNombreVistaPrincipal();    
             nombreVista=nombreVista.replace(/[^a-z0-9]/g,"-");
 
@@ -1271,7 +1272,7 @@ var editor=new function() {
 
             //Crear componentes
             datos.componentes.forEach(function(obj) {
-                var comp=ui.crearComponente(obj,nombreVista);
+                var comp=ui.crearComponente(obj,vista);
                 self.prepararComponenteInsertado(comp,true);
             });
 

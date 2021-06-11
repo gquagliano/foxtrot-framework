@@ -18,5 +18,6 @@ include(__DIR__.'/mpdf.php');
     ->crear()
     ->establecerFondo(__DIR__.'/bg.jpg')
     ->marcaDeAgua('Prueba')
-    ->escribirHtml('<h1>¡Hóla!</h1>')
+    ->escribirHtml('<style>body{font-family:sans-serif;}</style>')
+    ->escribirHtml('<h1>¡Hola!</h1><p>(Prúeba ñe caraçteres especiales)</p>')
     ->enviar();

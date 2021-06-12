@@ -280,6 +280,170 @@ class modelo extends modeloBase {
         return call_user_func_array([$this,'donde'],$args);
     }
 
+    ////dondeMayor, dondeMayorIgual, dondeMenor, dondeMenorIgual
+
+    /**
+     * Agrega una condición donde el valor del campo es mayor (`>`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeMayor() {
+        return call_user_func_array([$this,'yDondeMayor'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) donde el valor del campo es mayor (`>`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeMayor() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]='>';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) donde el valor del campo es mayor (`>`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeMayor() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]='>';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) donde el valor del campo es mayor (`>`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeMayor() {
+        $args=func_get_args();
+        $args[]='>';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición donde el valor del campo es mayor o igual (`>=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeMayorIgual() {
+        return call_user_func_array([$this,'yDondeMayorIgual'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) donde el valor del campo es mayor o igual (`>=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeMayorIgual() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]='>=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) donde el valor del campo es mayor o igual (`>=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeMayorIgual() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]='>=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) donde el valor del campo es mayor o igual (`>=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeMayorIgual() {
+        $args=func_get_args();
+        $args[]='>=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición donde el valor del campo es menor (`<`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeMenor() {
+        return call_user_func_array([$this,'yDondeMenor'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) donde el valor del campo es menor (`<`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeMenor() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]='<';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) donde el valor del campo es menor (`<`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeMenor() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]='<';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) donde el valor del campo es menor (`<`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeMenor() {
+        $args=func_get_args();
+        $args[]='<';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición donde el valor del campo es menor o igual (`<=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function dondeMenorIgual() {
+        return call_user_func_array([$this,'yDondeMenorIgual'],func_get_args());
+    }
+
+    /**
+     * Agrega una condición `O` (`OR`) donde el valor del campo es menor o igual (`<=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oDondeMenorIgual() {
+        $args=func_get_args();
+        array_unshift($args,self::o);
+        $args[]='<=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `XOR` (*`O` exclusivo*) donde el valor del campo es menor o igual (`<=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function oxDondeMenorIgual() {
+        $args=func_get_args();
+        array_unshift($args,self::ox);
+        $args[]='<=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    /**
+     * Agrega una condición `Y` (`AND`) donde el valor del campo es menor o igual (`<=`) que el valor dado. Ver `donde()` para información sobre los parámetros.
+     * @return \modelo
+     */
+    public function yDondeMenorIgual() {
+        $args=func_get_args();
+        $args[]='<=';
+        return call_user_func_array([$this,'donde'],$args);
+    }
+
+    ////--
+
     /**
      * Agrega una condición `Y` (`AND`).
      * @param \entidad $entidad Utilizar las propiedades definidas de la entidad como condiciones.

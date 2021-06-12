@@ -57,12 +57,16 @@ class recurso extends \tipoSolicitud {
             preg_match('#^/aplicacion/(.+)#',$this->url,$coincidencias);
             $recurso=$coincidencias[1];
 
-            //Remover versión
-            $recurso=preg_replace('/-[0-9]+\.(css|js)$/','.$1',$recurso);
-
-            //Validar que no haya slido del directorio de la aplicación
             $dir=realpath(_raizAplicacion);
             $ruta=realpath($dir.'/'.$recurso);
+
+            //Remover versión, a menos que sea un archivo existente
+            if(!file_exists($this->ruta)) {
+                $recurso=preg_replace('/-[0-9]+\.(css|js)$/','.$1',$recurso);
+                $this->ruta=realpath($dir.'/'.$recurso);
+            }
+
+            //Validar que no haya slido del directorio de la aplicación (ej. utilizando `/../` o un acceso directo)
             if(substr($ruta,0,strlen($dir))==$dir) $this->ruta=$ruta;
         }
         return $this->ruta;

@@ -315,20 +315,9 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
-            if($etiqueta->etiqueta==$nombre) return PHP_EOL.'**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje);
+            if($etiqueta->etiqueta==$nombre) return '**Devuelve:** '.procesarTipo($etiqueta->comentario,$lenguaje).PHP_EOL.PHP_EOL;
         }
     };
-
-    if(!$codigoParametros) {
-        //Sin parámetros, mostrar solo el título y el valor de retorno
-        
-        $salida='### `'.$nombre.'()`';
-        if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-        $salida.=$buscarReturn($comentario->bloques[0]).'  '.PHP_EOL;
-        $salida.=$comentario->bloques[0]->comentario.PHP_EOL.PHP_EOL;
-
-        return $salida;
-    }
 
     $cadenaParametros=function() use(&$parametros) {
         $res='';
@@ -346,8 +335,6 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$
     };
 
     $salida='';
-    if($nombre=='crearDesplegable')
-    $i=1;
 
     foreach($comentario->bloques as $i=>$bloque) {
         $parametros=[];
@@ -360,9 +347,11 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$
 
         if(is_string($codigoParametros)) {
             $partes=explode(',',$codigoParametros);
+
             //Si no hubo parámetros documentados, verificar si es que falta la documentación o realmente no tiene parámetros
             if(!count($parametros)) {
-                foreach($partes as $j=>$parametro) {            
+                foreach($partes as $j=>$parametro) {
+                    if(!trim($parametro)) continue;
                     $parametros[$j]=(object)[
                         'variable'=>trim(trim($parametro),'.'),
                         'opcional'=>false,
@@ -390,39 +379,39 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$
 
         if($i==0) {
             $salida.='### `'.$nombre.'('.$cadenaParametros().')`';
-            if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
-            $salida.=PHP_EOL.$bloque->comentario.'  '.PHP_EOL.PHP_EOL;
         } else {
-            $salida.='#### Sobrecarga '.($i+1).': `'.$nombre.'('.$cadenaParametros().')`';
-            $salida.=PHP_EOL.$bloque->comentario.'  '.PHP_EOL.PHP_EOL;
+            $salida.='#### Sobrecarga '.($i+1).': `'.$nombre.'('.$cadenaParametros().')`';                
         }
-        $salida.='| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
-
-        if(!count($parametros)) {
-            $salida.='| (Ninguno) |'.PHP_EOL;
-        } else {
+        if($modificadores&&count($modificadores)) $salida.=' ('.implode(', ',$modificadores).')';
+        $salida.=PHP_EOL;
+        if($bloque->comentario) $salida.=$bloque->comentario.'  '.PHP_EOL;
+            
+        if(count($parametros)) {
+            $salida.=PHP_EOL.'| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
             foreach($parametros as $parametro) $salida.='| `'.($parametro->multiple?'...':'').limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion).' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'').' |'.PHP_EOL;
-        }
-
-        //Miembros
-        foreach($miembros as $parametro=>$parametros) {
-            if($lenguaje=='php') {
-                $salida.='#### Propiedades o elementos de `'.$parametro.'`'.PHP_EOL;
-                $salida.='| Nombre | Tipo | Descripción |'.PHP_EOL.'|--|--|--|'.PHP_EOL;
-            } elseif($lenguaje=='js') {
-                $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
-                $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
-            }
-
-            foreach($parametros as $parametro) {
-                $salida.='| `'.limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion);
-                if($lenguaje=='js') $salida.=' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'');
-                $salida.=' |'.PHP_EOL;
-            }
-        }
         
+            //Miembros
+            foreach($miembros as $parametro=>$parametros) {
+                if($lenguaje=='php') {
+                    $salida.='#### Propiedades o elementos de `'.$parametro.'`'.PHP_EOL;
+                    $salida.='| Nombre | Tipo | Descripción |'.PHP_EOL.'|--|--|--|'.PHP_EOL;
+                } elseif($lenguaje=='js') {
+                    $salida.='#### Propiedades de `'.$parametro.'`'.PHP_EOL;
+                    $salida.='| Propiedad | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
+                }
+
+                foreach($parametros as $parametro) {
+                    $salida.='| `'.limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion);
+                    if($lenguaje=='js') $salida.=' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'');
+                    $salida.=' |'.PHP_EOL;
+                }
+            }
+
+            $salida.=PHP_EOL;
+        }
+
         //Buscar @return/@returns de este bloque
-        $salida.=PHP_EOL.$buscarReturn($bloque).PHP_EOL.PHP_EOL;
+        $salida.=$buscarReturn($bloque);
     }
 
     return $salida;

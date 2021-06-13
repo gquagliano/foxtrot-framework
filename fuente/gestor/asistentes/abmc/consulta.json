@@ -141,11 +141,11 @@
         {
             "id": "{idVista}52",
             "nombre": null,
-            "selector": ".{idVista}boton-54",
+            "selector": ".{idVista}boton-52",
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "click": "ir:{nombreSingular}/?id={id}&{relacion}={parametros.{relacion}}",
+                "click": "ir:{nombreSingular}/?id={item.id}&{relacion}={parametros.{relacion}}",
                 "predeterminado": true
             }
         },
@@ -154,11 +154,11 @@
         {
             "id": "{idVista}52",
             "nombre": null,
-            "selector": ".{idVista}boton-54",
+            "selector": ".{idVista}boton-52",
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "click": "ir:{nombreSingular}/?id={id}"
+                "click": "ir:{nombreSingular}/?id={item.id}"
             }
         },
 !>
@@ -180,7 +180,7 @@
             "componente": "boton",
             "propiedades": {
                 "tipo": "boton",
-                "click": "ir:{siguiente}/?{relacion}={id}"
+                "click": "ir:{siguiente}/?{relacion}={item.id}"
             }
         },
 !>

@@ -14,7 +14,6 @@ defined('_inc') or exit;
 class abmc extends asistente {
     var $opcionGenerarConsulta=true;
     var $opcionGenerarFormulario=true;
-    var $opcionActualizarModelo;
     var $ruta='';
     var $nombreModelo;
     var $nombreControlador;
@@ -27,7 +26,6 @@ class abmc extends asistente {
     var $plural;
     var $singular;
     var $titulo;
-    var $claseModelo;
     var $multinivel=false;
     var $nivelAnterior=null;
     var $siguienteNivel=null;
@@ -100,7 +98,7 @@ class abmc extends asistente {
                     <label class="custom-control-label" for="a-consulta">Consulta</label>
                 </div>    
                 <div class="custom-control custom-checkbox custom-control-inline">
-                    <input type="checkbox" class="custom-control-input" name="multinivel" checked id="a-multi">
+                    <input type="checkbox" class="custom-control-input" name="multinivel" id="a-multi">
                     <label class="custom-control-label" for="a-multi">Multinivel</label>
                 </div>
             </div>
@@ -128,12 +126,6 @@ class abmc extends asistente {
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" name="noModificar" id="a-no-modif-modelo">
-                <label class="custom-control-label" for="a-no-modif-modelo">No modificar la clase del modelo de datos</label>
-            </div>
-        </div>
 <?php
     }
 
@@ -159,9 +151,7 @@ class abmc extends asistente {
 
         if($this->opcionGenerarConsulta) $this->generarConsulta();
 
-        if(!file_exists($this->rutaPhp)) $this->generarControladorServidor($this->opcionActualizarModelo);
-
-        if($this->opcionActualizarModelo) $this->actualizarModelo();
+        if(!file_exists($this->rutaPhp)) $this->generarControladorServidor();
         
         //Guardar los cambios que ha sufrido el JSON
         file_put_contents(_raizAplicacion.'aplicacion.json',json_encode($this->json));
@@ -173,16 +163,12 @@ class abmc extends asistente {
         $partes=\util::separarRuta($opc->modelo);
         $this->rutaModelo=$partes->ruta;
         $this->nombreModelo=$partes->nombre;
-        
-        $this->claseModelo=\foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().'modelo\\'.$this->rutaModelo.$this->nombreModelo,true);
-        if(!class_exists($this->claseModelo)) exit;
 
-        $c=$this->claseModelo;
-        $this->modelo=new $c;
+        $this->modelo=\foxtrot::fabricarModelo($this->nombreModelo);
+        if(!$this->modelo) exit;
 
         $this->opcionGenerarConsulta=$opc->consulta;
         $this->opcionGenerarFormulario=$opc->formulario;
-        $this->opcionActualizarModelo=!$opc->noModificar;
         
         $this->titulo=$opc->titulo?$opc->titulo:ucfirst($this->nombreModelo);
 
@@ -195,7 +181,7 @@ class abmc extends asistente {
         if(!$this->plural) $this->plural=$this->nombreModelo;
 
         $this->singular=$opc->singular;
-        if(!$this->singular) $this->singular=$this->modelo->singular();
+        if(!$this->singular) $this->singular=$this->plural.'-edicion';
 
         $this->nombreControlador=$opc->controlador?$opc->controlador:$this->nombreModelo; //Por defecto, mismo nombre que el modelo
 
@@ -255,6 +241,14 @@ class abmc extends asistente {
 
             $etiqueta=$campo->etiqueta?$campo->etiqueta:ucfirst(str_replace('_',' ',$nombreCampo));
 
+            $atributos='';
+            $largoMaximo='null';
+
+            if($campo->tipo=='cadena'&&$campo->longitud) {
+                $atributos.=' maxlength="'.$campo->longitud.'"';
+                $largoMaximo=$campo->longitud;
+            }
+
             $vars=[
                 'idVista'=>$id,
                 'n'=>$i,
@@ -265,7 +259,9 @@ class abmc extends asistente {
                 'autofocoBool'=>$i==1?'true':'false',
                 'req'=>$campo->requerido?'*':'',
                 'columna'=>$nombreCampo,
-                'encabezado'=>$etiqueta
+                'encabezado'=>$etiqueta,
+                'atributos'=>$atributos,
+                'largoMaximo'=>$largoMaximo
             ];
 
             $camposJson.=$this->reemplazarVariables($plantillaCampoJson[1],$vars);
@@ -331,8 +327,8 @@ class abmc extends asistente {
         return \foxtrot::prepararNombreClase(gestor::obtenerEspacioAplicacion().$partes->ruta.($publico?'publico\\':''),true,true);        
     }
 
-    private function generarControladorServidor($usaModeloBase) {
-        $php=file_get_contents(__DIR__.'/abmc/'.($usaModeloBase?'controlador':'controlador-sin-modeloBase').'.php');
+    private function generarControladorServidor() {
+        $php=file_get_contents(__DIR__.'/abmc/controlador.php');
 
         $requeridos=[];
         $sql='';
@@ -344,10 +340,9 @@ class abmc extends asistente {
 
         $clase=\foxtrot::prepararNombreClase($this->nombreControlador)->nombre;
         $espacio=$this->generarEspacioControlador($this->nombreControlador,true);
-
+        
         $php=$this->reemplazarVariables($php,[
-            'claseModelo'=>$this->claseModelo,
-            'aliasModelo'=>'modelo'.ucfirst(basename($this->claseModelo)),
+            'modelo'=>$this->nombreModelo,
             'requeridos'=>implode(',',$requeridos),
             'sqlFiltros'=>$sql,
             'espacio'=>$espacio,
@@ -356,39 +351,6 @@ class abmc extends asistente {
 
         file_put_contents($this->rutaPhp,$php);
     }
-
-    private function actualizarModelo() {
-        $php=file_get_contents($this->rutaModelo);
-
-        preg_match('/^\s*namespace .+?;/m',$php,$coincidencias);
-        $namespace=$coincidencias[0];
-
-        //Hacemos que el modelo extienda modeloBase
-        if(preg_match('/ extends \\\\modelo/m',$php,$coincidencias)) {
-            $php=str_replace($coincidencias[0],' extends modeloBase',$php);
-        }
-
-        //Agregar use
-        if(!preg_match('/use '.str_replace('\\','\\\\',gestor::obtenerEspacioAplicacion()).'modeloBase;/m',$php)) {            
-            $php=str_replace($namespace,$namespace.PHP_EOL.PHP_EOL.'use '.gestor::obtenerEspacioAplicacion().'modeloBase;',$php);
-        }
-
-        //Si no lo incluye, agregar include() debajo de namespace
-        if(!preg_match('/include_once\(_servidorAplicacion.\'modeloBase.php\'\);/',$php)) {            
-            $php=str_replace($namespace,$namespace.PHP_EOL.PHP_EOL.'include_once(_servidorAplicacion.\'modeloBase.php\');',$php);
-        }
-        
-        //Reemplazar
-        file_put_contents($this->rutaModelo,$php);
-
-        //Agregar modeloBase
-        $ruta=_servidorAplicacion.'modeloBase.php';
-        if(!file_exists($ruta)) {
-            $codigo=file_get_contents(__DIR__.'/abmc/modeloBase.php');
-            $codigo=$this->reemplazarVariables($codigo);
-            file_put_contents($ruta,$codigo);
-        }
-    }   
 
     private function reemplazarVariables($codigo,$adicionales=[]) {
         $vars=array_merge([

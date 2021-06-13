@@ -80,7 +80,8 @@ ui.registrarControlador("{nombreVista}",function() {
         for(var i=1;i<=pags;i++) opciones[i]=i;
 
         comp.establecerOpciones(opciones)
-            .valor(pagina?pagina:1); //Reestablecer valor luego de haber reemplazado las opciones
+            //Reestablecer valor luego de haber reemplazado las opciones
+            .valor(pagina?pagina:1); 
 
         return this;
     };

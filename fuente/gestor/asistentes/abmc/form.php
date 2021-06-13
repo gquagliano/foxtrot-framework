@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <base href="<?= \foxtrot::obtenerUrl() ?>">
+    <base href="<?=\foxtrot::obtenerUrl()?>">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, maximum-scale=1, user-scalable=0">
     <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar="foxtrot">
@@ -25,7 +25,7 @@
                             <label class="componente texto" data-fxid="{idVista}5-{n}">{etiqueta}: {req}</label></div>
                         <div class="contenedor componente columna {idVista}columna-16 col-12 col-md-{tamano}" data-fxid="{idVista}15-{n}">
                             <div data-fxid="{idVista}17-{n}" class="componente {autofoco} campo {idVista}campo-{campo}">
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text"{atributos}>
                             </div>
                         </div>
                     </div>

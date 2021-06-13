@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <base href="<?= \foxtrot::obtenerUrl() ?>">
+    <base href="<?=\foxtrot::obtenerUrl()?>">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, maximum-scale=1, user-scalable=0">
     <link rel="stylesheet" href="recursos/css/foxtrot.css" combinar="foxtrot">

@@ -67,7 +67,8 @@
             "propiedades": {
                 "autofoco": {
                     "g": {autofocoBool}
-                }
+                },
+                "largoMaximo": {largoMaximo}
             }
         },
         {

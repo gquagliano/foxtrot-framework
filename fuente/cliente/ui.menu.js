@@ -117,10 +117,14 @@
      * @param {boolean} [items[].separador=false] - Determina si el item es seguido de un separador.
      * @param {Object[]} [items[].submenu] - Items del submenú (admiten las mismas propiedades que items).
      * @param {string} [clase] - Clase CSS.
+     * @param {Node} [destino=ui.obtenerCuerpo()] - Elemento de destino.
      * @returns {Object}
      */
-    ui.construirMenu=function(items,clase) {
+    ui.construirMenu=function(items,clase,destino) {
         if(typeof clase==="undefined") clase=null;
+        if(typeof destino=="undefined") destino=ui.obtenerCuerpo();
+
+        var doc=destino.ownerDocument;
 
         //TODO Integración con Cordova
         //TODO Integración con el cliente de escritorio
@@ -160,13 +164,13 @@
         var fn=function(elem,items) {
             var ul=elem.querySelector("ul");
             for(var i=0;i<items.length;i++) {
-                var li=document.crear("<li>"),
-                    a=document.crear("<a href='#'>");
+                var li=doc.crear("<li>"),
+                    a=doc.crear("<a href='#'>");
 
                 a.establecerHtml(items[i].etiqueta);
 
                 if(items[i].hasOwnProperty("submenu")) {
-                    var submenu=document.crear("<div class='menu oculto'><ul></ul></div>");
+                    var submenu=doc.crear("<div class='menu oculto'><ul></ul></div>");
                     fn(submenu,items[i].submenu);
 
                     li.agregarClase("con-submenu");
@@ -209,7 +213,7 @@
         };
 
         var menu={
-            elem:document.crear("<div class='menu oculto'><ul></ul></div>"),
+            elem:doc.crear("<div class='menu oculto'><ul></ul></div>"),
             items:items.clonar(),
             eliminar:false
         };
@@ -218,7 +222,7 @@
 
         fn(menu.elem,menu.items);
 
-        ui.obtenerDocumento().body.anexar(menu.elem);
+        destino.anexar(menu.elem);
 
         return menu;
     };
@@ -347,7 +351,13 @@
         //TODO Integración con el cliente de escritorio
 
         if(util.esArray(obj)) {
-            obj=ui.construirMenu(obj,clase);
+            var destino=ui.obtenerCuerpo();
+            if(ui.enModoEdicion()) {
+                destino=document.body;
+            } else if(util.esElemento(posicion)) {
+                destino=posicion.ownerDocument.body;
+            }
+            obj=ui.construirMenu(obj,clase,destino);
             obj.eliminar=true;
         }
 

@@ -578,7 +578,8 @@ var editor=new function() {
                 ev.stopPropagation();
 
                 var arbol=[],
-                    seleccionMultiple=ev.shiftKey;
+                    seleccionMultiple=ev.shiftKey,
+                    posMarco=ui.obtenerMarco().posicion();
 
                 //Construir árbol de herencia
                 var comp=ui.obtenerInstanciaComponente(this);
@@ -623,8 +624,8 @@ var editor=new function() {
                             }
                         ],
                         {
-                            x:ev.clientX,
-                            y:ev.clientY
+                            x:ev.clientX+posMarco.x,
+                            y:ev.clientY+posMarco.y
                         },
                         "foxtrot-menu-editor"
                     );

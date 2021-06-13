@@ -231,6 +231,9 @@
      * @returns {dialogo}
      */
     ui.construirDialogo=function(parametros) {
+        var doc=ui.obtenerDocumento();
+        if(ui.enModoEdicion()) doc=document;
+
         parametros=Object.assign({
             cuerpo:null,
             opciones:null,
@@ -243,7 +246,7 @@
             modal:false,
             sobreponer:false,
             icono:null,
-            destino:document.body //Utilizar el documento principal (ui.obtenerDocumento() devolverá el marco cuando esté en modo de edición)
+            destino:doc.body
         },parametros);
 
         var elem=document.crear("<div class='dialogo oculto'><div class='dialogo-cuerpo'><div class='dialogo-contenido'></div><div class='dialogo-opciones'></div></div></div>")
@@ -354,7 +357,7 @@
         if(btn) btn.focus();
 
         //Sombra
-        ui.mostrarSombra();
+        ui.mostrarSombra(dialogo.param.destino);
         
         establecerEventosDialogo();
 
@@ -422,7 +425,7 @@
             }
         }
 
-        if(!dialogosAbiertos.length) ui.ocultarSombra();
+        if(!dialogosAbiertos.length) ui.ocultarSombra(dialogo.param.destino);
 
         actualizarZIndexDialogos();
 
@@ -913,11 +916,12 @@
 
     /**
      * Muestra la sombra debajo de los diálogos.
+     * @param {Node} [destino] - Destino del diálogo.
      * @memberof ui
      * @returns {ui}
      */
-    ui.mostrarSombra=function() {
-        ui.obtenerElementoSombra();
+    ui.mostrarSombra=function(destino) {
+        ui.obtenerElementoSombra(destino);
         elemSombra.removerEventos();
         ui.detenerAnimacion(elemSombra).animarAparecer(elemSombra);
 
@@ -929,11 +933,13 @@
 
     /**
      * Oculta la sombra debajo de los diálogos.
+     * @param {Node} [destino] - Destino del diálogo.
      * @memberof ui
      * @returns {ui}
      */
-    ui.ocultarSombra=function() {
-        if(elemSombra) ui.detenerAnimacion(elemSombra).animarDesaparecer(elemSombra);
+    ui.ocultarSombra=function(destino) {
+        ui.obtenerElementoSombra(destino);
+        ui.detenerAnimacion(elemSombra).animarDesaparecer(elemSombra);
         
         //Integración con Cordova
         ui.establecerColoresBarraEstado();
@@ -962,12 +968,18 @@
 
     /**
      * Devuelve el emlemento de la sombra.
+     * @param {Node} [destino] - Destino del diálogo.
      * @memberof ui
      * @returns {Node}
      */
-    ui.obtenerElementoSombra=function() {
-        var doc=ui.obtenerDocumento();
-        if(!elemSombra) elemSombra=doc.querySelector("#foxtrot-sombra");
+    ui.obtenerElementoSombra=function(destino) {
+        var doc;
+        if(typeof destino=="undefined") {
+            doc=ui.obtenerDocumento();
+        } else {
+            doc=destino.ownerDocument;
+        }
+        elemSombra=doc.querySelector("#foxtrot-sombra");
         if(!elemSombra) elemSombra=doc.crear("<div id='foxtrot-sombra' class='oculto'>").anexarA(doc.body);
         return elemSombra;
     };

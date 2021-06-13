@@ -20,7 +20,7 @@
     /**
      * Establece el evento animationend y un temporizador en caso de que el navegador no tenga soporte para el mismo.
      * @private
-     * @param {(Node|Element)} elem 
+     * @param {Node} elem 
      * @param {function} funcion
      */
     function establecerEvento(elem,funcion) {
@@ -41,7 +41,7 @@
     /**
      * Remueve el evento animationend y el temporizador.
      * @private
-     * @param {(Node|Element)} elem 
+     * @param {Node} elem 
      */
     function removerEvento(elem) {
         elem._eventoCompleto=false;
@@ -52,7 +52,7 @@
     /**
      * Hace aparecer el elemento en forma animada utilizando animaciones CSS.
      * @memberof ui
-     * @param {(Node|Element)} elem - Elemento.
+     * @param {Node} elem - Elemento.
      * @param {function} [retorno] - Función de retorno.
      * @returns {ui}
      */
@@ -70,7 +70,7 @@
     /**
      * Hace desaparecer y oculta el elemento en forma animada utilizando animaciones CSS.
      * @memberof ui
-     * @param {(Node|Element)} elem - Elemento.
+     * @param {Node} elem - Elemento.
      * @param {function} [retorno] - Función de retorno.
      * @returns {ui}
      */
@@ -90,7 +90,7 @@
     /**
      * Oculta el elemento mediante el mismo mecanismo que animarDesaparecer(), pero de forma inmediata.
      * @memberof ui
-     * @param {(Node|Element)} elem - Elemento.
+     * @param {Node} elem - Elemento.
      * @returns {ui}
      */
     ui.desaparecer=function(elem) {
@@ -102,7 +102,7 @@
     /**
      * Detiene la animación en curso.
      * @memberof ui
-     * @param {(Node|Element)} elem - Elemento.
+     * @param {Node} elem - Elemento.
      * @returns {ui}
      */
     ui.detenerAnimacion=function(elem) {

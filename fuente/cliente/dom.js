@@ -239,7 +239,7 @@
 
     /**
      * Agrega los elementos especificados antes del primer hijo de esta instancia.
-     * @var {(Node|Element)} elemento - Elemento a anteponer.
+     * @var {Node} elemento - Elemento a anteponer.
      * @returns {Node}
      * @memberof external:Node
      */
@@ -322,7 +322,7 @@
 
     /**
      * Agrega este elemento como primer hijo de los elementos especificados.
-     * @var {(Node|Element)} elemento - Elemento de destino.
+     * @var {Node} elemento - Elemento de destino.
      * @returns {Node}
      * @memberof external:Node
      */
@@ -345,7 +345,7 @@
      * @param {(string|RegExp)} [filtro.datos] - Datos (dataset). Objeto {nombre:valor}. Coincidencia exacta o RegExp.
      * @param {(string|RegExp)} [filtro.metadatos] - Metadatos (internos). Objeto. Coincidencia exacta o RegExp.
      * @param {(string|RegExp)} [filtro.tipo] - Tipo de campo {nombre:valor}. Coincidencia exacta o RegExp.
-     * @param {(Node|Element)} [filtro.elemento] - Instancia de un nodo o elemento.
+     * @param {Node} [filtro.elemento] - Instancia de un nodo o elemento.
      * @param {boolean} [filtro.visible] - Visibilidad. Nótese que un elemento oculto mediande `visibility` u opacidad se considera visible ya que forma parte del DOM.
      * @returns {boolean}
      * @memberof external:Node
@@ -782,7 +782,7 @@
     /**
      * Acceso a innerText.
      * @memberof external:Node
-     * @returns {(Node|Element)}
+     * @returns {Node}
      */
     Node.prototype.establecerTexto=function(texto) {
         this.innerText=texto;

@@ -142,7 +142,7 @@ var componenteDesplegable=function() {
     /**
      * Devuelve un listado de `<option>`s dado el listado de opciones u objeto.
      * @param {*} listado 
-     * @param {(Node|Element)} destino
+     * @param {Node} destino
      * @param {string} prefijo
      */
     var generarOpciones=function(listado,destino,prefijo) {

@@ -213,7 +213,7 @@
      * Construye un cuadro de diálogo.
      * @memberof ui
      * @param {Object} parametros - Parámetros.
-     * @param {(string|Node|Element)} [parametros.cuerpo] - Elemento o HTML a incluir en el cuerpo.
+     * @param {(string|Node)} [parametros.cuerpo] - Elemento o HTML a incluir en el cuerpo.
      * @param {Object[]} [parametros.opciones] - Botones de acción a generar.
      * @param {string} [parametros.opciones.etiqueta] - Etiqueta del botón.
      * @param {string} [parametros.opciones.clase] - Clase CSS del botón.
@@ -227,7 +227,7 @@
      * @param {string} [parametros.icono=null] - Ícono. Admite una ruta relativa al directorio `recursos` de la aplicación actual, una URL absoluta,
      * o uno de los siguientes valores: `pregunta`, `exclamacion`, `alerta`, `error`, `informacion`, `ubicacion`, `audio`, `camara`,
      * `notificacion`, `seguridad`, `ok`, `problema-red`.
-     * @param {(string|Node|Element)} [parametros.destino=document.body] - Elemento de destino, dentro del cual se creará el diálogo.
+     * @param {(string|Node)} [parametros.destino=document.body] - Elemento de destino, dentro del cual se creará el diálogo.
      * @returns {dialogo}
      */
     ui.construirDialogo=function(parametros) {

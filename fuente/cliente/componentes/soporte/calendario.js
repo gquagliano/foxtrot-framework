@@ -146,7 +146,7 @@ function calendario(opciones) {
 
     /**
      * Construye el calendario dentro del elemento especificado.
-     * @param {(Node|Element)} destino - Elemento de destino.
+     * @param {Node} destino - Elemento de destino.
      * @returns {Calendario}
      */
     this.construir=function(destino) {

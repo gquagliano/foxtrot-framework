@@ -1818,7 +1818,7 @@ var ui=new function() {
      * @param {boolean} principal - Determina si se trata de la vista principal.
      * @param {Object} [json] - Objeto JSON decodificado de la vista.
      * @param {string} [html] - Código HTML, en caso de tratarse de una vista secundaria.
-     * @param {Node|Element} [destino] - Elemento de destino, en caso de tratarse de una vista secundaria.
+     * @param {Node} [destino] - Elemento de destino, en caso de tratarse de una vista secundaria.
      * @param {function} [retorno] - Función de retorno.
      * @returns {ui}
      */

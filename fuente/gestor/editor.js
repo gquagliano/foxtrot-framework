@@ -100,6 +100,11 @@ var editor=new function() {
                 top:config.posicionBarraPropiedades.y,
                 right:"auto"
             });
+        
+        //Reposicionar si el tamaño de ventana actual es inferior al tamaño cuando se almacenó la config
+        reposicionarBarrasHerramientas();
+
+        window.evento("resize",reposicionarBarrasHerramientas);
     }
 
     function contruirBarrasHerramientas() {
@@ -150,6 +155,25 @@ var editor=new function() {
 
         configurarBarrasHerramientas();
     }  
+
+    function reposicionarBarrasHerramientas() {
+        function fn(elem) {
+            var posicion=elem.posicion(),
+                alto=elem.alto(),
+                ancho=elem.ancho(),
+                altoVentana=window.alto(),
+                anchoVentana=window.ancho();
+
+            if(posicion.x+ancho+20>anchoVentana) elem.estilo("left",anchoVentana-ancho-20);
+            if(posicion.x<20) elem.estilo("left",20);
+            if(posicion.y+alto+20>=altoVentana) elem.estilo("top",altoVentana-alto-20);
+            if(posicion.y<75) elem.estilo("top",75);
+        };
+
+        fn(barraComponentes);
+        fn(barraPropiedades);
+        guardarConfigInterfaz();
+    }
 
     this.construirPropiedades=function() {
         if(!self.componentesSeleccionados.length) {

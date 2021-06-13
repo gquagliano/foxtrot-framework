@@ -673,7 +673,11 @@ class foxtrot {
         
         //Cuando presenten /, cambia su espacio
         $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
-        if(!class_exists($clase)) return null;
+
+        if(!class_exists($clase)||!is_subclass_of($clase,'\\modelo')) {
+            //Clase inexistente, intentar crear asumiendo que $nombre es el nombre de la entidad
+            return self::fabricarModeloPorEntidad($nombre,$bd);
+        }
 
         return new $clase;
     }
@@ -687,8 +691,8 @@ class foxtrot {
         //Las clases ya fueron incluidas
         
         //Cuando presenten /, cambia su espacio
-        $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
-        if(!class_exists($clase)) return null;
+        $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true);
+        if(!class_exists($clase)||!is_subclass_of($clase,'\\entidad')) return null;
 
         return new $clase;
     }
@@ -703,7 +707,7 @@ class foxtrot {
         //Las clases ya fueron incluidas
         
         $clase=self::prepararNombreClase(_espacioApl.'modelo\\'.$nombre,true); 
-        if(!class_exists($clase)) return null;
+        if(!class_exists($clase)||!is_subclass_of($clase,'\\entidad')) return null;
 
         return call_user_func([$clase,'fabricarModelo'],$bd);
     }

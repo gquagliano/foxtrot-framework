@@ -2371,7 +2371,7 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {            
             var nombre=hijo.obtenerNombre();
-            if(nombre&&!hijo.esComponenteOculto()) {
+            if(nombre&&hijo.esCampo()&&!hijo.esComponenteOculto()) {
                 var valor=hijo.valor();
                 if(typeof valor!=="undefined") valores[nombre]=valor; //Un componente puede devolver nulo; se entiende que es un componente sin valor (como un contenedor) cuando devuelve indefinido
             }

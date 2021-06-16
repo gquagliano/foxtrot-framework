@@ -27,7 +27,8 @@ var componenteDialogo=function() {
             ocultarIconoCerrar:{
                 etiqueta:"Ocultar ícono de cierre",
                 tipo:"logico",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
     };

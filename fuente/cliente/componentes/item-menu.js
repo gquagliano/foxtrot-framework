@@ -28,17 +28,20 @@ var componenteItemMenu=function() {
         "Comportamiento":{
             enlace:{
                 etiqueta:"Enlace",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             nuevaVentana:{
                 etiqueta:"Abrir en nueva ventana",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             separador:{
                 etiqueta:"Separador",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
     };

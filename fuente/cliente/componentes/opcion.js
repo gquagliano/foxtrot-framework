@@ -33,7 +33,8 @@ var componenteOpcion=function() {
             },
             valorInicial:{
                 etiqueta:"Valor inicial",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Grupo":{
@@ -43,7 +44,8 @@ var componenteOpcion=function() {
             },
             valor:{
                 etiqueta:"Valor",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Posicionamiento":{            
@@ -54,7 +56,8 @@ var componenteOpcion=function() {
                     bloque:"Bloque",
                     enLinea:"En línea"
                 },
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
     };

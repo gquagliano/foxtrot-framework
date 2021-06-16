@@ -52,32 +52,38 @@ var componenteContenedorMenu=function() {
                     //TODO deslizarDerecha:"Deslizar desde la derecha"
                     //TODO deslizarArriba:"Deslizar desde arriba"
                     //TODO deslizarAbajo:"Deslizar desde abajo"
-                }
+                },
+                evaluable:true
             },
             posicionLateral:{
                 etiqueta:"Posición lateral (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen izquierdo a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+                ayuda:"Distancia en píxeles desde el márgen izquierdo a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px).",
+                evaluable:true
             },
             posicionSuperior:{
                 etiqueta:"Posición superior (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen superior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+                ayuda:"Distancia en píxeles desde el márgen superior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px).",
+                evaluable:true
             },
             posicionInferior:{
                 etiqueta:"Posición inferior (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen inferior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+                ayuda:"Distancia en píxeles desde el márgen inferior a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px).",
+                evaluable:true
             },
             posicionDerecha:{
                 etiqueta:"Posición derecha (flotante)",
                 tipo:"numero",
-                ayuda:"Distancia en píxeles desde el márgen derecho a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px)."
+                ayuda:"Distancia en píxeles desde el márgen derecho a utilizar como valor predeterminado, si el menú es de modo Flotante. No acepta unidad (siempre se asume px).",
+                evaluable:true
             },
             componenteRelativo:{
                 etiqueta:"Componente relativo (flotante)",
                 ayuda:"Nombre de un componente de la misma vista relativo al cual se abrirá el menú flotante.",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             editarMenu:{
                 etiqueta:"Editar menú",

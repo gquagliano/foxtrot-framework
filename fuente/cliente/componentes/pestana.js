@@ -24,7 +24,8 @@ var componentePestana=function() {
         "Pestaña":{
             etiqueta:{
                 etiqueta:"Etiqueta",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             mover:{
                 etiqueta:"Mover",

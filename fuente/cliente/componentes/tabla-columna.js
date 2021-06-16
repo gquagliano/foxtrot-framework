@@ -23,7 +23,8 @@ var componenteColumnaTabla=function() {
         "Columna de tabla":{
             encabezado:{
                 etiqueta:"Encabezado",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             encabezadoActivo:{
                 etiqueta:"Encabezado activo",
@@ -39,7 +40,8 @@ var componenteColumnaTabla=function() {
                     ascendente:"Ascendente",
                     descendente:"Descendente"
                 },
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             columna:{
                 etiqueta:"Columna",
@@ -51,7 +53,8 @@ var componenteColumnaTabla=function() {
             clickEncabezado:{
                 etiqueta:"Click en encabezado",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                evaluable:true
             }
         }
     };

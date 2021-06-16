@@ -49,7 +49,8 @@ var componenteBoton=function() {
                     enlace:"Enlace - Hipervínculo",
                     boton:"Botón"
                 },
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             enlace:{
                 etiqueta:"Enlace",
@@ -59,7 +60,8 @@ var componenteBoton=function() {
             nuevaVentana:{
                 etiqueta:"Abrir en nueva ventana",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             predeterminado:{
                 etiqueta:"Acción predeterminada",

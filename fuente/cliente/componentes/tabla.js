@@ -32,7 +32,8 @@ var componenteTabla=function() {
             vacia:{
                 etiqueta:"Mensaje de tabla vacía",
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             filtrarPropiedades:{
                 etiqueta:"Devolver propiedades",

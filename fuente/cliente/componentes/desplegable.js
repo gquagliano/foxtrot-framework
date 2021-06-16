@@ -28,16 +28,19 @@ var componenteDesplegable=function() {
             opciones:{
                 etiqueta:"Opciones",
                 adaptativa:false,
-                ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de opciones."
+                ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de opciones.",
+                evaluable:true
             },
             grupos:{
                 etiqueta:"Grupos",
                 adaptativa:false,
-                ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de grupos de opciones. Cada grupo debe tener las propiedades 'etiqueta' y 'opciones' con el listado de opciones."
+                ayuda:"Expresión que resulte en un objeto a ser utilizado como listado de grupos de opciones. Cada grupo debe tener las propiedades 'etiqueta' y 'opciones' con el listado de opciones.",
+                evaluable:true
             },
             valor:{
                 etiqueta:"Valor inicial",
                 adaptativa:false,
+                evaluable:true,
                 evaluable:true
             },
             propiedadClave:{
@@ -57,7 +60,8 @@ var componenteDesplegable=function() {
             etiquetaOpcional:{
                 etiqueta:"Etiqueta opcional",
                 adaptativa:false,
-                ayuda:"Etiqueta de la primer opción cuando el despletable se establece como opcional."
+                ayuda:"Etiqueta de la primer opción cuando el despletable se establece como opcional.",
+                evaluable:true
             }
         }
     };

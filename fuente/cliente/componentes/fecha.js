@@ -29,11 +29,13 @@ var componenteFecha=function() {
             valorInicial:{
                 etiqueta:"Valor inicial",
                 adaptativa:false,
-                ayuda:"En tiempo epoch (UTC)"
+                ayuda:"En tiempo epoch (UTC)",
+                evaluable:true
             },
             relleno:{
                 etiqueta:"Texto de relleno",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
         //TODO Formato

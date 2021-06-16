@@ -70,7 +70,8 @@ var componenteBuscador=function() {
             buscar:{
                 etiqueta:"Buscar",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                evaluable:true
             }
         }
     };

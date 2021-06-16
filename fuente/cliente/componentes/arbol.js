@@ -30,7 +30,8 @@ var componenteArbol=function() {
             mensajeVacio:{
                 etiqueta:"Mensaje de árbol vacío",
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             estadoInicial:{
                 etiqueta:"Estado inicial",
@@ -77,12 +78,14 @@ var componenteArbol=function() {
             expandido:{
                 etiqueta:"Item expandido",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                evaluable:true
             },
             contraido:{
                 etiqueta:"Item contraído",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                evaluable:true
             }
         }
     };

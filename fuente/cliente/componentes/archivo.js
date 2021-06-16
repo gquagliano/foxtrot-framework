@@ -36,7 +36,8 @@ var componenteArchivo=function() {
             },
             acepta:{
                 etiqueta:"Acepta",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             multimedia:{
                 etiqueta:"Multimedia",
@@ -57,7 +58,8 @@ var componenteArchivo=function() {
             },
             etiqueta:{
                 etiqueta:"Etiqueta",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             ocultarNombre:{
                 etiqueta:"Ocultar nombre de archivo",
@@ -69,7 +71,8 @@ var componenteArchivo=function() {
             listo:{
                 etiqueta:"Archivos listos",
                 adaptativa:false,
-                evento:true
+                evento:true,
+                evaluable:true
             }
         }
     };

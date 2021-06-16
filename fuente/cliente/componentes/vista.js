@@ -24,19 +24,23 @@ var componenteVista=function() {
         "Metadatos":{
             titulo:{
                 etiqueta:"Título",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             descripcion:{
                 etiqueta:"Descripción",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             palabrasClave:{
                 etiqueta:"Palabras clave",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             imagen:{
                 etiqueta:"Imagen (OG)",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Comportamiento":{

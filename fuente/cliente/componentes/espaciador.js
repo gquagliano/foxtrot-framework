@@ -23,12 +23,14 @@ var componenteEspaciador=function() {
                 opciones:{
                     horizontal:"Horizontal",
                     vertical:"Vertical"
-                }
+                },
+                evaluable:true
             },
             borde:{
                 etiqueta:"Borde",
                 tipo:"bool",
-                clase:"borde"
+                clase:"borde",
+                evaluable:true
             }
         }
     };

@@ -49,11 +49,13 @@ var componenteImagen=function() {
             //}
             origen:{
                 etiqueta:"Origen",
-                ayuda:"URL absoluta o relativa al directorio de imagenes de la aplicación."
+                ayuda:"URL absoluta o relativa al directorio de imagenes de la aplicación.",
+                evaluable:true
             },
             alt:{
                 etiqueta:"Texto alternativo",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             importar:{
                 etiqueta:"Embeber archivo",

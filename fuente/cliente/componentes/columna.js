@@ -20,7 +20,8 @@ var componenteColumna=function() {
             columna:{
                 etiqueta:"Tamaño",
                 tipo:"numero",
-                ayuda:"Tamaño en proporción de la grilla de 12 columnas de Bootstrap. Pueden utilizarse las propiedades de Flexbox para establecer dimensiones personalizadas."
+                ayuda:"Tamaño en proporción de la grilla de 12 columnas de Bootstrap. Pueden utilizarse las propiedades de Flexbox para establecer dimensiones personalizadas.",
+                evaluable:true
             }
             //nombre:{
             //    etiqueta

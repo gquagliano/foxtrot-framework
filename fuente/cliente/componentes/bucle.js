@@ -27,7 +27,8 @@ var componenteBucle=function() {
             mensajeVacio:{
                 etiqueta:"Mensaje de bloque vacío",
                 ayuda:"Cuando se asigne un origen de datos vacío, se mostrará este mensaje.",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             filtrarPropiedades:{
                 etiqueta:"Devolver propiedades",

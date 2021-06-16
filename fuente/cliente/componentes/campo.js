@@ -40,32 +40,38 @@ var componenteCampo=function() {
             },
             valorInicial:{
                 etiqueta:"Valor inicial",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             relleno:{
                 etiqueta:"Texto de relleno",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             largoMaximo:{
                 etiqueta:"Largo máximo",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Formato":{
             longitud:{
                 etiqueta:"Longitud máxima",
                 tipo:"numero",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             paso:{
                 etiqueta:"Paso (campo numérico)",
                 tipo:"numero",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             },
             ocultarControl:{
                 etiqueta:"Ocultar control ±",
                 tipo:"bool",
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         }
     };

@@ -23,7 +23,8 @@ var componentePestanas=function() {
             pestanaActivada:{
                 etiqueta:"Pestaña activada",
                 evento:true,
-                adaptativa:false
+                adaptativa:false,
+                evaluable:true
             }
         },
         "Pestañas":{

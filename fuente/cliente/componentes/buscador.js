@@ -89,10 +89,9 @@ var componenteBuscador=function() {
         var boton=this.elemento.querySelector(".btn-desplegar");
         if(!boton) {
             //Por retrocompatibilidad, se agrega el botón, si no existe, al inicializar
-            boton=document.crear("<button type='button' class='btn-desplegar'></button>")
+            document.crear("<button type='button' class='btn-desplegar'></button>")
                 .anexarA(this.elemento);
         }
-        boton.evento("click",clickDesplegar);        
 
         this.clasesCss.push("desplegable");
 
@@ -170,6 +169,20 @@ var componenteBuscador=function() {
             t.abortarBusqueda(true);
             t.cerrarResultados();
         });
+
+        this.elemento.querySelector(".btn-desplegar")
+            .evento("click",clickDesplegar)
+            .evento("keydown",function(ev) {
+                if(t.resultados&&t.resultados.length) {
+                    if(ev.which==38||ev.which==40) { //Arriba/Abajo
+                        ev.preventDefault();
+                        t.moverSeleccion(ev);
+                    } else if(ev.which==13) { //Intro
+                        ev.preventDefault();
+                        t.procesarIntro(ev);
+                    }
+                }
+            });
 
         return this;
     };

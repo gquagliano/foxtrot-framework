@@ -958,6 +958,8 @@ class modeloBase {
             $this->procesarRelacionesSeleccion($objeto,$comoObjetoEstandar);
         }
 
+        $objeto->procesarValores();
+
         if($comoObjetoEstandar) $objeto=$objeto->obtenerObjeto();
 
         return $objeto;

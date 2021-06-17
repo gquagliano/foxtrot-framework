@@ -506,25 +506,28 @@ class modeloBase {
     /**
      * Realiza el bloqueo de tablas.
      * @param int $modo Modo (`modeloBase::soloLectura`, `modeloBase::lecturaEscritura`).
-     * @param string ...$tablas Nombre de las tablas a bloquear. Opcional, si se omite, se realizará el bloqueo de la tabla de esta modelo
-     * y de los modelos relacionados *hasta el momento*. Nótese que el bloqueo se ejecutará inmediatamente (no al realizar la consulta).
+     * @param string ...$modelos Instancias de los modelos a bloquear, nombres de las tablas o `['nombre de la tabla','alias']`. Opcional, si se
+     * omite, se realizará el bloqueo de la tabla de esta modelo y de los modelos relacionados *hasta el momento*. Nótese que el bloqueo se ejecutará inmediatamente (no al realizar la consulta).
      * @return \modeloBase
      */
-    public function bloquear($modo,...$tablas) {
-        if(!count($tablas)) $tablas=$this->relaciones;
+    public function bloquear($modo,...$modelos) {
+        if(!count($modelos)) {
+            $modelos=[$this];
+            foreach($this->relaciones as $relacion)
+                $modelos[]=$relacion->modelo;
+        }
 
-        //Convertir objetos [tabla,alias] o [modelo,alias] en arrays [tabla,alias]
-        $bloquear=[];
-        foreach($tablas as $tabla) {
-            if($tabla->modelo) {
-                $tabla=$tabla->modelo->obtenerTabla();
-                $alias=$tabla->modelo->obtenerAlias();
+        //Convertir a [[tabla,alias],...]
+        $tablas=[];
+        foreach($modelos as $item) {
+            if(is_subclass_of($item,'modeloBase')) {
+                $tablas[]=[
+                    $item->obtenerTabla(),
+                    $item->obtenerAlias()
+                ];
             } else {
-                $tabla=$tabla->$tabla;
-                $alias=$tabla->alias;
+                $tablas[]=$item;
             }
-            
-            $bloquear[]=[$tabla,$alias];
         }
 
         $this->bd->bloquear($modo,$tablas);

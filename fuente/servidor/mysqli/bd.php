@@ -116,7 +116,7 @@ class bd extends \datos\bd {
      * @return \datos\bd
      */
 	public function bloquear($modo,$tablas,$alias=null) {
-        $modo=$modo==self::soloLectura?' WRITE':' READ';
+        $modo=$modo==self::lecturaEscritura?' WRITE':' READ';
         
         if(is_string($tablas)) {
             if($alias) $tablas.=' AS '.$alias;

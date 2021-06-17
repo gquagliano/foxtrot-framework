@@ -2193,10 +2193,20 @@ var componente=new function() {
     };
 
     /**
-     * Devuelve si el componente se encuentra habilitado.
+     * Devuelve o establece si el componente se encuentra o no habilitado.
+     * @param {boolean} [habilitado] - Si se especifica, habilitará (`true`) o deshabilitará (`false`) el componente.
      * @returns {boolean}
      */
-    this.habilitado=function() {
+    this.habilitado=function(habilitado) {
+        if(typeof habilitado!="undefined") {
+            if(habilitado) {
+                this.habilitar();
+            } else {
+                this.deshabilitar();
+            }
+            return habilitado;
+        }
+        
         var deshabilitado=this.propiedad("deshabilitado");
         return !deshabilitado;
     };

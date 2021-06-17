@@ -204,9 +204,9 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
     if($etiqueta->etiqueta!='var'&&$etiqueta->etiqueta!='param') return;
 
     if($lenguaje=='php') {
-        if(preg_match('/^(.+?) (&?\$[\w>-]+)( (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
-            $variable=trim($coincidencia2[2]);            
-
+        if(preg_match('/^(.+?) ((\.\.\.)?&?\$[\w>-]+)( (.+))?/ms',$etiqueta->comentario,$coincidencia2)) {
+            $variable=trim($coincidencia2[2]);
+            
             $miembroDe=null;
             if(preg_match('/(\w+)->(\w+)/',$variable,$coincidencia3)) {
                 $miembroDe='$'.$coincidencia3[1];
@@ -221,7 +221,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
                     'opcional'=>false, //TODO
                     'predeterminado'=>false, //TODO
                     'tipo'=>$coincidencia2[1],
-                    'descripcion'=>$coincidencia2[4],
+                    'descripcion'=>$coincidencia2[5],
                     'clase'=>$clase
                 ];
             } else {
@@ -230,7 +230,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
                     $parametros[]=(object)[
                         'variable'=>$variable,
                         'tipo'=>$coincidencia2[1],
-                        'descripcion'=>$coincidencia2[4],
+                        'descripcion'=>$coincidencia2[5],
                         'clase'=>$clase,
                         'opcional'=>false,    
                         'predeterminado'=>''
@@ -240,7 +240,7 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
                     foreach($parametros as $parametro) {
                         if($variable==$parametro->variable) {
                             $parametro->tipo=$coincidencia2[1];
-                            $parametro->descripcion=$coincidencia2[4];
+                            $parametro->descripcion=$coincidencia2[5];
                         }
                     }
                 }
@@ -312,6 +312,9 @@ function procesarVariable($etiqueta,$lenguaje,&$parametros,&$miembros,$autogener
 }
 
 function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$comentario) {
+    if($nombre=='bloquear'){
+        $a=1;
+    }
     $buscarReturn=function($bloque) use($lenguaje) {
         $nombre=$lenguaje=='js'?'returns':'return';
         foreach($bloque->etiquetas as $etiqueta) {
@@ -388,7 +391,7 @@ function procesarParametros($lenguaje,$nombre,$modificadores,$codigoParametros,$
             
         if(count($parametros)) {
             $salida.=PHP_EOL.'| Parámetro | Tipo | Descripción | Opcional | Predeterminado |'.PHP_EOL.'|--|--|--|--|--|'.PHP_EOL;
-            foreach($parametros as $parametro) $salida.='| `'.($parametro->multiple?'...':'').limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion).' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'').' |'.PHP_EOL;
+            foreach($parametros as $parametro) $salida.='| `'.($parametro->multiple&&substr($parametro->variable,0,3)!='...'?'...':'').limpiarCelda($parametro->variable).'` | '.procesarTipo($parametro->tipo,$lenguaje,true).' | '.limpiarCelda($parametro->descripcion).' | '.limpiarCelda(($parametro->opcional?'Si':'')).' | '.($parametro->predeterminado?'`'.limpiarCelda($parametro->predeterminado).'`':'').' |'.PHP_EOL;
         
             //Miembros
             foreach($miembros as $parametro=>$parametros) {

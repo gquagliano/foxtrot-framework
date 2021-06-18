@@ -84,6 +84,8 @@ var componenteEtiqueta=function() {
      */
     this.actualizar=function() {
         this.prototipo.actualizar.call(this,false);
+
+        if(ui.enModoEdicion()) return this;
         
         this.actualizacionEnCurso=true;
 

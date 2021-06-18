@@ -15,6 +15,7 @@ class abmc extends asistente {
     var $opcionGenerarConsulta=true;
     var $opcionGenerarFormulario=true;
     var $ruta='';
+    var $claseModelo;
     var $nombreModelo;
     var $nombreControlador;
     var $modelo;
@@ -161,10 +162,11 @@ class abmc extends asistente {
         if(!$opc->modelo) exit;
 
         $partes=\util::separarRuta($opc->modelo);
+        $this->claseModelo=$opc->modelo;
         $this->rutaModelo=$partes->ruta;
         $this->nombreModelo=$partes->nombre;
 
-        $this->modelo=\foxtrot::fabricarModelo($this->nombreModelo);
+        $this->modelo=\foxtrot::fabricarModelo($this->claseModelo);
         if(!$this->modelo) exit;
 
         $this->opcionGenerarConsulta=$opc->consulta;
@@ -183,7 +185,7 @@ class abmc extends asistente {
         $this->singular=$opc->singular;
         if(!$this->singular) $this->singular=$this->plural.'-edicion';
 
-        $this->nombreControlador=$opc->controlador?$opc->controlador:$this->nombreModelo; //Por defecto, mismo nombre que el modelo
+        $this->nombreControlador=$opc->controlador?$opc->controlador:$this->claseModelo; //Por defecto, mismo nombre que el modelo
 
         $this->ruta=trim($opc->ruta);
         if($this->ruta&&substr($this->ruta,-1)!='/') $this->ruta.='/';
@@ -342,7 +344,7 @@ class abmc extends asistente {
         $espacio=$this->generarEspacioControlador($this->nombreControlador,true);
         
         $php=$this->reemplazarVariables($php,[
-            'modelo'=>$this->nombreModelo,
+            'modelo'=>$this->claseModelo,
             'requeridos'=>implode(',',$requeridos),
             'sqlFiltros'=>$sql,
             'espacio'=>$espacio,

@@ -2522,10 +2522,12 @@ var componente=new function() {
 
     /**
      * Agrega un nuevo elemento.
-     * @param {*} obj - Elemento a insertar.
+     * @param {*} [obj] - Elemento a insertar.
      * @returns {componente}
      */
     this.agregarElemento=function(obj) {
+        if(typeof obj=="undefined") obj={};
+
         if(!util.esArray(this.datos)) this.datos=[];
         var idx=this.datos.push(obj)-1;
 

@@ -32,6 +32,7 @@ class configuracion {
     public static $contrasenaSmtp='';
     public static $rutaArchivos='temp/';
     public static $depuracion=false;
+    public static $idioma='espanol';
 
     protected static $otrosParametros=[];
 

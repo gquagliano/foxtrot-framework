@@ -299,6 +299,7 @@ asistentes::obtenerAsistente('construir-produccion')->obtenerFormulario();
     <script>
     "use strict";
     var nombreAplicacion="<?=_gestorAplicacion?>";
+    idioma.establecerIdioma("<?=configuracion::obtener('idioma')?>");
     </script>
     <script src="gestor.js"></script>
   </body>

@@ -155,9 +155,11 @@ function compilarFoxtrotJs($destino,$omitirClosure,$omitirModulos=false) {
         _fuente.'cliente/ui.menu.js',
         _fuente.'cliente/ui.dialogos.js',
         _fuente.'cliente/expresion.js',
+        _fuente.'cliente/idioma.js',
         _fuente.'cliente/componentes/soporte/**.js',
         _fuente.'cliente/componentes/**.js', //TODO Debemos definir el orden de los componentes, ya que actualmente se representan en el editor en orden de inclusión, sobre lo cual aquí no tenemos control
-        _fuente.'cliente/enrutadores/**.js'
+        _fuente.'cliente/enrutadores/**.js',
+        _fuente.'cliente/idiomas/**.js' //TODO Debemos poder limitar qué idiomas incluir
     ];
     if(!$omitirModulos) {
         //Integrar todos los módulos

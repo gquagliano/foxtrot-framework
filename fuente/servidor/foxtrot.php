@@ -153,6 +153,7 @@ class foxtrot {
         define('_temporales',_raiz.'temp/');
         define('_temporalesPrivados',_temporales.'temp-privado/');
         define('_modulos',_servidor.'modulos/');
+        define('_idiomas',_servidor.'idiomas/');
     }
 
     /**
@@ -197,6 +198,8 @@ class foxtrot {
         include(_servidor.'almacenamiento.php');
         include(_servidor.'controlador-eventos.php');
         include(_servidor.'eventos.php');
+        include(_servidor.'idioma-base.php');
+        include(_servidor.'idioma.php');
 
         include(_servidor.'datos/nulo.php');
         include(_servidor.'datos/bd.php');
@@ -256,6 +259,8 @@ class foxtrot {
 	            self::$bd->desconectar();
 	            self::$bd=null;
 	        }
+
+            idioma::establecerIdioma(configuracion::obtener('idioma'));
 	        
 	        include(_servidorAplicacion.'aplicacion.php');
 

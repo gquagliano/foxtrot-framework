@@ -60,6 +60,7 @@ foxtrot::inicializar(false);
     <script src="editor.js"></script>
     <script>
     "use strict";
+    idioma.establecerIdioma("<?=configuracion::obtener('idioma')?>");
     editor.activar({
         urlBase:"<?=\foxtrot::obtenerUrl()?>"
     });

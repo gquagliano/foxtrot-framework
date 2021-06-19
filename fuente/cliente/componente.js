@@ -2372,7 +2372,13 @@ var componente=new function() {
      */
     this.obtenerValores=function() {
         if(this.iterativo) {
-            //No queremos que continúe la búsqueda en forma recursiva entre los componentes autogenerados
+            //Los componentes iterativos devuelven directamente su valor. No deben continuar la búsqueda en forma recursiva entre los
+            //componentes autogenerados  
+            if(this.nombre) {
+                var obj=[];
+                obj[this.nombre]=this.valor();
+                return obj;
+            }
             return null;
         }
 

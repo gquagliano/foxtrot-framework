@@ -668,6 +668,21 @@ var editor=new function() {
                     ev.preventDefault();
 
                     self.cortar();
+                } else if(ev.which==113) {
+                    //F2
+                    //Iniciar edición si hay solo un componente seleccionado
+                    if(self.componentesSeleccionados.length==1) {
+                        ev.preventDefault();
+                        self.componentesSeleccionados[0].iniciarEdicion(false);
+                    }
+                } else if(ev.ctrlKey&&ev.which==90) {
+                    //Ctrl+Z
+                    ev.preventDefault();
+                    self.deshacer();
+                } else if(ev.ctrlKey&&ev.which==89) {
+                    //Ctrl+Y
+                    ev.preventDefault();
+                    self.rehacer();
                 }
             }).evento("mouseup",function(ev) {
                 removerZonas();

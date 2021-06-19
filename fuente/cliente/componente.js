@@ -1681,8 +1681,10 @@ var componente=new function() {
 
     ////Editor de texto WYSIWYG
     
-    this.iniciarEdicion=function(pausar) {   
+    this.iniciarEdicion=function(pausar) {
         if(util.esIndefinido(pausar)) pausar=true;
+        
+        if(!this.contenidoEditable||!ui.enModoEdicion()) return this;        
 
         var elem=this.elementoEditable?this.elementoEditable:this.elemento;
         elem.iniciarEdicion().focus();
@@ -1695,6 +1697,18 @@ var componente=new function() {
             //Deshabilitar otros eventos del editor
             editor.pausarEventos();
         }
+
+        //Finalizar edición con ESC
+        var t=this,
+            fn=function(ev) {
+                if(ev.which==27) {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    t.finalizarEdicion();
+                    ui.obtenerDocumento().removerEvento("keydown",fn);
+                }
+            };
+        ui.obtenerDocumento().evento("keydown",fn);
 
         return this;
     };
@@ -1755,19 +1769,8 @@ var componente=new function() {
             });            
         } else if(this.contenidoEditable) {
             this.elemento.evento("dblclick",function(ev) {
-                ev.stopPropagation();
-                
+                ev.stopPropagation();                
                 t.iniciarEdicion(false);
-
-                var fn=function(e) {
-                    if(e.which==27) {
-                        t.finalizarEdicion();
-                        ui.obtenerDocumento().removerEvento("keydown",fn);
-                        e.stopPropagation();
-                        e.preventDefault();
-                    }
-                };
-                ui.obtenerDocumento().evento("keydown",fn);
             });
         }
 

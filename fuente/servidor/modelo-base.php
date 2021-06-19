@@ -600,13 +600,16 @@ class modeloBase {
 
         if($id) $this->valores->id=$id;
         $this->preprocesarRelacionesActualizacionInsercion(self::actualizar);
-        $this->valores->prepararValores(self::actualizar);
+
+        if(!$this->valores->e) $this->valores->prepararValores(self::actualizar);
         
         $this->construirConsulta(self::actualizar);
         
         $this->ejecutarConsulta();
 
         $this->procesarRelacionesActualizacionInsercion(self::actualizar);
+
+        if($this->valores->e) $this->valores->procesarValores(self::eliminar);
         
         return $this;
     }
@@ -629,6 +632,8 @@ class modeloBase {
         $this->valores->id=$this->ultimoId;
 
         $this->procesarRelacionesActualizacionInsercion(self::crear);
+
+        $this->valores->procesarValores(self::crear);
         
         return $this;
     }
@@ -916,9 +921,10 @@ class modeloBase {
      * @param bool $comoObjetoEstandar Si es `false`, devolverá una instancia de la entidad.
      * @param \modeloBase $modelo Modelo del cual extraer el listado de campos. Opcional; si se omite, se asume el modelo actual.
      * @param bool $procesarRelaciones Solo si es `true` se procesarán los campos relacionales.
+     * @param int $operacion Operación.
      * @return object|\entidadBase
      */
-    protected function filaAObjeto($fila,$comoObjetoEstandar=false,$modelo=null,$procesarRelaciones=true) {
+    protected function filaAObjeto($fila,$comoObjetoEstandar=false,$modelo=null,$procesarRelaciones=true,$operacion=self::seleccionar) {
         if(!$modelo) $modelo=$this;
 
         $objeto=$modelo->fabricarEntidad();
@@ -955,13 +961,13 @@ class modeloBase {
         if($procesarRelaciones) {
             foreach($this->relaciones as $relacion) {
                 $campo=$relacion->campo;
-                $objeto->$campo=$this->filaAObjeto($fila,$comoObjetoEstandar,$relacion->modelo,false);
+                $objeto->$campo=$this->filaAObjeto($fila,$comoObjetoEstandar,$relacion->modelo,false,$operacion);
             }
 
             $this->procesarRelacionesSeleccion($objeto,$comoObjetoEstandar);
         }
 
-        $objeto->procesarValores();
+        $objeto->procesarValores($operacion);
 
         if($comoObjetoEstandar) $objeto=$objeto->obtenerObjeto();
 

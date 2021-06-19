@@ -17,22 +17,23 @@ class entidad extends entidadBase {
     
     /**
      * Realiza post-procesamiento de los valores tras ser asignados. Si se sobreescribe, *debe* invocarse `parent::procesarValores()`.
+     * @param int $operacion Operación que se realizará (`modelo::crear`, `modelo::seleccionar`, `modelo::eliminar`).
      * @return \entidad
      */
-    public function procesarValores() {
+    public function procesarValores($operacion) {
         return $this;
     }
 
     /**
      * Realiza pre-procesamiento de los valores antes de una operación de alta o actualización. Si se sobreescribe, *debe* invocarse 
      * `parent::prepararValores($operacion)`.
-     * @param int $operacion Operación que se realizará (`modelo::crear`, `modelo::actualizar`, `modelo::seleccionar`).
+     * @param int $operacion Operación que se realizará (`modelo::crear`, `modelo::actualizar`).
      * @return \entidad
      */
     public function prepararValores($operacion) {
         if($operacion==modelo::crear) $this->fecha_alta=time();
-        if($operacion==modelo::crear||$operacion==modelo::actualizar) $this->fecha_actualizacion=time();
-        if($operacion==modelo::actualizar&&$this->e==1&&!$this->fecha_baja) $this->fecha_baja=time();
+        if($operacion==modelo::crear||$operacion==modelo::actualizar||$operacion==modelo::eliminar) $this->fecha_actualizacion=time();
+        if($operacion==modelo::eliminar) $this->fecha_baja=time();
         return $this;
     }
 }

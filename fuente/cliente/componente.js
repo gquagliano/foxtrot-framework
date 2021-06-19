@@ -1446,7 +1446,7 @@ var componente=new function() {
             tamanos=["g","sm","md","lg","xl"],
             valor=null;
 
-        if(typeof valores!=="object") return valores;
+        if(typeof valores!=="object"||!valores) return valores;
 
         if(tamano=="xs") tamano="g";
 

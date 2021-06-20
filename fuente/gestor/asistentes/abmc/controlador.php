@@ -33,6 +33,7 @@ class {nombre} extends \controlador {
 
         $modelo=$this->modelo
             ->reiniciar()
+            //->ordenar('titulo','asc')
             ->establecerAlias('t');
 
         if($filtro->texto) {
@@ -60,8 +61,10 @@ class {nombre} extends \controlador {
         return [
             'cantidad'=>$cantidad,
             'filas'=>$listado,
-            'paginas'=>ceil($cantidad/50),
+            'paginas'=>ceil($cantidad/50),      
+<!multinivel
             'titulo'=>$titulo
+!>
         ];
     }
 <!multinivel
@@ -87,8 +90,7 @@ class {nombre} extends \controlador {
 
         $this->modelo
             ->reiniciar()
-            ->donde(['id'=>$id])
-            ->eliminar();
+            ->eliminar($id);
     }
 
     /**
@@ -104,12 +106,10 @@ class {nombre} extends \controlador {
         $obligatorios=[{requeridos}];
         foreach($obligatorios as $obligatorio) if(!trim($datos->$obligatorio)) $this->cliente->error(1);    
 
-        $datos->id=$id;
-
         $nuevoId=$this->modelo
             ->reiniciar()
             ->establecerValores($datos)
-            ->guardar()
+            ->guardar($id)
             ->obtenerId();
 
         return [
@@ -127,7 +127,6 @@ class {nombre} extends \controlador {
         
         return $this->modelo
             ->reiniciar()
-            ->donde(['id'=>$id])
-            ->obtenerUno(true);
+            ->obtenerItem($id,true);
     }
 }

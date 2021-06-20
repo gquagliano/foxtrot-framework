@@ -32,11 +32,12 @@ class modelo extends modeloBase {
     }
 
     /**
-     * Guarda los valores actualmente asignados. Actualizará o creará el registro según esté asignada o no el campo `id`.
+     * Guarda los valores actualmente asignados. Actualizará o creará el registro según esté asignada o no el campo `id` o el parámetro `$id`. 
+     * @param int $id ID a actualizar.
      * @return \modeloBase
      */
-    public function guardar() {
-        if($this->valores&&$this->valores->id) return $this->actualizar();
+    public function guardar($id=null) {
+        if($id||($this->valores&&$this->valores->id)) return $this->actualizar($id);
         return $this->crear();
     }
 

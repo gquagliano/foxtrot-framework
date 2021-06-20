@@ -68,13 +68,13 @@ h6,.h6 {
 .formulario-arbol {
     margin-bottom: 20px;
     background-color: #fff;
-    border-radius: 2px;
-    padding: 30px;
+    border-radius: .25rem;
+    padding: 3rem;
 }
 .cuerpo-formulario,
 .formulario-tabla,
 .formulario-arbol {
-    box-shadow: 0 1px 14px rgba(0,0,0,.03), 0 2px 4px rgba(0,0,0,.05);
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
 }
 .cuerpo-formulario .row {
     margin-bottom: 1rem;

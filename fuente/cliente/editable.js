@@ -20,7 +20,8 @@ var editable=new function() {
 
     var componentesEliminados={},
         moviendoSeleccion=false,
-        moviendoNodo=null;
+        moviendoNodo=null,
+        editando=0;
 
     /**
      * 
@@ -217,6 +218,9 @@ var editable=new function() {
         if(this.innerText=="") this.append("Editar...");
         
         this.editable(true);
+
+        if(ui.enModoEdicion()) editor.editandoTexto();
+
         //TODO Seleccionar todo
 
         var t=this,
@@ -257,6 +261,8 @@ var editable=new function() {
      */
     Node.prototype.finalizarEdicion=function() {
         this.editable(false);
+
+        if(ui.enModoEdicion()) editor.editandoTexto(false);
 
         //Remover eventos
         this.removerDestino()

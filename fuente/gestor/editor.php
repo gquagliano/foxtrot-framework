@@ -28,8 +28,8 @@ foxtrot::inicializar(false);
     <div id="foxtrot-barra-principal" class="foxtrot-editor foxtrot-barra-herramientas">
         <button class="btn btn-sm separador" onclick="editor.guardar()" title="Guardar"><img src="img/guardar.png"></button>
         <button class="btn btn-sm separador" onclick="editor.previsualizar()" disabled title="Previsualizar la vista en una nueva ventana (sin guardar los cambios)"><img src="img/previsualizar.png"></button>
-        <button class="btn btn-sm" onclick="editor.deshacer()" disabled id="foxtrot-btn-deshacer" title="Deshacer"><img src="img/deshacer.png"></button>
-        <button class="btn btn-sm" onclick="editor.rehacer()" disabled id="foxtrot-btn-rehacer" title="Rehacer"><img src="img/rehacer.png"></button>
+        <button class="btn btn-sm" onclick="editor.deshacer()" id="foxtrot-btn-deshacer" title="Deshacer"><img src="img/deshacer.png"></button>
+        <button class="btn btn-sm" onclick="editor.rehacer()" id="foxtrot-btn-rehacer" title="Rehacer"><img src="img/rehacer.png"></button>
         <div class="float-right text-nowrap">
             <img src="img/cargando.svg" id="foxtrot-cargando">
             <button class="btn btn-sm activo" onclick="editor.alternarBordes()" id="foxtrot-btn-alternar-bordes" title="Activar / desactivar bordes"><img src="img/bordes.png"></button>

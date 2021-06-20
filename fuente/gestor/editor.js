@@ -28,7 +28,9 @@ var editor=new function() {
         invisiblesVisibles=true,
         claseMovil=false,
         tamanoActual="g",
-        cambiosSinGuardar=false;
+        cambiosSinGuardar=false,
+        limiteHistorial=20,
+        editandoTexto=0;
 
     this.listo=false;
     this.aplicacionArchivoAbierto=null
@@ -38,13 +40,16 @@ var editor=new function() {
     this.urlBase=null;
 
     this.componentesSeleccionados=[];
+    this.historial=[];
 
     ////Elementos del dom
     
     var barraComponentes=document.querySelector("#foxtrot-barra-componentes"),
         cuerpoBarraComponentes=barraComponentes.querySelector(".foxtrot-contenidos-barra-herramientas"),
         barraPropiedades=document.querySelector("#foxtrot-barra-propiedades"),
-        cuerpoBarraPropiedades=barraPropiedades.querySelector(".foxtrot-contenidos-barra-herramientas");
+        cuerpoBarraPropiedades=barraPropiedades.querySelector(".foxtrot-contenidos-barra-herramientas"),
+        botonDeshacer=document.querySelector("#foxtrot-btn-deshacer"),
+        botonRehacer=document.querySelector("#foxtrot-btn-rehacer");
 
     ////Construcción de la interfaz
 
@@ -1334,6 +1339,34 @@ var editor=new function() {
         prepararComponentesInsertados();
     };
 
+    /**
+     * Comando Deshacer.
+     * @returns {editor}
+     */
+    this.deshacer=function() {
+        //Si se está editando texto, pasar el evento al navegador
+        if(editandoTexto>0) {
+            ui.obtenerDocumento().execCommand("undo");
+            return this;
+        }
+        
+        return this;
+    };
+
+    /**
+     * Comando Rehacer.
+     * @returns {editor}
+     */
+    this.rehacer=function() {
+        //Si se está editando texto, pasar el evento al navegador
+        if(editandoTexto>0) {
+            ui.obtenerDocumento().execCommand("redo");
+            return this;
+        }
+        
+        return this;
+    };
+
     ////Gestión de la vista
 
     this.obtenerTamano=function() {
@@ -1674,6 +1707,18 @@ var editor=new function() {
         //Notificar a los componentes que el editor ha sido activado mediante el evento `editor`
         ui.eventoComponentes(null,"editor");
         
+        return this;
+    };
+
+    /**
+     * Recibe notificaciones sobre el editor de texto desde `editable`.
+     * @param {boolean} estado - Estado (activado o desactivado).
+     * @returns {editor}
+     */
+    this.editandoTexto=function(estado) {
+        if(typeof estado=="undefined") estado=true;
+        editandoTexto+=estado?1:-1;
+        cambiosSinGuardar=true;
         return this;
     };
 }();

@@ -619,7 +619,7 @@ class modeloBase {
         if($id) $this->valores->id=$id;
         $this->preprocesarRelacionesActualizacionInsercion(self::actualizar);
 
-        if(!$this->valores->e) $this->valores->prepararValores(self::actualizar);
+        $this->valores->prepararValores($this->valores->e?self::eliminar:self::actualizar);
         
         $this->construirConsulta(self::actualizar);
         

@@ -594,6 +594,13 @@ class modelo extends modeloBase {
     }
 
     /**
+     * @return bool
+     */
+    private function esOperador($valor) {
+        return in_array($valor,['=','<>','<','<=','>','>=',self::como,self::noComo,self::en,self::noEn]);
+    }
+
+    /**
      * Agrega una condición `WHERE` o `HAVING`. El primer parámetro debe ser siempre el tipo de condición (`condicion::donde` o
      * `condicion::teniendo`) mientras que el resto de los parámetros son idénticos a los de `donde()` y `teniendo()`.
      * @return \modelo
@@ -608,13 +615,12 @@ class modelo extends modeloBase {
             $union=array_shift($args);
 
         $operador='=';
-        if(in_array($args[count($args)-1],['=','<>','<','<=','>','>=',self::como,self::noComo,self::en,self::noEn]))
-        	$operador=array_pop($args);
 
         //donde($entidad[,$operador])
         //donde($union,$entidad[,$operador])
         if(is_object($args[0])&&get_class($args[0])==$this->_tipoEntidad) {
             $obj=$args[0];
+            if($this->esOperador($args[1])) $operador=$args[1];
 
             $obj->prepararValores(self::seleccionar);
 
@@ -630,6 +636,7 @@ class modelo extends modeloBase {
         //donde($union,['campo'=>valor][,$operador])
         if(is_object($args[0])||is_array($args[0])) {
             $array=is_object($args[0])?(array)$args[0]:$args[0];
+            if($this->esOperador($args[1])) $operador=$args[1];
             
             foreach($array as $clave=>$valor) {
                 if($valor===null) continue;
@@ -641,8 +648,9 @@ class modelo extends modeloBase {
 
         //donde($campo,$valor[,$operador])
         //donde($union,$campo,$valor[,$operador])
-        if(count($args)==2&&array_key_exists($args[0],$this->campos)) {
-            list($nombre,$valor)=$args;
+        if((count($args)==2||count($args)==3)&&array_key_exists($args[0],$this->campos)) {
+            list($nombre,$valor,$arg3)=$args;
+            if($this->esOperador($arg3)) $operador=$arg3;
 
             if($valor===null) return $this;
 
@@ -652,8 +660,9 @@ class modelo extends modeloBase {
         //donde($campo,$operador,$valor[,$operador2])
         //donde($union,$campo,$operador,$valor[,$operador2])
         //$operador2 es ignorado
-        if(count($args)==3&&array_key_exists($args[0],$this->campos)) {
-            list($nombre,$operador,$valor)=$args;
+        if((count($args)==3||count($args)==4)&&array_key_exists($args[0],$this->campos)) {
+            list($nombre,$operador,$valor,$arg4)=$args;
+            if($this->esOperador($arg4)) $operador=$arg4;
             
             if($valor===null||!is_integer($operador)) return $this;
 
@@ -664,7 +673,8 @@ class modelo extends modeloBase {
         //donde($union,$sql[,$parametros,$tipos,$operador])
         //$operador es ignorado
         if(is_string($args[0])) {
-            list($sql,$parametros,$tipos)=$args;
+            list($sql,$parametros,$tipos,$arg4)=$args;
+            if($this->esOperador($arg4)) $operador=$arg4;
 
             return $this->agregarCondicionSql($sql,$parametros,$tipos,$union,$tipo);
         }

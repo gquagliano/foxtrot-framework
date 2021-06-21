@@ -108,7 +108,7 @@ class {nombre} extends \controlador {
 
         $nuevoId=$this->modelo
             ->reiniciar()
-            ->establecerValores($datos)
+            ->establecerValoresPublicos($datos)
             ->guardar($id)
             ->obtenerId();
 

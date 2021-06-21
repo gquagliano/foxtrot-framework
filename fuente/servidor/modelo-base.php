@@ -389,6 +389,24 @@ class modeloBase {
 
         return $this;
     }
+    
+    /**
+     * Asigna propiedades que no son campos de la base de datos en la instancia de la entidad con la que se está trabajando actualmente.
+     * @param object|array|\entidadBase $valores Valores como objeto, array asociativo o instancia de una entidad.
+     * @param string ...$nombres Listado de nombres de propiedades a asignar. Solo se tomarán estas propiedades, si están presentes, desde `$valores`.
+     * @return \modeloBase
+     */
+    public function asignarPropiedades($valores,...$nombres) {
+        if(is_array($valores)) $valores=(object)$valores;
+
+        if(!$this->valores) $this->valores=$this->fabricarEntidad();
+
+        foreach($nombres as $nombre)
+            if(isset($valores->$nombre))
+                $this->valores->$nombre=$valores->$nombre;
+
+        return $this;
+    }
 
     /**
      * Establece los valores para la operación de inserción o actualización, considerando únicamente los campos que sean válidos, públicos (es

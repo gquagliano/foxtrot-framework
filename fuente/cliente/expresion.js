@@ -14,12 +14,12 @@ function expresion(expr) {
 
     this.cadena=null;
 
-    this.objeto=null;
-    this.controlador=null;
-    this.componente=null;
-    this.valor=null;
-    this.componentes=null;
-    this.this=null;
+    this.objeto={};
+    this.controlador={};
+    this.componente={};
+    this.valor={};
+    this.componentes={};
+    this.this={};
 
     var cacheSubexpresiones={};
 
@@ -98,54 +98,62 @@ function expresion(expr) {
 
         if(typeof procesarTernario==="undefined") procesarTernario=true;
 
-        var resultado;
+        var resultado,
+            corchetes=0,
+            llaves=0,
+            parentesis=0,
+            comillas=null,
+            bufer="",
+            pregunta=null,
+            dosPuntos=null,
+            miembros=[];
+        for(var i=0;i<expresion.length;i++) {
+            var c=expresion[i],
+                cAnt=i>0?expresion[i-1]:null;
 
-        //Detectar expresión con operador ternario
-        var coincidencias=expresion.match(/^(.+?)\?(.+):(.+)$/);
-        if(procesarTernario&&coincidencias) {
-            //En este caso, vamos a modificar la expresión para extraer la subexpresión de cada término, manteniendo la condición,
-            //para que se pueda interpretar cuál corresponde tomar más adelante
-            resultado=coincidencias[1]+"?"+extraerUltimoMiembro(coincidencias[2],false)+":"+extraerUltimoMiembro(coincidencias[3],false);
-        } else {
-            var corchetes=0,
-                llaves=0,
-                parentesis=0,
-                comillas=null,
-                bufer="",
-                miembros=[];
-            for(var i=0;i<expresion.length;i++) {
-                var c=expresion[i],
-                    cAnt=i>0?expresion[i-1]:null;
-
-                if(!comillas) {
-                    if(!comillas&&!corchetes&&!llaves&&!parentesis&&(c=="."||c=="["||c=="{"||c=="(")) {
-                        miembros.push(bufer);
-                    }
-
-                    if(c=="[") {
-                        corchetes++;
-                    } else if(c=="{") {
-                        llaves++;
-                    } else if(c=="(") {
-                        parentesis++;
-                    } else if(c=="]") {
-                        corchetes--;
-                    } else if(c=="}") {
-                        llaves--;
-                    } else if(c==")") {
-                        parentesis--;
-                    } else if(c=="\""||c=="'") {
-                        comillas=c;
-                    }
-                } else {
-                    if(c==comillas&&cAnt!="\\") {
-                        comillas=null;
-                    }
+            if(!comillas) {
+                if(!comillas&&!corchetes&&!llaves&&!parentesis&&(c=="."||c=="["||c=="{"||c=="(")) {
+                    miembros.push(bufer);
                 }
 
-                bufer+=c;
+                if(c=="[") {
+                    corchetes++;
+                } else if(c=="{") {
+                    llaves++;
+                } else if(c=="(") {
+                    parentesis++;
+                } else if(c=="]") {
+                    corchetes--;
+                } else if(c=="}") {
+                    llaves--;
+                } else if(c==")") {
+                    parentesis--;
+                } else if(c=="\""||c=="'") {
+                    comillas=c;
+                } else if(c=="?"&&!pregunta) {
+                    pregunta=i;
+                } else if(c==":") {
+                    dosPuntos=i;
+                }
+            } else {
+                if(c==comillas&&cAnt!="\\") {
+                    comillas=null;
+                }
             }
-            if(bufer!="") miembros.push(bufer);
+
+            bufer+=c;
+        }
+        if(bufer!="") miembros.push(bufer);
+
+        if(pregunta&&dosPuntos) {
+            //Operador ternario
+            //En este caso, vamos a modificar la expresión para extraer la subexpresión de cada término, manteniendo la condición,
+            //para que se pueda interpretar cuál corresponde tomar más adelante
+            var condicion=expresion.substring(0,pregunta),
+                verdadero=expresion.substring(pregunta+1,dosPuntos),
+                falso=expresion.substring(dosPuntos+1);
+            resultado=condicion+"?"+extraerUltimoMiembro(verdadero,false)+":"+extraerUltimoMiembro(falso,false);
+        } else {
             if(miembros.length<=1) return expresion;
             resultado=miembros[miembros.length-2];
         }

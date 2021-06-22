@@ -84,7 +84,10 @@ var componenteFecha=function() {
 
         this.campo.evento("paste input",function(ev) {
             //Al borrar todo el texto, reestablecer
-            if(t.campo.valor()=="") t.valorEpoch(null);
+            if(t.campo.valor()=="") {
+                t.valorEpoch=null;
+                t.procesarEvento("modificacion","modificacion");
+            }
         })
         .evento("focus",function(ev) {
             this.select();
@@ -180,6 +183,7 @@ var componenteFecha=function() {
         var opc={
             retorno:function(valor) {
                 t.establecerValor(valor);
+                t.procesarEvento("modificacion","modificacion");
             }
         };
         if(this.valorEpoch) opc.valor=this.valorEpoch;
@@ -284,7 +288,10 @@ var componenteFecha=function() {
         if(anoCadena.length==3) anoCadena="2"+anoCadena;
         else if(anoCadena.length==2) anoCadena="20"+anoCadena;
         else if(anoCadena.length==1) anoCadena="200"+anoCadena;
-        this.campo.valor(dia.toString()+"/"+(mes+1).toString()+"/"+anoCadena);
+
+        var nuevoValor=dia.toString()+"/"+(mes+1).toString()+"/"+anoCadena;
+        if(v!=nuevoValor) this.procesarEvento("modificacion","modificacion");
+        this.campo.valor(nuevoValor);
 
         return this;
     };    

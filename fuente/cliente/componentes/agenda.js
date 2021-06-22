@@ -23,7 +23,8 @@ var componenteAgenda=function() {
         ultimaHoraMinima=null,
         ultimaHoraMaxima=null,
         sincronizando=false,
-        temporizador;
+        temporizador,
+        eventos=null;
 
     this.componente="agenda";
     this.iterativo=true;
@@ -322,6 +323,8 @@ var componenteAgenda=function() {
             this.generarFondo()
                 .construirHorarios();
         }
+
+        this.actualizarEventos(eventos);
         
         if(!this.autogenerado&&!this.plantilla) this.realizarSincronizacion();
 
@@ -448,9 +451,8 @@ var componenteAgenda=function() {
      * @returns {componenteAgenda}
      */
     this.generarItems=function(indice,listado,destino) {
-        var eventos=this.posicionarEventos();
+        eventos=this.posicionarEventos();
         this.prototipo.generarItems.call(this,indice,eventos,destino);
-        this.actualizarEventos(eventos);
     };
 
     /**

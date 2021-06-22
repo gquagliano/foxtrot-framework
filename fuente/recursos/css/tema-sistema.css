@@ -477,11 +477,11 @@ body.escritorio .btn-secondary:hover,
 }
 .agenda .agenda-ahora::before {
     content: "";
-    width: 9px;
-    height: 9px;
+    width: 12px;
+    height: 12px;
     position: absolute;
-    left: -4px;
-    top: -4px;
+    left: -6px;
+    top: -5px;
     border-radius: 100%;
     background-color: #347ab7;
 }

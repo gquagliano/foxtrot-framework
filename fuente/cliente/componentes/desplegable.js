@@ -41,7 +41,6 @@ var componenteDesplegable=function() {
                 etiqueta:"Valor inicial",
                 adaptativa:false,
                 evaluable:true,
-                evaluable:true
             },
             propiedadClave:{
                 etiqueta:"Propiedad clave",

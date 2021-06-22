@@ -55,7 +55,8 @@ var componenteBuscador=function() {
             valor:{
                 etiqueta:"Valor inicial",
                 adaptativa:false,
-                ayuda:"Valor del item a seleccionar por defecto, realizando la búsqueda correspondiente al cargar la vista. Puede contener expresiones."
+                ayuda:"Valor del item a seleccionar por defecto, realizando la búsqueda correspondiente al cargar la vista. Puede contener expresiones.",
+                evaluable:true
             }
         },
         "Comportamiento":{

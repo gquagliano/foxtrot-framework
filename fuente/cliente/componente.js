@@ -56,6 +56,8 @@ var componente=new function() {
      * @var {*[]} clasesCss - Listado todas las de clases CSS propias del componente posibles. Cada componente concreto debe agregar las propias.
      * @var {boolean} iterativo - Indica si el componente concreto es una estructura que itere su contenido.
      * @var {*[]} itemsAutogenerados - Listado de items autogenerados por el componente iterativo.
+     * @var {boolean} plantilla - Indica si es un componente que será utilizado como plantilla de otro componente iterativo.
+     * @var {boolean} autogenerado - Indica si es un componente que fue autogenerado por otro componente iterativo.
      * @var {Node} contenedorItems - Contenedor de los items autogenerados del componente iterativo. Por defecto, será coincidente con `elemento`.
      * @var {boolean} descartarValores - Indica si se deben descartar los valores de los campos durante el próximo redibujado (componentes iterativos).
      * @var {boolean} redibujar - Indica si se debe redibujar por completo el componente durante la próxima actualización.
@@ -106,6 +108,8 @@ var componente=new function() {
     ];
     this.iterativo=false;
     this.itemsAutogenerados=[];
+    this.plantilla=false;
+    this.autogenerado=false;
     this.contenedorItems=null;
     this.descartarValores=false;
     this.redibujar=false;
@@ -2273,13 +2277,12 @@ var componente=new function() {
 
     /**
      * Devuelve un array de componentes hijos, o un listado de componentes de su descendencia que coincidan con el filtro.
-     * @param {Object} [filtro] - Filtro para la búsqueda en la asecendencia. Si se omite, solo devolverá la descendencia directa.
-     * @param {string} [filtro.componente] - Tipo de componente.
-     * @param {string} [filtro.nombre] - Nombre del componente.
-     * @param {Object} [filtro.elemento] - Filtro por propiedades del elemento del DOM (filtro compatible con `Node.es()`).
+     * @param {boolean} [recursivo=false] - Buscar recursivamente toda la descendencia.
      * @returns {componente[]}
      */
-    this.obtenerHijos=function() {
+    this.obtenerHijos=function(recursivo) {
+        if(typeof recursivo=="undefined") recursivo=false;
+
         var hijos=[];
         
         //Los componentes no serán necesariamente hijos directos, por lo tanto debemos profundizar en la descendencia en el DOM hasta encontrar
@@ -2290,7 +2293,10 @@ var componente=new function() {
             for(var i=0;i<elementos.length;i++) {
                 if(elementos[i].es({clase:"componente"})) {
                     var comp=ui.obtenerInstanciaComponente(elementos[i]);
-                    if(comp) hijos.push(comp);
+                    if(comp) {
+                        hijos.push(comp);
+                        if(recursivo) fn(elementos[i]);
+                    }
                 } else {
                     fn(elementos[i]);
                 }
@@ -2683,6 +2689,11 @@ var componente=new function() {
      this.actualizarIterativo=function() {
         if(ui.enModoEdicion()) return this;
 
+        this.obtenerHijos(true).forEach(function(hijo) {
+            hijo.plantilla=true;
+            hijo.autogenerado=false; //en caso de iterativos anidados puede haber sido asignado true, debe reestablecerse
+        });
+
         //Aplicar cambios en los campos
         //if(!this.descartarValores) this.obtenerDatosActualizados();
         this.descartarValores=false;
@@ -2703,6 +2714,11 @@ var componente=new function() {
             this.mostrarMensajeSinDatos();
         } else {
             this.generarItems();
+
+            //Notificar actualización finalizada
+            this.itemsAutogenerados.forEach(function(comp) {
+                comp.actualizacionPadreCompleta();
+            });
         }
 
         return this;
@@ -2717,8 +2733,20 @@ var componente=new function() {
      * @returns {Object}
      */
     this.prepararElemento=function(componente,obj,indice,recursivo) {
-        componente.establecerDatos(obj);
         componente.indice=indice;
+        
+        if(!componente.autogenerado) {
+            componente.autogenerado=true;
+            componente.obtenerHijos(true).forEach(function(hijo) {
+                hijo.autogenerado=true;
+            });
+        }
+
+        //Notificar actualización en curso
+        componente.actualizandoPadre();
+
+        componente.establecerDatos(obj);
+
         if(recursivo) componente.ruta=recursivo.ruta.concat(indice).join(".");
 
         //Agregar métodos al origen de datos
@@ -2764,7 +2792,6 @@ var componente=new function() {
 
             t.prepararElemento(nuevo,objeto,indice,recursivo);
 
-            nuevo.autogenerado=true;
             nuevo.ocultarDescendencia();
             nuevo.obtenerElemento().agregarClase("autogenerado");
         });
@@ -2844,6 +2871,29 @@ var componente=new function() {
             }
         }
 
+        return this;
+    };
+
+    /**
+     * Evento invocado por el componente iterativo en cada uno de los componentes autogenerados durante la actualización de su origen de datos.
+     * @returns {componente}
+     */
+    this.actualizandoPadre=function() {
+        this.obtenerHijos().forEach(function(comp) {
+            comp.actualizandoPadre();
+        });
+        return this;
+    };
+
+    /**
+     * Evento invocado por el componente iterativo en cada uno de los componentes autogenerados *luego* de finalizada la actualización de su
+     * origen de datos.
+     * @returns {componente}
+     */
+    this.actualizacionPadreCompleta=function() {
+        this.obtenerHijos().forEach(function(comp) {
+            comp.actualizacionPadreCompleta();
+        });
         return this;
     };
 };

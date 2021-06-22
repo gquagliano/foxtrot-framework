@@ -10,6 +10,7 @@
     background-repeat: no-repeat;
     background-size: 1.4em;
     background-position: calc(100% - .4em) calc(100% / 2 - .1em);
+    padding-right: 2.1em;
 }
 .desplegable-calendario {
     min-width: 220px;

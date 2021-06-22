@@ -145,6 +145,7 @@ textarea.form-control {
 .custom-switch {
     padding: .28rem;
     padding-left: 3.45rem;
+    overflow: hidden;
 }
 .custom-switch * {
     cursor: pointer;

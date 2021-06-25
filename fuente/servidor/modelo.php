@@ -16,8 +16,8 @@ defined('_inc') or exit;
 class modelo extends modeloBase {
     /**
      * Agrega una relación.
-     * @param int $tipo Tipo de relación: `modelo::relacion1N` (`1:N`), `modelo::relacion11` (`1:1`), `modelo::relacion10 (`1:0`, es decir
-     * `1:1 o nulo`).
+     * @param int $tipo Tipo de relación: `modelo::relacion1N` (`1:N`), `modelo::relacion11` (`1:1`), `modelo::relacion10` (`1:0`, es decir
+     * `1:1` o nulo).
      * @param string $modelo Nombre del modelo foráneo.
      * @param string $alias Alias del modelo foráneo.
      * @param string $condicion Condición como SQL.

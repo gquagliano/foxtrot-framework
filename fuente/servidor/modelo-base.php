@@ -50,6 +50,7 @@ class modeloBase {
     protected $configSeleccionarEliminados=false;
     protected $configEliminarRelacionados=false;
     protected $configRelacionesValoresPublicos=null;
+    protected $seleccionAgregada=false;
 
     //Redefinimos algunas constantes para evitar el uso de cadenas pero a la vez evitar acoplar el código del cliente y la descendencia
     //de esta clase al constructor. Ya que dentro de esta clase sabemos que dependemos del constructor, directamente asignamos
@@ -204,6 +205,7 @@ class modeloBase {
         $this->configSeleccionarEliminados=false;
         $this->configEliminarRelacionados=false;
         $this->configRelacionesValoresPublicos=null;
+        $this->seleccionAgregada=false;
         $this->ultimoId=null;
         $this->cantidadFilas=0;
         $this->valores=null;
@@ -336,6 +338,7 @@ class modeloBase {
     public function seleccionar(...$campos) {
         foreach($campos as $campo)
             $this->constructor->seleccionarCampo($this->alias,$campo,'__'.$this->alias.'_'.$campo);
+        $this->seleccionAgregada=true;
         return $this;
     }
 
@@ -954,7 +957,7 @@ class modeloBase {
      */
     protected function prepararSeleccionPredeterminada() {
         //Por defecto seleccionar todos los campos
-        if(!count($this->constructor->obtenerCampos()))
+        if(!$this->seleccionAgregada)
             $this->agregarTodosLosCampos();
 
         if(!$this->configSeleccionarEliminados) $this->agregarCondicion('e','=','0');

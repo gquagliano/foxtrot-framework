@@ -112,6 +112,7 @@ class entidadBase {
 
             if($campo->relacion=='1:n') {
                 $this->$propiedad=$modelo
+                    ->omitirRelaciones()
                     ->donde([
                         $columna=>$this->id
                     ])
@@ -123,6 +124,7 @@ class entidadBase {
                 }
 
                 $this->$propiedad=$modelo
+                    ->omitirRelaciones()
                     ->donde([
                         //TODO Columna foránea configurable
                         'id'=>$this->$columna

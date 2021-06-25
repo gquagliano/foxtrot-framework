@@ -49,6 +49,7 @@ class modeloBase {
     protected $configProcesarRelaciones1N=true;
     protected $configSeleccionarEliminados=false;
     protected $configEliminarRelacionados=false;
+    protected $configRelacionesValoresPublicos=null;
 
     //Redefinimos algunas constantes para evitar el uso de cadenas pero a la vez evitar acoplar el código del cliente y la descendencia
     //de esta clase al constructor. Ya que dentro de esta clase sabemos que dependemos del constructor, directamente asignamos
@@ -198,6 +199,7 @@ class modeloBase {
         $this->configObtenerOcultos=false;
         $this->configSeleccionarEliminados=false;
         $this->configEliminarRelacionados=false;
+        $this->configRelacionesValoresPublicos=null;
         $this->ultimoId=null;
         $this->cantidadFilas=0;
         $this->valores=null;
@@ -271,6 +273,18 @@ class modeloBase {
      */
     public function obtenerEntidad() {
         return $this->valores;
+    }
+
+    /**
+     * Establece si las entidades relacionadas se deben, o no, asumir públicos los datos asignados a los campos relacionales. Esto significa que, si
+     * está activado, los campos se asignarán siempre mediante `establecerValoresPublicos()`, o mediante `establecerValores()` en caso contrario.
+     * @param bool|null $activar Activa o desactiva este comportamiento, o si es `null` lo mantiene en automático (se activa si en algún punto
+     * es invocado `establecerValoresPublicos()`).
+     * @return \modeloBase
+     */
+    public function relacionarValoresPublicos($activar=true) {
+        $this->configRelacionesValoresPublicos=$activar;
+        return $this;
     }
 
     ////Configuración de consultas    
@@ -420,6 +434,9 @@ class modeloBase {
     public function establecerValoresPublicos($valores,$reemplazar=false) {
         if(is_object($valores)&&is_subclass_of($valores,entidad::class))
             $valores=$valores->obtenerObjeto();
+
+        if($this->configRelacionesValoresPublicos===null) $this->configRelacionesValoresPublicos=true;
+
         return $this->establecerValores($valores,$reemplazar,true);
     }
 
@@ -1011,6 +1028,7 @@ class modeloBase {
             $modelo->omitirRelaciones();
             if($this->configObtenerOcultos) $modelo->obtenerOcultos();
             if($this->configSeleccionarEliminados) $modelo->seleccionarEliminados();
+            if($this->configRelacionesValoresPublicos) $modelo->relacionarValoresPublicos();
 
             if($campo->orden) $modelo->ordenar($campo->orden);
             
@@ -1242,9 +1260,12 @@ class modeloBase {
                 $objeto->id=$id;
                 $modelo
                     ->reiniciar()
-                    ->omitirRelaciones()
-                    ->establecerValores($objeto)
-                    ->actualizar();
+                    ->omitirRelaciones();
+                if($this->configRelacionesValoresPublicos)
+                    $modelo->establecerValoresPublicos($objeto);
+                else                   
+                    $modelo->establecerValores($objeto);
+                $modelo->actualizar($id);
                 
                 $this->valores->$nombre=$id;
 
@@ -1256,9 +1277,12 @@ class modeloBase {
 
                 $modelo
                     ->reiniciar()
-                    ->omitirRelaciones()
-                    ->establecerValores($objeto)
-                    ->crear();
+                    ->omitirRelaciones();
+                if($this->configRelacionesValoresPublicos)
+                    $modelo->establecerValoresPublicos($objeto);
+                else                   
+                    $modelo->establecerValores($objeto);
+                $modelo->crear();
                 
                 $this->valores->$nombre=$modelo->obtenerEntidad();
                 $this->valores->$nombreCampoValor=$modelo->obtenerId();
@@ -1321,9 +1345,17 @@ class modeloBase {
 
                 $modelo
                     ->reiniciar()
-                    ->omitirRelaciones()
-                    ->establecerValores($item)
-                    ->guardar();
+                    ->omitirRelaciones();
+                if($this->configRelacionesValoresPublicos)
+                    $modelo->establecerValoresPublicos($item);
+                else                   
+                    $modelo->establecerValores($item);
+                $modelo->guardar();
+            }
+        }
+
+        return $this;
+    }
             }
         }
 

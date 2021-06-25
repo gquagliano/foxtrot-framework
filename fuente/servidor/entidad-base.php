@@ -100,8 +100,6 @@ class entidadBase {
     public function procesarRelaciones($actualizar=false) {
         foreach(static::obtenerCampos() as $campo) {
             $propiedad=$campo->nombre;
-            $columna=$campo->campo;
-            if($campo->campoforaneo) $columna=$campo->campoforaneo;
 
             if(!$campo->relacional||($this->$propiedad&&!$actualizar)) continue;
 
@@ -110,25 +108,45 @@ class entidadBase {
             } else {
                 $modelo=\foxtrot::fabricarModelo($campo->modelo);
             }
+            
+            $modelo->omitirRelaciones();
 
             if($campo->relacion=='1:n') {
+                //@campo o @campoForaneo es indistinto en 1:n
+                $columna=$campo->campo?$campo->campo:$campo->campoforaneo;
+
+                if(!$this->id) {
+                    $this->propiedad=null;
+                    continue;
+                }
+
                 $this->$propiedad=$modelo
-                    ->omitirRelaciones()
                     ->donde([
                         $columna=>$this->id
                     ])
                     ->obtenerListado();
             } else {
-                if(!$this->$columna) {
-                    $this->$propiedad=null;
+                $columna='id';
+                $valor=null;
+
+                if($campo->campo) {
+                    //@campo, foranea.id=campo
+                    $campoValor=$campo->campo;
+                    $valor=$this->$campoValor;
+                } else {
+                    //@campoForaneo, foranea.campo=id
+                    $columna=$campo->campoforaneo;
+                    $valor=$this->id;
+                }
+
+                if(!$valor) {
+                    $this->propiedad=null;
                     continue;
                 }
 
                 $this->$propiedad=$modelo
-                    ->omitirRelaciones()
                     ->donde([
-                        //TODO Columna foránea configurable
-                        'id'=>$this->$columna
+                        $columna=>$valor
                     ])
                     ->obtenerUno();
             }

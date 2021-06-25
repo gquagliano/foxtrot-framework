@@ -645,8 +645,9 @@ class modeloBase {
         $this->procesarRelacionesActualizacionInsercion(self::actualizar);
 
         if($this->valores->e) {
-            $this->valores->procesarValores(self::eliminar);
             $this->procesarRelacionesRecursivamente($this,$this->valores,self::eliminar);
+
+            $this->valores->procesarValores(self::eliminar);
         }
         
         return $this;
@@ -671,8 +672,9 @@ class modeloBase {
 
         $this->procesarRelacionesActualizacionInsercion(self::crear);
 
-        $this->valores->procesarValores(self::crear);
         $this->procesarRelacionesRecursivamente($this,$this->valores,self::crear);
+        
+        $this->valores->procesarValores(self::crear);
         
         return $this;
     }
@@ -1000,14 +1002,21 @@ class modeloBase {
         if($procesarRelaciones) {
             foreach($this->relaciones as $relacion) {
                 $campo=$relacion->campo;
-                $objeto->$campo=$this->filaAObjeto($fila,$comoObjetoEstandar,$relacion->modelo,false,$operacion);
+                $propiedadId='__'.$relacion->modelo->obtenerAlias().'_id';
+
+                if(!$fila->$propiedadId) {
+                    $objeto->$campo=null;
+                } else {
+                    $objeto->$campo=$this->filaAObjeto($fila,$comoObjetoEstandar,$relacion->modelo,false,$operacion);
+                }
             }
 
             $this->procesarRelacionesSeleccion($objeto,$comoObjetoEstandar);
         }
 
-        $objeto->procesarValores($operacion);
         $this->procesarRelacionesRecursivamente($modelo,$objeto,$operacion);
+
+        $objeto->procesarValores($operacion);
 
         if($comoObjetoEstandar) $objeto=$objeto->obtenerObjeto();
 

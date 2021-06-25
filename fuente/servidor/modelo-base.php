@@ -107,10 +107,14 @@ class modeloBase {
 
     /**
      * Devuelve una nueva instancia de las entidades de este modelo.
+     * @param object|array $valores Valores a asignar.
      * @return \entidadBase
      */
-    public function fabricarEntidad() {
-        return new $this->_tipoEntidad;
+    public function fabricarEntidad($valores=null) {
+        if($valores&&is_subclass_of($valores,'\\entidadBase')) return $valores;
+        $obj=new $this->_tipoEntidad;
+        if($valores) $obj->asignarObjeto($valores);
+        return $obj;
     }
     
     /**
@@ -1404,9 +1408,11 @@ class modeloBase {
             if($campo->relacion=='1:n') {
                 if(!is_array($entidad->$nombre)) continue;
                 
-                foreach($entidad->$nombre as $item) {
-                    if($operacion==self::seleccionar) {                        
-                        if(!$item) continue;
+                foreach($entidad->$nombre as $item) {              
+                    if(!$item) continue;
+                    $item=$modelo->fabricarEntidad($item);
+                    
+                    if($operacion==self::seleccionar) {          
                         $item->procesarRelaciones();
                     } else { //actualizacion, insercion
                         if($valoresPublicos) {
@@ -1420,6 +1426,7 @@ class modeloBase {
                 }
             } else {  
                 if(!$entidad->$nombre) continue;
+                $entidad->$nombre=$modelo->fabricarEntidad($entidad->$nombre);
 
                 if($operacion==self::seleccionar) {
                     $entidad->$nombre->procesarRelaciones();

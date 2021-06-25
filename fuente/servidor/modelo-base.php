@@ -287,6 +287,14 @@ class modeloBase {
         return $this;
     }
 
+    /**
+     * Devuelve la configuración actual sobre relacionar con valores públicos únicamente (ver `relacionarValoresPublicos()`).
+     * @return bool|null
+     */
+    public function valorRelacionesValoresPublicos() {
+        return $this->configRelacionesValoresPublicos;
+    }
+
     ////Configuración de consultas    
 
     /**
@@ -644,11 +652,7 @@ class modeloBase {
 
         $this->procesarRelacionesActualizacionInsercion(self::actualizar);
 
-        if($this->valores->e) {
-            $this->procesarRelacionesRecursivamente($this,$this->valores,self::eliminar);
-
-            $this->valores->procesarValores(self::eliminar);
-        }
+        if($this->valores->e) $this->valores->procesarValores(self::eliminar);
         
         return $this;
     }
@@ -671,8 +675,6 @@ class modeloBase {
         $this->valores->id=$this->ultimoId;
 
         $this->procesarRelacionesActualizacionInsercion(self::crear);
-
-        $this->procesarRelacionesRecursivamente($this,$this->valores,self::crear);
         
         $this->valores->procesarValores(self::crear);
         
@@ -1011,10 +1013,8 @@ class modeloBase {
                 }
             }
 
-            $this->procesarRelacionesSeleccion($objeto,$comoObjetoEstandar);
+            $this->procesarRelacionesSeleccion($modelo,$objeto,$comoObjetoEstandar);
         }
-
-        $this->procesarRelacionesRecursivamente($modelo,$objeto,$operacion);
 
         $objeto->procesarValores($operacion);
 
@@ -1025,11 +1025,12 @@ class modeloBase {
 
     /**
      * Procesa los campos relacionales tras una operación de selección.
+     * @param \modeloBase Modelo al que pertenece el objeto.
      * @param object|\entidadBase Objeto con los valores del registro o instancia de la entidad.
      * @param bool $comoObjetoEstandar Si es `false`, devolverá una instancia de la entidad.
      * @return object|\entidadBase
      */
-    public function procesarRelacionesSeleccion(&$objeto,$comoObjetoEstandar=false) {
+    public function procesarRelacionesSeleccion($modelo,&$objeto,$comoObjetoEstandar=false) {
         if(!$this->configProcesarRelaciones||!$this->configProcesarRelaciones1N) return $this;
 
         foreach($this->campos as $campo) {
@@ -1051,6 +1052,8 @@ class modeloBase {
                 ->donde([$campo->campo=>$objeto->id])
                 ->obtenerListado($comoObjetoEstandar);
         }
+
+        $this->procesarRelacionesRecursivamente($modelo,$objeto,self::seleccionar);
 
         return $this;
     }
@@ -1244,7 +1247,7 @@ class modeloBase {
         foreach($this->campos as $nombre=>$campo) {
             if(!$campo->relacional||$campo->simple||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
 
-            $nombreCampoValor=$campo->campo;
+            $nombreCampoValor=$campo->campo?$campo->campo:$campo->campoforaneo;
             $valor=$this->valores->$nombreCampoValor;
             $objeto=$this->valores->$nombre;
             if(is_array($objeto)) $objeto=(object)$objeto;
@@ -1286,8 +1289,6 @@ class modeloBase {
                 else                   
                     $modelo->establecerValores($objeto);
                 $modelo->actualizar($id);
-                
-                $this->valores->$nombre=$id;
 
                 continue;
             }
@@ -1336,7 +1337,7 @@ class modeloBase {
             $crearActualizar=[];
             $preservar=[];
             
-            $nombreCampo=$campo->campo;
+            $nombreCampo=$campo->campo?$campo->campo:$campo->campoforaneo;
             $listado=$this->valores->$nombre;
             if($listado===null) continue;
             if(!is_array($listado)) $listado=[];
@@ -1374,6 +1375,8 @@ class modeloBase {
             }
         }
 
+        $this->procesarRelacionesRecursivamente($this,$this->valores,$operacion);
+
         return $this;
     }
     
@@ -1387,28 +1390,48 @@ class modeloBase {
      * @return \modeloBase
      */
     protected function procesarRelacionesRecursivamente($modelo,$entidad,$operacion,$niveles=null,$nivel=1) {
-        if(!$this->configProcesarRelaciones&&!$this->configProcesarRelaciones1N) return $this;
-
-        //TODO Procesar según $operacion
-
         foreach($modelo->obtenerCampos() as $nombre=>$campo) {
             if(!$campo->relacional) continue;
 
             $recursion=$niveles===null?intval($campo->recursion):$niveles;
             if($recursion<=$nivel) continue;
 
-            if($campo->relacion=='1:n'&&is_array($entidad->$nombre)) {
+            $modeloCampo=$this->fabricarModeloCampo($campo);
+
+            $valoresPublicos=$modelo->valorRelacionesValoresPublicos();
+            $modeloCampo->relacionarValoresPublicos($valoresPublicos);
+
+            if($campo->relacion=='1:n') {
+                if(!is_array($entidad->$nombre)) continue;
+                
                 foreach($entidad->$nombre as $item) {
-                    $item->procesarRelaciones();
-                    
-                    //Intentar continuar recursivamente
-                    $this->procesarRelacionesRecursivamente($this->fabricarModeloCampo($campo),$item,$operacion,$recursion,$nivel+1);
+                    if($operacion==self::seleccionar) {                        
+                        if(!$item) continue;
+                        $item->procesarRelaciones();
+                    } else { //actualizacion, insercion
+                        if($valoresPublicos) {
+                            $modeloCampo->establecerValoresPublicos($item,true);
+                        } else {
+                            $modeloCampo->establecerValores($item,true);
+                        }
+                        $modeloCampo->procesarRelacionesActualizacionInsercion($operacion);
+                    }
+                    $this->procesarRelacionesRecursivamente($modeloCampo,$item,$operacion,$recursion,$nivel+1);
                 }
-            } elseif(is_subclass_of($entidad->$nombre,'\\entidadBase')) {
-                $entidad->$nombre->procesarRelaciones();
-                    
-                //Intentar continuar recursivamente
-                $this->procesarRelacionesRecursivamente($this->fabricarModeloCampo($campo),$entidad->$nombre,$operacion,$recursion,$nivel+1);
+            } else {  
+                if(!$entidad->$nombre) continue;
+
+                if($operacion==self::seleccionar) {
+                    $entidad->$nombre->procesarRelaciones();
+                } else { //actualizacion, insercion
+                    if($valoresPublicos) {
+                        $modeloCampo->establecerValoresPublicos($entidad->$nombre,true);
+                    } else {
+                        $modeloCampo->establecerValores($entidad->$nombre,true);
+                    }
+                    $modeloCampo->procesarRelacionesActualizacionInsercion($operacion);
+                }
+                $this->procesarRelacionesRecursivamente($modeloCampo,$entidad->$nombre,$operacion,$recursion,$nivel+1);
             }
         }
 

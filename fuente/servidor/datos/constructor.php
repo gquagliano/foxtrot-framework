@@ -81,6 +81,10 @@ class constructor {
      * @return \datos\constructor
      */
     public function seleccionarCampo($aliasEsquema,$nombre,$aliasCampo=null) {
+        foreach($this->campos as $campo)
+            if($campo->esquema==$aliasCampo&&$campo->nombre==$nombre&&$campo->alias==$aliasCampo)
+                return $this;
+
         $this->campos[]=(object)[
             'esquema'=>$aliasEsquema,
             'nombre'=>$nombre,

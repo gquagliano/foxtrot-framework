@@ -101,6 +101,7 @@ class entidadBase {
         foreach(static::obtenerCampos() as $campo) {
             $propiedad=$campo->nombre;
             $columna=$campo->campo;
+            if($campo->campoforaneo) $columna=$campo->campoforaneo;
 
             if(!$campo->relacional||($this->$propiedad&&!$actualizar)) continue;
 
@@ -183,6 +184,8 @@ class entidadBase {
         //@html
         //@alias *
         //@eliminar
+        //@recursion *
+        //@campoForaneo *
 
         $campos=(object)[
             'id'=>(object)[
@@ -220,7 +223,7 @@ class entidadBase {
         $propiedades=get_class_vars(static::class);
         foreach($propiedades as $propiedad=>$v) {
             $comentario=(new ReflectionProperty(static::class,$propiedad))->getDocComment();
-            if(preg_match_all("/@(tipo|relacion|alias|eliminar|contrasena|indice|simple|modelo|entidad|relacion|columna|campo|privado|predeterminado|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
+            if(preg_match_all("/@(tipo|relacion|alias|eliminar|contrasena|indice|simple|modelo|entidad|relacion|columna|campo|privado|predeterminado|recursion|requerido|tamano|etiqueta|omitir|oculto|busqueda|orden|publico|html|campoForaneo)( (.+?))?(\r|\n|\*\/)/s",$comentario,$coincidencias)) {
                 $campos->$propiedad=(object)[
                     'nombre'=>$propiedad
                 ];

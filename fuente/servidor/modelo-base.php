@@ -644,7 +644,10 @@ class modeloBase {
 
         $this->procesarRelacionesActualizacionInsercion(self::actualizar);
 
-        if($this->valores->e) $this->valores->procesarValores(self::eliminar);
+        if($this->valores->e) {
+            $this->valores->procesarValores(self::eliminar);
+            $this->procesarRelacionesRecursivamente($this,$this->valores,self::eliminar);
+        }
         
         return $this;
     }
@@ -669,6 +672,7 @@ class modeloBase {
         $this->procesarRelacionesActualizacionInsercion(self::crear);
 
         $this->valores->procesarValores(self::crear);
+        $this->procesarRelacionesRecursivamente($this,$this->valores,self::crear);
         
         return $this;
     }
@@ -1003,6 +1007,7 @@ class modeloBase {
         }
 
         $objeto->procesarValores($operacion);
+        $this->procesarRelacionesRecursivamente($modelo,$objeto,$operacion);
 
         if($comoObjetoEstandar) $objeto=$objeto->obtenerObjeto();
 
@@ -1112,8 +1117,15 @@ class modeloBase {
             } else {
                 $tipo=self::relacion1N;
             }
+
+            $campoLocal=$campo->campo;
+            $campoForaneo='id';
+            if($campo->campoforaneo) {
+                $campoLocal='id';
+                $campoForaneo=$campo->campoforaneo;
+            }
             
-            $this->agregarRelacion($tipo,$modelo,$alias,$campo->campo,'id');
+            $this->agregarRelacion($tipo,$modelo,$alias,$campoLocal,$campoForaneo);
 
             $this->relaciones[]=(object)[
                 'modelo'=>$modelo,
@@ -1257,7 +1269,6 @@ class modeloBase {
             if($id&&is_object($objeto)) {
                 //Registro existente, actualizar
 
-                $objeto->id=$id;
                 $modelo
                     ->reiniciar()
                     ->omitirRelaciones();
@@ -1356,6 +1367,39 @@ class modeloBase {
 
         return $this;
     }
+    
+    /**
+     * Procesa las relaciones recursivamente, si corresponde en cada campo (según la etiqueta `@recursion`).
+     * @param \modeloBase $modelo
+     * @param \entidadBase $entidad
+     * @param int $operacion
+     * @param int $niveles
+     * @param int $nivel
+     * @return \modeloBase
+     */
+    protected function procesarRelacionesRecursivamente($modelo,$entidad,$operacion,$niveles=null,$nivel=1) {
+        if(!$this->configProcesarRelaciones&&!$this->configProcesarRelaciones1N) return $this;
+
+        //TODO Procesar según $operacion
+
+        foreach($modelo->obtenerCampos() as $nombre=>$campo) {
+            if(!$campo->relacional) continue;
+
+            $recursion=$niveles===null?intval($campo->recursion):$niveles;
+            if($recursion<=$nivel) continue;
+
+            if($campo->relacion=='1:n'&&is_array($entidad->$nombre)) {
+                foreach($entidad->$nombre as $item) {
+                    $item->procesarRelaciones();
+                    
+                    //Intentar continuar recursivamente
+                    $this->procesarRelacionesRecursivamente($this->fabricarModeloCampo($campo),$item,$operacion,$recursion,$nivel+1);
+                }
+            } elseif(is_subclass_of($entidad->$nombre,'\\entidadBase')) {
+                $entidad->$nombre->procesarRelaciones();
+                    
+                //Intentar continuar recursivamente
+                $this->procesarRelacionesRecursivamente($this->fabricarModeloCampo($campo),$entidad->$nombre,$operacion,$recursion,$nivel+1);
             }
         }
 

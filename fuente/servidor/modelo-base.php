@@ -371,7 +371,7 @@ class modeloBase {
      * @return \modeloBase
      */
     public function ordenar($campo,$sentido=null) {
-        if(array_key_exists($campo,$this->campos)) $campo=$this->alias.'.'.$campo;
+        if(property_exists($this->campos,$campo)) $campo=$this->alias.'.'.$campo;
 
         $this->constructor->establecerOrden($campo,$sentido);
 
@@ -384,7 +384,7 @@ class modeloBase {
      * @return \modeloBase
      */
     public function agrupar($campo) {
-        if(array_key_exists($campo,$this->campos)) $campo=$this->alias.'.'.$campo;
+        if(property_exists($this->campos,$campo)) $campo=$this->alias.'.'.$campo;
 
         $this->constructor->establecerAgrupamiento($campo);
 
@@ -1186,7 +1186,7 @@ class modeloBase {
             if($campo->contrasena) $valor=password_hash($valor,PASSWORD_DEFAULT);
 
             //Caso especial: Si el campo es parte de otro campo de búsqueda, se debe reconstruir el caché
-            if(array_key_exists($nombre,$busqueda)) {
+            if(isset($busqueda[$nombre])) {
                 $campoBusqueda=$busqueda[$nombre];
                 if(!in_array($campoBusqueda,$actualizarBusqueda)) $actualizarBusqueda[]=$campoBusqueda;
             }

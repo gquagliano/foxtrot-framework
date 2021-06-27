@@ -648,7 +648,7 @@ class modelo extends modeloBase {
 
         //donde($campo,$valor[,$operador])
         //donde($union,$campo,$valor[,$operador])
-        if((count($args)==2||count($args)==3)&&array_key_exists($args[0],$this->campos)&&(!isset($args[2])||$this->esOperador($args[2]))) {
+        if((count($args)==2||count($args)==3)&&property_exists($this->campos,$args[0])&&(!isset($args[2])||$this->esOperador($args[2]))) {
             list($nombre,$valor,$operador)=$args;
 
             if($valor===null) return $this;
@@ -658,7 +658,7 @@ class modelo extends modeloBase {
 
         //donde($campo,$operador,$valor[,$operador2])
         //donde($union,$campo,$operador,$valor[,$operador2])
-        if((count($args)==3||count($args)==4)&&array_key_exists($args[0],$this->campos)&&$this->esOperador($args[1])) {
+        if((count($args)==3||count($args)==4)&&property_exists($this->campos,$args[0])&&$this->esOperador($args[1])) {
             list($nombre,$operador,$valor,$arg4)=$args;
             if($this->esOperador($arg4)) $operador=$arg4;
             

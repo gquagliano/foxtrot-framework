@@ -328,9 +328,13 @@ class foxtrot {
     }
 
     /**
-     * 
+     * Incluye todos los archivos `.php` de un directorio recursivamente. **Advertencia:** Este método no realiza verificaciones de seguridad,
+     * fue concebido para uso interno y debe utilizarse con precaución.
+     * @param string $ruta Ruta.
+     * @param bool $excluirPub Excluir archivos `.pub.php`.
+     * @return array
      */
-    private static function incluirDirectorio($ruta,$excluirPub=true) {
+    public static function incluirDirectorio($ruta,$excluirPub=true) {
         $incluidos=[];
         $archivos=glob($ruta.'*');
         foreach($archivos as $archivo) {

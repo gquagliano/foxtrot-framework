@@ -40,7 +40,8 @@ class configuracion {
      * 
      */
     public static function cargar() {
-        include(_raiz.'config.php');
+        $ruta=_raiz.'config.php';
+        if(file_exists($ruta)) include($ruta);
     }
 
     /**

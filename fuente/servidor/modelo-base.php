@@ -80,11 +80,12 @@ class modeloBase {
      * @param \datos\bd $bd Instancia de la base de datos a utilizar. Opcional; si se omite, se utilizará la instancia global.
      * @param string $nombre Nombre del modelo de datos. Parámetro de uso interno (normalmente debe omitirse).
      * @param string $tipoEntidad Nombre completo del tipo de las entidades. Parámetro de uso interno (normalmente debe omitirse).
+     * @param string $tabla Nombre de la tabla (normalmente debe omitirse).
      */
-    function __construct($bd=null,$nombre=null,$tipoEntidad=null) {
+    function __construct($bd=null,$nombre=null,$tipoEntidad=null,$tabla=null) {
         if($nombre) {
             $this->nombre=$nombre;
-            $this->_tabla=$nombre;
+            $this->_tabla=$tabla?$tabla:$nombre;
         } else {
             $clase=foxtrot::obtenerDatosClase($this,'modelo');
             $this->nombre=$clase->ruta.$clase->nombre;        

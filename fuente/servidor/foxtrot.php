@@ -685,6 +685,7 @@ class foxtrot {
 
         if(!class_exists($clase)||!is_subclass_of($clase,'\\modelo')) {
             //Clase inexistente, intentar crear asumiendo que $nombre es el nombre de la entidad
+            //TODO Buscar por entidad::nombreModelo primero
             return self::fabricarModeloPorEntidad($nombre,$bd);
         }
 

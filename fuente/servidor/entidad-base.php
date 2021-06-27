@@ -13,6 +13,7 @@ defined('_inc') or exit;
  */
 class entidadBase {
     protected static $nombreModelo;
+    protected static $tablaModelo;
     protected static $tipoModelo;
     protected static $omitirFechas=false;
 
@@ -161,7 +162,7 @@ class entidadBase {
      * @return \modelo
      */
     public static function fabricarModelo($bd=null) {
-        if(!static::$tipoModelo) return new modelo($bd,static::$nombreModelo,static::class);
+        if(!static::$tipoModelo) return new modelo($bd,static::$nombreModelo,static::class,static::$tablaModelo);
         return new static::$tipoModelo;
     }
 

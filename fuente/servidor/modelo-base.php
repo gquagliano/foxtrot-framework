@@ -1252,15 +1252,26 @@ class modeloBase {
             $valoresPrevios=$this->valores->fabricarModelo()->obtenerItem($this->valores->id);
 
         foreach($this->campos as $nombre=>$campo) {
-            if(!$campo->relacional||$campo->simple||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
+            if(!$campo->relacional||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
 
             $nombreCampoValor=null;
             $nombreCampoForaneo=null;
-            if($campo->campo) $nombreCampoValor=$campo->campo;
+            $valor=null;
+            if($campo->campo) {
+                $nombreCampoValor=$campo->campo;
+                $valor=$this->valores->$nombreCampoValor;
+            }
             if($campo->campoforaneo) $nombreCampoForaneo=$campo->campoforaneo;
-            $valor=$this->valores->$nombreCampoValor;
             $objeto=$this->valores->$nombre;
             if(is_array($objeto)) $objeto=(object)$objeto;
+
+            //Tomar el id del objeto asignado
+            if($nombreCampoValor&&is_object($objeto)&&$objeto->id!==null) {
+                $valor=$objeto->id;
+                $this->valores->$nombreCampoValor=$valor;
+            }
+
+            if($campo->simple) continue;
 
             if($valor===null&&!is_object($objeto)) continue;
             

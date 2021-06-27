@@ -1254,7 +1254,10 @@ class modeloBase {
         foreach($this->campos as $nombre=>$campo) {
             if(!$campo->relacional||$campo->simple||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
 
-            $nombreCampoValor=$campo->campo?$campo->campo:$campo->campoforaneo;
+            $nombreCampoValor=null;
+            $nombreCampoForaneo=null;
+            if($campo->campo) $nombreCampoValor=$campo->campo;
+            if($campo->campoforaneo) $nombreCampoForaneo=$campo->campoforaneo;
             $valor=$this->valores->$nombreCampoValor;
             $objeto=$this->valores->$nombre;
             if(is_array($objeto)) $objeto=(object)$objeto;
@@ -1291,10 +1294,14 @@ class modeloBase {
                 $modelo
                     ->reiniciar()
                     ->omitirRelaciones();
+                    
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($objeto);
                 else                   
                     $modelo->establecerValores($objeto);
+                    
+                if($nombreCampoForaneo) $modelo->establecerValores([$nombreCampoForaneo=>$this->valores->id]);
+
                 $modelo->actualizar($id);
 
                 continue;
@@ -1306,14 +1313,18 @@ class modeloBase {
                 $modelo
                     ->reiniciar()
                     ->omitirRelaciones();
+
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($objeto);
                 else                   
                     $modelo->establecerValores($objeto);
+
+                if($nombreCampoForaneo) $modelo->establecerValores([$nombreCampoForaneo=>$this->valores->id]);
+                
                 $modelo->crear();
                 
                 $this->valores->$nombre=$modelo->obtenerEntidad();
-                $this->valores->$nombreCampoValor=$modelo->obtenerId();
+                if($nombreCampoValor) $this->valores->$nombreCampoValor=$modelo->obtenerId();
             }
         }
 

@@ -873,9 +873,12 @@ class modeloBase {
      * @param string $alias Alias.
      * @param string $campo Nombre del campo local.
      * @param string $campoForaneo Nombre del campo foráneo.
+     * @param string $destino Nombre de la propiedad en la que se asignará la entidad foránea (por defecto, será igual al nombrer del modelo).
      * @return \modeloBase
      */
-    public function agregarRelacion($tipo,$modelo,$alias,$campo,$campoForaneo) {
+    public function agregarRelacion($tipo,$modelo,$alias,$campo,$campoForaneo,$destino=null) {
+        $modelo->establecerAlias($alias);
+
         $condicion=$this->constructor->fabricarCondicion()
             ->campo(null,$this->alias,$campo,'=',$alias,$campoForaneo);
 
@@ -885,6 +888,11 @@ class modeloBase {
         $this->constructor->agregarRelacion($relacion);
 
         $this->agregarTodosLosCampos($modelo,$alias);
+
+        $this->relaciones[]=(object)[
+            'modelo'=>$modelo,
+            'campo'=>$destino?$destino:$modelo->obtenerNombre()
+        ];
 
         return $this;
     }
@@ -899,9 +907,12 @@ class modeloBase {
      * @param array $parametros Parámetros utilizados en la sentencia, como `['nombre'=>valor]`.
      * @param array $tipos Tipos de los valores, como `['nombre'=>tipo]` (ver constantes `constructor::tipo`).  Opcional; si
      * se omite, se estimarán los tipos automáticamente.
+     * @param string $destino Nombre de la propiedad en la que se asignará la entidad foránea (por defecto, será igual al nombrer del modelo).
      * @return \modeloBase
      */
-    public function agregarRelacionSql($tipo,$modelo,$alias,$condicion,$parametros=null,$tipos=null) {
+    public function agregarRelacionSql($tipo,$modelo,$alias,$condicion,$parametros=null,$tipos=null,$destino=null) {
+        $modelo->establecerAlias($alias);
+
         $condicion=$this->constructor->fabricarCondicion()
             ->sql(null,$condicion,$parametros,$tipos);
 
@@ -911,6 +922,11 @@ class modeloBase {
         $this->constructor->agregarRelacion($relacion);
 
         $this->agregarTodosLosCampos($modelo,$alias);
+
+        $this->relaciones[]=(object)[
+            'modelo'=>$modelo,
+            'campo'=>$destino?$destino:$modelo->obtenerNombre()
+        ];
 
         return $this;
     }

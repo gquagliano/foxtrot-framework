@@ -22,12 +22,22 @@ class modelo extends modeloBase {
      * @param string $alias Alias del modelo foráneo.
      * @param string $condicion Condición como SQL.
      * @param array|object $parametros Parámetros para la condición (opcional).
+     * @param string $destino Nombre de la propiedad en la que se asignará la entidad foránea (por defecto, será igual al nombrer del modelo).
+     * @return \modelo
+     *//**
+     * Agrega una relación.
+     * @param int $tipo Tipo de relación: `modelo::relacion1N` (`1:N`), `modelo::relacion11` (`1:1`), `modelo::relacion10` (`1:0`, es decir
+     * `1:1` o nulo).
+     * @param string $modelo Nombre del modelo foráneo.
+     * @param string $alias Alias del modelo foráneo.
+     * @param string $condicion Condición como SQL.
+     * @param string $destino Nombre de la propiedad en la que se asignará la entidad foránea (por defecto, será igual al nombrer del modelo).
      * @return \modelo
      */
-    public function relacionar($tipo,$modelo,$alias,$condicion,$parametros=null) {
+    public function relacionar($tipo,$modelo,$alias,$condicion,$parametros=null,$destino=null) {
         //TODO Sobrecargas con otras ascepciones útiles de este método, por ejemplo por condición (\datos\condicion) o por campo,operador,valor
         if(is_string($modelo)) $modelo=\foxtrot::fabricarModelo($modelo);
-        $this->agregarRelacionSql($tipo,$modelo,$alias,$condicion,$parametros);
+        $this->agregarRelacionSql($tipo,$modelo,$alias,$condicion,$parametros,null,$destino);
         return $this;
     }
 

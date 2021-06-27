@@ -212,8 +212,7 @@ class entidadBase {
             ],
             'e'=>(object)[
                 'nombre'=>'e',
-                'tipo'=>'logico',
-                'oculto'=>true
+                'tipo'=>'logico'
             ]
         ];
 

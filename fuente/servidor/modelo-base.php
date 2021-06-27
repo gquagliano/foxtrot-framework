@@ -1306,7 +1306,7 @@ class modeloBase {
                 $valoresPrevios->$nombreCampoValor:
                 null;
 
-            if($idPrevio!==null&&$id!=$idPrevio&&($this->configEliminarRelacionados||$campo->eliminar)) {
+            if($idPrevio!==null&&$id!=$idPrevio&&($this->valores->e||$this->configEliminarRelacionados||$campo->eliminar)) {
                 //Eliminar
 
                 $modelo->eliminar($idPrevio);
@@ -1389,15 +1389,17 @@ class modeloBase {
             
             $nombreCampo=$campo->campo?$campo->campo:$campo->campoforaneo;
             $listado=$this->valores->$nombre;
-            if($listado===null) continue;
+            if($listado===null&&!$this->valores->e) continue;
             if(!is_array($listado)) $listado=[];
 
-            foreach($listado as $item) {
-                if(!is_object($item)&&!is_array($item)) continue;
-                if(is_array($item)) $item=(object)$item;
+            if(!$this->valores->e) {
+                foreach($listado as $item) {
+                    if(!is_object($item)&&!is_array($item)) continue;
+                    if(is_array($item)) $item=(object)$item;
 
-                if($item->id) $preservar[]=$item->id;
-                $crearActualizar[]=$item;
+                    if($item->id) $preservar[]=$item->id;
+                    $crearActualizar[]=$item;
+                }
             }
 
             if($this->configEliminarRelacionados||$campo->eliminar) {

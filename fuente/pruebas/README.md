@@ -6,7 +6,7 @@ Las pruebas siempre se ejecutan en `fuente`, no es necesario construir ni serán
 
 ### Pruebas del modelo de datos (ORM)
 
-1. Crear una base de datos e importar `pruebas-foxtrot.php`.
+1. Crear una base de datos e importar `pruebas-foxtrot.sql`.
 
 2. Configurar las credenciales de la base de datos en `prueba.php`.
 

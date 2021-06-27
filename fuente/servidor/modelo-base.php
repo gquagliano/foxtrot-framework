@@ -206,9 +206,14 @@ class modeloBase {
         $this->configEliminarRelacionados=false;
         $this->configRelacionesValoresPublicos=null;
         $this->seleccionAgregada=false;
+
+        $this->relaciones=[];
+        $this->resultado=null;
         $this->ultimoId=null;
         $this->cantidadFilas=0;
         $this->valores=null;
+        $this->contrasena=null;
+
         return $this;
     }
 

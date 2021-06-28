@@ -33,8 +33,8 @@ class {nombre} extends \controlador {
 
         $modelo=$this->modelo
             ->reiniciar()
-            //->ordenar('titulo','asc')
             ->establecerAlias('t');
+            //->ordenar('titulo','asc');
 
         if($filtro->texto) {
             $modelo->donde('t.`id`=@filtro{sqlFiltros}',[

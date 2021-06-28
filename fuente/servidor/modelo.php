@@ -498,19 +498,6 @@ class modelo extends modeloBase {
      * @return \modelo
      *//**
      * Agrega una condición `Y` (`AND`).
-     * @param string $campo Campo.
-     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
-     * @param mixed $valor Valor.
-     * @return \modelo
-     *//**
-     * Agrega una condición.
-     * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
-     * @param string $campo Campo.
-     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
-     * @param mixed $valor Valor.
-     * @return \modelo
-     *//**
-     * Agrega una condición `Y` (`AND`).
      * @param string $sql Condición como SQL.
      * @param array|object $parametros Array asociativo de parámetros (opcional).
      * @param array|mixed $valor Array asociativo de tipos de datos (`[parametro=>tipo]`, opcional).
@@ -569,19 +556,6 @@ class modelo extends modeloBase {
      * @param mixed $valor Valor.
      * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`) a utilizar para comparar los 
      * valores (por defecto, `=`).
-     * @return \modelo
-     *//**
-     * Agrega una condición `HAVING` `Y` (`AND`).
-     * @param string $campo Campo.
-     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
-     * @param mixed $valor Valor.
-     * @return \modelo
-     *//**
-     * Agrega una condición `HAVING`.
-     * @param int $union Unión (`modelo::y`, `modelo:o`, `modelo::ox`).
-     * @param string $campo Campo.
-     * @param int $operador Operador (`=`, `<`, `<=`, `>`, `>=`, `<>`, `modelo::como`, `modelo::noComo`).
-     * @param mixed $valor Valor.
      * @return \modelo
      *//**
      * Agrega una condición `HAVING` `Y` (`AND`).
@@ -658,21 +632,10 @@ class modelo extends modeloBase {
 
         //donde($campo,$valor[,$operador])
         //donde($union,$campo,$valor[,$operador])
-        if((count($args)==2||count($args)==3)&&property_exists($this->campos,$args[0])&&(!isset($args[2])||$this->esOperador($args[2]))) {
+        if((count($args)==2||count($args)==3)&&is_string($args[0])&&(!isset($args[2])||$this->esOperador($args[2]))) {
             list($nombre,$valor,$operador)=$args;
 
             if($valor===null) return $this;
-
-            return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
-        }
-
-        //donde($campo,$operador,$valor[,$operador2])
-        //donde($union,$campo,$operador,$valor[,$operador2])
-        if((count($args)==3||count($args)==4)&&property_exists($this->campos,$args[0])&&$this->esOperador($args[1])) {
-            list($nombre,$operador,$valor,$arg4)=$args;
-            if($this->esOperador($arg4)) $operador=$arg4;
-            
-            if($valor===null||!is_integer($operador)) return $this;
 
             return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
         }

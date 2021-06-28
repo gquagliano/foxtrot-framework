@@ -371,15 +371,6 @@ class pruebasModelo extends prueba {
 
         if(!$item||$item->id!=1) return 3;
 
-        //donde(campo,operador,valor)
-
-        $item=self::$items
-            ->reiniciar()
-            ->donde('id','=',1)
-            ->obtenerUno();
-
-        if(!$item||$item->id!=1) return 4;
-
         //donde(sql,parametros,tipos)
 
         $item=self::$items
@@ -390,7 +381,7 @@ class pruebasModelo extends prueba {
             ],'i')
             ->obtenerUno();
 
-        if(!$item||$item->id!=1) return 5;
+        if(!$item||$item->id!=1) return 4;
 
         //TODO Uniones (o, ox)
         //TODO Accesos directos (dondeEn, etc.), negados

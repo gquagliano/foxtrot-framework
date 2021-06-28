@@ -966,7 +966,7 @@ var componente=new function() {
         //componente concreto)        
         if(this.campo) {
             var valor=this.obtenerDatos(true);
-            if(typeof valor!=="undefined") this.valor(valor);
+            if(typeof valor!=="undefined"&&valor!==null) this.valor(valor);
         }
 
         if(actualizarHijos) {

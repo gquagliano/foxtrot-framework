@@ -122,8 +122,25 @@ class construirProduccion extends asistente {
                 }
             }
         }
+        //Importar todo con *
+        if(trim($modulos[0])=='*') $modulos=['cliente/*','servidor/*'];
+        $modulosNuevo=[];
         foreach($modulos as $modulo) {
-            if(!trim($modulo)) continue;
+            $modulo=trim($modulo);
+            if($modulo=='cliente/*') {
+                foreach(glob(_desarrollo.'cliente/modulos/*',GLOB_ONLYDIR) as $subdir)
+                    $modulosNuevo[]=basename($subdir);
+            } elseif($modulo=='servidor/*') {
+                foreach(glob(_desarrollo.'servidor/modulos/*',GLOB_ONLYDIR) as $subdir)
+                    $modulosNuevo[]=basename($subdir);
+            } else {
+                $modulosNuevo[]=$modulo;
+            }
+        }
+        $modulos=$modulosNuevo;
+        foreach($modulos as $modulo) {
+            $modulo=trim($modulo);
+            if(!$modulo) continue;
             if(file_exists(_desarrollo.'cliente/modulos/'.$modulo)) {
                 copiarModulos('cliente/modulos/'.$modulo.'/');
             }

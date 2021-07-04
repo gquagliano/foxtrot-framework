@@ -93,7 +93,13 @@ class crearModelo extends asistente {
         if(file_exists($rutaEntidad)) gestor::error('La clase de la entidad ya existe.');
 
         $tabla='';
-        if($param->tabla) $tabla='protected static $tabla=\''.$param->tabla.'\';'.PHP_EOL;
+        if($param->tabla) {
+            if($param->soloEntidad) {
+                $tabla='protected static $tablaModelo=\''.$param->tabla.'\';'.PHP_EOL;
+            } else {
+                $tabla='protected static $tabla=\''.$param->tabla.'\';'.PHP_EOL;
+            }
+        }
 
         $vars=[
             '{modelo}'=>$clase,

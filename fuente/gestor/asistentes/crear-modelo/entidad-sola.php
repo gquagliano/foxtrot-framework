@@ -13,6 +13,7 @@ defined('_inc') or exit;
  */
 class {entidad} extends \entidad {
     protected static $nombreModelo='{modelo}';
+    {tabla}
 
     //id, e (campo de baja lógica), fecha_alta, fecha_actualizacion y fecha_baja son automáticos, no requieren definir la propiedad ni comentarios
     

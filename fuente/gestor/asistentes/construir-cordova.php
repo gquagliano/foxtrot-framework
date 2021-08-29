@@ -124,7 +124,7 @@ class construirCordova extends asistente {
         //Almacenar parámetros en el JSON para la próxima ejecución
         $this->actualizarJson($param);
 
-        if($param->accion=='normal'||$param->accion=='construir') {
+        if($param->accion=='normal'||$param->accion=='construir'||$param->accion=='ninguna') {
             if(!$param->inicio) gestor::error('Ingresá el nombre de la vista inicial.');
 
             //Primero, construir aplicación

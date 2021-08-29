@@ -1,4 +1,8 @@
 {
     "browserWindow": {
+        "autoHideMenuBar":true,
+        "webPreferences": {
+            "nodeIntegration": true
+        }
     }
 }

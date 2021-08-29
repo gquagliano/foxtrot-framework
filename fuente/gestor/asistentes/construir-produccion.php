@@ -93,7 +93,7 @@ class construirProduccion extends asistente {
         if(!is_dir(_produccion.$rutaAplicacion.'cliente/vistas/')) mkdir(_produccion.$rutaAplicacion.'cliente/vistas/',0755,true);
 
         ////Copiar framework
-        $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
+        $tipos=['*.php','*.html','*.json','*.jpg','*.png','*.gif','*.svg','*.js','*.css'];
         copiar(_desarrollo.'cliente/',$tipos,_produccion.'cliente/',true,[realpath(_desarrollo.'cliente/modulos')]);
         copiar(_desarrollo.'servidor/',$tipos,_produccion.'servidor/',true,[realpath(_desarrollo.'servidor/modulos')]);
 

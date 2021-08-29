@@ -50,7 +50,7 @@ if(array_key_exists('ejecutar',$_REQUEST)) {
     ////php, html, css y otros recursos
 
     //Copiar
-    $tipos=['*.php','*.html','*.jpg','*.png','*.gif','*.svg','.htaccess'];
+    $tipos=['*.php','*.html','*.json','*.jpg','*.png','*.gif','*.svg','.htaccess'];
     copiar(_fuente,$tipos,_desarrollo,false);
     copiar(_fuente.'recursos/',$tipos,_desarrollo.'recursos/');
     copiar(_fuente.'servidor/',$tipos,_desarrollo.'servidor/',true,[realpath(_fuente.'servidor/modulos')]);

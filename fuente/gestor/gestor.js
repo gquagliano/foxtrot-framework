@@ -348,6 +348,7 @@
      */
     this.construirEmbebible=function() {
         this.abrirDialogo("dialogo-construir-embebible");
+        this.plataformaSeleccionada(document.querySelector("#dialogo-construir-embebible [name='plataforma']"));
     };
 
     /**
@@ -363,7 +364,18 @@
      */
     this.plataformaSeleccionada=function(elem) {
         var valor=elem.valor();
-        document.querySelector("#dialogo-construir-embebible [name='destino']").propiedad("disabled",valor=="electron");
+        if(valor=="electron") {
+            document.querySelector("#dialogo-construir-embebible [name='destino']").propiedad("disabled",true);
+            document.querySelector("#dialogo-construir-embebible #ce-ejecutar").propiedad("disabled",true).propiedad("checked",false);
+            document.querySelector("#dialogo-construir-embebible #accion-normal").propiedad("disabled",true).propiedad("checked",false);
+            document.querySelector("#dialogo-construir-embebible #accion-construir").propiedad("checked",true);
+            document.querySelector("#dialogo-construir-embebible #accion-ejecutar").propiedad("disabled",true).propiedad("checked",false);           
+        } else {
+            document.querySelector("#dialogo-construir-embebible [name='destino']").propiedad("disabled",false);
+            document.querySelector("#dialogo-construir-embebible #ce-ejecutar").propiedad("disabled",false);
+            document.querySelector("#dialogo-construir-embebible #accion-normal").propiedad("disabled",false);
+            document.querySelector("#dialogo-construir-embebible #accion-ejecutar").propiedad("disabled",false);
+        }
     };
 
     /**

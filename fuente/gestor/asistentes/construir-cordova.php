@@ -68,19 +68,18 @@ class construirCordova extends asistente {
         </div>
         <div class="form-inline">
             <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" name="ejecutar" checked id="ce-ejecutar" checked>
+                <input type="checkbox" class="custom-control-input" name="ejecutar" id="ce-ejecutar" checked>
                 <label class="custom-control-label" for="ce-ejecutar">Ejecutar en </label>
             </div>
-            <input type="text" class="form-control ml-2 form-control-sm" name="destino" value="<?=$json->embebible->cordova->destino?>"
-                <?=$json->embebible->cordova->plataforma=='electron'?'disabled':''?>>
-            <em class="d-inline-block ml-2">(Opcional si hay solo un dispositivo conectado)</em>
+            <input type="text" class="form-control ml-2 form-control-sm" name="destino" value="<?=$json->embebible->cordova->destino?>">
+            <em class="d-inline-block ml-2">(Opcional)</em>
         </div>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" name="depuracion" checked id="ce-depuracion">
+            <input type="checkbox" class="custom-control-input" name="depuracion" <?=!$json->embebible->depuracion?'checked':''?> id="ce-depuracion">
             <label class="custom-control-label" for="ce-depuracion">Depuración</label>
         </div>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" name="embebibles" checked id="ce-embebibles">
+            <input type="checkbox" class="custom-control-input" name="embebibles" <?=!$json->embebible->embebibles?'checked':''?> id="ce-embebibles">
             <label class="custom-control-label" for="ce-embebibles">Integrar vistas embebibles</label>
         </div>
         <div class="custom-control custom-checkbox">
@@ -99,9 +98,13 @@ class construirCordova extends asistente {
             <input type="radio" class="custom-control-input" name="accion" value="construir" id="accion-construir" <?=$json->embebible->accion=='construir'?'checked':''?>>
             <label class="custom-control-label" for="accion-construir">Solo construir, no ejecutar</label>
         </div>
-        <div class="custom-control custom-radio mb-3">
+        <div class="custom-control custom-radio">
             <input type="radio" class="custom-control-input" name="accion" value="ejecutar" id="accion-ejecutar" <?=$json->embebible->accion=='ejecutar'?'checked':''?>>
             <label class="custom-control-label" for="accion-ejecutar">Solo ejecutar, no volver a construir</label>
+        </div>
+        <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" name="accion" value="ninguna" id="accion-ninguna" <?=$json->embebible->accion=='ninguna'?'checked':''?>>
+            <label class="custom-control-label" for="accion-ninguna">No construir ni ejecutar, solo copiar los archivos</label>
         </div>
 <?php
         if(!function_exists('shell_exec')) {
@@ -163,6 +166,24 @@ class construirCordova extends asistente {
                     $ruta=$dir.'../config.xml';
                     $xml=file_get_contents($ruta);
                     $xml=preg_replace('/(<content .*?)src=".+?"(.*?>)/s','\1src="index.html"\2',$xml);
+
+                    if($param->plataforma=='electron') {
+                        //Inicializar settings.json
+                        if(!preg_match('/"ElectronSettingsFilePath"/',$xml)) {
+                            if(!preg_match('/<platform .*?name="electron".*?>/si',$xml)) {
+                                $xml=str_replace('</widget>','    <platform name="electron">
+        <preference name="ElectronSettingsFilePath" value="electron-settings.json" />
+    </platform>
+</widget>',$xml);
+                            } else {
+                                $xml=preg_replace('/(<platform .*?name="electron".*?>)/si','$1
+        <preference name="ElectronSettingsFilePath" value="electron-settings.json" />',$xml);
+                            }
+
+                            copy(_desarrollo.'electron-settings.json',$dir.'../electron-settings.json');
+                        }
+                    }
+
                     file_put_contents($ruta,$xml);
                 }
 
@@ -179,11 +200,12 @@ class construirCordova extends asistente {
                 rename($dir.'index-cordova.html',$dir.'index.html');
             }
         }
-            
+        
         //Construir y ejecutar
         if($param->www) {
             $dir=dirname($param->www);
             chdir($dir);
+            registroExec('CWD',getcwd());
 
             $pl=$param->plataforma;
             if(!$pl) $pl='android';
@@ -200,13 +222,13 @@ class construirCordova extends asistente {
 
                 if($param->accion=='ejecutar') $destino.=' --nobuild';
 
-                $comando='run '.escapeshellarg($pl).' '.$destino.' --no-update-notifier 2>&1';
+                $comando='run '.escapeshellarg($pl).' '.$destino.' --no-update-notifier'.(!$param->depuracion?' --release':'').' 2>&1';
                 
                 $esperar=$pl!='electron';
                 $o=ejecutar('cordova',$comando,$esperar);
                 registroExec('cordova '.$comando,$o);
-            } else {                
-                $comando='cordova prepare '.escapeshellarg($pl).' --no-update-notifier 2>&1';
+            } elseif($param->accion=='construir') {         
+                $comando='cordova prepare '.escapeshellarg($pl).' --no-update-notifier'.(!$param->depuracion?' --release':'').' 2>&1';
                 $o=shell_exec($comando);
                 registroExec($comando,$o);
             }
@@ -222,7 +244,9 @@ class construirCordova extends asistente {
             'cordova'=>[
                 'www'=>$param->www,
                 'plataforma'=>$param->plataforma,
-                'destino'=>$param->destino
+                'destino'=>$param->destino,
+                'depuracion'=>$param->depuracion,
+                'embebibles'=>$param->embebibles
             ]
         ];
         gestor::actualizarJsonAplicacion($json);  

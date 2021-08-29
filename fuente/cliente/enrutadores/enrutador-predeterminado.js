@@ -18,7 +18,16 @@ var enrutadorPredeterminado=function() {
      * @param {string} ruta - Cadena a evaluar.
      */
     this.obtenerUrlVista=function(ruta) {
-        return ruta+"/";
+        if(!ui.esCordova())
+            return ruta+"/";
+
+        //En Cordova (especialmente Electron, en otras plataformas quizás no tiene sentido), se debe dirigir al archivo HTML
+        var nombreAplicacion=ui.obtenerAplicacion().obtenerNombre();
+        if(!nombreAplicacion) {
+            //La aplicación desconoce su nombre, obtener a partir de la ruta en el sistema de archivos
+            nombreAplicacion=window.location.href.match(/\/www\/aplicaciones\/(.+?)\/cliente/)[1];
+        }
+        return "aplicaciones/"+nombreAplicacion+"/cliente/vistas/"+ruta+".html";
     };    
 };
 

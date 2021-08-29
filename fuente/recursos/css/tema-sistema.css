@@ -25,6 +25,9 @@ body {
 body.cordova {
     font-family: inherit;
 }
+body.cordova-electron {
+    font-family: "Segoe UI",sans-serif;
+}
 .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
     padding-right: 30px;
     padding-left: 30px;

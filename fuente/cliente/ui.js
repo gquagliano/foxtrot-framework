@@ -44,7 +44,8 @@ var ui=new function() {
         nombreVistaPrincipal=null,
         jsonVistaPrincipal=null,
         confirmarSalidaActivado=false,
-        confirmarSalidaMensaje;
+        confirmarSalidaMensaje,
+        electronWindow=null;
 
     ////Elementos del dom
 
@@ -1728,6 +1729,14 @@ var ui=new function() {
     };
 
     /**
+     * Devuelve la instancia de la propia ventana de Electron.
+     * @returns {(Object|null)}
+     */
+    this.obenerElectron=function() {
+        return electronWindow;
+    };
+
+    /**
      * Si es Cordova o cliente de escritorio, cierra la aplicación.
      * @returns {ui}
      */
@@ -1969,7 +1978,7 @@ var ui=new function() {
 
             if(esCordova) {
                 doc.documentElement.agregarClase("cordova");
-                body.agregarClase("cordova");
+                body.agregarClase("cordova")
             }
 
             //Preprocesar parámetros de la URL
@@ -1988,6 +1997,18 @@ var ui=new function() {
         body.agregarClase("tamano-"+this.obtenerTamano());
 
         var listo=function() {
+            if(esCordova) {
+                body.agregarClase("cordova-"+cordova.platformId);
+                if(cordova.platformId=="electron") {
+                    //nodeIntegration debe ser true
+                    try {
+                        electronWindow=require("electron").remote.getCurrentWindow();
+                        //Configuración inicial
+                        electronWindow.setMenu(null);
+                    } catch(x) {}
+                }
+            }
+
             //El evento Listo en los componentes se ejecuta incluso en modo edición
             ui.eventoComponentes(null,"listo");
         };

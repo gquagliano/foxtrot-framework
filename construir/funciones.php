@@ -50,14 +50,15 @@ function registroExec($comando,$respuesta) {
     file_put_contents(__DIR__.'/../desarrollo/exec.log','# '.$comando.PHP_EOL.trim($respuesta).PHP_EOL.PHP_EOL,FILE_APPEND);
 }
 
-function ejecutar($comando,$argumentos,$esperarSalida=true) {
+function ejecutar($comando,$argumentos,$esperarSalida=true,$usuario=null,$contrasena=null) {
     if($esperarSalida)
         return shell_exec($comando.' '.$argumentos);
     
     if(PHP_OS_FAMILY==='Windows') {
         $dir=trim(getcwd(),'\\/');
         chdir(__DIR__);
-        exec('start ejecutar.exe '.escapeshellarg($dir).' '.escapeshellarg($comando).' '.escapeshellarg($argumentos).' gabriel lupe 2>&1');
+        exec('start ejecutar.exe '.escapeshellarg($dir).' '.escapeshellarg($comando).' '
+            .escapeshellarg($argumentos).' '.($usuario&&$contrasena?escapeshellarg($usuario).' '.escapeshellarg($contrasena):'').' 2>&1');
         chdir($dir);
         return null;
     }

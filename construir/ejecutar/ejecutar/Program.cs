@@ -7,7 +7,7 @@
  * La razón por la cual se realiza de esta forma es que no es posible en forma fehaciente y simple ejecutar comandos desde PHP en Windows sin esperar el resultado, 
  * mientras que trucos como utilizar "start /B" no es equivalente a ejecutar el comando directamente en la consola, por lo que vuelven más complejo el proceso.
  * 
- * ejecutar.exe "ruta de trabajo" comando "argumentos" [usuario contraseña]
+ * ejecutar.exe "ruta de trabajo" comando ["argumentos"] [usuario contraseña]
  * 
  * @author Gabriel Quagliano - gabriel.quagliano@gmail.com
  * @version 1.0
@@ -21,24 +21,33 @@ namespace ejecutar {
         static void Main(string[] args) {
             string ruta = args[0],
                 comando = args[1],
-                argumentos = args[2],
-                usuario=null,
-                contrasena=null;
+                argumentos = null,
+                usuario = null,
+                contrasena = null;
+
             if (args.Length == 5) {
+                argumentos = args[2];
                 usuario = args[3];
                 contrasena = args[4];
+            } else if (args.Length == 4) {
+                usuario = args[2];
+                contrasena = args[3];
             }
             
             ProcessStartInfo pInfo = new ProcessStartInfo(comando, argumentos);
-            pInfo.UseShellExecute = false;
-            pInfo.RedirectStandardInput = true;
-            pInfo.RedirectStandardError = true;
-            pInfo.RedirectStandardOutput = true;
+
+            //pInfo.UseShellExecute = false;
+            //pInfo.RedirectStandardInput = true;
+            //pInfo.RedirectStandardError = true;
+            //pInfo.RedirectStandardOutput = true;
             pInfo.WindowStyle = ProcessWindowStyle.Normal;
+
             pInfo.WorkingDirectory = ruta;
-            pInfo.LoadUserProfile = true;
+
+            if (usuario != null && contrasena != null) pInfo.LoadUserProfile = true;
             if (usuario != null) pInfo.UserName = usuario;
             if (contrasena != null) pInfo.Password = new NetworkCredential(usuario, contrasena).SecurePassword;
+
             Process.Start(pInfo);
         }
     }

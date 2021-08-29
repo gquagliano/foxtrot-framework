@@ -19,12 +19,15 @@ var aplicacion=new function() {
     /**
      * @var {servidor} servidor - Acceso al controlador de servidor.
      * @var {aplicacion} prototipo - Instancia de `aplicacion`.
+     * @var {string} nombre - Nombre de la aplicación.
      */
     this.servidor=null;
     this.prototipo=this;
+    var nombre=null;
     
     /**
      * Devuelve la instancia del gestor de la interfaz con el servidor.
+     * @returns {servidor}
      */
     this.obtenerServidor=function() {
         return this.servidor;
@@ -32,12 +35,16 @@ var aplicacion=new function() {
 
     /**
      * Fabrica una instancia de una aplicación concreta dada su función.
+     * @param {string} [nombre] - Nombre de la aplicación.
+     * @returns {Object}
      */
-    this.fabricarAplicacion=function(fn) {
+    this.fabricarAplicacion=function(fn,nombre) {
         //Heredar prototipo
         fn.prototype=new (this.cttr());
 
         var obj=new fn;
+
+        if(typeof nombre=="string") fn.establecerNombre(nombre);
 
         //Inicializar las propiedades que son objetos (de otro modo, se copiarán las referencias desde el prototipo)
         //obj.hijos=[];
@@ -48,6 +55,7 @@ var aplicacion=new function() {
 
     /**
      * Inicializa la instancia.
+     * @returns {aplicacion}
      */
     this.inicializar=function() {
         this.inicializarAplicacion();
@@ -56,11 +64,30 @@ var aplicacion=new function() {
 
     /**
      * Inicializa la instancia.
+     * @returns {aplicacion}
      */
     this.inicializarAplicacion=function() {
         //Inicializar comunicación con el servidor
         this.servidor=servidor.fabricar();
         return this;
+    };
+
+    /**
+     * Establece el nombre de la aplicación concreta.
+     * @param {string} valor - Valor a asignar.
+     * @returns {aplicacion}
+     */
+    this.obtenerNombre=function(valor) {
+        nombre=valor;
+        return this;
+    };
+
+    /**
+     * Devuelve el nombre de la aplicación concreta.
+     * @returns {string}
+     */
+    this.obtenerNombre=function() {
+        return nombre;
     };
 
     ////Eventos

@@ -104,7 +104,7 @@ var componenteEtiqueta=function() {
             }
         } else if(contenido) {
             //Como expresión global, sin origen de datos específico
-            resultado=ui.evaluarExpresion(contenido);
+            resultado=this.evaluarExpresion(contenido);
         }        
 
         if(typeof resultado==="undefined"||typeof resultado==="object"||typeof resultado==="function") resultado=""; //Evitar 'undefined' u otros valores

@@ -172,7 +172,7 @@ class constructor extends \datos\constructor {
                 $campos.=$campo;
             } else {
                 $nombre='';
-                if(strpos($campo->nombre,'.')===false) $nombre.=($campo->esquema?$campo->esquema:$this->alias).'.';
+                if(strpos($campo->nombre,'.')===false) $nombre.=($campo->esquema?$campo->esquema:($this->alias?$this->alias:$this->esquema)).'.';
                 $nombre.=$campo->nombre;
 
                 $campos.=$nombre.($campo->alias?' '.$campo->alias:'');

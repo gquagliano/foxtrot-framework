@@ -126,7 +126,7 @@ class bd extends \datos\bd {
 		    foreach($tablas as $tabla) {
                 if(is_array($tabla)) {
                     //[[tabla,alias],...]
-                    $listado[]=$tabla[0].' as '.$tabla[1].$modo;
+                    $listado[]=$tabla[0].(count($tabla)>1?' as '.$tabla[1]:'').$modo;
                 } else {
                     //[tabla,tabla]
                     $listado[]=$tabla.$modo;

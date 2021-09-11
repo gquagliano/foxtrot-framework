@@ -1295,6 +1295,8 @@ class modeloBase {
                 } elseif(is_numeric($objeto)) {
                     //Si se recibe un número, asumir que es el ID
                     $this->valores->$nombreCampoValor=$objeto;
+                    //Descartar el valor original, ya que el campo relacional solo debe contener objetos
+                    $this->valores->$nombre=null;
                 }
             }
 
@@ -1397,12 +1399,15 @@ class modeloBase {
             $listado=$this->valores->$nombre;
             if($listado===null&&!$this->valores->e) continue;
             if(!is_array($listado)) $listado=[];
+            $descartarValor=false;
 
             if(!$this->valores->e) {
                 foreach($listado as $item) {
                     //Si se recibe un número, asumir que es el ID
-                    if(is_numeric($item))
+                    if(is_numeric($item)) {
                         $item=(object)['id'=>$item];
+                        $descartarValor=true;
+                    }
 
                     if(!is_object($item)&&!is_array($item)) continue;
                     if(is_array($item)) $item=(object)$item;
@@ -1410,6 +1415,9 @@ class modeloBase {
                     if($item->id) $preservar[]=$item->id;
                     $crearActualizar[]=$item;
                 }
+
+                //Si se recibió un array de IDs, descartar el mismo, ya que el campo relacional solo debe contener objetos
+                if($descartarValor) $this->valores->$nombre=null;
             }
 
             if($this->configEliminarRelacionados||$campo->eliminar) {

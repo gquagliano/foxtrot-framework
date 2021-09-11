@@ -1294,8 +1294,10 @@ class modeloBase {
                     $this->valores->$nombreCampoValor=$valor;
                 } elseif(is_numeric($objeto)) {
                     //Si se recibe un número, asumir que es el ID
+                    $valor=$objeto;
                     $this->valores->$nombreCampoValor=$objeto;
                     //Descartar el valor original, ya que el campo relacional solo debe contener objetos
+                    $objeto=null;
                     $this->valores->$nombre=null;
                 }
             }
@@ -1399,15 +1401,12 @@ class modeloBase {
             $listado=$this->valores->$nombre;
             if($listado===null&&!$this->valores->e) continue;
             if(!is_array($listado)) $listado=[];
-            $descartarValor=false;
 
             if(!$this->valores->e) {
                 foreach($listado as $item) {
                     //Si se recibe un número, asumir que es el ID
-                    if(is_numeric($item)) {
+                    if(is_numeric($item))
                         $item=(object)['id'=>$item];
-                        $descartarValor=true;
-                    }
 
                     if(!is_object($item)&&!is_array($item)) continue;
                     if(is_array($item)) $item=(object)$item;
@@ -1416,9 +1415,10 @@ class modeloBase {
                     $crearActualizar[]=$item;
                 }
 
-                //Si se recibió un array de IDs, descartar el mismo, ya que el campo relacional solo debe contener objetos
-                if($descartarValor) $this->valores->$nombre=null;
+                $this->valores->$nombre=[];
             }
+
+            if($campo->simple) continue;
 
             if($this->configEliminarRelacionados||$campo->eliminar) {
                 //Eliminar todo lo que no esté en $preservar
@@ -1442,6 +1442,8 @@ class modeloBase {
                 else                   
                     $modelo->establecerValores($item);
                 $modelo->guardar();
+
+                $this->valores->$nombre[]=$modelo->obtenerEntidad();
             }
         }
 

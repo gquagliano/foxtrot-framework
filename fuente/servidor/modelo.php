@@ -706,5 +706,8 @@ class modelo extends modeloBase {
     /**
      * Inicializa la tabla luego de la primer sincronización desde el gestor de aplicaciones.
      */
-    public function instalar() {}
+    public function instalar() {
+        //Por defecto, buscar también el método instalar() en la entidad
+        $this->fabricarEntidad()->instalar();
+    }
 }

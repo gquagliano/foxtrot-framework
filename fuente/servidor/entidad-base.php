@@ -113,19 +113,35 @@ class entidadBase {
             $modelo->omitirRelaciones();
 
             if($campo->relacion=='1:n') {
-                //@campo o @campoForaneo es indistinto en 1:n
-                $columna=$campo->campo?$campo->campo:$campo->campoforaneo;
+                //if(is_array($this->$propiedad)) {
+                //    $ids=[];
+                //    foreach($this->$propiedad as $item)
+                //        if(is_numeric($item)) {
+                //            $ids[]=$item;
+                //        } elseif(is_object($item)) {
+                //            $ids[]=$item->id;
+                //        } elseif(is_array($item)) {
+                //            $ids[]=$item['id'];
+                //        }
+                //    }
+                //    $this->$propiedad=$modelo
+                //        ->dondeEn('id',$ids)
+                //        ->obtenerListado();
+                //} else {
+                    //@campo o @campoForaneo es indistinto en 1:n
+                    $columna=$campo->campo?$campo->campo:$campo->campoforaneo;
 
-                if(!$this->id) {
-                    $this->propiedad=null;
-                    continue;
-                }
+                    if(!$this->id) {
+                        $this->propiedad=null;
+                        continue;
+                    }
 
-                $this->$propiedad=$modelo
-                    ->donde([
-                        $columna=>$this->id
-                    ])
-                    ->obtenerListado();
+                    $this->$propiedad=$modelo
+                        ->donde([
+                            $columna=>$this->id
+                        ])
+                        ->obtenerListado();
+                //}
             } else {
                 $columna='id';
                 $valor=null;
@@ -134,6 +150,8 @@ class entidadBase {
                     //@campo, foranea.id=campo
                     $campoValor=$campo->campo;
                     $valor=$this->$campoValor;
+                    //Si el valor es nulo, intentar usar el valor del campo relacional como ID
+                    if(!$valor&&is_numeric($this->$propiedad)) $valor=$this->$propiedad;
                 } else {
                     //@campoForaneo, foranea.campo=id
                     $columna=$campo->campoforaneo;

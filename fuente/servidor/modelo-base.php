@@ -1427,8 +1427,8 @@ class modeloBase {
                 $item->$nombreCampo=$this->valores->id;
 
                 $modelo
-                    ->reiniciar()
-                    ->omitirRelaciones();
+                    //->omitirRelaciones()
+                    ->reiniciar();
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($item);
                 else                   

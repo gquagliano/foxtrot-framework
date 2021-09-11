@@ -36,4 +36,10 @@ class entidad extends entidadBase {
         if($operacion==modelo::eliminar) $this->fecha_baja=time();
         return $this;
     }
+
+    /**
+     * Inicializa la tabla luego de la primer sincronización desde el gestor de aplicaciones.
+     */
+    public function instalar() {
+    }
 }

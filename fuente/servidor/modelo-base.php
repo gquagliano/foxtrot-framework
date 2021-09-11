@@ -1287,10 +1287,15 @@ class modeloBase {
             $objeto=$this->valores->$nombre;
             if(is_array($objeto)) $objeto=(object)$objeto;
 
-            //Tomar el id del objeto asignado
-            if($nombreCampoValor&&is_object($objeto)&&$objeto->id!==null) {
-                $valor=$objeto->id;
-                $this->valores->$nombreCampoValor=$valor;
+            if($nombreCampoValor) {
+                if(is_object($objeto)&&$objeto->id!==null) {
+                    //Tomar el id del objeto asignado
+                    $valor=$objeto->id;
+                    $this->valores->$nombreCampoValor=$valor;
+                } elseif(is_numeric($objeto)) {
+                    //Si se recibe un número, asumir que es el ID
+                    $this->valores->$nombreCampoValor=$objeto;
+                }
             }
 
             if($campo->simple) continue;
@@ -1395,6 +1400,10 @@ class modeloBase {
 
             if(!$this->valores->e) {
                 foreach($listado as $item) {
+                    //Si se recibe un número, asumir que es el ID
+                    if(is_numeric($item))
+                        $item=(object)['id'=>$item];
+
                     if(!is_object($item)&&!is_array($item)) continue;
                     if(is_array($item)) $item=(object)$item;
 

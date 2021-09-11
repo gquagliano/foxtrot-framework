@@ -217,7 +217,10 @@ var componentePestanas=function() {
             if(pestana<0) pestana=hijos.length+pestana;
             if(hijos.length>pestana) pestana=hijos[pestana];
         }
-        if(typeof pestana==="object"&&pestana.componente=="pestana") pestana.activar();
+        if(typeof pestana==="object"&&pestana.componente=="pestana") {
+            pestana.activar();
+            ui.autofoco(pestana.obtenerElemento());
+        }
         return this;
     };
 

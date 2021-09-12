@@ -2377,9 +2377,12 @@ var componente=new function() {
 
     /**
      * Busca todos los componentes con nombre que desciendan de este componente y devuelve un objeto con sus valores.
+     * @param {boolean} [incluirOcultos=false] - Incluir componentes ocultos.
      * @returns {Object}
      */
-    this.obtenerValores=function() {
+    this.obtenerValores=function(incluirOcultos) {
+        if(typeof incluirOcultos=="undefined") incluirOcultos=false;
+
         if(this.iterativo) {
             //Los componentes iterativos devuelven directamente su valor. No deben continuar la búsqueda en forma recursiva entre los
             //componentes autogenerados  
@@ -2396,13 +2399,13 @@ var componente=new function() {
 
         hijos.forEach(function(hijo) {            
             var nombre=hijo.obtenerNombre();
-            if(nombre&&hijo.esCampo()&&!hijo.esComponenteOculto()) {
+            if(nombre&&hijo.esCampo()&&(incluirOcultos||!hijo.esComponenteOculto())) {
                 var valor=hijo.valor();
                 if(typeof valor!=="undefined") valores[nombre]=valor; //Un componente puede devolver nulo; se entiende que es un componente sin valor (como un contenedor) cuando devuelve indefinido
             }
             
             //Continuar la búsqueda en forma recursiva
-            valores=Object.assign({},valores,hijo.obtenerValores());
+            valores=Object.assign({},valores,hijo.obtenerValores(incluirOcultos));
         });
 
         return valores;

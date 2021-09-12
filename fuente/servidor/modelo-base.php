@@ -678,7 +678,7 @@ class modeloBase {
         if(!$this->valores) return $this;
 
         $this->valores->id=null;
-        $this->preprocesarRelacionesActualizacionInsercion(self::actualizar);
+        $this->preprocesarRelacionesActualizacionInsercion(self::crear);
         $this->valores->prepararValores(self::crear);
         
         $this->construirConsulta(self::crear);
@@ -1276,6 +1276,9 @@ class modeloBase {
         foreach($this->campos as $nombre=>$campo) {
             if(!$campo->relacional||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
 
+            if($nombre=='valor') {
+                $z=1;
+            }
             $nombreCampoValor=null;
             $nombreCampoForaneo=null;
             $valor=null;
@@ -1334,8 +1337,8 @@ class modeloBase {
                 //Registro existente, actualizar
 
                 $modelo
-                    ->reiniciar()
-                    ->omitirRelaciones();
+                    //->omitirRelaciones();
+                    ->reiniciar();
                     
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($objeto);
@@ -1353,8 +1356,8 @@ class modeloBase {
                 //Registro inexistente, crear
 
                 $modelo
-                    ->reiniciar()
-                    ->omitirRelaciones();
+                    //->omitirRelaciones()
+                    ->reiniciar();
 
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($objeto);
@@ -1437,10 +1440,12 @@ class modeloBase {
                 $modelo
                     //->omitirRelaciones()
                     ->reiniciar();
+
                 if($this->configRelacionesValoresPublicos)
                     $modelo->establecerValoresPublicos($item);
                 else                   
                     $modelo->establecerValores($item);
+                    
                 $modelo->guardar();
 
                 $this->valores->$nombre[]=$modelo->obtenerEntidad();
@@ -1494,7 +1499,7 @@ class modeloBase {
                 }
             } else {  
                 if(!$entidad->$nombre) continue;
-                $entidad->$nombre=$modelo->fabricarEntidad($entidad->$nombre);
+                $entidad->$nombre=$modeloCampo->fabricarEntidad($entidad->$nombre);
 
                 if($operacion==self::seleccionar) {
                     $entidad->$nombre->procesarRelaciones();

@@ -110,7 +110,7 @@ class entidadBase {
                 $modelo=\foxtrot::fabricarModelo($campo->modelo);
             }
             
-            $modelo->omitirRelaciones();
+            //$modelo->omitirRelaciones();
 
             if($campo->relacion=='1:n') {
                 //if(is_array($this->$propiedad)) {

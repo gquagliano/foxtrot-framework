@@ -217,7 +217,7 @@ var componenteCampo=function() {
 	            return this;
 	        }
 
-	        if(propiedad=="paso"&&/^[0-9\.]$/.test(valor)) {
+	        if(propiedad=="paso"&&/^[0-9\.]+$/.test(valor)) {
 	            this.campo.propiedad("step",valor);
 	            return this;
 	        }
@@ -277,6 +277,14 @@ var componenteCampo=function() {
 
         //Si es null, volver al valor inicial (puede contener expresiones)
         if(valor===null) valor=this.propiedad("valorInicial");
+
+        if(this.campo.atributo("type")=="number") {
+            if(typeof valor=="undefined")
+                return this.campo.valueAsNumber;
+            if(!isNaN(valor)&&parseFloat(valor)!==this.campo.valueAsNumber)
+                this.campo.value=valor;
+            return this;
+        }
 
         return this.prototipo.valor.call(this,valor);
     };

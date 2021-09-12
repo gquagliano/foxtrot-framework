@@ -55,7 +55,7 @@ class almacenamiento {
     }
 
     /**
-     * Reserva y devuelve un nombre de archivo libre.
+     * Reserva y devuelve un nombre de archivo libre. Devuelve solo el nombre de archivo, sin la ruta.
      * @param string $directorio Directorio de destino.
      * @param string $nombre Nombre propuesto.
      * @return string

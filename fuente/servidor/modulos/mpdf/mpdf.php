@@ -62,7 +62,7 @@ class mpdf extends \modulo {
      * @param string $formato Formato de la nueva página.
      * @return \modulos\mpdf
      */
-    public function gregarPagina($formato='A4') {
+    public function agregarPagina($formato='A4') {
         $this->mpdf->AddPage($formato);
         return $this;
     }

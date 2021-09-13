@@ -188,6 +188,40 @@ var componenteTabla=function() {
         return this;
     };
 
+    /**
+     * Devuelve el componente correspondiente a una columna dado su nombre de columna (propiedad `columna`; no confundir con el
+     * nombre del componente *Columna de tabla*).
+     * @param {string} nombre - Nombre de columna a buscar.
+     * @returns {(componente|null)}
+     */
+    this.obtenerColumna=function(nombre) {
+        var filas=this.buscarFilas();
+        if(!filas.length) return null;
+        
+        var columnas=filas[0].obtenerHijos();
+        for(var i=0;i<columnas.length;i++) {
+            var columna=columnas[i];
+            if(columna.propiedad("columna")==nombre)
+                return columna;
+        }
+        return null;
+    };
+
+    /**
+     * Elimina el valor de la propiedad `orden` de todas las columnas.
+     * @returns {componenteTabla}
+     */
+    this.limpiarOrdenamiento=function() {
+        var filas=this.buscarFilas();
+        if(!filas.length) return this;
+        
+        var columnas=filas[0].obtenerHijos();
+        for(var i=0;i<columnas.length;i++)
+            columnas[i].propiedad("orden",null);
+        
+        return this;
+    };
+
     ////Alias
 
     /**

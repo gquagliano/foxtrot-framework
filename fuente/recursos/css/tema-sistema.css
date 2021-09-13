@@ -258,7 +258,7 @@ textarea.form-control {
     position: sticky;
     top: 0;
     z-index: 999;
-    background: #fff;
+    background-color: #fff;
 }
 .formulario-tabla .btn {
     padding: 0;

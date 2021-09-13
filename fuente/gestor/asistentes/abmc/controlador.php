@@ -34,7 +34,9 @@ class {nombre} extends \controlador {
         $modelo=$this->modelo
             ->reiniciar()
             ->establecerAlias('t');
-            //->ordenar('titulo','asc');
+
+        if($filtro->orden)
+            $modelo->ordenar($filtro->orden[0],$filtro->orden[1]=='ascendente'?'asc':'desc');
 
         if($filtro->texto) {
             $modelo->donde('t.`id`=@filtro{sqlFiltros}',[

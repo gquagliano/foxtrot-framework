@@ -6,7 +6,8 @@
 ui.registrarControlador("{nombreVista}",function() {
     "use strict";
     
-    var t=this;
+    var t=this,
+        orden=null;
 
     this.controladorServidor="{controlador}";
 <!superior-multinivel
@@ -33,7 +34,8 @@ ui.registrarControlador("{nombreVista}",function() {
             {relacion}:this.{relacion},
 !>
             texto:componentes.filtro.valor(),
-            pagina:componentes.pagina.valor()
+            pagina:componentes.pagina.valor(),
+            orden:orden
         };
 
         this.servidor.obtenerListado(function(resp) {
@@ -66,6 +68,19 @@ ui.registrarControlador("{nombreVista}",function() {
                 t.cargarDatos();
             },id);
         },{icono:"pregunta"});
+    };
+
+    this.clickEncabezado=function(comp,ev) {
+        if(orden&&orden[0]==ev.columna) {
+            orden[1]=orden[1]=="ascendente"?"descendente":"ascendente"
+        } else {
+            orden=[ev.columna,"ascendente"];
+        }
+        componentes.tabla
+            .limpiarOrdenamiento()
+            .obtenerColumna(orden[0])
+            .propiedad("orden",orden[1]);
+        this.cargarDatos();
     };
 
     /**

@@ -94,6 +94,7 @@
             "propiedades": {
                 "encabezado": "Código",
                 "encabezadoActivo": true,
+                "clickEncabezado": "clickEncabezado",
                 "columna":"id"
             }
         },
@@ -115,6 +116,7 @@
             "propiedades": {
                 "encabezado": "{encabezado}",
                 "encabezadoActivo": true,
+                "clickEncabezado": "clickEncabezado",
                 "columna":"{columna}"
             }
         },

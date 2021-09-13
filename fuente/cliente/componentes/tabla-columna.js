@@ -13,8 +13,11 @@
 var componenteColumnaTabla=function() {  
     "use strict";
 
+    var t=this;
+
     this.componente="tabla-columna";
     this.encabezadoTemporal=null;
+    this.elementoTh=null;
 
     /**
      * Propiedades de Columna de tabla.
@@ -31,7 +34,7 @@ var componenteColumnaTabla=function() {
                 tipo:"bool",
                 adaptativa:false
             },
-            encabezadoOrden:{
+            orden:{
                 etiqueta:"Ordenamiento",
                 ayuda:"Muestra el ícono de ordanamiento en el encabezado.",
                 tipo:"opciones",
@@ -106,12 +109,34 @@ var componenteColumnaTabla=function() {
      * Actualiza el componente tras la modificación de una propiedad.
      */
     this.propiedadModificada=function(propiedad,valor,tamano,valorAnterior) {
-        //Las propiedades con expresionesse ignoran en el editor (no deben quedar establecidas en el html ni en el css)
+        //Las propiedades con expresiones se ignoran en el editor (no deben quedar establecidas en el html ni en el css)
         if(!ui.enModoEdicion()||!expresion.contieneExpresion(valor)) {
 	        //Actualizar encabezados en el editor
 	        if(propiedad=="encabezado"&&ui.enModoEdicion()) 
 	            this.encabezadoTemporal.establecerHtml(valor);
 	    }
+
+        if(this.elementoTh) {
+            if(propiedad=="encabezado") {
+                this.elementoTh.establecerHtml(valor);
+                return this;
+            }
+
+            if(propiedad=="encabezadoActivo") {
+                if(valor===true||valor===1||valor==="1") {
+                    this.elementoTh.agregarClase("activo");
+                } else {
+                    this.elementoTh.removerClase("activo");
+                }
+                return this;
+            }
+
+            if(propiedad=="orden") {
+                this.elementoTh.removerClase(/orden-.+/);
+                if(valor=="ascendente"||valor=="descendente")
+                    this.elementoTh.agregarClase("orden-"+valor);
+            }
+        }
 
         this.prototipo.propiedadModificada.call(this,propiedad,valor,tamano,valorAnterior);
         return this;
@@ -123,9 +148,25 @@ var componenteColumnaTabla=function() {
      */
     this.generarTh=function() {
         var texto=this.propiedad(null,"encabezado"),
-            elem=document.crear("th");            
+            elem=document.crear("th");
 
-        elem.establecerHtml(texto);
+        this.elementoTh=elem;
+
+        var clase="",
+            orden=this.propiedad("orden"),
+            activo=this.propiedad("encabezadoActivo");
+        if(orden) clase="orden-"+orden;
+        if(activo) clase+=" activo";
+
+        elem.establecerHtml(texto)
+            .agregarClase(clase)
+            .evento("click",function(ev) {
+                if(!t.propiedad("encabezadoActivo")) return;
+
+                t.procesarEvento("clickEncabezado","clickEncabezado",null,ev,{
+                    columna:t.propiedad("columna")
+                });
+            });
 
         return elem;
     };

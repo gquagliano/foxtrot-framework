@@ -12,6 +12,26 @@
 .ocultar-contenidos .autogenerado tr {
     display: table-row !important;
 }
-tr {
+.table tr {
     cursor: pointer;
+}
+.table th {
+    cursor: default;
+}
+.table th.activo {
+    cursor: pointer;
+}
+.table th.activo,
+.table th.orden-ascendente,
+.table th.orden-descendente {
+    padding-right: 2rem!important;
+    background-repeat: no-repeat;
+    background-position: center right .5rem;
+    background-size: 13px; 
+}
+.table th.orden-ascendente {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235e6c7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-arrow-down'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cpolyline points='19 12 12 19 5 12'%3E%3C/polyline%3E%3C/svg%3E");
+}
+.table th.orden-descendente {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235e6c7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-arrow-up'%3E%3Cline x1='12' y1='19' x2='12' y2='5'%3E%3C/line%3E%3Cpolyline points='5 12 12 5 19 12'%3E%3C/polyline%3E%3C/svg%3E");
 }

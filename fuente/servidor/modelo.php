@@ -632,12 +632,13 @@ class modelo extends modeloBase {
 
         //donde($campo,$valor[,$operador])
         //donde($union,$campo,$valor[,$operador])
-        if((count($args)==2||count($args)==3)&&is_string($args[0])&&(!isset($args[2])||$this->esOperador($args[2]))) {
+        if((count($args)==2||count($args)==3)&&is_string($args[0])&&!is_object($args[1])&&(!isset($args[2])||$this->esOperador($args[2]))) {
             list($nombre,$valor,$operador)=$args;
 
             if($valor===null) return $this;
 
-            return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
+            if(!is_array($valor)||$operador==self::en||$operador==self::noEn)
+                return $this->agregarCondicion($nombre,$operador,$valor,$union,$tipo);
         }
 
         //donde($sql[,$parametros,$tipos,$operador])

@@ -182,10 +182,18 @@ class modeloBase {
     }
 
     /**
-     * Devuelve el ID del último registro insertado.
+     * Devuelve el ID del último registro insertado o actualizado.
      * @return int|null
      */
     public function obtenerId() {
+        return $this->valores->id?$this->valores->id:$this->ultimoId;
+    }
+
+    /**
+     * Devuelve el ID del último registro insertado.
+     * @return int|null
+     */
+    public function obtenerIdInsertado() {
         return $this->ultimoId;
     }
 
@@ -655,6 +663,7 @@ class modeloBase {
         if(!$this->valores) return $this;
 
         if($id) $this->valores->id=$id;
+
         $this->preprocesarRelacionesActualizacionInsercion(self::actualizar);
 
         $this->valores->prepararValores($this->valores->e?self::eliminar:self::actualizar);

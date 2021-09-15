@@ -385,7 +385,7 @@ class modeloBase {
      * @return \modeloBase
      */
     public function ordenar($campo,$sentido=null) {
-        if(property_exists($this->campos,$campo)) $campo=$this->alias.'.'.$campo;
+        if(property_exists($this->campos,$campo)) $campo=($this->alias?$this->alias.'.':'').$campo;
 
         $this->constructor->establecerOrden($campo,$sentido);
 
@@ -398,7 +398,7 @@ class modeloBase {
      * @return \modeloBase
      */
     public function agrupar($campo) {
-        if(property_exists($this->campos,$campo)) $campo=$this->alias.'.'.$campo;
+        if(property_exists($this->campos,$campo)) $campo=($this->alias?$this->alias.'.':'').$campo;
 
         $this->constructor->establecerAgrupamiento($campo);
 

@@ -116,7 +116,8 @@ body.escritorio .menu a:hover,
 body.escritorio .item-menu a:hover,
 .item-menu a:focus,
 .item-menu a:active,
-.item-menu .abierto>a {
+.item-menu.abierto>a,
+.item-menu.submenu-abierto>a {
     background-color: #e8ebf1;
 }
 .menu .con-submenu>a {

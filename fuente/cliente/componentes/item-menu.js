@@ -354,7 +354,19 @@ var componenteItemMenu=function() {
             if(elem) ui.obtenerInstanciaComponente(elem).cerrar();
         });
         return this;
-    };   
+    };    
+
+    /**
+     * Evento `seleccionado` (editor).
+     * @param {boolean} estado - `true` en caso de selección, `false` deselección.
+     * @returns {(boolean|undefined)}
+     */
+    this.seleccionado=function(estado) {
+        //Corregir posicionamiento del submenúmenú en modo edición
+        if(estado)
+            ui.reposicionarElementoMenu(this.elemento.querySelector(".menu"));
+        return this.prototipo.seleccionado.call(this,estado);
+    };
 };
 
 ui.registrarComponente("item-menu",componenteItemMenu,configComponente.clonar({

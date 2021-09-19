@@ -1052,9 +1052,6 @@ var editor=new function() {
 
         elem.agregarClase("foxtrot-seleccionado");
 
-        //Evento
-        comp.seleccionado(true);
-
         //Agregar clase a toda la ascendencia
         var padre=comp;
         while(1) {
@@ -1062,6 +1059,9 @@ var editor=new function() {
             if(!padre) break;
             padre.obtenerElemento().agregarClase("foxtrot-hijo-seleccionado");
         }
+
+        //Evento
+        comp.seleccionado(true);
 
         this.componentesSeleccionados.push(comp);
         

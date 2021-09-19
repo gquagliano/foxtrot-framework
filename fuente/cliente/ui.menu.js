@@ -13,14 +13,13 @@
 
     var menuAbierto=[];
 
-    var abrirElementoMenu=function(elem) {
-        //Evento DOM para que otros objetos de los cuales dependa el menú puedan detectar el cierre
-        elem.ejecutarEvento("menu-abierto");
-
-        ui.animarAparecer(elem);
-
-        //TODO Barras de desplazamiento estilizadas
-
+    /**
+     * Corrige el posicionamiento de *un elemento* menú según su posición actual en la ventana.
+     * @memberof ui
+     * @param {Node} elem - Elemento a analizar.
+     * @returns {ui}
+     */
+    ui.reposicionarElementoMenu=function(elem) {
         var posicionamiento=elem.estilo("position"),
             padre=elem.padre();
 
@@ -83,6 +82,18 @@
                 elem.estilos({ top:altoVentana-alto-margen });
             }
         }
+
+        return ui;
+    };
+
+    var abrirElementoMenu=function(elem) {
+        //Evento DOM para que otros objetos de los cuales dependa el menú puedan detectar el cierre
+        elem.ejecutarEvento("menu-abierto");
+
+        ui.animarAparecer(elem);
+        ui.reposicionarElementoMenu(elem);
+
+        //TODO Barras de desplazamiento estilizadas
     };
     
     var cerrarElementoMenu=function(elem,omitirAnimacion,eliminar,retorno) {

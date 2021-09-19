@@ -363,8 +363,10 @@ var componenteItemMenu=function() {
      */
     this.seleccionado=function(estado) {
         //Corregir posicionamiento del submenúmenú en modo edición
-        if(estado)
-            ui.reposicionarElementoMenu(this.elemento.querySelector(".menu"));
+        if(estado) {
+            var submenu=this.elemento.querySelector(".menu");
+            if(submenu) ui.reposicionarElementoMenu(submenu);
+        }
         return this.prototipo.seleccionado.call(this,estado);
     };
 };

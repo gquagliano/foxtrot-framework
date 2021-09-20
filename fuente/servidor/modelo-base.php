@@ -1285,9 +1285,6 @@ class modeloBase {
         foreach($this->campos as $nombre=>$campo) {
             if(!$campo->relacional||($campo->relacion!='1:1'&&$campo->relacion!='1:0')) continue;
 
-            if($nombre=='valor') {
-                $z=1;
-            }
             $nombreCampoValor=null;
             $nombreCampoForaneo=null;
             $valor=null;
@@ -1430,8 +1427,6 @@ class modeloBase {
                 $this->valores->$nombre=[];
             }
 
-            if($campo->simple) continue;
-
             if($this->configEliminarRelacionados||$campo->eliminar) {
                 //Eliminar todo lo que no esté en $preservar
 
@@ -1439,7 +1434,7 @@ class modeloBase {
                     ->omitirRelaciones()
                     ->establecerAlias('m')
                     ->donde($nombreCampo,$this->valores->id)
-                    ->yDonde('id',condicion::operadorNoEn,$preservar)
+                    ->yDonde('id',$preservar,condicion::operadorNoEn)
                     ->eliminar();
             }
 
@@ -1455,7 +1450,7 @@ class modeloBase {
                 else                   
                     $modelo->establecerValores($item);
                     
-                $modelo->guardar();
+                $modelo->guardar($item->id);
 
                 $this->valores->$nombre[]=$modelo->obtenerEntidad();
             }

@@ -20,11 +20,15 @@ class entidadBase {
     protected static $campos;
     protected $_nombreEntidad;
 
+    protected $aplicacion;
+
     /**
      * Constructor.
      * @param array|object $datos Valores a asignar a las propiedades de la nueva instancia.
      */
     function __construct($datos=null) {
+        $this->aplicacion=\foxtrot::obtenerAplicacion();
+        
         $clase=\foxtrot::obtenerDatosClase($this,'modelo');
         
         $this->_nombreEntidad=$clase->ruta.$clase->nombre;

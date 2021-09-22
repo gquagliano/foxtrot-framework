@@ -52,6 +52,8 @@ class modeloBase {
     protected $configRelacionesValoresPublicos=null;
     protected $seleccionAgregada=false;
 
+    protected $aplicacion;
+
     //Redefinimos algunas constantes para evitar el uso de cadenas pero a la vez evitar acoplar el código del cliente y la descendencia
     //de esta clase al constructor. Ya que dentro de esta clase sabemos que dependemos del constructor, directamente asignamos
     //los mismos valores para ahorrar validaciones en el futuro.
@@ -83,6 +85,8 @@ class modeloBase {
      * @param string $tabla Nombre de la tabla (normalmente debe omitirse).
      */
     function __construct($bd=null,$nombre=null,$tipoEntidad=null,$tabla=null) {
+        $this->aplicacion=\foxtrot::obtenerAplicacion();
+        
         if($nombre) {
             $this->nombre=$nombre;
             $this->_tabla=$tabla?$tabla:$nombre;

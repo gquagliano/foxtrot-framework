@@ -674,7 +674,7 @@ class modeloBase {
 
         $this->procesarRelacionesActualizacionInsercion(self::actualizar);
 
-        if($this->valores->e) $this->valores->procesarValores(self::eliminar);
+        $this->valores->procesarValores($this->valores->e?self::eliminar:self::actualizar);
         
         return $this;
     }

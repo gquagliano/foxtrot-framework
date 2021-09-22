@@ -86,7 +86,7 @@ var componenteBuscador=function() {
         this.campo=this.elemento.querySelector("input");
         this.elementoEventos=this.campo;
         
-        prefijoCache=this.nombreVista+this.nombre;
+        prefijoCache=this.vista.obtenerNombreVista()+this.id.toString();
 
         var boton=this.elemento.querySelector(".btn-desplegar");
         if(!boton) {

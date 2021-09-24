@@ -20,6 +20,8 @@ var componenteCampo=function() {
 
     var ignorarTodaEntrada=false;
 
+    var modificado=false;
+
     /**
      * Propiedades de Campo.
      */
@@ -114,15 +116,39 @@ var componenteCampo=function() {
         }
     };
 
+    var eventoPasteInput=function(ev) {
+        modificado=true;
+    };
+
     /**
      * Establece los eventos predeterminados.
      */
     this.establecerEventos=function() {
         this.prototipo.establecerEventos.call(this);
-        this.campo.removerEvento("keydown",eventoKeydown)
-            .evento("keydown",eventoKeydown);
+        this.campo
+            .removerEvento("keydown",eventoKeydown)
+            .evento("keydown",eventoKeydown)
+            .removerEvento("paste input",eventoPasteInput)
+            .evento("paste input",eventoPasteInput);
         return this;
-    };    
+    };
+
+    /**
+     * Actualiza el componente.
+     * @param {boolean} [actualizarHijos] - No tiene efecto.
+     * @returns {componente}
+     */
+    this.actualizar=function(actualizarHijos) {
+        this.prototipo.actualizar.call(this,false);
+        
+        //Si el campo no fue modificado, establecer el valor inicial
+        if(!modificado) {
+            var valor=this.propiedad("valor");
+            if(valor) this.valor(valor);
+        }
+
+        return this;
+    };
 
     /**
      * Evento Intro.

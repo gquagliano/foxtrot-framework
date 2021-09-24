@@ -33,6 +33,8 @@ var componenteBuscador=function() {
     this.valorActual=null;
     this.etiquetaActual="";
 
+    var modificado=false;
+
     var ignorarTodaEntrada=false;
 
     /**
@@ -159,6 +161,7 @@ var componenteBuscador=function() {
                     t.buscar(valor);
                 },500);
             }
+            modificado=true;
         })
         .evento("focus",function(ev) {
             this.select();
@@ -223,6 +226,7 @@ var componenteBuscador=function() {
     var clickDesplegar=(function(evento) {
         evento.preventDefault();
         this.buscar(null,null,true);
+        modificado=true;
     }).bind(this);
 
     /**
@@ -531,6 +535,23 @@ var componenteBuscador=function() {
         
         var valor=this.propiedad("valor");
         if(valor) this.valor(valor);
+    };
+
+    /**
+     * Actualiza el componente.
+     * @param {boolean} [actualizarHijos] - No tiene efecto.
+     * @returns {componente}
+     */
+    this.actualizar=function(actualizarHijos) {
+        this.prototipo.actualizar.call(this,false);
+
+        //Si el campo no fue modificado, establecer el valor inicial
+        if(!modificado) {
+            var valor=this.propiedad("valor");
+            if(valor) this.valor(valor);
+        }
+
+        return this;
     };
 
     /**

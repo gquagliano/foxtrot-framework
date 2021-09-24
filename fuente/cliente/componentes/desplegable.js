@@ -20,6 +20,8 @@ var componenteDesplegable=function() {
     this.opcionesAsignadas=null;
     this.gruposAsignados=null;
 
+    var modificado=false;
+
     /**
      * Propiedades de Campo.
      */
@@ -100,6 +102,21 @@ var componenteDesplegable=function() {
         if(ui.enModoEdicion()) return;
 
         this.actualizar();
+    };
+
+    var eventoChange=function(ev) {
+        modificado=true;
+    };
+
+    /**
+     * Establece los eventos predeterminados.
+     */
+    this.establecerEventos=function() {
+        this.prototipo.establecerEventos.call(this);
+        this.campo
+            .removerEvento("change",eventoChange)
+            .evento("change",eventoChange);
+        return this;
     };
 
     /**
@@ -317,6 +334,12 @@ var componenteDesplegable=function() {
         }
 
         this.actualizacionEnCurso=false;
+
+        //Si el campo no fue modificado, establecer el valor inicial
+        if(!modificado) {
+            var valor=this.propiedad("valor");
+            if(valor) this.valor(valor);
+        }
         
         return this;
     };

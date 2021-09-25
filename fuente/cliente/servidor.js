@@ -105,7 +105,7 @@ var servidor=new function() {
 
         if(opciones.abortar) this.abortarTodo();
 
-        if(opciones.precarga) ui.mostrarPrecarga(opciones.precarga);
+        if(opciones.precarga) ui.mostrarPrecarga(opciones.precarga===true?"normal":opciones.precarga);
 
         var campos={};
         if(opciones.foxtrot) campos.__f=opciones.foxtrot;
@@ -171,7 +171,7 @@ var servidor=new function() {
                 servidor.evaluarRespuesta(resp,opciones);
             },
             siempre:function() {
-                ui.ocultarPrecarga(opciones.precarga);
+                if(opciones.precarga) ui.ocultarPrecarga(opciones.precarga===true?"normal":opciones.precarga);
                 if(opciones.siempre) opciones.siempre();
             },
             error:opciones.error,

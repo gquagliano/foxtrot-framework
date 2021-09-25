@@ -1821,15 +1821,17 @@ var componente=new function() {
      * @param {function} [retorno] - Función de retorno.
      * @param {boolean} [silencioso=false] - Deshabilita la precarga en caso de llamados al servidor.
      * @param {boolean} [nuevaVentana=false] - En caso de navegación, abrir la nueva vista o URL en una nueva ventana.
+     * @param {function} [siempre] - Función de retorno a invocarse tras procesar el evento independientemente del resultado.
      * @returns {(ajax|*|undefined)}
      */
-    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana) {
+    this.procesarEvento=function(nombre,propiedad,metodo,evento,parametros,retorno,silencioso,nuevaVentana,siempre) {
         if(typeof metodo==="undefined") metodo=null;
         if(typeof evento==="undefined") evento=null;
         if(typeof parametros==="undefined") parametros=null;
         if(typeof retorno==="undefined") retorno=null;
         if(typeof silencioso==="undefined") silencioso=false;
         if(typeof nuevaVentana==="undefined") nuevaVentana=false;
+        if(typeof siempre=="undefined") siempre=null;
 
         if(!evento) evento=document.createEvent("Event");
 
@@ -1846,6 +1848,7 @@ var componente=new function() {
         if(deshabilitado) {
             evento.preventDefault();
             evento.stopPropagation();
+            if(siempre) siempre();
             return this;
         }
 
@@ -1868,7 +1871,10 @@ var componente=new function() {
         if(metodo&&typeof this[metodo]==="function") {
             var ret=this[metodo](evento);
             //Los métodos que devuelvan true, detendrán el procesamiento del controlador
-            if(ret===true) return;
+            if(ret===true) {
+                if(siempre) siempre();
+                return;
+            }
         }       
                 
         //Agregar los parámetros al evento
@@ -1949,13 +1955,18 @@ var componente=new function() {
                     		controlador:nombreControlador,
                     		metodo:nombreMetodo,
                     		retorno:fn,
-                    		parametros:args
+                    		parametros:args,
+                            siempre:siempre
                     	});
                     } else {
                     	//Utilizar el controlador (JS)
-                    	var metodo=obj.servidor[controladorEvento];
-                    	args.unshift(fn);
-                    	ajax=metodo.apply(obj.servidor,args);
+                    	var metodo=obj.servidor[controladorEvento],
+                            opciones={
+                                retorno:fn,
+                                siempre:siempre,
+                                parametros:args
+                            };
+                    	ajax=metodo.apply(obj.servidor,opciones);
                     }
                 } else if(comando=="ir") {
                     //Navegación
@@ -2003,7 +2014,9 @@ var componente=new function() {
             if(detener) evento.stopPropagation();
         }
 
-        return typeof ajax!=="undefined"?ajax:resultadoLocal;
+        if(typeof ajax!="undefined") return ajax;
+        if(siempre) siempre();
+        return resultadoLocal;
     };
 
     /**

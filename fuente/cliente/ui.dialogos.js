@@ -72,6 +72,7 @@
 
             //Detener si se había solicitado ocultar la precarga hace menos de 200ms
             clearTimeout(temporizadorBarra);
+            clearTimeout(temporizadorBarraCompleta);
         
             if(barraVisible) return ui;
 

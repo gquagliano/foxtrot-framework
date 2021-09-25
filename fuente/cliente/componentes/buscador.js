@@ -257,7 +257,6 @@ var componenteBuscador=function() {
         }
         
         //this.seleccionarPrimerElemento=false;
-        ui.mostrarPrecarga("barra");
 
         var obj={campo:this.nombre};
 
@@ -265,15 +264,17 @@ var componenteBuscador=function() {
         else if(valor) obj.valor=valor;
         else if(todo) obj.listado=true;
         else return this;
+
+        ui.mostrarPrecarga("barra");
         
         this.ajax=this.procesarEvento("buscar","buscar",null,null,obj,function(res) {
-            ui.ocultarPrecarga("barra");
-
             //Si el controlador no devolvió un listado, esperar a que invoque establecerResultados()
             if(!util.esArray(res)) return;
 
             t.establecerResultados(res,!!valor);
-        },true);
+        },true,false,function() {
+            ui.ocultarPrecarga("barra");
+        });
 
         return this;
     };
